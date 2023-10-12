@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.PO_MasterModel
 
 @{
-    ViewData["Title"] = "PO Master";
+    ViewData["Title"] = "PURCHASE ORDER FORM";
     string clsView = "";
     if (Model.CaseNo != null)
     {
@@ -10,7 +10,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>PO Master</h2>
+        <h2>PURCHASE ORDER FORM</h2>
     </div>
 </div>
 <section id="tab-1">
@@ -28,20 +28,21 @@
 
             <div class="accordion-body">
                 <div class="row my-0">
-                    <div class="col-md-12">
-                        <label for="Reference" class="p-0">
-                            Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
-                        </label>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Ref No.</label>
+                        <input type="text" class="input" asp-for="CaseNo" readonly>
                     </div>
-                </div>
-                <div class="row align-items-end my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference" id="lblRealCaseNO1"></label>
-                    <input type="text" class="input" id="txtCaseNo">
-                </div>
-                <div class="col-md-1 mb-3">
-                    <button type="button" class="btn btn-primary w-100" onclick="LOASubmit();">Submit</button>
-                </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference" id="lblRealCaseNO1"></label>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Railway/Non-Railway</label>
+                        <input type="text" class="input" value="Railways" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference"></label>
+                        @*<input type="text" class="input" asp-for="RAILWAY" readonly>*@
+                    </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -62,9 +63,6 @@
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                         </div>
-
-
-
                     </div>
                     @if (IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower() != "admin")
                     {
@@ -319,37 +317,6 @@
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = '@Url.Action("Index", "DEOVendorPurchesOrder")';
         };
-
-        function LOASubmit() {
-            var VendCd = '@Model.VendCd';
-            $.get("@Url.Action("GetLOADetails", "DEOVendorPurchesOrder")", { CaseNo: $('#txtCaseNo').val(), VendCd: VendCd }, function (response) {
-                if (response != null && response != undefined) {
-                    $('#PoNo').val(response.poMaster.PoNo);
-                    $('#PoDt').val(response.poMaster.PoDt);
-                    $('#Remarks').val(response.poMaster.Remarks);
-                    $('#RecvDt').val(response.poMaster.RecvDt);
-                    $('#StockNonstock').val(response.poMaster.StockNonstock);
-                    $('#PoOrLetter').val(response.poMaster.PoOrLetter);
-                    $('#RlyNonrly').val(response.poMaster.RlyNonrly);
-                    FillAgencyClient();
-                    $('#RlyCd').val(response.poMaster.RlyCd);
-                    if (response.poMaster.RlyNonrly == "R") {
-                        $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
-                        $('#hdnRCD').val(response.poMaster.RlyCd);
-                        $('#txtSPur').val(response.poMaster.RlyCd);
-                        FillPurchaserCd();
-
-                    }
-                    if (response.poMaster.PurchaserCd != "0" && response.poMaster.PurchaserCd != "") {
-                        $('#PurchaserCd').val(response.poMaster.PurchaserCd);
-                    }
-
-                }
-                else {
-                    $('#PoNo').val('');
-                }
-            });
-        }
 
         function FillAgencyClient(id) {
             var RlyNonrly = $("#RlyNonrly").val();
