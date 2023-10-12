@@ -104,6 +104,10 @@ namespace IBS.Controllers.Vendor
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "PO Master Inserted Successfully.";
+                if (model.PoDt > DateTime.Now)
+                {
+                    return Json(new { status = false, responseText = "PO Date Cannot Be Greater Then Current Date!!!" });
+                }
                 if (model.CaseNo != null)
                 {
                     msg = "PO Master Updated Successfully.";
@@ -111,12 +115,12 @@ namespace IBS.Controllers.Vendor
                 }
                 else
                 {
-                    PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
-                    if (pO_MasterModel != null)
-                    {
-                        var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
-                        return Json(new { status = false, responseText = Retmsg });
-                    }
+                    //PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
+                    //if (pO_MasterModel != null)
+                    //{
+                    //    var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
+                    //    return Json(new { status = false, responseText = Retmsg });
+                    //}
                     PO_MasterModel pO_MasterModel2 = pOMasterRepository.alreadyExistT13_PO_MASTER(model);
                     if (pO_MasterModel2 != null)
                     {
@@ -208,6 +212,13 @@ namespace IBS.Controllers.Vendor
                 if (consignee != null)
                 {
                     agencyClient = Common.GetPurchaserCd(consignee);
+                }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
                 }
                 return Json(new { status = true, list = agencyClient });
             }

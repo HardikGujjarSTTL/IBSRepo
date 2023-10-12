@@ -12,7 +12,9 @@ namespace IBS.Interfaces
         public InterUnitRecieptModel FindByID(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT, string VCHR_DT);
         public DTResult<InterUnitRecieptModel> RecieptList(DTParameters dtParameters, string Region);
 
-       
+        public bool Remove(string VCHR_NO, string CHQ_NO, string CHQ_DT, int BANK_CD, int U_ID);
+
+
 
     }
 }

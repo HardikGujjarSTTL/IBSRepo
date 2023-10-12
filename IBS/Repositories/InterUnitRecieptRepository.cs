@@ -15,24 +15,24 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO, string txtBPOtype,string BPOCD)
+        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO, string txtBPOtype, string BPOCD)
         {
 
-                    var bpoNameList = (
-                 from bpo in context.T12BillPayingOfficers
-                 join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                 //where bpo.BpoCd == Convert.ToString(city.CityCd) || bpo.BpoRly.Trim().ToUpper().StartsWith(bpo.BpoRly.Trim().ToUpper())
-                 //orderby bpo.BpoName
-                 where
-                                (bpo.BpoCd.Trim().ToUpper() == BPOCD.Trim().ToUpper() ||
-                                bpo.BpoRly.Trim().ToUpper().StartsWith(BPOCD.Trim().ToUpper()))
-                 orderby bpo.BpoName
-                 select new
-                 {
-                     bpo.BpoCd,
-                     BPOName = $"{bpo.BpoName}/{(bpo.BpoAdd ?? "")}/{(city.Location ?? city.City + "/" + city.Location)}/{bpo.BpoRly}"
-                 }
-             ).Take(100).ToList();
+                var bpoNameList = (
+             from bpo in context.T12BillPayingOfficers
+             join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+             where bpo.BpoCd == Convert.ToString(city.CityCd) || bpo.BpoRly.Trim().ToUpper().StartsWith(bpo.BpoRly.Trim().ToUpper())
+             orderby bpo.BpoName
+             where
+                            (bpo.BpoCd.Trim().ToUpper() == BPOCD.Trim().ToUpper() ||
+                            bpo.BpoRly.Trim().ToUpper().StartsWith(BPOCD.Trim().ToUpper()))
+             orderby bpo.BpoName
+             select new
+             {
+                 bpo.BpoCd,
+                 BPOName = $"{bpo.BpoName}/{(bpo.BpoAdd ?? "")}/{(city.Location ?? city.City + "/" + city.Location)}/{bpo.BpoRly}"
+             }
+         ).Take(100).ToList();
             //var result =  bpoNameList.FirstOrDefault();
 
             //  return Convert.ToString(result);
@@ -45,7 +45,14 @@ namespace IBS.Repositories
                 text = item.BPOName
             }).ToList();
 
-            return DropdownValues;
+            if(DropdownValues != null) {
+                return DropdownValues;
+            }
+            else
+            {
+                return null;
+            }
+            
 
         }
 
@@ -202,7 +209,7 @@ namespace IBS.Repositories
 
                 if (voucher1 != null)
                 {
-                    VCHR_NO = ss + 00 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
+                    VCHR_NO = ss + 000 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
                 }
                 else
                 {
@@ -224,7 +231,7 @@ namespace IBS.Repositories
             {
                 DateTime parsedDate;
                 DateTime vdt;
-                DateTime.TryParseExact(model.iu_Advice_DT, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
+                DateTime.TryParseExact(model.CHQ_DT, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
                 DateTime.TryParseExact(model.VCHR_DT, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
 
                 T24Rv data = new T24Rv();
@@ -244,13 +251,13 @@ namespace IBS.Repositories
                 maxSNO = maxSNO + 1;
                
 
-               T25RvDetail obj = new T25RvDetail();
-               obj.VchrNo = Convert.ToString(VCHR_NO);
+                T25RvDetail obj = new T25RvDetail();
+               obj.VchrNo = Convert.ToString(model.VCHR_NO);
                 obj.Sno = maxSNO;
                 obj.AccCd = Convert.ToInt32(model.ACC_CD);
                 obj.BankCd = Convert.ToInt32(model.BANK_CD);
-                obj.ChqNo = model.iu_Advice_no.Trim();
-                obj.ChqDt = parsedDate;
+                obj.ChqNo = model.CHQ_NO.Trim();
+                obj.ChqDt = Convert.ToDateTime(model.CHQ_DT);
                 obj.Narration = model.NARRATION;
                 obj.Amount = Convert.ToDecimal(model.AMOUNT);
                 obj.SuspenseAmt = Convert.ToDecimal(model.AMOUNT);
@@ -297,7 +304,8 @@ namespace IBS.Repositories
         public DTResult<InterUnitRecieptModel> RecieptList(DTParameters dtParameters , string Region)
         {
             string VCHR_NO = dtParameters.AdditionalValues?.GetValueOrDefault("VCHR_NO");
-                DTResult<InterUnitRecieptModel> dTResult = new() { draw = 0 };
+           // string VCHR_NO = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VCHR_NO"]) ? Convert.ToString(dtParameters.AdditionalValues["VCHR_NO"]) : "";
+            DTResult<InterUnitRecieptModel> dTResult = new() { draw = 0 };
                 IQueryable<InterUnitRecieptModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
@@ -315,6 +323,7 @@ namespace IBS.Repositories
              join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityJoin
              from city in cityJoin.DefaultIfEmpty()
              where t24.VchrNo.Substring(0, 1) == Region && t24.VchrNo == VCHR_NO && t24.VchrType == "I"
+             &&  t24.Isdeleted != 1
 
              select new InterUnitRecieptModel
              {
@@ -340,7 +349,27 @@ namespace IBS.Repositories
 
         }
 
-       
+        public bool Remove(string VCHR_NO, string CHQ_NO, string CHQ_DT, int BANK_CD, int U_ID)
+        {
+            
+            T24Rv VCHR = context.T24Rvs.Find(VCHR_NO);   
+            if (VCHR == null) { return false; }
+
+            VCHR.Isdeleted = 1;
+            VCHR.Updatedby = U_ID;
+            VCHR.Updateddate = DateTime.Now;
+
+            context.SaveChanges();
+            //DateTime dt = Convert.ToDateTime(CHQ_DT);
+            //T25RvDetail VCHR_Details = context.T25RvDetails.Find(CHQ_NO, dt, BANK_CD);
+            //if (VCHR_Details == null) { return false; }
+            //VCHR_Details.Isdeleted = 1;
+            //VCHR_Details.Updatedby = U_ID;
+            //VCHR_Details.Updateddate = DateTime.Now;
+
+            //context.SaveChanges();
+            return true;
+        }
 
 
     }

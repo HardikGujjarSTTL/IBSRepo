@@ -191,7 +191,14 @@ namespace IBS.Repositories
                 obj.RlyNonrly = model.RlyNonrly;
                 obj.PoNo = model.PoNo;
                 obj.PoDt = model.PoDt;
-                obj.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    obj.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    obj.RecvDt = DateTime.Now;
+                }
                 obj.VendCd = model.VendCd;
                 obj.RlyCd = model.RlyCd;
                 obj.RlyCdDesc = model.RlyCdDesc;
@@ -217,7 +224,14 @@ namespace IBS.Repositories
                 POMaster.RlyNonrly = model.RlyNonrly;
                 POMaster.PoNo = model.PoNo;
                 POMaster.PoDt = model.PoDt;
-                POMaster.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    POMaster.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    POMaster.RecvDt = DateTime.Now;
+                }
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;

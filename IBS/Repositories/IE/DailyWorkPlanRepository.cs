@@ -2,8 +2,11 @@
 using IBS.Interfaces.IE;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.IE
 {
@@ -106,26 +109,6 @@ namespace IBS.Repositories.IE
             DTResult<DailyWorkPlanModel> dTResult = new() { draw = 0 };
             IQueryable<DailyWorkPlanModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-            if (dtParameters.Order != null)
-            {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "CaseNo";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CaseNo";
-                orderAscendingDirection = true;
-            }
             string PlanDt = "", InspWorkType = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PlanDt"]))
             {
@@ -169,28 +152,13 @@ namespace IBS.Repositories.IE
                         DtInspDesire = t17.DtInspDesire.HasValue ? t17.DtInspDesire.Value : null
                     };
 
-            //query = from l in context.NoIeWorkPlans
-            //        where l.IeCd == GetIeCd
-            //        select new DailyWorkPlanModel
-            //        {
-            //            IeCd = l.IeCd,
-            //            CoCd = l.CoCd,
-            //            Reason = l.Reason,
-            //            NwpDt = l.NwpDt,
-            //            RegionCode = l.RegionCode,
-            //            UserId = l.UserId,
-            //            Datetime = l.Datetime
-            //        };
-
             dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
 
             dTResult.recordsFiltered = query.Count();
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
@@ -202,26 +170,6 @@ namespace IBS.Repositories.IE
             DTResult<DailyWorkPlanModel> dTResult = new() { draw = 0 };
             IQueryable<DailyWorkPlanModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-            if (dtParameters.Order != null)
-            {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "CaseNo";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CaseNo";
-                orderAscendingDirection = true;
-            }
             string PlanDt = "", InspWorkType = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PlanDt"]))
             {
@@ -233,65 +181,190 @@ namespace IBS.Repositories.IE
             }
 
             query = from t47 in context.T47IeWorkPlans
-                        join t05 in context.T05Vendors on t47.MfgCd equals t05.VendCd
-                        join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                        where t47.IeCd == GetIeCd && t47.VisitDt == Convert.ToDateTime(PlanDt)
-                        orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno
-                        select new DailyWorkPlanModel
-                        {
-                            VisitDt = t47.VisitDt,
-                            CaseNo = t47.CaseNo,
-                            CallRecvDt = t47.CallRecvDt,
-                            CallSno = t47.CallSno,
-                            VendName = t05.VendName,
-                            MfgPlace = t47.MfgPlace,
-                            MFGCity = t03.City
-                        };
+                    join t05 in context.T05Vendors on t47.MfgCd equals t05.VendCd
+                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                    where t47.IeCd == GetIeCd && t47.VisitDt == Convert.ToDateTime(PlanDt)
+                    orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno
+                    select new DailyWorkPlanModel
+                    {
+                        VisitDt = t47.VisitDt,
+                        CaseNo = t47.CaseNo,
+                        CallRecvDt = t47.CallRecvDt,
+                        CallSno = t47.CallSno,
+                        VendName = t05.VendName,
+                        MfgPlace = t47.MfgPlace,
+                        MFGCity = t03.City
+                    };
 
             dTResult.recordsTotal = query.Count();
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
-
             dTResult.recordsFiltered = query.Count();
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
 
-
-
-        public int DetailsInsertUpdate(DailyWorkPlanModel model)
+        public int DetailsInsertUpdate(DailyWorkPlanModel model, string Region, int GetIeCd)
         {
             int ID = 0;
-            var co_cd = context.T09Ies.Where(x => x.IeCd == model.IeCd).FirstOrDefault();
-            if (co_cd != null)
+            List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.checkedWork);
+            foreach (var details in deserializedData)
             {
-                NoIeWorkPlan obj = new NoIeWorkPlan();
-                obj.IeCd = model.IeCd;
-                obj.CoCd = Convert.ToByte(co_cd.IeCoCd);
-                obj.Reason = model.Reason;
-                obj.NwpDt = model.ReasonDt;
-                obj.RegionCode = model.RegionCode;
-                obj.UserId = model.Createdby;
-                obj.Datetime = DateTime.Now;
-                context.NoIeWorkPlans.Add(obj);
-                context.SaveChanges();
-                ID = Convert.ToInt32(obj.IeCd);
-            }
+                model.CaseNo = details.CaseNo;
+                model.CallRecvDt = details.CallRecvDt;
+                model.CallSno = details.CallSno;
 
+                var query = (from t17 in context.T17CallRegisters
+                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                             join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                             where t17.CaseNo.StartsWith(Region) && t17.IeCd == GetIeCd
+                             && t17.CaseNo == details.CaseNo && t17.CallRecvDt == details.CallRecvDt && t17.CallSno == details.CallSno
+                             select new
+                             {
+                                 t17.CaseNo,
+                                 t17.CallRecvDt,
+                                 t17.CallSno,
+                                 t17.CallStatus,
+                                 t17.MfgCd,
+                                 t17.MfgPlace,
+                                 t17.IeCd,
+                                 t17.CoCd,
+                                 t03.CityCd,
+                                 t03.City,
+                                 t17.DtInspDesire
+                             }).FirstOrDefault();
+                if (query != null)
+                {
+                    if (details.CaseNo != null && details.CallRecvDt != null && details.CallSno > 0)
+                    {
+                        T47IeWorkPlan obj = new T47IeWorkPlan();
+                        obj.IeCd = query.IeCd;
+                        obj.CoCd = Convert.ToByte(query.CoCd);
+                        obj.VisitDt = Convert.ToDateTime(model.PlanDt);
+                        obj.CaseNo = query.CaseNo;
+                        obj.CallRecvDt = query.CallRecvDt;
+                        obj.CallSno = query.CallSno;
+                        obj.MfgCd = query.MfgCd;
+                        obj.MfgPlace = query.MfgPlace;
+                        obj.RegionCode = Region;
+                        obj.UserId = model.Createdby;
+                        obj.Datetime = DateTime.Now;
+
+
+
+
+                        context.T47IeWorkPlans.Add(obj);
+                        context.SaveChanges();
+                        ID = Convert.ToInt32(obj.CallSno);
+                    }
+                }
+            }
             return ID;
         }
 
-        //public string SaveDetails(DailyWorkPlanModel model, string Region)
-        //{
-        //    string str = "";
+        public int DetailsDelete(DailyWorkPlanModel model, string Region, int GetIeCd)
+        {
+            int ID = 0;
+            List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.checkedWork);
+            foreach (var details in deserializedData)
+            {
+                model.CaseNo = details.CaseNo;
+                model.CallRecvDt = details.CallRecvDt;
+                model.CallSno = details.CallSno;
 
-        //    return str;
-        //}
+                var T47 = context.T47IeWorkPlans.Where(x => x.IeCd == GetIeCd && x.VisitDt == Convert.ToDateTime(model.PlanDt) && x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                if (T47 != null)
+                {
+                    context.T47IeWorkPlans.RemoveRange(T47);
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(T47.CallSno);
+                }
+            }
+            return ID;
+        }
+
+        public int NonInspectionSave(DailyWorkPlanModel model, string Region, int GetIeCd)
+        {
+            int ID = 0;
+            int co_cd = 0;
+            var T09 = context.T09Ies.Where(x => x.IeCd == GetIeCd).FirstOrDefault();
+            if (T09 != null)
+            {
+                co_cd = Convert.ToInt32(T09.IeCoCd);
+            }
+
+            DateTime startDate = Convert.ToDateTime(model.FromDt);
+            DateTime endDate = Convert.ToDateTime(model.ToDt);
+            int daysDifference = (int)(endDate - startDate).TotalDays;
+            var result = Enumerable.Range(0, daysDifference + 1)
+                .Select(offset => startDate.AddDays(offset))
+                .Select(date => date.ToString("dd/MM/yyyy"));
+
+            foreach (var wkDt in result)
+            {
+                var Exist = context.T48NiIeWorkPlans.Where(x => x.IeCd == GetIeCd && x.CoCd == Convert.ToByte(co_cd) && x.NiWorkCd == model.NIWorkType && x.NiWorkDt == Convert.ToDateTime(wkDt)).FirstOrDefault();
+                if (Exist == null)
+                {
+                    T48NiIeWorkPlan T48 = new();
+                    T48.IeCd = GetIeCd;
+                    T48.CoCd = Convert.ToByte(co_cd) == 0 ? null : Convert.ToByte(co_cd);
+                    T48.NiWorkCd = model.NIWorkType;
+                    T48.NiOtherDesc = model.OtherDesc;
+                    T48.NiWorkDt = Convert.ToDateTime(wkDt);
+                    T48.RegionCode = Region;
+                    T48.UserId = model.UserId;
+                    T48.Datetime = DateTime.Now.Date;
+
+                    context.T48NiIeWorkPlans.Add(T48);
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(T48.IeCd);
+                }
+            }
+            return ID;
+        }
+
+        public DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd)
+        {
+
+            DTResult<DailyWorkPlanModel> dTResult = new() { draw = 0 };
+            IQueryable<DailyWorkPlanModel>? query = null;
+
+            string PlanDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PlanDt"]))
+            {
+                PlanDt = Convert.ToString(dtParameters.AdditionalValues["PlanDt"]);
+            }
+
+            query = from T48 in context.T48NiIeWorkPlans
+                    where T48.IeCd == GetIeCd && T48.NiWorkDt == Convert.ToDateTime(PlanDt)
+                    orderby T48.NiWorkDt
+                    select new DailyWorkPlanModel
+                    {
+                        NIWorkType = T48.NiWorkCd == "T" ? "Training" :
+                                          T48.NiWorkCd == "L" ? "Leave" :
+                                          T48.NiWorkCd == "O" ? "Office" :
+                                          T48.NiWorkCd == "J" ? "JI" :
+                                          T48.NiWorkCd == "F" ? "Firm Visit" :
+                                          "Others - " + T48.NiOtherDesc,
+                        FromDt = T48.NiWorkDt
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
     }
 }
