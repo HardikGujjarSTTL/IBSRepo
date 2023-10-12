@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace IBS.Controllers
             accountCodesRepository = _accountCodesRepository;
         }
 
+        [Authorization("AccountCodesDirectory", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("AccountCodesDirectory", "Index", "view")]
         public IActionResult Manage(int id)
         {
             AccountCodesDirectoryModel model = new();
@@ -36,6 +39,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("AccountCodesDirectory", "Index", "edit")]
         public IActionResult Manage(AccountCodesDirectoryModel model)
         {
             try
@@ -67,6 +71,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("AccountCodesDirectory", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

@@ -48,14 +48,15 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway</label>
-                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient(1);"})
+                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+
                         <span asp-validation-for="RlyNonrly" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
-                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--",new{ @onChange="RlyCd_Changed();"})
+                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
@@ -69,9 +70,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Case To Be Registered At<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--",new{ @onChange="RegionCode_Changed();"})
+                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="RegionCode" class="text-danger"></span>
-                        <label id="lblEmail"></label>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Stock / Non-Stock (For Railways Only)<i class="text-danger">*</i></label>
@@ -122,7 +122,7 @@
                         <input type="text" class="input" asp-for="txtSPur">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <button type="button" id="btnSPur" class="btn btn-primary formSubBtn" onclick="SearchPurchaser();">Search Purchaser</button>
+                        <button type="button" class="btn btn-primary formSubBtn" onclick="SearchPurchaser();">Search Purchaser</button>
                     </div>
 
                     <div class="col-md-12 mb-3">
@@ -171,8 +171,10 @@
                         <input type="text" class="input" asp-for="PoiCd">
                         @*<input type="text" class="input" id="txtMName">*@
                     </div>
-                    <div class="col-md-4 mb-3" id="dvbtnPOI">
+                    <div class="col-md-4 mb-3">
+
                         <button type="button" id="btnPOI" class="btn btn-primary" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
+
                     </div>
                     <div class="col-md-12 mb-3">
                         <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
@@ -241,19 +243,11 @@
         </form>
     </div>
 </section>
-
-<div class="overlayLoader" style="display: none">
-        <div class="loaderHolder">
-            <div class="lds-dual-ring"></div>
-        </div>
-    </div>
-
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-
-        $(document).ready(function () {
+        $(function () {
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -268,8 +262,8 @@
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
                 FillEditedData();
             }
+            }
         });
-
         function FillEditedData()
         {
             FillAgencyClient(0);
@@ -294,8 +288,56 @@
             //$("#PoiCd").attr("readonly", false);
             }, 2000);
         }
+        }
 
-        function FillAgencyClient(types) {
+        function Save() {
+            if ($("#frmPOMaster").valid()) {
+                if (!SaveSingleDocuments("tab-1")) { return; }
+                $("#frmPOMaster").submit();
+            }
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "POMaster")';
+            }
+
+        };
+
+        function LOASubmit() {
+            $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
+                if (response.status) {
+                    $('#PoNo').val(response.poMaster.PoNo);
+                    $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
+                    $('#Remarks').val(response.poMaster.Remarks);
+                    $('#RecvDt').val(response.poMaster.RecvDt);
+                    $('#StockNonstock').val(response.poMaster.StockNonstock);
+                    $('#PoOrLetter').val(response.poMaster.PoOrLetter);
+                    $('#RlyNonrly').val(response.poMaster.RlyNonrly);
+                    FillAgencyClient();
+                    $('#RlyCd').val(response.poMaster.RlyCd);
+                    if (response.poMaster.RlyNonrly == "R") {
+                        $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
+                        $('#hdnRCD').val(response.poMaster.RlyCd);
+                        $('#txtSPur').val(response.poMaster.RlyCd);
+                        FillPurchaserCd();
+
+                    }
+                    if (response.poMaster.PurchaserCd != "0" && response.poMaster.PurchaserCd != "") {
+                        $('#PurchaserCd').val(response.poMaster.PurchaserCd);
+                    }
+
+                }
+                else {
+                    $('#PoNo').val('');
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function FillAgencyClient(id) {
             var RlyNonrly = $("#RlyNonrly").val();
             $.ajax({
                 url: '@Url.Action("GetAgencyClient", "POMaster")?RlyNonrly=' + RlyNonrly,
@@ -307,21 +349,17 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#RlyCd").html("");
+                    $("#RlyCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
                         $("#RlyCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
                     $("#hdnRCD").val($("#RlyCd").val());
-                    $("#hdnRailway").val($("#RlyCd option:selected").text());
                     $("#RlyCdDesc").css("display", "none");
                 }
+                }
             });
-            if (types == 1) {
-                setTimeout(function () {
-                    fill_consignee_purcher();
-                }, 2000);
-            }
+            FillPurchaserCd();
         }
-
         function RlyCd_Changed() {
             $("#hdnRCD").val($("#RlyCd").val());
             $("#hdnRailway").val($("#RlyCd option:selected").text());
@@ -340,6 +378,7 @@
                 $("#RegionCode").focus();
             }
             fill_consignee_purcher();
+            fill_consignee_purcher();
         }
 
         function fill_consignee_purcher() {
@@ -356,13 +395,14 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#PurchaserCd").html("");
+                    $("#PurchaserCd").append("<option value=''>--Select--</option>");
+                    $("#PurchaserCd").append("<option value='0'>Other</option>");
                     $.each(response.list, function (index, value) {
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
                 }
             });
         }
-
         function RegionCode_Changed() {
             var RegionCode = $("#RegionCode").val();
             if (RegionCode == "N") {
@@ -394,8 +434,9 @@
 
         function FillPurchaserCd(ids) {
             var txtSPur = $("#txtSPur").val();
+            var txtSPur = $("#txtSPur").val();
             $.ajax({
-                url: '@Url.Action("GetPurchaserCd", "POMaster")?consignee=' + txtSPur,
+                url: '@Url.Action("GetVendor", "POMaster")',
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -403,26 +444,46 @@
                 contentType: false
             }).done(function (response) {
                 if (response.status) {
-                    $("#PurchaserCd").html("");
-                    var isExist = false;
-                    $.each(response.list, function (index, value) {
-                        //$("#PurchaserCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
-                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
-                        if (ids != null && value.Value == ids.toString()) {
-                            isExist = true;
-                        }
-                    });
-                    if (isExist) {
-                        $("#PurchaserCd").val(ids);
+                    if (response.list != null) {
+                        $("#VendCd").html("");
+                        $("#VendCd").append("<option value=''>--Select--</option>");
+                        $.each(response.list, function (index, value) {
+                            $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
+                        });
+                        //vendor_status();
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, "No Vendor Found!!!");
                     }
                 }
             });
         }
 
+        //function vendor_status() {
+        //    //var VendCd = $("#VendCd").val();
+        //    $.ajax({
+        //        url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
+        //        type: 'GET',
+        //        cache: false,
+        //        data: '{}',
+        //        processData: false,
+        //        contentType: false
+        //    }).done(function (response) {
+        //        if (response.status) {
+        //            ShowHideMsgNew(response.status, response.responseText);
+        //            $("#txtVend").val("");
+        //        }
+        //        else
+        //        {
+        //            $("#txtVend").val(VendCd);
+        //        }
+        //    });
+        //}
+
         function sameAsVendor() {
             if ($("#chkManuf").prop('checked') == true) {
-                $("#dvbtnPOI").css("display", "none");
-                $("#dvddlManufac").css("display", "block");
+                //$("#dvPlaceOfInspection").css("display", "block");
+                //$("#txtMPOI").attr("disabled", "disabled");
                 fill_manufacturer(0);
                 setTimeout(function () {
                     $("#TempPoiCd").val($("#ddlManufac").val());
@@ -431,13 +492,12 @@
                 GetManufVEND(0);
             }
             else {
-                $("#dvbtnPOI").css("display", "block");
-                $("#dvddlManufac").css("display", "none");
+                //$("#dvPlaceOfInspection").css("display", "none");
+                //$("#txtMPOI").removeAttr("disabled");
                 $("#PoiCd").val("");
                 $("#txtMPOI").val("");
                 $("#ddlManufac").html("");
                 //$("#PoiCd").attr("readonly", true);
-            }
         }
 
         function SelectManufacturer() {
@@ -458,6 +518,7 @@
             $("#TempPoiCd").val($("#ddlManufac").val());
             $("#PoiCd").val($("#ddlManufac").val());
             GetManufVEND($("#PoiCd").val());
+            GetManufVEND(PoiCd);
         }
 
         function ChanedPurchaserCd()
@@ -486,10 +547,11 @@
             }).done(function (response) {
                 if (response.list != null) {
                     $("#ddlManufac").html("");
-                    //$("#ddlManufac").append("<option value=''>--Select--</option>");
+                    $("#ddlManufac").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
                         $("#ddlManufac").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
                     });
+                    //vendor_status();
                 }
                 else {
                     ShowHideMsgNew(response.status, "No Vendor Found!!!");
@@ -497,47 +559,12 @@
             });
         }
 
-        function LOASubmit() {
-            $(document).ajaxSend(function () {
-                $(".overlayLoader").show();
-            });
-            
-            $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
-                if (response.status) {
-                    $('#PoNo').val(response.poMaster.PoNo);
-                    $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
-                    $('#Remarks').val(response.poMaster.Remarks);
-                    $('#RecvDt').val(response.poMaster.RecvDt);
-                    $('#StockNonstock').val(response.poMaster.StockNonstock);
-                    $('#PoOrLetter').val(response.poMaster.PoOrLetter);
-                    $('#RlyNonrly').val(response.poMaster.RlyNonrly);
-                    FillAgencyClient(0);
-                    setTimeout(function () {
-                        $('#RlyCd').val(response.poMaster.RlyCd);
-                    }, 2000);
-
-                    $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
-                    $('#hdnRCD').val(response.poMaster.RlyCd);
-                    $('#txtSPur').val(response.poMaster.RlyCd);
-                    FillPurchaserCd(response.poMaster.PurchaserCd);
-
-                    $("#PoNo").attr("readonly", true);
-                    $("#PoDt").attr("readonly", true);
-                    $("#PoOrLetter").attr("readonly", true);
-                    $("#RlyNonrly").attr("readonly", true);
-                    $("#RlyCd").attr("readonly", true);
-                }
-                else {
-                    $('#PoNo').val('');
-                    ShowHideMsgNew(response.status, response.responseText);
-                }
-            });
-            $(document).ajaxComplete(function () {
-                $(".overlayLoader").hide();
-            });
-        }
-
         function GetManufVEND(id) {
+            //var VendCd = $("#VendCd").val();
+            //if(id > 0)
+            //{
+            //    VendCd=id;
+            //}
             $.ajax({
                 url: '@Url.Action("GetManufVEND", "POMaster")?id=' + id,
                 type: 'GET',
@@ -549,30 +576,25 @@
                 if (response.status) {
                     if (response.getvendor.VendStatus == 'B') {
                         ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
+                        //$("#ddlManufac").css("display", "none");
                     }
-                    else {
                         //$("#PoiCd").val($("#ddlManufac").val());
-                        $("#txtMPOI").val(response.getvendor.VendAdd1);
+                        $("#PoiCd").val($("#ddlManufac").val());
                         //$("#PoiCd").attr("readonly", true);
                     }
                 }
             });
         }
-
-        function Save() {
-            if ($("#frmPOMaster").valid()) {
-                if (!SaveSingleDocuments("tab-1")) { return; }
-                $("#frmPOMaster").submit();
-            }
         }
 
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            if (res.status) {
-                window.location.href = '@Url.Action("Index", "POMaster")';
-            }
-        };
+            });
+        }
+
+        function SelectManufacturer() {
+            var PoiCd = $("#PoiCd").val();
+            fill_manufacturer(PoiCd);
+            GetManufVEND(PoiCd);
+        }
 
     </script>
 }

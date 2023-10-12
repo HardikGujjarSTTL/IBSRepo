@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace IBS.Controllers
             vendorClusterRepository = _vendorClusterRepository;
         }
 
+        [Authorization("VendorCluster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("VendorCluster", "Index", "view")]
         public IActionResult Manage()
         {
             return View(new VendorClusterModel());
@@ -61,6 +64,7 @@ namespace IBS.Controllers
             return Json(Common.GetClustersName(RegionCode, DepartmentName).ToList());
         }
 
+        [Authorization("VendorCluster", "Index", "delete")]
         public IActionResult Delete(string id)
         {
             try
@@ -80,6 +84,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("VendorCluster", "Index", "edit")]
         public IActionResult Manage(VendorClusterModel model, IFormCollection formCollection)
         {
             try
