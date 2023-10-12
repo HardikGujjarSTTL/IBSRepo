@@ -2,13 +2,17 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
     public class RecieptVoucherRepository : IRecieptVoucherRepository
     {
-        public string VNO, Action, VTYPE;
         private readonly ModelContext context;
 
         public RecieptVoucherRepository(ModelContext context)
@@ -16,34 +20,35 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public RecieptVoucherModel FindByID(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT)
+        public RecieptVoucherModel FindByID(string VoucherNo)
         {
-
             RecieptVoucherModel model = new();
-            DateTime dt = Convert.ToDateTime(CHQ_DT);
-            T24Rv tenant2 = context.T24Rvs.Find(VCHR_NO);
-            T25RvDetail tenant = context.T25RvDetails.Find(BANK_CD, CHQ_NO, dt);
+            T24Rv rv = context.T24Rvs.Where(x => x.VchrNo == VoucherNo).FirstOrDefault();
 
-            if (tenant == null && tenant2 == null)
+            if (rv != null)
             {
-
-                throw new Exception("Voucher Record Not found");
+                model.IsNew = false;
+                model.VCHR_NO = rv.VchrNo;
+                model.VCHR_DT = rv.VchrDt;
+                model.BANK_CD = rv.BankCd;
+                model.lstVoucherDetails = (from t25 in context.T25RvDetails
+                                           where t25.VchrNo == model.VCHR_NO
+                                           select new VoucherDetailsModel
+                                           {
+                                               ID = t25.Sno ?? 0,
+                                               CHQ_NO = t25.ChqNo,
+                                               CHQ_DT = t25.ChqDt,
+                                               BANK_CD = t25.BankCd,
+                                               AMOUNT = t25.Amount,
+                                               SAMPLE_NO = t25.SampleNo,
+                                               ACC_CD = t25.AccCd,
+                                               CASE_NO = t25.CaseNo,
+                                               BPO_CD = t25.BpoCd,
+                                               BPO_TYPE = t25.BpoType,
+                                               NARRATION = t25.Narration,
+                                           }).ToList();
             }
-            else
-            {
-                model.VCHR_DT = Convert.ToString(tenant2.VchrDt);
-                model.BANK_CD = tenant.BankCd;
-                model.CHQ_NO = tenant.ChqNo;
-                model.CHQ_DT = Convert.ToString(tenant.ChqDt);
-                model.BANK_NAME = Convert.ToString(tenant.BankCd);
-                model.AMOUNT = Convert.ToDouble(tenant.Amount);
-                model.SAMPLE_NO = tenant.SampleNo;
-                model.ACC_CD = Convert.ToString(tenant.AccCd);
-                model.CASE_NO = tenant.CaseNo;
-                model.NARRATION = tenant.Narration;
-                model.BPO_CD = tenant.BpoCd;
 
-            }
             return model;
         }
 
@@ -51,262 +56,52 @@ namespace IBS.Repositories
         {
             DTResult<RecieptVoucherModel> dTResult = new() { draw = 0 };
             IQueryable<RecieptVoucherModel>? query = null;
+            List<RecieptVoucherModel>? lstQuery = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            if (dtParameters.Order != null)
+            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
             {
-                // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "VCHR_NO";
-                }
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "VCHR_DT";
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
-                // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "VCHR_NO";
+                orderCriteria = "VCHR_DT";
                 orderAscendingDirection = true;
             }
-            query = from l in context.ViewVoucherLists
-                        //join i in context.T25RvDetails on l.VchrNo equals i.VchrNo
-                        //join j in context.T95AccountCodes on i.AccCd equals j.AccCd
-                        //join k in context.T12BillPayingOfficers on i.BpoCd equals k.BpoCd
-                        //join m in context.T94Banks on i.BankCd equals m.BankCd
-                        //join c in context.T03Cities on k.BpoCityCd equals c.CityCd
-                        //where l.Isdeleted == 0  (nvl(T24.VCHR_TYPE, 'X') <> 'I')
 
-                    select new RecieptVoucherModel
-                    {
-                        VCHR_NO = l.VchrNo,
-                        //SNO = Convert.ToInt32(l.Sno),
-                        CHQ_NO = l.ChqNo,
-                        CHQ_DT = l.ChqDt,
-                        AMOUNT = Convert.ToDouble(l.Amount),
-                        BANK_NAME = l.BankName,
-                        BANK_CD = l.BankCd,
-                        BPO_CD = l.BpoName,
-                        ACC_CD = Convert.ToString(l.AccDesc),
-                        CASE_NO = l.CaseNo,
-                        NARRATION = l.Narration,
-                    };
+            lstQuery = (from t24 in context.T24Rvs
+                        join t94 in context.T94Banks on t24.BankCd equals t94.BankCd
+                        where t24.Isdeleted != 1
+                        select new RecieptVoucherModel
+                        {
+                            VCHR_NO = t24.VchrNo,
+                            VCHR_DT = t24.VchrDt,
+                            BANK_NAME = t94.FmisBankCd.ToString().PadLeft(4, '0') + "-" + t94.BankName,
+                        }).ToList();
+
+            query = lstQuery.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.VCHR_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.CHQ_NO).ToLower().Contains(searchBy.ToLower())
-                );
+                query = query.Where(w => (w.VCHR_NO != null && w.VCHR_NO.ToLower().Contains(searchBy.ToLower()))
+                    || (w.BANK_NAME != null && w.BANK_NAME.ToLower().Contains(searchBy.ToLower()))
+            );
 
             dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
             dTResult.draw = dtParameters.Draw;
+
             return dTResult;
-        }
-
-        public string VoucherDetailsSave(RecieptVoucherModel model, string Region)
-        {
-            DTResult<RecieptVoucherModel> dTResult = new() { draw = 0 };
-            IQueryable<RecieptVoucherModel>? query = null;
-
-            string VCHR_NO = "";
-            string CASE_NO = "";
-
-            if (model.VCHR_NO == null)
-            {
-
-
-                string vchr_dt = model.VCHR_DT.ToString() ?? string.Empty;
-                string ss = Region + vchr_dt.Substring(8, 2) + vchr_dt.Substring(3, 2);
-                string ss1 = ss.Substring(Convert.ToInt32(model.VCHR_NO), 5);
-                var voucher1 = context.T24Rvs
-                  .Where(r => r.VchrNo.StartsWith(ss))
-                  .Select(r => r.VchrNo.Substring(5, 8))
-                  .AsEnumerable()
-                  .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0)
-                  .DefaultIfEmpty(0)
-                  .Max() + 1;
-
-                if (voucher1 != null)
-                {
-                    VCHR_NO = ss + 00 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
-                }
-                else
-                {
-                    VCHR_NO = ss + (Convert.ToInt32(0) + 1);
-                }
-            }
-            var GetValue = context.T24Rvs.Find(model.VCHR_NO);
-
-            var GetValue2 = context.T25RvDetails.Find(Convert.ToInt32(model.BANK_CD), model.CHQ_NO, Convert.ToDateTime(model.CHQ_DT));
-
-            var GetValue3 = context.T13PoMasters.Find(model.CASE_NO);
-
-            if (GetValue == null)
-            {
-                T24Rv data = new T24Rv();
-                data.VchrNo = Convert.ToString(VCHR_NO);
-                data.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
-                data.BankCd = Convert.ToByte(model.BANK_CD);
-                data.VchrType = model.VCHR_TYPE;
-                context.T24Rvs.Add(data);
-                context.SaveChanges();
-                VCHR_NO = Convert.ToString(data.VchrNo);
-
-                T13PoMaster insert = new T13PoMaster();
-                insert.CaseNo = model.CASE_NO;
-                context.T13PoMasters.Add(insert);
-                context.SaveChanges();
-
-                T25RvDetail obj = new T25RvDetail();
-                obj.VchrNo = Convert.ToString(VCHR_NO);
-                obj.ChqNo = model.CHQ_NO;
-                obj.BankCd = Convert.ToByte(model.BANK_NAME);
-                obj.ChqDt = Convert.ToDateTime(DateTime.ParseExact(model.CHQ_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
-                obj.Amount = Convert.ToDecimal(model.AMOUNT);
-                obj.SampleNo = model.SAMPLE_NO;
-                //obj.AccCd = Convert.ToByte(model.ACC_CD);
-                obj.CaseNo = model.CASE_NO;
-                obj.Narration = model.NARRATION;
-                obj.BpoCd = model.BPO_CD;
-                //  obj.CaseNo = model.CASE_NO;
-                obj.BpoCd = model.BPO_CD;
-                obj.BpoType = model.BPO_TYPE;
-
-                context.T25RvDetails.Add(obj);
-                context.SaveChanges();
-
-
-
-
-
-            }
-            else
-            {
-                DateTime parsedDate;
-                DateTime vdt;
-                DateTime.TryParseExact(model.CHQ_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate);
-                DateTime.TryParseExact(model.VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out vdt);
-                VCHR_NO = model.VCHR_NO;
-
-                T24Rv data = new T24Rv();
-                GetValue.VchrNo = Convert.ToString(VCHR_NO);
-                // GetValue.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
-                GetValue.BankCd = Convert.ToByte(model.BANK_CD);
-                GetValue.VchrType = model.VCHR_TYPE;
-                // context.T24Rvs.Add(data);
-                context.SaveChanges();
-                VCHR_NO = Convert.ToString(GetValue.VchrNo);
-
-                T25RvDetail obj = new T25RvDetail();
-                GetValue2.VchrNo = Convert.ToString(VCHR_NO);
-                GetValue2.BankCd = Convert.ToByte(model.BANK_NAME);
-                obj.ChqDt = parsedDate;
-                GetValue2.Amount = Convert.ToDecimal(model.AMOUNT);
-                GetValue2.SampleNo = model.SAMPLE_NO;
-                GetValue2.AccCd = Convert.ToInt32(model.ACC_CD);
-                GetValue2.CaseNo = model.CASE_NO;
-                GetValue2.Narration = model.NARRATION;
-                GetValue2.BpoCd = model.BPO_CD;
-                // GetValue2.CaseNo = model.CASE_NO;
-                GetValue2.BpoCd = model.BPO_CD;
-                GetValue2.BpoType = model.BPO_TYPE;
-                GetValue2.Narration = model.NARRATION;
-
-                // context.T25RvDetails.Add(obj);
-                context.SaveChanges();
-
-
-            }
-            return VCHR_NO;
-        }
-
-        public string ChkCSNO(string txtCSNO, string lstBPO, out string Narrt)
-        {
-
-            var query = from p in context.T13PoMasters
-                        join b in context.T14PoBpos on p.CaseNo equals b.CaseNo into bpoJoin
-                        from bpo in bpoJoin.DefaultIfEmpty()
-                        join v in context.T05Vendors on p.VendCd equals v.VendCd
-                        where p.CaseNo == txtCSNO
-                        group new { p, bpo, v } by new { p.CaseNo, bpo.BpoCd, v.VendName } into g
-                        select new
-                        {
-                            CaseNo = g.Key.CaseNo,
-                            BpoCd = g.Key.BpoCd,
-                            VendName = g.Key.VendName
-                        };
-            var result = query.FirstOrDefault();
-            if (query == null)
-            {
-                Narrt = "";
-                return "0";
-            }
-            else
-            {
-                Narrt = query.FirstOrDefault().VendName;
-            }
-
-
-            return Narrt;
-        }
-
-        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO)
-        {
-
-
-
-            var query = from b in context.T12BillPayingOfficers
-                        join p in context.T14PoBpos on b.BpoCd equals p.BpoCd
-                        join d in context.T03Cities on b.BpoCityCd equals d.CityCd
-                        where p.CaseNo == txtCSNO.ToUpper()
-                        orderby b.BpoName
-                        select new
-                        {
-                            BpoCd = b.BpoCd,
-                            BpoName = b.BpoName + "/" + (b.BpoAdd ?? "") + "/" + (d.Location ?? d.City) + "/" + b.BpoRly
-                        };
-
-            var distinctQuery = query.Distinct();
-
-            var DropdownValues = distinctQuery.AsEnumerable().Select(item => new BPOlist
-            {
-                value = item.BpoCd.ToString(),
-                text = item.BpoName
-            }).ToList();
-
-            return DropdownValues;
-
-        }
-
-        public string Insert(RecieptVoucherModel model, string VoucherDate, string Bank_Code, string VoucherType, string Region)
-        {
-            string VCHR_NO = "";
-
-            string vchr_dt = VoucherDate.ToString() ?? string.Empty;
-            string ss = Region + vchr_dt.Substring(8, 2) + vchr_dt.Substring(4, 2);
-            string ss1 = ss.Substring(Convert.ToInt32(model.VCHR_NO), 5);
-            var voucher1 = context.T24Rvs
-                .Where(r => r.VchrNo.StartsWith(ss))
-                .Select(r => r.VchrNo.Substring(5, 8))
-                .AsEnumerable()
-                .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0)
-                .DefaultIfEmpty(0)
-                .Max() + 1;
-            if (voucher1 != null)
-            {
-                VCHR_NO = ss + "00" + voucher1.ToString();
-            }
-            else
-            {
-                VCHR_NO = ss + "001";
-            }
-            return null;
         }
 
         public string GetAccountName(int AccCd)
@@ -319,16 +114,21 @@ namespace IBS.Repositories
             return context.T94Banks.Where(x => x.BankCd == BankCd).Select(x => x.BankName).FirstOrDefault();
         }
 
+        public string GetFMISBankCd(int BankCd)
+        {
+            return context.T94Banks.Where(x => x.BankCd == BankCd).Select(x => x.FmisBankCd.ToString().PadLeft(4, '0')).FirstOrDefault();
+        }
+
         public string GetBPOName(string BpoCd)
         {
             string BpoName = string.Empty;
             var obj = (from bpo in context.T12BillPayingOfficers
-                           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                           where bpo.BpoCd == BpoCd
-                           select new
-                           {
-                               BPO_NAME = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
-                           }).FirstOrDefault();
+                       join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                       where bpo.BpoCd == BpoCd
+                       select new
+                       {
+                           BPO_NAME = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                       }).FirstOrDefault();
 
             if (obj != null) BpoName = obj.BPO_NAME.ToString();
 
@@ -395,5 +195,230 @@ namespace IBS.Repositories
                     }).FirstOrDefault();
         }
 
+        public bool SaveDetails(RecieptVoucherModel model)
+        {
+            int wUnit_Cd = 0, wSBU_Cd = 0;
+
+            if (model.Region == "N") { wUnit_Cd = 8; wSBU_Cd = 20; }
+            else if (model.Region == "W") { wUnit_Cd = 5; wSBU_Cd = 17; }
+            else if (model.Region == "E") { wUnit_Cd = 6; wSBU_Cd = 18; }
+            else if (model.Region == "S") { wUnit_Cd = 7; wSBU_Cd = 19; }
+            else if (model.Region == "C") { wUnit_Cd = 10; wSBU_Cd = 23; }
+            else { wUnit_Cd = 0; wSBU_Cd = 0; }
+
+            if (model.IsNew)
+            {
+                model.VCHR_NO = GenerateVoucherNo(model.Region, model.VCHR_DT ?? DateTime.Now.Date);
+
+                T24Rv rv = new()
+                {
+                    VchrNo = model.VCHR_NO,
+                    VchrDt = model.VCHR_DT,
+                    BankCd = model.BANK_CD,
+                    VchrType = model.VCHR_TYPE,
+                    Createdby = model.Createdby,
+                    Createddate = DateTime.Now,
+                    Isdeleted = 0
+                };
+
+                context.T24Rvs.Add(rv);
+                context.SaveChanges();
+
+                if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
+                {
+                    int index = 0;
+                    model.lstVoucherDetails.ForEach(i => { index = index + 1; i.ID = index; });
+
+                    foreach (var item in model.lstVoucherDetails)
+                    {
+                        T25RvDetail rvDetails = new()
+                        {
+                            VchrNo = model.VCHR_NO,
+                            Sno = item.ID,
+                            BankCd = item.BANK_CD,
+                            ChqNo = item.CHQ_NO,
+                            ChqDt = item.CHQ_DT,
+                            Amount = item.AMOUNT,
+                            AccCd = item.ACC_CD,
+                            AmountAdjusted = 0,
+                            SuspenseAmt = item.AMOUNT,
+                            Narration = item.NARRATION,
+                            SampleNo = item.SAMPLE_NO,
+                            BpoCd = item.BPO_CD,
+                            BpoType = item.BPO_TYPE,
+                            CaseNo = item.CASE_NO,
+                            AmtTransferred = 0,
+                            UserId = model.UserName,
+                            Createdby = model.Createdby,
+                            Createddate = DateTime.Now,
+                        };
+                        context.T25RvDetails.Add(rvDetails);
+
+                        string wAcc_Cd = "", wProject_Cd = "", wSub_Cd = "";
+
+                        if (item.ACC_CD == 2709) { wAcc_Cd = "2709"; wProject_Cd = "2203"; wSub_Cd = "1"; }
+                        else if (item.ACC_CD > 2000 & item.ACC_CD < 2300) { wAcc_Cd = "2203"; wProject_Cd = item.ACC_CD.ToString(); wSub_Cd = "0"; }
+                        else if (item.ACC_CD > 3000 & item.ACC_CD < 3100) { wAcc_Cd = item.ACC_CD.ToString(); wProject_Cd = "2204"; wSub_Cd = "1"; }
+                        else if (item.ACC_CD == 2210) { wAcc_Cd = "2093"; wProject_Cd = "2203"; wSub_Cd = "0"; }
+                        else if (item.ACC_CD == 2212) { wAcc_Cd = "2094"; wProject_Cd = "2203"; wSub_Cd = "0"; }
+                        else { wAcc_Cd = "0000"; wProject_Cd = "0000"; wSub_Cd = ""; }
+
+                        GeneralFile gnrFile = new()
+                        {
+                            UnitCode = wUnit_Cd,
+                            CurryCode = 0,
+                            VchrNumb = Convert.ToInt32(model.VCHR_NO.Substring(5, 3)),
+                            VchrDate = model.VCHR_DT,
+                            Tc = 2,
+                            AccCode = Convert.ToInt32(wAcc_Cd),
+                            SubCode = wSub_Cd,
+                            RefNo = 1,
+                            ProjectCode = Convert.ToInt32(wProject_Cd),
+                            SbuCode = Convert.ToByte(wSBU_Cd),
+                            Narration = item.NARRATION.Length > 30 ? item.NARRATION.Substring(0, 30) : item.NARRATION,
+                            Amount = item.AMOUNT,
+                            ChequeNo = item.CHQ_NO.Length > 6 ? item.CHQ_NO.Substring(0, 6) : item.CHQ_NO,
+                            BankCode = Convert.ToInt32(GetFMISBankCd(model.BANK_CD ?? 0)),
+                            PartyName = GetBankName(item.BANK_CD) + " || " + Common.ConvertDateFormat(item.CHQ_DT),
+                            Region = model.Region,
+                            VchrNoT25 = model.VCHR_NO,
+                            SnoT25 = Convert.ToInt32(item.ID)
+                        };
+
+                        context.GeneralFiles.Add(gnrFile);
+                    }
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                T24Rv rv = context.T24Rvs.Where(x => x.VchrNo == model.VCHR_NO).FirstOrDefault();
+
+                if (rv != null)
+                {
+                    rv.VchrDt = model.VCHR_DT;
+                    rv.BankCd = model.BANK_CD;
+                    rv.Updatedby = model.Updatedby;
+                    rv.Updateddate = DateTime.Now;
+
+                    context.SaveChanges();
+                }
+
+                if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
+                {
+                    foreach (var item in model.lstVoucherDetails)
+                    {
+                        string wAcc_Cd = "", wProject_Cd = "", wSub_Cd = "";
+
+                        if (item.ACC_CD == 2709) { wAcc_Cd = "2709"; wProject_Cd = "2203"; wSub_Cd = "1"; }
+                        else if (item.ACC_CD > 2000 & item.ACC_CD < 2300) { wAcc_Cd = "2203"; wProject_Cd = item.ACC_CD.ToString(); wSub_Cd = "0"; }
+                        else if (item.ACC_CD > 3000 & item.ACC_CD < 3100) { wAcc_Cd = item.ACC_CD.ToString(); wProject_Cd = "2204"; wSub_Cd = "1"; }
+                        else if (item.ACC_CD == 2210) { wAcc_Cd = "2093"; wProject_Cd = "2203"; wSub_Cd = "0"; }
+                        else if (item.ACC_CD == 2212) { wAcc_Cd = "2094"; wProject_Cd = "2203"; wSub_Cd = "0"; }
+                        else { wAcc_Cd = "0000"; wProject_Cd = "0000"; wSub_Cd = ""; }
+
+                        if (item.IsNew)
+                        {
+                            T25RvDetail rvDetails = new()
+                            {
+                                VchrNo = model.VCHR_NO,
+                                Sno = item.ID,
+                                BankCd = item.BANK_CD,
+                                ChqNo = item.CHQ_NO,
+                                ChqDt = item.CHQ_DT,
+                                Amount = item.AMOUNT,
+                                AccCd = item.ACC_CD,
+                                AmountAdjusted = 0,
+                                SuspenseAmt = item.AMOUNT,
+                                Narration = item.NARRATION,
+                                SampleNo = item.SAMPLE_NO,
+                                BpoCd = item.BPO_CD,
+                                BpoType = item.BPO_TYPE,
+                                CaseNo = item.CASE_NO,
+                                AmtTransferred = 0,
+                                UserId = model.UserName,
+                                Createdby = model.Createdby,
+                                Createddate = DateTime.Now,
+                            };
+                            context.T25RvDetails.Add(rvDetails);
+
+                            GeneralFile gnrFile = new()
+                            {
+                                UnitCode = wUnit_Cd,
+                                CurryCode = 0,
+                                VchrNumb = Convert.ToInt32(model.VCHR_NO.Substring(5, 3)),
+                                VchrDate = model.VCHR_DT,
+                                Tc = 2,
+                                AccCode = Convert.ToInt32(wAcc_Cd),
+                                SubCode = wSub_Cd,
+                                RefNo = 1,
+                                ProjectCode = Convert.ToInt32(wProject_Cd),
+                                SbuCode = Convert.ToByte(wSBU_Cd),
+                                Narration = item.NARRATION.Length > 30 ? item.NARRATION.Substring(0, 30) : item.NARRATION,
+                                Amount = item.AMOUNT,
+                                ChequeNo = item.CHQ_NO.Length > 6 ? item.CHQ_NO.Substring(0, 6) : item.CHQ_NO,
+                                BankCode = Convert.ToInt32(GetFMISBankCd(model.BANK_CD ?? 0)),
+                                PartyName = GetBankName(item.BANK_CD) + " || " + Common.ConvertDateFormat(item.CHQ_DT),
+                                Region = model.Region,
+                                VchrNoT25 = model.VCHR_NO,
+                                SnoT25 = Convert.ToInt32(item.ID)
+                            };
+                        }
+                        else
+                        {
+                            T25RvDetail rvDetails = context.T25RvDetails.Where(x => x.VchrNo == model.VCHR_NO && x.Sno == item.ID).FirstOrDefault();
+
+                            if (rvDetails != null)
+                            {
+                                rvDetails.BankCd = item.BANK_CD;
+                                rvDetails.ChqNo = item.CHQ_NO;
+                                rvDetails.ChqDt = item.CHQ_DT;
+                                rvDetails.Amount = item.AMOUNT;
+                                rvDetails.AccCd = item.ACC_CD;
+                                rvDetails.AmountAdjusted = 0;
+                                rvDetails.SuspenseAmt = item.AMOUNT;
+                                rvDetails.Narration = item.NARRATION;
+                                rvDetails.SampleNo = item.SAMPLE_NO;
+                                rvDetails.BpoCd = item.BPO_CD;
+                                rvDetails.BpoType = item.BPO_TYPE;
+                                rvDetails.CaseNo = item.CASE_NO;
+                                rvDetails.AmtTransferred = 0;
+                                rvDetails.UserId = model.UserName;
+                                rvDetails.Updatedby = model.Updatedby;
+                                rvDetails.Updateddate = DateTime.Now;
+                            }
+
+                            GeneralFile gnrFile = context.GeneralFiles.Where(x => x.VchrNoT25 == model.VCHR_NO && x.SnoT25 == item.ID && x.PostingStatus == null).FirstOrDefault();
+
+                            if(gnrFile != null)
+                            {
+                                gnrFile.AccCode = Convert.ToInt32(wAcc_Cd);
+                                gnrFile.PartyName = GetBankName(item.BANK_CD) + " || " + Common.ConvertDateFormat(item.CHQ_DT);
+                                gnrFile.ChequeNo = item.CHQ_NO.Length > 6 ? item.CHQ_NO.Substring(0, 6) : item.CHQ_NO;
+                                gnrFile.Narration = item.NARRATION.Length > 30 ? item.NARRATION.Substring(0, 30) : item.NARRATION;
+                                gnrFile.Amount = item.AMOUNT;
+                            }
+
+                        }
+                    }
+                    context.SaveChanges();
+                }
+            }
+
+            return true;
+        }
+
+        public string GenerateVoucherNo(string Region, DateTime VoucherDate)
+        {
+            string strVoucherDate = Common.ConvertDateFormat(VoucherDate);
+            string ss = Region + strVoucherDate.Substring(8, 2) + strVoucherDate.Substring(3, 2);
+
+            var query = context.T24Rvs.Where(r => r.VchrNo.StartsWith(ss)).Select(r => r.VchrNo.Substring(5, 8)).AsEnumerable()
+                          .Select(substring => int.TryParse(substring, out int parsedInt) ? parsedInt : 0).DefaultIfEmpty(0)
+                          .Max() + 1;
+
+            return ss + query.ToString("000");
+
+        }
     }
 }

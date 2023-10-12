@@ -4,6 +4,8 @@ namespace IBS.Models
 {
     public class Rly_Designation_FormModel
     {
+        public int ID { get; set; }
+
         [Display (Name = "Designation Code")]
         [Required]
         public string RlyDesigCd { get; set; } = null!;
@@ -23,8 +25,5 @@ namespace IBS.Models
         public DateTime? Createddate { get; set; }
 
         public DateTime? Updateddate { get; set; }
-
-        public bool IsNew { get; set; } = true;
-
     }
 }

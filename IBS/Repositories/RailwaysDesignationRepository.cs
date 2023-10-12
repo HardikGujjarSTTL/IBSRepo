@@ -13,18 +13,18 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public Rly_Designation_FormModel FindByID(string RlyDesigCd)
+        public Rly_Designation_FormModel FindByID(int id)
         {
             Rly_Designation_FormModel model = new();
-            T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Find(RlyDesigCd);
+            T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Where(x => x.Id == id).FirstOrDefault();
 
             if (railwayDesignation == null)
                 return model;
             else
             {
+                model.ID = railwayDesignation.Id;
                 model.RlyDesigCd = railwayDesignation.RlyDesigCd;
                 model.RlyDesigDesc = railwayDesignation.RlyDesigDesc;
-                model.IsNew = false;
                 return model;
             }
         }
@@ -59,6 +59,7 @@ namespace IBS.Repositories
                     && (!string.IsNullOrEmpty(Designation) ? t90.RlyDesigDesc.ToLower().Contains(Designation.ToLower()) : true)
                     select new Rly_Designation_FormModel
                     {
+                        ID = t90.Id,
                         RlyDesigCd = t90.RlyDesigCd,
                         RlyDesigDesc = t90.RlyDesigDesc,
                     };
@@ -83,7 +84,7 @@ namespace IBS.Repositories
 
         public bool IsDuplicate(Rly_Designation_FormModel model)
         {
-            if (model.IsNew)
+            if (model.ID == 0)
             {
                 return context.T90RlyDesignations.Any(x => x.RlyDesigCd == model.RlyDesigCd);
             }
@@ -95,7 +96,7 @@ namespace IBS.Repositories
 
         public void SaveDetails(Rly_Designation_FormModel model)
         {
-            if (model.IsNew)
+            if (model.ID == 0)
             {
                 T90RlyDesignation railwayDesignation = new()
                 {
@@ -112,7 +113,7 @@ namespace IBS.Repositories
             }
             else
             {
-                T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Find(model.RlyDesigCd);
+                T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Where(x => x.Id == model.ID).FirstOrDefault();
 
                 if (railwayDesignation != null)
                 {
@@ -127,21 +128,30 @@ namespace IBS.Repositories
             }
         }
 
-        public bool Remove(string RlyDesigCd)
+        public bool Remove(int id)
         {
-            if (context.T90RlyDesignations.Any(x => x.RlyDesigCd == RlyDesigCd))
+            if (context.T90RlyDesignations.Any(x => x.Id == id))
             {
-                context.T90RlyDesignations.RemoveRange(context.T90RlyDesignations.Where(x => x.RlyDesigCd == RlyDesigCd).ToList());
+                context.T90RlyDesignations.RemoveRange(context.T90RlyDesignations.Where(x => x.Id == id).ToList());
                 context.SaveChanges();
             }
             return true;
         }
 
-        public string IsExistsRailwayDesignationCode(string RlyDesigCd)
+        public string IsExistsRailwayDesignationCode(int id)
         {
-            if (context.T06Consignees.Any(x => x.ConsigneeDesig == RlyDesigCd && x.ConsigneeType == "R"))
+            T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Where(x => x.Id == id).FirstOrDefault();
+
+            if(railwayDesignation != null)
             {
-                return "Consignee Master";
+                if (context.T06Consignees.Any(x => x.ConsigneeDesig == railwayDesignation.RlyDesigCd && x.ConsigneeType == "R"))
+                {
+                    return "Consignee Master";
+                }
+                else
+                {
+                    return "";
+                }
             }
             else
             {

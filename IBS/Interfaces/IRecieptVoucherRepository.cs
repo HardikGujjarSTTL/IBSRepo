@@ -7,15 +7,7 @@ namespace IBS.Interfaces
     {
         public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters);
 
-        public RecieptVoucherModel FindByID(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT);
-
-        public string VoucherDetailsSave(RecieptVoucherModel model, string Region);
-
-        public string ChkCSNO(string txtCSNO, string lstBPO, out string Narrt);
-
-        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO);
-
-        public string Insert(RecieptVoucherModel model, string VoucherDate, string Bank_Code, string VoucherType, string Region);
+        public RecieptVoucherModel FindByID(string VoucherNo);
 
         public string GetAccountName(int AccCd);
 
@@ -26,5 +18,9 @@ namespace IBS.Interfaces
         public IEnumerable<SelectListItem> GetBPO(int Acc_cd, string BpoType, string BPO_cd);
 
         public BPODetailsModel FindBPODetails(string CaseNo);
+
+        public bool SaveDetails(RecieptVoucherModel model);
+
+        public string GenerateVoucherNo(string Region, DateTime VoucherDate);
     }
 }

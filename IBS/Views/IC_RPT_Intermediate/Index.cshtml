@@ -1,0 +1,267 @@
+﻿@{
+    ViewData["Title"] = "IC REPORT EDIT FORM";
+    string clsView = "";
+    //if (Model.ErrorMsg != null)
+    //{
+    clsView = "Permission_View";
+    //}
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>IC REPORT EDIT FORM</h2>
+    </div>
+</div>
+<div class="@clsView">
+    <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
+        <div class="accordion-body">
+            <table class="borderGrid mb-2">
+                <tr>
+                    <td>
+                        <label for="Reference">Case No. : </label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblBank">N22010890</label>
+                    </td>
+                    <td>
+                        <label for="Reference">Call Serial No : </label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblChqNo">80</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">Call Date : </label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblChqDate">02/08/2022</label>
+                    </td>
+                    <td>
+                        <label for="Reference">PO No. : </label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblVNo">02211400100166</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Reference">PO Date :</label>
+                    </td>
+                    <td>
+                        <label class="text-danger" id="lblJVNO">02/08/2022</label>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="row my-0 m-lg-1" style="border: 1px solid;">
+                <label for="Reference">PO AMENDMENTS</label>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amendments</label>
+                    <input type="text" class="input" id="TxtAmnds" maxlength="12" /> @*asp-for="test"*@
+                    @*<span asp-validation-for="test" class="text-danger"></span>*@
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Date</label>
+                    <input type="text" class="input datepicker" id="TxtAmndsDate" placeholder="DD/MM/YYYY" />
+                    @*<span asp-validation-for="test" class="text-danger"></span>*@
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Save Ammendments</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0" id="listAmendments">
+                <div class="col-md-12">
+                    <div class="task-listinput">
+                        <div class="dash-table mb-0">
+                            <table id="dtList" class="table-responsive mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Amendments</th>
+                                        <th>Date</th>
+                                        <th class="center padR10">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Consignee</label>
+                    @Html.DropDownList("dpConsignee", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Item</label>
+                    @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">BK No.</label>
+                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">SET No.</label>
+                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Consignee Manufacture Type : </label>
+                    @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Consignee DESCRIPTION : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Bill Paying Officer DESCRIPTION : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Governing Bill Paying Authority : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Manufacturer DESCRIPTION : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Purchasing Authority DESCRIPTION : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Offered Inst. No. : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">ITEM UNIT (UOM) : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">ITEM DESCRIPTION : </label>
+                    <textarea id="txtConsDesc" maxlength="750"></textarea>
+                    @*<input type="text" class="input"  />*@
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">ITEM REMARK : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">QTY ORDER : </label>
+                    <label id="lblQtyOrder">347</label>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">CUM QTY PREV OFFERED : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
+                    <span class="text-danger">Only numeric is allowed!</span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">CUM QTY PREV PASSED : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
+                    <span class="text-danger">Only numeric is allowed!</span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">QTY TO INSP : </label>
+                    <label id="lblQtyINSP">347</label>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">QTY PASSED : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
+                    <span class="text-danger">Only numeric is allowed!</span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">QTY REJECTED : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
+                    <span class="text-danger">Only numeric is allowed!</span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">QTY DUE : </label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
+                    <span class="text-danger">Only numeric is allowed!</span>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Remark<span class="text-danger">* (Max 400 Chars)</span></label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <label for="Reference">Holograms<span class="text-danger">* (Max 250 Chars)</span></label>
+                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <span class="text-danger">* Enter series of Holograms Used on material and if Holograms not used then kindly mention type of seal & it's No..</span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Case Status Date</label>
+                    <input type="text" class="input datepicker" id="txtConsDesc" maxlength="750" />
+                </div>
+                <div class="col-md-9 mb-3">
+                    <label for="Reference"> </label>
+                    <span style="font-size:13px;">(Current Date Will be the Case Status Date i.e Date of Cancellation/Acceptance..etc)</span>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Case Lab report receipt Date</label>
+                    <input type="text" class="input datepicker" id="txtLabReceDate" placeholder="(DD/MM/YYYY)" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Passed instt. Note</label>
+                    <input type="text" class="input" id="txtConsDesc" />
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Visits Dates</label>
+                    <input type="text" class="input" id="txtConsDesc" />
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-10 mb-3">
+                    <label for="Reference">IE Stamp</label>
+                    <div style="display:flex;">
+                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    </div>
+                </div>
+            </div>
+
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" id="btnSave">Save</button>
+                <button type="button" class="save-btn" id="btnRefresh">Refresh</button>
+                <button type="button" class="save-btn" id="btnCancel">Cancel</button>
+                <button type="button" class="save-btn" id="btnReport">Show Report</button>
+            </div>
+        </div>
+    </form>
+</div>

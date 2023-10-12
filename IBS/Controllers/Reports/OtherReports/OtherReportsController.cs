@@ -70,6 +70,7 @@ namespace IBS.Controllers.Reports.OtherReports
 
             if (formCollection.Keys.Contains("hdnReportType")) model.ReportType = formCollection["hdnReportType"];
             model.ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(model.ReportType);
+            
             if (model.ReportType == "C" || model.ReportType == "I")
             {
                 if (formCollection.Keys.Contains("hdnmonthtxt") && !string.IsNullOrEmpty(formCollection["hdnmonthtxt"])) model.monthChar = Convert.ToString(formCollection["hdnmonthtxt"]);

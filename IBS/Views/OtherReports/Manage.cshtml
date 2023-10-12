@@ -16,7 +16,7 @@
 </head>
 <body>
     <p align="right">
-        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" value="Go Back" /></a>
+        <a href="@Html.Raw(@HttpUtility.UrlDecode(gobackUrl))"><input type="button" class="commonBtn" id="btnGoBack" value="Go Back" /></a>
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
@@ -40,10 +40,12 @@
 
     $(document).ready(function () {
         if ('@ReportType' == 'COWISEIE') {
+            //$("#btnGoBack").css("display","none");
             loadCOWISEIE();
             fileName = 'Controlling_Office_Wise_IE';
         } 
         else if ('@ReportType' == 'COIEWiseCalls'){
+            $("#btnGoBack").css("display", "none");
             loadCOIEWiseCalls();
             fileName = 'Co_Ie_Wise_Calls';
         } else if ('@ReportType' == 'C' || '@ReportType' == 'I') {

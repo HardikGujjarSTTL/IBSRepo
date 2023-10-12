@@ -1,7 +1,5 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -21,11 +19,11 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult Manage(string id)
+        public IActionResult Manage(int id)
         {
             Rly_Designation_FormModel model = new();
 
-            if (!string.IsNullOrEmpty(id))
+            if (id > 0)
             {
                 model = railwaysDesignationRepository.FindByID(id);
             }
@@ -47,7 +45,7 @@ namespace IBS.Controllers
             {
                 if (!railwaysDesignationRepository.IsDuplicate(model))
                 {
-                    if (model.IsNew)
+                    if (model.ID == 0)
                     {
                         model.Createdby = UserId;
                         model.UserId = USER_ID.Substring(0, 8);
@@ -74,7 +72,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
             try
             {
