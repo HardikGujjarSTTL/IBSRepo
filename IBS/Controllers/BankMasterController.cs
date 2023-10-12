@@ -1,4 +1,4 @@
-﻿using IBS.DataAccess;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +14,13 @@ namespace IBS.Controllers
             bankRepository = _bankRepository;
         }
 
+        [Authorization("BankMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("BankMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             BankMasterModel model = new();
@@ -37,6 +39,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("BankMaster", "Index", "edit")]
         public IActionResult Manage(BankMasterModel model)
         {
             try
@@ -65,6 +68,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("BankMaster", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

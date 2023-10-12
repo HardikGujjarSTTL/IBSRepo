@@ -1,9 +1,9 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -22,11 +22,13 @@ namespace IBS.Controllers.Vendor
             this.env = _env;
         }
 
+        [Authorization("Vendor", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("Vendor", "Index", "view")]
         public IActionResult Manage(int Id)
         {
             VendorMasterModel model = new();
@@ -56,6 +58,7 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
+        [Authorization("Vendor", "Index", "edit")]
         public IActionResult Manage(VendorMasterModel model, IFormCollection formCollection)
         {
             try
@@ -94,6 +97,7 @@ namespace IBS.Controllers.Vendor
             return View(model);
         }
 
+        [Authorization("Vendor", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
