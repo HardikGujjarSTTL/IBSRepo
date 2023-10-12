@@ -27,7 +27,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization("InterUnitReciept", "InterUnitRecieptSave", "view")]
+       
 
         public IActionResult InterUnitRecieptSave(InterUnitRecieptModel model)
         {
@@ -59,14 +59,19 @@ namespace IBS.Controllers
             return Json(new { status = false, VCHR_NO = VCHR_NO , responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        [Authorization("InterUnitReciept", "Manage", "view")]
+      
 
         public IActionResult Manage(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT, string VCHR_DT)
         {
             InterUnitRecieptModel model = new();
             if (VCHR_NO != "" && VCHR_NO != null)
             {
+                 model.Action= "M";
                 model = interunitrecieptrepository.FindByID(VCHR_NO, BANK_CD, CHQ_NO, CHQ_DT,VCHR_DT);
+            }
+            else
+            {
+                model.Action = "A";
             }
             return View(model);
 
@@ -75,7 +80,7 @@ namespace IBS.Controllers
         }
 
 
-        [Authorization("InterUnitReciept", "RecieptList", "view")]
+        
 
         public IActionResult RecieptList([FromBody] DTParameters dtParameters)
         {
@@ -85,35 +90,35 @@ namespace IBS.Controllers
         }
 
 
-     
+
 
 
         [HttpPost]
-        public ActionResult ButtonClick(string AccCD, string txtBPO, string lstBPO, string txtCSNO , string txtBPOtype, string BPOCD)
+        public ActionResult ButtonClick(string AccCD, string txtBPO, string lstBPO, string txtCSNO, string txtBPOtype, string BPOCD)
         {
-          
+
             InterUnitRecieptModel bPOmodel = new InterUnitRecieptModel();
 
             var list = GetDistinctBPOsByCaseNo(txtCSNO, bPOmodel, txtBPOtype, BPOCD);
 
-            
+
             string Narrt = string.Empty;
             try
             {
                 if (AccCD == "2709" || AccCD == "2210" || AccCD == "2212")
                 {
-                  var  result = interunitrecieptrepository.ChkCSNO(txtCSNO);
+                    var result = interunitrecieptrepository.ChkCSNO(txtCSNO);
                 }
                 else
                 {
                     if (AccCD == "2201" || AccCD == "2202" || AccCD == "2203" || AccCD == "2204" || AccCD == "2205")
                     {
-                        var result = interunitrecieptrepository.fill_BPO( txtCSNO,  lstBPO,  txtBPOtype);
+                        var result = interunitrecieptrepository.fill_BPO(txtCSNO, lstBPO, txtBPOtype);
                     }
                     else
                     {
                         var result = interunitrecieptrepository.fill_BPO01(txtCSNO, lstBPO, txtBPOtype);
-                        if(result != null)
+                        if (result != null)
                         {
                             Narrt = Convert.ToString(result);
                         }
@@ -132,7 +137,7 @@ namespace IBS.Controllers
             }
 
 
-            return Json(new { status = false, Narrt = Narrt,((IBS.Models.InterUnitRecieptModel)((Microsoft.AspNetCore.Mvc.ViewResult)list).Model).BPOList,  responseText = "Oops Somthing Went Wrong !!" });
+            return Json(new { status = false, Narrt = Narrt, ((IBS.Models.InterUnitRecieptModel)((Microsoft.AspNetCore.Mvc.ViewResult)list).Model).BPOList, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         public ActionResult GetDistinctBPOsByCaseNo(string txtCSNO, InterUnitRecieptModel bPOmodel, string txtBPOtype, string BPOCD)
@@ -155,8 +160,25 @@ namespace IBS.Controllers
             return View(bPOmodel);
         }
 
+            public IActionResult Delete(string VCHR_NO, string CHQ_NO, string CHQ_DT, int BANK_CD)
+            {
+                try
+                {
+                    int U_ID = Convert.ToInt32(UserId);
+                    if (interunitrecieptrepository.Remove(VCHR_NO, CHQ_NO , CHQ_DT , BANK_CD, U_ID))
+                        AlertDeletedSuccess();
+                    else
+                        AlertDanger();
+                }
+                catch (Exception ex)
+                {
+                    Common.AddException(ex.ToString(), ex.Message.ToString(), "InterUnitReceipt", "Delete", 1, GetIPAddress());
+                    AlertDanger();
+                }
+                return RedirectToAction("Index");
+            }
 
-      
+
 
     }
 }

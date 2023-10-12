@@ -11,7 +11,7 @@
     <div class="row my-0">
         <div class="col-md-3 mb-3">
             <label for="txtChequeNo">Cheque No <i class="text-danger">*</i></label>
-            <input type="text" class="input" id="txtChequeNo" maxlength="12" />
+            <input type="text" class="input" id="txtChequeNo" />
             <span class="text-danger field-validation-error" id="spnErrorChequeNo"></span>
         </div>
         <div class="col-md-3 mb-3">
@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-3 mb-3">
             <label for="txtSampleNo">Sample No</label>
-            <input type="text" class="input" id="txtSampleNo" maxlength="4" />
+            <input type="text" class="input" id="txtSampleNo" />
         </div>
         <div class="col-md-3 mb-3">
             <label for="ddlAccountCode">Account Code</label>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-md-3 mb-3" id="dvCaseNo" style="display: none;">
             <label for="txtCaseNo">Case No</label> <br />
-            <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" maxlength="9" />
+            <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
         </div>
         <div class="col-md-3 mb-3">
             <label for="ddlAccountCode">BPO <i class="text-danger">*</i></label> <br />
@@ -92,10 +92,7 @@
                                 <td>
                                     <div align="center" class="reportIcon actionCenter">
                                         <a id="btnEdit" class="edit" href="javascript:void(0);" onclick="GetVoucherDetailsByID(@item.ID);"><i class="fa fa-pencil" title="Edit"></i></a>
-                                        @if (item.IsNew)
-                                        {
-                                            <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
-                                        }
+                                        <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -275,7 +272,7 @@
                         $("#dvCaseNo").css("display", "block");
                         BindBPO(0, "", response.responseText.BPO_CD);
                     }
-                    else {
+                    else{
                         $("#dvCaseNo").css("display", "none");
                         BindBPO(response.responseText.ACC_CD, response.responseText.BPO_TYPE, "");
                     }
