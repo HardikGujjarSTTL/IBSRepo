@@ -209,6 +209,13 @@ namespace IBS.Controllers.Vendor
                 {
                     agencyClient = Common.GetPurchaserCd(consignee);
                 }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
