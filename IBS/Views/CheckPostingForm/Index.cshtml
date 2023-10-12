@@ -138,7 +138,7 @@
                             <input type="radio" class="billInvoiceClass" id="radioInvoice" name="Bill" value="Invoice_No">
                             <label for="Reference" class="billInvoiceClass">Invoice No.</label><br>
 
-                             <input type="text" class="billInvoiceClass" id="Bill/InvoiceNo" class="input" asp-for="BILL_NO" maxlength="300" />
+                             <input type="text" class="billInvoiceClass" id="BillInvoiceNo" class="input" asp-for="BILL_NO" maxlength="300" />
                              <br></br>
                            
                         </div>
@@ -254,10 +254,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <div class="btn-group">
+                        <div>
                             <button type="button" id="cancelChanges" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" id="saveChanges" class="btn btn-primary Permission_Save" onclick="savedata();">Save</button>
-                            <button type="button" id="TDSentry" class="btn btn-primary" onclick="Tds();" >TDS Entry</button>
+                            <button type="button" id="TDSentry" class="btn btn-primary" onclick="Tds();" >TDS</button>
                         </div>
                     </div>
                     </div>
@@ -295,7 +295,7 @@
 
         function btnBillDetailsClick(){
             debugger;
-            if ($('#radioBill').is(':checked')) {
+            if ($('#radioBill').is(':checked') && $('#BillInvoiceNo').val() != null) {
                RadioBill =  $("#radioBill").val();
                 $.ajax({
                     url: '/CheckPostingForm/btnBillDetailsClick',
@@ -312,8 +312,7 @@
 
                 });
             }
-            else if($('#radioInvoice').is(':checked'))
-            {
+            else if ($('#radioInvoice').is(':checked') && $('#BillInvoiceNo').val() != null) {
                 RadioInvoice = $("#radioInvoice").val();
                 $.ajax({
                     url: '/CheckPostingForm/btnInvoiceClick',

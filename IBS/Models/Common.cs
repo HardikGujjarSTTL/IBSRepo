@@ -2053,10 +2053,7 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            //SelectListItem drop = new SelectListItem();
-            //drop.Text = "Other";
-            //drop.Value = "0";
-            //dropDownDTOs.Add(drop);
+
             if (RlyNonrly == "R")
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
@@ -2067,8 +2064,12 @@ namespace IBS.Models
                        {
                            Text = Convert.ToString(a.Railway),
                            Value = Convert.ToString(a.RlyCd)
-                       }).ToList();
+                       }).OrderBy(x => x.Value).ToList();
                 dropDownDTOs.AddRange(dropList);
+                SelectListItem drop = new SelectListItem();
+                drop.Text = "Other";
+                drop.Value = "0";
+                dropDownDTOs.Add(drop);
             }
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
@@ -2082,6 +2083,10 @@ namespace IBS.Models
                            Value = Convert.ToString(a.BpoOrgn)
                        }).OrderBy(x => x.Text).ToList();
                 dropDownDTOs.AddRange(dropList);
+                SelectListItem drop = new SelectListItem();
+                drop.Text = "Other";
+                drop.Value = "0";
+                dropDownDTOs.Add(drop);
             }
             return dropDownDTOs.DistinctBy(x => x.Text).ToList();
         }
@@ -2171,23 +2176,35 @@ namespace IBS.Models
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
-            SelectListItem drop = new SelectListItem();
-            drop.Text = "Other";
-            drop.Value = "0";
-            dropDownDTOs.Add(drop);
+
             if (RlyNonrlyText == "Railways")
             {
                 List<SelectListItem> dropList = new List<SelectListItem>();
                 dropList = (from a in ModelContext.T06Consignees
                             join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
-                            where a.ConsigneeFirm == Convert.ToString(RlyCd)
-                            select
-                       new SelectListItem
-                       {
-                           Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
-                           Value = Convert.ToString(a.ConsigneeCd)
-                       }).ToList();
+                            where a.ConsigneeFirm.Trim().ToUpper().StartsWith(RlyCd.Trim().ToUpper())
+                            orderby
+                                (a.ConsigneeDesig.Trim() + "/" ?? "") +
+                                (a.ConsigneeDept.Trim() + "/" ?? "") +
+                                (a.ConsigneeFirm.Trim() + "/" ?? "") +
+                                (a.ConsigneeAdd1.Trim() + "/" ?? "") +
+                                (b.Location.Trim() + " : " + b.City.Trim() ?? b.City.Trim())
+                            select new SelectListItem
+                            {
+                                Text = Convert.ToString(a.ConsigneeCd + "-" +
+                                        a.ConsigneeFirm +
+                                        (a.ConsigneeDesig != null ? "/" + a.ConsigneeDesig : "") +
+                                        (a.ConsigneeDept != null ? "/" + a.ConsigneeDept : "") +
+                                        (a.ConsigneeAdd1 != null ? "/" + a.ConsigneeAdd1 : "") +
+                                        (b.Location != null ? " : " + b.Location + " : " + b.City : b.City)),
+                                Value = Convert.ToString(a.ConsigneeCd)
+                            }).ToList();
+
                 dropDownDTOs.AddRange(dropList);
+                SelectListItem drop = new SelectListItem();
+                drop.Text = "Other";
+                drop.Value = "0";
+                dropDownDTOs.Add(drop);
             }
             else if (RlyNonrlyText != "")
             {
@@ -2195,13 +2212,27 @@ namespace IBS.Models
                 dropList = (from a in ModelContext.T06Consignees
                             join b in ModelContext.T03Cities on a.ConsigneeCity equals b.CityCd
                             where a.ConsigneeType == Convert.ToString(RlyNonrlyValue)
-                            select
-                       new SelectListItem
-                       {
-                           Text = Convert.ToString(a.ConsigneeCd + "-" + a.ConsigneeFirm + "/" + a.ConsigneeDesig + "/" + a.ConsigneeDept + "/" + a.ConsigneeAdd1 + "/" + b.Location + " : " + a.ConsigneeCity),
-                           Value = Convert.ToString(a.ConsigneeCd)
-                       }).ToList();
+                            orderby
+                                (a.ConsigneeDesig.Trim() + "/" ?? "") +
+                                (a.ConsigneeDept.Trim() + "/" ?? "") +
+                                (a.ConsigneeFirm.Trim() + "/" ?? "") +
+                                (a.ConsigneeAdd1.Trim() + "/" ?? "") +
+                                (b.Location.Trim() + " : " + b.City.Trim() ?? b.City.Trim())
+                            select new SelectListItem
+                            {
+                                Text = Convert.ToString(a.ConsigneeCd + "-" +
+                                        a.ConsigneeFirm +
+                                        (a.ConsigneeDesig != null ? "/" + a.ConsigneeDesig : "") +
+                                        (a.ConsigneeDept != null ? "/" + a.ConsigneeDept : "") +
+                                        (a.ConsigneeAdd1 != null ? "/" + a.ConsigneeAdd1 : "") +
+                                        (b.Location != null ? " : " + b.Location + " : " + b.City : b.City)),
+                                Value = Convert.ToString(a.ConsigneeCd)
+                            }).ToList();
                 dropDownDTOs.AddRange(dropList);
+                SelectListItem drop = new SelectListItem();
+                drop.Text = "Other";
+                drop.Value = "0";
+                dropDownDTOs.Add(drop);
             }
             return dropDownDTOs;
         }
@@ -2237,7 +2268,7 @@ namespace IBS.Models
                    {
                        Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
                        Value = Convert.ToString(a.ConsigneeCd)
-                   }).OrderBy(x => x.Text).ToList();
+                   }).ToList();
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -2246,10 +2277,10 @@ namespace IBS.Models
             drop.Text = "Other";
             drop.Value = "0";
             dropDownDTOs.Add(drop);
-            if (dropDownDTOs != null && dropDownDTOs.Count > 1)
-            {
-                dropDownDTOs[1].Selected = true;
-            }
+            //if (dropDownDTOs != null && dropDownDTOs.Count > 1)
+            //{
+            //    dropDownDTOs[1].Selected = true;
+            //}
             return dropDownDTOs;
         }
 
@@ -3960,6 +3991,39 @@ namespace IBS.Models
             }
         }
 
+        //    public static List<TextValueDropDownDTO> NIWorkType()
+        //    {
+        //        return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.NIWorkType)).ToList();
+        //        public enum NIWorkType
+        //    {
+        //        [Description("Training")]
+        //        T,
+        //        [Description("Leave")]
+        //        L,
+        //        [Description("Office")]
+        //        O,
+        //        [Description("Joint Inspection")]
+        //        J,
+        //        [Description("Firm Visit")]
+        //        F,
+        //        [Description("Others")]
+        //        X,
+        //    }
+        //}
+
+        public static List<SelectListItem> NIWorkType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Training", Value = "T" },
+                new SelectListItem() { Text = "Leave", Value = "L" },
+                new SelectListItem() { Text = "Office", Value = "O" },
+                new SelectListItem() { Text = "Joint Inspection", Value = "J" },
+                new SelectListItem() { Text = "Firm Visit", Value = "F" },
+                new SelectListItem() { Text = "Others", Value = "X" }
+            };
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> BindIEStamps()
         {
             DataSet ds = new DataSet();
@@ -4069,20 +4133,14 @@ namespace IBS.Models
             var property = typeof(T).GetProperty(sortColumn);
 
             // Handle nullable properties
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
-            }
+            //if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            //{
+            //    property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
+            //}
 
             var propertyAccess = Expression.MakeMemberAccess(parameter, property);
 
             var orderByExpression = Expression.Lambda(propertyAccess, parameter);
-
-            // this is the part p.SortColumn
-            // var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-
-            // this is the part p =&gt; p.SortColumn
-            // var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
             // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },

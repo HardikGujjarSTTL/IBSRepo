@@ -178,7 +178,7 @@ namespace IBS.Repositories
             }
             else
             {
-                T26ChequePosting data = new T26ChequePosting();
+                //T26ChequePosting data = new T26ChequePosting();
                 GetValue.BankCd = model.BANK_CD;
                 GetValue.ChqNo = model.CHQ_NO;
                 GetValue.ChqDt= model.CHQ_DATE;
@@ -190,7 +190,7 @@ namespace IBS.Repositories
                 //GetValue.UserId = Uname;
                 GetValue.Datetime = model.DATETIME;
 
-                context.T26ChequePostings.Add(data);
+               // context.T26ChequePostings.Add(data);
                 context.SaveChanges();
             }
 

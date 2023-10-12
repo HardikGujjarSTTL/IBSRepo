@@ -10,8 +10,12 @@ namespace IBS.Interfaces.IE
 
         DTResult<DailyWorkPlanModel> GetLoadTableCurrentDay(DTParameters dtParameters, string Region, int GetIeCd);
 
-        int DetailsInsertUpdate(DailyWorkPlanModel model);
+        int DetailsInsertUpdate(DailyWorkPlanModel model, string Region, int GetIeCd);
 
-        //string SaveDetails(InspectionCertModel model, string Region);
+        int DetailsDelete(DailyWorkPlanModel model, string Region, int GetIeCd);
+
+        int NonInspectionSave(DailyWorkPlanModel model, string Region, int GetIeCd);
+
+        DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd);
     }
 }

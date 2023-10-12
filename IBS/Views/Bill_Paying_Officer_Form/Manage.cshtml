@@ -13,21 +13,16 @@
     <form role="form" asp-controller="Bill_Paying_Officer_Form" asp-action="Manage" id="frmBPOMaster">
         <input type="hidden" asp-for="ActionType" />
         <div class="accordion-body">
-            @*<div class="row my-0">
-            <div class="col-md-3 mb-3" id="divBpoCd">
-            <label for="Reference">BPO Code</label>
-            <label style="text-transform: uppercase; color:red;">@Model.BpoCd</label>
-            </div>
-            <div class="col-md-3 mb-3" id="divSAPCd">
-            <label for="Reference">SAP CUST CD:</label>
-            <label style="text-transform: uppercase; color:red;">@Model.SapCustCdBpo</label>
-            </div>
-            </div>*@
             <div class="row my-0">
-                <div class="col-md-4 mb-3" id="divBpoCd">
+                <div class="col-md-1 mb-3 divBpoCd" id="divBpoCd">
                     <label for="Reference">BPO Code : </label>
-                    <label style="text-transform: uppercase; color:red;"><b><u>@Model.BpoCd </u></b></label><br />
-                    <label style="text-transform: uppercase; color:red;" ><b>SAP CUST CD : @Model.SapCustCdBpo </b></label>
+                    <input type="text" class="input" asp-for="BpoCd" maxlength="30" style="text-transform: uppercase; color:red;" readonly>
+                    @*<label style="text-transform: uppercase; color:red;"><b><u>@Model.BpoCd </u></b></label><br />
+                    <label style="text-transform: uppercase; color:red;"><b>SAP CUST CD : @Model.SapCustCdBpo </b></label>*@
+                </div>
+                <div class="col-md-3 mb-3 divBpoCd">
+                    <label for="Reference">SAP CUST CD</label>
+                    <input type="text" class="input" asp-for="SapCustCdBpo" maxlength="30" style="text-transform: uppercase; color:red;" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">BPO Name</label>
@@ -89,8 +84,9 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">BPO State <span style="color:red">*</span></label><br />
-                    @*<input type="text" class="input" asp-for="lblBpoState" style="color:red;" readonly="readonly" style="text-transform: uppercase;">*@
-                    <label style="text-transform: uppercase; color:red;">@Model.lblBpoState </label>
+                    <input type="text" class="input" asp-for="lblBpoState" style="color:red;" readonly="readonly" style="text-transform: uppercase;">
+                    @*<label style="text-transform: uppercase; color:red;">@Model.lblBpoState </label>*@
+
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">GSTIN No. <span style="color:red">*</span></label>
@@ -206,7 +202,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Paying Window</label>
-                    @Html.DropDownListFor(model => model.BpoAdvFlg, new SelectList(IBS.Models.Common.GetPayingWindow() , "Value", "Text"), "--Select--")
+                    @Html.DropDownListFor(model => model.PayWindowId, new SelectList(IBS.Models.Common.GetPayingWindow() , "Value", "Text"), "--Select--")
                     <span asp-validation-for="PayWindowId" class="text-danger"></span>
                 </div>
             </div>
@@ -229,8 +225,7 @@
             const _actionType = urlParams.get('ActionType');
             $("#ActionType").val(_actionType);
             if (_actionType == null) {
-                $("#divBpoCd").hide();
-                //$("#divSAPCd").hide();
+                $(".divBpoCd").hide();
             }
         });
 
@@ -253,28 +248,23 @@
                 data: '{}',
                 dataType: 'json',
                 success: function (state) {
-                    $('#lblBpoState').val(state);
+                    $("#lblBpoState").val(state);
+                    $("#BpoState").val(state);
+
                 },
                 error: function () {
                     ShowHideMsgNew(false, "Oops, something went wrong!");
                 }
             });
-            //$.ajax({
-            //    url: '@Url.Action("GetState", "Bill_Paying_Officer_Form")?BpoCityCd=' + BpoCityCd,
-            //    type: 'GET',
-            //    cache: false,
-            //    data: '{}',
-            //    processData: false,
-            //    contentType: false
-            //}).done(function (response) {
-            //    if (response.status) {
-            //    }
-            //});
         }
 
         function Save() {
-            if (($("#BpoCityCd").val() == null || $("#BpoCityCd").val() == "") && $("#BpoCity").val() == "") {
+            if (($("#BpoCityCd").val() == null || $("#BpoCityCd").val() == "0") && $("#BpoCity").val() == "") {
                 ShowHideMsgNew(false, "Plz Press the select City button first and then save it");
+                return;
+            }
+            if ($("#GstinNo").val() == null) {
+                ShowHideMsgNew(false, "Please add GSTIN No.");
                 return;
             }
             if ($("#BpoState").val() == "") {
@@ -296,16 +286,13 @@
 
         }
 
-        function Delete() {
-            if ($("#frmBPOMaster").valid()) {
-                $("#frmBPOMaster").submit();
-            }
-        }
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/Bill_Paying_Officer_Form/Index";
-            window.location.href = '@Url.Action("Index", "Bill_Paying_Officer_Form")';
-        };
+        //function Delete() {
+            
+        //    if ($("#frmBPOMaster").valid()) {
+        //        $("#frmBPOMaster").submit();
+        //    }
+        //}
+
+
     </script>
 }

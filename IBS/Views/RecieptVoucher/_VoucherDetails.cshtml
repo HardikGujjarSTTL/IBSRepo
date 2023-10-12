@@ -41,7 +41,7 @@
             <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
         </div>
         <div class="col-md-3 mb-3">
-            <label for="ddlAccountCode">BPO</label> <br />
+            <label for="ddlAccountCode">BPO <i class="text-danger">*</i></label> <br />
             <select id="ddlBPO" name="ddlBPO" style="width: 100%;">
                 <option value="">--Select--</option>
             </select>
@@ -53,7 +53,6 @@
         </div>
     </div>
     <div class="savenext-btn" style="justify-content: end;">
-
         <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add</button>
         <a href="#clear" class="reset-btn">Clear</a>
         <button id="btnUploadExcel" type="button" class="save-btn active" onclick="onclickUploadExcel();">Upload Excel</button>
@@ -113,17 +112,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" enctype="multipart/form-data" action="/RecieptVoucher/UploadExcelFile">
-                        <div class="row my-0">
-                            <div class="col-md-12 mb-3">
-                                <label for="file">Select Excel File:</label>
-                                <input type="file" name="file" id="VoucherDetailsFile" accept=".xlsx" required />
-                            </div>
-                            <div class="savenext-btn">
-                                <button type="button" class="save-btn active" data-id="" onclick="onclickUploadAndProcess();">Upload and Process</button>
-                            </div>
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <label for="file">Select Excel File:</label>
+                            <input type="file" name="file" id="VoucherDetailsFile" accept=".xlsx" required />
                         </div>
-                    </form>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" data-id="" onclick="onclickUploadAndProcess();">Upload and Process</button>
+                            <a href="~/ReadWriteData/SampleFiles/ReceiptVoucher.xlsx" class="reset-btn">Download Sample File</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                 </div>

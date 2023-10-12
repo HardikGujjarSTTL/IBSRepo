@@ -5,25 +5,25 @@ namespace IBS.DataAccess;
 
 public partial class GeneralFile
 {
-    public byte? UnitCode { get; set; }
+    public int? UnitCode { get; set; }
 
     public byte? CurryCode { get; set; }
 
-    public byte? VchrNumb { get; set; }
+    public int? VchrNumb { get; set; }
 
     public DateTime? VchrDate { get; set; }
 
-    public byte? Tc { get; set; }
+    public int? Tc { get; set; }
 
-    public byte? AccCode { get; set; }
+    public int? AccCode { get; set; }
 
     public string? SubCode { get; set; }
 
     public byte? RefNo { get; set; }
 
-    public byte? ProjectCode { get; set; }
+    public int? ProjectCode { get; set; }
 
-    public byte? SbuCode { get; set; }
+    public int? SbuCode { get; set; }
 
     public string? Narration { get; set; }
 
@@ -31,7 +31,7 @@ public partial class GeneralFile
 
     public string? ChequeNo { get; set; }
 
-    public byte? BankCode { get; set; }
+    public int? BankCode { get; set; }
 
     public decimal? BankOb { get; set; }
 
@@ -59,9 +59,11 @@ public partial class GeneralFile
 
     public string? VchrNoT25 { get; set; }
 
-    public byte? SnoT25 { get; set; }
+    public int? SnoT25 { get; set; }
 
     public string? PostingStatus { get; set; }
 
     public DateTime? PostingDt { get; set; }
+
+    public int Id { get; set; }
 }
