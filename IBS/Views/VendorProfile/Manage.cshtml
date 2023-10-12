@@ -234,7 +234,8 @@
         function Save() {
             if ($("#frmVendorProfileDetails").valid()) {
                 if ('@IBS.Helper.SessionHelper.UserModelDTO.RoleName.ToLower()' != "vendor") {
-                    SaveSingleDocuments("tab-1");
+                    //SaveSingleDocuments("tab-1");
+                    if (!SaveSingleDocuments("tab-1")) { return; }
                 }
                 $("#frmVendorProfileDetails").submit();
             }

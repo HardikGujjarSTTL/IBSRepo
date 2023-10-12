@@ -23,7 +23,7 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        #region Naimish Code
+        #region 
         public InterUnit_TransferModel Get_Inter_Unit_Transfer(string Bank, string ChqNo, string ChqDate, string Region)
         {
             InterUnit_TransferModel model = new();

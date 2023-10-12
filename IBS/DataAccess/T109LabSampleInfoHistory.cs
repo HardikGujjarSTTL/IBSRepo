@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T109LabSampleInfo
+public partial class T109LabSampleInfoHistory
 {
     public string? CaseNo { get; set; }
 
@@ -43,5 +43,11 @@ public partial class T109LabSampleInfo
 
     public byte? Isdeleted { get; set; }
 
-    public virtual T17CallRegister? Ca { get; set; }
+    public string? Actiontype { get; set; }
+
+    public DateTimeOffset? Actiondate { get; set; }
+
+    public string? Actionuserid { get; set; }
+
+    public int Id { get; set; }
 }

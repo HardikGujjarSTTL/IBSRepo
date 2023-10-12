@@ -4,7 +4,7 @@
 @{
     string Region = ViewBag.Regions;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
+    string ReportTitle =  string.Empty;//EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
     else if (ReportType == "COIEWiseCalls") ReportTitle = "CONTROLLING WISE CALLS MARKED";
@@ -117,7 +117,7 @@
                             <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
                             <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
@@ -139,7 +139,7 @@
                             <span class="text-danger field-validation-error" id="spnErroryear"></span>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
                             <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
@@ -324,7 +324,7 @@
                             @Html.DropDownList("Region", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--", new { id = "Region" })
                         </div>
                         &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <div class="savenext-btn">
                                 <button type="button" class="save-btn active" onclick="ViewReportONGCON();">Generate Report</button>
                                 <button type="button" class="reset-btn" onclick="ClearControlsONGCON();">Clear</button>
@@ -337,13 +337,14 @@
         </div>
 
          <div class="task-inner row CONTRACT" style="display: none">
-            <div class="row my-0">
+            
             <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCONTRACT">
                 <input type="hidden" id="hdnReportType" name="hdnReportType" />
                 <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
                 <input type="hidden" id="hdnToDate" name="hdnToDate" />
                 <input type="hidden" id="hdnRegion" name="hdnRegion" />
                 <input type="hidden" id="hdnclientname" name="hdnclientname" />
+                <div class="row my-0">
                 <div class="col-md-3">
                     <div class="input-search">
                         <label for="FromDate">For The Period From</label>
@@ -370,14 +371,15 @@
                         <input type="text" id="clientname" />
                     </div>
                 </div>
-                <div class="col-md-3" style="margin-top: 30px;">
+                <div class="col-md-5" style="margin-top: 30px;">
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="ViewReportfrmCONTRACT();">Generate Report</button>
                         <button type="button" class="reset-btn" onclick="ClearControlsfrmCONTRACT();">Clear</button>
                     </div>
                 </div>
+                </div>
             </form>
-        </div>
+        
         </div>
 
          <div class="task-inner row CLUSVENDOR" style="display: none">
@@ -402,7 +404,7 @@
                                 @Html.DropDownList("department", new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--", new { id = "department" })
                             </div>
                             &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" onclick="ViewReportCLUSVENDOR();">Generate Report</button>
                                     <button type="button" class="reset-btn" onclick="ClearControlsCLUSVENDOR();">Clear</button>
@@ -428,7 +430,7 @@
                                 </div>
                             </div>
                             &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" onclick="ViewReportIEALTER();">Generate Report</button>
                                 </div>
@@ -442,7 +444,7 @@
         </div>
 
         <div class="task-inner row VENDPER" style="display: none">
-            <div class="row my-0">
+            
                 <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDPER">
                      <input type="hidden" id="hdnReportType" name="hdnReportType" />
                     <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
@@ -454,6 +456,7 @@
                     <input type="hidden" id="hdnvendor" name="hdnvendor" />
                     <input type="hidden" id="hdnvendcd" name="hdnvendcd" />
                     <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
+                    <div class="row my-0">
                     <div class="col-md-6">
                         <div class="custom-readio">
                             <div class="company-checkbox">
@@ -505,26 +508,27 @@
                         </div>
 
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mt-4">
                         <label for="Reference">Vendor</label>
                         <input type="text" id="vendorVENDPER" class="input" maxlength="3" />
                         <span class="text-danger field-validation-error" id="spnErrorvendorVENDPER"></span>
                     </div>
-                    <div class="col-md-3" style="margin-top: 30px;">
-                        <div class="savenext-btn">
+                    <div class="col-md-5 mt-4">
+                        <div class="savenext-btn" style="margin-top: 30px;">
                             <button type="button" class="save-btn active" onclick="ViewReportVENDPER();">Generate Report</button>
                             <button type="button" class="reset-btn" onclick="ClearControlsVENDPER();">Clear</button>
                         </div>
                     </div>
+                    </div>
                </form>
-        </div>
+        
     </div>
 
         <div class="task-inner row VENDFEED" style="display: none">
             <div class="row my-0">
                     <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDFEED">
                          <input type="hidden" id="hdnReportType" name="hdnReportType" />
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="ViewReportVENDFEED();">Generate Report</button>
                             </div>
@@ -534,7 +538,7 @@
         </div>
 
         <div class="task-inner row CHECK" style="display: none">
-            <div class="row my-0">
+           
                 <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmPWCHECK">
                          <input type="hidden" id="hdnReportType" name="hdnReportType" />
                         <input type="hidden" id="hdnFromDatePWCHECK" name="hdnFromDatePWCHECK" />
@@ -555,14 +559,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="col-md-4" style="margin-top: 30px;">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="ViewReportPWCHECK();">Generate Report</button>
                             <button type="button" class="reset-btn" onclick="ClearControlsPWCHECK();">Clear</button>
                         </div>
                     </div>
                     </form>
-            </div>
+            
          </div>
 
          <div class="task-inner row U" style="display: none">
@@ -728,7 +732,7 @@
                         </div>
 
                     </div>
-                    <div class="col-md-3" style="margin-top: 30px;">
+                    <div class="col-md-4" style="margin-top: 30px;">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="ViewReportIEICPHOTO();">Search</button>
                             <button type="button" class="save-btn active" onclick="ViewReportIEICPHOTOReport();">Generate Report</button>
