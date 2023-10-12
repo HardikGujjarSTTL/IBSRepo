@@ -7,6 +7,7 @@
         public string BANK_CD { get; set; }
         public string BANK_NAME { get; set; }
         public string VCHR_TYPE { get; set; }
+        public string Action { get; set; }
 
 
         public int SNO { get; set; }
