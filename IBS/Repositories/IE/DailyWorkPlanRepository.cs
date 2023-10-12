@@ -45,8 +45,8 @@ namespace IBS.Repositories.IE
             DateTime toDtValue = DateTime.Now;
 
             //comment remove testing purpose only
-            model.FromDt = Convert.ToDateTime("22/04/2019");
-            model.ToDt = Convert.ToDateTime("23/04/2019");
+            //model.FromDt = Convert.ToDateTime("22/04/2019");
+            //model.ToDt = Convert.ToDateTime("23/04/2019");
 
             DateTime tdt = Convert.ToDateTime(model.FromDt);
 
@@ -95,10 +95,6 @@ namespace IBS.Repositories.IE
                 }
             }
             model.errcode = err;
-
-
-
-
 
             return model;
         }
@@ -222,29 +218,28 @@ namespace IBS.Repositories.IE
                                MfgCd = grouped.Key,
                                Count = grouped.Count()
                            }).ToList();
+            
 
-            foreach (var dtl in qryList)
+            foreach (var dt1 in deserializedData)
             {
-                foreach (var dt1 in deserializedData)
+                var InsertRcrd = (from t17 in context.T17CallRegisters
+                                  where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
+                                  group t17 by t17.MfgCd into grouped
+                                  select new
+                                  {
+                                      MfgCd = grouped.Key,
+                                      Count = grouped.Count()
+                                  }).FirstOrDefault();
+                foreach (var dtl in qryList)
                 {
-                    var InsertRcrd = (from t17 in context.T17CallRegisters
-                                    where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
-                                    group t17 by t17.MfgCd into grouped
-                                    select new
-                                    {
-                                        MfgCd = grouped.Key,
-                                        Count = grouped.Count()
-                                    }).FirstOrDefault();
-                    if(InsertRcrd.MfgCd == dtl.MfgCd)
+                    if (InsertRcrd.MfgCd == dtl.MfgCd)
                     {
                         vend_count = vend_count + 1;
                     }
                 }
-                vend_count = vend_count + 1;
-                count = count + Convert.ToInt32(dtl.Count);
             }
-            vend_count = vend_count + Convert.ToInt32(deserializedData.Count);
-            count = count + Convert.ToInt32(deserializedData.Count);
+            vend_count = vend_count + deserializedData.Count;
+            count = count + deserializedData.Count + qryList.Count;
 
             if (vend_count > 3 || count > 5)
             {
