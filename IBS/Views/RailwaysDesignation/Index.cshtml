@@ -104,7 +104,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.RlyDesigCd;
+                            var id = data.ID;
                             var editUrl = '@Url.Action("Manage", "RailwaysDesignation")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="Delete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
