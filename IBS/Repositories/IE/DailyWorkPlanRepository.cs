@@ -212,58 +212,97 @@ namespace IBS.Repositories.IE
         public int DetailsInsertUpdate(DailyWorkPlanModel model, string Region, int GetIeCd)
         {
             int ID = 0;
+            int vend_count = 0, count = 0;
             List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.checkedWork);
-            foreach (var details in deserializedData)
+            var qryList = (from T47 in context.T47IeWorkPlans
+                           where T47.IeCd == GetIeCd && T47.VisitDt == Convert.ToDateTime(model.PlanDt)
+                           group T47 by T47.MfgCd into grouped
+                           select new
+                           {
+                               MfgCd = grouped.Key,
+                               Count = grouped.Count()
+                           }).ToList();
+
+            foreach (var dtl in qryList)
             {
-                model.CaseNo = details.CaseNo;
-                model.CallRecvDt = details.CallRecvDt;
-                model.CallSno = details.CallSno;
-
-                var query = (from t17 in context.T17CallRegisters
-                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
-                             join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                             where t17.CaseNo.StartsWith(Region) && t17.IeCd == GetIeCd
-                             && t17.CaseNo == details.CaseNo && t17.CallRecvDt == details.CallRecvDt && t17.CallSno == details.CallSno
-                             select new
-                             {
-                                 t17.CaseNo,
-                                 t17.CallRecvDt,
-                                 t17.CallSno,
-                                 t17.CallStatus,
-                                 t17.MfgCd,
-                                 t17.MfgPlace,
-                                 t17.IeCd,
-                                 t17.CoCd,
-                                 t03.CityCd,
-                                 t03.City,
-                                 t17.DtInspDesire
-                             }).FirstOrDefault();
-                if (query != null)
+                foreach (var dt1 in deserializedData)
                 {
-                    if (details.CaseNo != null && details.CallRecvDt != null && details.CallSno > 0)
+                    var InsertRcrd = (from t17 in context.T17CallRegisters
+                                    where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
+                                    group t17 by t17.MfgCd into grouped
+                                    select new
+                                    {
+                                        MfgCd = grouped.Key,
+                                        Count = grouped.Count()
+                                    }).FirstOrDefault();
+                    if(InsertRcrd.MfgCd == dtl.MfgCd)
                     {
-                        T47IeWorkPlan obj = new T47IeWorkPlan();
-                        obj.IeCd = query.IeCd;
-                        obj.CoCd = Convert.ToByte(query.CoCd);
-                        obj.VisitDt = Convert.ToDateTime(model.PlanDt);
-                        obj.CaseNo = query.CaseNo;
-                        obj.CallRecvDt = query.CallRecvDt;
-                        obj.CallSno = query.CallSno;
-                        obj.MfgCd = query.MfgCd;
-                        obj.MfgPlace = query.MfgPlace;
-                        obj.RegionCode = Region;
-                        obj.UserId = model.Createdby;
-                        obj.Datetime = DateTime.Now;
+                        vend_count = vend_count + 1;
+                    }
+                }
+                vend_count = vend_count + 1;
+                count = count + Convert.ToInt32(dtl.Count);
+            }
+            vend_count = vend_count + Convert.ToInt32(deserializedData.Count);
+            count = count + Convert.ToInt32(deserializedData.Count);
 
+            if (vend_count > 3 || count > 5)
+            {
+                ID = 0;
+            }
+            else
+            {
+                foreach (var details in deserializedData)
+                {
+                    model.CaseNo = details.CaseNo;
+                    model.CallRecvDt = details.CallRecvDt;
+                    model.CallSno = details.CallSno;
 
+                    var query = (from t17 in context.T17CallRegisters
+                                 join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                                 join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                                 where t17.CaseNo.StartsWith(Region) && t17.IeCd == GetIeCd
+                                 && t17.CaseNo == details.CaseNo && t17.CallRecvDt == details.CallRecvDt && t17.CallSno == details.CallSno
+                                 select new
+                                 {
+                                     t17.CaseNo,
+                                     t17.CallRecvDt,
+                                     t17.CallSno,
+                                     t17.CallStatus,
+                                     t17.MfgCd,
+                                     t17.MfgPlace,
+                                     t17.IeCd,
+                                     t17.CoCd,
+                                     t03.CityCd,
+                                     t03.City,
+                                     t17.DtInspDesire
+                                 }).FirstOrDefault();
+                    if (query != null)
+                    {
+                        if (details.CaseNo != null && details.CallRecvDt != null && details.CallSno > 0)
+                        {
+                            T47IeWorkPlan obj = new T47IeWorkPlan();
+                            obj.IeCd = query.IeCd;
+                            obj.CoCd = Convert.ToByte(query.CoCd);
+                            obj.VisitDt = Convert.ToDateTime(model.PlanDt);
+                            obj.CaseNo = query.CaseNo;
+                            obj.CallRecvDt = query.CallRecvDt;
+                            obj.CallSno = query.CallSno;
+                            obj.MfgCd = query.MfgCd;
+                            obj.MfgPlace = query.MfgPlace;
+                            obj.RegionCode = Region;
+                            obj.UserId = model.Createdby;
+                            obj.Datetime = DateTime.Now;
 
-
-                        context.T47IeWorkPlans.Add(obj);
-                        context.SaveChanges();
-                        ID = Convert.ToInt32(obj.CallSno);
+                            context.T47IeWorkPlans.Add(obj);
+                            context.SaveChanges();
+                            ID = Convert.ToInt32(obj.CallSno);
+                        }
                     }
                 }
             }
+
+
             return ID;
         }
 

@@ -63,7 +63,15 @@ namespace IBS.Controllers.IE
                 if (model.ActionType == "S")
                 {
                     i = dailyRepository.DetailsInsertUpdate(model, Region, GetIeCd);
-                    AlertAddSuccess("Record Added Successfully.");
+                    if(i == 0)
+                    {
+                        AlertDanger("Your Work Plan Cannot be Saved due to  one or both of the following \n1. You have selected more then 3 different vendors. \n2. You have Selected more then 6 calls of a particular vendor.");
+                    }
+                    else
+                    {
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
+                    
                 }
                 else
                 {
