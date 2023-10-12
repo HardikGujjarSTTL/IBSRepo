@@ -11,7 +11,7 @@
         <h2>@Model.Title</h2>
     </div>
 </div>
-
+<div class="accordion-body">
 <div class="task-listinput">
     <input type="hidden" asp-for="Region" />
     <input type="hidden" asp-for="ActionType" />
@@ -241,6 +241,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />

@@ -13,7 +13,7 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
-        <div class="task-inner row">
+        <div class="task-inner row my-0">
             <div class="col-md-2">
                 <div class="reference">
                     <label for="Reference">IE Code</label>
@@ -38,6 +38,8 @@
                     @Html.DropDownList("IeCoCd", new SelectList(IBS.Models.Common.GetControllingOfficer(Region) , "Value", "Text"),"--Select--")
                 </div>
             </div>
+            </div>
+            <div class="row my-0">
             <div class="col-md-2" style="margin-top: 30px;">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
