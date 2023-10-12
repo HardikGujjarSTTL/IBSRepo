@@ -47,19 +47,19 @@ namespace IBS.Repositories
                              CASE_NO = t17.CaseNo,
                              CALL_RECV_DATE = t17.CallRecvDt.ToString("dd/MM/yyyy"),
                              CALL_SNO = t17.CallSno,
-                             CALL_LETTER_NO = t17.CallLetterNo,
-                             CALL_LETTER_DT = t17.CallLetterDt != null ? t17.CallLetterDt.Value.ToString("dd/MM/yyyy") : null,
+                             CALL_LETTER_NO = (t17.CallLetterNo)??"CallNo",
+                             CALL_LETTER_DT = t17.CallLetterDt != null ? t17.CallLetterDt.Value.ToString("dd/MM/yyyy") : "01/01/2001",
                              CALL_INSTALL_NO = Convert.ToInt32(t17.CallInstallNo),
                              ONLINE_CALL = t17.OnlineCall ?? "X",
                              FINAL_OR_STAGE = t17.FinalOrStage ?? "X",
-                             REMARKS = t17.Remarks,
+                             REMARKS = (t17.Remarks)?? "Remark",
                              ITEM_RDSO = t17.ItemRdso == "Y" ? "Yes" : t17.ItemRdso == "N" ? "No" : "",
-                             VEND_RDSO = t17.VendRdso == "Y" ? "Yes" : t17.VendRdso == "N" ? "No" : "",
-                             VEND_APP_FR = t17.VendApprovalFr != null ? t17.VendApprovalFr.Value.ToString("dd/MM/yyyy") : null,
-                             VEND_APP_TO = t17.VendApprovalTo != null ? t17.VendApprovalTo.Value.ToString("dd/MM/yyyy") : null,
+                             VEND_RDSO = (t17.VendRdso == "Y" ? "Yes" : t17.VendRdso == "N" ? "No" : "")?? "Yes",
+                             VEND_APP_FR = t17.VendApprovalFr != null ? t17.VendApprovalFr.Value.ToString("dd/MM/yyyy") : "01/01/2001",
+                             VEND_APP_TO = t17.VendApprovalTo != null ? t17.VendApprovalTo.Value.ToString("dd/MM/yyyy") : "01/01/2001",
                              STAG_DP = t17.StaggeredDp == "Y" ? "YES" : t17.StaggeredDp == "N" ? "NO" : "N.A",
-                             LOT_DP_1 = t17.LotDp1,
-                             LOT_DP_2 = t17.LotDp2,
+                             LOT_DP_1 = (t17.LotDp1)?? "00",
+                             LOT_DP_2 = (t17.LotDp2)?? "00",
                              IE_NAME = t09.IeName,
                              ITEM_DESC_PO = t18.ItemDescPo,
                              QTY_ORDERED = Convert.ToDecimal(t18.QtyOrdered),
@@ -79,10 +79,12 @@ namespace IBS.Repositories
             //var result = query1.ToList();
 
             model = result.FirstOrDefault();
-           // query2( caseNo = "",  callRecvDate = "",  callSno = "");
+            // query2( caseNo = "",  callRecvDate = "",  callSno = "");
             //dTResult.recordsTotal = query1.Count();
             //dTResult.data = result;
             //dTResult.recordsFiltered = query1.Count();
+            var result1 = result.ToList();
+            model.printcalllater = result1;
             return model;
         }
 
@@ -124,6 +126,7 @@ namespace IBS.Repositories
             {
             // Call query1 to get the initial model 
             Print_Call_letter_Model model = query1(caseNo, callRecvDate, callSno);
+            
 
             // Call query2 to populate additional fields in the model
             var result2 = query2(caseNo, callRecvDate, callSno);
@@ -140,7 +143,10 @@ namespace IBS.Repositories
             }
 
             // Return the populated model
+
             return model;
+        
+        
         }
     }
 }
