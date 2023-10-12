@@ -3,6 +3,7 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.IE;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Drawing;
 
 namespace IBS.Controllers.IE
@@ -46,20 +47,30 @@ namespace IBS.Controllers.IE
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DailyWorkPlan(DailyWorkPlanModel model)
+        public IActionResult DailyWorkPlan(DailyWorkPlanModel model, IFormCollection formCollection)
         {
             try
             {
-                int i = 0;
-                if (model.Reason != null)
+                if (formCollection.Keys.Contains("checkedWork"))
                 {
-                    model.Createdby = Convert.ToString(UserName.Trim());
-                    model.UserId = Convert.ToString(UserName.Trim());
-                    model.IeCd = GetIeCd;
-                    model.RegionCode = Region;
-                    i = dailyRepository.DetailsInsertUpdate(model);
+                    model.checkedWork = formCollection["checkedWork"];
+                }
+                int i = 0;
+                model.Createdby = Convert.ToString(UserName.Trim());
+                model.UserId = Convert.ToString(UserName.Trim());
+                model.IeCd = GetIeCd;
+                model.RegionCode = Region;
+                if(model.ActionType == "S")
+                {
+                    i = dailyRepository.DetailsInsertUpdate(model, Region, GetIeCd);
                     AlertAddSuccess("Record Added Successfully.");
                 }
+                else
+                {
+                    i = dailyRepository.DetailsDelete(model, Region, GetIeCd);
+                    AlertAddSuccess("Record Deleted Successfully.");
+                }
+                
                 return RedirectToAction("DailyWorkPlan");
             }
             catch (Exception ex)
@@ -69,11 +80,5 @@ namespace IBS.Controllers.IE
             return View(model);
         }
 
-        //[HttpPost]
-        //public IActionResult UpdateBillsFinalisation(DailyWorkPlanModel model)
-        //{
-        //    string i = dailyRepository.SaveDetails(model, Region);
-        //    return Json(new { status = true, responseText = "Records Locking Successfully." });
-        //}
     }
 }

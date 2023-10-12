@@ -3959,6 +3959,39 @@ namespace IBS.Models
                         }).ToList();
             }
         }
+
+        //    public static List<TextValueDropDownDTO> NIWorkType()
+        //    {
+        //        return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.NIWorkType)).ToList();
+        //        public enum NIWorkType
+        //    {
+        //        [Description("Training")]
+        //        T,
+        //        [Description("Leave")]
+        //        L,
+        //        [Description("Office")]
+        //        O,
+        //        [Description("Joint Inspection")]
+        //        J,
+        //        [Description("Firm Visit")]
+        //        F,
+        //        [Description("Others")]
+        //        X,
+        //    }
+        //}
+
+        public static List<SelectListItem> NIWorkType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Training", Value = "T" },
+                new SelectListItem() { Text = "Leave", Value = "L" },
+                new SelectListItem() { Text = "Office", Value = "O" },
+                new SelectListItem() { Text = "Joint Inspection", Value = "J" },
+                new SelectListItem() { Text = "Firm Visit", Value = "F" },
+                new SelectListItem() { Text = "Others", Value = "X" }
+            };
+            return textValueDropDownDTO.ToList();
+        }
     }
 
     public static class DbContextHelper

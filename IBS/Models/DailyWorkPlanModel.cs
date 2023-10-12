@@ -77,6 +77,19 @@ namespace IBS.Models
 
         public int errcode { get; set; }
 
-        public string[] checkedWork { get; set; }
+        public string checkedWork { get; set; }
+
+        public string NIWorkType { get; set; }
+
+        public string ActionType { get; set; }
+    }
+
+    public class DeSerializeDailyWorkModel
+    {
+        public string CaseNo { get; set; }
+
+        public DateTime CallRecvDt { get; set; }
+
+        public int CallSno { get; set; }
     }
 }

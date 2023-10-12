@@ -20,4 +20,6 @@ public partial class ViewGetBpodetail
     public string? City { get; set; }
 
     public string? SapCustCdBpo { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

@@ -11,6 +11,9 @@
     </div>
     <div class="accordion-body">
         <input type="hidden" asp-for="ReasonDt" />
+        <input type="hidden" id="checkedWork" name="checkedWork" />
+        <input type="hidden" id="ActionType" asp-for="ActionType" />
+
         <div class="row my-0">
             @if (Model.errcode == 1)
             {
@@ -28,7 +31,6 @@
                     </div>
                 </div>
             }
-
 
             <div class="col-md-12 mb-3">
                 <label for="PlanDt">Work Plan Dated : </label>
@@ -71,14 +73,13 @@
             </div>
         </div>
     </div>
-    <section class="table-section">
+    <section class="table-section secInspectionWork" style="display:none;">
         <h3 class="heading3">Enter the Daily Work Plan (DWP) for Calls a day in advance latest by 1500 HRS. </h3>
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtList" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Sr No.</th>
                             <th></th>
                             <th>Action</th>
                             <th>Case No.</th>
@@ -96,16 +97,21 @@
                 </table>
             </div>
         </div>
+
+        <div class="row my-0">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            </div>
+        </div>
     </section>
 
-    <section class="table-section">
+    <section class="table-section secInspectionWork" style="display:none;">
         <h3 class="heading3">Calls Already Added in Daily Work Plan For the Day. </h3>
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtListCurrentDay" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Sr No.</th>
                             <th></th>
                             <th>Visit Date</th>
                             <th>Case No.</th>
@@ -121,12 +127,24 @@
                 </table>
             </div>
         </div>
+
+        <div class="row my-0">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="Delete();">Delete</button>
+            </div>
+        </div>
     </section>
-    <div class="row my-0">
-        <div class="savenext-btn">
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
+
+    <div class="accordion-body secNonInspectionWork" style="display:none;">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="NIWorkType">Non Inspection Work Plan</label>
+                @Html.DropDownListFor(model => model.NIWorkType, Common.NIWorkType(), "--Select--",  new { @class = "" })
+                <span asp-validation-for="NIWorkType" class="text-danger"></span>
+            </div>
         </div>
     </div>
+
 </form>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -134,23 +152,31 @@
 
     <script type="text/javascript">
         $(function () {
-            //setDefaultDate();
-            //InitializeDatatable();
-            var InspWorkType_Y = $("#InspWorkType_Y");
-            var InspWorkType_N = $("#InspWorkType_N");
+            $('input[name="InspWorkType"]').on('change', function () {
+                var InspWorkType = $(this).val();
+                if (InspWorkType == "Y") {
+                    $(".secInspectionWork").show();
+                    $(".secNonInspectionWork").hide();
+                    InitializeDatatable();
+                    InitializeDatatableCurrentDay();
+                }
+                else {
+                    $(".secInspectionWork").hide();
+                    $(".secNonInspectionWork").show();
+                    InitializeDatatable();
+                    InitializeDatatableCurrentDay();
+                }
+            });
 
-            InspWorkType_Y.change(function () {
-                if (InspWorkType_Y.is(":checked")) {
+            $('input[name="PlanDt"]').on('change', function () {
+                var PlanDt = $(this).val();
+                var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+                if (InspWorkType == "Y" || InspWorkType == "N") {
                     InitializeDatatable();
                     InitializeDatatableCurrentDay();
                 }
             });
-            InspWorkType_N.change(function () {
-                if (InspWorkType_N.is(":checked")) {
-                    InitializeDatatable();
-                    InitializeDatatableCurrentDay();
-                }
-            });
+
         });
 
         function Save1() {
@@ -183,7 +209,8 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
+                ordering: false,
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -200,16 +227,16 @@
                 },
 
                 columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
+                    //{
+                    //    data: null, width: "5%", className: "dt-align-center",
+                    //    render: function (data, type, row, meta) {
+                    //        return '<input type="checkbox" name="chkDWplan" id="' + data.CaseNo + '"><label for="' + data.CallSno + '"></label>';
+                    //    }
+                    //},
                     {
                         data: null, width: "5%", className: "dt-align-center",
                         render: function (data, type, row, meta) {
-                            return '<input type="checkbox" name="chkDWplan" id="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                            return '<input type="checkbox" name="chkDWplan" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
                         }
                     },
                     {
@@ -264,9 +291,10 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
+                ordering: false,
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("GetLoadTableCurrentDay")",
+                    url: "@Url.Action("LoadTableCurrentDay")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -281,11 +309,11 @@
                 },
 
                 columns: [// Columns Setups
-                    
+
                     {
                         data: null, width: "5%", className: "dt-align-center",
                         render: function (data, type, row, meta) {
-                            return '<input type="checkbox" name="chkDWplan" id="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                            return '<input type="checkbox" name="chkDWplanDay" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
                         }
                     },
                     {
@@ -312,42 +340,67 @@
                     { data: "MfgPlace" },
                     { data: "MFGCity" },
                 ],
-                "order": [[9, "asc"]]
+                "order": [[0, "asc"]]
             });
         }
 
         function Save() {
             checkedWork = [];
             var dt = $('#dtList').DataTable();
+            //$(dt.$('input[name="chkDWplan"]:checked').each(function () {
+            //    checkedWork.push($(this).attr('id'));
+            //}));
+            debugger
             $(dt.$('input[name="chkDWplan"]:checked').each(function () {
-                checkedWork.push($(this).attr('id'));
+                var CaseNo = $(this).attr('CaseNo');
+                var CallRecvDt = $(this).attr('CallRecvDt');
+                var CallSno = $(this).attr('CallSno');
+                //var caseNo = dt.cell($(this).closest('tr'), 2).data();
+                checkedWork.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno });
             }));
 
             if (checkedWork.length == 0) {
                 alert('Please select atleast record for daily plan for work!!!')
                 return false;
             }
-            $("#checkedWork").val(checkedWork);
-            event.preventDefault();
-            var formData = $("#frmDetails").serialize();
-            $.post("@Url.Action("BillUpdate", "BillAdjustments")", formData, function (response) {
-                if (response.status) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                }
-            });
-            //$.post("@Url.Action("UpdateBillsFinalisation", "BillFinalisationForm")", { BillNos: checkedWork }, function (response) {
-            //    if (response.status) {
-            //        ShowHideMsg("success", response.responseText);
-            //        InitializeDatatable();
-            //    }
-            //});
+
+            $("#ActionType").val("S");
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+            $("#PlanDt").val(PlanDt);
+            $("#InspWorkType").val(InspWorkType);
+            $("#checkedWork").val(JSON.stringify(checkedWork));
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
         }
 
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            //window.location.href = "/DailyWorkPlan/DailyWorkPlan";
-            window.location.href = '@Url.Action("DailyWorkPlan", "DailyWorkPlan")';
-        };
+        function Delete() {
+            checkedWork = [];
+            debugger
+            var dt = $('#dtListCurrentDay').DataTable();
+            $(dt.$('input[name="chkDWplanDay"]:checked').each(function () {
+                var CaseNo = $(this).attr('CaseNo');
+                var CallRecvDt = $(this).attr('CallRecvDt');
+                var CallSno = $(this).attr('CallSno');
+                //var caseNo = dt.cell($(this).closest('tr'), 2).data();
+                checkedWork.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno });
+            }));
+
+            if (checkedWork.length == 0) {
+                alert('Please select atleast record for daily plan for work!!!')
+                return false;
+            }
+            $("#ActionType").val("D");
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+            $("#PlanDt").val(PlanDt);
+            $("#InspWorkType").val(InspWorkType);
+            $("#checkedWork").val(JSON.stringify(checkedWork));
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+
     </script>
     }

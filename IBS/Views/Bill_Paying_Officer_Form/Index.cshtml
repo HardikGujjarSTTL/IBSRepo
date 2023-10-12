@@ -157,9 +157,10 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var BpoCd = data.BpoCd;
+                            var id = data.BpoCd;
                             var editUrl = '@Url.Action("Manage", "Bill_Paying_Officer_Form")?BpoCd=' + BpoCd + "&ActionType=E";
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="BPODelete(this.BpoCd); return false;" href="javascript:void(\'0\');" id=\"' + BpoCd + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="BPODelete(id); return false;" href="javascript:void(\'0\');" id=\"' + BpoCd + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -169,9 +170,10 @@
             });
         }
 
-        function BPODelete(BpoCd) {
+        function BPODelete(id) {
+            alert(id);
             var url = '@Url.Action("Delete", "Bill_Paying_Officer_Form")';
-            $("#btn-delete-yes").attr("href", url + "/" + BpoCd);
+            $("#btn-delete-yes").attr("href", url + "/" + id);
             $("#modal-delete-conf").modal("show");
         }
     </script>
