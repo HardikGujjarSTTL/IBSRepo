@@ -168,6 +168,7 @@ builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked
 builder.Services.AddScoped<ICallsReportRepository, CallsReportRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
+builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 
 
 

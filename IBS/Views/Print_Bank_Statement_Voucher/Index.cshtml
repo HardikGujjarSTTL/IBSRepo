@@ -1,0 +1,228 @@
+﻿@model IBS.Models.Print_Bank_Statement_VoucherModel
+@{
+    var region = ViewBag.Region;
+    var bankAddress = "";
+    var accountNumber = "";
+    Layout = null;
+
+    if (region == "N")
+    {
+        bankAddress = "AXIS BANK LTD.<br>Rites Bhawan, Gurgaon";
+        accountNumber = "131010200012272";
+    }
+    else if (region == "S")
+    {
+        bankAddress = "AXIS BANK LTD.<br>Chennai";
+        accountNumber = "006010200009843";
+    }
+    
+    else if (region == "E")
+    {
+        bankAddress = "AXIS BANK LTD.<br>Rites Bhawan, Gurgaon";
+        accountNumber = "131010200012272";
+    }
+    else if (region == "W")
+    {
+        bankAddress = "AXIS BANK.<br>Mumbai";
+        accountNumber = "004010200023773";
+    }
+    else if (region == "C")
+    {
+        bankAddress = "AXIS BANK LTD.<br>Rites Bhawan, Gurgaon";
+        accountNumber = "131010200012272";
+    }
+
+   
+}
+<div id="buttonContainer" class="button-container">
+    <button class="print-button" onclick="window.print();">Print</button>
+ 
+</div>
+<p style="text-align: center;">
+    <span style="font-size: 12;"><b>RITES LTD</b><br>BANK VOUCHER<br>ACCOUNTING UNIT - @ViewBag.region</span>
+</p>
+<table width="95%" align="center">
+    <tr>
+        <td colspan="5">
+            <HR size="4" noshade style="width: 100%;" />
+        </td>
+    </tr>
+    <tr>
+        <td align="Left">
+            <p align="Left">
+                <font face="Verdana">
+                    <span style="font-size: 12">
+                        @bankAddress
+                    </span>
+                </font>
+            </p>
+        </td>
+        <td align="center">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    @ViewBag.VCHR_NO
+                </span>
+            </font>
+        </td>
+        <td align="center">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    Dated: @ViewBag.VCHR_DT
+                </span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td align="Left" colspan="3">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    <u>
+                        @Model.AMOUNT
+                    </u>
+                </span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td align="Left">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    C. A/C. No. @accountNumber OF RITES LTD. <b><u>CHEQUE/CASH Rs. @Model.AMOUNT</u></b>
+                </span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    @ViewBag.VCHR_NO Dated: @ViewBag.VCHR_DT
+                </span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td align="Left" colspan="3">
+            <font face="Verdana">
+                <span style="font-size: 12">
+                    <u>
+                        @Model.AMOUNT
+                    </u>
+                </span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" align="Center">
+            CASHIER
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <HR />
+        </td>
+    </tr>
+    <tr>
+        <td width="10%" align="Left">
+            <font face="Verdana">
+                <span style="font-size: 12"><b>S No.</b></span>
+            </font>
+        </td>
+        <td width="30%" align="Left">
+            <font face="Verdana">
+                <span style="font-size: 12"><b>Drawee Bank</b></span>
+            </font>
+        </td>
+        <td width="25%" align="Left">
+            <font face="Verdana">
+                <span style="font-size: 12"><b>Cheque No</b></span>
+            </font>
+        </td>
+        <td width="15%" align="Left">
+            <font face="Verdana">
+                <span style="font-size: 12"><b>Date</b></span>
+            </font>
+        </td>
+        <td width="15%" align="Right">
+            <font face="Verdana">
+                <span style="font-size: 12"><b>Amount (Rs.)</b></span>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <HR />
+        </td>
+    </tr>
+    @if (Model != null && Model.Print_Bank_Statement.Count > 0)
+    {
+        var serialNumber = 1;
+        @foreach (var item in Model.Print_Bank_Statement)
+        {
+            <tr>
+                <td width="10%" align="Left">
+                    <font face="Verdana">
+                       <span style="font-size: 12">
+                      
+                                @serialNumber
+                       </span>
+                    </font>
+                </td>
+                <td width="30%" align="Left">
+                    <font face="Verdana">
+                        <span style="font-size: 12">@Model.BANK_NAME</span>
+                    </font>
+                </td>
+                <td width="25%" align="Left">
+                    <font face="Verdana">
+                        <span style="font-size: 12">@Model.CHQ_NO</span>
+                    </font>
+                </td>
+                <td width="15%" align="Left">
+                    <font face="Verdana">
+                        <span style="font-size: 12">@Model.CHQ_DT</span>
+                    </font>
+                </td>
+                <td width="15%" align="Right">
+                    <font face="Verdana">
+                        <span style="font-size: 12">@Model.AMOUNT</span>
+                    </font>
+                </td>
+            </tr>
+            serialNumber++; 
+        }
+    }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="Right">
+            --------------
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="right">
+            @Model.AMOUNT
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="right">
+            --------------
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" align="center">
+            ----------------------------------------------Tear At This Place------------------------------------------------
+        </td>
+    </tr>
+</table>
+
