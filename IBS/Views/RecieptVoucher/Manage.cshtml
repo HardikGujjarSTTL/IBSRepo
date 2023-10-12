@@ -46,11 +46,14 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            
-        });
-
         function SubmitRecieptVoucherData() {
+            var rowCount = $("#dtVoucherDetails tr").length;
+
+            if (rowCount <= 1) {
+                ShowHideMsg("warning", "Please insert atleast Voucher Details.");
+                return false;
+            }
+
             if ($("#frmRecieptVoucher").valid()) {
                 $("#frmRecieptVoucher").submit();
             }
