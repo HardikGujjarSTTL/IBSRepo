@@ -252,9 +252,12 @@ namespace IBS.Repositories.IE
                         obj.MfgCd = query.MfgCd;
                         obj.MfgPlace = query.MfgPlace;
                         obj.RegionCode = Region;
-
                         obj.UserId = model.Createdby;
                         obj.Datetime = DateTime.Now;
+
+
+
+
                         context.T47IeWorkPlans.Add(obj);
                         context.SaveChanges();
                         ID = Convert.ToInt32(obj.CallSno);
@@ -283,6 +286,85 @@ namespace IBS.Repositories.IE
                 }
             }
             return ID;
+        }
+
+        public int NonInspectionSave(DailyWorkPlanModel model, string Region, int GetIeCd)
+        {
+            int ID = 0;
+            int co_cd = 0;
+            var T09 = context.T09Ies.Where(x => x.IeCd == GetIeCd).FirstOrDefault();
+            if (T09 != null)
+            {
+                co_cd = Convert.ToInt32(T09.IeCoCd);
+            }
+
+            DateTime startDate = Convert.ToDateTime(model.FromDt);
+            DateTime endDate = Convert.ToDateTime(model.ToDt);
+            int daysDifference = (int)(endDate - startDate).TotalDays;
+            var result = Enumerable.Range(0, daysDifference + 1)
+                .Select(offset => startDate.AddDays(offset))
+                .Select(date => date.ToString("dd/MM/yyyy"));
+
+            foreach (var wkDt in result)
+            {
+                var Exist = context.T48NiIeWorkPlans.Where(x => x.IeCd == GetIeCd && x.CoCd == Convert.ToByte(co_cd) && x.NiWorkCd == model.NIWorkType && x.NiWorkDt == Convert.ToDateTime(wkDt)).FirstOrDefault();
+                if (Exist == null)
+                {
+                    T48NiIeWorkPlan T48 = new();
+                    T48.IeCd = GetIeCd;
+                    T48.CoCd = Convert.ToByte(co_cd) == 0 ? null : Convert.ToByte(co_cd);
+                    T48.NiWorkCd = model.NIWorkType;
+                    T48.NiOtherDesc = model.OtherDesc;
+                    T48.NiWorkDt = Convert.ToDateTime(wkDt);
+                    T48.RegionCode = Region;
+                    T48.UserId = model.UserId;
+                    T48.Datetime = DateTime.Now.Date;
+
+                    context.T48NiIeWorkPlans.Add(T48);
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(T48.IeCd);
+                }
+            }
+            return ID;
+        }
+
+        public DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd)
+        {
+
+            DTResult<DailyWorkPlanModel> dTResult = new() { draw = 0 };
+            IQueryable<DailyWorkPlanModel>? query = null;
+
+            string PlanDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PlanDt"]))
+            {
+                PlanDt = Convert.ToString(dtParameters.AdditionalValues["PlanDt"]);
+            }
+
+            query = from T48 in context.T48NiIeWorkPlans
+                    where T48.IeCd == GetIeCd && T48.NiWorkDt == Convert.ToDateTime(PlanDt)
+                    orderby T48.NiWorkDt
+                    select new DailyWorkPlanModel
+                    {
+                        NIWorkType = T48.NiWorkCd == "T" ? "Training" :
+                                          T48.NiWorkCd == "L" ? "Leave" :
+                                          T48.NiWorkCd == "O" ? "Office" :
+                                          T48.NiWorkCd == "J" ? "JI" :
+                                          T48.NiWorkCd == "F" ? "Firm Visit" :
+                                          "Others - " + T48.NiOtherDesc,
+                        FromDt = T48.NiWorkDt
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
     }
 }
