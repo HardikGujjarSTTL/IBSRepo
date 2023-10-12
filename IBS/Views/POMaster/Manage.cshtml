@@ -471,14 +471,18 @@
                 $("#PoiCd").val($("#ddlManufac").val());
             }, 1000);
 
-            GetManufVEND($("#PoiCd").val());
+            setTimeout(function () {
+                GetManufVEND($("#PoiCd").val());
+            }, 2000);
         }
 
         function ChanedManufacturer() {
             $("#TempPoiCd").val($("#ddlManufac").val());
             $("#PoiCd").val($("#ddlManufac").val());
-            GetManufVEND($("#PoiCd").val());
-            GetManufVEND(PoiCd);
+            setTimeout(function () {
+                GetManufVEND($("#PoiCd").val());
+            }, 2000);
+            
         }
 
         function ChanedPurchaserCd() {
