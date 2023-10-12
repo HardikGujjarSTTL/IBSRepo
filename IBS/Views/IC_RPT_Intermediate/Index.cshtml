@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IBS.Models.IC_RPT_IntermediateModel;
+@{
     ViewData["Title"] = "IC REPORT EDIT FORM";
     string clsView = "";
     //if (Model.ErrorMsg != null)
@@ -21,13 +22,13 @@
                         <label for="Reference">Case No. : </label>
                     </td>
                     <td>
-                        <label class="text-danger" id="lblBank">N22010890</label>
+                        <label id="lblCASE_NO">@Model.CASE_NO</label>
                     </td>
                     <td>
                         <label for="Reference">Call Serial No : </label>
                     </td>
                     <td>
-                        <label class="text-danger" id="lblChqNo">80</label>
+                        <label id="lblCall_SNO">@Model.Call_SNO</label>
                     </td>
                 </tr>
                 <tr>
@@ -35,13 +36,13 @@
                         <label for="Reference">Call Date : </label>
                     </td>
                     <td>
-                        <label class="text-danger" id="lblChqDate">02/08/2022</label>
+                        <label id="lblCall_Recv_dt">@Model.Display_Call_Recv_dt</label>
                     </td>
                     <td>
                         <label for="Reference">PO No. : </label>
                     </td>
                     <td>
-                        <label class="text-danger" id="lblVNo">02211400100166</label>
+                        <label id="lblPONO">@Model.PO_NO</label>
                     </td>
                 </tr>
                 <tr>
@@ -49,7 +50,7 @@
                         <label for="Reference">PO Date :</label>
                     </td>
                     <td>
-                        <label class="text-danger" id="lblJVNO">02/08/2022</label>
+                        <label id="lblPODT">@Model.PO_DT</label>
                     </td>
                 </tr>
             </table>
@@ -96,7 +97,7 @@
             <div class="row my-3">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee</label>
-                    @Html.DropDownList("dpConsignee", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.CONSIGNEE_CD, new SelectList(IBS.Models.Common.BindConsignee(Model.CASE_NO, Model.Display_Call_Recv_dt, Model.Call_SNO) , "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Item</label>
@@ -104,126 +105,122 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
-                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="BK_NO" maxlength="12" /> @*asp-for="test"*@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">SET No.</label>
-                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" /> @*asp-for="test"*@
                 </div>
             </div>
 
             <div class="row my-3">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee Manufacture Type : </label>
-                    @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.MAN_TYPE, new SelectList(IBS.Models.Common.GetConsignneManufacturingType() , "Value", "Text"))
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Consignee DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="CONSIGNEE_DESC" maxlength="200" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Bill Paying Officer DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="BPO_DESC" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Governing Bill Paying Authority : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="GBPO_AUTH" maxlength="200" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Manufacturer DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="MANUFAC_DESC" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Purchasing Authority DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="PUR_AUTH_DESC" maxlength="200" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Offered Inst. No. : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="OFF_INST_NO" maxlength="200" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">ITEM UNIT (UOM) : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="ITEM_UNIT" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM DESCRIPTION : </label>
-                    <textarea id="txtConsDesc" maxlength="750"></textarea>
+                    <textarea maxlength="750" asp-for="ITEM_DESC_PO"></textarea>
                     @*<input type="text" class="input"  />*@
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM REMARK : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="ITEM_REMARK" maxlength="750" />
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">QTY ORDER : </label>
-                    <label id="lblQtyOrder">347</label>
+                    <label id="lblQtyOrder">@Model.QTY_ORDERED</label>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">CUM QTY PREV OFFERED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="CUM_QTY_PREV_OFFERED" maxlength="10" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">CUM QTY PREV PASSED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="CUM_QTY_PREV_PASSED" maxlength="10" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">QTY TO INSP : </label>
-                    <label id="lblQtyINSP">347</label>
+                    <label id="lblQtyINSP">@Model.QTY_TO_INSP</label>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">QTY PASSED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="QTY_PASSED" maxlength="10" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">QTY REJECTED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="QTY_REJECTED" maxlength="10" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">QTY DUE : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="QTY_DUE" maxlength="10" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Remark<span class="text-danger">* (Max 400 Chars)</span></label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="REMARK" maxlength="750" />
+                    <span class="text-danger">* Add Rejection Remarks.</span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Holograms<span class="text-danger">* (Max 250 Chars)</span></label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="HOLOGRAM" maxlength="750" />
                     <span class="text-danger">* Enter series of Holograms Used on material and if Holograms not used then kindly mention type of seal & it's No..</span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Case Status Date</label>
-                    <input type="text" class="input datepicker" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input datepicker" maxlength="750" />
                 </div>
                 <div class="col-md-9 mb-3">
                     <label for="Reference"> </label>
@@ -238,11 +235,11 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Passed instt. Note</label>
-                    <input type="text" class="input" id="txtConsDesc" />
+                    <input type="text" class="input" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Visits Dates</label>
-                    <input type="text" class="input" id="txtConsDesc" />
+                    <input type="text" class="input" />
                 </div>
             </div>
 
@@ -250,8 +247,8 @@
                 <div class="col-md-10 mb-3">
                     <label for="Reference">IE Stamp</label>
                     <div style="display:flex;">
-                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
-                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                        @Html.DropDownList("dpItem1", new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))
+                        @Html.DropDownList("dpItem2", new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))
                     </div>
                 </div>
             </div>
@@ -265,3 +262,43 @@
         </div>
     </form>
 </div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
+
+        $("#btnSave").click(function () {
+            if ($("#CONSIGNEE_CD").val() == "0" || $("#CONSIGNEE_CD").val() == "") {
+                ShowHideMsgNew(false, "Please select consignee !");
+                return;
+            }
+
+            var Qty_TO_Ins = "@Model.QTY_TO_INSP";
+            var QtyRejected = $("#QTY_REJECTED").val() == "" ? "0" : $("#QTY_REJECTED").val();
+            var QtyPassed = $("#QTY_PASSED").val() == "" ? "0" : $("#QTY_PASSED").val();
+            if (!IsValidQty(Qty_TO_Ins, QtyRejected, QtyPassed)) {
+                ShowHideMsgNew(false, "QTY REJECTED + QTY PASSED should not be greater than (>) QTY TO INSP !");
+                return;
+            }
+        });
+
+        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
+            var inspqty = 0;
+            var rejectedqty = 0;
+            var passedqty = 0;
+
+            inspqty = parseFloat(pinspqty);
+            rejectedqty = parseFloat(prejectedqty);
+            passedqty = parseFloat(ppassedqty);
+
+            if ((rejectedqty + passedqty) > inspqty) {
+                return false;
+
+            }
+            return true;
+        }
+    </script>
+}
