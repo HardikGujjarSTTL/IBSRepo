@@ -4,6 +4,7 @@ using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
+using IronBarCode;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
@@ -135,27 +136,77 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-        public IActionResult GenerateBarcode(string Barcode)
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (Bitmap bitMap = new Bitmap(Barcode.Length * 40, 80))
-                {
-                    using (Graphics graphics = Graphics.FromImage(bitMap))
-                    {
-                        Font oFont = new Font("IDAutomationHC39M", 16);
-                        PointF point = new PointF(2f, 2f);
-                        SolidBrush whiteBrush = new SolidBrush(Color.White); // Use a white background
-                        graphics.FillRectangle(whiteBrush, 0, 0, bitMap.Width, bitMap.Height);
-                        SolidBrush blackBrush = new SolidBrush(Color.Black);
-                        graphics.DrawString("*" + Barcode + "*", oFont, blackBrush, point);
-                    }
-                    bitMap.Save(memoryStream, ImageFormat.Png); // Save as PNG
-                    ViewBag.BarcodeImage = "data:image/png;base64," + Convert.ToBase64String(memoryStream.ToArray());
-                }
-            }
-            return View();
-        }
         
+        public IActionResult GenerateBarcode(string Barcode, int quantity)
+        {
+            try
+            {
+                
+                List<string> imageUrls = new List<string>();
+
+                for (int i = 0; i < quantity; i++)
+                {
+                    string uniqueBarcode = $"{Barcode}\n{DateTime.Now.ToString("dd-MM-yyyy")}";
+                    GeneratedBarcode barcode = IronBarCode.BarcodeWriter.CreateBarcode(uniqueBarcode, BarcodeWriterEncoding.Code128);
+                    barcode.ResizeTo(400, 120);
+                    barcode.AddBarcodeValueTextBelowBarcode();
+                    
+                    barcode.ChangeBarCodeColor(System.Drawing.Color.Black);
+                    barcode.SetMargins(10);
+
+                    string path = Path.Combine(env.WebRootPath, "GeneratedBarcode");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fileName = $"barcode_{i + 1}.png";
+                    string filePath = Path.Combine(env.WebRootPath, "GeneratedBarcode", fileName);
+                    barcode.SaveAsPng(filePath);
+
+                    string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/GeneratedBarcode/" + fileName;
+                    imageUrls.Add(imageUrl);
+                }
+
+                ViewBag.QrCodeUris = imageUrls;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return PartialView();
+            
+        }
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        {
+           
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
+
     }
 }

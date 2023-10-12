@@ -1,11 +1,11 @@
 ﻿<div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <h2>Generate Bar Code</h2>
-        
-
+    <div class="col-md-6" id="barcode">
        
-            <img src="@ViewBag.BarcodeImage" alt="Barcode Image">
+        @foreach (var imageUrl in ViewBag.QrCodeUris)
+        {
+            <img src="@imageUrl" alt="Generated Barcode" />
+        }
        
     </div>
 </div> 
@@ -15,14 +15,57 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
-        $(function () {
-            barcode();
+        $(document).ajaxSend(function () {
+            $(".overlayLoader").show();
         });
-        function barcode(){
 
+        $(document).ajaxComplete(function () {
+            $(".overlayLoader").hide();
+        });
+        $(function () {
+            generatePdf(true);
+        });
+        function generatePdf(isPrint) {
+            var HTML = $('#barcode').html();
+
+            $.ajax({
+                url: "@Url.Action("GeneratePDF", "BarcodeGeneration")",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: { htmlContent: HTML },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (result) {
+                    var url = window.URL.createObjectURL(result);
+                    if (isPrint) {
+                        iframe = document.createElement('iframe');
+                        document.body.appendChild(iframe);
+
+                        iframe.style.display = 'none';
+                        iframe.src = url;
+                        iframe.onload = function () {
+                            setTimeout(function () {
+                                iframe.focus();
+                                iframe.contentWindow.print();
+                            }, 1);
+                        };
+                    }
+                    else {
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = getExportFileName(fileName) + '.pdf';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
         }
-      
 
     </script>
 }

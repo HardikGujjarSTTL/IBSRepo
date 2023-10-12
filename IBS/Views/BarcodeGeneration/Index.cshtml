@@ -90,10 +90,14 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                         var Id = data.BARCODE;
-                            var editUrl = '@Url.Action("GenerateBarcode", "BarcodeGeneration")?Barcode=' + Id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
+                            //var qty = 1;
+                            var qtyInput = '<input type="number" class="text-filter" name="qty" style="height:auto;" id="' + data.QTY + '" value="1" min="1" step="1" oninput="validity.valid||(value=\'1\');" onchange="validateQty(this);"';
+
+                            var printImage = '<img src="../images/print.png" alt="Print" />';
+                            var printLink = '<a href="' + getEditUrl(Id) + '" class="btnicons" style="margin-left:40%;vertical-align:sub;">' + printImage + '</a>';
+                            var html = '<div align="center" class="btnicons">' + printLink + '</div>';
+
+                            return qtyInput + html;
                         }
                     }
                    
@@ -101,7 +105,46 @@
                 "order": [[0, "asc"]]
             });
         }
+        function getEditUrl(Id) {
+         
+            return '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id;
 
+        }
+
+        
+        $('#dtbarcode').on('click', 'td a', function (e) {
+            
+            e.preventDefault(); 
+            var qty = $(this).closest('td').find('input[name="qty"]').val();
+            var Id = $(this).attr('href').split('Barcode=')[1]; 
+            var editUrl = getEditUrl(Id) + '&quantity=' + qty; 
+            //window.location.href = editUrl;
+            printDirectly(editUrl);
+        });
+        function printDirectly(url) {
+            
+            var iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.display = 'none';
+
+            
+            document.body.appendChild(iframe);
+
+           
+            setTimeout(function () {
+                iframe.contentWindow.print();
+            }, 1000);
+
+            
+            setTimeout(function () {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }
+        function validateQty(inputElement) {
+            if (inputElement.value === '' || parseInt(inputElement.value) < 1) {
+                inputElement.value = '1';
+            }
+        }
                
 
     </script>

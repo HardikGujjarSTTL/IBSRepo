@@ -395,7 +395,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-
+                            
                             return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '">';
                         }
                     },
@@ -437,9 +437,35 @@
                     qtytotal.val("");
                 }
                 var rowData = dataTable.row(row).data();
+              
                 if (rowData) {
                     var testName = rowData.TEST_NAME;
                     var DISCIPLINE_ID = rowData.DISCIPLINE_ID;
+                    var DisciplineName = "";
+                    if (DISCIPLINE_ID == "1") {
+                        DisciplineName = "Textile";
+                    }
+                    else if (DISCIPLINE_ID == "2") {
+                        DisciplineName = "Paper";
+                    }
+                    else if (DISCIPLINE_ID == "3") {
+                        DisciplineName = "Metal";
+                    }
+                     else if (DISCIPLINE_ID == "4") {
+                        DisciplineName = "Mechanical";
+                    }
+                     else if (DISCIPLINE_ID == "5") {
+                        DisciplineName = "Metalographic";
+                    }
+                     else if (DISCIPLINE_ID == "6") {
+                        DisciplineName = "Leather";
+                    }
+                    else if (DISCIPLINE_ID == "7") {
+                        DisciplineName = "Polymer-Rubbe";
+                    }
+                    else if (DISCIPLINE_ID == "8") {
+                        DisciplineName = "Other";
+                    }
                     if (checkbox.is(":checked")) {
                         var price = rowData.PRICE;
                         var qtyTextbox = row.find('input[name="qty"]');
@@ -453,12 +479,12 @@
 
                         if (!testNameExists) {
 
-                            destinationTable.row.add([testName, price, qtyValue, totalValue, DISCIPLINE_ID]).draw(false);
+                            destinationTable.row.add([DisciplineName,testName, price, qtyValue, totalValue, DISCIPLINE_ID]).draw(false);
                         
                             var sumTotal = 0;
                             destinationTable.rows().eq(0).each(function (index) {
                                 var rowData = destinationTable.row(index).data();
-                                var totalValue = rowData[3]; 
+                                var totalValue = rowData[4]; 
                                 if (!isNaN(totalValue)) {
                                     sumTotal += parseFloat(totalValue);
                                     $("#Total").val(sumTotal);
@@ -540,11 +566,11 @@
             var tableData = destinationTable.rows().data().toArray();
 
             $.each(tableData, function (index, row) {
-                names += row[0] + ","; 
-                amounts += row[1] + ",";
-                quantities += row[2] + ",";
-                subtotals += row[3] + ",";
-                othervalues += row[4] + ",";
+                names += row[1] + ","; 
+                amounts += row[2] + ",";
+                quantities += row[3] + ",";
+                subtotals += row[4] + ",";
+                othervalues += row[5] + ",";
             });
             names = names.slice(0, -1);
             amounts = amounts.slice(0, -1);
@@ -604,6 +630,8 @@
                         $("#TotalRate").val(response.BarcodeGenerate.GTotal);
                         $("#GSTAmount").val(response.BarcodeGenerate.Tax);
                         ShowHideMsg("success", response.responseText);
+                        $("#popup2").fadeOut();
+                        $("#popup2").hide();
                     } else {
                         ShowHideMsg("Failed", response.responseText);
                     }

@@ -224,27 +224,53 @@ namespace IBS.Repositories
         }
         public string GenerateBarCodeNo(BarcodeGenerate BarcodeGenerate)
         {
-            string date = BarcodeGenerate.CURRENT_DATE.ToString().Substring(0, 10);
-            OracleParameter[] par = new OracleParameter[4];
-            par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Char, BarcodeGenerate.Region, ParameterDirection.Input);
-            par[1] = new OracleParameter("IN_Current_DT", OracleDbType.Varchar2, BarcodeGenerate.CURRENT_DATE, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_transaction_no", OracleDbType.Varchar2, ParameterDirection.Output);
-            par[3] = new OracleParameter("p_barcode_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            //string date = BarcodeGenerate.CURRENT_DATE.ToString().Substring(0, 10);
+            //OracleParameter[] par = new OracleParameter[3];
+            //par[0] = new OracleParameter("in_lab_code", OracleDbType.Char, BarcodeGenerate.Region, ParameterDirection.Input);
+            //par[1] = new OracleParameter("in_transaction_date", OracleDbType.Date, BarcodeGenerate.CURRENT_DATE, ParameterDirection.Input);
+            //par[2] = new OracleParameter("out_transaction_number", OracleDbType.Varchar2, ParameterDirection.Output);
+            ////par[3] = new OracleParameter("p_barcode_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GENERATE_Transaction_And_Barcode_No", par, 1);
+            //var ds = DataAccessDB.GetDataSet("GENERATE_Barcode_NO", par, 1);
 
-            BarcodeGenerate model1 = new();
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //BarcodeGenerate model1 = new();
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+
+            //    DataRow row = ds.Tables[0].Rows[0];
+            //    model1 = new BarcodeGenerate
+            //    {
+            //        BARCODE = row["BARCODE"] as string,
+            //    };
+            //}
+            //var Barcode = model1.BARCODE.Trim();
+            //return Barcode;
+            try
             {
-
-                DataRow row = ds.Tables[0].Rows[0];
-                model1 = new BarcodeGenerate
+                using (var conn1 = context.Database.GetDbConnection())
                 {
-                    BARCODE = row["BARCODE"] as string,
-                };
+                    using (OracleCommand cmd = new OracleCommand("GENERATE_Barcode_NO", (OracleConnection)conn1))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("in_lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
+                        cmd.Parameters.Add("in_transaction_date", OracleDbType.Date).Value = BarcodeGenerate.CURRENT_DATE;
+                        OracleParameter outParam = new OracleParameter("out_transaction_number", OracleDbType.Varchar2, 255);
+                        outParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(outParam);
+                        conn1.Open();
+                        cmd.ExecuteNonQuery();
+
+                        BarcodeGenerate.BARCODE = cmd.Parameters["out_transaction_number"].Value.ToString();
+                    }
+                }
             }
-            var Barcode = model1.BARCODE.Trim();
-            return Barcode;
+            catch (Exception ex)
+            {
+                return BarcodeGenerate.BARCODE;
+            }
+            
+
+            return BarcodeGenerate.BARCODE;
         }
         public DTResult<BarcodeGenerate> LoadCalculation(DTParameters dtParameters)
         {

@@ -427,8 +427,28 @@
         $("#btnprint").click(function () {
             
             var PaymentID = $("#lblpyno").val();
-            window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            var url = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            printDirectly(url);
+            //window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
         })
+        function printDirectly(url) {
 
+            var iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.display = 'none';
+
+
+            document.body.appendChild(iframe);
+
+
+            setTimeout(function () {
+                iframe.contentWindow.print();
+            }, 1000);
+
+
+            setTimeout(function () {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }
     </script>
 }
