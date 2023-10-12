@@ -283,7 +283,6 @@ namespace IBS.Helper
             X,
         }
 
-
         public enum ActiveInActive
         {
             [Description("Active")]
@@ -590,8 +589,6 @@ namespace IBS.Helper
             R,
         }
 
-        
-
         public enum ManagementReportsTitle
         {
             [Description("IE Performance")] IE_X,
@@ -814,14 +811,23 @@ namespace IBS.Helper
         public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
 
         public static AllICStatusModel AllICStatus { get; set; }
+
         public static ReInspectionICsModel ReInspectionICs { get; set; }
+
         public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
+
         public static ICUnbilledModel ICUnbilled { get; set; }
+
         public static IE7thCopyListModel IE7thCopyList { get; set; }
+
         public static ICIssuedNotReceivedReportModel ICIssuedNotReceivedReport{ get; set; }
+
         public static ICStatusModel ICStatus { get; set; }
+
         public static PendingJICasesReportModel PendingJICasesReport { get; set; }
+
         public static IEDairyModel IEDairy { get;set; }
+
         public static IEWorkPlanModel IEWorkPlan { get; set; }
     }
 }

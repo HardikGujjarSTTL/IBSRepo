@@ -1,6 +1,6 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -15,11 +15,13 @@ namespace IBS.Controllers
             ritesDesignationMasterRepository = _ritesDesignationMasterRepository;
         }
 
+        [Authorization("RitesDesignationMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("RitesDesignationMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             RDMModel model = new();
@@ -31,6 +33,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("RitesDesignationMaster", "Index", "edit")]
         public IActionResult Manage(RDMModel model)
         {
             try
@@ -64,6 +67,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("RitesDesignationMaster", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
