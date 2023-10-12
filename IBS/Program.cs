@@ -131,7 +131,7 @@ builder.Services.AddScoped<IHighlightsRepository, HighlightsRepository>();
 builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRepository>();
 builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
 builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
-builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<IRecieptVoucherRepository, RecieptVoucherRepository>();
 builder.Services.AddScoped<IInterUnitRecieptRepository, InterUnitRecieptRepository>();
 
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
@@ -237,6 +237,7 @@ builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepos
 builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>();
+builder.Services.AddScoped<IIC_RPT_IntermediateRepository, IC_RPT_IntermediateRepository>();
 
 var app = builder.Build();
 

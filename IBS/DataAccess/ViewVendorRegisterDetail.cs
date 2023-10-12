@@ -30,4 +30,6 @@ public partial class ViewVendorRegisterDetail
     public DateTime? DelvDate { get; set; }
 
     public string? Bpo { get; set; }
+
+    public int ConsigneeCd { get; set; }
 }

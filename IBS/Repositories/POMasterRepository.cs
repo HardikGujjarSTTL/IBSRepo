@@ -45,6 +45,8 @@ namespace IBS.Repositories
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 model.Contractid = POMaster.Contractid;
+                model.RealCaseNo = POMaster.RealCaseNo;
+                model.Purchaser = POMaster.Purchaser;
                 return model;
             }
         }
@@ -189,7 +191,14 @@ namespace IBS.Repositories
                 obj.RlyNonrly = model.RlyNonrly;
                 obj.PoNo = model.PoNo;
                 obj.PoDt = model.PoDt;
-                obj.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    obj.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    obj.RecvDt = DateTime.Now;
+                }
                 obj.VendCd = model.VendCd;
                 obj.RlyCd = model.RlyCd;
                 obj.RlyCdDesc = model.RlyCdDesc;
@@ -197,6 +206,7 @@ namespace IBS.Repositories
                 obj.Remarks = model.Remarks;
                 obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
+                obj.Purchaser = model.Purchaser;
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
@@ -214,7 +224,14 @@ namespace IBS.Repositories
                 POMaster.RlyNonrly = model.RlyNonrly;
                 POMaster.PoNo = model.PoNo;
                 POMaster.PoDt = model.PoDt;
-                POMaster.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    POMaster.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    POMaster.RecvDt = DateTime.Now;
+                }
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;
@@ -225,6 +242,7 @@ namespace IBS.Repositories
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 POMaster.Contractid = model.Contractid;
+                POMaster.Purchaser = model.Purchaser;
                 POMaster.Updatedby = model.Updatedby;
                 POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();

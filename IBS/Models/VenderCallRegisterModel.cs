@@ -205,6 +205,8 @@ namespace IBS.Models
 
         public string? Consignee { get; set; }
 
+        public int ConsigneeCd { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? DelvDt { get; set; }
@@ -256,6 +258,8 @@ namespace IBS.Models
         public string OfflineCallStatus { get; set; }
 
         public string Region { get; set; }
+
+        public string MsgStatus { get; set; }
 
         public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
 
