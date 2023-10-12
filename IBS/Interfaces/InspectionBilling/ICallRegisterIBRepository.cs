@@ -54,12 +54,18 @@ namespace IBS.Interfaces.InspectionBilling
 
         int CallDetailsSave(VendrorCallDetailsModel model, string UserName);
 
-        string CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+        public VenderCallStatusModel CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
+        public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
-        string GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
 
-        string GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
+        public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
+
+        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue,string IeCd,string Region);
+
+        public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
     }
 }

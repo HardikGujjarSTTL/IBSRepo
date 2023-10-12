@@ -471,9 +471,16 @@ namespace IBS.Models
 
         public string ConsigneeFirm { get; set; }
 
+        public string RejectionCharge { get; set; }
+
+        public string LocalOutstation { get; set; }
+
         public List<SelectListItem> ConsigneeFirmList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> CallRlyFirmList { get; set; } = new List<SelectListItem>();
 
         public string? ItemDescPo { get; set; }
+
+        public string? ReasonFIFO { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -489,8 +496,9 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? PoDt { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Book No.")]
         public string? BkNo { get; set; }
-
+        [Required(ErrorMessage = "Please Enter Set No.")]
         public string? SetNo { get; set; }
 
         public string? CallStatus1 { get; set; }
@@ -533,6 +541,10 @@ namespace IBS.Models
         public string UserId { get; set; }
 
         public string? MaterialValue { get; set; }
+
+        public string? CallListByRly { get; set; }
+        public string? ChkFIFO { get; set; }
+        public string? AlertMsg { get; set; }
 
     }
 

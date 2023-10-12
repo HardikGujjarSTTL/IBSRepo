@@ -556,6 +556,42 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderUpload_10.MaxUploaderinOthers = 5;
             FileUploaderUpload_10.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.IC_Photos_Upload10 = FileUploaderUpload_10;
+
+            List<IBS_DocumentDTO> lstDocumentUpload = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPhotoDigSign, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderUpload = new FileUploaderDTO();
+            FileUploaderUpload.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload.IBS_DocumentList = lstDocumentUpload.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign).ToList();
+            FileUploaderUpload.OthersSection = false;
+            FileUploaderUpload.MaxUploaderinOthers = 5;
+            FileUploaderUpload.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.ICPhoto_Dig_Sign = FileUploaderUpload;
+
+            List<IBS_DocumentDTO> lstDocumentTestplan = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadTestPlan, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploadertestplan = new FileUploaderDTO();
+            FileUploadertestplan.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploadertestplan.IBS_DocumentList = lstDocumentTestplan.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan).ToList();
+            FileUploadertestplan.OthersSection = false;
+            FileUploadertestplan.MaxUploaderinOthers = 5;
+            FileUploadertestplan.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_Test_Plan = FileUploadertestplan;
+
+            List<IBS_DocumentDTO> lstDocumentICAnnexue1 = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadICAnnexue1, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderICAnnexue1 = new FileUploaderDTO();
+            FileUploaderICAnnexue1.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderICAnnexue1.IBS_DocumentList = lstDocumentICAnnexue1.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1).ToList();
+            FileUploaderICAnnexue1.OthersSection = false;
+            FileUploaderICAnnexue1.MaxUploaderinOthers = 5;
+            FileUploaderICAnnexue1.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_IC_Annexue1 = FileUploaderICAnnexue1;
+
+            List<IBS_DocumentDTO> lstDocumentICAnnexue2 = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadICAnnexue2, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderICAnnexue2 = new FileUploaderDTO();
+            FileUploaderICAnnexue2.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderICAnnexue2.IBS_DocumentList = lstDocumentICAnnexue2.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2).ToList();
+            FileUploaderICAnnexue2.OthersSection = false;
+            FileUploaderICAnnexue2.MaxUploaderinOthers = 5;
+            FileUploaderICAnnexue2.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_IC_Annexue2 = FileUploaderICAnnexue2;
             #endregion
 
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
@@ -572,8 +608,8 @@ namespace IBS.Controllers.InspectionBilling
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
             model.UserId = Convert.ToString(UserId);
             model.IeCd = Convert.ToString(GetIeCd);
-            string msg = callregisterRepository.CallStatusFilesSave(model,DocumentsList);
-            if (msg == "Success")
+            model = callregisterRepository.CallStatusFilesSave(model,DocumentsList);
+            if (model.AlertMsg == "Success")
             {
                 if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                 {
@@ -585,6 +621,40 @@ namespace IBS.Controllers.InspectionBilling
                 AlertAddSuccess("Upload done Successfully!!!");
                 return RedirectToAction("Index");
             }
+            else
+            {
+                AlertDanger(model.AlertMsg);
+            }
+            return View(model);
+        }
+
+        public IActionResult CallStatusUpload(VenderCallStatusModel model,IFormCollection FrmCollection)
+        {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+            model.UserId = Convert.ToString(UserId);
+            model = callregisterRepository.CallStatusUploadSave(model, DocumentsList);
+            if(model.AlertMsg == "Success")
+            {
+                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-2"]))
+                {
+                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-2"]);
+                    if (DocumentsList[0].DocName == "Upload TestPlan")
+                    {
+                        DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
+                    }
+                    else
+                    {
+                        DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                    }
+                }
+                AlertAddSuccess(model.AlertMsg);
+            }else
+            {
+                AlertDanger(model.AlertMsg);
+            }
+            
             return View(model);
         }
 
@@ -675,15 +745,36 @@ namespace IBS.Controllers.InspectionBilling
 
         public IActionResult GetBkNoAndSetNo(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
-            string result = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno,model, selectedConsigneeCd);
+             model = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno,model, selectedConsigneeCd);
 
             return Json(model);
         }
 
         public IActionResult CancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
         {
-            VenderCallStatusModel model = null;
-            string result = callregisterRepository.GetCancelChargeByStatus(CaseNo, DesireDt, CallSno, selectedValue);
+            VenderCallStatusModel model = callregisterRepository.GetCancelChargeByStatus(CaseNo, DesireDt, CallSno, selectedValue);
+            return Json(model);
+        }
+        
+        public IActionResult GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            string IeCd = Convert.ToString(GetIeCd);
+            string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
+            VenderCallStatusModel model = callregisterRepository.GetRlyDrp(CaseNo, DesireDt, CallSno, selectedValue, IeCd, Region);
+            if(model.AlertMsg  != "Success!!!")
+            {
+                AlertDanger(model.AlertMsg);
+            }
+            return Json(model);
+        }
+        
+        public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = callregisterRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
+            if(model.AlertMsg  != "Success!!!")
+            {
+                AlertDanger(model.AlertMsg);
+            }
             return Json(model);
         }
 

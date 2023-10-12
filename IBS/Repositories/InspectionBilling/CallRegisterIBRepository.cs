@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Data;
 using System.Dynamic;
 using System.Globalization;
@@ -2782,10 +2783,9 @@ namespace IBS.Repositories.InspectionBilling
             return Id;
         }
 
-        public string CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
+        public VenderCallStatusModel CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
             int consignee_cd = 0;
-            string msg = "";
             ImageFiles filesimg = new ImageFiles();
             string formattedCallRecvDt = "";
 
@@ -2819,8 +2819,8 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         if (consignee_cd.ToString() != model.ConsigneeFirm)
                         {
-                            msg = "Please Enter other book no. or set no. same is used for consignee " + consignee_cd + " !!!";
-                            return msg;
+                            model.AlertMsg = "Please Enter other book no. or set no. same is used for consignee " + consignee_cd + " !!!";
+                            return model;
                         }
                     }
 
@@ -2924,23 +2924,168 @@ namespace IBS.Repositories.InspectionBilling
                         recordExists.File10 = filesimg.File_10;
                         context.SaveChanges();
                     }
-                    msg = "Success";
+                    model.AlertMsg = "Success";
                 }
                 else if(model.BkNo != "" && model.SetNo != "" && bsCheck == 0)
                 {
-                    msg = "Book No. and Set No. specified is not issued to You!!!";
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                    return model;
                 }
             }
             else
             {
-                msg = "Please enter valid book no. and set no. !";
-                return msg;
+                model.AlertMsg = "Please enter valid book no. and set no. !";
+                return model;
             }
 
-            return msg;
+            return model;
         }
 
-        public string GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
+        {
+            if(model.CallStatus == "A")
+            {
+                var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.BkNo && t.SetNo == model.SetNo).Count();
+                if (count > 0)
+                {
+                    string FileName = model.CaseNo.Trim() + "-" + model.BkNo + "-" + model.SetNo;
+                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.BkNo && x.SetNo == model.SetNo).FirstOrDefault();
+                    if (recordExists != null)
+                    {
+                        recordExists.IcPhoto = FileName;
+                        recordExists.IcPhotoA1 = FileName;
+                        recordExists.IcPhotoA2 = FileName;
+                        context.SaveChanges();
+                    }
+                    model.AlertMsg = "Success";
+                }
+                else if (count == 0)
+                {
+                    model.AlertMsg = "The Inspection Photos should be uploaded first against the given Case and then Upload the Files";
+                }
+            }
+            else if(model.CallStatus == "R")
+            {
+                var no_ic_count = (from t49 in context.T49IcPhotoEncloseds
+                                   join ic in context.IcIntermediates
+                                   on new { t49.CaseNo, t49.BkNo, t49.SetNo } equals new { ic.CaseNo, ic.BkNo, ic.SetNo }
+                                   where t49.CaseNo == model.CaseNo &&
+                                         t49.CallRecvDt == model.CallRecvDt &&
+                                         t49.CallSno == model.CallSno &&
+                                         t49.IcPhoto == null
+                                   group new { t49.CaseNo, t49.BkNo, t49.SetNo } by new { t49.CaseNo, t49.BkNo, t49.SetNo } into grouped
+                                   select grouped).Count();
+
+                var no_of_photo = context.T49IcPhotoEncloseds
+                            .Where(t => t.CaseNo == model.CaseNo &&
+                                        t.CallRecvDt == model.CallRecvDt &&
+                                        t.CallSno == model.CallSno)
+                            .Count();
+
+                if (model.CallStatus.Trim() == "" || model.CallStatus == null)
+                {
+                    model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
+                }
+                else if (model.CallStatus.Trim() == "R" && model.CallCancelCharges.Trim() == "")
+                {
+                    model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
+                }
+                else if (model.ConsigneeFirm == "0")
+                {
+                    model.AlertMsg = "Select Consignee from the List and then Click on Accepted/Rejected Button";
+                }
+                else if (no_of_photo == 0)
+                {
+                    model.AlertMsg = "Kindly upload the inspections photos and prepare the IC before updating the Call Status to Aceepted/Rejected!!!";
+                }
+                else if (no_ic_count > 0)
+                {
+                    model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                }
+                else
+                {
+                    var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
+
+                    var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
+
+                    if (result.Count > 0)
+                    {
+                        foreach (var entity in result)
+                        {
+                            int len_item = 0;
+                            string formatedItem = "";
+                            if (!string.IsNullOrEmpty(entity.ItemDescPo))
+                            {
+                                if (entity.ItemDescPo.Length > 400)
+                                {
+                                    len_item = 390;
+                                }
+                                else
+                                {
+                                    len_item = entity.ItemDescPo.Length;
+                                }
+
+                                formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                                var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                                existingEntity.ItemDescPo = formatedItem;
+                                existingEntity.QtyPassed = entity.QtyPassed;
+                                existingEntity.QtyRejected = entity.QtyRejected;
+                                existingEntity.QtyDue = entity.QtyDue;
+                                context.SaveChanges();
+                            }
+                        }
+                        double wRejCharges = 0;
+                        string wRejType = "";
+                        if (callStatus == "R")
+                        {
+                            wRejCharges = Convert.ToDouble(model.RejectionCharge);
+
+                        }
+                        if (model.LocalOutstation != "" && model.LocalOutstation != null)
+                        {
+                            wRejType = model.LocalOutstation;
+                        }
+
+                        var existingRecord = context.T17CallRegisters.FirstOrDefault(c => c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt && c.CallSno == model.CallSno);
+
+                        if (existingRecord != null)
+                        {
+                            existingRecord.CallStatus = model.CallStatus;
+                            existingRecord.CallStatusDt = model.CallStatusDt;
+                            existingRecord.BkNo = model.BkNo;
+                            existingRecord.SetNo = model.SetNo;
+                            existingRecord.UserId = model.UserId;
+                            existingRecord.Datetime = DateTime.Now;
+                            existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
+                            existingRecord.FifoVoilateReason = model.ReasonFIFO;
+                            existingRecord.LocalOrOuts = wRejType;
+
+                            context.SaveChanges();
+                        }
+
+                        var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
+
+                        if (existingRecord1 != null)
+                        {
+                            existingRecord1.ConsgnCallStatus = model.CallStatus;
+                            context.SaveChanges();
+                        }
+
+                        if (model.CallStatus == "R" && callStatus != "R")
+                        {
+                            var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
+
+                            existingRecord2.PendingCharges = (byte?)((existingRecord2.PendingCharges ?? 0) + 1);
+                            context.SaveChanges();
+                        }
+                    }
+                }
+            }
+
+            return model;
+        }
+
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
             string msg = "";
             string formattedCallRecvDt = "";
@@ -2970,14 +3115,14 @@ namespace IBS.Repositories.InspectionBilling
                 model.SetNo = "";
 
             }
-            return msg;
+            return model;
         }
 
-        public string GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
         {
             string msg = "";
             double w_cancharges = 0;
-            VenderCallStatusModel model = null;
+            VenderCallStatusModel model = new(); 
             string formattedCallRecvDt = "";
             if (DesireDt != null && DesireDt != DateTime.MinValue)
             {
@@ -3044,7 +3189,134 @@ namespace IBS.Repositories.InspectionBilling
                 }
 
             }
-            return msg;
+            return model;
+        }
+
+        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue, string IeCd, string Region)
+        {
+            string formattedCallRecvDt = "";
+            VenderCallStatusModel model = new(); 
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            if (selectedValue == "C")
+            {
+                var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
+
+
+                if(rly_nonrly == "R")
+                {
+                    model = new VenderCallStatusModel
+                    {
+                        CallRlyFirmList = new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "B", Text = "Before Visit of IE to Vendor's premises (AS per Railway Board Order No. 99/RS(G)/709/4 Dated: 12-02/2016)" },
+                            new SelectListItem { Value = "A", Text = "After Visit of IE to Vendor's Premises (As per Railway Board Order No. 99/RS(G)/709/4 Dated: 12-02/2016)" }
+                        }
+                    };
+                }
+                else
+                {
+                    model = new VenderCallStatusModel
+                    {
+                        CallRlyFirmList = new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "3000", Text = "Before Visit of IE to Vendor's premises" },
+                            new SelectListItem { Value = "10000", Text = "After Visit of IE to Vendor Premises - Local" },
+                            new SelectListItem { Value = "15000", Text = "After Visit of IE to Vendor Premises - Out Station" }
+                        }
+                    };
+                }
+            }
+            if (selectedValue != "A" && selectedValue != "R")
+            {
+                var callCount = context.T17CallRegisters.Where(t => t.DtInspDesire < Convert.ToDateTime(formattedCallRecvDt) && t.CallStatus == "M" &&t.IeCd == Convert.ToInt32(IeCd) &&
+                            t.RegionCode == Region &&t.CallRecvDt > DateTime.ParseExact("01/04/2021", "dd/MM/yyyy", null)).Count();
+
+                if (callCount > 0)
+                {
+                    model.AlertMsg = "You are Voilating the FIFO for attending Calls, kindly enter the reason for voilating FIFO!!!";
+                    model.ChkFIFO = "true";
+                    return model;
+                }
+                else
+                {
+                    model.ChkFIFO = "false";
+                }
+            }
+            model.AlertMsg = "Success!!!";
+            return model;
+        }
+
+        public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = new();
+            string formattedCallRecvDt = "";
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
+
+            var SumValue = (from t18 in context.T18CallDetails
+                          join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                          where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                              select new
+                              {
+                                  t18.CaseNo,
+                                  t18.CallRecvDt,
+                                  t18.CallSno,
+                                  Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
+                          ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
+                          : (decimal)0
+                              })
+                              .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
+                              .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
+                              .FirstOrDefault();
+            model.MaterialValue = Convert.ToString(SumValue.Value);
+            double w_cancharges = 0;
+            if (rly_nonrly == "R")
+            {
+                decimal callCancelCharges = SumValue.Value * (decimal)0.9 / 100;
+                model.RejectionCharge = callCancelCharges.ToString();
+
+                w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
+                if (w_cancharges < 5000)
+                {
+                    model.RejectionCharge = "5000";
+                }
+            }else if (rly_nonrly != "R")
+            {
+                model.RejectionCharge = Convert.ToString(SumValue.Value * 1 / 100);
+                w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
+
+                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == model.CaseNo &&t.CallRecvDt == model.CallRecvDt &&t.CallSno == model.CallSno).Count();
+                double w_rejcharges = 0;
+                if (selectedValue == "L")
+                {
+                    w_rejcharges = no_of_visits * 10000;
+                    if (w_rejcharges > w_cancharges)
+                    {
+                        model.RejectionCharge = Convert.ToString(w_rejcharges);
+                    }
+                }
+                if (selectedValue == "o")
+                {
+                    w_rejcharges = no_of_visits * 15000;
+                    if (w_rejcharges > w_cancharges)
+                    {
+                        model.RejectionCharge = Convert.ToString(w_rejcharges);
+                    }
+                }
+            }
+
+
+            return model;
         }
 
         public bool CallDetailsRemove(VendrorCallDetailsModel model)

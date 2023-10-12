@@ -136,24 +136,32 @@
                         @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallCancelStatusdrp"})
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallCancelCharges,new SelectList(Model.ConsigneeFirmList, "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallCancelChargesdrp"})
+                        @Html.DropDownListFor(model => model.CallListByRly,new SelectList(Model.CallRlyFirmList, "Value", "Text"),"--Select--",new { @class = "form-control", @id = "CallCancelChargesdrp" })
                     </td>
                 </tr>
-                <tr>
+                <tr id="ReasonFIFOdv">
+                    <td>
+                        <label for="Reference">Reason For Voilating FIFO : </label>
+                    </td>
+                    <td colspan="4">
+                        <textarea rows="4" asp-for="ReasonFIFO" style="color:red;text-transform: uppercase;" id="ReasonFIFO"></textarea>
+                    </td>
+                </tr>
+                <tr id="MatCanvalue">
                     <td>
                         <label for="Reference">Material Vlaue: </label>
                     </td>
-                    <td colspan="4">
+                    <td>
                         <input type="text" class="input" id="MatValue" asp-for="MaterialValue" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                     <td>
                         <label for="Reference">Cancellation Charge: </label>
                     </td>
-                    <td colspan="4">
+                    <td>
                         <input type="text" class="input" id="CanCharges" asp-for="CallCancelCharges" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                 </tr>
-                <tr>
+                <tr id="bkset">
                     <td>
                         <label for="Reference">BK & Set No : </label>
                     </td>
@@ -191,7 +199,7 @@
                 }
             </table>
         </div>
-        <div class="savenext-btn">
+        <div class="savenext-btn" id="savedetails">
             <button type="button" class="save-btn active" onclick="Save();">Save</button>
             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
         </div>
@@ -206,6 +214,7 @@
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="CallRecvDt" />
             <input type="hidden" asp-for="CallSno" />
+            <input type="hidden" asp-for="CallStatus" />
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
 
             <div class="accordion-body" style="overflow-x: auto;">
@@ -216,11 +225,15 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Book No : </label>
-                        <input type="text" asp-for="BkNo" maxlength="100" style="color:red;text-transform: uppercase;">
+                        <input type="text" asp-for="BkNo" maxlength="100" >
+                        <span asp-validation-for="BkNo" class="text-danger"></span>
+
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Set No : </label>
-                        <input type="text" asp-for="SetNo" maxlength="100" style="color:red;text-transform: uppercase;">
+                        <input type="text" asp-for="SetNo" maxlength="100" >
+                        <span asp-validation-for="SetNo" class="text-danger"></span>
+
                     </div>
                 </div>
                 <div class="row my-0">
@@ -271,23 +284,56 @@
     </div>
 </div>
 
-@*<div id="tab-2" class="task-listinput">
-    <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
-    <div class="row my-0">
-        <div class="col-md-4 mb-3">
-            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload4" />
-        </div>
-        <div class="col-md-4 mb-3">
-            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload5" />
-        </div>
-        <div class="col-md-4 mb-3">
-            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload6" />
-        </div>
-        <div class="col-md-4 mb-3">
-            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload6" />
-        </div>
+<div id="accepteuploadddrp">
+    <div id="tab-2" class="task-listinput">
+         <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatusUpload" id="frmCallStatusAcceptupload">
+            <input type="hidden" asp-for="ActionType" />
+            <input type="hidden" asp-for="CaseNo" />
+            <input type="hidden" asp-for="BkNo" />
+            <input type="hidden" asp-for="SetNo" />
+            <input type="hidden" asp-for="CallRecvDt" />
+            <input type="hidden" asp-for="CallSno" />
+            <input type="hidden" asp-for="CallStatus" />
+            <input type="hidden" asp-for="ConsigneeFirm" />
+            <input type="hidden" asp-for="ReasonFIFO" />
+            <input type="hidden" asp-for="RejectionCharge" />
+            <input type="hidden" asp-for="MaterialValue" />
+            <input type="hidden" asp-for="CallCancelCharges" />
+            <input type="hidden" asp-for="CallStatusDt" />
+            <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
+            <div class="accordion-body" style="overflow-x: auto;">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
+                 </div>
+                <div class="col-md-4 mb-3">
+                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
+                 </div>
+                <div class="col-md-4 mb-3">
+                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
+                </div>
+                <div class="col-md-4 mb-3">
+                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
+                </div>
+                <div class="col-md-4 mb-3" id="localdrp">
+                   <label for="Reference">Local or Outstation : </label>
+                   @Html.DropDownListFor(model => model.LocalOutstation,new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new { @class = "form-control" ,@id="LocalOutstationdrp"})
+                </div>
+                 <div class="col-md-4 mb-3" id="rejvalue">
+                        <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
+                        <input type="text" asp-for="RejectionCharge" id="RejectionCharge" maxlength="100">
+                 </div>
+                <div class="col-md-4 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="UploadFiles();">Upload Files</button>
+                        <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+          </form>
     </div>
-</div>*@
+</div>
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
@@ -297,6 +343,14 @@
         $(document).ready(function () {
 
             $('#accepteddrp').hide();
+            $('#CallCancelChargesdrp').hide();
+            $('#MatCanvalue').hide();
+            $('#ReasonFIFOdv').hide();
+            $('#accepteuploadddrp').hide();
+            $('#bkset').hide();
+            $('#LocalOutstationdrp').hide();
+            $('#localdrp').hide();
+            $('#rejvalue').hide();
 
             $('#consigneeFirmDropdown').change(function () {
                 debugger
@@ -304,6 +358,8 @@
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#callRecdt').val();
+                $('#MatCanvalue').hide();
+
 
                 $.ajax({
                     url: '/CallRegisterIB/GetBkNoAndSetNo',
@@ -320,23 +376,153 @@
             });
 
             $('#CallStatusdrp').change(function () {
+                $('#MatCanvalue').hide();
+
                 var selectedValue = $('#CallStatusdrp').val();
+                var CaseNo = $('#CaseNo').val();
+                var CallSno = $('#CallSno').val();
+                var DesireDt = $('#callRecdt').val();
 
                 if(selectedValue == "A"){
                     $('#accepteddrp').show();
+                    $('#savedetails').hide();
+                    $('#bkset').hide();
+                    $('#CallCancelStatusdrp').hide();
+                    $('#accepteuploadddrp').show();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
                 }else if(selectedValue == "W"){
                     $('#accepteddrp').hide();
+                } else if (selectedValue == "R") {
+                    $('#MatValue').show();
+                    $('#accepteddrp').show();
+                    $('#localdrp').show();
+                    $('#rejvalue').show();
+                    $('#accepteuploadddrp').show();
+                    $('#ReasonFIFOdv').show();
+                    $('#AcceptReject').text('Rejected');
+                } else if (selectedValue == "G") {
+                    $('#accepteuploadddrp').show();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
+                    $('#accepteddrp').hide();
+                    $('#savedetails').hide();
+                    $('#ReasonFIFOdv').show();
+                    $('#bkset').show();
+                    $('#CallCancelStatusdrp').hide();
+                }else if (selectedValue == "T") {
+                    $('#accepteuploadddrp').show();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
+                    $('#accepteddrp').hide();
+                    $('#savedetails').hide();
+                    $('#bkset').show();
+                    $('#ReasonFIFOdv').show();
+                    $('#CallCancelStatusdrp').hide();
+                } else if (selectedValue == "S") {
+                    $('#accepteuploadddrp').hide();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
+                    $('#accepteddrp').hide();
+                    $('#savedetails').hide();
+                    $('#bkset').hide();
+                    $('#ReasonFIFOdv').show();
+                    $('#CallCancelStatusdrp').hide();
+                }else if (selectedValue == "U") {
+                    $('#accepteuploadddrp').hide();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
+                    $('#accepteddrp').hide();
+                    $('#savedetails').hide();
+                    $('#bkset').hide();
+                    $('#ReasonFIFOdv').show();
+                    $('#CallCancelStatusdrp').hide();
+                }else if (selectedValue == "W") {
+                    $('#accepteuploadddrp').hide();
+                    $('#localdrp').hide();
+                    $('#rejvalue').hide();
+                    $('#accepteddrp').hide();
+                    $('#savedetails').hide();
+                    $('#bkset').hide();
+                    $('#ReasonFIFOdv').show();
+                    $('#CallCancelStatusdrp').hide();
                 }
+
+                $.ajax({
+                    url: '/CallRegisterIB/GetRlyDrp',
+                    type: 'GET',
+                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                    success: function (data) {
+                        debugger
+                        if(data.ChkFIFO == "true"){
+                            $('#ReasonFIFOdv').show();
+                        } else if (data.ChkFIFO == "false"){
+                            $('#ReasonFIFOdv').hide();
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving BkNo and SetNo.');
+                    }
+                });
+            });
+
+            $('#LocalOutstationdrp').change(function () {
+                var selectedValue = $('#LocalOutstationdrp').val();
+                var CaseNo = $('#CaseNo').val();
+                var CallSno = $('#CallSno').val();
+                var DesireDt = $('#callRecdt').val();
+                $.ajax({
+                    url: '/CallRegisterIB/LocalOutstation',
+                    type: 'GET',
+                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                    success: function (data) {
+                        $('#MatValue').val(data.MaterialValue);
+                        $('#RejectionCharge').val(data.RejectionCharge);
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving BkNo and SetNo.');
+                    }
+                });
             });
 
             $('#CallCancelStatusdrp').change(function () {
-                var selectedValue = $('#CallCancelStatusdrp').val();
+                $('#MatCanvalue').hide();
+                var selectedValue1 = $('#CallCancelStatusdrp').val();
+                var selectedValue = $('#CallStatusdrp').val();
+                var CaseNo = $('#CaseNo').val();
+                var CallSno = $('#CallSno').val();
+                var DesireDt = $('#callRecdt').val();
 
-                if(selectedValue == "C"){
+                debugger
+                if (selectedValue1 == "C") {
                     $('#CallCancelChargesdrp').show();
-                }else if(selectedValue == "A"){
+                } else if (selectedValue1 == "N") {
                     $('#CallCancelChargesdrp').hide();
                 }
+
+                $.ajax({
+                    url: '/CallRegisterIB/GetRlyDrp',
+                    type: 'GET',
+                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                    success: function (data) {
+                        debugger
+                        if (data.ChkFIFO == "true") {
+                            $('#ReasonFIFOdv').show();
+                        } else if (data.ChkFIFO == "false") {
+                            $('#ReasonFIFOdv').hide();
+                        }
+                        var callRlyFirmList = data.CallRlyFirmList;
+                        for (var i = 0; i < callRlyFirmList.length; i++) {
+                            $('#CallCancelChargesdrp').append($('<option>', {
+                                value: callRlyFirmList[i].Value,
+                                text: callRlyFirmList[i].Text
+                            }));
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving BkNo and SetNo.');
+                    }
+                });
             });
 
             $('#CallCancelChargesdrp').change(function () {
@@ -349,8 +535,9 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#MatValue').val(data.BkNo);
-                        $('#CanCharges').val(data.SetNo);
+                        $('#MatCanvalue').show();
+                        $('#MatValue').val(data.MaterialValue);
+                        $('#CanCharges').val(data.CallCancelCharges);
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
@@ -359,6 +546,28 @@
                
             });
         });
+
+        function UploadFiles(){
+            SaveSingleDocuments("tab-2");
+            if ($("#ActionType").val() == "C") {
+                $("#frmCallStatusAcceptupload").submit();
+            }
+            else {
+                if ($("#frmCallStatusAcceptupload").valid()) {
+                    $("#frmCallStatusAcceptupload").submit();
+                }
+            }
+        }
+        function Accepted() {
+            if ($("#ActionType").val() == "C") {
+                $("#frmCallStatusAcceptupload").submit();
+            }
+            else {
+                if ($("#frmCallStatusAcceptupload").valid()) {
+                    $("#frmCallStatusAcceptupload").submit();
+                }
+            }
+        }
 
         function Save() {
             if ($("#ActionType").val() == "C") {
