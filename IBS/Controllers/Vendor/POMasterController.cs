@@ -104,6 +104,10 @@ namespace IBS.Controllers.Vendor
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "PO Master Inserted Successfully.";
+                if (model.PoDt > DateTime.Now)
+                {
+                    return Json(new { status = false, responseText = "PO Date Cannot Be Greater Then Current Date!!!" });
+                }
                 if (model.CaseNo != null)
                 {
                     msg = "PO Master Updated Successfully.";
