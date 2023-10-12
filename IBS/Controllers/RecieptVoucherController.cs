@@ -21,19 +21,35 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult Manage(int id)
+        public IActionResult Manage(string id)
         {
-            RecieptVoucherModel model = new();
-            if (id > 0)
+            RecieptVoucherModel model = new() { Region = Region };
+            if (!string.IsNullOrEmpty(id))
             {
-                //model = recieptVoucherRepository.FindByID(id);
+                model = recieptVoucherRepository.FindByID(id);
+                model.Region = Region;
+
+                model.lstVoucherDetails.ForEach(i =>
+                {
+                    i.BANK_NAME = recieptVoucherRepository.GetBankName(i.BANK_CD);
+                    i.ACC_NAME = recieptVoucherRepository.GetAccountName(i.ACC_CD ?? 0);
+                    i.BPO_NAME = i.BPO_CD != null ? recieptVoucherRepository.GetBPOName(i.BPO_CD) : "";
+                    i.IsNew = false;
+                });
+
+                SetLstVoucherDetailsModel = model.lstVoucherDetails;
             }
             else
             {
+                model.VCHR_DT = DateTime.Now.Date;
+                model.VCHR_NO = recieptVoucherRepository.GenerateVoucherNo(Region, DateTime.Now.Date);
+
                 if (Region == "N") model.BANK_CD = 53;
                 else if (Region == "W") model.BANK_CD = 88;
                 else if (Region == "E") model.BANK_CD = 85;
                 else if (Region == "S") model.BANK_CD = 87;
+
+                SetLstVoucherDetailsModel = new List<VoucherDetailsModel>();
             }
 
             ViewBag.RoleCD = GetAuthType;
@@ -43,7 +59,36 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveVoucherDetails(int id, string ChequeNo, DateTime? ChequeDate, int? Bank_Cd, decimal? Amount, string SampleNo, int? AccountCode, string CaseNo, string BPO_Cd, string BPOType, string Narration, bool IsAdd)
+        public IActionResult Manage(RecieptVoucherModel model)
+        {
+            if (model.IsNew)
+            {
+                model.Createdby = UserId;
+                model.UserName = USER_ID.Substring(0, 8);
+                model.lstVoucherDetails = GetLstVoucherDetailsModel;
+                recieptVoucherRepository.SaveDetails(model);
+                AlertAddSuccess();
+            }
+            else
+            {
+                model.Updatedby = UserId;
+                model.UserName = USER_ID.Substring(0, 8);
+                model.lstVoucherDetails = GetLstVoucherDetailsModel;
+                recieptVoucherRepository.SaveDetails(model);
+                AlertUpdateSuccess();
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<RecieptVoucherModel> dTResult = recieptVoucherRepository.GetVoucherList(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult SaveVoucherDetails(int id, string ChequeNo, DateTime ChequeDate, int Bank_Cd, decimal? Amount, string SampleNo, int? AccountCode, string CaseNo, string BPO_Cd, string BPOType, string Narration, bool IsAdd)
         {
             List<VoucherDetailsModel> lst = GetLstVoucherDetailsModel;
             VoucherDetailsModel obj = new VoucherDetailsModel();
@@ -52,10 +97,12 @@ namespace IBS.Controllers
 
             if (IsAdd)
             {
+                if(lst.Count == 0) obj.ID = 1;
+                else obj.ID = lst.Max(x => x.ID) + 1;
                 obj.CHQ_NO = ChequeNo;
                 obj.CHQ_DT = ChequeDate;
                 obj.BANK_CD = Bank_Cd;
-                obj.BANK_NAME = recieptVoucherRepository.GetBankName(Bank_Cd ?? 0);
+                obj.BANK_NAME = recieptVoucherRepository.GetBankName(Bank_Cd);
                 obj.AMOUNT = Amount;
                 obj.SAMPLE_NO = SampleNo;
                 obj.ACC_CD = AccountCode;
@@ -75,7 +122,7 @@ namespace IBS.Controllers
                     obj.CHQ_NO = ChequeNo;
                     obj.CHQ_DT = ChequeDate;
                     obj.BANK_CD = Bank_Cd;
-                    obj.BANK_NAME = recieptVoucherRepository.GetBankName(Bank_Cd ?? 0);
+                    obj.BANK_NAME = recieptVoucherRepository.GetBankName(Bank_Cd);
                     obj.AMOUNT = Amount;
                     obj.SAMPLE_NO = SampleNo;
                     obj.ACC_CD = AccountCode;
@@ -88,8 +135,6 @@ namespace IBS.Controllers
                 }
             }
 
-            int index = 0;
-            lst.ForEach(i => { index = index + 1; i.ID = index; });
             SetLstVoucherDetailsModel = lst;
 
             if (IsAdd)
@@ -131,9 +176,6 @@ namespace IBS.Controllers
             if (obj != null)
             {
                 lst.Remove(obj);
-
-                int index = 0;
-                lst.ForEach(i => { index = index + 1; i.ID = index; });
                 SetLstVoucherDetailsModel = lst;
                 return Json(new { status = 1, responseText = "Records has been deleted successfully." });
             }
@@ -168,15 +210,14 @@ namespace IBS.Controllers
                                 {
                                     VoucherDetailsModel data = new VoucherDetailsModel
                                     {
+                                        ID = lst.Max(x => x.ID) + 1,
                                         CHQ_NO = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 1].Value.ToString() : "",
-                                        CHQ_DT = worksheet.Cells[row, 1].Value != null ? DateTime.FromOADate(long.Parse(worksheet.Cells[row, 2].Value.ToString())) : null,
+                                        CHQ_DT = worksheet.Cells[row, 1].Value != null ? DateTime.FromOADate(long.Parse(worksheet.Cells[row, 2].Value.ToString())) : DateTime.Now.Date,
                                         AMOUNT = worksheet.Cells[row, 1].Value != null ? Convert.ToDecimal(worksheet.Cells[row, 3].Value) : null
                                     };
                                     lst.Add(data);
                                 }
 
-                                int index = 0;
-                                lst.ForEach(i => { index = index + 1; i.ID = index; });
                                 SetLstVoucherDetailsModel = lst;
 
                                 return Json(new { status = 1, responseText = "Records has been added successfully." });

@@ -3988,20 +3988,14 @@ namespace IBS.Models
             var property = typeof(T).GetProperty(sortColumn);
 
             // Handle nullable properties
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
-            }
+            //if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            //{
+            //    property = Nullable.GetUnderlyingType(property.PropertyType).GetProperty(sortColumn);
+            //}
 
             var propertyAccess = Expression.MakeMemberAccess(parameter, property);
 
             var orderByExpression = Expression.Lambda(propertyAccess, parameter);
-
-            // this is the part p.SortColumn
-            // var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-
-            // this is the part p =&gt; p.SortColumn
-            // var orderByExpression = Expression.Lambda(propertyAccess, parameter);
 
             // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
             resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },
