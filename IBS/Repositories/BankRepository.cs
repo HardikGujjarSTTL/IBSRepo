@@ -60,7 +60,7 @@ namespace IBS.Repositories
                      && (!string.IsNullOrEmpty(BankName) ? t94.BankName.ToLower().Contains(BankName.ToLower()) : true)
                      && ((FMISBankCD != null) ? t94.FmisBankCd == FMISBankCD : true)
                     select new BankMasterModel
-                    {
+                    {   
                         BankCd = t94.BankCd,
                         BankName = t94.BankName,
                         FmisBankCd = t94.FmisBankCd

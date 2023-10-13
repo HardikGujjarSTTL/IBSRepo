@@ -1,26 +1,43 @@
 ﻿@model IBS.Models.Reports.CoIeWiseCallsModel
 <div>
-    <h3 class="center"></h3>
-    <div class="tableOuter">
-        <table width="90%" align="center" style="Z-INDEX: 101; LEFT: 8px; WIDTH: 90%; POSITION: absolute; TOP: 8px;" height="100" border="0">
+    @if (Model.coIeWiseCallsList1[0].ONLINE_CALL == "Y")
+    {
+        <h3 class="center">ONLINE INSPECTION CALL</h3>
+        @*<td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b></b></span></font></td>*@
+    }
+    else
+    {
+        <h3 class="center">INSPECTION CALL</h3>
+        @*<td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b></b></span></font></td>*@
+    }
+    @if (Model.coIeWiseCallsList1[0].FINAL_OR_STAGE == "S")
+    {
+        <h3 class="center">STAGE CALL</h3>
+        @*<tr>
+            <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>STAGE CALL</b></span></font></td>
+        </tr>*@
+    }
+    
+    <div @*class="tableOuter"*@>
+        <table width="90%" align="center" style="Z-INDEX: 101; LEFT: 8px; WIDTH: 90%; POSITION: absolute;" height="100" border="0">
             <tbody>
             @{
-                <tr>
-                    @if (Model.coIeWiseCallsList1[0].ONLINE_CALL == "Y")
-                    {
-                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>ONLINE INSPECTION CALL</b></span></font></td>
-                    }
-                    else
-                    {
-                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>INSPECTION CALL</b></span></font></td>
-                    }
-                </tr>
-                @if (Model.coIeWiseCallsList1[0].FINAL_OR_STAGE == "S")
-                {
-                    <tr>
-                        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>STAGE CALL</b></span></font></td>
-                    </tr>
-                }
+                //<tr>
+                //    @if (Model.coIeWiseCallsList1[0].ONLINE_CALL == "Y")
+                //    {
+                //        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>ONLINE INSPECTION CALL</b></span></font></td>
+                //    }
+                //    else
+                //    {
+                //        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>INSPECTION CALL</b></span></font></td>
+                //    }
+                //</tr>
+                //@if (Model.coIeWiseCallsList1[0].FINAL_OR_STAGE == "S")
+                //{
+                //    <tr>
+                //        <td colspan="2" align="center"><font face="Verdana" size="2"><span style="font-size:14;"><b>STAGE CALL</b></span></font></td>
+                //    </tr>
+                //}
                 <tr><td colspan="2"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>From.</b><br> @Model.coIeWiseCallsList2[0].VEND_NAME <br> @Model.coIeWiseCallsList2[0].VEND_ADDRESS </span></font></td></tr>
                 <tr><td colspan="2"><font Face="Verdana" size="1"><span style="font-size: 12;"><b>Ref No.</b> @Model.coIeWiseCallsList1[0].CALL_LETTER_NO</span></font></td></tr>
                 <tr>

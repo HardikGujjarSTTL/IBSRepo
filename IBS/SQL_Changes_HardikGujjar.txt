@@ -475,11 +475,26 @@ create or replace PROCEDURE GENERATE_VEND_CASE_NO(
 ) AS
     w_ctr VARCHAR2(100) := NULL;
     w_sno CHAR(100) := NULL;
-    w_region CHAR(100) := NULL;
+    w_region VARCHAR2(500) := NULL;
     w_Case_No VARCHAR2(500) := NULL;
 
 BEGIN
-    w_ctr := IN_REGION_CD || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
+
+    IF IN_REGION_CD   ='N' THEN
+        w_region       := 'n';
+      elsif IN_REGION_CD='W' THEN
+        w_region       :='w';
+      elsif IN_REGION_CD='S' THEN
+        w_region       :='s';
+      elsif IN_REGION_CD='E' THEN
+        w_region       :='e';
+      elsif IN_REGION_CD='C' THEN
+        w_region       :='c';
+      elsif IN_REGION_CD='Q' THEN
+        w_region       :='q';
+      END IF;
+      
+    w_ctr := w_region || SUBSTR(IN_PO_DT, 9, 2) || SUBSTR(IN_PO_DT, 4, 2);
 
     SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
     INTO w_sno
@@ -3907,3 +3922,164 @@ END;
 
 ==========
 
+CREATE OR REPLACE PROCEDURE GENERATE_REAL_CASE_NO_CRIS_new (
+    IN_REGION_CD IN CHAR,
+    IN_TEMP_POKEY IN NUMBER,
+    IN_TEMP_RLY_CD IN CHAR,
+    IN_TEMP_USER_ID IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+    CURSOR po_detail IS
+        SELECT D.ITEM_SRNO, D.CONSIGNEE_CD, H.BPO_CD
+        FROM IMMS_RITES_PO_HDR H, IMMS_RITES_PO_DETAIL D
+        WHERE H.IMMS_POKEY = D.IMMS_POKEY
+            AND H.IMMS_RLY_CD = D.IMMS_RLY_CD
+            AND D.IMMS_POKEY = IN_TEMP_POKEY
+            AND D.IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    r1 po_detail%ROWTYPE;
+    w_ctr CHAR(5) := NULL;
+    w_sno CHAR(4) := NULL;
+    w_Case_No CHAR(9) := NULL;
+    w_Purchaser NUMBER(8) := NULL;
+    w_Rly_Cd VARCHAR2(50) := NULL;
+    w_Bpo_Cd VARCHAR2(50) := NULL;
+    my_exception EXCEPTION;
+    OUT_ERR_CD NUMBER := 0;
+    p_Result_Cursor SYS_REFCURSOR;
+BEGIN
+    -- Rest of your procedure logic here...
+
+    -- Retrieve PURCHASER_CD and RLY_CD
+    SELECT PURCHASER_CD, TRIM(RLY_CD) INTO w_Purchaser, w_Rly_Cd
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
+        OUT_ERR_CD := 2;
+        RAISE my_exception;
+    END IF;
+
+    FOR r1 IN po_detail LOOP
+        IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
+            OUT_ERR_CD := 3;
+            RAISE my_exception;
+            EXIT;
+        END IF;
+        w_Bpo_Cd := r1.BPO_CD;
+    END LOOP;
+
+    SELECT REGION_CODE || TO_CHAR(PO_DT, 'YYMM') INTO w_ctr
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0') INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD
+        AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+
+    OUT_ERR_CD := 4;
+    w_Case_No := w_ctr || w_sno;
+
+    INSERT INTO T13_PO_MASTER(case_no,purchaser_cd,stock_nonstock,rly_nonrly,po_or_letter,po_no,l5no_po,po_dt,recv_dt,vend_cd,rly_cd,region_code,user_id,datetime,
+   remarks,inspecting_agency,poi_cd,po_source,pending_charges) 
+    SELECT
+        w_Case_No,
+        PURCHASER_CD,
+        STOCK_NONSTOCK,
+        RLY_NONRLY,
+        PO_OR_LETTER,
+        PO_NO,
+        L5NO_PO,
+        PO_DT,
+        RECV_DATE,
+        VEND_CD,
+        RLY_CD,
+        REGION_CODE,
+        IN_TEMP_USER_ID,
+        DATETIME,
+        REMARKS,
+        'R',
+        POI_CD,
+        'C',
+        0
+    FROM IMMS_RITES_PO_HDR
+    WHERE REGION_CODE = IN_REGION_CD
+        AND IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 5;
+    INSERT INTO T14_PO_BPO(CASE_NO, CONSIGNEE_CD, BPO_CD)
+    SELECT DISTINCT w_Case_No, CONSIGNEE_CD, w_Bpo_Cd
+    FROM IMMS_RITES_PO_DETAIL
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 6;
+    INSERT INTO T15_PO_DETAIL(case_no,item_srno,item_desc,consignee_cd,qty,rate,uom_cd,basic_value,sales_tax_per,
+    sales_tax,excise_type,excise_per,excise,discount_type,discount_per,discount,other_charges,value,
+    delv_dt,ext_delv_dt,user_id,datetime,ot_charge_type,ot_charge_per,item_cd,
+    pl_no)
+    SELECT
+        w_Case_No,
+        ITEM_SRNO,
+        UPPER(SUBSTR(REPLACE(ITEM_DESC, CHR(39), ''), 0, 400)),
+        CONSIGNEE_CD,
+        QTY,
+        RATE,
+        UOM_CD,
+        BASIC_VALUE,
+        SALES_TAX_PER,
+        SALES_TAX,
+        EXCISE_TYPE,
+        EXCISE_PER,
+        EXCISE,
+        DISCOUNT_TYPE,
+        DISCOUNT_PER,
+        DISCOUNT,
+        OT_CHARGES,
+        VALUE,
+        DELV_DT,
+        NVL2(EXT_DELV_DT, EXT_DELV_DT, DELV_DT),
+        IN_TEMP_USER_ID,
+        DATETIME,
+        OT_CHARGE_TYPE,
+        OT_CHARGE_PER,
+        ITEM_CD,
+        PL_NO
+    FROM IMMS_RITES_PO_DETAIL
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+    OUT_ERR_CD := 7;
+
+    UPDATE IMMS_RITES_PO_HDR
+    SET RITES_CASE_NO = w_Case_No
+    WHERE IMMS_POKEY = IN_TEMP_POKEY
+        AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
+
+
+    COMMIT;
+
+    OPEN p_Result_Cursor FOR
+        SELECT OUT_ERR_CD AS ERR_CD, w_Case_No AS CASE_NO FROM DUAL;
+    p_Result := p_Result_Cursor;
+
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        ROLLBACK;
+    WHEN NO_DATA_FOUND THEN
+        ROLLBACK;
+    WHEN my_exception THEN
+        ROLLBACK;
+    WHEN OTHERS THEN
+        ROLLBACK;
+END;
+/
+
+=================

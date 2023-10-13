@@ -1,0 +1,407 @@
+﻿@model List<IBS.Models.VoucherDetailsModel>
+
+@{
+    string Role_Cd = ViewBag.RoleCD;
+}
+
+<div class="accordion-body">
+    <input type="hidden" id="hdnBPOType" value="" />
+    <input type="hidden" id="hdnID" value="" />
+    <h3 class="heading3">Voucher Details</h3>
+    <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            <label for="txtChequeNo">Cheque No <i class="text-danger">*</i></label>
+            <input type="text" class="input" id="txtChequeNo" />
+            <span class="text-danger field-validation-error" id="spnErrorChequeNo"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="txtChequeDate">Cheque Date <i class="text-danger">*</i></label>
+            <input type="text" class="datepicker" id="txtChequeDate" placeholder="DD/MM/YYYY" />
+            <span class="text-danger field-validation-error" id="spnErrorChequeDate"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="ddlBank">Bank/Cash</label>
+            @Html.DropDownList("ddlBank_Cd", Common.GetBankNames())
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="txtAmount">Amount <i class="text-danger">*</i></label>
+            <input type="text" class="input" id="txtAmount" onkeypress="return isNumberWithDot(event)" />
+            <span class="text-danger field-validation-error" id="spnErrorAmount"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="txtSampleNo">Sample No</label>
+            <input type="text" class="input" id="txtSampleNo" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="ddlAccountCode">Account Code</label>
+            @Html.DropDownList("ddlAccountCode", Common.GetAccountCode(Role_Cd), new { @onchange = "onchangeAccountCode();" })
+        </div>
+        <div class="col-md-3 mb-3" id="dvCaseNo" style="display: none;">
+            <label for="txtCaseNo">Case No</label> <br />
+            <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="ddlAccountCode">BPO <i class="text-danger">*</i></label> <br />
+            <select id="ddlBPO" name="ddlBPO" style="width: 100%;">
+                <option value="">--Select--</option>
+            </select>
+            <span class="text-danger field-validation-error" id="spnErrorBPO"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="txtNarration">Narration</label>
+            <textarea class="input" id="txtNarration" maxlength="50"></textarea>
+        </div>
+    </div>
+    <div class="savenext-btn" style="justify-content: end;">
+        <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add</button>
+        <a href="#clear" class="reset-btn">Clear</a>
+        <button id="btnUploadExcel" type="button" class="save-btn active" onclick="onclickUploadExcel();">Upload Excel</button>
+    </div>
+    <div class="task-listinput" style="margin-top: 10px;">
+        <div class="dash-table" style="max-height: 500px; overflow: auto">
+            <table id="dtVoucherDetails" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cheque No</th>
+                        <th>Cheque Date</th>
+                        <th>Amount</th>
+                        <th>Bank/Cash</th>
+                        <th>BPO</th>
+                        <th>Account</th>
+                        <th>Case No</th>
+                        <th>Narration</th>
+                        <th style="text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.CHQ_NO</td>
+                                <td>@item.Display_CHQ_DT</td>
+                                <td>@item.AMOUNT</td>
+                                <td>@item.BANK_NAME</td>
+                                <td>@item.BPO_NAME</td>
+                                <td>@item.ACC_NAME</td>
+                                <td>@item.CASE_NO</td>
+                                <td>@item.NARRATION</td>
+                                <td>
+                                    <div align="center" class="reportIcon actionCenter">
+                                        <a id="btnEdit" class="edit" href="javascript:void(0);" onclick="GetVoucherDetailsByID(@item.ID);"><i class="fa fa-pencil" title="Edit"></i></a>
+                                        <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modalUploadExcel" class="modal" role="dialog">
+        <div class="modal-dialog modal-s" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Excel</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <label for="file">Select Excel File:</label>
+                            <input type="file" name="file" id="VoucherDetailsFile" accept=".xlsx" required />
+                        </div>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" data-id="" onclick="onclickUploadAndProcess();">Upload and Process</button>
+                            <a href="~/ReadWriteData/SampleFiles/ReceiptVoucher.xlsx" class="reset-btn">Download Sample File</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        }).mask("00/00/0000");
+
+        $('#ddlBPO').select2({
+            minimumInputLength: 2
+        });
+
+        onchangeAccountCode();
+    });
+
+    function checkFormValidation() {
+        $("#spnErrorChequeNo").html("");
+        $("#spnErrorChequeDate").html("");
+        $("#spnErrorAmount").html("");
+        $("#spnErrorBPO").html("");
+
+        var IsValid = true;
+
+        if ($('#txtChequeNo').val() == '') {
+            $("#spnErrorChequeNo").html("The Cheque No field is required.");
+            IsValid = false;
+        }
+        if ($('#txtChequeDate').val() == '') {
+            $("#spnErrorChequeDate").html("The Cheque Date field is required.");
+            IsValid = false;
+        }
+        if ($("#txtChequeDate").val() != "" && IsValidDate($("#txtChequeDate").val()) == false) {
+            $("#spnErrorChequeDate").html("Invalid date format");
+            IsValid = false;
+        }
+        if ($('#txtAmount').val() == '') {
+            $("#spnErrorAmount").html("The Amount field is required.");
+            IsValid = false;
+        }
+        if ($('#ddlBPO').val() == '') {
+            $("#spnErrorBPO").html("The BPO field is required.");
+            IsValid = false;
+        }
+
+        return IsValid;
+    }
+
+    function SaveVoucherDetails() {
+
+        if (!checkFormValidation()) return false;
+
+        var id, ChequeNo, ChequeDate, Bank_Cd, Amount, SampleNo, AccountCode, CaseNo, BPO_Cd, BPOType, Narration, IsAdd;
+        IsAdd = true;
+
+        if ($("#btnAdd").text() == 'Update') {
+            IsAdd = false;
+            id = $("#hdnID").val();
+        }
+
+        ChequeNo = $("#txtChequeNo").val();
+
+        if ($("#txtChequeDate").val() != "") {
+            ChequeDate = moment($('#txtChequeDate').datepicker('getDate')).format("YYYY-MM-DD");
+        }
+
+        Bank_Cd = $("#ddlBank_Cd").val();
+        Amount = $("#txtAmount").val();
+        SampleNo = $("#txtSampleNo").val();
+        AccountCode = $("#ddlAccountCode").val();
+        CaseNo = $("#txtCaseNo").val();
+        BPO_Cd = $("#ddlBPO").val();
+        Narration = $("#txtNarration").val();
+        BPOType = $("#hdnBPOType").val();
+
+        $.post("@Url.Action("SaveVoucherDetails", "RecieptVoucher")", { id, ChequeNo, ChequeDate, Bank_Cd, Amount, SampleNo, AccountCode, CaseNo, BPO_Cd, BPOType, Narration, IsAdd }, function (response) {
+            if (response.status) {
+                ShowHideMsg("success", response.responseText);
+                GetVoucherDetails();
+                ClearControlVoucherDetails();
+            }
+        });
+    }
+
+    $('a[href="#clear"]').click(function (e) {
+        e.preventDefault();
+        ClearControlVoucherDetails();
+        GetVoucherDetails();
+    });
+
+    function ClearControlVoucherDetails() {
+        $("#txtChequeNo").val("");
+        $("#txtChequeDate").val("");
+        $("#ddlBank_Cd").get(0).selectedIndex = 0;
+        $("#txtAmount").val("");
+        $("#txtSampleNo").val("");
+        $("#ddlAccountCode").get(0).selectedIndex = 0;
+        $("#txtCaseNo").val("");
+        $("#ddlBPO").empty();
+        $("#ddlBPO").append($('<option value="">--Select--</option>'));
+        $("#txtNarration").val("");
+        $("#hdnID").val("");
+        $("#hdnBPOType").val("");
+
+        $("#spnErrorChequeNo").html("");
+        $("#spnErrorChequeDate").html("");
+        $("#spnErrorAmount").html("");
+        $("#spnErrorBPO").html("");
+
+        $("#btnAdd").text('Add');
+
+        onchangeAccountCode();
+    }
+
+    function GetVoucherDetails() {
+        $.get("@Url.Action("GetVoucherDetails", "RecieptVoucher")", function (response) {
+            if (response != null) {
+                $('#dvVoucherDetails').html("");
+                $('#dvVoucherDetails').html(response);
+            }
+        });
+    }
+
+    function GetVoucherDetailsByID(id) {
+        ClearControlVoucherDetails();
+        $.get("@Url.Action("GetVoucherDetailsByID", "RecieptVoucher")", { id }, function (response) {
+            if (response.status) {
+                if (response.responseText != null) {
+                    $("#hdnID").val(id);
+                    $("#hdnBPOType").val(response.responseText.BPO_TYPE);
+                    $("#txtChequeNo").val(response.responseText.CHQ_NO);
+                    $("#txtChequeDate").val(response.responseText.Display_CHQ_DT);
+                    $("#ddlBank_Cd").val(response.responseText.BANK_CD);
+                    $("#txtAmount").val(response.responseText.AMOUNT);
+                    $("#txtSampleNo").val(response.responseText.SAMPLE_NO);
+                    $("#ddlAccountCode").val(response.responseText.ACC_CD);
+                    $("#txtCaseNo").val(response.responseText.CASE_NO);
+
+                    if ($("#txtCaseNo").val() != "") {
+                        $("#dvCaseNo").css("display", "block");
+                        BindBPO(0, "", response.responseText.BPO_CD);
+                    }
+                    else{
+                        $("#dvCaseNo").css("display", "none");
+                        BindBPO(response.responseText.ACC_CD, response.responseText.BPO_TYPE, "");
+                    }
+
+                    setTimeout(function () {
+                        $("#ddlBPO").select2().val(response.responseText.BPO_CD).trigger("change");
+                    }, 1000);
+
+                    $("#txtNarration").val(response.responseText.NARRATION);
+                    $("#btnAdd").text('Update');
+                    $(window).scrollTop(0);
+                }
+            }
+        });
+    }
+
+    function DeleteVoucherDetailsByID(id) {
+        $.post("@Url.Action("DeleteVoucherDetailsByID", "RecieptVoucher")", { id }, function (response) {
+            if (response.status) {
+                ShowHideMsg("success", response.responseText);
+                GetVoucherDetails();
+                ClearControlVoucherDetails();
+            }
+        });
+    }
+
+    function onclickUploadExcel() {
+        $("#modalUploadExcel").modal('show');
+    }
+
+    function onclickUploadAndProcess() {
+        var formData = new FormData();
+        formData.append('file', $('#VoucherDetailsFile')[0].files[0]);
+        $.ajax({
+            url: '/RecieptVoucher/UploadExcelFile',
+            type: "POST",
+            processData: false,
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            success: function (response) {
+                if (response.status) {
+                    $("#modalUploadExcel").modal('hide');
+                    ShowHideMsg("success", response.responseText);
+                    GetVoucherDetails();
+                    ClearControlVoucherDetails();
+                }
+                else {
+                    ShowHideMsg("error", response.responseText);
+                }
+            },
+            error: function (er) { }
+        });
+        return false;
+    }
+
+    function onchangeAccountCode() {
+
+        var id = $("#ddlAccountCode").val();
+
+        if (id == "2709" || id == "2210" || id == "2212") {
+            $("#dvCaseNo").css("display", "block");
+            $("#ddlBPO").empty();
+            $("#ddlBPO").append($('<option value="">--Select--</option>'));
+            $("#hdnBPOType").val("");
+        }
+        else {
+            $("#txtCaseNo").val("");
+            $("#dvCaseNo").css("display", "none");
+
+            if (id == "2201") {
+                $("#hdnBPOType").val("R");
+            }
+            else if (id == "2202") {
+                $("#hdnBPOType").val("F");
+            }
+            else if (id == "2203") {
+                $("#hdnBPOType").val("U");
+            }
+            else if (id == "2204") {
+                $("#hdnBPOType").val("P");
+            }
+            else if (id == "2205") {
+                $("#hdnBPOType").val("S");
+            }
+
+            BindBPO(id, $("#hdnBPOType").val(), "");
+        }
+
+        $("#txtNarration").val("");
+    }
+
+    function BindBPO(Acc_cd, BpoType, BPO_cd) {
+        $("#ddlBPO").empty();
+        if (BPO_cd == "") {
+            $("#ddlBPO").append($('<option value="">--Select--</option>'));
+        }
+
+        $.get("@Url.Action("GetBPO", "RecieptVoucher")", { Acc_cd, BpoType, BPO_cd }, function (response) {
+            if (response != null) {
+                $("#ddlBPO").empty();
+                if (BPO_cd == "") {
+                    $("#ddlBPO").append($('<option value="">--Select--</option>'));
+                }
+                $.each(response, function (ind, val) {
+                    $("#ddlBPO").append($('<option></option>').val(val.Value).html(val.Text));
+                });
+            }
+        });
+    }
+
+    function onchangeCaseNo() {
+        var CaseNo = $("#txtCaseNo").val();
+
+        $.get("@Url.Action("FindBPODetails", "RecieptVoucher")", { CaseNo }, function (response) {
+            if (response.status) {
+                if (response.responseText != null) {
+                    $("#txtNarration").val(response.responseText.VEND_NAME);
+                    BindBPO(0, "", response.responseText.BPO_CD);
+                }
+            }
+            else {
+                $("#txtNarration").val("");
+                $("#ddlBPO").empty();
+                $("#ddlBPO").append($('<option value="">--Select--</option>'));
+            }
+        });
+    }
+
+</script>
+
+

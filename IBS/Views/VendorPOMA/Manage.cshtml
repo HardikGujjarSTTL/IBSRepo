@@ -9,28 +9,40 @@
             <h2>VENDOR MA FORM</h2>
         </div>
     </div>
+    
     <div class="accordion-body" id="tab-1">
+        <input type="hidden" asp-for="MA_STATUS" />
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Case No.</label>
                     <input type="text" asp-for="CASE_NO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="CASE_NO" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Po No.</label>
                     <input type="text" class="input" asp-for="PO_NO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="PO_NO" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
                     <input type="text" class="input" asp-for="PO_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy" readonly="readonly">
                     <span asp-validation-for="PO_DT" class="text-danger"></span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row my-0">
+            <div class="col-md-1 mb-3">
+                <div class="reference">
+                    <label for="Reference">SNo.</label>
+                    <input type="text" class="input" asp-for="MA_SNO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    @*<span asp-validation-for="MA_SNO" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-3 mb-3">
@@ -38,15 +50,6 @@
                     <label for="Reference">RLY Code.</label>
                     <input type="text" class="input" asp-for="RLY_CD" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
                     <span asp-validation-for="RLY_CD" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">SNo.</label>
-                    <input type="text" class="input" asp-for="MA_SNO" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                    @*<span asp-validation-for="MA_SNO" class="text-danger"></span>*@
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -65,30 +68,30 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">MA No.<span style="color:red">*</span></label>
                     <input type="text" class="input" asp-for="MA_NO" maxlength="100" style="text-transform: uppercase;">
                     <span asp-validation-for="MA_NO" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">MA Date (DD/MM/YYYY)<span style="color:red">*</span></label>
                     <input type="text" class="datepicker" asp-for="MA_DT" maxlength="100" style="text-transform: uppercase;" placeholder="dd/mm/yyyy">
                     <span asp-validation-for="MA_DT" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Field</label>
                     <textarea rows="4" asp-for="MA_FIELD" style="text-transform: uppercase;"></textarea>
                     <span asp-validation-for="MA_FIELD" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
                 <div class="reference">
                     <label for="Reference">MA Description</label>
                     <textarea rows="4" asp-for="MA_DESC" style="text-transform: uppercase;"></textarea>
@@ -122,7 +125,7 @@
             <button type="button" class="save-btn active" id="btnAddMA" style="display:none;">Save MA</button>
             <button type="button" class="save-btn active" id="btnUpdateMA" style="display:none;">Update MA</button>
         </div>
-        <div class="row my-0">
+        <div class="row my-0" id="divRemarks">
             <div class="col-md-6 mb-3">
                 <div class="reference">
                     <label for="Reference">REMARKS</label>
@@ -177,10 +180,19 @@
             if (Action_T == "N") {
                 $("#btnUpdateMA").hide();
                 $("#btnAddMA").show();
+                $("#divRemarks").hide();
             }
             if (Action_T == "E") {
                 $("#btnUpdateMA").show();
                 $("#btnAddMA").hide();
+                if ($("#MA_STATUS").val() == "Pending")
+                {
+                    $("#divRemarks").hide();
+                }
+                else
+                {
+                    $("#divRemarks").show();
+                }
             }
             InitializeDatatable();
         });
@@ -310,7 +322,8 @@
         }
 
         $("#btnAddMA").click(function () {
-            SaveSingleDocuments("tab-1");
+            //SaveSingleDocuments("tab-1");
+            if (!SaveSingleDocuments("tab-1")) { return; }
 
             var CaseNo = $("#CASE_NO").val();
             var MaNo = $("#MA_NO").val();

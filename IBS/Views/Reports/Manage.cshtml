@@ -64,8 +64,8 @@
             loadIEWorkPlan();
             fileName = 'IE_WorkPlan';
         }
-        else if ('@ReportType' == "ConsCompls"){
-            loadConsCompls();
+        else if ('@ReportType' == "CCI") {
+            loadCCI();
             fileName = 'Consignee_Complaints_Report';
         }
     });
@@ -118,7 +118,7 @@
         });
     }
 
-    function loadConsCompls(){
+    function loadCCI() {
         $("#dvReportViewer").load("@Url.Action("ConsigneeComplaints")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);

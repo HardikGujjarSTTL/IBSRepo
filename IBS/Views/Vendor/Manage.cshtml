@@ -85,19 +85,35 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="VendStatusDtFr">Date From</label>
                         <input type="text" class="datepicker" asp-for="VendStatusDtFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
                         <span asp-validation-for="VendStatusDtFr" class="text-danger"></span>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="VendStatusDtTo">Date To</label>
                         <input type="text" class="datepicker" asp-for="VendStatusDtTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendStatus="true">
                         <span asp-validation-for="VendStatusDtTo" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="VendInspStopped">Has any item of this Vendor blocked?</label>
                         @Html.DropDownListFor(model => model.VendInspStopped, new SelectList(Common.ItemBlocked() , "Value", "Text"))
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="GSTNO">GST No.<i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="GSTNO" maxlength="15">
+                        <span asp-validation-for="GSTNO" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="TanNo">TAN No.</label>
+                        <input type="text" class="input" asp-for="TANNO" maxlength="10">
+                    </div>  
+                    <div class="col-md-4 mb-3">
+                        <label for="PanNo">PAN No.<i class="text-danger">*</i></label>
+                        <input type="text" class="input" asp-for="PANNO" maxlength="10">
+                        <span asp-validation-for="PANNO" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
@@ -123,7 +139,7 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-8 mb-3">
                         <partial name="_FileUploader" model="(FileUploaderDTO)ViewBag.Vendor_Manufacturer" />
                     </div>
                 </div>

@@ -111,6 +111,16 @@ public partial class T40ConsigneeComplaint
 
     public string? NoJiOther { get; set; }
 
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
     public virtual T13PoMaster? CaseNoNavigation { get; set; }
 
     public virtual T06Consignee? ConsigneeCdNavigation { get; set; }

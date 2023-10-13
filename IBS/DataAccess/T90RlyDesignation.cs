@@ -22,4 +22,6 @@ public partial class T90RlyDesignation
     public DateTime? Createddate { get; set; }
 
     public DateTime? Updateddate { get; set; }
+
+    public int Id { get; set; }
 }

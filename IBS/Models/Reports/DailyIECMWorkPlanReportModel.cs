@@ -16,6 +16,7 @@
         public string CMWise { get; set; }
         public string SortedIE { get; set; }
         public string visitdate { get; set; }
+        public string Regions { get; set; }
 
         public List<DailyIECMWorkPlanReporttbl1> lstDailyIECMWorkPlanReporttbl1 { get; set; }
         public List<DailyIECMWorkPlanReporttbl2> lstDailyIECMWorkPlanReporttbl2 { get; set; }

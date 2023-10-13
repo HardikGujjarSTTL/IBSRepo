@@ -1,10 +1,14 @@
-﻿@using IBS.Helper;
+﻿@using System.Web;
+@using IBS.Helper;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
-    string Region = ViewBag.Region;
+    string Region = ViewBag.Regions;
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
-    string ReportTitle = string.Empty;
+    string ReportTitle = string.Empty;//EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
+    if(ReportType != "COIEWiseCalls"){
+        ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
+    }
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
     else if (ReportType == "COIEWiseCalls") ReportTitle = "CONTROLLING WISE CALLS MARKED";
     ViewData["Title"] = ReportTitle;
@@ -17,11 +21,22 @@
 </div>
 <div class="task-listinput">
     <div class="accordion-body">
+        <div class="task-inner row COWISEIE" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCOWISEIE">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <div class="col-md-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReportCOWISEIE();">Generate Report</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="task-inner row COIEWiseCalls" style="display: none">
             <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="dpCO">Controlling Officer</label>
-                    @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Region) , "Value", "Text"),new { @onchange = "BindlstIE();" })
+                    @Html.DropDownList("dpCO", new SelectList(IBS.Models.Common.GetControllingOfficers(ViewBag.Regions) , "Value", "Text"),new { @onchange = "BindlstIE();" })
                 </div>
             </div>
             <div class="col-md-3 mb-3" style="font-weight: bold;">
@@ -43,7 +58,7 @@
             <div class="col-md-3 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="dpIE"></label>
-                    @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Region,"") , "Value", "Text"),"-- Select --")
+                    @Html.DropDownList("dpIE", new SelectList(IBS.Models.Common.GetControllingSelectedIE(ViewBag.Regions,"") , "Value", "Text"),"-- Select --")
                 </div>
             </div>
 
@@ -66,56 +81,790 @@
                 </div>
             </div>
         </div>
-    </div>
-    <section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtCOIEWiseCalls" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>VIEW REPORT</th>
-                            <th>IE Name</th>
-                            <th>VENDOR NAME</th>
-                            <th>NEW VENDOR</th>
-                            <th>PURCHASER</th>
-                            <th>ITEM</th>
-                            <th>DELV DATE</th>
-                            <th>INSP DESIRE DATE</th>
-                            <th>CALL DATE</th>
-                            <th>CALL SERIAL NO.</th>
-                            <th>CALL DOCUMENT(IF ANY).</th>
-                            <th>CASE NO/VIEW PO</th>
-                            @*<th style="display:none;" class="takenworkplan">TAKEN IN TODAY'S WORKPLAN</th> Hide*@
-                            <th>PO SOURCE</th>
-                            <th>STATUS</th>
-                            @*<th>VIEW IC</th>*@
-                            <th>REMARKS</th>
-                            <th>PONO</th>
-                            <th>PO DATE</th>
-                            <th>CONTACT PERSON</th>
-                            <th>CONTACT PERSON PHONE NO.</th>
-                            <th>USER</th>
-                            <th>LAST UPDATION DATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+
+        <div class="task-inner row C" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmC">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnformonth" name="hdnformonth" />
+                <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnmonth" name="hdnmonth" />
+                <input type="hidden" id="hdnyear" name="hdnyear" />
+                <input type="hidden" id="hdnAllCM" name="hdnAllCM" />
+                <input type="hidden" id="hdnforCM" name="hdnforCM" />
+                <input type="hidden" id="hdniecmname" name="hdniecmname" />
+                <input type="hidden" id="hdnAll" name="hdnAll" />
+                <input type="hidden" id="hdnOutstanding" name="hdnOutstanding" />
+                <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
+                <input type="hidden" id="hdnIENametext" name="hdnIENametext" />
+                <div class="col-md-6">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="formonth" name="formonth" value="formonth" checked>
+                                    <label for="formonth">For The Month</label>
+                                </div>
+                            </div>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="forperiod" name="formonth" value="forperiod">
+                                    <label for="forperiod">For Given Period</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end" id="divdate">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDate">To</label>
+                            <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end" id="divmonth">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">Month</label>
+                            @Html.DropDownList("month", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "month" })
+                            <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDate">Year</label>
+                            @Html.DropDownList("year", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "year" })
+                            <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SubmitNCRC();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                @if (ReportType == "I")
+                {
+                    <div class="col-md-12 custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                <div class="remecheckbox">
+                                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
+                                    <label for="AllCM">All IE</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
+                                    <label for="forCM">For Given IE</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (ReportType == "C")
+                {
+                    <div class="col-md-12 custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                <div class="remecheckbox">
+                                    <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
+                                    <label for="AllCM">All CM</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" value="forCM" id="forCM" name="AllCM" />
+                                    <label for="forCM">For Given CM</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-3">
+                    @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+                </div>
+
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <label for="year">Report Type</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                            <div class="remecheckbox">
+                                <input type="radio" value="All" id="All" name="All" checked="checked" />
+                                <label for="All">All</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" value="Outstanding" id="Outstanding" name="All" />
+                                <label for="Outstanding">Outstanding</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="task-inner row IEWISET" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmIEWISET">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnIENAME" name="hdnIENAME" />
+                <input type="hidden" id="hdnMechanical" name="hdnMechanical" />
+                <input type="hidden" id="hdnElectrical" name="hdnElectrical" />
+                <input type="hidden" id="hdnCivil" name="hdnCivil" />
+                <input type="hidden" id="hdnRegular" name="hdnRegular" />
+                <input type="hidden" id="hdnDeputaion" name="hdnDeputaion" />
+                <input type="hidden" id="hdnParticularie" name="hdnParticularie" />
+                <input type="hidden" id="hdnParticularArea" name="hdnParticularArea" />
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">Discipline</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="Alldescipline" name="Discipline" checked="checked" value="Alldescipline">
+                                <label for="Alldescipline">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Mechanical" name="Discipline" value="Mechanical">
+                                <label for="Mechanical">Mechanical</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Electrical" name="Discipline" value="Electrical">
+                                <label for="Electrical">Electrical</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Civil" name="Discipline" value="Civil">
+                                <label for="Civil">Civil</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">IE Category</h3>
+                    <div class="col-md-12" id="detaileds">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIeCat" name="IECategory" checked="checked" value="AllIeCat">
+                                <label for="AllIeCat">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Regular" name="IECategory" value="Regular">
+                                <label for="Regular">Regular</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Deputaion" name="IECategory" value="Deputaion">
+                                <label for="Deputaion">Deputaion</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">IE</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllIe" name="AllIe" checked="checked" value="AllIe">
+                                <label for="AllIe">All IE</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="Particularie" name="AllIe" value="Particularie">
+                                <label for="Particularie">Particular IE</label>
+                            </li>
+                            <li>
+                                @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3 class="heading3 mb-4">Training Area</h3>
+                    <div class="col-md-12">
+                        <ul class="radioListForm m-0">
+                            <li>
+                                <input type="radio" id="AllArea" name="AllArea" checked="checked" value="AllArea">
+                                <label for="AllArea">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="ParticularArea" name="AllArea" value="ParticularArea">
+                                <label for="ParticularArea">Particular Area</label>
+                            </li>
+                            <li>
+                                @Html.DropDownList("TrainingArea", new SelectList(IBS.Models.Common.TrainingArea(), "Value", "Text"), "--Select--", new { id = "TrainingArea" })
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="ViewReportIEWISET();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControlsIEWISET();">Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="task-inner row ONGCON" style="display: none">
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmONGCON">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnStatusOffer" name="hdnStatusOffer" />
+                <input type="hidden" id="hdnRegion" name="hdnRegion" />
+                <input type="hidden" id="hdnStatusOffertxt" name="hdnStatusOffertxt" />
+                <input type="hidden" id="hdnRegiontxt" name="hdnRegiontxt" />
+                <input type="hidden" id="hdnrdoregionwise" name="hdnrdoregionwise" />
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" value="regionwise" id="regionwise" name="regionwise" />
+                                <label for="regionwise">For Region Wise </label>
+                                &nbsp;&nbsp;
+                                <input type="radio" value="allregion" id="allregion" name="regionwise" />
+                                <label for="allregion">For All Region</label>
+                            </div>
+                        </div>
+                        <div>
+                            @Html.DropDownList("StatusOffer", new SelectList(IBS.Models.Common.StatusOffer() , "Value", "Text"),"--Select--", new { id = "StatusOffer" })
+                        </div>
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                        <div>
+                            @Html.DropDownList("Region", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--", new { id = "Region" })
+                        </div>
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                        <div class="col-md-5">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="ViewReportONGCON();">Generate Report</button>
+                                <button type="button" class="reset-btn" onclick="ClearControlsONGCON();">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+         <div class="task-inner row CONTRACT" style="display: none">
+            
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCONTRACT">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnRegion" name="hdnRegion" />
+                <input type="hidden" id="hdnclientname" name="hdnclientname" />
+                <div class="row my-0">
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDate">For The Period From</label>
+                        <input type="text" class="datepicker" id="FromDateCONTRACT" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorFromDateCONTRACT"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDate">To</label>
+                        <input type="text" class="datepicker" id="ToDateCONTRACT" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorToDateCONTRACT"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="Region">Region</label>
+                        @Html.DropDownList("RegionCONTRACT", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--" ,new { id = "RegionCONTRACT" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="clientname">Client Wise</label>
+                        <input type="text" id="clientname" />
+                    </div>
+                </div>
+                <div class="col-md-5" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ViewReportfrmCONTRACT();">Generate Report</button>
+                        <button type="button" class="reset-btn" onclick="ClearControlsfrmCONTRACT();">Clear</button>
+                    </div>
+                </div>
+                </div>
+            </form>
+        
+        </div>
+
+        <div class="task-inner row CLUSVENDOR" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCLUSVENDOR">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdndepartment" name="hdndepartment" />
+                    <input type="hidden" id="hdnallreport" name="hdnallreport" />
+                    <input type="hidden" id="hdndepartreport" name="hdndepartreport" />
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" value="allreport" id="allreport" name="allreport" checked="checked" />
+                                    <label for="allreport">Show Report for All</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" value="departreport" id="departreport" name="allreport" />
+                                    <label for="departreport">Show Report for departmentwise</label>
+                                </div>
+                            </div>
+                            <div>
+                                @Html.DropDownList("department", new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--", new { id = "department" })
+                            </div>
+                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                            <div class="col-md-5">
+                                <div class="savenext-btn">
+                                    <button type="button" class="save-btn active" onclick="ViewReportCLUSVENDOR();">Generate Report</button>
+                                    <button type="button" class="reset-btn" onclick="ClearControlsCLUSVENDOR();">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
-</div>
 
+        <div class="task-inner row IEALTER" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmIEALTER">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" value="allreport" id="allreportIEALTER" name="allreport" checked="checked" />
+                                    <label for="allreport">Show LIST of IE -ALTIE</label>
+                                </div>
+                            </div>
+                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                            <div class="col-md-5">
+                                <div class="savenext-btn">
+                                    <button type="button" class="save-btn active" onclick="ViewReportIEALTER();">Generate Report</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="task-inner row VENDPER" style="display: none">
+            
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDPER">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                    <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                    <input type="hidden" id="hdnformonth" name="hdnformonth" />
+                    <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
+                    <input type="hidden" id="hdnmonth" name="hdnmonth" />
+                    <input type="hidden" id="hdnyear" name="hdnyear" />
+                    <input type="hidden" id="hdnvendor" name="hdnvendor" />
+                    <input type="hidden" id="hdnvendcd" name="hdnvendcd" />
+                    <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
+                    <div class="row my-0">
+                    <div class="col-md-6">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="formonthVENDPER" name="formonth" value="formonth" checked>
+                                        <label for="formonthVENDPER">For The Month</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="forperiodVENDPER" name="formonth" value="forperiod">
+                                        <label for="forperiodVENDPER">For Given Period</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0" id="divdateVENDPER">
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="FromDate">For The Period From</label>
+                                <input type="text" class="datepicker" id="FromDateVENDPER" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDateVENDPER"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="ToDate">To</label>
+                                <input type="text" class="datepicker" id="ToDateVENDPER" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorToDateVENDPER"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0" id="divmonthVENDPER">
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="FromDate">Month</label>
+                                @Html.DropDownList("monthVENDPER", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "monthVENDPER" })
+                                <span class="text-danger field-validation-error" id="spnErrormonth"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="ToDate">Year</label>
+                                @Html.DropDownList("yearVENDPER", new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--", new { id = "yearVENDPER" })
+                                <span class="text-danger field-validation-error" id="spnErroryear"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <label for="Reference">Vendor</label>
+                        <input type="text" id="vendorVENDPER" class="input" maxlength="3" />
+                        <span class="text-danger field-validation-error" id="spnErrorvendorVENDPER"></span>
+                    </div>
+                    <div class="col-md-5 mt-4">
+                        <div class="savenext-btn" style="margin-top: 30px;">
+                            <button type="button" class="save-btn active" onclick="ViewReportVENDPER();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControlsVENDPER();">Clear</button>
+                        </div>
+                    </div>
+                    </div>
+               </form>
+        
+    </div>
+
+        <div class="task-inner row VENDFEED" style="display: none">
+            <div class="row my-0">
+                    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDFEED">
+                         <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                        <div class="col-md-5">
+                            <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="ViewReportVENDFEED();">Generate Report</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="task-inner row CHECK" style="display: none">
+           
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmPWCHECK">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnFromDatePWCHECK" name="hdnFromDatePWCHECK" />
+                    <input type="hidden" id="hdnToDatePWCHECK" name="hdnToDatePWCHECK" />
+                    <div class="row my-0">
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="FromDate">For The Period From</label>
+                                <input type="text" class="datepicker" id="FromDatePWCHECK" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDatePWCHECK"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-search">
+                                <label for="ToDate">To</label>
+                                <input type="text" class="datepicker" id="ToDatePWCHECK" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorToDatePWCHECK"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="ViewReportPWCHECK();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControlsPWCHECK();">Clear</button>
+                        </div>
+                    </div>
+                    </form>
+            
+         </div>
+
+        <div class="task-inner row U" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmUE">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnddlienameUE" name="hdnddlienameUE" />
+                    <input type="hidden" id="hdnddlsupercmUE" name="hdnddlsupercmUE" />
+                    <input type="hidden" id="hdnFromDateUE" name="hdnFromDateUE" />
+                    <input type="hidden" id="hdnToDateUE" name="hdnToDateUE" />
+                    <input type="hidden" id="hdnAllIEsUE" name="hdnAllIEsUE" />
+                    <input type="hidden" id="hdnParticularCMsUE" name="hdnParticularCMsUE" />
+                    <input type="hidden" id="hdnIEWiseUE" name="hdnIEWiseUE" />
+                    <input type="hidden" id="hdnCMWiseUE" name="hdnCMWiseUE" />
+                    <input type="hidden" id="hdnSortedIEUE" name="hdnSortedIEUE" />
+                    <input type="hidden" id="hdnvisitdateUE" name="hdnvisitdateUE" />
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3">For The Period</h3>
+                        </div>
+                    </div>
+                    <div class="row" id="divdateUE">
+                        <div class="col-md-4">
+                            <div class="input-search">
+                                <label for="FromDate">From</label>
+                                <input type="text" class="datepicker" id="FromDateUE" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDateUE"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-search">
+                                <label for="ToDate">To</label>
+                                <input type="text" class="datepicker" id="ToDateUE" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorToDateUE"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="radio" id="IEWiseUE" name="CMWises" value="IEWise" checked="checked">
+                            <label for="IEWiseUE">IE Wise</label>
+
+                            <div id="AllIEUE">
+                                <ul class="radioListForm m-0">
+                                    <li>
+                                        <input type="radio" id="AllIEsUE" name="IEWise" value="AllIE" checked="checked">
+                                        <label for="AllIEsUE">All IE</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="ParticularIEsUE" name="IEWise" value="ParticularIEs">
+                                        <label for="ParticularIEsUE">Particular IE</label>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="row my-0">
+                                <div class="col-md-6" id="particularIEUE">
+                                    @Html.DropDownList("ddlienameUE", new SelectList(IBS.Models.Common.GetInspEngCdFortech(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlienameUE" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" id="CMWiseUE" name="CMWises" value="CMWise">
+                            <label for="CMWiseUE">Controlling Manager Wise</label>
+
+                            <div id="AllCMWiseUE">
+                                <ul class="radioListForm m-0">
+                                    <li>
+                                        <input type="radio" id="AllCMUE" name="CMWise" value="AllCM">
+                                        <label for="AllCMUE">All CM </label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="ParticularCMsUE" name="CMWise" value="ParticularCMs">
+                                        <label for="ParticularCMsUE">Particular CM</label>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="row my-0">
+                                <div class="col-md-6" id="particularCMUE">
+                                    @Html.DropDownList("ddlsupercmUE", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercmUE" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (ReportType == "E")
+                    {
+                        <div class="row my-0">
+                            <div class="col-md-12">
+                                <h3 class="heading3">Sorted On</h3>
+                            </div>
+                            <div class="col-md-4">
+
+                                <ul class="radioListForm">
+                                    <li>
+                                        <input type="radio" id="SortedIEUE" name="visitdate" value="SortedIE">
+                                        <label for="SortedIEUE">IE</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="visitdateUE" name="visitdate" value="visitdate">
+                                        <label for="visitdateUE">VISIT DATE</label>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    }
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="ViewReportUE();">Submit</button>
+                                <button type="button" class="reset-btn" onclick="ClearControlsUE();">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="task-inner row IEICPHOTO" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmIEICPHOTO">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnCaseNo" name="hdnCaseNo" />
+                    <input type="hidden" id="hdnCallRecDT" name="hdnCallRecDT" />
+                    <input type="hidden" id="hdnCallSno" name="hdnCallSno" />
+                    <input type="hidden" id="hdnBKNO" name="hdnBKNO" />
+                    <input type="hidden" id="hdnSETNO" name="hdnSETNO" />
+                    <div class="row my-0">
+                        <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Case No.</label>
+                                <input type="text" id="CaseNo" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Call Recieve Date</label>
+                                <input type="text" id="CallRecDT" class="datepicker" placeholder="DD/MM/YYYY" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Call SNO.</label>
+                                <input type="text" id="CallSno" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Book No.</label>
+                                <input type="text" id="BKNO" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>  <div class="col-md-2">
+                            <div class="input-search">
+                                <label for="FromDate">Set No.</label>
+                                <input type="text" id="SETNO" />
+                                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4" style="margin-top: 30px;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="ViewReportIEICPHOTO();">Search</button>
+                            <button type="button" class="save-btn active" onclick="ViewReportIEICPHOTOReport();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControlsIEICPHOTO();">Clear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtCOIEWiseCalls" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>VIEW REPORT</th>
+                        <th>IE Name</th>
+                        <th>VENDOR NAME</th>
+                        <th>NEW VENDOR</th>
+                        <th>PURCHASER</th>
+                        <th>ITEM</th>
+                        <th>DELV DATE</th>
+                        <th>INSP DESIRE DATE</th>
+                        <th>CALL DATE</th>
+                        <th>CALL SERIAL NO.</th>
+                        <th>CALL DOCUMENT(IF ANY).</th>
+                        <th>CASE NO/VIEW PO</th>
+                        @*<th style="display:none;" class="takenworkplan">TAKEN IN TODAY'S WORKPLAN</th> Hide*@
+                        <th>PO SOURCE</th>
+                        <th>STATUS</th>
+                        @*<th>VIEW IC</th>*@
+                        <th>REMARKS</th>
+                        <th>PONO</th>
+                        <th>PO DATE</th>
+                        <th>CONTACT PERSON</th>
+                        <th>CONTACT PERSON PHONE NO.</th>
+                        <th>USER</th>
+                        <th>LAST UPDATION DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section class="table-section IEICPHOTO" id="tblIEICPHOTO" style="display: none">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtphoto" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Case No.</th>
+                        <th>Call Date</th>
+                        <th>Call SNO.</th>
+                        <th>Book NO.</th>
+                        <th>Set NO.</th>
+                        <th>Photo 1</th>
+                        <th>Photo 2</th>
+                        <th>Photo 3</th>
+                        <th>Photo 4</th>
+                        <th>Photo 5</th>
+                        <th>Photo 6</th>
+                        <th>Photo 7</th>
+                        <th>Photo 8</th>
+                        <th>Photo 9</th>
+                        <th>Photo 10</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-
+    <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
     <script type="text/javascript">
-
         $(document).ready(function () {
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+            $("#AllIEUE").hide();
+            $("#AllCMWiseUE").hide();
+            $("#divdate").hide();
+            $("#iecmname").hide();
+            $("#IENAME").hide();
+            $("#TrainingArea").hide();
+            $("#Region").hide();
+            $("#department").hide();
+
+            $("#divdateVENDPER").hide();
+
+            $("#vendorVENDPER").autocomplete({
+                source: function (request, response) {
+                    debugger
+                    $.ajax({
+                        url: "/Search/GetVendorData",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            debugger
+                            response($.map(data, function (item) {
+                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                            }))
+                        }
+                    })
+                },
+                minLength: 3
+            });
+
             BindlstIE();
             if ('@ReportType' == 'COWISEIE') {
-                ViewReportCOWISEIE();
+                $(".COWISEIE").css("display", "");               
             }
             else if ('@ReportType' == "COIEWiseCalls") {
                 $(".COIEWiseCalls").css("display", "");
@@ -132,27 +881,228 @@
                     }
                 });
             }
+            else if ('@ReportType' == 'C' || '@ReportType' == 'I') {
+                $(".C").css("display", "");
+            } else if ('@ReportType' == 'IEWISET') {
+                $(".IEWISET").css("display", "");
+            } else if ('@ReportType' == 'ONGCON') {
+                $(".ONGCON").css("display", "");
+            } else if ('@ReportType' == 'CONTRACT') {
+                $(".CONTRACT").css("display", "");
+            } else if ('@ReportType' == 'CLUSVENDOR') {
+                $(".CLUSVENDOR").css("display", "");
+            } else if ('@ReportType' == 'IEALTER') {
+                $(".IEALTER").css("display", "");
+            } else if ('@ReportType' == 'VENDPER') {
+                $(".VENDPER").css("display", "");
+            } else if ('@ReportType' == 'VENDFEED') {
+                $(".VENDFEED").css("display", "");
+            } else if ('@ReportType' == 'CHECK' || '@ReportType' == 'TECH') {
+                $(".CHECK").css("display", "");
+            } else if ('@ReportType' == 'U' || '@ReportType' == 'E') {
+                $(".U").css("display", "");
+            } else if ('@ReportType' == 'IEICPHOTO') {
+                $(".IEICPHOTO").css("display", "");
+            }
+
+            $('#formonthVENDPER').change(function () {
+                $("#FromDateVENDPER").val('');
+                $("#ToDateVENDPER").val('');
+                $("#vendorVENDPER").val('');
+                $("#divdateVENDPER").hide();
+                $("#divmonthVENDPER").show();
+            });
+
+            $('#forperiodVENDPER').change(function () {
+                $("#monthVENDPER").val('');
+                $("#yearVENDPER").val('');
+                $("#vendorVENDPER").val('');
+                $("#divmonthVENDPER").hide();
+                $("#divdateVENDPER").show();
+            });
+
+
+            $('#Particularie').change(function () {
+                $("#IENAME").show();
+            });
+
+            $('#ParticularArea').change(function () {
+                $("#TrainingArea").show();
+            });
+
+            $('#AllIe').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#departreport').change(function () {
+                $("#department").show();
+            });
+
+            $('#allreport').change(function () {
+                $("#department").val('');
+                $("#department").hide();
+            });
+
+            $('#AllArea').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#AllIeCat').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Regular').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Deputaion').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Alldescipline').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Mechanical').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Electrical').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
+
+            $('#Civil').change(function () {
+                $("#IENAME").val('');
+                $("#TrainingArea").val('');
+                $("#TrainingArea").hide();
+                $("#IENAME").hide();
+            });
         });
 
 
+        $('#forperiod').change(function () {
+            $("#divdate").show();
+            $("#divmonth").hide();
+            $("#month").val('');
+            $("#year").val('');
+        });
 
+        $('#formonth').change(function () {
+            $("#divdate").hide();
+            $("#divmonth").show();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+        });
+
+        $('#forCM').change(function () {
+            $("#iecmname").show();
+        });
+
+        $('#AllCM').change(function () {
+            $("#iecmname").hide();
+        });
+
+        $('#regionwise').change(function () {
+            $("#Region").show();
+        });
+
+        $('#allregion').change(function () {
+            $("#Region").val('');
+            $("#Region").hide();
+        });
+
+        $('#IEWiseUE').change(function () {
+            debugger
+            $("#AllIEUE").show();
+            $("#AllCMWiseUE").hide();
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+        });
+
+        $('#CMWiseUE').change(function () {
+            $("#AllIEsUE").prop("checked", false);
+            $("#AllCMWiseUE").show();
+            $("#AllIEUE").hide();
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+        });
+
+        $('#ParticularIEsUE').change(function () {
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").show();
+        });
+
+        $('#ParticularCMsUE').change(function () {
+            $("#ddlsupercmUE").show();
+            $("#ddlienameUE").hide();
+        });
+
+        $('#AllCMUE').change(function () {
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+        });
+
+        $('#AllIEsUE').change(function () {
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+        });
+
+        function ClearControlsONGCON() {
+            $("#Region").val('');
+            $("#StatusOffer").val('');
+            $("#Region").hide();
+        }
+
+        function ViewReportONGCON() {
+            var ReportType = '@ReportType';
+            var StatusOffer = $('#StatusOffer').val();
+            var Region = $('#Region').val();
+            var StatusOffertxt = $('#StatusOffer option:selected').text();
+            var Regiontxt = $('#Region option:selected').text();
+            var rdoregionwise = $("#regionwise").is(":checked") == true ? "true" : "false";
+
+            $('#frmONGCON').find("#hdnReportType").val(ReportType);
+            $('#frmONGCON').find("#hdnStatusOffer").val(StatusOffer);
+            $('#frmONGCON').find("#hdnRegion").val(Region);
+            $('#frmONGCON').find("#hdnStatusOffertxt").val(StatusOffertxt);
+            $('#frmONGCON').find("#hdnRegiontxt").val(Regiontxt);
+            $('#frmONGCON').find("#hdnrdoregionwise").val(rdoregionwise);
+
+            $("#frmONGCON").submit();
+        }
+        
         function ViewReportCOWISEIE() {
             var ReportType = '@ReportType';
-            let myObject = { ReportType };
-            var url = '@Url.Action("Manage", "OtherReports")?' + $.param(myObject);
-            window.open(url, '_blank');
+            $('#frmCOWISEIE').find("#hdnReportType").val(ReportType);
+            $("#frmCOWISEIE").submit();
         }
 
         function ViewReportCOIEWiseCalls(Case_No, Call_Recv_Date, Call_SNo) {
-            var ReportType = '@ReportType';
-            //var CO = $("#dpCO").val();
-            //var Status = $("#status").val();
-            //var IE = $("#dpIE").val();
-            //var IsAllPartiIE = $("#rdAllIE").is(":checked");
-            //var IsCallDate = $("#rdCallDate").is(":checked");
-            //if (IsAllPartiIE) {
-            //    IE = null;
-            //}
+            var ReportType = '@ReportType';            
             let myObject = { ReportType, Case_No, Call_Recv_Date, Call_SNo };
             var url = '@Url.Action("ManageCoIeWiseCalls", "OtherReports")?' + $.param(myObject);
             window.open(url, '_blank');
@@ -333,6 +1283,527 @@
                 ],
                 "order": [[0, "asc"]]
             });
+        }
+
+        function ClearControls1() {
+            $("#month").val('');
+            $("#year").val('');
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#formonth").prop("checked", true);
+            $("#divdate").hide();
+            $("#divmonth").show();
+        }
+
+        function SubmitNCRC() {
+
+            $("#spnErrorToDate").html("");
+            $("#spnErrorFromDate").html("");
+            $("#spnErrormonth").html("");
+            $("#spnErroryear").html("");
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var IsValid = true;
+
+            if (formonth == "true") {
+                if ($("#month").val() == "") {
+                    $("#spnErrormonth").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#year").val() == "") {
+                    $("#spnErroryear").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+
+
+            if (forperiod == "true") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnErrorFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() == "") {
+                    $("#spnErrorToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
+                if ($("#FromDate").val() != "" && IsValidDate($("#FromDate").val()) == false) {
+                    $("#spnErrorFromDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if ($("#ToDate").val() != "" && IsValidDate($("#ToDate").val()) == false) {
+                    $("#spnErrorToDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var monthChar = $('#month option:selected').text();
+            var month = getMonthNumber(monthChar);
+            var year = $('#year').val();
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var AllCM = $("#AllCM").is(":checked") == true ? "true" : "false";
+            var forCM = $("#forCM").is(":checked") == true ? "true" : "false";
+            var All = $("#All").is(":checked") == true ? "true" : "false";
+            var Outstanding = $("#Outstanding").is(":checked") == true ? "true" : "false";
+            var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
+            var iecmname = $('#iecmname').val();
+            var COName = $('#iecmname option:selected').text();
+            var IENametext = $('#iecmname option:selected').text();
+
+
+            $('#frmC').find("#hdnReportType").val(ReportType);
+            $('#frmC').find("#hdnmonthtxt").val(monthChar);
+            $('#frmC').find("#hdnmonth").val(month);
+            $('#frmC').find("#hdnyear").val(year);
+            $('#frmC').find("#hdnFromDate").val(FromDate);
+            $('#frmC').find("#hdnToDate").val(ToDate);
+            $('#frmC').find("#hdnAllCM").val(AllCM);
+            $('#frmC').find("#hdnforCM").val(forCM);
+            $('#frmC').find("#hdnAll").val(All);
+            $('#frmC').find("#hdnOutstanding").val(Outstanding);
+            $('#frmC').find("#hdnformonth").val(formonth);
+            $('#frmC').find("#hdnforperiod").val(forperiod);
+            $('#frmC').find("#hdniecmname").val(iecmname);
+            $('#frmC').find("#hdnCOName").val(COName);
+            $('#frmC').find("#hdnIENametext").val(IENametext);
+
+            $("#frmC").submit();
+
+        }
+
+        function getMonthNumber(monthName) {
+
+            const date = new Date(`${monthName} 1, 2000`);
+            const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
+            return monthNumber;
+        }
+
+        function ClearControlsIEWISET() {
+            $("#IENAME").val('');
+            $("#TrainingArea").val('');
+            $("#TrainingArea").hide();
+            $("#IENAME").hide();
+            $("#Alldescipline").prop("checked", true);
+            $("#AllIeCat").prop("checked", true);
+            $("#AllIe").prop("checked", true);
+            $("#AllArea").prop("checked", true);
+        }
+
+        function ViewReportIEWISET() {
+            var ReportType = '@ReportType';
+            var IENAME = $('#IENAME').val();
+            var TrainingArea = $('#TrainingArea').val();
+            var Mechanical = $("#Mechanical").is(":checked") == true ? "true" : "false";
+            var Electrical = $("#Electrical").is(":checked") == true ? "true" : "false";
+            var Civil = $("#Civil").is(":checked") == true ? "true" : "false";
+            var Regular = $("#Regular").is(":checked") == true ? "true" : "false";
+            var Deputaion = $("#Deputaion").is(":checked") == true ? "true" : "false";
+            var Particularie = $("#Particularie").is(":checked") == true ? "true" : "false";
+            var ParticularArea = $("#ParticularArea").is(":checked") == true ? "true" : "false";
+
+            $('#frmIEWISET').find("#hdnReportType").val(ReportType);
+            $('#frmIEWISET').find("#hdnIENAME").val(IENAME);
+            $('#frmIEWISET').find("#hdnTrainingArea").val(TrainingArea);
+            $('#frmIEWISET').find("#hdnMechanical").val(Mechanical);
+            $('#frmIEWISET').find("#hdnElectrical").val(Electrical);
+            $('#frmIEWISET').find("#hdnCivil").val(Civil);
+            $('#frmIEWISET').find("#hdnRegular").val(Regular);
+            $('#frmIEWISET').find("#hdnDeputaion").val(Deputaion);
+            $('#frmIEWISET').find("#hdnParticularie").val(Particularie);
+            $('#frmIEWISET').find("#hdnParticularArea").val(ParticularArea);
+
+            $("#frmIEWISET").submit();
+        }
+
+        function ClearControlsfrmCONTRACT() {
+            $("#RegionCONTRACT").val('');
+            $("#clientname").val('');
+            $("#FromDateCONTRACT").val('');
+            $("#ToDateCONTRACT").val('');
+        }
+
+        function ViewReportfrmCONTRACT() {
+            debugger
+            $("#spnErrorToDateCONTRACT").html("");
+            $("#spnErrorFromDateCONTRACT").html("");
+            var IsValid = true;
+
+
+            if ($("#FromDateCONTRACT").val() == "") {
+                $("#spnErrorFromDateCONTRACT").html("Enter From Date.");
+                IsValid = false;
+            }
+            if ($("#ToDateCONTRACT").val() == "") {
+                $("#spnErrorToDateCONTRACT").html("Enter To Date.");
+                IsValid = false;
+            }
+            if ($("#FromDateCONTRACT").val() != "" && IsValidDate($("#FromDateCONTRACT").val()) == false) {
+                $("#spnErrorFromDateCONTRACT").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#ToDateCONTRACT").val() != "" && IsValidDate($("#ToDateCONTRACT").val()) == false) {
+                $("#spnErrorToDateCONTRACT").html("Invalid date format.");
+                IsValid = false;
+            }
+
+
+            if (!IsValid) return;
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var FromDate = $('#FromDateCONTRACT').val();
+            var ToDate = $('#ToDateCONTRACT').val();
+            var Region = $('#RegionCONTRACT').val();
+            var clientname = $('#clientname').val();
+
+            $('#frmCONTRACT').find("#hdnReportType").val(ReportType);
+            $('#frmCONTRACT').find("#hdnFromDate").val(FromDate);
+            $('#frmCONTRACT').find("#hdnToDate").val(ToDate);
+            $('#frmCONTRACT').find("#hdnRegion").val(Region);
+            $('#frmCONTRACT').find("#hdnclientname").val(clientname);
+
+            $("#frmCONTRACT").submit();
+        }
+
+        function ClearControlsCLUSVENDOR() {
+            $("#department").val('');
+            $("#allreport").prop("checked", true);
+            $("#department").hide();
+        }
+
+        function ViewReportCLUSVENDOR() {
+            var ReportType = '@ReportType';
+            var department = $('#department').val();
+            var allreport = $("#allreport").is(":checked") == true ? "true" : "false";
+            var departreport = $("#departreport").is(":checked") == true ? "true" : "false";
+
+
+            $('#frmCLUSVENDOR').find("#hdnReportType").val(ReportType);
+            $('#frmCLUSVENDOR').find("#hdndepartment").val(department);
+            $('#frmCLUSVENDOR').find("#hdnallreport").val(allreport);
+            $('#frmCLUSVENDOR').find("#hdndepartreport").val(departreport);
+
+            $("#frmCLUSVENDOR").submit();
+        }
+
+        function ViewReportIEALTER() {
+            var ReportType = '@ReportType';
+
+            $('#frmIEALTER').find("#hdnReportType").val(ReportType);
+            $("#frmIEALTER").submit();
+        }
+
+        function ViewReportVENDFEED() {
+            var ReportType = '@ReportType';
+
+            $('#frmVENDFEED').find("#hdnReportType").val(ReportType);
+            $("#frmVENDFEED").submit();
+        }
+
+        function ViewReportVENDPER() {
+
+            $("#spnErrorFromDateVENDPER").html("");
+            $("#spnErrorToDateVENDPER").html("");
+            $("#spnErrormonthVENDPER").html("");
+            $("#spnErroryearVENDPER").html("");
+            $("#spnErrorvendorVENDPER").html("");
+
+            var FromDate = $('#FromDateVENDPER').val();;
+            var ToDate = $('#ToDateVENDPER').val();;
+            var formonth = $("#formonthVENDPER").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiodVENDPER").is(":checked") == true ? "true" : "false";
+            var month = $('#monthVENDPER').val();
+            var year = $('#yearVENDPER').val();
+            var vendor = $('#vendorVENDPER').val();
+
+            var IsValid = true;
+
+            if ($("#vendorVENDPER").val() == "") {
+                $("#spnErrorvendorVENDPER").html("Enter Vendor");
+                IsValid = false;
+            }
+
+            if (formonth == "true") {
+                if ($("#monthVENDPER").val() == "") {
+                    $("#spnErrormonthVENDPER").html("Select Month");
+                    IsValid = false;
+                }
+                if ($("#yearVENDPER").val() == "") {
+                    $("#spnErroryearVENDPER").html("Select Year");
+                    IsValid = false;
+                }
+            }
+
+            if (forperiod == "true") {
+                if ($("#FromDateVENDPER").val() == "") {
+                    $("#spnErrorFromDateVENDPER").html("Enter From Date.");
+                    IsValid = false;
+                }
+                if ($("#ToDateVENDPER").val() == "") {
+                    $("#spnErrorToDateVENDPER").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var FromDate = $('#FromDateVENDPER').val();;
+            var ToDate = $('#ToDateVENDPER').val();;
+            var formonth = $("#formonthVENDPER").is(":checked") == true ? "true" : "false";
+            var forperiod = $("#forperiodVENDPER").is(":checked") == true ? "true" : "false";
+            var month = $('#monthVENDPER').val();
+            var year = $('#yearVENDPER').val();
+            var vendor = $('#vendorVENDPER').val();
+            var indexOfHyphen = vendor.indexOf("-");
+            var vendcd = vendor.substr(0, indexOfHyphen).trim();
+            var monthtxt = $('#monthVENDPER option:selected').text();
+
+            $('#frmVENDPER').find("#hdnReportType").val(ReportType);
+            $('#frmVENDPER').find("#hdnFromDate").val(FromDate);
+            $('#frmVENDPER').find("#hdnToDate").val(ToDate);
+            $('#frmVENDPER').find("#hdnformonth").val(formonth);
+            $('#frmVENDPER').find("#hdnforperiod").val(forperiod);
+            $('#frmVENDPER').find("#hdnmonth").val(month);
+            $('#frmVENDPER').find("#hdnyear").val(year);
+            $('#frmVENDPER').find("#hdnvendor").val(vendor);
+            $('#frmVENDPER').find("#hdnvendcd").val(vendcd);
+            $('#frmVENDPER').find("#hdnmonthtxt").val(monthtxt);
+
+            $("#frmVENDPER").submit();
+        }
+
+        function ClearControlsVENDPER() {
+            $("#FromDateVENDPER").val('');
+            $("#ToDateVENDPER").val('');
+            $("#vendorVENDPER").val('');
+            $("#vendordtVENDPER").val('');
+            $("#monthVENDPER").val('');
+            $("#yearVENDPER").val('');
+        }
+
+        function ViewReportPWCHECK() {
+
+            $("#spnErrorFromDatePWCHECK").html("");
+            $("#spnErrorToDatePWCHECK").html("");
+
+            var FromDate = $('#FromDatePWCHECK').val();
+            var ToDate = $('#ToDatePWCHECK').val();
+
+            var IsValid = true;
+
+            if ($("#FromDatePWCHECK").val() == "") {
+                $("#spnErrorFromDatePWCHECK").html("Enter From Date.");
+                IsValid = false;
+            }
+            if ($("#ToDatePWCHECK").val() == "") {
+                $("#spnErrorToDatePWCHECK").html("Enter To Date.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var IsValid = true;
+            var ReportType = '@ReportType';
+            var FromDate = $('#FromDatePWCHECK').val();;
+            var ToDate = $('#ToDatePWCHECK').val();;
+
+            $('#frmPWCHECK').find("#hdnReportType").val(ReportType);
+            $('#frmPWCHECK').find("#hdnFromDatePWCHECK").val(FromDate);
+            $('#frmPWCHECK').find("#hdnToDatePWCHECK").val(ToDate);
+
+            $("#frmPWCHECK").submit();
+        }
+
+        function ClearControls1() {
+            $("#spnErrorFromDatePWCHECK").html("");
+            $("#spnErrorToDatePWCHECK").html("");
+            $('#FromDatePWCHECK').val("");
+            $('#ToDatePWCHECK').val("");
+        }
+
+        function ClearControlsUE() {
+            $("#FromDateUE").val('');
+            $("#ToDateUE").val('');
+            $("#ddlsupercmUE").hide();
+            $("#ddlienameUE").hide();
+            $("#AllIEUE").hide();
+            $("#AllCMWiseUE").hide();
+        }
+
+        function ViewReportUE() {
+
+            var lstIE = $('#ddlienameUE').val();
+            var lstCM = $('#ddlsupercmUE').val();
+            var FromDate = $('#FromDateUE').val();
+            var ToDate = $('#ToDateUE').val();
+            var AllIEs = $("#AllIEsUE").is(":checked") == true ? "true" : "false";
+            var ParticularIEs = $("#ParticularIEsUE").is(":checked") == true ? "true" : "false";
+            var AllCM = $("#AllCMUE").is(":checked") == true ? "true" : "false";
+            var ParticularCMs = $("#ParticularCMsUE").is(":checked") == true ? "true" : "false";
+            var IEWise = $("#IEWiseUE").is(":checked") == true ? "true" : "false";
+            var CMWise = $("#CMWiseUE").is(":checked") == true ? "true" : "false";
+            var SortedIE = $("#SortedIEUE").is(":checked") == true ? "true" : "false";
+            var visitdate = $("#visitdateUE").is(":checked") == true ? "true" : "false";
+            var ReportType = '@ReportType';
+
+            $('#frmUE').find("#hdnReportType").val(ReportType);
+            $('#frmUE').find("#hdnddlienameUE").val(lstIE);
+            $('#frmUE').find("#hdnddlsupercmUE").val(lstCM);
+            $('#frmUE').find("#hdnFromDateUE").val(FromDate);
+            $('#frmUE').find("#hdnToDateUE").val(ToDate);
+            $('#frmUE').find("#hdnAllIEsUE").val(AllIEs);
+            $('#frmUE').find("#hdnParticularCMsUE").val(ParticularIEs);
+            $('#frmUE').find("#hdnIEWiseUE").val(IEWise);
+            $('#frmUE').find("#hdnCMWiseUE").val(CMWise);
+            $('#frmUE').find("#hdnSortedIEUE").val(SortedIE);
+            $('#frmUE').find("#hdnvisitdateUE").val(visitdate);
+
+            $("#frmUE").submit();
+        }
+
+        function ViewReportIEICPHOTO() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecDT = $("#CallRecDT").val();
+            var CallSno = $("#CallSno").val();
+            var BKNO = $("#BKNO").val();
+            var SETNO = $("#SETNO").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable", "OtherReports")";
+
+            $("#dtphoto").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecDT": CallRecDT,
+                            "CallSno": CallSno,
+                            "BKNO": BKNO,
+                            "SETNO": SETNO
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    { data: "CaseNo", width: "10%" },
+                    { data: "CallRecDT", width: "10%" },
+                    { data: "CallSno", width: "10%" },
+                    { data: "BKNO", width: "10%" },
+                    { data: "SETNO", width: "10%" },
+                    {
+                        data: "FILE_1", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_1;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_1 + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_2", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_2;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_2 + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_3", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_3;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_3 + '</a>';
+                        }
+                    },
+                    {
+                        data: "FILE_4", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_4;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_4 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_5", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_5;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_5 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_6", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_6;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_6 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_7", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_7;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_7 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_8", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_8;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_8 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_9", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_9;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_9 + '</a>';
+                        }
+                    }, {
+                        data: "FILE_10", width: "10%",
+                        render: function (data, type, row) {
+                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_10;
+                            return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_10 + '</a>';
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function ViewReportIEICPHOTOReport() {
+
+            var CaseNo = $("#CaseNo").val();
+            var CallRecDT = $("#CallRecDT").val();
+            var CallSno = $("#CallSno").val();
+            var BKNO = $("#BKNO").val();
+            var SETNO = $("#SETNO").val();
+            var ReportType = '@ReportType';
+            $('#frmIEICPHOTO').find("#hdnReportType").val(ReportType);
+            $('#frmIEICPHOTO').find("#hdnCaseNo").val(CaseNo);
+            $('#frmIEICPHOTO').find("#hdnCallRecDT").val(CallRecDT);
+            $('#frmIEICPHOTO').find("#hdnCallSno").val(CallSno);
+            $('#frmIEICPHOTO').find("#hdnBKNO").val(BKNO);
+            $('#frmIEICPHOTO').find("#hdnSETNO").val(SETNO);
+
+            $("#frmIEICPHOTO").submit();
+        }
+
+        function ClearControlsIEICPHOTO() {
+            $("#CaseNo").val('');
+            $("#CallRecDT").val('');
+            $("#CallSno").val('');
+            $("#BKNO").val('');
+            $("#SETNO").val('');
+            $("#dtphoto tbody").empty();
         }
     </script>
 }

@@ -11,6 +11,8 @@
         public string vendcd { get; set; }
         public string vendor { get; set; }
         public string monthtxt { get; set; }
+        public string Region { get; set; }
+        public string todaydate { get; set; }
         public string ReportTitle { get; set; }
 
         public List<VendorPerformance> lstVendorPerformance { get; set; }

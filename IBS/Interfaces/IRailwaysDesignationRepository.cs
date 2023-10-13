@@ -4,7 +4,7 @@ namespace IBS.Interfaces
 {
     public interface IRailwaysDesignationRepository
     {
-        public Rly_Designation_FormModel FindByID(string RlyDesigCd);
+        public Rly_Designation_FormModel FindByID(int id);
 
         DTResult<Rly_Designation_FormModel> GetRailwaysDesignationList(DTParameters dtParameters);
 
@@ -12,9 +12,9 @@ namespace IBS.Interfaces
 
         public void SaveDetails(Rly_Designation_FormModel model);
 
-        public bool Remove(string RlyDesigCd);
+        public bool Remove(int id);
 
-        public string IsExistsRailwayDesignationCode(string RlyDesigCd);
+        public string IsExistsRailwayDesignationCode(int id);
 
     }
 }

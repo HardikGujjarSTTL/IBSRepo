@@ -26,4 +26,14 @@ public partial class ReturnedBillsBpoChange
     public string? OldRecipientGstinNo { get; set; }
 
     public string? NewRecipientGstinNo { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

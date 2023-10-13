@@ -96,6 +96,7 @@ builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.T
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 builder.Services.AddScoped<IBillAdjustmentsRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsRepository>();
+builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.InspectionBilling.SupplementaryBillRepository>();
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
@@ -130,7 +131,9 @@ builder.Services.AddScoped<IHighlightsRepository, HighlightsRepository>();
 builder.Services.AddScoped<IBillingOperatingTargetRepository, BillingOperatingRepository>();
 builder.Services.AddScoped<IBillingAdjustmentRepository, BillingAdjustmentRepository>();
 builder.Services.AddScoped<ILastYearOutstandingRepository, LastYearOutstandingRepository>();
-builder.Services.AddScoped<IAddRecieptVoucher, AddRecieptVoucherRepository>();
+builder.Services.AddScoped<IRecieptVoucherRepository, RecieptVoucherRepository>();
+builder.Services.AddScoped<IInterUnitRecieptRepository, InterUnitRecieptRepository>();
+
 builder.Services.AddScoped<IVendorDocumentRepository, VendorDocumentRepository>();
 builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 builder.Services.AddScoped<ICentralQOIRepository, CentralQOIRepository>();
@@ -165,6 +168,7 @@ builder.Services.AddScoped<ICalls_Marked_For_Specific_PORepository, Calls_Marked
 builder.Services.AddScoped<ICallsReportRepository, CallsReportRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
+builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 
 
 
@@ -219,18 +223,6 @@ builder.Services.AddScoped<IOnlinePaymentReportRepository, OnlinePaymentReportRR
 builder.Services.AddScoped<ILabInvoiceReportRepository, LabInvoiceReportRRepository>();
 builder.Services.AddScoped<ILabSamInfoReportRepository, LabSamInfoReportRRepository>();
 
-builder.Services.AddScoped<IIEICPhotoEnclosedReportRepository, IEICPhotoEnclosedReportRepository>();
-builder.Services.AddScoped<IDailyIEWorkPlanReportRepository, DailyIEWorkPlanReportRepository>();
-builder.Services.AddScoped<IPeriodWiseTechnicalReportRepository, PeriodWiseTechnicalReportRepository>();
-builder.Services.AddScoped<IPeriodWiseChecksheetReportRepository, PeriodWiseChecksheetReportRepository>();
-builder.Services.AddScoped<IVendorPerformanceReportRepository, VendorPerformanceReportRepository>();
-builder.Services.AddScoped<IIEWiseTrainingReportRepository, IEWiseTrainingReportRepository>();
-builder.Services.AddScoped<IContractsReportsRepository, ContractsReportsRepository>();
-builder.Services.AddScoped<IOngoingContractsReportRepository, OngoingContractsReportRepository>();
-builder.Services.AddScoped<IVendorFeedbackReportRepository, VendorFeedbackReportRepository>();
-builder.Services.AddScoped<IIEAlterReportRepository, IEAlterReportRepository>();
-builder.Services.AddScoped<IVendorClusterIERepository, VendorClusterIERepository>();
-builder.Services.AddScoped<INCRCWiseReportRepository, NCRCWiseReportRepository>();
 builder.Services.AddScoped<IManagementReportsRepository, ManagementReportsRepository>();
 builder.Services.AddScoped<IPurchaseOrdersofSpecificValuesRepository, PurchaseOrdersofSpecificValuesRepository>();
 
@@ -245,6 +237,7 @@ builder.Services.AddScoped<IReceiptsRemitanceRepository, ReceiptsRemitanceRRepos
 builder.Services.AddScoped<IBillingRepository, BillingRRepository>();
 builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsRepository>();
 builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>();
+builder.Services.AddScoped<IIC_RPT_IntermediateRepository, IC_RPT_IntermediateRepository>();
 builder.Services.AddScoped<IBarcodeGeneration, BarcodeGenerationRepository>();
 
 var app = builder.Build();

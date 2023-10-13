@@ -2,16 +2,16 @@
 
 <div>
     
-    @if (@ViewBag.Detailedchk == "false")
+    @if (@Model.Detailed == "false")
     {
-        <h3 class="heading3">@ViewBag.Regions</h3>
-        @if (@ViewBag.FromDT != null)
+        <h3 class="center">@Model.Regions</h3>
+        @if (@Model.FromDate != null && Convert.ToDateTime(@Model.FromDate) != DateTime.MinValue)
         {
-            <h3 class="heading3">Complaint Recieved For The Period : <span class="orangeText"> (@ViewBag.FromDT To @ViewBag.ToDT) </span>@((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</h3>
+            <h3 class="heading3">Complaint Recieved For The Period : <span class="orangeText"> (@Model.FromDate To @Model.ToDate) </span>@((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</h3>
         }
         else
         {
-            <h3 class="heading3">Complaint Recieved For The Period : <span class="orangeText"> (@ViewBag.Financialperiod) </span>@((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</h3>
+            <h3 class="heading3">Complaint Recieved For The Period : <span class="orangeText"> (@Model.FinancialYears) </span>@((Model.ClientWise == "true") ? "(Client Wise)" : "")@((Model.ConsigneeWise == "true") ? "(Consignee Wise)" : "")@((Model.IEWise == "true") ? "(IE Wise)" : "") @((Model.VendorWise == "true") ? "(Vendor Wise)" : "") @((Model.CMWise == "true") ? "(CM Wise)" : "")</h3>
         }
         <br>
         <br>
@@ -99,13 +99,13 @@
     }
     <br>
     <br>
-    @if (@ViewBag.Detailedchk == "true")
+    @if (@Model.Detailed == "true")
     {
         <div class="tableOuter">
             <table class="borderTable" cellpadding="0" cellspacing="0">
                 <tbody>
                     <tr>
-                        <th width="100%" valign="top" align="Center" colspan="29"><font size="2" face="Verdana">Compliant Recieved During the Period: (@ViewBag.Financialperiod)  @((Model.ClientWise == "true") ? "(Sorted On Client)" : "")@((Model.ConsigneeWise == "true") ? "(Sorted On Consignee)" : "")@((Model.IEWise == "true") ? "(Sorted On IE)" : "") @((Model.VendorWise == "true") ? "(Sorted On Vendor)" : "") @((Model.CMWise == "true") ? "(Sorted On CM)" : "")</font></th>
+                        <th width="100%" valign="top" align="Center" colspan="29"><font size="2" face="Verdana">Compliant Recieved During the Period: (@Model.FinancialYears)  @((Model.ClientWise == "true") ? "(Sorted On Client)" : "")@((Model.ConsigneeWise == "true") ? "(Sorted On Consignee)" : "")@((Model.IEWise == "true") ? "(Sorted On IE)" : "") @((Model.VendorWise == "true") ? "(Sorted On Vendor)" : "") @((Model.CMWise == "true") ? "(Sorted On CM)" : "")</font></th>
                         <th colspan="7" width="15%" valign="top" align="center"><b><font size="2" face="Verdana">Corrective & Preventive Action Identified</font></b></th>
                     </tr>
                     <tr>

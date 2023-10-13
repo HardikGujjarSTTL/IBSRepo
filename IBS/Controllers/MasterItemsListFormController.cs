@@ -46,11 +46,11 @@ namespace IBS.Controllers
             MasterItemsListFormModel model = new();
             if (id != null)
             {
-                model = masterItemsListForm.FindByID(id, GetRegionCode);
+                model = masterItemsListForm.FindByID(id, Region);
             }
             else
             {
-                model.Region = GetRegionCode;
+                model.Region = Region;
             }
             return View(model);
         }
@@ -80,19 +80,24 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult MasterItemsListFormDetailsSave(MasterItemsListFormModel model, IFormCollection FrmCollection)
+        public IActionResult Manage(MasterItemsListFormModel model, IFormCollection FrmCollection)
         {
             try
             {
-                string msg = "Inserted Successfully...";
-                if (model.ItemCd != null)
-                {
-                    msg = "Updated Successfully...";
-                    model.Updatedby = UserId;
-                }
                 model.Createdby = UserId;
-                string i = masterItemsListForm.MasterItemsListFormInsertUpdate(model, GetRegionCode, GetIeCd);
+                model.Updatedby = UserId;
+
+                string i ="";
+                if (model.ItemCd == null)
+                {
+                    i = masterItemsListForm.DtlInsertUpdate(model, Region, GetIeCd);
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    i = masterItemsListForm.DtlInsertUpdate(model, Region, GetIeCd);
+                    AlertAddSuccess("Record Update Successfully.");
+                }
                 if (i != "" && i != null)
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
@@ -102,14 +107,16 @@ namespace IBS.Controllers
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                         DocumentHelper.SaveFiles(ItemCd, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.MasterItemDoc), env, iDocument, "MasterIDoc", string.Empty, DocumentIds);
                     }
-                    return Json(new { status = true, responseText = msg });
+                    //return Json(new { status = true, responseText = msg });
                 }
+                //return RedirectToAction("Index?actiontype=" + model.actiontype);
+                return RedirectToAction("Index", new { actiontype = model.actiontype });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "MasterItemsListForm", "MasterItemsListFormDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "MasterItemsListForm", "Manage", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
 
         public IActionResult GetCOData()

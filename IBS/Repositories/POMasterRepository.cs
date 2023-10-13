@@ -45,6 +45,11 @@ namespace IBS.Repositories
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 model.Contractid = POMaster.Contractid;
+                model.RealCaseNo = POMaster.RealCaseNo;
+                model.Purchaser = POMaster.Purchaser;
+                //model.txtSPur = POMaster.Purchaser;
+                model.TempPurchaser = POMaster.Purchaser;
+                model.TempPoiCd = POMaster.PoiCd;
                 return model;
             }
         }
@@ -189,7 +194,14 @@ namespace IBS.Repositories
                 obj.RlyNonrly = model.RlyNonrly;
                 obj.PoNo = model.PoNo;
                 obj.PoDt = model.PoDt;
-                obj.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    obj.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    obj.RecvDt = DateTime.Now;
+                }
                 obj.VendCd = model.VendCd;
                 obj.RlyCd = model.RlyCd;
                 obj.RlyCdDesc = model.RlyCdDesc;
@@ -197,6 +209,10 @@ namespace IBS.Repositories
                 obj.Remarks = model.Remarks;
                 obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
+                if (model.PurchaserCd == 0)
+                {
+                    obj.Purchaser = model.Purchaser;
+                }
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
@@ -214,17 +230,28 @@ namespace IBS.Repositories
                 POMaster.RlyNonrly = model.RlyNonrly;
                 POMaster.PoNo = model.PoNo;
                 POMaster.PoDt = model.PoDt;
-                POMaster.RecvDt = model.RecvDt;
+                if (model.RecvDt != null)
+                {
+                    POMaster.RecvDt = model.RecvDt;
+                }
+                else
+                {
+                    POMaster.RecvDt = DateTime.Now;
+                }
                 POMaster.VendCd = model.VendCd;
                 POMaster.RlyCd = model.RlyCd;
                 POMaster.RlyCdDesc = model.RlyCdDesc;
-                POMaster.RegionCode = model.RegionCode;
+                //POMaster.RegionCode = model.RegionCode;
                 POMaster.Remarks = model.Remarks;
                 POMaster.Datetime = DateTime.Now;
                 POMaster.PoiCd = model.PoiCd;
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 POMaster.Contractid = model.Contractid;
+                if (model.PurchaserCd == 0)
+                {
+                    POMaster.Purchaser = model.Purchaser;
+                }
                 POMaster.Updatedby = model.Updatedby;
                 POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
@@ -500,6 +527,10 @@ namespace IBS.Repositories
                 {
                     returnVal = "Not Match";
                 }
+            }
+            else
+            {
+                returnVal = "Not Match";
             }
             return returnVal;
         }

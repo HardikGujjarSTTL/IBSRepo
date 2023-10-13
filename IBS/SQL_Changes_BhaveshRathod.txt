@@ -57,6 +57,9 @@ Select 'RAILWAYS' as TableName,count(*) as TotalCount from T91_RAILWAYS
 union all
 Select 'BANK MASTER' as TableName,count(*) as TotalCount from T94_BANK
 
+ALTER TABLE T12_BILL_PAYING_OFFICER MODIFY BPO_STATE VARCHAR(50)
+ALTER TABLE T12_BILL_PAYING_OFFICER_HISTORY MODIFY BPO_STATE VARCHAR(50)
+
 4) T97_CONTROL_FILE
 ALTER TABLE T97_CONTROL_FILE 
 MODIFY GRACE_DAYS NUMBER(6,0) ;
@@ -496,5 +499,29 @@ Inspection Certificate Generate
 SP_GENERATE_BILL_NEW
 
 SP_GENERATE_BILL_GST_NEW
+
+SP_GENERATE_CREDIT_NOTE_NEW
+
+SP_T20IC_CONSIGNEEUPDATE
+
+Adjustment bill Generation page
+
+CREATE TABLE T22_Adjustment_bill (
+    AID NUMBER(6) PRIMARY KEY,
+    BILL_NO_N VARCHAR2(10 BYTE),
+    BILL_NO_O VARCHAR2(10 BYTE),
+    CASE_NO CHAR(9 BYTE),
+    USER_ID CHAR(8 BYTE), 
+    DATETIME DATE,
+    BILLADTYPE VARCHAR2(10 BYTE)
+);
+
+CREATE SEQUENCE T22_Adjustment_bill_seq START WITH 1 INCREMENT BY 1 CACHE 20;
+UPDATE T22_Adjustment_bill SET AID = T22_Adjustment_bill_seq.nextval;
+ALTER TABLE T22_Adjustment_bill MODIFY AID NUMBER(6,0) DEFAULT T22_Adjustment_bill_seq.nextval;
+ALTER TABLE T22_Adjustment_bill ADD CONSTRAINT T22_Adjustment_bill_pk  PRIMARY KEY (AID);
+
+ALTER TABLE t22_bill ADD REFERENCE_AID NUMBER(6)
+ALTER TABLE t22_bill ADD BILLADTYPE VARCHAR2(10 BYTE)
 =============================================================================================================================================
 

@@ -104,9 +104,12 @@
                             var id = data.CaseNo;
                             var editUrl = '@Url.Action("Manage", "POMaster")?CaseNo=' + id;
                             var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="POMasterDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            if (data.RealCaseNo == null || data.RealCaseNo == "") {
+                                html += '<a onclick="POMasterDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            }
                             html += '</div>';
                             return html;
+
                         }
                     },
                 ],
@@ -118,7 +121,7 @@
         }
 
         function POMasterDelete(id) {
-            var url = '@Url.Action("Delete", "POMaster")?CaseNo='+id;
+            var url = '@Url.Action("Delete", "POMaster")?CaseNo=' + id;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
