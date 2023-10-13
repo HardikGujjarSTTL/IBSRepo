@@ -104,6 +104,10 @@ namespace IBS.Controllers.Vendor
             {
                 int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "PO Master Inserted Successfully.";
+                if (model.PoDt > DateTime.Now)
+                {
+                    return Json(new { status = false, responseText = "PO Date Cannot Be Greater Then Current Date!!!" });
+                }
                 if (model.CaseNo != null)
                 {
                     msg = "PO Master Updated Successfully.";
@@ -111,12 +115,12 @@ namespace IBS.Controllers.Vendor
                 }
                 else
                 {
-                    PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
-                    if (pO_MasterModel != null)
-                    {
-                        var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
-                        return Json(new { status = false, responseText = Retmsg });
-                    }
+                    //PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
+                    //if (pO_MasterModel != null)
+                    //{
+                    //    var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt;
+                    //    return Json(new { status = false, responseText = Retmsg });
+                    //}
                     PO_MasterModel pO_MasterModel2 = pOMasterRepository.alreadyExistT13_PO_MASTER(model);
                     if (pO_MasterModel2 != null)
                     {
@@ -126,6 +130,8 @@ namespace IBS.Controllers.Vendor
                 }
                 model.Createdby = UserId;
                 model.VendCd = VendCd;
+                //model.Purchaser = model.TempPurchaser;
+                model.PoiCd = model.TempPoiCd;
                 if (model.PoiCd == null || model.PoiCd == 0)
                 {
                     model.PoiCd = VendCd;
@@ -209,6 +215,13 @@ namespace IBS.Controllers.Vendor
                 {
                     agencyClient = Common.GetPurchaserCd(consignee);
                 }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -218,21 +231,33 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor(int id = 0)
+        public IActionResult GetVendor(string searchValues = null,bool isSameAs =false)
         {
             try
             {
-                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
-                if (id > 0)
+                bool IsDigit = false;
+                if (searchValues != null && searchValues != "0")
                 {
-                    VendCd = id;
+                    char characterToCheck = searchValues[3];  // Access a character at the specific index (5 in this case)
+                    IsDigit = Char.IsDigit(characterToCheck);
+                    //IsDigit = Char.IsDigit(searchValues, 5);
                 }
-                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
-                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(VendCd)).ToList())
+
+                int VendCdID = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (isSameAs)
                 {
-                    if (item.Value == Convert.ToString(VendCd))
+                    agencyClient = Common.GetVendor(VendCdID);
+                }
+                else
+                {
+                    if (IsDigit)
                     {
-                        item.Selected = true;
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(searchValues));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(searchValues);
                     }
                 }
                 return Json(new { status = true, list = agencyClient });

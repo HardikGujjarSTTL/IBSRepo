@@ -45,6 +45,7 @@
         public string SOURCE { get; set; }
 
        public List<subreport> subreport { get; set; } 
+        public List<Print_Call_letter_Model> printcalllater { get; set; }
     }
 
     public class subreport

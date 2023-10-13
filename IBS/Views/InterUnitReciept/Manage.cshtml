@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.InterUnitRecieptModel
 
 @{
-    ViewData["Title"] = "Generate IU Voucher";
+    ViewData["Title"] = "Edit IU Voucher";
     string clsView = "";
     //if (Model.SNO > 0)
     //{
@@ -11,7 +11,7 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Generate Voucher</h2>
+        <h2>Edit IU Voucher</h2>
     </div>
 </div>
 <section class="@clsView">
@@ -28,7 +28,7 @@
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Voucher Date</label>
                             <input type="text" id="vchr_dt" class="input datepicker" asp-for="VCHR_DT" maxlength="500" />
-                            <span asp-validation-for="VCHR_DT" class="text-danger"></span>
+                            
                         </div>
 
 
@@ -64,14 +64,7 @@
                             @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountLst(), new { id="AccCD" })
                         </div>
 
-                        <div id="txtCSNO" class="col-md-4 mb-3">
-                            <label for="Reference">Case No</label>
-                            <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
-                            <br></br>
-                            <button type="button" class="save-btn active" onclick="ButtonClick();">Select BPO</button>
-                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
-
-                        </div>
+                       
                         <div id="txtBPO" class="col-md-4 mb-3">
                             <label for="Reference">BPO</label>
                             <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
@@ -82,17 +75,11 @@
                         </div>
 
                         <div id="lstBPO" class="col-md-4 mb-3" style="display:none">
-                            @* <label  for="Reference">BPO List</label>
-                            @Html.DropDownListFor(model => model.BPO_CD, Common., new { id="listBPO" })*@
+                           
                             <label for="Reference">BPO</label>
                             <select id="SelectedBPO" class="form-control">
 
-                                @* @if(Model.BPOList != null){
-                                @foreach (var bpo in Model.BPOList)
-                                {
-                                <option value="@bpo.value">@bpo.text</option>
-                                }
-                                }*@
+                                
                             </select>
                         </div>
 
@@ -104,8 +91,9 @@
                     </div>
 
                     <div class="savenext-btn">
-@*                        <a asp-controller="InterUnitReciept" asp-action="Index" class="reset-btn">Cancel</a>
-                        *@                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                  <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                  <button type="button" class="save-btn active Permission_Save"  onclick="Print();">Print</button>
+                  <button type="button" class="save-btn active Permission_Save"  onclick="AddNew();">Add New</button>
 
                     </div>
 
@@ -146,6 +134,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
+            debugger;
             $("#dtInterUnitReciept").css("display", "none");
             var currentDate = new Date();
 
@@ -164,21 +153,10 @@
 
             $("#vchr_dt").val(formattedDate);
 
-            var selectedValue = $("#AccCD").val();
-            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
-                $("#txtCSNO").show();
-                $("#txtBPO").hide();
-                $("#lstBPO").css("display", "block");
-                $("#txtNarrat").show();
-            } else {
-                $("#txtCSNO").hide();
-                $("#lstBPO").css("display", "block");
-                $("#txtNarrat").show();
-                $("#txtBPO").show();
-            }
+           
             var VCHR_NO = $("#Vchr_no").val();
             //InitializeDatatable(VCHR_NO);
-            ButtonClick();
+           
 
         });
         function Save() {
@@ -276,13 +254,13 @@
             //var selectedValue = $("#AccCD").val();
 
 
-            var txtBPO = $("#bpoCD").val();
+            var bpoCD = $("#bpoCD").val();
 
             $.ajax({
                 url: '/InterUnitReciept/ButtonClick',
                 type: "POST",
                 dataType: "JSON",
-                data: { txtBPO: txtBPO },
+                data: { bpoCD: bpoCD },
 
                 success: function (success) {
                     debugger;
@@ -305,6 +283,18 @@
 
             });
 
+        }
+
+        function Print(){
+
+            var VCHR_NO = $('#Vchr_no').val();
+            var VCHR_DT = $('#vchr_dt').val();
+
+            var redirectUrl = '/Print_Bank_Statement_Voucher/Index?VCHR_NO=' + encodeURIComponent(VCHR_NO) + '&VCHR_DT=' + encodeURIComponent(VCHR_DT);
+            window.location.href = redirectUrl;
+        }
+        function AddNew(){
+            window.location.href = '/InterUnitReciept/Manage';
         }
     </script>
 }

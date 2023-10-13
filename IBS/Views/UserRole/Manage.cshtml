@@ -45,8 +45,10 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        $(".select2").select2();
-
+        //$(".select2").select2();
+        $('.select2).select2({
+                  minimumInputLength: 3
+         });
         function Save() {
             if ($("#frmUserRole").valid()) {
                 $("#frmUserRole").submit();

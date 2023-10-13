@@ -71,7 +71,9 @@ namespace IBS.Models
         public bool Isstageinspection { get; set; }
 
         public int? Contractid { get; set; }
-
+        public string? txtSPur { get; set; }
+        public string? TempPurchaser { get; set; }
+        public int? TempPoiCd { get; set; }
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
         public virtual T01Region? RegionCodeNavigation { get; set; }

@@ -1,10 +1,17 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class RecieptVoucherModel
     {
+        [Display(Name = "Voucher No")]
+        [Required]
         public string? VCHR_NO { get; set; }
 
-        public string VCHR_DT { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        [Required]
+        public DateTime? VCHR_DT { get; set; }
 
         public int? BANK_CD { get; set; }
 
@@ -12,41 +19,21 @@
 
         public string VCHR_TYPE { get; set; }
 
-        public int SNO { get; set; }
+        public string Region { get; set; }
 
-        public string CHQ_NO { get; set; }
+        public string UserName { get; set; }
 
-        public string CHQ_DT { get; set; }
+        public int? Createdby { get; set; }
 
-        public double AMOUNT { get; set; }
+        public DateTime? Createddate { get; set; }
 
-        public string ACC_CD { get; set; }
+        public int? Updatedby { get; set; }
 
-        public double AMOUNT_ADJUSTED { get; set; }
+        public DateTime? Updateddate { get; set; }
 
-        public double SUSPENSE_AMT { get; set; }
+        public bool Isdeleted { get; set; }
 
-        public string NARRATION { get; set; }
-
-        public string SAMPLE_NO { get; set; }
-
-        public DateTime POST_DT { get; set; }
-
-        public string STATUS { get; set; }
-
-        public string BPO_CD { get; set; }
-
-        public string BPO_TYPE { get; set; }
-
-        public string CASE_NO { get; set; }
-
-        public double AMT_TRANSFERRED { get; set; }
-
-        public string USER_ID { get; set; }
-
-        public DateTime DATETIME { get; set; }
-
-        public List<BPOlist> BPOList { get; set; }
+        public bool IsNew { get; set; } = true;
 
         public List<VoucherDetailsModel> lstVoucherDetails { get; set; }
     }
@@ -57,13 +44,13 @@
 
         public string CHQ_NO { get; set; }
 
-        public int? BANK_CD { get; set; }
+        public int BANK_CD { get; set; }
 
         public string BANK_NAME { get; set; }
 
-        public DateTime? CHQ_DT { get; set; }
+        public DateTime CHQ_DT { get; set; }
 
-        public string Display_CHQ_DT { get { return this.CHQ_DT != null ? Common.ConvertDateFormat(this.CHQ_DT.Value) : ""; } }
+        public string Display_CHQ_DT { get { return Common.ConvertDateFormat(this.CHQ_DT); } }
 
         public decimal? AMOUNT { get; set; }
 
@@ -82,15 +69,8 @@
         public string CASE_NO { get; set; }
 
         public string NARRATION { get; set; }
-    }
 
-    public class ReceiptVoucherImportExcelModel
-    {
-        public string ChequeNo { get; set; }
-
-        public DateTime? ChequeDate { get; set; }
-
-        public decimal? Amount { get; set; }
+        public bool IsNew { get; set; } = true;
     }
 
     public class BPODetailsModel

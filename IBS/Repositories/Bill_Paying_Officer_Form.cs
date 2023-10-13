@@ -128,30 +128,6 @@ namespace IBS.Repositories
             SapCustCdBpo = SapCustCdBpo.ToString() == "" ? string.Empty : SapCustCdBpo.ToString();
             GstinNo = GstinNo.ToString() == "" ? string.Empty : GstinNo.ToString();
 
-            //query = from t12 in context.T12BillPayingOfficers
-            //        join t03 in context.T03Cities on t12.BpoCityCd equals t03.CityCd into cityGroup
-            //        from city in cityGroup.DefaultIfEmpty()
-            //        join a in context.AuCris on t12.Au equals a.Au into auGroup
-            //        from au in auGroup.DefaultIfEmpty()
-            //        where (string.IsNullOrEmpty(BpoCd) || t12.BpoCd == BpoCd) &&
-            //              (string.IsNullOrEmpty(BpoName) || t12.BpoName.ToUpper().StartsWith(BpoName.ToUpper())) &&
-            //              (string.IsNullOrEmpty(BpoRly) || t12.BpoRly.ToUpper() == BpoRly.Trim().ToUpper()) &&
-            //              (string.IsNullOrEmpty(BpoCity) || (city != null && city.City.ToUpper().StartsWith(BpoCity.Trim().ToUpper()))) &&
-            //              (string.IsNullOrEmpty(SapCustCdBpo) || t12.SapCustCdBpo == SapCustCdBpo.Trim()) &&
-            //              (string.IsNullOrEmpty(GstinNo) || t12.GstinNo.ToUpper() == GstinNo.Trim().ToUpper())
-            //        orderby t12.BpoName, t12.BpoRly,
-            //                (t12.BpoAdd + "," + (city != null ? city.Location + " : " + city.City : city.City))
-            //        select new Bill_Paying_Officer_FormModel
-            //        {
-            //            BpoCd = t12.BpoCd,
-            //            BpoName =t12.BpoName,
-            //            BpoRly = t12.BpoRly,
-            //            BpoAdd = t12.BpoAdd + "," + (city != null ? city.Location + " : " + city.City : city.City),
-            //            Au = au != null ? au.Au + "-" + au.Audesc : null,
-            //            BpoCityCd = t12.BpoCityCd,
-            //            GstinNo = t12.GstinNo,
-            //        };
-
             query = from l in context.ViewGetBpodetails
                     where (string.IsNullOrEmpty(BpoCd) || l.BpoCd == BpoCd)
                     && (string.IsNullOrEmpty(BpoName) || l.BpoName == BpoName)
@@ -159,7 +135,7 @@ namespace IBS.Repositories
                     && (string.IsNullOrEmpty(BpoCity) || l.City.Equals(BpoCity))
                     && (string.IsNullOrEmpty(SapCustCdBpo) || l.SapCustCdBpo == SapCustCdBpo)
                     && (string.IsNullOrEmpty(GstinNo) || l.GstinNo == GstinNo)
-
+                    && l.Isdeleted != 1
                     select new Bill_Paying_Officer_FormModel
                     {
                         BpoCd = l.BpoCd,
@@ -193,12 +169,12 @@ namespace IBS.Repositories
 
         public bool Remove(int BpoCd, int UserID)
         {
-            var roles = context.T12BillPayingOfficers.Find(Convert.ToByte(BpoCd));
-            if (roles == null) { return false; }
+            var T12 = context.T12BillPayingOfficers.Where(x => x.BpoCd == Convert.ToString(BpoCd)).FirstOrDefault();
+            if (T12 == null) { return false; }
 
-            roles.Isdeleted = Convert.ToByte(true);
-            roles.Updatedby = Convert.ToInt32(UserID);
-            roles.Updateddate = DateTime.Now;
+            T12.Isdeleted = Convert.ToByte(true);
+            T12.Updatedby = Convert.ToInt32(UserID);
+            T12.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -228,7 +204,7 @@ namespace IBS.Repositories
 
         public string BPOSave(Bill_Paying_Officer_FormModel model)
         {
-            string BPOCd ="";
+            string BPOCd = "";
             if (model.BpoCd == null)
             {
                 BPOCd = GetMaxBPOCd();
@@ -319,7 +295,7 @@ namespace IBS.Repositories
 
         public string GetState(int BpoCityCd)
         {
-            string StateName ="";
+            string StateName = "";
 
             var BPOState = (from s in context.T92States
                             where s.StateCd == (from c in context.T03Cities

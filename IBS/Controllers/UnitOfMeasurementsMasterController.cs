@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace IBS.Controllers
             unitOfMeasurementsRepository = _unitOfMeasurementsRepository;
         }
 
+        [Authorization("UnitOfMeasurements", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("UnitOfMeasurements", "Index", "view")]
         public IActionResult Manage(int id)
         {
             UOMModel model = new();
@@ -29,6 +32,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("UnitOfMeasurements", "Index", "edit")]
         public IActionResult Manage(UOMModel model)
         {
             try
@@ -64,6 +68,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("UnitOfMeasurements", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try
