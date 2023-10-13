@@ -17,24 +17,24 @@ namespace IBS.Repositories
 
         public Calls_Marked_ReportModel Query1(string pDtFr, string pDtTo, string pRegion, string pSortKey , int UserID , string wRgn_Name)
         {
-            string wSortHdr = "";
+            //string wSortHdr = "";
             Calls_Marked_ReportModel model = new();
             model.pDtFr = pDtFr;
             model.pDtTo = pDtTo;
             model.Uname = UserID;
-            string sortOrder;
-            string sortHeader;
+            //string sortOrder;
+            //string sortHeader;
 
-            if (pSortKey == "V")
-            {
-                sortOrder = "VENDOR"; // Sort by vendor name
-                sortHeader = "Report Sorted on Vendor Name";
-            }
-            else
-            {
-                sortOrder = "CALL_MARK_DT"; // Sort by call date
-                sortHeader = "Report Sorted on Call Date";
-            }
+            //if (pSortKey == "V")
+            //{
+            //    sortOrder = "VENDOR"; // Sort by vendor name
+            //    sortHeader = "Report Sorted on Vendor Name";
+            //}
+            //else
+            //{
+            //    sortOrder = "CALL_MARK_DT"; // Sort by call date
+            //    sortHeader = "Report Sorted on Call Date";
+            //}
 
             // Perform the LINQ query with sorting
             var query = from t051 in context.T05Vendors

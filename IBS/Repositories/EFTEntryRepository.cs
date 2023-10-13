@@ -117,10 +117,8 @@ namespace IBS.Repositories
         public string VoucherDetailsSave(EFTEntryModel model, string Region)
         {
             DTResult<EFTEntryModel> dTResult = new() { draw = 0 };
-            IQueryable<EFTEntryModel>? query = null;
 
             string VCHR_NO = "";
-            string CASE_NO = "";
             if (model.VCHR_NO == null)
             {
                 string vchr_dt = model.VCHR_DT.ToString() ?? string.Empty;

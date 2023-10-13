@@ -51,7 +51,6 @@ namespace IBS.Repositories.WebsitePages
 
         public string SaveComplaints(OnlineComplaints onlineComplaints)
         {
-            string msg = "";
             TempOnlineComplaint complaint = null;
             //if (complaintFile != null && Path.GetExtension(complaintFile.FileName).ToUpper() == ".PDF")
             //{
