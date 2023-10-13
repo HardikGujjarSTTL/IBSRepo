@@ -2091,22 +2091,37 @@ namespace IBS.Models
             }
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
+                var query = ModelContext.T12BillPayingOfficers
+                        .Where(bpo => bpo.BpoType == "U")
+                        .GroupBy(bpo => new
+                        {
+                            RLY_CD = bpo.BpoRly.ToUpper().Trim(),
+                            RAILWAY = bpo.BpoOrgn
+                        })
+                        .Select(group => new
+                        {
+                            RLY_CD = group.Key.RLY_CD,
+                            RAILWAY = group.Key.RAILWAY
+                        })
+                        .OrderBy(result => result.RLY_CD)
+                        .ToList();
+
                 List<SelectListItem> dropList = new List<SelectListItem>();
-                dropList = (from a in ModelContext.T12BillPayingOfficers
-                            where a.BpoType == Convert.ToString(RlyNonrly)
+                dropList = (from a in query where a.RLY_CD != null
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.BpoRly),
-                           Value = Convert.ToString(a.BpoOrgn)
-                       }).OrderBy(x => x.Text).ToList();
+                           Text = Convert.ToString(a.RAILWAY),
+                           Value = Convert.ToString(a.RLY_CD)
+                       }).OrderBy(x => x.Value).ToList();
                 dropDownDTOs.AddRange(dropList);
                 SelectListItem drop = new SelectListItem();
                 drop.Text = "Other";
                 drop.Value = "0";
                 dropDownDTOs.Add(drop);
             }
-            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+            return dropDownDTOs.DistinctBy(x => x.Value).ToList();
+            //return dropDownDTOs.ToList();
         }
 
         public static List<SelectListItem> GetAgencyClientForDEOCris()

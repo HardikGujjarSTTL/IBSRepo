@@ -316,7 +316,7 @@
                 if (response.status) {
                     $("#RlyCd").html("");
                     $.each(response.list, function (index, value) {
-                        $("#RlyCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#RlyCd").append("<option value='" + value.Value + "' >" + value.Text + "</option>");
                     });
                     $("#hdnRCD").val($("#RlyCd").val());
                     $("#hdnRailway").val($("#RlyCd option:selected").text());
