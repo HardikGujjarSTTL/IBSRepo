@@ -76,9 +76,9 @@ namespace IBS.Models
         public string SET_NO { get; set; }
         public string VISITS_DATES { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
-        [DataType(DataType.Date)]
-        public DateTime LAB_TST_RECT_DT { get; set; }
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        //[DataType(DataType.Date)]
+        public string LAB_TST_RECT_DT { get; set; }
         public string PASSED_INST_NO { get; set; }
         public string CONSIGNEE_DTL { get; set; }
         public string BPO_DTL { get; set; }

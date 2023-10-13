@@ -1,4 +1,5 @@
-﻿using IBS.Filters;
+﻿using IBS.DataAccess;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -31,22 +32,22 @@ namespace IBS.Controllers
             var Call_SNO = "3";
             var CONSIGNEE_CD = "39";
             var ACTIONAR = "A";
-            model.ACTIONAR = ACTIONAR;
 
             model = iC_RPT_IntermediateRepository.AcceptedFun(CASE_NO, Call_Recv_dt, Call_SNO, CONSIGNEE_CD);
+            model.ACTIONAR = ACTIONAR;
+            model.CONSIGNEE_CD = CONSIGNEE_CD;
 
-            
             //model = iC_RPT_IntermediateRepository.GetDetails(model.CASE_NO, model.Display_Call_Recv_dt, model.Call_SNO, model.ITEM_SRNO_PO, model.CONSIGNEE_CD);
 
             model.Region = Region;
             return View(model);
         }
 
-        public IActionResult FillItems()
+        [HttpPost]
+        public IActionResult LoadPOAmendmentTable([FromBody] DTParameters dtParameters)
         {
-            IC_RPT_IntermediateModel model = new();
-
-            return View("Index", model);
+            DTResult<PO_Amendments> dTResult = iC_RPT_IntermediateRepository.GetPOAmendment(dtParameters);
+            return Json(dTResult);
         }
 
         public IActionResult AcceptedFun(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
@@ -55,15 +56,36 @@ namespace IBS.Controllers
             return Json(data);
         }
 
-        //public IActionResult GetICIntermediate(string Case_No, string Call_Recv_Dt, string Call_SNo, string, Consignee_CD)
-        //{
-
-        //    return Json();
-        //}
-
-        public IActionResult GetVisitsChanges(string Case_No, string Call_Recv_Dt, string Call_SNo)
+        public IActionResult GetVisitsChanges(string Case_No, string Call_Recv_Dt, string Call_SNo, string VisitDate)
         {
-            return Json(null);
+            VisitDate = iC_RPT_IntermediateRepository.GetVisitsChanges(Case_No, Call_Recv_Dt, Call_SNo, VisitDate);
+            return Json(VisitDate);
+        }
+
+
+        public IActionResult FillItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
+        {
+            var model = iC_RPT_IntermediateRepository.FillItems(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
+            return Json(model);
+        }
+
+        public IActionResult SetItemVal(string Case_No, string Call_Recv_Dt, string Call_SNo, string ITEM_SRNO_PO, string Consignee_Cd)
+        {
+            var model = iC_RPT_IntermediateRepository.GetDetails(Case_No, Call_Recv_Dt, Call_SNo, ITEM_SRNO_PO, Consignee_Cd);
+            return Json(model);
+        }
+
+
+        public IActionResult SetAccepted(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
+        {
+            var data = iC_RPT_IntermediateRepository.SetAccepted(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
+            return Json(data);
+        }
+
+        public IActionResult FillItemDropDown(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
+        {
+            var data = iC_RPT_IntermediateRepository.GetItems(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
+            return Json(data);
         }
     }
 }

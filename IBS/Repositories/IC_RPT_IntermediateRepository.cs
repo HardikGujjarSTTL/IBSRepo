@@ -9,6 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -20,11 +21,10 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-
         public IC_RPT_IntermediateModel GetDetails(string Case_No, string Call_Recv_Dt, string Call_SNo, string ITEM_SRNO_PO, string CONSIGNEE_CD)
         {
             IC_RPT_IntermediateModel model = new();
-
+            Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
             OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("p_case_no", OracleDbType.NVarchar2, Case_No, ParameterDirection.Input);
             par[1] = new OracleParameter("p_call_recv_dt", OracleDbType.NVarchar2, Call_Recv_Dt, ParameterDirection.Input);
@@ -136,39 +136,13 @@ namespace IBS.Repositories
             return model;
         }
 
-        public IC_RPT_IntermediateModel FillItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
-        {
-            IC_RPT_IntermediateModel model = new();
-            //var query = from ic in context.IcIntermediates
-            //            where (ic.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD)
-            //                    && ic.CaseNo == Case_No
-            //                    && ic.CallRecvDt == DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", null)
-            //                    && ic.CallSno == Convert.ToInt32(Call_SNo))
-            //            orderby ic.Datetime descending
-            //            select new IC_RPT_IntermediateModel
-            //            {
-            //                BK_NO = ic.BkNo,
-            //                SET_NO = ic.SetNo,
-            //                IE_STAMPS_DETAIL = ic.IeStampsDetail,
-            //                IE_STAMPS_DETAIL2 = ic.IeStampsDetail2,
-            //                LAB_TST_RECT_DT = Convert.ToDateTime(ic.LabTstRectDt),
-            //                PASSED_INST_NO = ic.PassedInstNo,
-            //                REMARK = ic.Remark,
-            //                HOLOGRAM = ic.Hologram
-            //            };
-
-            //// Execute the query and retrieve the results
-            //var results = query.ToList();
-            return model;
-        }
-
         public IC_RPT_IntermediateModel AcceptedFun(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
         {
             IC_RPT_IntermediateModel model = new();
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_case_no", OracleDbType.NVarchar2, Case_No, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_call_recv_dt", OracleDbType.NVarchar2, Call_Recv_Dt, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_call_recv_dt", OracleDbType.NVarchar2, Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
             par[2] = new OracleParameter("p_call_sno", OracleDbType.NVarchar2, Call_SNo, ParameterDirection.Input);
             par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("sp_get_acceptedfun", par, 1);
@@ -217,11 +191,75 @@ namespace IBS.Repositories
             return model;
         }
 
-
-
-        public bool GetVisitsChanges(string Case_No, string Call_Recv_Dt, string Call_SNo, string VisitDate)
+        public DTResult<PO_Amendments> GetPOAmendment(DTParameters dtParameters)
         {
-            var callRecvDt = DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DTResult<PO_Amendments> dTResult = new() { draw = 0 };
+            IQueryable<PO_Amendments>? query = null;
+
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = true;            
+
+            var Case_No = "";
+
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Case_No"]))
+            {
+                Case_No = Convert.ToString(dtParameters.AdditionalValues["Case_No"]);
+            }
+
+
+            List<PO_Amendments> modelList = new List<PO_Amendments>();
+
+            var AmendmentDetail = (from a in context.IcPoAmendments
+                                   where a.CaseNo == Case_No
+                                   select a.AmendmentDetail).FirstOrDefault();
+
+
+            if (AmendmentDetail != null)
+            {
+                var arrAmd = AmendmentDetail.Split("#");
+                for (int i = 0; i < arrAmd.Length; i++)
+                {
+                    var arrdetail = arrAmd[i].Split(";");
+                    //for(int j = 0; j < arrdetail.Length; j++)
+                    //{
+                    PO_Amendments obj = new PO_Amendments();
+                    obj.Sno = i;
+                    obj.Amendments = arrdetail[0];
+                    obj.Date = arrdetail[1];
+                    modelList.Add(obj);
+                    //}
+                }
+            }
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = modelList; //DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public int SetAccepted(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
+        {
+            Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
+            var query = 0;
+            query = (from ic in context.IcIntermediates
+                     where ((ic.ConsgnCallStatus == "A" || ic.ConsgnCallStatus == "R")
+                            && ic.CaseNo == Case_No
+                             && ic.CallRecvDt == DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", null)
+                             && ic.CallSno == Convert.ToInt32(Call_SNo)
+                             && ic.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD))
+                     orderby ic.Datetime descending
+                     select ic).Count();
+            return query;
+        }
+
+        public string GetVisitsChanges(string Case_No, string Call_Recv_Dt, string Call_SNo, string VisitDate)
+        {
+            var VisitChange = VisitDate;
+            //var txtVisitDate = "";
+            var callRecvDt = DateTime.ParseExact(Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
             var result = context.T47IeWorkPlans
                         .Where(item =>
@@ -242,38 +280,106 @@ namespace IBS.Repositories
             {
                 foreach (var item in result)
                 {
+                    VisitChange = item.VISIT_DATES;
+                    VisitDate = SaveUpdateVisit(Case_No, Call_Recv_Dt, Call_SNo, VisitDate, VisitChange);
+                }
+            }
+            else
+            {
+                VisitDate = SaveUpdateVisit(Case_No, Call_Recv_Dt, Call_SNo, VisitDate, VisitChange);
+            }
+            return VisitDate;
+        }
 
-                    var visitChange = item.VISIT_DATES;
-                    using (var trans = context.Database.BeginTransaction())
+        public IC_RPT_IntermediateModel FillItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
+        {
+            Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
+            IC_RPT_IntermediateModel model = new();
+            var query = from ic in context.IcIntermediates
+                        where (ic.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD)
+                                && ic.CaseNo == Case_No
+                                && ic.CallRecvDt == DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", null)
+                                && ic.CallSno == Convert.ToInt32(Call_SNo))
+                        orderby ic.Datetime descending
+                        select new IC_RPT_IntermediateModel
+                        {
+                            BK_NO = ic.BkNo,
+                            SET_NO = ic.SetNo,
+                            IE_STAMPS_DETAIL = ic.IeStampsDetail,
+                            IE_STAMPS_DETAIL2 = ic.IeStampsDetail2,
+                            LAB_TST_RECT_DT = ic.LabTstRectDt == null ? "" : Convert.ToDateTime(ic.LabTstRectDt).ToString("dd/MM/yyyy"),
+                            PASSED_INST_NO = ic.PassedInstNo,
+                            REMARK = ic.Remark,
+                            HOLOGRAM = ic.Hologram
+                        };
+            // Execute the query and retrieve the results
+            var results = query.ToList();
+            return model;
+        }
+
+        public string SaveUpdateVisit(string Case_No, string Call_Recv_Dt, string Call_SNo, string VisitDate, string VisitChange)
+        {
+            Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
+
+            var query = (from ic in context.IcIntermediates
+                         where (ic.CaseNo == Case_No
+                                 && ic.CallRecvDt == DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", null)
+                                 && ic.CallSno == Convert.ToInt32(Call_SNo)
+                                 && ic.VisitsDates != null)
+                         orderby ic.Datetime descending
+                         select ic.VisitsDates).ToList();
+
+            try
+            {
+                string sqlQuery = "";
+                if (query.Count() > 0)
+                {
+                    if (!string.IsNullOrEmpty(VisitDate))
                     {
-                        var query = (from ic in context.IcIntermediates
-                                     where (ic.CaseNo == Case_No
-                                             && ic.CallRecvDt == DateTime.ParseExact(Call_Recv_Dt, "dd/MM/yyyy", null)
-                                             && ic.CallSno == Convert.ToInt32(Call_SNo)
-                                             && ic.VisitsDates != null)
-                                     orderby ic.Datetime descending
-                                     select ic.VisitsDates).ToList();
+                        sqlQuery = "Update IC_INTERMEDIATE set NUM_VISITS = " + VisitDate.Trim().Split(',').Length + " , VISITS_DATES = '" + VisitDate.Trim() + "' where case_no = '" + Case_No + "' and CALL_SNO ='" + Call_SNo + "' AND CALL_RECV_DT = TO_date('" + Call_Recv_Dt + "', 'dd/mm/yyyy') ";
+                    }
+                    else
+                    {
+                        sqlQuery += "Update IC_INTERMEDIATE set VISITS_DATES = VISITS_DATES,NUM_VISITS=NUM_VISITS where case_no = '" + Case_No + "' and CALL_SNO ='" + Call_SNo + "' AND CALL_RECV_DT = TO_date('" + Call_Recv_Dt + "', 'dd/mm/yyyy') ";
+                        VisitDate = query[0]; //Convert.ToString(ds.Tables[0].Rows[0]["VISITS_DATES"]);
+                    }
+                }
+                else
+                {
+                    sqlQuery += "Update IC_INTERMEDIATE set NUM_VISITS = " + VisitChange.Split(',').Length + ", VISITS_DATES = '" + VisitChange + "' where case_no = '" + Case_No + "' and CALL_SNO ='" + Call_SNo + "' AND CALL_RECV_DT = TO_date('" + Call_Recv_Dt + "', 'dd/mm/yyyy') ";
+                    VisitDate = VisitChange;
+                }
 
-                        try
-                        {
-                            if(query.Count() > 0)
-                            {
+                using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
+                using (var command = cont.Database.GetDbConnection().CreateCommand())
+                {
+                    bool wasOpen = command.Connection.State == ConnectionState.Open;
+                    if (!wasOpen) command.Connection.Open();
+                    try
+                    {
+                        command.CommandText = sqlQuery;
+                        var res = command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
 
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                        }
-                        trans.Commit();
+                    }
+                    finally
+                    {
+                        if (!wasOpen) command.Connection.Close();
                     }
                 }
             }
-            return true;
+            catch (Exception ex)
+            {
+
+            }
+            return VisitDate;
         }
 
         public List<IC_RPT_IntermediateModel> Get_IcIntermediate(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
         {
+            Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
             var query = (from ic in context.IcIntermediates
                          where (ic.ConsigneeCd == Convert.ToInt32(CONSIGNEE_CD)
                                  && ic.CaseNo == Case_No
@@ -286,12 +392,54 @@ namespace IBS.Repositories
                              SET_NO = ic.SetNo,
                              IE_STAMPS_DETAIL = ic.IeStampsDetail,
                              IE_STAMPS_DETAIL2 = ic.IeStampsDetail2,
-                             LAB_TST_RECT_DT = Convert.ToDateTime(ic.LabTstRectDt),
+                             LAB_TST_RECT_DT = ic.LabTstRectDt == null ? "" : Convert.ToDateTime(ic.LabTstRectDt).ToString("dd/MM/yyyy"),
                              PASSED_INST_NO = ic.PassedInstNo,
                              REMARK = ic.Remark,
                              HOLOGRAM = ic.Hologram
                          }).ToList();
             return query;
+        }
+
+        public List<SelectListItem> GetItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD)
+        {
+            OracleParameter param = new OracleParameter();
+            OracleParameter[] par = new OracleParameter[6];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.NVarchar2, Case_No, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_CALL_RECV_DT", OracleDbType.NVarchar2, Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy"), ParameterDirection.Input);
+            par[2] = new OracleParameter("P_CALL_SNO", OracleDbType.NVarchar2, Call_SNo, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_CONSIGNEE_CD", OracleDbType.NVarchar2, CONSIGNEE_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_DP_CONSIGNEE_CD", OracleDbType.NVarchar2, CONSIGNEE_CD, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_IC_RPT_ITEMS", par, 1);
+
+            DataTable dt = ds.Tables[0];
+
+            List<SelectListItem> lst = dt.AsEnumerable().Select(row => new SelectListItem
+            {
+                Text = Convert.ToString(row["ITEM_SRNO_PO"]),
+                Value = Convert.ToString(row["ITEM_SRNO_PO"])
+            }).ToList();
+            return lst;
+        }
+
+        public bool SaveDetail(string Case_No, string Call_Recv_Dt, string Call_SNo, string ITEM_SRNO_PO, string CONSIGNEE_CD, string Bk_No, string Set_No, UserSessionModel model)
+        {
+            using (var trans = context.Database.BeginTransaction())
+            {
+                Call_Recv_Dt = Convert.ToDateTime(Call_Recv_Dt).ToString("dd/MM/yyyy");
+                try
+                {
+
+
+                }
+                catch (Exception)
+                {
+                    trans.Rollback();
+                    return false;
+                }
+                trans.Commit();
+            }
+            return true;
         }
     }
 }
