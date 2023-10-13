@@ -467,6 +467,8 @@ namespace IBS.Models
 
         public string? VendName { get; set; }
 
+        public bool[] chkItems { get; set; }
+
         public string? Consignee { get; set; }
 
         public string ConsigneeFirm { get; set; }
@@ -479,6 +481,8 @@ namespace IBS.Models
         public List<SelectListItem> CallRlyFirmList { get; set; } = new List<SelectListItem>();
 
         public string? ItemDescPo { get; set; }
+
+        public string? CancellationDescription { get; set; }
 
         public string? ReasonFIFO { get; set; }
 
@@ -545,6 +549,18 @@ namespace IBS.Models
         public string? CallListByRly { get; set; }
         public string? ChkFIFO { get; set; }
         public string? AlertMsg { get; set; }
+        public string? Chk1 { get; set; }
+        public string? Chk2 { get; set; }
+        public string? Chk3 { get; set; }
+        public string? Chk4 { get; set; }
+        public string? Chk5 { get; set; }
+        public string? Chk6 { get; set; }
+        public string? Chk7 { get; set; }
+        public string? Chk8 { get; set; }
+        public string? Chk9 { get; set; }
+        public string? Chk10 { get; set; }
+        public string? Chk11 { get; set; }
+        public string? Chk12 { get; set; }
 
     }
 

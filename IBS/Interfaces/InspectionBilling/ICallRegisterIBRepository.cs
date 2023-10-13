@@ -56,6 +56,8 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallStatusModel CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
+        public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
         public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);

@@ -77,6 +77,8 @@ namespace IBS.Helper
             BILLIC = 25,
             [Description("/ReadWriteData/TESTPLAN")]
             TESTPLAN = 26,
+            [Description("/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")]
+            CALLCANCELLATIONDOCUMENTS = 27,
         }
 
         public enum DocumentCategory : int
@@ -104,6 +106,7 @@ namespace IBS.Helper
             UploadTestPlan = 24,
             UploadICAnnexue1 = 25,
             UploadICAnnexue2 = 26,
+            CancellationDocument = 27,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -137,6 +140,7 @@ namespace IBS.Helper
             Upload_Test_Plan = 34,
             Upload_IC_Annexue1 = 35,
             Upload_IC_Annexue2 = 36,
+            Cancellation_Document = 37,
         }
 
         public enum DocumentICCancellation : int

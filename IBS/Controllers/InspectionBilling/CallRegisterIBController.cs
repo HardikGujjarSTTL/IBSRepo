@@ -592,6 +592,15 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderICAnnexue2.MaxUploaderinOthers = 5;
             FileUploaderICAnnexue2.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.Upload_IC_Annexue2 = FileUploaderICAnnexue2;
+            
+            List<IBS_DocumentDTO> lstDocumentCancellationDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.CancellationDocument, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderlstDocumentCancellationDocument = new FileUploaderDTO();
+            FileUploaderlstDocumentCancellationDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderlstDocumentCancellationDocument.IBS_DocumentList = lstDocumentCancellationDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document).ToList();
+            FileUploaderlstDocumentCancellationDocument.OthersSection = false;
+            FileUploaderlstDocumentCancellationDocument.MaxUploaderinOthers = 5;
+            FileUploaderlstDocumentCancellationDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Cancellation_Document = FileUploaderlstDocumentCancellationDocument;
             #endregion
 
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
@@ -625,37 +634,72 @@ namespace IBS.Controllers.InspectionBilling
             {
                 AlertDanger(model.AlertMsg);
             }
-            return View(model);
+            return Json(model);
         }
 
+        public IActionResult SaveCancellation(VenderCallStatusModel model, IFormCollection FrmCollection)
+        {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+
+            string myYear, myMonth, myDay;
+            string ConcatDate = Convert.ToString(model.CallRecvDt);
+            myDay = ConcatDate.Substring(0, 2);
+            myMonth = ConcatDate.Substring(3, 2);
+            myYear = ConcatDate.Substring(6, 4);
+            string dt_out = myYear + myMonth + myDay;
+
+
+            model.UserId = Convert.ToString(UserId);
+            model.IeCd = Convert.ToString(GetIeCd);
+            model = callregisterRepository.CallCancellationSave(model,DocumentsList);
+            if (model.AlertMsg == "Success")
+            {
+                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-3"]))
+                {
+                    var FileName = model.CaseNo + "-" + dt_out + "-" + model.CallSno;
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document };
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-3"]);
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CALLCANCELLATIONDOCUMENTS), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+                AlertAddSuccess("Upload done Successfully!!!");
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                AlertDanger(model.AlertMsg);
+            }
+            return Json(model);
+        }
+
+        [HttpPost]
         public IActionResult CallStatusUpload(VenderCallStatusModel model,IFormCollection FrmCollection)
         {
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
             model.UserId = Convert.ToString(UserId);
             model = callregisterRepository.CallStatusUploadSave(model, DocumentsList);
-            if(model.AlertMsg == "Success")
+            if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-2"]))
             {
-                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-2"]))
+                var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
+                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
+                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-2"]);
+                if (DocumentsList[0].DocName == "Upload TestPlan")
                 {
-                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
-                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
-                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-2"]);
-                    if (DocumentsList[0].DocName == "Upload TestPlan")
-                    {
-                        DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
-                    }
-                    else
-                    {
-                        DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
-                    }
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
+                else
+                {
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+            }
+            if (model.AlertMsg == "Success")
+            {
                 AlertAddSuccess(model.AlertMsg);
             }else
             {
                 AlertDanger(model.AlertMsg);
             }
-            
-            return View(model);
+
+            return Json(model);
         }
 
         [HttpPost]
@@ -676,7 +720,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallStatusSave", 1, GetIPAddress());
             }
-            return View(model);
+            return Json(model);
         }
 
         public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, int ItemSrNoPo)
