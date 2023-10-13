@@ -209,11 +209,11 @@
 
     </tbody>
 </table>
-<div class="savenext-btn" style="margin-left:40%;">
+@* <div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active" onclick="printPage();">Print</button>
     <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>
 
-</div>
+</div> *@
 
 @*</form>*@
 @section scripts{
@@ -308,7 +308,7 @@
 
                 success: function (success) {
 
-                    debugger;
+                 
                     //$("#dtregdt").val(success.SampleRegDate);
                     $("#lblvno").val(success.PaymentID);
                     $("#dtdt").val(success.PaymentDt);

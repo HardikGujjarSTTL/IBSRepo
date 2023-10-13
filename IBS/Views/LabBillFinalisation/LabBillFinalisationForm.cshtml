@@ -202,7 +202,18 @@
         });
 
         function GetLabBill() {
-
+            $("#spnError1").html("");
+            $("#spnError2").html("")
+            var IsValid = true;
+            if ($("#dtfrom").val() == "") {
+                $("#spnError1").html("Please Enter From Date");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnError2").html("Please Enter To Date");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var FromDate = $("#dtfrom").val();
             var ToDate = $("#dtto").val();
             $.ajax({
@@ -263,18 +274,7 @@
 
 
         function Update() {
-            $("#spnError1").html("");
-            $("#spnError2").html("")
-            var IsValid = true;
-            if ($("#dtfrom").val() == "") {
-                $("#spnError1").html("Please Enter From Date");
-                IsValid = false;
-            }
-            if ($("#dtto").val() == "") {
-                $("#spnError2").html("Please Enter To Date");
-                IsValid = false;
-            }
-            if (!IsValid) return;
+            
             var selectedsrno = [];
            
             $("input[type='checkbox'][data-sno]:checked").each(function () {
@@ -300,8 +300,8 @@
                         if (result == true) {
 
                             alert('Data Saved Successfully!');
-                            
-                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+
+                            window.location.href = "@Url.Action("LabBillFinalisationForm", "LabBillFinalisation")";
                         }
                         else {
 
@@ -316,8 +316,8 @@
                         if (result == true) {
 
                             alert('Data Saved Successfully!');
-                            
-                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+
+                            window.location.href = "@Url.Action("LabBillFinalisationForm", "LabBillFinalisation")";
                         }
                         else {
                             alert('Error Occurred. Contact Your admin!');

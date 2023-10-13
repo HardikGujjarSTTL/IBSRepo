@@ -1,0 +1,413 @@
+﻿@model IBS.Models.LABREGISTERModel
+
+@{
+
+    string clsView = "";
+    if (Model.LabID != "0")
+    {
+
+        clsView = "Permission_View";
+    }
+    //ViewData["Title"] = "LAB REGISTER";
+}
+
+@* 
+<style>
+    .custom-textarea {
+        width: 400px; /* Set the desired width here */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
+
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
+
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
+
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtsearchdata {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+        #dtsearchdata th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+        #dtsearchdata td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style> *@
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>LAB REGISTER FORM</h2>
+    </div>
+    @* <div class="list-btn">
+        <a asp-area="" asp-controller="LabRegisterForm" asp-action="LabRegisterFormNew" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Register</a>
+    </div> *@
+</div>
+
+<section class="@clsView">
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <label for="PropertyId">Lab Registration No.</label>
+                    <input type="text" class="input" id="txtlabregno" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="PropertyId">Case No.</label>
+                    <input type="text" class="input" id="txtcaseno" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="PropertyId">Call Receive Date</label>
+                    <input type="text" class="input datepicker" id="txtcallRDt" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="PropertyId">Call SNO.</label>
+                    <input type="text" class="input" id="txtcallno" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="savenext-btn col-md-2 mb-3" style="margin-top:auto;">
+                    <button type="button" class="save-btn active" id="btnsr">Search</button>
+                </div>
+            </div>
+
+
+
+            @*  <td style="width: 7.74%; height: 32px;" align="center" bgcolor="#ffcccc" colspan="2">
+            <label class="font-bold font-size-8pt text-darkblue" style="font-family: Verdana; width: 100%;">Lab Registration No.</label>
+            <input type="text" id="txtlabregno" />
+            <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:34%;margin-top:1%;" onclick="Modify()">Modify</button>
+            </td> *@
+
+
+            @* <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:15%;margin-top:1%;" onclick="AddNew()">Add New</button> *@
+
+
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+
+                        <table id="dtsearchdata" class="table-responsive">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Sample Reg No.</th>
+                                    <th>Case No.</th>
+                                    <th>Call Date</th>
+                                    <th>Call SNo.</th>
+                                    <th>IE</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
+            });
+            InitializeDatatableLabReg();
+        });
+        function InitializeDatatableLabReg(CaseNo, CallRdt,RegNo) {
+
+            $("#dtsearchdata").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LapIndexData")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            CaseNo: CaseNo,
+                            CallRdt: CallRdt,
+                            RegNo: RegNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                        console.log(d);
+                    }
+                },
+                columns: [// Columns Setups
+
+                    { data: "SampleRegNo" },
+                    { data: "CaseNo" },
+                    { data: "CallRecDt" },
+                    { data: "CallSNO" },
+                    { data: "IE" },
+                    { data: "TestStatus" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            
+                            var CaseNo = data.CaseNo;
+                            var CallRdt = data.CallRecDt;
+                            var CallSno = data.CallSNO;
+                            var RegNo = data.SampleRegNo;
+                            if (data.SampleRegNo == null) {
+                                var editUrl = '@Url.Action("LabRegisterFormNew", "LabRegisterForm")';
+                            }
+                            else
+                            {
+                                var editUrl = '@Url.Action("LabRegisterForm", "LabRegisterForm")';
+                            }
+                            // var editUrl = '@Url.Action("LabRegisterForm", "LabRegisterForm")';
+                            editUrl += '?RegNo=' + RegNo;
+                            editUrl += '&CaseNo=' + CaseNo;
+                            editUrl += '&CallRdt=' + CallRdt;
+                            editUrl += '&CallSno=' + CallSno;
+                            
+                            var html = '<div align=\"\" class=\"\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+        function Modify() {
+
+            var RegNo = $("#txtlabregno").val();
+            var CaseNo = $("#txtcaseno").val();
+            var CallDt = $("#txtcallRDt").val();
+            var CallSno = $("#txtcallno").val();
+            //window.location.href = "/LabRegisterForm/LabRegisterForm?RegNo="+RegNo;
+            var url = sessionStorage.getItem("link");
+            var link = "/LabRegisterForm/LabRegisterForm?RegNo=" + RegNo + '&CaseNo = ' + CaseNo + '&CallDt=' + CallDt + '&CallSno=' + CallSno;
+            if (url == null) {
+                window.location.href = link;
+            }
+            else {
+                window.location.href = url;
+            }
+
+        }
+        function AddNew() {
+
+            var CaseNo = $("#txtcaseno").val();
+            var CallDt = $("#txtcallRDt").val();
+            var CallSno = $("#txtcallno").val();
+            window.location.href = "/LabRegisterForm/LabRegisterFormNew?CaseNo=" + CaseNo + '&CallDt=' + CallDt + '&CallSno=' + CallSno;
+        }
+        function grid(CaseNo, CallRdt, RegNo) {
+
+            $.ajax({
+                url: '/LabRegisterForm/LapIndexData',
+                type: 'POST',
+                dataType: 'json',
+                data: { CaseNo: CaseNo, CallRdt: CallRdt, RegNo: RegNo },
+                success: function (data) {
+
+
+                    var tableBody = $('#tableBody');
+                    tableBody.empty();
+                    var no = 0;
+                    for (i = 0; i < data.length; i++) {
+
+                        no++;
+                        var row = $('<tr>');
+                        var actionColumn = $('<td>');
+                        //var editButton = $('<a>').text('Select').attr('id',"editButton");
+                        //var snoLink = $('<a href="#ddlitem">').text(data[i].SNO).attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+                        var editButton = $('<a>').text('Select').attr('id', "editButton_" + no).attr('RegNo', data[i].SampleRegNo).css({ 'color': 'blue', 'text-decoration': 'none' });
+                        editButton.hover(
+                            function () {
+                                $(this).css('text-decoration', 'underline');
+                            },
+                            function () {
+                                $(this).css('text-decoration', 'none');
+                            }
+                        );
+
+                        actionColumn.append(editButton);
+                        row.append(actionColumn);
+                        row.append($('<td>').text(data[i].SampleRegNo));
+                        row.append($('<td>').text(data[i].CaseNo));
+                        row.append($('<td>').text(data[i].CallRecDt));
+                        row.append($('<td>').text(data[i].CallSNO));
+                        row.append($('<td>').text(data[i].IE));
+                        row.append($('<td>').text(data[i].TestStatus));
+                        tableBody.append(row);
+                        var cashno = data[i].CaseNo;
+                        var CallDt = data[i].CallRecDt;
+                        var callSno = data[i].CallSNO;
+                        var RegNo = data[i].SampleRegNo;
+                        (function (cashno, CallDt, callSno, RegNo) {
+                            editButton.click(function (event) {
+
+                                var edit = event.currentTarget.id;
+                                var regno = $('#' + edit).attr('regno');
+                                if (regno != null) {
+                                    $("#txtcaseno").val('');
+                                    $("#txtcallRDt").val('');
+                                    $("#txtcallno").val('');
+                                    $("#txtlabregno").val(regno);
+                                    var link = "/LabRegisterForm/LabRegisterForm?RegNo=" + regno + '&CaseNo = ' + cashno + '&CallDt=' + CallDt + '&CallSno=' + callSno;
+                                    sessionStorage.setItem("link", link);
+                                }
+                                else {
+                                    $("#txtcaseno").val(cashno);
+                                    $("#txtcallRDt").val(CallDt);
+                                    $("#txtcallno").val(callSno);
+                                }
+                                //LabDtlModify(regNo, sno);
+                            });
+                        })(cashno, CallDt, callSno);
+                    }
+                    //editButton.click(function(event) {
+                    //    debugger;
+                    //    $("#txtcaseno").val(cashno);
+                    //    $("#txtcallRDt").val(CallDt);
+                    //    $("#txtcallno").val(callSno);
+                    //     // var regNo = regNo1;
+                    //     // var sno = sno1;
+                    //     //LabDtlModify(regNo, sno);
+                    // });
+
+                },
+                error: function () {
+
+                }
+            });
+
+        }
+        $("#btnsr").click(function () {
+            
+            var CaseNo = $("#txtcaseno").val();
+            var CallRdt = $("#txtcallRDt").val();
+            var RegNo = $("#txtlabregno").val();
+            InitializeDatatableLabReg(CaseNo, CallRdt, RegNo);
+            // grid(CaseNo, CallRdt, RegNo);
+            // $("#gridshow").css("display", "block");
+        })
+    </script>
+}
+

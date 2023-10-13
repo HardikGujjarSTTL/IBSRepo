@@ -18,6 +18,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Call Date </label>
                         <input type="text" id="callDate" class="input datepicker">
+                    <span class="text-danger field-validation-error" id="spnError1"></span>
                     </div>
                 </div>
 
@@ -41,7 +42,15 @@
         });
 
         function submit() {
+            $("#spnError1").html("");
+            var IsValid = true;
+
+            if ($("#callDate").val() == "") {
+                $("#spnError1").html("The Call Date field is required.");
+                IsValid = false;
+            }
             
+            if (!IsValid) return;
             var callDate = $("#callDate").val();
             var RegNo = '@ViewBag.Region';
             var QueryString = "RptFlag=4" +

@@ -108,6 +108,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BarCode" Version="2023.8.4" />
 		<PackageReference Include="EPPlus" Version="6.2.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.19" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
@@ -133,6 +134,12 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\GeneratedBarcode\" />
+	  <Folder Include="wwwroot\ReadWriteData\LAB\" />
+	  <Folder Include="wwwroot\ReadWriteData\Payment\" />
 	</ItemGroup>
 
 </Project>
