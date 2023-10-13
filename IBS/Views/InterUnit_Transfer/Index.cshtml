@@ -21,31 +21,31 @@
             <input type="hidden" id="hdnBank" name="hdnBank" />
             <input type="hidden" id="hdnChequeNo" name="hdnChequeNo" />
             <input type="hidden" id="hdnChequeDate" name="hdnChequeDate" />
-            <div class="task-inner row">
+            <div class="task-inner row my-0">
                 <div class="col-md-3">
                     <div class="input-search">
                         <label for="dpBank">Bank</label>
 
                         @Html.DropDownList("dpBank", Common.GetBank().OrderBy(x => x.Text), new { @id = "dpBank" })
-                        <label class="text-danger" id="lblErrorBank"></label>
+                        <span class="text-danger" id="lblErrorBank"></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="input-search">
                         <label for="txtChequeNo">Cheque No.</label>
                         <input type="text" id="txtChequeNo" class="input" />
-                        <label class="text-danger" id="lblErrorChequeNo"></label>
+                        <span class="text-danger" id="lblErrorChequeNo"></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="input-search">
                         <label for="txtChequeDate">Cheque Date</label>
                         <input type="text" id="txtChequeDate" class="input datepicker" placeholder="DD/MM/YYYY" />
-                        <label class="text-danger" id="lblErrorChequeDate"></label>
+                        <span class="text-danger" id="lblErrorChequeDate"></span>
                     </div>
                 </div>
-                <div class="col-md-3" style="margin-top: 30px;">
-                    <div class="savenext-btn">
+                <div class="col-md-3">
+                    <div class="savenext-btn btnAlign">
                         <button type="button" class="save-btn active" id="btnSearch">Search</button>                        
                     </div>
                 </div>
