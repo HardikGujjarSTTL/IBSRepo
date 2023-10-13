@@ -1901,8 +1901,8 @@ namespace IBS.Repositories.Vendor
             }
             var count = context.T17CallRegisters.Where(call => call.CaseNo == CaseNo && call.CallStatus == "M" && call.FinalOrStage == CallStage).Select(call => call.CaseNo).Count();
 
-            int result = count != null ? count : 0;
-            model.MaxCount = result;
+            //int result = count != null ? count : 0;
+            model.MaxCount = count;
 
             string dp = "";
             if (model.InspectingAgency == "R" || model.InspectingAgency == "U")

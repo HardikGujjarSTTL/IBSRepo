@@ -320,7 +320,7 @@ namespace IBS.Repositories.Vendor
 
 
                 query = from l in context.ViewT15PoDetails
-                        where l.CaseNo == CaseNo && (l.ConsigneeCd == Convert.ToInt32(ConsigneeCd) || l.ConsigneeCd == null)
+                        where l.CaseNo == CaseNo && (l.ConsigneeCd == Convert.ToInt32(ConsigneeCd))
                         //&& l.ItemDesc == ItemDesc
                         select new PurchesOrder1LOAModel
                         {

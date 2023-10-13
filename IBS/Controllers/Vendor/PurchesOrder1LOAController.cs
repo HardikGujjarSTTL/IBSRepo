@@ -70,7 +70,7 @@ namespace IBS.Controllers.Vendor
             {
                 string msg = "Inserted Successfully.";
 
-                if (model.CaseNo != null && model.ItemSrno != null)
+                if (model.CaseNo != null && model.ItemSrno > 0)
                 {
                     msg = "Updated Successfully.";
                     model.UserId = Convert.ToString(UserName);
