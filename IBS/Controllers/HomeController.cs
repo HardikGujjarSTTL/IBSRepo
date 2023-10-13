@@ -296,7 +296,7 @@ namespace IBS.Controllers
         {
             if (Convert.ToInt32(user.UserId) > 0)
             {
-                string SaltedToken = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678912";
+                //string SaltedToken = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678912";
                 string strOldPassword = formCollection["OldPassword"];
                 string strNewPassword = formCollection["NewPassword"];
 

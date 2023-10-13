@@ -1,7 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 namespace IBS.Controllers
 {
@@ -16,7 +15,6 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult Save(Call_Cancellation_FormModel model ,string selectedValues) 
         {
-            var msg = "Successfull";
             string Uname = Convert.ToString(UserId);
 
             string i = callcancellationformrepository.SaveDetails(model ,selectedValues,Uname);

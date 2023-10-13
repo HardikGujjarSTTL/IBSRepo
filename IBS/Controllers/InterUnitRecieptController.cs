@@ -142,7 +142,6 @@ namespace IBS.Controllers
 
         public ActionResult GetDistinctBPOsByCaseNo(string txtCSNO, InterUnitRecieptModel bPOmodel, string txtBPOtype, string BPOCD)
         {
-            string DropdownValues = "";
             var dropdownValues = interunitrecieptrepository.GetDistinctBPOsByCaseNo(txtCSNO, txtBPOtype, BPOCD);
             if (dropdownValues == null)
             {

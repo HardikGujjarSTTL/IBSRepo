@@ -118,7 +118,6 @@ namespace IBS.Controllers
 
         public ActionResult GetDistinctBPOsByCaseNo(string txtCSNO, LabRecieptVoucherModel bPOmodel)
         {
-            string DropdownValues = "";
             var dropdownValues = LabRecieptVoucherRepository.GetDistinctBPOsByCaseNo(txtCSNO);
             if (dropdownValues == null)
             {
