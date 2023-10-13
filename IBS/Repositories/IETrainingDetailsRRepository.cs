@@ -229,16 +229,15 @@ namespace IBS.Repositories
             var IE = context.T09Ies.Find(ie);
 
             //var lb = (from l in context.T65LaboratoryMasters where l.LabId == LabId select l).FirstOrDefault();
-            
-            if (ie == null)
-                throw new Exception("Record Not found");
+
+            if (IE == null)
+                return model;
             else
             {
                 //model.ID = Convert.ToDecimal(user.Id);
                 model.EmpNo = IE.IeEmpNo;
                 return model;
             }
-            return model;
         }
         public bool Save(IETrainingDetailsModel IETrainingDetailsModel)
         {

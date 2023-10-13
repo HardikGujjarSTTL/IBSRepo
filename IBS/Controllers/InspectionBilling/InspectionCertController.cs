@@ -406,7 +406,7 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 InspectionCertModel model = new InspectionCertModel();
-                if (CaseNo != null && CallRecvDt != null && CallSno > 0 && ItemSrnoPo > 0)
+                if (CaseNo != null && CallSno > 0 && ItemSrnoPo > 0)
                 {
                     model = inpsRepository.FindByItemID(CaseNo, CallRecvDt, CallSno, ItemSrnoPo, Region);
                 }
@@ -426,7 +426,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 string id = "";
                 string msg = "Item Description Updated Successfully.";
-                if (ItemSrnoPo > 0 && CaseNo != null && CallRecvDt != null && CallSno > 0)
+                if (ItemSrnoPo > 0 && CaseNo != null && CallSno > 0)
                 {
                     id = inpsRepository.UpdateCallDetails(model, ItemSrnoPo, CaseNo, CallRecvDt, CallSno);
                 }
@@ -496,7 +496,7 @@ namespace IBS.Controllers.InspectionBilling
             InspectionCertModel model = new();
             try
             {
-                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                if (CaseNo != null && CallSno > 0)
                 {
                     model = inpsRepository.FindByCallMaterialReadiness(CaseNo, CallRecvDt, CallSno, Region);
                     if (model.DtInspDesire == null)
