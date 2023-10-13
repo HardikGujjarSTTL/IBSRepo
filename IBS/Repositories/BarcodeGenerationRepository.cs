@@ -251,9 +251,10 @@ namespace IBS.Repositories
                 {
                     using (OracleCommand cmd = new OracleCommand("GENERATE_Barcode_NO", (OracleConnection)conn1))
                     {
+                        var CURRENT_DATE = Convert.ToDateTime(BarcodeGenerate.CURRENT_DATE).ToString("MM/dd/yyyy");
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("in_lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
-                        cmd.Parameters.Add("in_transaction_date", OracleDbType.Date).Value = BarcodeGenerate.CURRENT_DATE;
+                        cmd.Parameters.Add("in_transaction_date", OracleDbType.Date).Value = CURRENT_DATE;
                         OracleParameter outParam = new OracleParameter("out_transaction_number", OracleDbType.Varchar2, 255);
                         outParam.Direction = ParameterDirection.Output;
                         cmd.Parameters.Add(outParam);
