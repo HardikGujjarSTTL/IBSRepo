@@ -203,7 +203,7 @@
                 </div>
             </div>
 
-            <div class="row my-0">
+            <div class="row my-0 clsRemark" style="display:none;">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Remark<span class="text-danger">* (Max 400 Chars)</span></label>
                     <input type="text" class="input" asp-for="REMARK" maxlength="750" />
@@ -242,6 +242,26 @@
                     <input type="text" class="input" />
                 </div>
             </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Dispatch Advice No.</label>
+                    <input type="text" class="input" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Invoice No.</label>
+                    <input type="text" class="input" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Name of Inspecting Engineer</label>
+                    <input type="text" class="input" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Consignee Destination</label>
+                    <input type="text" class="input" />
+                </div>
+            </div>
 
             <div class="row my-0">
                 <div class="col-md-10 mb-3">
@@ -268,6 +288,57 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            if("@Model.ACTIONAR" == "R"){
+                $(".clsRemark").css("display", "");
+            }
+        });
+
+        if ("@Model.Region" == "C") {
+
+        } else {
+            Man_type.Visible = false;
+            GBPO_DES.Visible = false;
+            OFF_INST_NO.Visible = true;
+            I_UOM.Visible = true;
+            Labelqtyod.Text = "QTY ORDERED";
+            Labelcumqtyoffer.Text = "CUM QTY PREV OFFERED";
+            Labelqtypass.Text = "QTY PASSED";
+            LabelVT.Text = "Visits Dates";
+            LAB_RE.Visible = true;
+            Labelinst.Text = "Passed instt. Note";
+            DIS_PAC_NO.Visible = false;
+            INVOICE_NO.Visible = false;
+            NAME_INS_ENG.Visible = false;
+            CONS_DESG.Visible = false;
+        }
+
+        function lstman() {
+            if (lstmantype.SelectedValue == "B") {
+                Label_dis_pac.Text = "Dispatch Adive No.";
+            }
+            else if (lstmantype.SelectedValue == "J") {
+                Label_dis_pac.Text = "Packing List No.";
+            }
+            else {
+                //Man_type.Visible=false;
+                GBPO_DES.Visible = false;
+                OFF_INST_NO.Visible = true;
+                I_UOM.Visible = true;
+                Labelqtyod.Text = "QTY ORDERED";
+                Labelcumqtyoffer.Text = "CUM QTY PREV OFFERED";
+                Labelqtypass.Text = "QTY PASSED";
+                LabelVT.Text = "Visits Dates";
+                LAB_RE.Visible = true;
+                Labelinst.Text = "Passed instt. Note";
+                DIS_PAC_NO.Visible = false;
+                INVOICE_NO.Visible = false;
+                NAME_INS_ENG.Visible = false;
+                CONS_DESG.Visible = false;
+            }
+        }
+
         if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
 
         $("#btnSave").click(function () {

@@ -14,6 +14,8 @@ namespace IBS.Models
         public string PO_DT { get; set; }
 
         public string Call_SNO { get; set; }
+        public string CALL_STATUS { get; set; }
+        public string CALL_STATUS_DT { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -110,5 +112,5 @@ namespace IBS.Models
         public int Sno { get; set; }
         public string Amendments { get; set; }
         public string Date { get; set; }
-    }
+    }    
 }

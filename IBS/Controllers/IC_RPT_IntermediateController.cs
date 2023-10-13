@@ -26,14 +26,17 @@ namespace IBS.Controllers
             //model.CONSIGNEE_CD = "3895";
             //model.ACTIONAR = "A";
 
-            model.CASE_NO = "N21111089";
-            model.Call_Recv_dt = Convert.ToDateTime("13/08/2022");
-            model.Call_SNO = "3";
-            model.CONSIGNEE_CD = "39";
-            model.ACTIONAR = "A";
+            var CASE_NO = "N21111089";
+            var Call_Recv_dt = Convert.ToString("13/08/2022");
+            var Call_SNO = "3";
+            var CONSIGNEE_CD = "39";
+            var ACTIONAR = "A";
+            model.ACTIONAR = ACTIONAR;
 
+            model = iC_RPT_IntermediateRepository.AcceptedFun(CASE_NO, Call_Recv_dt, Call_SNO, CONSIGNEE_CD);
 
-            model = iC_RPT_IntermediateRepository.GetDetails(model.CASE_NO, model.Display_Call_Recv_dt, model.Call_SNO, model.ITEM_SRNO_PO, model.CONSIGNEE_CD);
+            
+            //model = iC_RPT_IntermediateRepository.GetDetails(model.CASE_NO, model.Display_Call_Recv_dt, model.Call_SNO, model.ITEM_SRNO_PO, model.CONSIGNEE_CD);
 
             model.Region = Region;
             return View(model);
@@ -44,6 +47,23 @@ namespace IBS.Controllers
             IC_RPT_IntermediateModel model = new();
 
             return View("Index", model);
+        }
+
+        public IActionResult AcceptedFun(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
+        {
+            var data = iC_RPT_IntermediateRepository.AcceptedFun(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
+            return Json(data);
+        }
+
+        //public IActionResult GetICIntermediate(string Case_No, string Call_Recv_Dt, string Call_SNo, string, Consignee_CD)
+        //{
+
+        //    return Json();
+        //}
+
+        public IActionResult GetVisitsChanges(string Case_No, string Call_Recv_Dt, string Call_SNo)
+        {
+            return Json(null);
         }
     }
 }
