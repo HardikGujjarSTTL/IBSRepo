@@ -41,21 +41,15 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">&nbsp;</label>
-                        <input type="text" class="input" asp-for="RlyCd" readonly>
+                        @*<input type="text" class="input" asp-for="RlyCd" readonly>*@
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Railway/Non-Railway</label>
-                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
-
-                        <span asp-validation-for="RlyNonrly" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-3">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Reference">Agency/Client</label>
-                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="fill_consignee_purcher();"})
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
@@ -246,7 +240,7 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        $(function () {
+        $(document).ready(function () {
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -257,23 +251,25 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-        });
-
-        $(document).ready(function () {
             //FillVendor();
-            if ('@Model' != null) {
-                FillAgencyClient('@Model.RlyCd');
+            if ('@Model.CaseNo' != null && '@Model.CaseNo' != "") {
+                FillAgencyClient('@Model.RlyNonrly');
+                setTimeout(function () {
+                    $('#RlyCd').val('@Model.RlyCd');
+                    $('#PoiCd').val('@Model.PoiCd');
+                }, 2000);
+                FillPurchaserCdForEdit('@Model.PurchaserCd');
                 if ('@Model.RlyCd' == "0") {
                     $('#txtSPur').val('@Model.RlyCdDesc');
                 }
                 else {
                     $('#txtSPur').val('@Model.RlyCd');
                 }
-                FillPurchaserCd('@Model.PurchaserCd');
+                //FillPurchaserCd('@Model.PurchaserCd');
 
-                setTimeout(function () {
-                    fill_consignee_purcher();
-                }, 2000);
+                //setTimeout(function () {
+                //    fill_consignee_purcher();
+                //}, 2000);
 
 
             }
@@ -312,6 +308,7 @@
                 }
             });
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
@@ -319,9 +316,8 @@
         };
 
         function FillAgencyClient(id) {
-            var RlyNonrly = $("#RlyNonrly").val();
-            $.ajax({
-                url: '@Url.Action("GetAgencyClient", "DEOVendorPurchesOrder")?RlyNonrly=' + RlyNonrly,
+            $.ajax({    
+                url: '@Url.Action("GetAgencyClient", "DEOVendorPurchesOrder")?RlyNonrly=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -330,18 +326,17 @@
             }).done(function (response) {
                 if (response.status) {
                     $("#RlyCd").html("");
-                    $("#RlyCd").append("<option value=''>--Select--</option>");
                     $.each(response.list, function (index, value) {
                         $("#RlyCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
                     $("#hdnRCD").val($("#RlyCd").val());
                     $("#hdnRailway").val($("#RlyCd option:selected").text());
-                    if (id != "") {
-                        $("#RlyCd").val(id);
-                    }
+                    //if (id != "") {
+                    //    $("#RlyCd").val(id);
+                    //}
                 }
             });
-            FillPurchaserCd();
+            //FillPurchaserCd();
         }
 
         function FillPurchaserCd(ids) {
@@ -375,6 +370,37 @@
                 }
             });
         }
+
+        function FillPurchaserCdForEdit(ids) {
+            $.ajax({
+                url: '@Url.Action("GetConsigneeUsingConsignee", "POMaster")?ConsigneeSearch=' + ids,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCd").html("");
+                    var isExist = false;
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        
+                        if (ids != null && value.Value == ids.toString()) {
+                            isExist = true;
+                        }
+                    });
+                    if(ids == "0")
+                    {
+                        $("#PurchaserCd").append("<option value='0' >Other</option>");
+                    }
+                    if (isExist) {
+                        $("#PurchaserCd").val(ids);
+                    }
+                }
+            });
+        }
+
         function SearchPurchaser() {
             FillPurchaserCd();
         }

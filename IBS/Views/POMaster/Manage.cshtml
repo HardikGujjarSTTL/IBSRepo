@@ -433,6 +433,9 @@
                         }
                         $("#PurchaserCd").append("<option value='0' >Other</option>");
                     });
+                    if (ids == "0") {
+                        $("#PurchaserCd").append("<option value='0' >Other</option>");
+                    }
                     if (isExist) {
                         $("#PurchaserCd").val(ids);
                     }
@@ -491,6 +494,7 @@
             }
             else {
                 $("#dvPurchaser").css("display", "none");
+                $("#Purchaser").val("");
             }
         }
         function fill_manufacturer(id) {
@@ -523,6 +527,7 @@
             $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
                 if (response.status) {
                     $('#PoNo').val(response.poMaster.PoNo);
+                    $('#RegionCode').val(response.poMaster.RegionCode);
                     $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
                     $('#Remarks').val(response.poMaster.Remarks);
                     $('#RecvDt').val(response.poMaster.RecvDt);
@@ -536,9 +541,19 @@
 
                     $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
                     $('#hdnRCD').val(response.poMaster.RlyCd);
-                    $('#txtSPur').val(response.poMaster.RlyCd);
-                    FillPurchaserCd(response.poMaster.PurchaserCd);
-
+                    //$('#txtSPur').val(response.poMaster.RlyCd);
+                    //FillPurchaserCd(response.poMaster.PurchaserCd);
+                    FillPurchaserCdForEdit(response.poMaster.PurchaserCd);
+                    $('#PoiCd').val(response.poMaster.PoiCd);
+                    fill_manufacturer(response.poMaster.PoiCd);
+                    GetManufVEND(response.poMaster.PoiCd);
+                    $('#Contractid').val(response.poMaster.Contractid);
+                    if (response.poMaster.Isstageinspection == true) {
+                        $("#Isstageinspection").prop("checked", true);
+                    }
+                    if (response.poMaster.Ispricevariation == true) {
+                        $("#Ispricevariation").prop("checked", true);
+                    }
                     $("#PoNo").attr("readonly", "readonly");
                     $("#PoDt").attr("readonly", "readonly");
                     $("#PoOrLetter").attr("readonly", "readonly");
