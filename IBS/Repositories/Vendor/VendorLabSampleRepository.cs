@@ -193,7 +193,7 @@ namespace IBS.Repositories
             string mdtEx = dateconcate(lblCallDT.Trim());
             string myFileEx = $"{lblCaseNo.Trim()}_{lblCSNO.Trim()}_{mdtEx}";
 
-            string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
+            string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
             
             return File.Exists(fpath);
         }

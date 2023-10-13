@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace IBS.Controllers
             clusterMasterRepository = _clusterMasterRepository;
         }
 
+        [Authorization("ClusterMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("ClusterMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             int ClusterCd = clusterMasterRepository.GetMaxClusterCd();
@@ -39,6 +42,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("ClusterMaster", "Index", "edit")]
         public IActionResult Manage(ClusterMasterModel model)
         {
             try
@@ -67,6 +71,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("ClusterMaster", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

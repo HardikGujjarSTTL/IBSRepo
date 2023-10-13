@@ -160,7 +160,7 @@ namespace IBS.Controllers.Reports.Queries
                 model.toDt = toDt;
                 List<InspectionDataModel> model1 = purchaseOrdersofSpecificValuesRepository.GetItemWiseInspectionsList(model);
 
-                string html = "";
+                //string html = "";
                 string wRegion = "";
                 if (Region == "N")
                     wRegion = "Northern Region";

@@ -61,7 +61,6 @@ namespace IBS.Repositories
 
         public List<railway_dropdown> GetValue(string selectedValue)
         {
-            Calls_Marked_For_Specific_POModel result = null;
             var query = from railway in context.T91Railways
                         where railway.RlyCd != "CORE"
                         orderby railway.RlyCd
@@ -77,7 +76,6 @@ namespace IBS.Repositories
 
         public List<railway_dropdown> GetValue2(string selectedValue)
         {
-            Calls_Marked_For_Specific_POModel result = null;
             var query = context.T12BillPayingOfficers
              .Where(bpo => bpo.BpoType == selectedValue)
              .Select(bpo => new railway_dropdown

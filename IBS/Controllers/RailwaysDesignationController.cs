@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,19 +7,20 @@ namespace IBS.Controllers
 {
     public class RailwaysDesignationController : BaseController
     {
-        #region Variables
         private readonly IRailwaysDesignationRepository railwaysDesignationRepository;
-       #endregion
+
         public RailwaysDesignationController(IRailwaysDesignationRepository _railwaysDesignationRepository)
         {
             railwaysDesignationRepository = _railwaysDesignationRepository;
         }
 
+        [Authorization("RailwaysDesignation", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("RailwaysDesignation", "Index", "view")]
         public IActionResult Manage(int id)
         {
             Rly_Designation_FormModel model = new();
@@ -39,6 +41,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("RailwaysDesignation", "Index", "edit")]
         public IActionResult Manage(Rly_Designation_FormModel model)
         {
             try
@@ -72,6 +75,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("RailwaysDesignation", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

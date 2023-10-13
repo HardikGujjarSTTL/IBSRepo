@@ -32,31 +32,31 @@ namespace IBS.Repositories.Reports.Billing
 
             string SetFromMn = (Convert.ToInt32(model.FromMn) < 10) ? "0" + model.FromMn : Convert.ToString(model.FromMn);
 
-            string wHdr_YrMth_FR = SetFromMn + "-" + model.FromYr;
+            //string wHdr_YrMth_FR = SetFromMn + "-" + model.FromYr;
             string wYrMth_FR = Convert.ToString(model.FromYr + SetFromMn);
-            string wHdr_YrMth_TO = "";
+            //string wHdr_YrMth_TO = "";
             string wYrMth_TO = "";
-            string wRegion = "";
+            //string wRegion = "";
 
-            if (model.Region == "N")
-            {
-                wRegion = "Northern Region";
-            }
-            else if (model.Region == "S") { wRegion = "Southern Region"; }
-            else if (model.Region == "E") { wRegion = "Eastern Region"; }
-            else if (model.Region == "W") { wRegion = "Western Region"; }
-            else if (model.Region == "C") { wRegion = "Central Region"; }
-            int ctr = 60;
-            string first_page = "Y";
+            //if (model.Region == "N")
+            //{
+            //    wRegion = "Northern Region";
+            //}
+            //else if (model.Region == "S") { wRegion = "Southern Region"; }
+            //else if (model.Region == "E") { wRegion = "Eastern Region"; }
+            //else if (model.Region == "W") { wRegion = "Western Region"; }
+            //else if (model.Region == "C") { wRegion = "Central Region"; }
+            //int ctr = 60;
+            //string first_page = "Y";
 
             if (model.BillSummary == "M")
             {
-                wHdr_YrMth_TO = SetFromMn + "-" + model.FromYr;
+                //wHdr_YrMth_TO = SetFromMn + "-" + model.FromYr;
                 wYrMth_TO = Convert.ToString(model.FromYr + SetFromMn);
             }
             else if (model.BillSummary == "P")
             {
-                wHdr_YrMth_TO = model.ToMn + "-" + model.ToYr;
+                //wHdr_YrMth_TO = model.ToMn + "-" + model.ToYr;
                 wYrMth_TO = Convert.ToString(model.ToYr + model.ToMn);
             }
 
