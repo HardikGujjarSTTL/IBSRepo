@@ -505,7 +505,7 @@ namespace IBS.Repositories
             mail1.Body = NC_REASONS + "\n" + wRegion;
 
             SendMailModel sendMailModel = new SendMailModel();
-            rsender = rsender;
+            //rsender = rsender;
             sendMailModel.From = rsender;
             sendMailModel.To = emailAddresses;
             sendMailModel.Subject = "Non Conformities Register";

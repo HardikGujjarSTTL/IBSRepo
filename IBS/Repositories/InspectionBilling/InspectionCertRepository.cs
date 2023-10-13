@@ -1623,7 +1623,7 @@ namespace IBS.Repositories.InspectionBilling
                     TaxType = model.BpoTaxType;
                 }
                 int NoOfInsp;
-                if (model.NoOfInsp == null)
+                if (model.NoOfInsp == 0)
                 {
                     NoOfInsp = 1;
                 }
@@ -1829,7 +1829,7 @@ namespace IBS.Repositories.InspectionBilling
                 TaxType = model.BpoTaxType;
             }
             int NoOfInsp;
-            if (model.NoOfInsp == null)
+            if (model.NoOfInsp == 0)
             {
                 NoOfInsp = 1;
             }

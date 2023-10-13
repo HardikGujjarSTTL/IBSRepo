@@ -31,7 +31,7 @@
     @if (@partialView != null && @partialView != "")
     {
         <section class="table-section" id="tblsection">
-            @Html.Partial(@partialView)
+            <partial name="@partialView" />
         </section>
     }
 </form>
