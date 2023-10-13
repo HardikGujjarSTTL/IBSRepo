@@ -295,8 +295,6 @@ namespace IBS.Repositories
 
         public string GetState(int BpoCityCd)
         {
-            string StateName = "";
-
             var BPOState = (from s in context.T92States
                             where s.StateCd == (from c in context.T03Cities
                                                 where c.CityCd == BpoCityCd

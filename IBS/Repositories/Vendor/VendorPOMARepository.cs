@@ -238,11 +238,8 @@ namespace IBS.Repositories.Vendor
 
         public int DetailsSave(VendorPOMAModel model, string CaseNo, string MaNo, string MaDt, string UserName)
         {
-            int Id = 0;
             //var GetValue = context.VendPoMaDetails.Find(CaseNo, CallRecvDt, CallSNo);
             int statusID = 0;
-            decimal reader = 0;
-            decimal qty = 0;
 
             //DateTime? _MaDt = MaDt == "" ? null : DateTime.ParseExact(MaDt, "dd/MM/yyyy", null);
             var MAcheckquery = context.VendPoMaMasters.Where(x => x.CaseNo == CaseNo && x.MaNo == MaNo && x.MaDt == model.MA_DT).FirstOrDefault();

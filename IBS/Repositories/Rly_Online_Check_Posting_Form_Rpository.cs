@@ -68,15 +68,12 @@ namespace IBS.Repositories
         public DTResult<Rly_Online_Check_Posting_Form_Model> BillList(DTParameters dtParameters , string Region)
         {
             Rly_Online_Check_Posting_Form_Model model = new();
-            int count = 0;
 
             DateTime fromDate = Convert.ToDateTime(dtParameters.AdditionalValues?.GetValueOrDefault("fromDate"));
             DateTime toDate = Convert.ToDateTime(dtParameters.AdditionalValues?.GetValueOrDefault("toDate"));
             var bpoRly = dtParameters.AdditionalValues?.GetValueOrDefault("bpoRly");
           
             DTResult<Rly_Online_Check_Posting_Form_Model> dTResult = new() { draw = 0 };
-            IQueryable<Rly_Online_Check_Posting_Form_Model>? query = null;
-
 
             // Use the converted DateTime values in the LINQ query
             var query1 = (from t22 in context.V22Bills

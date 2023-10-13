@@ -1623,6 +1623,24 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> TypeofGST()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "--Select GST--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "IN-STATE";
+            single.Value = "IN-STATE";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "OUT-STATE";
+            single.Value = "OUT-STATE";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> TestToBeConducted()
         {

@@ -60,13 +60,13 @@
                         <span class="text-danger field-validation-error" id="spnErrorTo"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Contact Person1</label>
+                        <label for="Reference">Contact Person</label>
                         <input type="text" class="input" asp-for="LabContactPer" maxlength="30" style="text-transform: uppercase;">
                         <span class="text-danger field-validation-error" id="spnErrorConPer"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Tel No.</label>
-                        <input type="text" class="input" asp-for="LabContactTel" maxlength="30" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="LabContactTel" maxlength="10" style="text-transform: uppercase;" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                         <span class="text-danger field-validation-error" id="spnErrorTelNo"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -95,7 +95,7 @@
             });
         });
         function Save() {
-            debugger;
+            
             $("#spnErrorLabName").html("");
             $("#spnErrorLabEmail").html("");
             $("#spnErrorCity").html("");

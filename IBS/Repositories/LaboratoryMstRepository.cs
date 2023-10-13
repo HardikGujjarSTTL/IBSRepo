@@ -3,6 +3,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Reflection.Emit;
 using static IBS.Helper.Enums;
 
@@ -121,8 +122,8 @@ namespace IBS.Repositories
                 obj.LabApproval = Convert.ToString(model.LabApproval);
                 //obj.LabApprovalFr = Convert.ToDateTime(model.LabApprovalFr);
                 //obj.LabApprovalTo = Convert.ToDateTime(model.LabApprovalTo);
-                obj.LabApprovalFr = DateTime.ParseExact(model.LabApprovalFr, "dd-MM-yyyy", null);
-                obj.LabApprovalTo = DateTime.ParseExact(model.LabApprovalTo, "dd-MM-yyyy", null);
+                obj.LabApprovalFr = DateTime.ParseExact(model.LabApprovalFr, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                obj.LabApprovalTo = DateTime.ParseExact(model.LabApprovalTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
                 obj.LabContactPer = model.LabContactPer;
                 obj.LabContactTel = model.LabContactTel;

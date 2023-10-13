@@ -53,7 +53,7 @@ namespace IBS.Controllers
             {
                 string msg = "Inserted Successfully.";
 
-                if (model.CaseNo != null && model.MaNo != null && model.MaDt != null && model.MaSno != null)
+                if (model.CaseNo != null && model.MaNo != null && model.MaDt != null && model.MaSno > 0)
                 {
                     msg = "Updated Successfully.";
                     model.ApprovedBy = Convert.ToString(UserId);
