@@ -42,7 +42,6 @@ namespace IBS.Repositories.Vendor
         }
 
         public string CNO, DT, Action, CSNO, cstatus, wFOS;
-        int callval = 0;
         int e_status = 0;
 
         public VenderCallRegisterModel show1(VenderCallRegisterModel model, string CaseNo, string UserName)
@@ -678,17 +677,12 @@ namespace IBS.Repositories.Vendor
                         obj.NewVendor = w_New_Vendor;
                         obj.IrfcFunded = w_irfc_funded;
                         obj.ClusterCode = model.ClusterCode;
-
                         obj.Createdby = model.Createdby;
                         obj.Createddate = DateTime.Now;
                         context.T17CallRegisters.Add(obj);
                         context.SaveChanges();
                         ID = obj.CaseNo;
                     }
-                    decimal wMat_value = 0;
-                    string ext_delv_dt = "";
-                    int desire_dt = 0;
-
                     GetDtList(model);
 
                 }
@@ -735,8 +729,6 @@ namespace IBS.Repositories.Vendor
         int GetDtList(VenderCallRegisterModel model)
         {
             int err = 0;
-            decimal qty_off_now = 0;
-
             List<VenderCallRegisterModel>? query = null;
 
             var ItemSrnoPo = (from a in context.T18CallDetails

@@ -83,7 +83,6 @@ namespace IBS.Controllers
                 ViewBag.Role = GetUserInfo.RoleName;
                 ViewBag.Region = GetUserInfo.Region;
                 model.HgRegion = Region;
-                string msg = "";
                 var chkDate = hologramSearchForm.CheckDate(Convert.ToString(model.HgIssueDt));
                 if (chkDate == 1)
                 {

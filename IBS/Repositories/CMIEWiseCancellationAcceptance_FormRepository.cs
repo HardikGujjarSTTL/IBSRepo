@@ -39,8 +39,6 @@ namespace IBS.Repositories
         {
             int lstCO = Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("lstCO"));
             DTResult<CMIEWiseCancellationAcceptance_FormModel> dTResult = new() { draw = 0 };
-            IQueryable<CMIEWiseCancellationAcceptance_FormModel>? query = null;
-
 
             var query1 = from t17 in context.T17CallRegisters
                         join t19 in context.T19CallCancels on
@@ -80,8 +78,6 @@ namespace IBS.Repositories
         {
                 int lstIE = Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("lstIE"));
             DTResult<CMIEWiseCancellationAcceptance_FormModel> dTResult = new() { draw = 0 };
-            IQueryable<CMIEWiseCancellationAcceptance_FormModel>? query = null;
-
 
             var query1 = from t17 in context.T17CallRegisters
                          join t19 in context.T19CallCancels on

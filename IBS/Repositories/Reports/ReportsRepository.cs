@@ -90,14 +90,12 @@ namespace IBS.Repositories.Reports
             IEDairyModel model = new();
             List<IEDairyListModel> list = new();
             DTResult<IEDairyListModel> dTResult = new() { draw = 0 };
-            IQueryable<IEDairyListModel>? query = null;
 
             model.FromDate = FromDate;
             model.ToDate = ToDate;
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(userModel.Region);
-            string startDate = "", toDate = "", Region = "", IECD = null;
+            string startDate = "", toDate = "", IECD = null;
             int sorByVisitDate = 0;
-            var IsAll = true;
 
             startDate = Common.DateConcate(model.Display_FromDate);
             toDate = Common.DateConcate(model.Display_ToDate);

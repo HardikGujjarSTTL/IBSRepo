@@ -49,19 +49,19 @@ namespace IBS.Controllers.InspectionBilling
             var wchk_val = CHECK_SELECTED; //Convert.ToString(Request.Query["CHECK_SELECTED"]).Trim();
             var wrun_dt = RUN_DT; //Convert.ToString(Request.Query["RUN_DT"]).Trim();
 
-            bool RDB1 = false, RDB2 = false, RDB3 = false;
-            if (wchk_val == "1")
-            {
-                RDB1 = true;
-            }
-            else if (wchk_val == "2")
-            {
-                RDB2 = true;
-            }
-            else if (wchk_val == "3")
-            {
-                RDB3 = true;
-            }
+            //bool RDB1 = false, RDB2 = false, RDB3 = false;
+            //if (wchk_val == "1")
+            //{
+            //    RDB1 = true;
+            //}
+            //else if (wchk_val == "2")
+            //{
+            //    RDB2 = true;
+            //}
+            //else if (wchk_val == "3")
+            //{
+            //    RDB3 = true;
+            //}
 
             var obj = new CallMarkedOnlineFilter();
             obj.CASE_NO = CNO;
