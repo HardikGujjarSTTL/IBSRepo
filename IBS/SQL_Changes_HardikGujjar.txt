@@ -4083,3 +4083,42 @@ END;
 /
 
 =================
+
+CREATE OR REPLACE PROCEDURE SP_Get_DEOCRISPurchesOrderDetails (
+    p_Result OUT SYS_REFCURSOR,
+    p_IMMS_POKEY VARCHAR2,
+    p_IMMS_RLY_CD VARCHAR2
+) AS
+BEGIN
+  OPEN p_Result FOR
+    SELECT
+      p.IMMS_POKEY,
+      p.IMMS_RLY_CD,
+      p.ITEM_SRNO,
+      p.ITEM_DESC,
+      NVL2(
+        p.CONSIGNEE_CD,
+        (C.CONSIGNEE_CD
+          || '-'
+          || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+          || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))),
+        p.IMMS_CONSIGNEE_NAME || '/' || p.IMMS_CONSIGNEE_DETAIL
+      ) CONSIGNEE_NAME,
+      p.QTY,
+      p.RATE,
+      p.VALUE
+    FROM IMMS_RITES_PO_DETAIL p
+    LEFT JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    LEFT JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE p.IMMS_POKEY = p_IMMS_POKEY
+      AND p.IMMS_RLY_CD = p_IMMS_RLY_CD
+    ORDER BY p.ITEM_SRNO;
+END SP_Get_DEOCRISPurchesOrderDetails;
+/
+
+
+=====================
+

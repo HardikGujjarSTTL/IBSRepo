@@ -180,5 +180,73 @@ namespace IBS.Repositories
             }
             return result;
         }
+
+        public DEO_CRIS_PO_MasterDetailsModel DetailsFindByID(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD)
+        {
+            DEO_CRIS_PO_MasterDetailsModel model = new();
+            
+
+            return model;
+        }
+
+        public DTResult<DEO_CRIS_PO_MasterDetailsListModel> GetPOMasterDetailsList(DTParameters dtParameters)
+        {
+
+            DTResult<DEO_CRIS_PO_MasterDetailsListModel> dTResult = new() { draw = 0 };
+            IQueryable<DEO_CRIS_PO_MasterDetailsListModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "ITEM_SRNO";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "ITEM_SRNO";
+                orderAscendingDirection = true;
+            }
+            string IMMS_POKEY = dtParameters.AdditionalValues.ToArray().Where(x => x.Key == "IMMS_POKEY").FirstOrDefault().Value;
+            string IMMS_RLY_CD = dtParameters.AdditionalValues.ToArray().Where(x => x.Key == "IMMS_RLY_CD").FirstOrDefault().Value;
+
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("p_IMMS_POKEY", OracleDbType.Varchar2, IMMS_POKEY, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_IMMS_RLY_CD", OracleDbType.Varchar2, IMMS_RLY_CD, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_Get_DEOCRISPurchesOrderDetails", par, 1);
+            List<DEO_CRIS_PO_MasterDetailsListModel> model = new List<DEO_CRIS_PO_MasterDetailsListModel>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<DEO_CRIS_PO_MasterDetailsListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            query = model.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ITEM_DESC).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CONSIGNEE_NAME).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.QTY).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
     }
 }

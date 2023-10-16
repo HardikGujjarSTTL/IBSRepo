@@ -1,4 +1,5 @@
-﻿@model IBS.Models.PO_MasterModel
+﻿@using IBS.Helper;
+@model IBS.Models.PO_MasterModel
 
 @{
     ViewData["Title"] = "PURCHASE ORDER FORM";
@@ -38,7 +39,21 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
-                        <input type="text" class="input" value="Railways" readonly>
+                        @{
+                            string rValues = "";
+                            if (Model.RlyNonrly == "R")
+                                rValues = "Railways";
+                            else if (Model.RlyNonrly == "P")
+                                rValues = "Private";
+                            else if (Model.RlyNonrly == "U")
+                                rValues = "PSU";
+                            else if (Model.RlyNonrly == "S")
+                                rValues = "State Govt.";
+                            else if (Model.RlyNonrly == "F")
+                                rValues = "Foreign Railways";
+
+                        }
+                        <input type="text" class="input" value="@rValues" readonly>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">&nbsp;</label>
