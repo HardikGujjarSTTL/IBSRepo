@@ -1,31 +1,24 @@
 ﻿@model IBS.Models.VendorCallRegPrintReport
 @{
     ViewData["Title"] = "INSPECTION CALL";
+    Layout = null;
 }
-
-<form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-    @*<div class="list-inner">
-    <div class="tast-list">
-    <h2>INSPECTION CALL</h2>
-    </div>
-    </div>*@
+<html>
+<head>
+    <title>Sector wise billing summary</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack"/>
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+    </p>
     <input type="hidden" asp-for="CaseNo" />
     <input type="hidden" asp-for="CallRecvDt" />
     <input type="hidden" asp-for="CallSno" />
 
-    <div class="accordion-body" id="divToPrint">
-        <div class="row my-0">
-            @*<div class="center">
-                @if (Model.OnlineCall == "Y")
-                    {
-                        <span style="font-size: 14"><font face="Verdana" size="2"><b>ONLINE INSPECTION CALL</b></font></span>
-                    }
-                    else
-                    {
-                        <span style="font-size: 14"><Font face="Verdana" size="2"><B>INSPECTION CALL</B></Font></span>
-                    }
-            </div>*@
-            <table border="0">
+    <div id="dvReportViewer">
+       <table border="0" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
                 <tr class="center">
                     @if (Model.OnlineCall == "Y")
                     {
@@ -110,7 +103,7 @@
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.Purchaser </span></Font></td>
                 </tr>
                 <tr>
-                    <td align=left><Font Face="Verdana"><span style="font-size:12;">3. Consignee </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">3. Consignee </span></Font></td>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
                 </tr>
                 <tr>
@@ -254,148 +247,114 @@
                 <tr class="center">
                     <td colspan="2" align="center" class="center"><B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B></td>
                 </tr>
-                @*<tr>
-                    <td colspan=2>
-                        <Font Face="Verdana" size="2">
-                            <span style="font-size: 14;">
-                                <B>Annexure-1 (INSPECTION CALL ITEM DETAILS)</B>
-                            </span>
-                        </Font>
-                    </td>
-                </tr>*@
             </table>
-            <section class="table-section">
-                <div class="task-listinput">
-                    <div class="dash-table">
-                        <table id="dtListPrint" class="awardWrap">
-                            <thead>
-                                <tr>
-                                    <th>Sno.</th>
-                                    <th>Consignee</th>
-                                    <th>Description of Stores</th>
-                                    <th>Quantity on Order</th>
-                                    <th>Quantity Now Offered</th>
-                                    <th>Quantity already inspected and passed</th>
-                                    <th>Delivery period as per P.O./Amendment</th>
-                                    <th>Bill Paying authority</th>
-                                    <th>Master Item Checksheet</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-            <table border="0">
+
+       <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
                 <tr>
-                    @if (Model.Remarks != "")
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Sr. No.</font></b></th>
+                    <th width="25%" valign="top" align="left"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Description of Stores</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity on Order</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity Now Offered</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity already inspected and passed</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Delivery period as per P.O./Amendment</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Bill Paying authority</font></b></th>
+                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Master Item Checksheet</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstPrintCallLetter.Count > 0)
+                {
+                    int SrNo = 1;
+                    @foreach (var item in Model.lstPrintCallLetter)
+                        {
+                            <tr>
+                            <td align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.Consignee</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.ItemDescPo</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.QtyOrdered</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.QtyToInsp</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.CumQtyPrevOffered</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.DelvDt</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.Bpo</font></td>
+                            <td align="right"><font size="1" face="Verdana">@item.ItemCd</font></td>
+                        </tr>
+                        SrNo++;
+                        }
+                    }
+                </tbody>
+        </table>
+       
+       <table border="0" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+           <tr>
+               @if (Model.Remarks != "")
                     {
                         <td colspan=2 align=left><Font face="Verdana" size="1"><span style="font-size:medium;"><B>REMARKS: @Model.Remarks </b></span></Font></td>
                     }
-                </tr>
-            </table>
-        </div>
-        <div class="savenext-btn">
-             <button type="button" class="save-btn active" id="btnPrint">Print</button>
-        </div>
+           </tr>
+       </table>
     </div>
-</form>
+</body>
+</html>
 
-@*$("#btnPrint").hide();
-var contentToPrint = $("#divToPrint").html();
-var newWin = window.open('', '_blank');
-newWin.document.open();
-newWin.document.write('<html><body>' + contentToPrint + '</body></html>');
-newWin.document.close();
-newWin.print();*@
 
-@section scripts{
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+        fileName = "PrintCallLetter_1";
+    });
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
 
-    @*<style>
-        #dtListPrint td {
-            word-wrap: anywhere;
-        }
-    </style>*@
-    <script type="text/javascript">
-        $(function () {
-            InitializeDatatable();
-        });
-        function InitializeDatatable() {
-            var CaseNo = $("#CaseNo").val();
-            var CallRecvDt = $("#CallRecvDt").val();
-            var CallSno = $("#CallSno").val();
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
 
-            $("#dtListPrint").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                dom:"rt",
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTableReport", "VendorCallRegister")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "CaseNo": CaseNo,
-                            "CallRecvDt": CallRecvDt,
-                            "CallSno": CallSno,
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-                columns: [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
 
-                    { data: "Consignee" },
-                    { data: "ItemDescPo" },
-                    { data: "QtyOrdered" },
-                    { data: "QtyToInsp" },
-                    { data: "CumQtyPrevOffered" },
-                    
-                    {
-                        data: "DelvDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "Bpo" },
-                    { data: "ItemCd" },
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
 
-                ],
-                "order": [[0, "asc"]],
-                "initComplete": function (settings, json) {
-                    $("#dtList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
-                },
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
+        window.location.href = url;
+    });
+
+    function generatePdf(isPrint) {
+        var element = document.getElementById('dvReportViewer');
+
+        element.style.width = "1100px";
+
+        const options = {
+            margin: 0,
+            filename: getExportFileName(fileName) + '.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        if (isPrint) {
+            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+                pdfObj.autoPrint();
+                window.open(pdfObj.output('bloburl'), '_blank');
             });
         }
+        else {
+            html2pdf().set(options).from(element).save();
+        }
 
-        $("#btnPrint").click(function () {
-             window.print(); 
-        });
-
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/PurchesOrder1LOA";
-        };
-    </script>
+        setTimeout(function () {
+            element.style.width = "100%";
+        }, 1000);
     }
+   </script>

@@ -1,0 +1,35 @@
+﻿using IBS.Filters;
+using IBS.Interfaces;
+using IBS.Models;
+using IBS.Repositories;
+using Microsoft.AspNetCore.Mvc;
+
+namespace IBS.Controllers
+{
+    public class LabSearchPaymentController : BaseController
+    {
+        #region Variables
+        private readonly ILabSearchPaymentRepository LabSearchPaymentRepository;
+        #endregion
+        public LabSearchPaymentController(ILabSearchPaymentRepository _LabSearchPaymentRepository)
+        {
+            LabSearchPaymentRepository = _LabSearchPaymentRepository;
+        }
+        //[Authorization("Search", "Index", "view")]
+        public IActionResult Index()
+        {
+            var region = GetUserInfo.Region;
+            ViewBag.Region = region;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            var region = GetUserInfo.Region;
+            DTResult<SearchPaymentsModel> dTResult = LabSearchPaymentRepository.GetSearchList(dtParameters);
+            return Json(dTResult);
+        }
+      
+    }
+}

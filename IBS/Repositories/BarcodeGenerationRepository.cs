@@ -249,18 +249,18 @@ namespace IBS.Repositories
             {
                 using (var conn1 = context.Database.GetDbConnection())
                 {
-                    using (OracleCommand cmd = new OracleCommand("GENERATE_Barcode_NO", (OracleConnection)conn1))
+                    using (OracleCommand cmd = new OracleCommand("New_BarcodeGenarate", (OracleConnection)conn1))
                     {
+                       
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("in_lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
-                        cmd.Parameters.Add("in_transaction_date", OracleDbType.Date).Value = BarcodeGenerate.CURRENT_DATE;
-                        OracleParameter outParam = new OracleParameter("out_transaction_number", OracleDbType.Varchar2, 255);
+                        cmd.Parameters.Add("lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
+                        OracleParameter outParam = new OracleParameter("transaction_number", OracleDbType.Varchar2, 255);
                         outParam.Direction = ParameterDirection.Output;
                         cmd.Parameters.Add(outParam);
                         conn1.Open();
                         cmd.ExecuteNonQuery();
 
-                        BarcodeGenerate.BARCODE = cmd.Parameters["out_transaction_number"].Value.ToString();
+                        BarcodeGenerate.BARCODE = cmd.Parameters["transaction_number"].Value.ToString();
                     }
                 }
             }

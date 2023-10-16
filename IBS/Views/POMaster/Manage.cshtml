@@ -56,14 +56,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
-                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient("") , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})
+                                @*@Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient(Model.RlyNonrly) , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})*@
+                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="fill_consignee_purcher();"})
+
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
-                                @*<label id="lblRailway" style="display:none"></label><br />
-                                <label id="lblRailwayCode" style="display:none"></label><br />
-                                <label id="lblRCD" style="display:none"></label><br />*@
                                 <input type="text" class="input" asp-for="RlyCdDesc">
                             </div>
                         </div>
@@ -78,21 +77,6 @@
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
                     </div>
-
-
-                    @* <div class="row my-0">
-                    <div class="col-md-5 mb-3">
-                    <label for="Reference">Vendor</label>
-                    <input type="text" class="input" id="txtVend">
-                    <input type="hidden" id="hdnlblVendor" />
-                    </div>
-                    <div class="col-md-5 mb-3">
-                    <label for="Reference"></label>
-                    @Html.DropDownListFor(model => model.VendCd, new SelectList(IBS.Models.Common.GetVendor(0) , "Value", "Text"),"--Select--")
-                    </div>
-                    </div>*@
-
-
                     <div class="col-md-4 mb-3">
                         <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
@@ -105,12 +89,11 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Purchase Order No./ LOA No.</label>
-                        <input type="text" class="input" asp-for="PoNo">
+                        <input type="text" class="input" asp-for="PoNo" maxlength="50">
                         <span asp-validation-for="PoNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">PO/LOA Date <i class="text-danger">*</i></label>
-                        @*<input type="text" class="datepicker" asp-for="PoDt" readonly="true">*@
                         <input id="PoDt" asp-for="PoDt" type="text" class="datepicker" placeholder="dd-MM-yyyy" readonly="readonly" />
                         <span asp-validation-for="PoDt" class="text-danger"></span>
                     </div>
@@ -118,13 +101,11 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Purchaser</label>
-                        @*<input type="text" class="input" id="txtSPur">*@
                         <input type="text" class="input" asp-for="txtSPur">
                     </div>
                     <div class="col-md-4 mb-3">
                         <button type="button" class="btn btn-primary formSubBtn" onclick="SearchPurchaser();">Search Purchaser</button>
                     </div>
-
                     <div class="col-md-12 mb-3">
                         <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below <i class="text-danger">*</i></label>
                     </div>
@@ -143,7 +124,6 @@
                         <span asp-validation-for="RecvDt" class="text-danger"></span>
                     </div>
                 </div>
-
                 <div class="row my-0">
                     <div class="col-md-12 mb-3">
                         <div class="reference">
@@ -169,19 +149,15 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <input type="text" class="input" asp-for="PoiCd">
-                        @*<input type="text" class="input" id="txtMName">*@
                     </div>
                     <div class="col-md-4 mb-3" id="dvbtnPOI">
-
                         <button type="button" id="btnPOI" class="btn btn-primary" style="width:auto;" onclick="SelectManufacturer();">Select Manufacturer</button>
-
                     </div>
                     <div class="col-md-12 mb-3">
                         <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                     </div>
                     <div class="col-md-4 mb-3" id="dvddlManufac">
                         @Html.DropDownListFor(model => model.ddlManufac, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="ChanedManufacturer();"})
-
                     </div>
                 </div>
                 <div class="row my-0">
@@ -271,22 +247,11 @@
                 $('#RlyCd').val('@Model.RlyCd');
                 $('#PoiCd').val('@Model.PoiCd');
             }, 2000);
-            //$('#txtSPur').val('@Model.Purchaser');
             FillPurchaserCdForEdit('@Model.PurchaserCd');
             fill_manufacturer('@Model.PoiCd');
-
-            //if ('@Model.RlyCd' == "0") {
-            //    $('#txtSPur').val('@Model.RlyCdDesc');
-            //}
-            //else {
-            //    $('#txtSPur').val('@Model.RlyCd');
-            //}
             if ('@Model.PoiCd' != "" && '@Model.PoiCd' != "0") {
                 GetManufVEND('@Model.PoiCd');
             }
-            setTimeout(function () {
-                //$("#PoiCd").attr("readonly", false);
-            }, 2000);
         }
 
         function FillAgencyClient(types) {
@@ -302,7 +267,7 @@
                 if (response.status) {
                     $("#RlyCd").html("");
                     $.each(response.list, function (index, value) {
-                        $("#RlyCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#RlyCd").append("<option value='" + value.Value + "' >" + value.Text + "</option>");
                     });
                     $("#hdnRCD").val($("#RlyCd").val());
                     $("#hdnRailway").val($("#RlyCd option:selected").text());
@@ -380,7 +345,6 @@
         function SearchPurchaser() {
             $("#TempPurchaser").val($("#txtSPur").val());
             FillPurchaserCd(null);
-
             setTimeout(function () {
                 ChanedPurchaserCd();
             }, 2000);
@@ -426,13 +390,15 @@
                     $("#PurchaserCd").html("");
                     var isExist = false;
                     $.each(response.list, function (index, value) {
-
                         $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                         if (ids != null && value.Value == ids.toString()) {
                             isExist = true;
                         }
                         $("#PurchaserCd").append("<option value='0' >Other</option>");
                     });
+                    if (ids == "0") {
+                        $("#PurchaserCd").append("<option value='0' >Other</option>");
+                    }
                     if (isExist) {
                         $("#PurchaserCd").val(ids);
                     }
@@ -462,7 +428,6 @@
             }
         }
         function SelectManufacturer() {
-            //$("#PoiCd").attr("readonly", true);
             $("#dvddlManufac").css("display", "block");
             var PoiCd = $("#PoiCd").val();
             fill_manufacturer(PoiCd);
@@ -471,14 +436,17 @@
                 $("#PoiCd").val($("#ddlManufac").val());
             }, 1000);
 
-            GetManufVEND($("#PoiCd").val());
+            setTimeout(function () {
+                GetManufVEND($("#PoiCd").val());
+            }, 2000);
         }
 
         function ChanedManufacturer() {
             $("#TempPoiCd").val($("#ddlManufac").val());
             $("#PoiCd").val($("#ddlManufac").val());
-            GetManufVEND($("#PoiCd").val());
-            GetManufVEND(PoiCd);
+            setTimeout(function () {
+                GetManufVEND($("#PoiCd").val());
+            }, 2000);
         }
 
         function ChanedPurchaserCd() {
@@ -487,6 +455,7 @@
             }
             else {
                 $("#dvPurchaser").css("display", "none");
+                $("#Purchaser").val("");
             }
         }
         function fill_manufacturer(id) {
@@ -519,6 +488,7 @@
             $.get("@Url.Action("GetLOADetails", "POMaster")", { CaseNo: $('#txtCaseNo').val() }, function (response) {
                 if (response.status) {
                     $('#PoNo').val(response.poMaster.PoNo);
+                    $('#RegionCode').val(response.poMaster.RegionCode);
                     $('#PoDt').val(moment(response.poMaster.PoDt).format("DD-MM-YYYY"));
                     $('#Remarks').val(response.poMaster.Remarks);
                     $('#RecvDt').val(response.poMaster.RecvDt);
@@ -532,9 +502,17 @@
 
                     $('#hdnRailwayCode').val(response.poMaster.RlyNonrly);
                     $('#hdnRCD').val(response.poMaster.RlyCd);
-                    $('#txtSPur').val(response.poMaster.RlyCd);
-                    FillPurchaserCd(response.poMaster.PurchaserCd);
-
+                    FillPurchaserCdForEdit(response.poMaster.PurchaserCd);
+                    $('#PoiCd').val(response.poMaster.PoiCd);
+                    fill_manufacturer(response.poMaster.PoiCd);
+                    GetManufVEND(response.poMaster.PoiCd);
+                    $('#Contractid').val(response.poMaster.Contractid);
+                    if (response.poMaster.Isstageinspection == true) {
+                        $("#Isstageinspection").prop("checked", true);
+                    }
+                    if (response.poMaster.Ispricevariation == true) {
+                        $("#Ispricevariation").prop("checked", true);
+                    }
                     $("#PoNo").attr("readonly", "readonly");
                     $("#PoDt").attr("readonly", "readonly");
                     $("#PoOrLetter").attr("readonly", "readonly");
@@ -562,9 +540,7 @@
                         ShowHideMsgNew(response.getvendor.status, "It is informed that due to unavoidable reasons, online call booking facility has temporarily restricted against your ID From: " + response.getvendor.VendStatusDtFrST);
                     }
                     else {
-                        //$("#PoiCd").val($("#ddlManufac").val());
                         $("#txtMPOI").val(response.getvendor.VendAdd1);
-                        //$("#PoiCd").attr("disabled", "disabled");
                     }
                 }
             });
@@ -584,53 +560,6 @@
                 window.location.href = '@Url.Action("Index", "POMaster")';
             }
         };
-
-
-                //function FillVendor() {
-                //    $.ajax({
-                //        url: '@Url.Action("GetVendor", "POMaster")',
-                //        type: 'GET',
-                //        cache: false,
-                //        data: '{}',
-                //        processData: false,
-                //        contentType: false
-                //    }).done(function (response) {
-                //        if (response.status) {
-                //            if (response.list != null) {
-                //                $("#VendCd").html("");
-                //                $("#VendCd").append("<option value=''>--Select--</option>");
-                //                $.each(response.list, function (index, value) {
-                //                    $("#VendCd").append("<option value=" + value.Value + " Selected=" + value.Selected + " >" + value.Text + "</option>");
-                //                });
-                //                //vendor_status();
-                //            }
-                //            else {
-                //                ShowHideMsgNew(response.status, "No Vendor Found!!!");
-                //            }
-                //        }
-                //    });
-                //}
-
-                //function vendor_status() {
-                //    //var VendCd = $("#VendCd").val();
-                //    $.ajax({
-                //        url: '@Url.Action("Getvendor_status", "POMaster")?VendCd=' + VendCd,
-                //        type: 'GET',
-                //        cache: false,
-                //        data: '{}',
-                //        processData: false,
-                //        contentType: false
-                //    }).done(function (response) {
-                //        if (response.status) {
-                //            ShowHideMsgNew(response.status, response.responseText);
-                //            $("#txtVend").val("");
-                //        }
-                //        else
-                //        {
-                //            $("#txtVend").val(VendCd);
-                //        }
-                //    });
-                //}
 
     </script>
 

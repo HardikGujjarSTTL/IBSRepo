@@ -44,6 +44,8 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? NwpDt { get; set; }
 
+        public string Display_NwpDt { get { return this.NwpDt != null ? Common.ConvertDateFormat(this.NwpDt.Value) : ""; } }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? VisitDt { get; set; }

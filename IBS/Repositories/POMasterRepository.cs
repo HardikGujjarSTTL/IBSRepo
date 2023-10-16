@@ -289,6 +289,9 @@ namespace IBS.Repositories
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
+                model.Contractid = POMaster.Contractid;
+                model.Isstageinspection =Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 return model;
             }
         }
