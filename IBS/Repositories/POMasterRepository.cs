@@ -47,6 +47,9 @@ namespace IBS.Repositories
                 model.Contractid = POMaster.Contractid;
                 model.RealCaseNo = POMaster.RealCaseNo;
                 model.Purchaser = POMaster.Purchaser;
+                //model.txtSPur = POMaster.Purchaser;
+                model.TempPurchaser = POMaster.Purchaser;
+                model.TempPoiCd = POMaster.PoiCd;
                 return model;
             }
         }
@@ -206,7 +209,10 @@ namespace IBS.Repositories
                 obj.Remarks = model.Remarks;
                 obj.Datetime = DateTime.Now;
                 obj.PoiCd = model.PoiCd;
-                obj.Purchaser = model.Purchaser;
+                if (model.PurchaserCd == 0)
+                {
+                    obj.Purchaser = model.Purchaser;
+                }
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
@@ -242,7 +248,10 @@ namespace IBS.Repositories
                 POMaster.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 POMaster.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 POMaster.Contractid = model.Contractid;
-                POMaster.Purchaser = model.Purchaser;
+                if (model.PurchaserCd == 0)
+                {
+                    POMaster.Purchaser = model.Purchaser;
+                }
                 POMaster.Updatedby = model.Updatedby;
                 POMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
@@ -280,6 +289,9 @@ namespace IBS.Repositories
                 model.Datetime = POMaster.Datetime;
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
+                model.Contractid = POMaster.Contractid;
+                model.Isstageinspection =Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 return model;
             }
         }

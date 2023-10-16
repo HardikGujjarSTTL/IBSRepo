@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace IBS.Controllers
             railwaysDirectoryRepository = _railwaysDirectoryRepository;
         }
 
+        [Authorization("RailwaysDirectory", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("RailwaysDirectory", "Index", "view")]
         public IActionResult Manage(int id)
         {
             RailwaysDirectoryModel model = new();
@@ -29,6 +32,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("RailwaysDirectory", "Index", "edit")]
         public IActionResult Manage(RailwaysDirectoryModel model)
         {
             try
@@ -69,6 +73,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("RailwaysDirectory", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

@@ -198,7 +198,7 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="Reference">Amount</label>
-                <input type="text" class="input" id="txtamt">
+                <input type="text" class="input" id="txtamt" readonly="readonly">
 
             </div>
             <div class="col-md-4 mb-3">
@@ -405,11 +405,31 @@
             //    alert("Select atleast One Sample Registration No. to process the Lab Payment.");
             //}
         }
+        function printDirectly(url) {
 
+            var iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.display = 'none';
+
+
+            document.body.appendChild(iframe);
+
+
+            setTimeout(function () {
+                iframe.contentWindow.print();
+            }, 1000);
+
+
+            setTimeout(function () {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }
         $("#btnprint").click(function () {
             
             var PaymentID = $("#lblpyno").val();
-            window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            //window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            var url = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            printDirectly(url);
         })
         function Edit(PaymentID) {
 

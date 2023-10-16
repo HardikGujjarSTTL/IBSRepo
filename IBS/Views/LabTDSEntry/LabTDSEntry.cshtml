@@ -79,6 +79,14 @@
             location.reload();
         }
         function SearchRegNo() {
+            $("#spnErrorsRegNo").html("");
+            var IsValid = true;
+            if ($("#txtSRNO").val() == "") {
+                $("#spnErrorsRegNo").html("Please Enter Sample Register No.");
+                IsValid = false;
+            }
+            
+            if (!IsValid) return;
             var RegNo = $("#txtSRNO").val();
             var TDSAmt = $("#lbltsdamt").val();
             var TDSDate = $("#lbltdsdate").val();

@@ -226,12 +226,12 @@ namespace IBS.Controllers.Reports.OtherReports
         public IActionResult VendorClusterIEReport(string department)
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            string wRegion = "";
-            if (Region == "N") { wRegion = "Northern Region"; }
-            else if (Region == "S") { wRegion = "Southern Region"; }
-            else if (Region == "E") { wRegion = "Eastern Region"; }
-            else if (Region == "W") { wRegion = "Western Region"; }
-            else if (Region == "C") { wRegion = "Central Region"; }
+            //string wRegion = "";
+            //if (Region == "N") { wRegion = "Northern Region"; }
+            //else if (Region == "S") { wRegion = "Southern Region"; }
+            //else if (Region == "E") { wRegion = "Eastern Region"; }
+            //else if (Region == "W") { wRegion = "Western Region"; }
+            //else if (Region == "C") { wRegion = "Central Region"; }
             VendorClusterReportModel model = otherReportsRepository.GetVendorClusterReport(department, Region);
             GlobalDeclaration.VendorClusterReport = model;
             return PartialView(model);
@@ -240,12 +240,12 @@ namespace IBS.Controllers.Reports.OtherReports
         public IActionResult IEAlterMappingReport()
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            string wRegion = "";
-            if (Region == "N") { wRegion = "Northern Region"; }
-            else if (Region == "S") { wRegion = "Southern Region"; }
-            else if (Region == "E") { wRegion = "Eastern Region"; }
-            else if (Region == "W") { wRegion = "Western Region"; }
-            else if (Region == "C") { wRegion = "Central Region"; }
+            //string wRegion = "";
+            //if (Region == "N") { wRegion = "Northern Region"; }
+            //else if (Region == "S") { wRegion = "Southern Region"; }
+            //else if (Region == "E") { wRegion = "Eastern Region"; }
+            //else if (Region == "W") { wRegion = "Western Region"; }
+            //else if (Region == "C") { wRegion = "Central Region"; }
             IEAlterMappingReportModel model = otherReportsRepository.GetIEAlterMappingReport(Region);
             GlobalDeclaration.IEAlterMappingReport = model;
             return PartialView(model);

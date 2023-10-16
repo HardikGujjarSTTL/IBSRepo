@@ -367,6 +367,27 @@ namespace IBS.Controllers
         }
 
 
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
+        public IActionResult PODetails(string IMMS_POKEY,string IMMS_RLY_CD)
+        {
+            DEO_CRIS_PurchesOrderModel model = new();
+            model = purchesorderRepository.FindByID(IMMS_POKEY, IMMS_RLY_CD);
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableForPODetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<DEO_CRIS_PO_MasterDetailsListModel> dTResult = purchesorderRepository.GetPOMasterDetailsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        public IActionResult PoDetailManage(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD)
+        {
+            DEO_CRIS_PO_MasterDetailsModel model = new();
+            model = purchesorderRepository.DetailsFindByID(IMMS_POKEY, ITEM_SRNO, IMMS_RLY_CD);
+            return View(model);
+        }
 
 
     }

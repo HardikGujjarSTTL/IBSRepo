@@ -56,7 +56,7 @@ namespace IBS.Repositories
                     orderAscendingDirection = true;
                 }
 
-                string NCNO = "", CASENO = "", ToDate = null, FromDate = null, IENAME = null;
+                string ToDate = null, FromDate = null, IENAME = null;
 
                 //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
                 //{
@@ -435,7 +435,7 @@ namespace IBS.Repositories
 
         public bool SendEmail(NCRRegister nCRRegister)
         {
-            string msg = "";
+            //string msg = "";
 
             string region = nCRRegister.SetRegionCode; 
             string wRegion = GetRegionDetails(region);
@@ -505,7 +505,7 @@ namespace IBS.Repositories
             mail1.Body = NC_REASONS + "\n" + wRegion;
 
             SendMailModel sendMailModel = new SendMailModel();
-            rsender = rsender;
+            //rsender = rsender;
             sendMailModel.From = rsender;
             sendMailModel.To = emailAddresses;
             sendMailModel.Subject = "Non Conformities Register";

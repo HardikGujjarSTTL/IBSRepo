@@ -264,7 +264,7 @@ namespace IBS.Controllers.Vendor
         {
             VendorCallRegPrintReport model = new();
 
-            if (CaseNo != null && CallRecvDt != null && CallSno != null)
+            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = venderRepository.FindByPrintReport(CaseNo, CallRecvDt, CallSno, UserName);
             }

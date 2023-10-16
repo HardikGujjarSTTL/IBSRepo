@@ -20,17 +20,18 @@
 <section class="@clsView">
     <div class="task-listinput">
         <div class="accordion-body">
-            <div class="row my-0">
-                        <div class="col-md-4 mb-4">
+            <div class="row align-items-end my-0">
+                        <div class="col-md-4">
                         <label for="Reference">Voucher No</label>
                         <input type="text" asp-for="VCHR_NO" id="Vchr_no"  maxlength="300" />
                     </div>
+                <div class="col-md-4">
                     <div class="BtnEdit savenext-btn">
                      <button type="button" class="save-btn active Permission_Save" onclick="Edit();">Edit Voucher</button>
                     </div>
-                  
-
-                <table id="dtInterUnitReciept" class="table-responsive">
+                  </div>
+            </div>
+            <table id="dtInterUnitReciept" class="table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -47,9 +48,6 @@
                     <tbody id="tableBody">
                     </tbody>
                 </table>
-
-                  
-            </div>
         </div>
     </div>
 </section>

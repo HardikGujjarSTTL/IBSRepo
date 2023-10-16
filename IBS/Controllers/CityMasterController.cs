@@ -1,6 +1,6 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -14,11 +14,13 @@ namespace IBS.Controllers
             cityRepository = _cityRepository;
         }
 
+        [Authorization("CityMaster", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("CityMaster", "Index", "view")]
         public IActionResult Manage(int id)
         {
             CityMasterModel model = new();
@@ -37,6 +39,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("CityMaster", "Index", "edit")]
         public IActionResult Manage(CityMasterModel model)
         {
             try
@@ -65,6 +68,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("CityMaster", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

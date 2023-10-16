@@ -463,7 +463,6 @@ namespace IBS.Repositories.InspectionBilling
 
         public int financial_year_check(InspectionCertModel model)
         {
-            int Id = 0;
             var IcData = context.T20Ics.Where(ic => ic.BkNo.Trim() == model.Bkno && ic.SetNo == model.Setno && ic.CaseNo.Substring(0, 1) == model.Regioncode).Select(ic => ic.IcDt).FirstOrDefault();
             string myYear, myMonth;
             int fin_year_IC = 0;
@@ -643,7 +642,7 @@ namespace IBS.Repositories.InspectionBilling
                     TaxType = model.BpoTaxType;
                 }
                 int NoOfInsp;
-                if (model.NoOfInsp == null)
+                if (model.NoOfInsp == 0)
                 {
                     NoOfInsp = 1;
                 }

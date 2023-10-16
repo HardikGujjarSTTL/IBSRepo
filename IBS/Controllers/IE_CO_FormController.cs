@@ -1,24 +1,26 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
     public class IE_CO_FormController : BaseController
     {
-        #region Variables
         private readonly I_IE_CO_FormRepository iE_CO_FormRepository;
-        #endregion
+
         public IE_CO_FormController(I_IE_CO_FormRepository _iE_CO_FormRepository)
         {
             iE_CO_FormRepository = _iE_CO_FormRepository;
         }
+
+        [Authorization("IE_CO_Form", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorization("IE_CO_Form", "Index", "view")]
         public IActionResult Manage(int id)
         {
             IE_CO_FormModel model = new();
@@ -37,6 +39,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [Authorization("IE_CO_Form", "Index", "edit")]
         public IActionResult Manage(IE_CO_FormModel model)
         {
             try
@@ -64,6 +67,7 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        [Authorization("IE_CO_Form", "Index", "delete")]
         public IActionResult Delete(int id)
         {
             try

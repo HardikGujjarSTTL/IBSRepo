@@ -37,12 +37,12 @@
             <div class="col-md-3 mb-3">
                 <label for="PropertyId">From Date</label>
                 <input class="input datepicker" id="dtfrom" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
             <div class="col-md-3 mb-3">
                 <label for="PropertyId">To date</label>
                 <input class="input datepicker" id="dtto" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
 
         </div>
@@ -144,6 +144,29 @@
 
     <script type="text/javascript">
         function show() {
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
             InitializeDatatable();
             $("#hide").css("display", "block");
         }

@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace IBS.Controllers
             billFinalisationFormRepository = _billFinalisationFormRepository;
         }
 
+        [Authorization("BillFinalisationForm", "Index", "view")]
         public IActionResult Index()
         {
             return View();
@@ -26,6 +28,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [Authorization("BillFinalisationForm", "Index", "edit")]
         public IActionResult UpdateBillsFinalisation(string[] BillNos)
         {
             billFinalisationFormRepository.UpdateBillFinalisationStatus(BillNos);
