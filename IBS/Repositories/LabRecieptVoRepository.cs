@@ -144,7 +144,7 @@ namespace IBS.Repositories
                   .DefaultIfEmpty(0)
                   .Max() + 1;
 
-                if (voucher1 != null)
+                if (voucher1 > 0)
                 {
                     VCHR_NO = ss + 00 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
                 }

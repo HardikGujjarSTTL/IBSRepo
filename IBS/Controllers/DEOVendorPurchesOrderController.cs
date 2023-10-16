@@ -101,7 +101,8 @@ namespace IBS.Controllers
                 {
                     model.PoiCd = model.VendCd;
                 }
-
+                //model.Purchaser = model.TempPurchaser;
+                model.PoiCd = model.TempPoiCd;
                 //PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
                 //if (pO_MasterModel != null)
                 //{
@@ -188,6 +189,13 @@ namespace IBS.Controllers
                 {
                     agencyClient = Common.GetPurchaserCd(consignee);
                 }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -197,20 +205,31 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor(int VendCd, int id = 0)
+        public IActionResult GetVendor(int VendCd, string searchValues = null, bool isSameAs = false)
         {
             try
             {
-                if (id > 0)
+                bool IsDigit = false;
+                if (searchValues != null && searchValues != "0")
                 {
-                    VendCd = id;
+                    char characterToCheck = searchValues[3];  
+                    IsDigit = Char.IsDigit(characterToCheck);
                 }
-                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
-                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(VendCd)).ToList())
+                int VendCdID = VendCd;
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (isSameAs)
                 {
-                    if (item.Value == Convert.ToString(VendCd))
+                    agencyClient = Common.GetVendor(VendCdID);
+                }
+                else
+                {
+                    if (IsDigit)
                     {
-                        item.Selected = true;
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(searchValues));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(searchValues);
                     }
                 }
                 return Json(new { status = true, list = agencyClient });
@@ -393,6 +412,36 @@ namespace IBS.Controllers
         {
             DTResult<PO_MasterDetailsModel> dTResult = pOMasterRepository.FindByUOMDetail(id);
             return Json(dTResult);
+        }
+
+        [HttpGet]
+        public IActionResult GetVend_CD(string VEND_CD)
+        {
+            try
+            {
+                bool IsDigit = false;
+                if (VEND_CD != null)
+                {
+                    char characterToCheck = VEND_CD[3];
+                    IsDigit = Char.IsDigit(characterToCheck);
+                }
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (IsDigit)
+                {
+                    agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
+                }
+                else
+                {
+                    agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                }
+
+                return Json(new { status = true, list = agencyClient});
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOVendorPurchesOrder", "GetAgencyClient", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         [HttpPost]

@@ -238,7 +238,7 @@ namespace IBS.Controllers.Vendor
                 bool IsDigit = false;
                 if (searchValues != null && searchValues != "0")
                 {
-                    char characterToCheck = searchValues[3];  // Access a character at the specific index (5 in this case)
+                    char characterToCheck = searchValues[3]; 
                     IsDigit = Char.IsDigit(characterToCheck);
                     //IsDigit = Char.IsDigit(searchValues, 5);
                 }

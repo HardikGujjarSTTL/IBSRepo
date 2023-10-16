@@ -24,6 +24,7 @@
                             <th>Place of Inspection</th>
                             <th>Region</th>
                             <th>Remarks</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -86,6 +87,16 @@
                     { data: "POI" },
                     { data: "REGION" },
                     { data: "REMARKS" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CaseNo;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
