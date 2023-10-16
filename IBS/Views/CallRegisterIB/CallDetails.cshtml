@@ -38,34 +38,6 @@
             </div>
         </div>
 
-    @*<div class="accordion-body">
-    <table>
-    <tr>
-    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Case No:</td>
-    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-    <label id="lblCaseNo" style="text-transform: uppercase; color:red;"></label>
-    </td>
-    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">Call Date - SNo:</td>
-    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-    <label id="lblCallRecvDt" style="text-transform: uppercase; color:red;"></label>
-    <span> - </span>
-    <label id="lblCallSNo" style="text-transform: uppercase; color:red;"></label>
-    </td>
-    </tr>
-    <tr>
-    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">PO No & Date:</td>
-    <td style="width: 40%; height: 16px" bgcolor="#ffffcc">
-    <label id="lblPoNo" style="text-transform: uppercase; color:red;"></label>
-    <span> & </span>
-    <label id="lblPoDt" style="text-transform: uppercase; color:red;"></label>
-    </td>
-    <td style="width: 15%; height: 16px" bgcolor="#ffffcc">IE:</td>
-    <td style="width: 20%; height: 16px" bgcolor="#ffffcc">
-    <label id="lblIE_SName" style="text-transform: uppercase; color:red;"></label>
-    </td>
-    </tr>
-    </table>
-    </div>*@
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
@@ -120,7 +92,7 @@
         <div class="row my-0">
             <div class="col-md-6 mb-3">
                 <div class="savenext-btn">
-                    <a asp-controller="CallRegister" asp-action="Index" class="reset-btn">Cancel</a>
+                    <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" class="save-btn active" id="btnSave">Save</button>
                     <button type="button" class="save-btn" id="btnDelete" onclick="CallDetailsDelete();">Delete</button>
                 </div>
