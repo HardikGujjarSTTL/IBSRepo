@@ -100,7 +100,7 @@
                     @Html.DropDownListFor(Model => Model.CONSIGNEE_CD, new SelectList(IBS.Models.Common.BindConsignee(Model.CASE_NO, Model.Display_Call_Recv_dt, Model.Call_SNO) , "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Item</label>
+                    <label for="Reference">Items</label>
                     @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
@@ -220,7 +220,7 @@
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Case Status Date</label>
-                    <input type="text" class="input datepicker" maxlength="750" />
+                    <input type="text" class="input" asp-for="CALL_STATUS_DT" readonly="readonly" />
                 </div>
                 <div class="col-md-9 mb-3">
                     <label for="Reference"> </label>
@@ -388,6 +388,129 @@
                 ShowHideMsgNew(false, "QTY REJECTED + QTY PASSED should not be greater than (>) QTY TO INSP !");
                 return;
             }
+
+            var formData = {
+                CASE_NO: $("#lblCASE_NO").html(),
+                CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
+                DP_CONSIGNEE_CD: $("#CONSIGNEE_CD").val(),
+                ACTIONAR: "@Model.ACTIONAR",
+                //IE_CD: $("#ClusterID option:selected").text(),
+                PO_NO: $("#lblPONO").html(),
+                PO_DT: $("#lblPODT").html(),
+                Call_SNO: $("#lblCall_SNO").html(),
+                Call_Recv_dt: $("#lblCall_Recv_dt").html(),
+                Call_Install_No: $("#OFF_INST_NO").val(),
+                MFG_Name: $("#MANUFAC_DESC").val(),
+                ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
+                ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
+                ITEM_REMARK: $("#ITEM_REMARK").val(),
+                QTY_ORDERED: $("#lblQtyOrder").html(),
+                CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
+                CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
+                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_PASSED: $("#QTY_PASSED").val(),
+                QTY_REJECTED: $("#QTY_REJECTED").val(),
+                QTY_DUE: $("#QTY_DUE").val(),
+                UNIT_DTL: $("#ITEM_UNIT").val(),
+                BK_NO: $("#BK_NO").val(),
+                SET_NO: $("#SET_NO").val(),
+                IE_STAMPS_DETAIL: $("#IE_STAMPS_DETAIL").val(),
+                IE_STAMPS_DETAIL2: $("#IE_STAMPS_DETAIL2").val(),
+                REMARK: $("#REMARK").val(),
+                PASSED_INST_NO: $("#PASSED_INST_NO").val(),
+                LAB_TST_RECT_DT: $("#LAB_TST_RECT_DT").val(),
+                HOLOGRAM: $("#HOLOGRAM").val(),
+                MAN_TYPE: $("#MAN_TYPE").val(),
+                DISPATCH_PACKING_NO: $("#DISPATCH_PACKING_NO").val(),
+                INVOICE_NO: $("#INVOICE_NO").val(),
+                NAME_OF_IE: $("#NAME_OF_IE").val(),
+                CONSIGNEE_DESG: $("#CONSIGNEE_DESG").val(),
+                CONSIGNEE_DTL: $("#CONSIGNEE_DESC").val(),
+                CONSIGNEE_DESC: $("#CONSIGNEE_DESC").val(),
+                BPO_DTL: $("#BPO_DESC").val(),
+                GOV_BILL_AUTH: $("#GBPO_AUTH").val(),
+                PUR_DTL: $("#MANUFAC_DESC").val(),
+                MANUFAC_DESC: $("#MANUFAC_DESC").val(),
+                PUR_AUT_DTL: $("#PUR_AUTH_DESC").val(),
+                PUR_AUTH_DESC: $("#PUR_AUTH_DESC").val(),
+                OFF_INST_NO_DTL: $("#OFF_INST_NO").val(),
+                VISIT_DATES: $("#VISIT_DATES").val(),
+                VISITS_DATES: $("#VISIT_DATES").val(),
+                BPO_DESC: $("#BPO_DESC").val(),
+                GBPO_AUTH: $("#GBPO_AUTH").val(),
+                OFF_INST_NO: $("#OFF_INST_NO").val(),
+                ITEM_UNIT: $("#ITEM_UNIT").val(),
+            }
+            $.post("@Url.Action("SaveDetails", "IC_RPT_Intermediate")", { model: formData }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+
+                }
+            });
+        });
+
+
+        $("#btnRefresh").click(function () {
+
+            var formData = {
+                CASE_NO: $("#lblCASE_NO").html(),
+                CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
+                DP_CONSIGNEE_CD: $("#CONSIGNEE_CD").val(),
+                ACTIONAR: "@Model.ACTIONAR",
+                //IE_CD: $("#ClusterID option:selected").text(),
+                PO_NO: $("#lblPONO").html(),
+                PO_DT: $("#lblPODT").html(),
+                Call_SNO: $("#lblCall_SNO").html(),
+                Call_Recv_dt: $("#lblCall_Recv_dt").html(),
+                Call_Install_No: $("#OFF_INST_NO").val(),
+                MFG_Name: $("#MANUFAC_DESC").val(),
+                ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
+                ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
+                ITEM_REMARK: $("#ITEM_REMARK").val(),
+                QTY_ORDERED: $("#lblQtyOrder").html(),
+                CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
+                CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
+                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_PASSED: $("#QTY_PASSED").val(),
+                QTY_REJECTED: $("#QTY_REJECTED").val(),
+                QTY_DUE: $("#QTY_DUE").val(),
+                UNIT_DTL: $("#ITEM_UNIT").val(),
+                BK_NO: $("#BK_NO").val(),
+                SET_NO: $("#SET_NO").val(),
+                IE_STAMPS_DETAIL: $("#IE_STAMPS_DETAIL").val(),
+                IE_STAMPS_DETAIL2: $("#IE_STAMPS_DETAIL2").val(),
+                REMARK: $("#REMARK").val(),
+                PASSED_INST_NO: $("#PASSED_INST_NO").val(),
+                LAB_TST_RECT_DT: $("#LAB_TST_RECT_DT").val(),
+                HOLOGRAM: $("#HOLOGRAM").val(),
+                MAN_TYPE: $("#MAN_TYPE").val(),
+                DISPATCH_PACKING_NO: $("#DISPATCH_PACKING_NO").val(),
+                INVOICE_NO: $("#INVOICE_NO").val(),
+                NAME_OF_IE: $("#NAME_OF_IE").val(),
+                CONSIGNEE_DESG: $("#CONSIGNEE_DESG").val(),
+                CONSIGNEE_DTL: $("#CONSIGNEE_DESC").val(),
+                CONSIGNEE_DESC: $("#CONSIGNEE_DESC").val(),
+                BPO_DTL: $("#BPO_DESC").val(),
+                GOV_BILL_AUTH: $("#GBPO_AUTH").val(),
+                PUR_DTL: $("#MANUFAC_DESC").val(),
+                MANUFAC_DESC: $("#MANUFAC_DESC").val(),
+                PUR_AUT_DTL: $("#PUR_AUTH_DESC").val(),
+                PUR_AUTH_DESC: $("#PUR_AUTH_DESC").val(),
+                OFF_INST_NO_DTL: $("#OFF_INST_NO").val(),
+                VISIT_DATES: $("#VISIT_DATES").val(),
+                VISITS_DATES: $("#VISIT_DATES").val(),
+                BPO_DESC: $("#BPO_DESC").val(),
+                GBPO_AUTH: $("#GBPO_AUTH").val(),
+                OFF_INST_NO: $("#OFF_INST_NO").val(),
+                ITEM_UNIT: $("#ITEM_UNIT").val(),
+            }
+            $.post("@Url.Action("RefreshDetail", "IC_RPT_Intermediate")", { model: formData }, function (response) {
+                debugger
+                //ShowHideMsgNew(response, response.responseText);
+                if (response) {
+
+                }
+            });
         });
 
         function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
@@ -472,6 +595,7 @@
                     } else {
 
                     }
+                    $("#CALL_STATUS_DT").val($.datepicker.formatDate("dd/mm/yy", new Date()));
                 }
             });
         }
@@ -504,10 +628,11 @@
                     debugger
                     if (response != null) {
                         FillItemDropDown();
-                        $("#BK_No").val(response.BK_No);
+                        debugger
+                        $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
-                        $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL);
-                        $("#IE_STAMPS_DETAIL2").val(response.IE_STAMPS_DETAIL2);
+                        $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL);
+                        $("#IE_STAMPS_DETAIL2").val(response.IE_STAMPS_DETAIL2 == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL2);
                         $("#LAB_TST_RECT_DT").val(response.LAB_TST_RECT_DT);
                         $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
                         $("#REMARK").val(response.REMARK);
@@ -546,12 +671,12 @@
                         $("#INVOICE_NO").val(response.INVOICE_NO);
                         $("#NAME_OF_IE").val(response.NAME_OF_IE);
                         $("#CONSIGNEE_DESG").val(response.CONSIGNEE_DESG);
-                        if("@Model.Region" == "C"){
+                        if ("@Model.Region" == "C") {
                             $("#MAN_TYPE").val(response.MAN_TYPE);
                             lstman();
-                            $("#MAN_TYPE").css("display","none"); //false
+                            $("#MAN_TYPE").css("display", "none"); //false
                         }
-                        else{
+                        else {
                             $("#MAN_TYPE").css("display", ""); //true
                         }
                         $("#CONSIGNEE_DESC").val(response.CONSIGNEE_DESC);

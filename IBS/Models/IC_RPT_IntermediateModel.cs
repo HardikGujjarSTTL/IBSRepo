@@ -112,5 +112,6 @@ namespace IBS.Models
         public int Sno { get; set; }
         public string Amendments { get; set; }
         public string Date { get; set; }
+        public int IECD { get; set; }
     }    
 }

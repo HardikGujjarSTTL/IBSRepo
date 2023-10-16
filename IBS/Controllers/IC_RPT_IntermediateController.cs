@@ -1,5 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace IBS.Controllers
     {
         #region Varible
         private readonly IIC_RPT_IntermediateRepository iC_RPT_IntermediateRepository;
+        SessionHelper objSessionHelper = new SessionHelper();
         public IC_RPT_IntermediateController(IIC_RPT_IntermediateRepository _iC_RPT_IntermediateRepository)
         {
             iC_RPT_IntermediateRepository = _iC_RPT_IntermediateRepository;
@@ -47,6 +49,7 @@ namespace IBS.Controllers
         public IActionResult LoadPOAmendmentTable([FromBody] DTParameters dtParameters)
         {
             DTResult<PO_Amendments> dTResult = iC_RPT_IntermediateRepository.GetPOAmendment(dtParameters);
+            objSessionHelper.lstPoAmendments = dTResult.data.ToList();
             return Json(dTResult);
         }
 
@@ -86,6 +89,60 @@ namespace IBS.Controllers
         {
             var data = iC_RPT_IntermediateRepository.GetItems(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
             return Json(data);
+        }
+
+        [HttpPost]
+        public IActionResult SaveDetails(IC_RPT_IntermediateModel model)
+        {
+            try
+            {
+                var result = true;
+                result = iC_RPT_IntermediateRepository.SaveDetail(model, GetUserInfo);
+
+                if (result)
+                    AlertAddSuccess("Record Added Successfully.");
+                else
+                    AlertDanger("Looks Like Something Went Wrong. Some Error Occurs...");
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_RPT_Intermediate", "SaveDetails", 1, GetIPAddress());
+            }
+            return RedirectToAction("Index", model);
+        }
+
+        public IActionResult RefreshDetail(IC_RPT_IntermediateModel model)
+        {
+            try
+            {
+                var data = iC_RPT_IntermediateRepository.RefreshDetail(model, GetUserInfo);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_RPT_Intermediate", "RefereDetail", 1, GetIPAddress());
+            }
+            return Json(null);
+        }
+
+        public IActionResult SaveAmendment(string CaseNo, string Po_No,PO_Amendments model)
+        {
+            int res = 0;
+            var Iecd = GetUserInfo.IeCd;
+            try
+            {
+                List<PO_Amendments> lstPoAhm = objSessionHelper.lstPoAmendments;
+                lstPoAhm.ForEach(x => x.IECD = Iecd);
+                res = iC_RPT_IntermediateRepository.SaveAmendment( CaseNo,  Po_No,  model, lstPoAhm);
+                if(res > 0)
+                {
+                    return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_RPT_Intermediate", "SaveAmendment", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
     }
 }
