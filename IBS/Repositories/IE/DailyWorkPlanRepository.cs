@@ -218,7 +218,7 @@ namespace IBS.Repositories.IE
                                MfgCd = grouped.Key,
                                Count = grouped.Count()
                            }).ToList();
-            
+
 
             foreach (var dt1 in deserializedData)
             {
@@ -399,6 +399,34 @@ namespace IBS.Repositories.IE
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+        }
+
+        public string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region,string UserName)
+        {
+            string Dtl = "";
+            int co_cd = 0;
+            var T09 = context.T09Ies.Where(x => x.IeCd == GetIeCd).FirstOrDefault();
+            if (T09 != null)
+            {
+                co_cd = Convert.ToInt32(T09.IeCoCd);
+            }
+            if(co_cd > 0)
+            {
+                NoIeWorkPlan plan = new NoIeWorkPlan();
+                plan.IeCd = GetIeCd;
+                plan.CoCd = Convert.ToByte(co_cd);
+                plan.Reason = Reason;
+                plan.NwpDt = Convert.ToDateTime(NwpDt);
+                plan.RegionCode = Region;
+                plan.UserId = UserName;
+                plan.Datetime = DateTime.Now.Date;
+
+                context.NoIeWorkPlans.Add(plan);
+                context.SaveChanges();
+                //Dtl = Convert.ToString(Convert.ToDateTime(NwpDt).AddDays());
+                Dtl = Convert.ToDateTime(NwpDt).AddDays(1).ToString("dd/MM/yyyy");
+            }
+            return Dtl;
         }
     }
 }

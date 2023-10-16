@@ -218,13 +218,15 @@ namespace IBS.Controllers.Vendor
                 }
                 if (i != null)
                 {
+                    //Bhavesh Code SMS & Mail Code comment.
+                    //if (model.e_status == 1 && model.callval != 0)
+                    //{
+                    //    string emailResult = venderRepository.send_Vendor_Email(model);
+                    //    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
+                    //}
                     return Json(new { status = true, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                 }
-                if (model.e_status == 1 && model.callval != 0)
-                {
-                    string emailResult = venderRepository.send_Vendor_Email(model);
-                    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
-                }
+
             }
             catch (Exception ex)
             {
@@ -509,7 +511,7 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult PopUp(string CaseNo)
+        public IActionResult PopUp()
         {
             try
             {
@@ -521,6 +523,12 @@ namespace IBS.Controllers.Vendor
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        public IActionResult TermsCondition()
+        {
+            return PartialView("_TermsCondition");
+        }
+
 
     }
 }
