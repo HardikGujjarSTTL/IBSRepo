@@ -35,27 +35,27 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="FromMn" id="lblMonth">Month</label> <br />
                 @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
                 <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="FromYr" id="lblYear">Year</label> <br />
                 @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
                 <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
             </div>
-            <div class="col-md-2 mb-3 trTo" style="display: none">
+            <div class="col-md-4 mb-3 trTo" style="display: none">
                 <label for="ToMn">To Month</label> <br />
                 @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
                 <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
             </div>
-            <div class="col-md-2 mb-3 trTo" style="display: none">
+            <div class="col-md-4 mb-3 trTo" style="display: none">
                 <label for="ToYr">To Year</label> <br />
                 @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
                 <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
             </div>
-            <div class="col-md-2 mb-3 SWBills" style="display: none">
+            <div class="col-md-4 mb-3 SWBills" style="display: none">
                 <label for="IncRites">Include RITES Billing (Y/N)</label> <br />
                 @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"))
                 <span class="text-danger field-validation-error" id="spnErrorIncRites"></span>

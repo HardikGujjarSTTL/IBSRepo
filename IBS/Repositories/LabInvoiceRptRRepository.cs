@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -148,19 +149,8 @@ namespace IBS.Repositories
             query = modelList.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Item).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Item).ToLower().Contains(searchBy.ToLower())
-                );
-
+            dTResult.data = query;
             dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.data = query.ToList();
-
-            dTResult.draw = dtParameters.Draw;
-
             return dTResult;
 
             //using (var dbContext = context.Database.GetDbConnection())
