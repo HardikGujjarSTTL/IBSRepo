@@ -272,9 +272,10 @@
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload10" />
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="savenext-btn">
+                        <div class="savenext-btn" style="margin-top:30px;">
                             <button type="button" class="save-btn active" onclick="SaveImages();">Save Files</button>
                             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+                            <button type="button" class="save-btn active" id="ViewPrintIC">View Print/IC</button>
                         </div>
                     </div>
 
@@ -323,7 +324,7 @@
                         <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                         <input type="text" asp-for="RejectionCharge" id="RejectionCharges" maxlength="100">
                  </div>
-                <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-3" style="margin-top:30px;">
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="UploadFiles();">Upload Files</button>
                         <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
@@ -416,6 +417,8 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Cancellation Description:-</label>
                         <textarea rows="4" asp-for="CancellationDescription" id="Candesc" style="color:red;text-transform: uppercase;"></textarea>
+                                <span asp-validation-for="CancellationDescription" class="text-danger"></span>
+
                     </div>
                     <div class="col-md-4 mb-3">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Cancellation_Document" />
@@ -440,6 +443,14 @@
 
         $(document).ready(function () {
 
+            //var bknoaccpted = $('#bknoaccpted').val();
+            //var setnoaccpted = $('#setnoaccpted').val();
+            //if (bknoaccpted != "" || setnoaccpted!= ""){
+
+            //}else{
+
+            //}
+            $('#ViewPrintIC').prop('disabled', false);
             $('#accepteddrp').hide();
             $('#CallCancelChargesdrp').hide();
             $('#MatCanvalue').hide();
@@ -459,7 +470,6 @@
             }
 
             $('#consigneeFirmDropdown').change(function () {
-                debugger
                 var selectedValue = $('#consigneeFirmDropdown').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
@@ -597,7 +607,6 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        debugger
                         if(data.ChkFIFO == "true"){
                             $('#ReasonFIFOdv').show();
                         } else if (data.ChkFIFO == "false"){
@@ -620,7 +629,6 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        debuggerormData.append
                         $('#MatValue').val(data.MaterialValue);
                         $('#RejectionCharges').val(data.RejectionCharge);
                     },
@@ -638,7 +646,6 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#callRecdt').val();
 
-                debugger
                 if (selectedValue1 == "C") {
                     $('#CallCancelChargesdrp').show();
                 } else if (selectedValue1 == "N") {
@@ -650,7 +657,6 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        debugger
                         if (data.ChkFIFO == "true") {
                             $('#ReasonFIFOdv').show();
                         } else if (data.ChkFIFO == "false") {
@@ -694,38 +700,85 @@
 
         function UploadFiles(){
             var formData = new FormData();
-
+            debugger
             SaveSingleDocuments("tab-2");
-             formData = AjaxModel();
 
-            var file = $('#hdnUploadedDocumentList_tab-2').val()
-            formData.append("UploadeFile", file);
+            var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
+            var bknoaccpted = $('#bknoaccpted').val();
+            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#BkNo').val();
+            var setnoaccpted = $('#SetNo').val();
 
-            $.ajax({
-                url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error: ' + textStatus, errorThrown);
+            if (bknoaccpted != "" || setnoaccpted != ""){
+                var ajaxData = AjaxModel();
+
+                if (ajaxData) {
+                    for (var key in ajaxData) {
+                        if (ajaxData.hasOwnProperty(key)) {
+                            formData.append(key, ajaxData[key]);
+                        }
+                    }
                 }
-            });
+                var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
+
+                if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
+                    var file = fileInput.defaultValue;
+                    formData.append("UploadeFile", file);
+                }
+
+                $.ajax({
+                    url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response == 1) {
+                            ShowHideMsgNew(true, response.responseText);
+                        }
+                        else {
+                            ShowHideMsgNew(false, response.responseText);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle error
+                        console.error('Error: ' + textStatus, errorThrown);
+                    }
+                });
+            }else{
+                alert("BKNO & SetNo Is Required.");
+                return;
+            }
 
         }
         function Accepted() {
             var formData = AjaxModel();
 
-            $.ajax({
-                url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error: ' + textStatus, errorThrown);
-                }
-            });
+            var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
+            var bknoaccpted = $('#bknoaccpted').val();
+            var setnoaccpted = $('#setnoaccpted').val();
+
+            if (bknoaccpted != "" || setnoaccpted != "") {
+                $.ajax({
+                    url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response == 1) {
+                            ShowHideMsgNew(true, response.responseText);
+                        }
+                        else {
+                            ShowHideMsgNew(false, response.responseText);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error: ' + textStatus, errorThrown);
+                    }
+                });
+            } else {
+                alert("BKNO & SetNo Is Required.");
+                return;
+            }
 
         }
 
@@ -744,39 +797,114 @@
             var formData = new FormData();
 
             SaveSingleDocuments("tab-1");
-             formData = AjaxModel();
+            var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
+            var bknoaccpted = $('#bknoaccpted').val();
+            var setnoaccpted = $('#setnoaccpted').val();
+            debugger
+            if (bknoaccpted != "" || setnoaccpted != "") {
+                var ajaxData = AjaxModel();
 
-            $.ajax({
-                url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error: ' + textStatus, errorThrown);
+                if (ajaxData) {
+                    for (var key in ajaxData) {
+                        if (ajaxData.hasOwnProperty(key)) {
+                            formData.append(key, ajaxData[key]);
+                        }
+                    }
                 }
-            });
+                var files = $('#hdnUploadedDocumentList_tab-1')[0];
+
+                if (files == null) {
+                    alert('Please Upload images.');
+                    return;
+                }
+
+                for (var i = 0; i < files.length; i++) {
+                    formData.append('UploadeFile[]', files[i]);
+                }
+
+                $.ajax({
+                    url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                       
+                        if (response == 1) {
+                            ShowHideMsgNew(true, response.responseText);
+                        }
+                        else {
+                            ShowHideMsgNew(false, response.responseText);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle error
+                        console.error('Error: ' + textStatus, errorThrown);
+                    }
+                });
+            }
+            else {
+                alert("BKNO & SetNo Is Required.");
+                return;
+            }
         }
 
         function SaveCancellation() {
             var formData = new FormData();
 
             SaveSingleDocuments("tab-3");
-            var ajaxFormData = AjaxModel();
-            for (var pair of ajaxFormData.entries()) {
-                formData.append(pair[0], pair[1]);
+            debugger
+            var ajaxData = AjaxModel();
+
+            if (ajaxData) {
+                for (var key in ajaxData) {
+                    if (ajaxData.hasOwnProperty(key)) {
+                        formData.append(key, ajaxData[key]);
+                    }
+                }
+            }
+            var fileInput = $('#hdnUploadedDocumentList_tab-3')[0];
+
+            if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
+                var file = fileInput.defaultValue;
+                formData.append("UploadeFile", file);
+            }else{
+                alert("Upload File");
+                return;
             }
 
-            var file = $('#hdnUploadedDocumentList_tab-3').val()
-            formData.append("UploadeFile", file);
+            var atLeastOneChecked = $('input[name^="chkItems"]').is(':checked');
+
+            if (!atLeastOneChecked) {
+                alert('Please select at least one Cancellation Reason.');
+                return;
+            }
+
+            var formData = new FormData();
+
+            $('input[name^="chkItems"]').each(function () {
+                var index = $(this).attr('name').match(/\[([\d]+)\]/)[1];
+                formData.append("chkItems[" + index + "]", $(this).is(':checked'));
+            });
+
 
             $.ajax({
                 url: '@Url.Action("SaveCancellation", "CallRegisterIB")',
                 type: 'POST',
                 data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
+                    if (response == 1) {
+                        ShowHideMsgNew(true, response.responseText);
+                        window.location.href = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE") + "?type=C"';
+                    }
+                    else {
+                        ShowHideMsgNew(false, response.responseText);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
@@ -795,7 +923,6 @@
             var CallSno = $('#callsnos').val();
             var CallStatusDt = $('#calldtstatus').val();
             var CallCancelCharges = $('#CanCharges').val();
-            var chkItems = $('#chkItems').val();
             var CancellationDescription = $('#Candesc').val();
 
             var formData = {
@@ -808,7 +935,6 @@
                 CallRecvDt: CallRecvDt,
                 CallSno: CallSno,
                 CallStatusDt: CallStatusDt,
-                chkItems: chkItems,
                 CancellationDescription: CancellationDescription
             };
             

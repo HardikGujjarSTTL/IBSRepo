@@ -205,11 +205,11 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
                     #region File Upload Profile Picture
-                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                     {
                         msg = "Document Upload Successfully.";
                         int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.CallRegistrationDoc };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                         DocumentHelper.SaveFiles(DocID, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CallRegistrationDoc), env, iDocument, "CallRegistrationDoc", string.Empty, DocumentIds);
                     }
                     #endregion
@@ -620,21 +620,20 @@ namespace IBS.Controllers.InspectionBilling
             model = callregisterRepository.CallStatusFilesSave(model,DocumentsList);
             if (model.AlertMsg == "Success")
             {
-                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                 {
                     var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };
-                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                     DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
-                AlertAddSuccess("Upload done Successfully!!!");
-                return RedirectToAction("Index");
+                model.AlertMsg = "Upload done Successfully!!!";
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
             }
             else
             {
-                AlertDanger(model.AlertMsg);
+                return Json(new { status = false, responseText = model.AlertMsg });
             }
-            return Json(model);
         }
 
         public IActionResult SaveCancellation(VenderCallStatusModel model, IFormCollection FrmCollection)
@@ -654,21 +653,20 @@ namespace IBS.Controllers.InspectionBilling
             model = callregisterRepository.CallCancellationSave(model,DocumentsList);
             if (model.AlertMsg == "Success")
             {
-                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-3"]))
+                if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                 {
                     var FileName = model.CaseNo + "-" + dt_out + "-" + model.CallSno;
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document };
-                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-3"]);
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CALLCANCELLATIONDOCUMENTS), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
-                AlertAddSuccess("Upload done Successfully!!!");
-                return RedirectToAction("Index");
+                model.AlertMsg = "Upload done Successfully!!!";
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
             }
             else
             {
-                AlertDanger(model.AlertMsg);
+                return Json(new { status = false, responseText = model.AlertMsg });
             }
-            return Json(model);
         }
 
         [HttpPost]
@@ -677,11 +675,11 @@ namespace IBS.Controllers.InspectionBilling
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
             model.UserId = Convert.ToString(UserId);
             model = callregisterRepository.CallStatusUploadSave(model, DocumentsList);
-            if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-2"]))
+            if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
             {
                 var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
                 int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
-                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-2"]);
+                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                 if (DocumentsList[0].DocName == "Upload TestPlan")
                 {
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
@@ -693,13 +691,12 @@ namespace IBS.Controllers.InspectionBilling
             }
             if (model.AlertMsg == "Success")
             {
-                AlertAddSuccess(model.AlertMsg);
-            }else
-            {
-                AlertDanger(model.AlertMsg);
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
             }
-
-            return Json(model);
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
         }
 
         [HttpPost]
@@ -807,9 +804,9 @@ namespace IBS.Controllers.InspectionBilling
             VenderCallStatusModel model = callregisterRepository.GetRlyDrp(CaseNo, DesireDt, CallSno, selectedValue, IeCd, Region);
             if(model.AlertMsg  != "Success!!!")
             {
-                AlertDanger(model.AlertMsg);
+                return Json(new { status = false, responseText = model.AlertMsg });
             }
-            return Json(model);
+            return Json(model);         
         }
         
         public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
@@ -817,7 +814,7 @@ namespace IBS.Controllers.InspectionBilling
             VenderCallStatusModel model = callregisterRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
             if(model.AlertMsg  != "Success!!!")
             {
-                AlertDanger(model.AlertMsg);
+                return Json(new { status = false, responseText = model.AlertMsg });
             }
             return Json(model);
         }

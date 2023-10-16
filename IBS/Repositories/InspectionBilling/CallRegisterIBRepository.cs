@@ -2511,6 +2511,101 @@ namespace IBS.Repositories.InspectionBilling
 
             // Set ConsigneeFirmList to the query result
             model.ConsigneeFirmList = firstQuery.Union(secondQuery).ToList();
+
+            var CancelData = (from l in context.T19CallCancels
+                              join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
+                              where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && l.CallSno == CallSno
+                              select new VenderCallCancellationModel
+                              {
+                                  CaseNo = l.CaseNo,
+                                  CallRecvDt = l.CallRecvDt,
+                                  CallSno = (short)l.CallSno,
+                                  Cdesc = l.CancelDesc,
+                                  CancelDt = l.CancelDate,
+                                  DocRec = l.DocsSubmitted,
+                                  CallCancelStatus = c.CallCancelStatus,
+                                  chk1 = Convert.ToInt32(l.CancelCd1),
+                                  chk2 = Convert.ToInt32(l.CancelCd2),
+                                  chk3 = Convert.ToInt32(l.CancelCd3),
+                                  chk4 = Convert.ToInt32(l.CancelCd4),
+                                  chk5 = Convert.ToInt32(l.CancelCd5),
+                                  chk6 = Convert.ToInt32(l.CancelCd6),
+                                  chk7 = Convert.ToInt32(l.CancelCd7),
+                                  chk8 = Convert.ToInt32(l.CancelCd8),
+                                  chk9 = Convert.ToInt32(l.CancelCd9),
+                                  chk10 = Convert.ToInt32(l.CancelCd10),
+                                  chk11 = Convert.ToInt32(l.CancelCd11),
+                                  chk12 = Convert.ToInt32(l.CancelCd12),
+                              }).FirstOrDefault();
+            if (CancelData == null)
+                throw new Exception("Record Not found");
+            else
+            {
+                model.CaseNo = CancelData.CaseNo;
+                model.CallRecvDt = CancelData.CallRecvDt;
+                model.CallSno = CancelData.CallSno;
+                model.CancellationDescription = CancelData.Cdesc;
+                model.CallCancelStatus = CancelData.CallCancelStatus;
+
+                bool[] chk = new bool[12];
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    if (CancelData.chk1 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk2 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk3 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk4 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk5 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk6 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk7 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk8 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk9 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk10 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk11 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk12 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+
+                }
+
+                model.chkItems = chk;
+                
+            }
+
             return model;
         }
 
@@ -2943,6 +3038,7 @@ namespace IBS.Repositories.InspectionBilling
             if(model.CallStatus == null || (model.CallStatus == "C" && model.CallStatus == ""))
             {
                 model.AlertMsg = "Mention Call Chargeable/Call Non-Chargeable & Select One of the Given Call Cancellation Charges in Case the Call is Chargeable!!!";
+                return model;
             }
             else
             {
@@ -3143,7 +3239,9 @@ namespace IBS.Repositories.InspectionBilling
 
                             context.SaveChanges();
                         }
-                    }else if (Action != "")
+                        model.AlertMsg = "Success";
+                    }
+                    else if (Action != "")
                     {
                         var CallCancalltion = context.T19CallCancels.FirstOrDefault(cc => cc.CaseNo == model.CaseNo && cc.CallRecvDt == model.CallRecvDt && cc.CallSno == model.CallSno);
 
@@ -3316,14 +3414,15 @@ namespace IBS.Repositories.InspectionBilling
                                 context.SaveChanges();
                             }
                         }
+                        model.AlertMsg = "Success";
                     }
                 }
                 else
                 {
                     model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
+                    return model;
                 }
             }
-
             return model;
         }
 
@@ -3348,6 +3447,7 @@ namespace IBS.Repositories.InspectionBilling
                 else if (count == 0)
                 {
                     model.AlertMsg = "The Inspection Photos should be uploaded first against the given Case and then Upload the Files";
+                    return model;
                 }
             }
             else if(model.CallStatus == "R")
@@ -3375,22 +3475,27 @@ namespace IBS.Repositories.InspectionBilling
                 if (model.CallStatus.Trim() == "" || model.CallStatus == null)
                 {
                     model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
+                    return model;
                 }
                 else if (model.CallStatus.Trim() == "R")
                 {
                     model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
+                    return model;
                 }
                 else if (model.ConsigneeFirm == "0")
                 {
                     model.AlertMsg = "Select Consignee from the List and then Click on Accepted/Rejected Button";
+                    return model;
                 }
                 else if (no_of_photo == 0)
                 {
                     model.AlertMsg = "Kindly upload the inspections photos and prepare the IC before updating the Call Status to Aceepted/Rejected!!!";
+                    return model;
                 }
                 else if (no_ic_count > 0)
                 {
                     model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                    return model;
                 }
                 
                     var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
