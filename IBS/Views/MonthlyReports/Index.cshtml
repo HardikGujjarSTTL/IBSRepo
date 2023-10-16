@@ -32,7 +32,9 @@
                     <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                 </div>
             </div>
-            <div class="col-md-3 mb-3" style="font-weight: bold;">
+            </div>
+            <div class="row my-0">
+            <div class="col-md-4 mb-3" style="font-weight: bold;">
                 <div class="reference">
                     <label for="Name">Status of IE</label>
                     @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's
@@ -40,21 +42,24 @@
                     @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
                 </div>
             </div>
-            <div class="col-md-3 mb-3" id="IEStatus" style="display:none;">
+            </div>
+        <div class="row">
+            <div class="col-md-4" id="IEStatus" style="display:none;">
                 <div class="reference">
                     <label for="Name">IE</label>
                     @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(ViewBag.Region) , "Value", "Text"),"--Select--")
                 </div>
             </div>
+        </div>
             <div class="row my-0">
-                <div class="col-md-3" style="margin-top: 30px;">
+                <div class="col-md-3">
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="ViewReportICStatus();">Submit</button>
                         <button type="button" class="reset-btn" onclick="ClearControlsICStatus();">Clear</button>
                     </div>
                 </div>
             </div>
-        </div>
+        
         <div class="task-inner row ReInspectionICs" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">

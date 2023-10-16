@@ -498,25 +498,25 @@ namespace IBS.Repositories
                 mail_body += $"Rejection Advice has Registered Vide Complaint No: {model.TEMP_COMPLAINT_ID}, Dated: {model.TempComplaintDt} \n Consignee: {model.Consignee} \n PO No. - {model.Contract} \n Book No -  {model.BKNo} & Set No - {model.SetNo} \n Vendor - {model.Vendor} \n Item- {model.Item} \n Rejected Qty - {model.QtyRejected} \n Rejection Memo No. {model.RejMemono} \n Reason for Rejection - {model.RejectionReason}. \n\n You are requested to send complete Inspection Case with comments for arranging JI at TOP Prioity. \n\n {wRegion}.";
             }
 
-            string sender = "";
+            //string sender = "";
             string cc = "";
 
             switch (model.Regioncode)
             {
                 case "N":
-                    sender = "nrinspn@rites.com";
+                    //sender = "nrinspn@rites.com";
                     cc = "nrinspn@rites.com;pklal@rites.com;sbu.ninsp@rites.com";
                     break;
                 case "W":
-                    sender = "wrinspn@rites.com";
+                    //sender = "wrinspn@rites.com";
                     cc = "wrinspn@rites.com;harisankarprasad@rites.com;sbu.winsp@rites.com";
                     break;
                 case "E":
-                    sender = "erinspn@rites.com";
+                    //sender = "erinspn@rites.com";
                     cc = "erinspn@rites.com;dksinha1958@hotmail.com;sbu.einsp@rites.com";
                     break;
                 case "S":
-                    sender = "srinspn@rites.com";
+                    //sender = "srinspn@rites.com";
                     cc = "srinspn@rites.com;ravis@rites.com;ravis@rites.com;sbu.sinsp@rites.com";
                     break;
                 default:

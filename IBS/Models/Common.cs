@@ -1623,6 +1623,24 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> TypeofGST()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "--Select GST--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "IN-STATE";
+            single.Value = "IN-STATE";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "OUT-STATE";
+            single.Value = "OUT-STATE";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> TestToBeConducted()
         {
@@ -2088,22 +2106,37 @@ namespace IBS.Models
             }
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
+                var query = ModelContext.T12BillPayingOfficers
+                        .Where(bpo => bpo.BpoType == "U")
+                        .GroupBy(bpo => new
+                        {
+                            RLY_CD = bpo.BpoRly.ToUpper().Trim(),
+                            RAILWAY = bpo.BpoOrgn
+                        })
+                        .Select(group => new
+                        {
+                            RLY_CD = group.Key.RLY_CD,
+                            RAILWAY = group.Key.RAILWAY
+                        })
+                        .OrderBy(result => result.RLY_CD)
+                        .ToList();
+
                 List<SelectListItem> dropList = new List<SelectListItem>();
-                dropList = (from a in ModelContext.T12BillPayingOfficers
-                            where a.BpoType == Convert.ToString(RlyNonrly)
+                dropList = (from a in query where a.RLY_CD != null
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.BpoRly),
-                           Value = Convert.ToString(a.BpoOrgn)
-                       }).OrderBy(x => x.Text).ToList();
+                           Text = Convert.ToString(a.RAILWAY),
+                           Value = Convert.ToString(a.RLY_CD)
+                       }).OrderBy(x => x.Value).ToList();
                 dropDownDTOs.AddRange(dropList);
                 SelectListItem drop = new SelectListItem();
                 drop.Text = "Other";
                 drop.Value = "0";
                 dropDownDTOs.Add(drop);
             }
-            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+            return dropDownDTOs.DistinctBy(x => x.Value).ToList();
+            //return dropDownDTOs.ToList();
         }
 
         public static List<SelectListItem> GetAgencyClientForDEOCris()
@@ -2375,7 +2408,7 @@ namespace IBS.Models
             dropList = (from v in ModelContext.T05Vendors
                         join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                         where v.VendCityCd == c.CityCd && v.VendName != null
-                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper().Substring(0, 5))
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
                         orderby v.VendName
                         select
                    new SelectListItem

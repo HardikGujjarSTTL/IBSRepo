@@ -76,7 +76,6 @@
                     @if (Model != null && Model.ReportLst != null && Model.ReportLst.Count > 0)
                     {
                         string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "";
-                        int Cnt = 0;
                         @foreach (var item in Model.ReportLst)
                         {
                             //wSelect = "/CallRegisterIB/CallStatus?CaseNo=" + @item.CaseNo + "&CallRecvDt=" + @item.CallRecvDt + "&CallSno=" + @item.CallSno;

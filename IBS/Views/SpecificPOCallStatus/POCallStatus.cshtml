@@ -28,7 +28,7 @@
             <div class="col-md-3 mb-3">
                @* <label for="PropertyId">PO Date</label>*@
                 <input class="input datepicker" id="DTPO" style="border: 1px solid #cccccc;height:42px;border-radius: 6px;" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnError1"></span>
             </div>
         </div>
        
@@ -106,6 +106,16 @@
 
     <script type="text/javascript">
         function show() {
+            $("#spnError1").html("");
+            
+            var IsValid = true;
+
+            if ($("#DTPO").val() == "") {
+                $("#spnError1").html("The Po Date field is required.");
+                IsValid = false;
+            }
+            
+            if (!IsValid) return;
             InitializeDatatable1();
             $("#hide1").css("display", "block");
             $("#hide").css("display", "none");

@@ -1,0 +1,138 @@
+﻿@model IBS.Models.BarcodeGenerate
+
+@{
+    ViewData["Title"] = "Lab Calculation";
+    string clsView = "";
+    // if (Model.LabId > 0)
+    // {
+    //     clsView = "Permission_View";
+    // }
+}
+
+@* <div class="list-inner">
+    <div class="tast-list">
+        <h2>Lab Calculation</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="BarcodeGeneration" class="formBtn viewall-btn">View List</a>
+    </div>
+</div> *@
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="BarcodeGeneration" asp-action="" data-ajax-method="post" data-ajax-complete="completed" id="frmbarcode">
+            <div class="accordion-body scroller">
+                <span class="close-button1" id="close" onclick="ClosePopup();">&times;</span>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-4">
+                        <label for="Reference">Discipline</label>
+                        @Html.DropDownListFor(model => model.Discipline, new SelectList(IBS.Models.Common.Discipline() , "Value", "Text"),"-- Select --",new { @id = "ddldisc",@onchange = "VisibleGrid()"})
+
+                    </div>
+                    <div class="col-md-3 mb-3 savenext-btn" style="margin-top:auto;">
+                        <button type="button" class="save-btn active" onclick="GridShow();">Load</button>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Type of GST</label>
+                        @Html.DropDownListFor(model => model.TypeGST, new SelectList(IBS.Models.Common.TypeofGST() , "Value", "Text"),new { @id = "ddlTGST",@onchange = "Change()"})
+                        <span class="text-danger field-validation-error" id="spnErrorGST"></span>
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <label for="Reference">SGST</label>
+                        <input type="text" class="input" asp-for="SGST" readonly="readonly">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <label for="Reference">CGST</label>
+                        <input type="text" class="input" asp-for="CGST" readonly="readonly">
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <label for="Reference">IGST</label>
+                        <input type="text" class="input" asp-for="IGST" readonly="readonly">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Total</label>
+                        <input type="text" class="input" asp-for="Total" readonly="readonly">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Tax</label>
+                        <input type="text" class="input" asp-for="Tax" readonly="readonly">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">G.Total</label>
+                        <input type="text" class="input" asp-for="GTotal" readonly="readonly">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Handling Charge</label>
+                        <input type="text" class="input" asp-for="HandlingCharge">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Extra Charge</label>
+                        <input type="text" class="input" asp-for="ExtraCharge">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">R.Total</label>
+                        <input type="text" class="input" asp-for="RTotal" readonly="readonly">
+                    </div>
+                </div>
+                <div class="savenext-btn" style="margin-left:40%;">
+                    <button type="button" class="save-btn active" onclick="calsavedata();">Calculation</button>
+                </div>
+                <section class="table-section" id="grid" style="display:none;">
+                    <div class="task-listinput">
+                        <div class="dash-table">
+                            <table id="dtcal" class="table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Test Name</th>
+                                        <th>Price</th>
+                                        <th>QTY</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <section class="table-section" id="grid2" style="display:none;">
+                    <div class="task-listinput">
+                        <div class="dash-table">
+                            <table id="dtcal2" class="table-responsive">
+                                <thead>
+                                    
+                                    <tr>
+                                        <th>Discipline Name</th>
+                                        <th>Test Name</th>
+                                        <th>Price</th>
+                                        <th>QTY</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            
+        });
+        
+    </script>
+}

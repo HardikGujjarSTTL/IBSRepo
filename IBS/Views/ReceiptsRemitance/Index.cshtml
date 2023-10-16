@@ -20,12 +20,12 @@
             <div class="col-md-2 mb-3">
                 <label for="PropertyId">From Date</label>
                 <input type="text" class="input datepicker" id="dtfrom" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
             <div class="col-md-2 mb-3">
                 <label for="PropertyId">To Date</label>
                 <input type="text" class="input datepicker" id="dtto" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
         </div>
         <div class="col-md-3" style="margin-top: 30px;">
@@ -47,6 +47,29 @@
             location.reload(true);
         }
         function ViewReport() {
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
             var BPOType = $("#ddlbpo").val();
             var AccCD = $("#ddlAccCD").val();
             var FromDate = $("#dtfrom").val();

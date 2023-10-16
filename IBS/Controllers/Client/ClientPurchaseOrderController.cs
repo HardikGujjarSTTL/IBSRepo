@@ -315,7 +315,7 @@ namespace IBS.Controllers.Client
             try
             {
                 ConsigneeModel model = new ConsigneeModel();
-                if (CaseNo != null && Consignee_CD != null)
+                if (CaseNo != null)
                 {
                     model = pIAdministratorPurchaseOrderRepository.FindConsigneeByID(CaseNo, Consignee_CD);
                 }

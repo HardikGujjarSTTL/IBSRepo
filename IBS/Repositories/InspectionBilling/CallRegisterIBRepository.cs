@@ -605,10 +605,6 @@ namespace IBS.Repositories.InspectionBilling
                         context.SaveChanges();
                         ID = obj.CaseNo;
                     }
-                    decimal wMat_value = 0;
-                    string ext_delv_dt = "";
-                    int desire_dt = 0;
-
                     GetDtList(model);
 
                 }

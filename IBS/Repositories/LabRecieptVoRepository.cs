@@ -115,9 +115,7 @@ namespace IBS.Repositories
         public string VoucherDetailsSave(LabRecieptVoucherModel model, string Region)
         {
             DTResult<LabRecieptVoucherModel> dTResult = new() { draw = 0 };
-            IQueryable<LabRecieptVoucherModel>? query = null;
             string VCHR_NO = "";
-            string CASE_NO = "";
             if (model.VCHR_NO == null)
             {
                 string vchr_dt = model.VCHR_DT.ToString() ?? string.Empty;
@@ -146,7 +144,7 @@ namespace IBS.Repositories
                   .DefaultIfEmpty(0)
                   .Max() + 1;
 
-                if (voucher1 != null)
+                if (voucher1 > 0)
                 {
                     VCHR_NO = ss + 00 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
                 }

@@ -12,7 +12,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtpylist" class="table-responsive">
+                <table id="dtpylist" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             
@@ -54,7 +54,7 @@
             $("#dtpylist").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+               // scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -124,7 +124,10 @@
                 //    { width: '150px', targets: [3, 4, 5] }, // Adjust the width and targets as needed
                 //    // ... Add more as needed
                 //],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtpylist").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 
