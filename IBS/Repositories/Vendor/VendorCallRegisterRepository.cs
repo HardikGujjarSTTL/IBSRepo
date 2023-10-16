@@ -166,6 +166,15 @@ namespace IBS.Repositories.Vendor
                     model.FinalOrStage = user.FinalOrStage;
                     model.Bpo = user.Bpo;
                     model.RecipientGstinNo = user.RecipientGstinNo;
+
+                    model.IrfcFunded = user.IrfcFunded;
+                    model.ItemRdso = user.ItemRdso;
+                    model.VendApprovalFr = user.VendApprovalFr;
+                    model.VendApprovalTo = user.VendApprovalTo;
+                    model.VendRdso = user.VendRdso;
+                    model.StaggeredDp = user.StaggeredDp;
+                    model.LotDp1 = user.LotDp1;
+                    model.LotDp2 = user.LotDp2;
                 }
 
                 if (GetView != null)
@@ -381,49 +390,78 @@ namespace IBS.Repositories.Vendor
                               where a.CaseNo == CaseNo && a.CallRecvDt == Convert.ToDateTime(CallRecvDt) && a.CallSno == Convert.ToInt16(CallSno)
                               select a.ItemSrnoPo).FirstOrDefault();
 
-            query = (from l in context.VenderCallRegisterItemView1s
-                     where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(CallRecvDt) && l.CallSno == Convert.ToInt16(CallSno)
-
+            query = (from t15 in context.T15PoDetails
+                    join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+                    join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+                    join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                    join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+                     join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+                    from bpo in bpoGroup.DefaultIfEmpty()
+                     join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+                    from city in cityGroup.DefaultIfEmpty()
+                     where t15.CaseNo == CaseNo && t18.ItemSrnoPo == ItemSrnoPo
                      select new VenderCallRegisterModel
-                     {
-                         Status = l.Status,
-                         ItemSrnoPo = l.ItemSrnoPo,
-                         ItemDescPo = l.ItemDescPo,
-                         QtyOrdered = l.QtyOrdered,
-                         CumQtyPrevOffered = l.CumQtyPrevOffered,
-                         CumQtyPrevPassed = l.CumQtyPrevPassed,
-                         QtyToInsp = l.QtyToInsp,
-                         QtyPassed = l.QtyPassed,
-                         QtyRejected = l.QtyRejected,
-                         QtyDue = l.QtyDue,
-                         Consignee = l.Consignee,
-                         DelvDate = l.DelvDate,
-                         CaseNo = CaseNo,
-                         CallRecvDt = Convert.ToDateTime(CallRecvDt),
-                         CallSno = Convert.ToInt16(CallSno)
-                     }).ToList();
+                    {
+                        Status = "Available",
+                        ItemSrnoPo = t18.ItemSrnoPo,
+                        ItemDescPo = t18.ItemDescPo,
+                        QtyOrdered = t18.QtyOrdered,
+                        CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                        CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                        QtyToInsp = t18.QtyToInsp,
+                        QtyPassed = t18.QtyPassed,
+                        QtyRejected = t18.QtyRejected,
+                        QtyDue = t18.QtyDue,
+                        Consignee = t06.ConsigneeCd + "-" +
+                                    t06.ConsigneeDesig + "/" +
+                                    t06.ConsigneeDept + "/" +
+                                    t06.ConsigneeFirm + "/" +
+                                    t06.ConsigneeAdd1 + "/" +
+                                    t03.Location + " : " + t03.City,
+                        DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+                        CaseNo = t18.CaseNo,
+                        CallRecvDt = t18.CallRecvDt,
+                        CallSno = t18.CallSno,
+                        Bpo = bpo.BpoCd + '-' +
+                                bpo.BpoName + '/' +
+                                bpo.BpoRly + '/' +
+                                bpo.BpoAdd + '/' +
+                                city.Location + '/' +
+                                city.City,
+                        ConsigneeCd = t06.ConsigneeCd
+                    }).ToList();
 
-            query.AddRange(from l in context.VenderCallRegisterItemView2s
-                           where l.CaseNo == CaseNo && l.ItemSrnoPo != ItemSrnoPo
+            //query = (from t15 in context.T15PoDetails
+            //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+            //         join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
+            //         join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+            //         where t15.CaseNo == CaseNo && t18.ItemSrnoPo == ItemSrnoPo
+            //         select new VenderCallRegisterModel
+            //         {
+            //             Status = "Available",
+            //             ItemSrnoPo = t18.ItemSrnoPo,
+            //             ItemDescPo = t18.ItemDescPo,
+            //             QtyOrdered = t18.QtyOrdered,
+            //             CumQtyPrevOffered = t18.CumQtyPrevOffered,
+            //             CumQtyPrevPassed = t18.CumQtyPrevPassed,
+            //             QtyToInsp = t18.QtyToInsp,
+            //             QtyPassed = t18.QtyPassed,
+            //             QtyRejected = t18.QtyRejected,
+            //             QtyDue = t18.QtyDue,
+            //             Consignee = t06.ConsigneeCd + "-" +
+            //                         t06.ConsigneeDesig + "/" +
+            //                         t06.ConsigneeDept + "/" +
+            //                         t06.ConsigneeFirm + "/" +
+            //                         t06.ConsigneeAdd1 + "/" +
+            //                         t03.Location + " : " + t03.City,
+            //             DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+            //             CaseNo = t18.CaseNo,
+            //             CallRecvDt = t18.CallRecvDt,
+            //             CallSno = t18.CallSno
+            //         }).ToList();
 
-                           select new VenderCallRegisterModel
-                           {
-                               Status = l.Status,
-                               ItemSrnoPo = l.ItemSrnoPo,
-                               ItemDescPo = l.ItemDescPo,
-                               QtyOrdered = l.QtyOrdered,
-                               CumQtyPrevOffered = l.CumQtyPrevOffered,
-                               CumQtyPrevPassed = l.CumQtyPrevPassed,
-                               QtyToInsp = l.QtyToInsp,
-                               QtyPassed = l.QtyPassed,
-                               QtyRejected = l.QtyRejected,
-                               QtyDue = l.QtyDue,
-                               Consignee = l.Consignee,
-                               DelvDate = l.DelvDate,
-                               CaseNo = CaseNo,
-                               CallRecvDt = Convert.ToDateTime(CallRecvDt),
-                               CallSno = Convert.ToInt16(CallSno)
-                           });
+            var result = query.ToList();
+
 
 
             dTResult.recordsTotal = query.Count();
@@ -474,6 +512,7 @@ namespace IBS.Repositories.Vendor
                          QtyDue = l.QtyDue,
                          Consignee = l.Consignee,
                          DelvDt = l.DelvDate,
+                         Bpo = l.Bpo,
                          CaseNo = CaseNo
 
                      }).ToList();
@@ -512,8 +551,6 @@ namespace IBS.Repositories.Vendor
 
         public string RegiserCallSave(VenderCallRegisterModel model)
         {
-
-
             string IE_name = null;
             int ie_officer_code = 0;
             string automaticCallMarked = null;
@@ -530,8 +567,6 @@ namespace IBS.Repositories.Vendor
                     var w_stag = "";
                     var w_stage_or_final = "";
 
-                    //var str3 = context.T17CallRegisters.Where(x => x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.RegionCode).FirstOrDefault();
-                    //CD = str3.CallSno + 1;
                     CD = Convert.ToInt32(model.CallSno);
                     if (model.ItemRdso == "Y")
                     {
@@ -572,7 +607,7 @@ namespace IBS.Repositories.Vendor
                         w_New_Vendor = "Y";
                     }
                     model.callval = FindIeCODE(model);
-
+                    model.IeCd = model.callval;
                     if (model.callval == 0)
                     {
                         //DisplayAlert("Master data not entered.So please enter master data cluster/vender/ie");
@@ -580,7 +615,6 @@ namespace IBS.Repositories.Vendor
                     else
                     {
                         var ieInfo = context.T09Ies.Where(ie => ie.IeCd == model.callval).Select(ie => new { IeName = ie.IeName, IeCoCode = ie.IeCoCd }).FirstOrDefault();
-
                         if (ieInfo != null)
                         {
                             string ieName = ieInfo.IeName;
@@ -589,7 +623,9 @@ namespace IBS.Repositories.Vendor
                             ie_officer_code = ieOfficerCode;
                             automaticCallMarked = "Y";
                         }
+                        model.IE_name = ieInfo.IeName;
                     }
+
                     string w_irfc_funded = "";
                     if (model.RlyNonrly == "R")
                     {
@@ -614,7 +650,7 @@ namespace IBS.Repositories.Vendor
                         obj.CallStatusDt = model.CallStatusDt;
                         obj.CallRemarkStatus = model.CallRemarkStatus;
                         obj.CallInstallNo = model.CallInstallNo;
-                        obj.RegionCode = model.SetRegionCode;
+                        obj.RegionCode = model.RegionCode;
                         obj.MfgCd = model.MfgCd;
                         obj.UserId = model.UserId;
                         obj.Datetime = DateTime.Now;
@@ -658,7 +694,7 @@ namespace IBS.Repositories.Vendor
                         obj.CallStatusDt = model.CallStatusDt;
                         obj.CallRemarkStatus = model.CallRemarkStatus;
                         obj.CallInstallNo = model.CallInstallNo;
-                        obj.RegionCode = model.SetRegionCode;
+                        obj.RegionCode = model.RegionCode;
                         obj.MfgCd = model.MfgCd;
                         obj.UserId = model.UserId;
                         obj.Datetime = DateTime.Now;
@@ -685,12 +721,7 @@ namespace IBS.Repositories.Vendor
                         context.SaveChanges();
                         ID = obj.CaseNo;
                     }
-                    decimal wMat_value = 0;
-                    string ext_delv_dt = "";
-                    int desire_dt = 0;
-
                     GetDtList(model);
-
                 }
                 else
                 {
@@ -743,49 +774,75 @@ namespace IBS.Repositories.Vendor
                               where a.CaseNo == model.CaseNo && a.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && a.CallSno == Convert.ToInt16(model.CallSno)
                               select a.ItemSrnoPo).FirstOrDefault();
 
-            query = (from l in context.VenderCallRegisterItemView1s
-                     where l.CaseNo == model.CaseNo && l.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && l.CallSno == Convert.ToInt16(model.CallSno)
-
+            query = (from t15 in context.T15PoDetails
+                     join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+                     join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+                     join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                     join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+                     join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+                     from bpo in bpoGroup.DefaultIfEmpty()
+                     join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+                     from city in cityGroup.DefaultIfEmpty()
+                     where t15.CaseNo == model.CaseNo && t18.ItemSrnoPo == ItemSrnoPo
                      select new VenderCallRegisterModel
                      {
-                         Status = l.Status,
-                         ItemSrnoPo = l.ItemSrnoPo,
-                         ItemDescPo = l.ItemDescPo,
-                         QtyOrdered = l.QtyOrdered,
-                         CumQtyPrevOffered = l.CumQtyPrevOffered,
-                         CumQtyPrevPassed = l.CumQtyPrevPassed,
-                         QtyToInsp = l.QtyToInsp,
-                         QtyPassed = l.QtyPassed,
-                         QtyRejected = l.QtyRejected,
-                         QtyDue = l.QtyDue,
-                         Consignee = l.Consignee,
-                         DelvDate = l.DelvDate,
-                         CaseNo = l.CaseNo,
-                         CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
-                         CallSno = Convert.ToInt16(l.CallSno)
+                         Status = "Available",
+                         ItemSrnoPo = t18.ItemSrnoPo,
+                         ItemDescPo = t18.ItemDescPo,
+                         QtyOrdered = t18.QtyOrdered,
+                         CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                         CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                         QtyToInsp = t18.QtyToInsp,
+                         QtyPassed = t18.QtyPassed,
+                         QtyRejected = t18.QtyRejected,
+                         QtyDue = t18.QtyDue,
+                         Consignee = t06.ConsigneeCd + "-" +
+                                    t06.ConsigneeDesig + "/" +
+                                    t06.ConsigneeDept + "/" +
+                                    t06.ConsigneeFirm + "/" +
+                                    t06.ConsigneeAdd1 + "/" +
+                                    t03.Location + " : " + t03.City,
+                         DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+                         CaseNo = t18.CaseNo,
+                         CallRecvDt = t18.CallRecvDt,
+                         CallSno = t18.CallSno,
+                         Bpo = bpo.BpoCd + '-' +
+                                bpo.BpoName + '/' +
+                                bpo.BpoRly + '/' +
+                                bpo.BpoAdd + '/' +
+                                city.Location + '/' +
+                                city.City,
+                         ConsigneeCd = t06.ConsigneeCd
                      }).ToList();
+            //query = (from t15 in context.T15PoDetails
+            //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+            //         join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
+            //         join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+            //         where t15.CaseNo == model.CaseNo && t18.ItemSrnoPo == ItemSrnoPo
+            //         select new VenderCallRegisterModel
+            //         {
+            //             Status = "Available",
+            //             ItemSrnoPo = t18.ItemSrnoPo,
+            //             ItemDescPo = t18.ItemDescPo,
+            //             QtyOrdered = t18.QtyOrdered,
+            //             CumQtyPrevOffered = t18.CumQtyPrevOffered,
+            //             CumQtyPrevPassed = t18.CumQtyPrevPassed,
+            //             QtyToInsp = t18.QtyToInsp,
+            //             QtyPassed = t18.QtyPassed,
+            //             QtyRejected = t18.QtyRejected,
+            //             QtyDue = t18.QtyDue,
+            //             Consignee = t06.ConsigneeCd + "-" +
+            //                         t06.ConsigneeDesig + "/" +
+            //                         t06.ConsigneeDept + "/" +
+            //                         t06.ConsigneeFirm + "/" +
+            //                         t06.ConsigneeAdd1 + "/" +
+            //                         t03.Location + " : " + t03.City,
+            //             DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+            //             CaseNo = t18.CaseNo,
+            //             CallRecvDt = t18.CallRecvDt,
+            //             CallSno = t18.CallSno
+            //         }).ToList();
 
-            query.AddRange(from l in context.VenderCallRegisterItemView2s
-                           where l.CaseNo == model.CaseNo && l.ItemSrnoPo != ItemSrnoPo
-
-                           select new VenderCallRegisterModel
-                           {
-                               Status = l.Status,
-                               ItemSrnoPo = l.ItemSrnoPo,
-                               ItemDescPo = l.ItemDescPo,
-                               QtyOrdered = l.QtyOrdered,
-                               CumQtyPrevOffered = l.CumQtyPrevOffered,
-                               CumQtyPrevPassed = l.CumQtyPrevPassed,
-                               QtyToInsp = l.QtyToInsp,
-                               QtyPassed = l.QtyPassed,
-                               QtyRejected = l.QtyRejected,
-                               QtyDue = l.QtyDue,
-                               Consignee = l.Consignee,
-                               DelvDate = l.DelvDate,
-                               CaseNo = l.CaseNo,
-                               CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
-                               CallSno = Convert.ToInt16(l.CallSno)
-                           });
             decimal wMat_value = 0;
             string ext_delv_dt = "";
             int desire_dt = 0;
@@ -1035,7 +1092,7 @@ namespace IBS.Repositories.Vendor
 
             if (region == "N")
             {
-                department1 = model.CallRemarkStatus;
+                department1 = model.DepartmentCode;
                 if (department1 == "M")
                 {
                     department1 = "M";
@@ -1051,7 +1108,7 @@ namespace IBS.Repositories.Vendor
             }
             else
             {
-                department1 = model.CallRemarkStatus;
+                department1 = model.DepartmentCode;
             }
 
             vcode = Convert.ToInt32(model.MfgCd);
@@ -1164,10 +1221,10 @@ namespace IBS.Repositories.Vendor
                                                         var altIeTwo = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeTwo).FirstOrDefault();
                                                         if (altIeTwo != null)
                                                         {
-                                                            strval = 0;
-                                                        }
-                                                        else
-                                                        {
+                                                            //    strval = 0;
+                                                            //}
+                                                            //else
+                                                            //{
                                                             int Alt_ieCode_TWO = Convert.ToInt32(altIeTwo);
                                                             DateTime startDate2 = new DateTime(2017, 1, 1);
 
@@ -1211,10 +1268,6 @@ namespace IBS.Repositories.Vendor
                                                                         {
                                                                             var altIeThree = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeThree).FirstOrDefault();
                                                                             if (altIeThree != null)
-                                                                            {
-                                                                                strval = 0;
-                                                                            }
-                                                                            else
                                                                             {
                                                                                 int Alt_ieCode_THREE = Convert.ToInt32(altIeThree);
                                                                                 DateTime startDate3 = new DateTime(2017, 1, 1);
@@ -1295,7 +1348,7 @@ namespace IBS.Repositories.Vendor
             string sms = "";
             try
             {
-                
+
                 string sender = "";
                 string wIEMobile = "", wIEName = "", wVendor = "", wCOMobile = "", wVendMobile = "", wIEMobile_for_SMS = "";
                 if (model.CaseNo.ToString().Substring(0, 1) == "N") { sender = "NR"; }
@@ -1382,19 +1435,17 @@ namespace IBS.Repositories.Vendor
             else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
             else if (Case_Region == "C") { wRegion = "Central Region"; }
 
-            var query = from t13 in context.T13PoMasters
-                        join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
-                        join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                        where t13.CaseNo == model.CaseNo
-                        select new
-                        {
-                            VEND_CD = t13.VendCd,
-                            VEND_NAME = t05.VendName,
-                            VEND_ADDRESS = t05.VendAdd2 != null ? $"{t05.VendAdd1}/{t05.VendAdd2}" : t05.VendAdd1 + "/" + t03.City,
-                            VEND_EMAIL = t05.VendEmail
-                        };
-
-            var result = query.FirstOrDefault();
+            var result = (from t13 in context.T13PoMasters
+                          join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+                          join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                          where t13.CaseNo == model.CaseNo
+                          select new
+                          {
+                              VendCd = t13.VendCd,
+                              VendName = t05.VendName,
+                              VendAdd = t05.VendAdd2 != null ? $"{t05.VendAdd1}/{t05.VendAdd2}" : t05.VendAdd1 + "/" + t03.City,
+                              VendEmail = t05.VendEmail
+                          }).FirstOrDefault();
 
             int vend_cd = 0;
             string vend_add = "";
@@ -1402,25 +1453,23 @@ namespace IBS.Repositories.Vendor
 
             if (result != null)
             {
-                vend_cd = Convert.ToInt32(result.VEND_CD);
-                vend_add = result.VEND_ADDRESS;
-                vend_email = result.VEND_EMAIL;
+                vend_cd = Convert.ToInt32(result.VendCd);
+                vend_add = result.VendAdd;
+                vend_email = result.VendEmail;
             }
 
-            var query1 = from t05 in context.T05Vendors
-                         join t17 in context.T17CallRegisters
-                         on t05.VendCd equals t17.MfgCd
-                         where t17.CaseNo == model.CaseNo &&
-                               t17.CallRecvDt == model.CallRecvDt &&
-                               t17.CallSno == model.CallSno
-                         select new
-                         {
-                             VEND_EMAIL = t05.VendEmail,
-                             MFG_CD = t17.MfgCd,
-                             DESIRE_DT = t17.DtInspDesire
-                         };
-
-            var result1 = query1.FirstOrDefault();
+            var result1 = (from t05 in context.T05Vendors
+                           join t17 in context.T17CallRegisters
+                           on t05.VendCd equals t17.MfgCd
+                           where t17.CaseNo == model.CaseNo &&
+                                 t17.CallRecvDt == model.CallRecvDt &&
+                                 t17.CallSno == model.CallSno
+                           select new
+                           {
+                               VendEmail = t05.VendEmail,
+                               MfgCd = t17.MfgCd,
+                               DtInspDesire = t17.DtInspDesire
+                           }).FirstOrDefault(); ;
 
             string manu_mail = "";
             int mfg_cd = 0;
@@ -1428,25 +1477,23 @@ namespace IBS.Repositories.Vendor
 
             if (result1 != null)
             {
-                manu_mail = result1.VEND_EMAIL;
-                mfg_cd = Convert.ToInt32(result1.MFG_CD);
-                desire_dt = Convert.ToString(result1.DESIRE_DT);
+                manu_mail = result1.VendEmail;
+                mfg_cd = Convert.ToInt32(result1.MfgCd);
+                desire_dt = Convert.ToString(result1.DtInspDesire);
 
             }
-            var query2 = from t09 in context.T09Ies
-                         join t08 in context.T08IeControllOfficers
-                         on t09.IeCoCd equals t08.CoCd
-                         where t09.IeCd == model.IeCd
-                         select new
-                         {
-                             IE_PHONE_NO = t09.IePhoneNo,
-                             CO_NAME = t08.CoName,
-                             CO_PHONE_NO = t08.CoPhoneNo,
-                             IE_NAME = t09.IeName,
-                             IE_EMAIL = t09.IeEmail
-                         };
-
-            var result2 = query2.FirstOrDefault();
+            var result2 = (from t09 in context.T09Ies
+                           join t08 in context.T08IeControllOfficers
+                           on t09.IeCoCd equals t08.CoCd
+                           where t09.IeCd == model.IeCd
+                           select new
+                           {
+                               IePhoneNo = t09.IePhoneNo,
+                               CoName = t08.CoName,
+                               CoPhoneNo = t08.CoPhoneNo,
+                               IeName = t09.IeName,
+                               IeEmail = t09.IeEmail
+                           }).FirstOrDefault();
 
             string ie_phone = "";
             string co_name = "";
@@ -1456,35 +1503,30 @@ namespace IBS.Repositories.Vendor
 
             if (result2 != null)
             {
-                ie_phone = result2.IE_PHONE_NO;
-                co_name = result2.CO_NAME;
-                co_mobile = result2.CO_PHONE_NO;
-                ie_name = result2.IE_NAME;
-                ie_email = result2.IE_EMAIL;
+                ie_phone = result2.IePhoneNo;
+                co_name = result2.CoName;
+                co_mobile = result2.CoPhoneNo;
+                ie_name = result2.IeName;
+                ie_email = result2.IeEmail;
 
                 // Use ie_phone, co_name, co_mobile, ie_name, ie_email as needed
             }
+            var subquerycount = context.T17CallRegisters.Where(entry => entry.CallRecvDt > DateTime.Parse("01/04/2017")
+                        && (entry.CallStatus == "M" || entry.CallStatus == "S")
+                        && entry.IeCd == model.IeCd).Count();
 
-            var subquery = from t17 in context.T17CallRegisters
-                           where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MM-yyyy", null) &&
-                                 (t17.CallStatus == "M" || t17.CallStatus == "S") &&
-                                 t17.IeCd == model.IeCd
-                           select t17;
-
-            var query3 = from t17 in context.T17CallRegisters
-                         where t17.CaseNo == model.CaseNo &&
-                               t17.CallRecvDt == model.CallRecvDt &&
-                               t17.CallSno == model.CallSno
-                         select new
-                         {
-                             INSP_DATE = Convert.ToDateTime(t17.DtInspDesire).AddDays(subquery.Count() / 1.5).ToString("dd/MM/yyyy")
-                         };
-
-            var result3 = query3.FirstOrDefault();
+            var result3 = (from t17 in context.T17CallRegisters
+                           where t17.CaseNo == model.CaseNo &&
+                                 t17.CallRecvDt == model.CallRecvDt &&
+                                 t17.CallSno == model.CallSno
+                           select new
+                           {
+                               DtInspDesire = Convert.ToDateTime(t17.DtInspDesire).AddDays(subquerycount / 1.5).ToString("dd/MM/yyyy")
+                           }).FirstOrDefault();
             string dateto_attend = "";
             if (result3 != null)
             {
-                dateto_attend = result3.INSP_DATE;
+                dateto_attend = result3.DtInspDesire;
             }
 
             var recordToUpdate = context.T17CallRegisters.FirstOrDefault(t17 => t17.CaseNo == model.CaseNo &&
@@ -1492,22 +1534,20 @@ namespace IBS.Repositories.Vendor
 
             if (recordToUpdate != null)
             {
-                recordToUpdate.ExpInspDt = DateTime.ParseExact(dateto_attend, "dd/MM/yyyy", null);
+                recordToUpdate.ExpInspDt = Convert.ToDateTime(dateto_attend);
                 context.SaveChanges();
             }
 
-            var query4 = from t18 in context.T18CallDetails
-                         join t15 in context.T15PoDetails on t18.CaseNo equals t15.CaseNo
-                         join t61 in context.T61ItemMasters on t15.ItemCd equals t61.ItemCd
-                         where t18.ItemSrnoPo == t15.ItemSrno && t15.CaseNo == model.CaseNo
-                         group new { t61.TimeForInsp, t61.ItemCd } by t61.ItemCd into grouped
-                         select new
-                         {
-                             ItemCd = grouped.Key,
-                             DaysToIc = grouped.Max(g => g.TimeForInsp)
-                         };
-
-            var result4 = query4.ToList();
+            var result4 = (from t18 in context.T18CallDetails
+                           join t15 in context.T15PoDetails on t18.CaseNo equals t15.CaseNo
+                           join t61 in context.T61ItemMasters on t15.ItemCd equals t61.ItemCd
+                           where t18.ItemSrnoPo == t15.ItemSrno && t15.CaseNo == model.CaseNo
+                           group new { t61.TimeForInsp, t61.ItemCd } by t61.ItemCd into grouped
+                           select new
+                           {
+                               ItemCd = grouped.Key,
+                               DaysToIc = grouped.Max(g => g.TimeForInsp)
+                           }).ToList();
 
             int days_to_ic = 0;
             string item_cd = "";
@@ -1520,7 +1560,7 @@ namespace IBS.Repositories.Vendor
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
             {
-                call_letter_dt = "NIL";
+                call_letter_dt = "NULL";
             }
             else
             {
@@ -1570,10 +1610,12 @@ namespace IBS.Repositories.Vendor
                 // Create a MailMessage object
                 MailMessage mail = new MailMessage();
                 mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
+                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
                 mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.IsBodyHtml = true;
                 mail.Body = mail_body;
 
                 // Create a SmtpClient
@@ -1601,8 +1643,10 @@ namespace IBS.Repositories.Vendor
                 MailMessage mail = new MailMessage();
                 mail.To.Add(vend_email);
                 mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
+                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
                 mail.Subject = "Your Call for Inspection By RITES";
                 mail.IsBodyHtml = true; // Set to true if the body contains HTML content
                 mail.Body = mail_body;
@@ -1646,8 +1690,10 @@ namespace IBS.Repositories.Vendor
                     mail.To.Add(manu_mail);
                 }
 
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
+                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
                 mail.Subject = "Your Call for Inspection By RITES";
                 mail.IsBodyHtml = true; // Set to true if the body contains HTML content
                 mail.Body = mail_body;
@@ -1696,12 +1742,14 @@ namespace IBS.Repositories.Vendor
                 MailMessage mail2 = new MailMessage();
 
                 mail2.To.Add(controllingEmail);
-                mail2.Bcc.Add("nrinspn@gmail.com");
+                //mail2.Bcc.Add("nrinspn@gmail.com");
+                mail2.Bcc.Add("bhavesh.rathod@silvertouch.com");
                 if (!string.IsNullOrEmpty(ie_email))
                 {
                     mail2.CC.Add(ie_email);
                 }
-                mail2.From = new MailAddress("nrinspn@gmail.com");
+                //mail2.From = new MailAddress("nrinspn@gmail.com");
+                mail2.From = new MailAddress("bhavesh.rathod@silvertouch.com");
                 mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
                 mail2.IsBodyHtml = true;
                 mail2.Body = mail_body;
@@ -1804,6 +1852,22 @@ namespace IBS.Repositories.Vendor
                 model.Source = GetPOReport.Source;
             }
 
+            List<PrintCallLetterModel> lstPrintCallLetter = new();
+            model.lstPrintCallLetter = (from l in context.ViewGetCallinspectionPrintReports
+                                        where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(CallRecvDt) && l.CallSno == Convert.ToInt32(CallSno)
+                                        select new PrintCallLetterModel
+                                        {
+                                            CaseNo = l.CaseNo,
+                                            Consignee = l.Consignee,
+                                            ItemDescPo = l.ItemDescPo,
+                                            QtyOrdered = l.QtyOrdered,
+                                            QtyToInsp = l.QtyToInsp,
+                                            CumQtyPrevOffered = l.CumQtyPrevOffered,
+                                            CumQtyPrevPassed = l.CumQtyPrevPassed,
+                                            DelvDt = l.DelvDt,
+                                            Bpo = l.Bpo,
+                                            ItemCd = l.ItemCd,
+                                        }).ToList();
 
             return model;
         }
@@ -2034,6 +2098,6 @@ namespace IBS.Repositories.Vendor
             }
             return item;
         }
-        
+
     }
 }
