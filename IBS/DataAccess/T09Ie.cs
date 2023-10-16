@@ -75,6 +75,8 @@ public partial class T09Ie
 
     public string? IeJobType { get; set; }
 
+    public int? ContAltIe { get; set; }
+
     public virtual T08IeControllOfficer? IeCoCdNavigation { get; set; }
 
     public virtual T07RitesDesig? IeDesigNavigation { get; set; }
