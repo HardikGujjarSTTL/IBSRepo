@@ -18,5 +18,7 @@ namespace IBS.Interfaces
         public DEO_CRIS_PO_MasterDetailsModel DetailsFindByID(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD);
 
         DTResult<DEO_CRIS_PO_MasterDetailsListModel> GetPOMasterDetailsList(DTParameters dtParameters);
+
+        int POMasterSubDetailsInsertUpdate(DEO_CRIS_PO_MasterDetailsModel model);
     }
 }
