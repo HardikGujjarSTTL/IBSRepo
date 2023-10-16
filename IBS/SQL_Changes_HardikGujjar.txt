@@ -4084,10 +4084,10 @@ END;
 
 =================
 
-CREATE OR REPLACE PROCEDURE SP_Get_DEOCRISPurchesOrderDetails (
-    p_Result OUT SYS_REFCURSOR,
+create or replace PROCEDURE SP_Get_DEOCRISPurchesOrderDetails (
     p_IMMS_POKEY VARCHAR2,
-    p_IMMS_RLY_CD VARCHAR2
+    p_IMMS_RLY_CD VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
 ) AS
 BEGIN
   OPEN p_Result FOR
@@ -4117,7 +4117,7 @@ BEGIN
       AND p.IMMS_RLY_CD = p_IMMS_RLY_CD
     ORDER BY p.ITEM_SRNO;
 END SP_Get_DEOCRISPurchesOrderDetails;
-/
+
 
 
 =====================
