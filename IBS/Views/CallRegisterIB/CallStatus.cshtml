@@ -280,7 +280,7 @@
                         <div class="savenext-btn" style="margin-top:30px;">
                             <button type="button" class="save-btn active" onclick="SaveImages();">Save Files</button>
                             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
-                            <button type="button" class="save-btn active" id="ViewPrintIC">View Print/IC</button>
+                            <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                         </div>
                     </div>
 
@@ -1048,6 +1048,18 @@
             };
             
             return formData;
+        }
+
+        function RedirectViewPrintIC(){
+            var CASE_NO = $('#caseno').val();
+            var CALL_RECV_DT = $('#callRecdt').val();
+            var CALL_SNO = $('#callsnos').val();
+            var CONSIGNEE_CD = $('#consigneeFirmDropdown').val();
+            var ACTIONAR = $("#ActionType").val();
+
+            let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
+            var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
+            window.location.href = url;
         }
 
     </script>
