@@ -16,47 +16,55 @@
 <div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
         <div class="accordion-body">
-            <table class="borderGrid mb-2">
-                <tr>
-                    <td>
-                        <label for="Reference">Case No. : </label>
-                    </td>
-                    <td>
-                        <label id="lblCASE_NO">@Model.CASE_NO</label>
-                    </td>
-                    <td>
-                        <label for="Reference">Call Serial No : </label>
-                    </td>
-                    <td>
-                        <label id="lblCall_SNO">@Model.Call_SNO</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Reference">Call Date : </label>
-                    </td>
-                    <td>
-                        <label id="lblCall_Recv_dt">@Model.Display_Call_Recv_dt</label>
-                    </td>
-                    <td>
-                        <label for="Reference">PO No. : </label>
-                    </td>
-                    <td>
-                        <label id="lblPONO">@Model.PO_NO</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Reference">PO Date :</label>
-                    </td>
-                    <td>
-                        <label id="lblPODT">@Model.PO_DT</label>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="row my-0 m-lg-1" style="border: 1px solid;">
-                <label for="Reference">PO AMENDMENTS</label>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="borderGrid mb-2">
+                        <tr>
+                            <td>
+                                <label for="Reference">Case No. : </label>
+                            </td>
+                            <td>
+                                <label id="lblCASE_NO">@Model.CASE_NO</label>
+                            </td>
+                            <td>
+                                <label for="Reference">Call Serial No : </label>
+                            </td>
+                            <td>
+                                <label id="lblCall_SNO">@Model.Call_SNO</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="Reference">Call Date : </label>
+                            </td>
+                            <td>
+                                <label id="lblCall_Recv_dt">@Model.Display_Call_Recv_dt</label>
+                            </td>
+                            <td>
+                                <label for="Reference">PO No. : </label>
+                            </td>
+                            <td>
+                                <label id="lblPONO">@Model.PO_NO</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="Reference">PO Date :</label>
+                            </td>
+                            <td>
+                                <label id="lblPODT">@Model.PO_DT</label>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          
+            <div class="row my-0">
+                <div class="col-lg-12">
+                <h3 class="heading3">PO AMENDMENTS</h3>
+                </div>
                 <input type="hidden" id="hdnSNo" />
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Amendments</label>
@@ -69,7 +77,7 @@
                     @*<span asp-validation-for="test" class="text-danger"></span>*@
                 </div>
                 <div class="col-md-3 mb-3">
-                    <div class="savenext-btn">
+                    <div class="savenext-btn btnAlign">
                         <button type="button" class="save-btn active" id="btnSavePOAmendment" onclick="SavePOAmendment()" data-id="">Save Ammendments</button>
                     </div>
                 </div>
