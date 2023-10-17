@@ -1,0 +1,110 @@
+﻿@model IBS.Models.DEO_CRIS_PurchesOrderModel
+@{
+    ViewData["Title"] = "VENDOR PURCHASE ORDER DETAILS LIST";
+}
+@{
+    var IMMS_POKEY = Model.IMMS_POKEY;
+    var ItemSrno = 0;
+    var IMMS_RLY_CD = Model.IMMS_RLY_CD;
+
+}
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>VENDOR PURCHASE ORDER DETAILS LIST</h2>
+        </div>
+        <div class="list-btn">
+            @*<a asp-area="" asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="PoDetailManage" asp-route-IMMS_POKEY="@IMMS_POKEY" asp-route-ITEM_SRNO="@ItemSrno" asp-route-IMMS_RLY_CD="@IMMS_RLY_CD" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New PO Master Details</a>*@
+            <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="Index" asp-route-CaseNo="@IMMS_POKEY" class="reset-btn">View List</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPOMasterDetails" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Item Sl. No.</th>
+                            <th>Item description</th>
+                            <th>Consignee</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Total Value(Inc. Taxes)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            InitializePOMasterDetailsDatatable();
+        });
+
+        function InitializePOMasterDetailsDatatable() {
+            var IMMS_POKEY = '@Model.IMMS_POKEY';
+            var IMMS_RLY_CD = '@Model.IMMS_RLY_CD';
+            $("#dtPOMasterDetails").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableForPODetails")?IMMS_POKEY=" + IMMS_POKEY,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            IMMS_POKEY: IMMS_POKEY, IMMS_RLY_CD: IMMS_RLY_CD
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "ITEM_SRNO" },
+                    { data: "ITEM_DESC" },
+                    { data: "CONSIGNEE_NAME" },
+                    { data: "QTY" },
+                    { data: "RATE" },
+                    { data: "VALUE" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var IMMS_POKEY = data.IMMS_POKEY;
+                            var ITEM_SRNO = data.ITEM_SRNO;
+                            var IMMS_RLY_CD = data.IMMS_RLY_CD;
+                            var editUrl = '@Url.Action("PoDetailManage", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + IMMS_POKEY + "&ITEM_SRNO=" + ITEM_SRNO + "&IMMS_RLY_CD=" + IMMS_RLY_CD;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            //html += '<a onclick="POMasterDetailsDelete(this.IMMS_POKEY,this.ITEM_SRNO,this.IMMS_RLY_CD); return false;" href="javascript:void(\'0\');" id=\"' + CASE_NO + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function POMasterDetailsDelete(CASE_NO, ITEM_SRNO) {
+            var url = '@Url.Action("DeletePODetails", "POMaster")?CASE_NO=' + CASE_NO + "&ITEM_SRNO=" + ITEM_SRNO;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+    </script>
+}

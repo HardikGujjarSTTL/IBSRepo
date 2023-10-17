@@ -90,12 +90,13 @@ namespace IBS.Controllers.InspectionBilling
             FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.CallRegistrationDoc = FileUploaderCOI;
 
-
-
-
-            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+            if (CaseNo != null && CallRecvDt != null)
             {
-                model = callregisterRepository.FindByManageID(CaseNo, CallRecvDt, CallSno, ActionType, GetRegionCode);
+                model = callregisterRepository.FindByManageID(CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, ActionType, Region);
+            }
+            if (model.MsgStatus != null)
+            {
+                AlertDanger(model.MsgStatus);
             }
             return View(model);
         }
@@ -119,36 +120,47 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 string i = "";
-                string msg = "Inserted Successfully.";
+                string msg = "";
+                if (model.ActionType == "A")
+                {
+                    msg = "Record Inserted Successfully.";
+                }
+                else
+                {
+                    msg = "Record Update Successfully.";
+                }
                 model.SetRegionCode = model.RegionCode;
-
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
-                    model.UserId = UserName;
-                    model.Createdby = UserName;
-                    msg = "Update Successfully.";
+                    model.UserId = UserName.Trim();
+                    model.Createdby = UserName.Trim();
                     i = callregisterRepository.RegiserCallSave(model);
                 }
-
-                if (model.e_status == 1 && model.callval != 0)
+                if (model.e_status == 1 && model.RejCanCall == null)
                 {
-                    if (model.IeCd > 0)
-                    {
-                        Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
-                        AlertDanger("SMS Send Success...");
-                    }
-
-                    string emailResult = callregisterRepository.send_Vendor_Email(model);
-                    if (emailResult == "success")
-                    {
-                        AlertDanger("Mail Send Success...");
-                    }
+                    //Bhavesh Code SMS & Mail Code comment.
+                    //if (model.IeCd > 0)
+                    //{
+                    //    Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
+                    //    AlertDanger("SMS Send Success...");
+                    //}
+                    //string emailResult = callregisterRepository.send_Vendor_Email(model);
+                    //if (emailResult == "success")
+                    //{
+                    //    AlertDanger("Mail Send Success...");
+                    //}
                 }
-
-
                 if (i != null)
                 {
-                    return Json(new { status = true, responseText = msg, Id = i });
+                    if (i == "NoFound")
+                    {
+                        return Json(new { status = true, responseText = "The Call Letter No. is already present for this Case No.", Id = i });
+                    }
+                    else
+                    {
+                        return Json(new { status = true, responseText = msg, Id = i });
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -463,7 +475,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd,string ActionType)
+        public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd, string ActionType)
         {
             VenderCallStatusModel model = new();
             #region Image Files

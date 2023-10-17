@@ -367,7 +367,81 @@ namespace IBS.Controllers
         }
 
 
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
+        public IActionResult PODetails(string IMMS_POKEY,string IMMS_RLY_CD)
+        {
+            DEO_CRIS_PurchesOrderModel model = new();
+            model = purchesorderRepository.FindByID(IMMS_POKEY, IMMS_RLY_CD);
+            return View(model);
+        }
 
+        [HttpPost]
+        public IActionResult LoadTableForPODetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<DEO_CRIS_PO_MasterDetailsListModel> dTResult = purchesorderRepository.GetPOMasterDetailsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        public IActionResult PoDetailManage(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD)
+        {
+            DEO_CRIS_PO_MasterDetailsModel model = new();
+            model = purchesorderRepository.DetailsFindByID(IMMS_POKEY, ITEM_SRNO, IMMS_RLY_CD);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "edit")]
+        public IActionResult POMasterDetailsSave(DEO_CRIS_PO_MasterDetailsModel model)
+        {
+            try
+            {
+                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
+                string msg = "PO Master Details Updated Successfully.";
+                model.Updatedby = UserId;
+                model.UserId =Convert.ToString(VendCd);
+                int i = purchesorderRepository.POMasterSubDetailsInsertUpdate(model);
+                if (i > 0)
+                {
+                    return Json(new { status = true, responseText = msg });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "POMasterDetailsSave", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetEditBillPayingOfficer(string IMMS_RLY_CD)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetEditBillPayingOfficer(IMMS_RLY_CD);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetBillPayingOfficer", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetEditConsigneeUsingConsignee(string IMMS_RLY_CD)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetEditConsigneeUsingConsignee(IMMS_RLY_CD);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetConsigneeUsingConsignee", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
 
     }
 }

@@ -24,6 +24,7 @@
                             <th>Place of Inspection</th>
                             <th>Region</th>
                             <th>Remarks</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -86,6 +87,17 @@
                     { data: "POI" },
                     { data: "REGION" },
                     { data: "REMARKS" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var ImmsPokey = data.IMMS_POKEY;
+                            var ImmsRlyCd = data.IMMS_RLY_CD;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + ImmsPokey + "&IMMS_RLY_CD=" + ImmsRlyCd;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="View"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {

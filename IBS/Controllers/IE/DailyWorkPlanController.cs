@@ -63,7 +63,7 @@ namespace IBS.Controllers.IE
                 if (model.ActionType == "S")
                 {
                     i = dailyRepository.DetailsInsertUpdate(model, Region, GetIeCd);
-                    if(i == 0)
+                    if (i == 0)
                     {
                         AlertDanger("Your Work Plan Cannot be Saved due to  one or both of the following \n1. You have selected more then 3 different vendors. \n2. You have Selected more then 6 calls of a particular vendor.");
                     }
@@ -71,7 +71,7 @@ namespace IBS.Controllers.IE
                     {
                         AlertAddSuccess("Record Added Successfully.");
                     }
-                    
+
                 }
                 else
                 {
@@ -120,6 +120,31 @@ namespace IBS.Controllers.IE
         {
             DTResult<DailyWorkPlanModel> dTResult = dailyRepository.GetLoadTableNonInspection(dtParameters, Region, GetIeCd);
             return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult ReasonSave(DateTime? NwpDt, string Reason)
+        {
+            try
+            {
+                string Dtl = "";
+                string msg = "Record Inserted Successfully.";
+                if (NwpDt != null && Reason != null)
+                {
+                    Dtl = dailyRepository.ReasonSave(NwpDt, Reason, GetIeCd, Region, UserName.Trim());
+                }
+
+                if (Dtl != "")
+                {
+                    return Json(new { status = true, responseText = msg, NwpDt = Dtl });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ReasonSave", "DailyWorkPlan", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+
         }
     }
 }

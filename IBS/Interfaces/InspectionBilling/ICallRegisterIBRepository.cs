@@ -16,7 +16,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetRegionValue(string CaseNo, string CallRecvDt, string CallSno);
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string GetRegionCode);
+        public VenderCallRegisterModel FindByManageID(string CaseNo, DateTime? CallRecvDt, int CallSno, string ActionType, string Region);
 
         DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd, string CaseNo);
 

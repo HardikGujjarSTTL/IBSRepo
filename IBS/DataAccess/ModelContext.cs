@@ -6352,7 +6352,6 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.CalTranDetailId)
                 .HasPrecision(6)
-                .ValueGeneratedNever()
                 .HasColumnName("CAL_TRAN_DETAIL_ID");
             entity.Property(e => e.CalTranHeaderId)
                 .HasPrecision(6)
@@ -6380,7 +6379,6 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.CalTranHeaderId)
                 .HasPrecision(6)
-                .ValueGeneratedNever()
                 .HasColumnName("CAL_TRAN_HEADER_ID");
             entity.Property(e => e.BarcodeId)
                 .HasMaxLength(20)
@@ -6389,6 +6387,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Cgst)
                 .HasPrecision(6)
                 .HasColumnName("CGST");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.ExtraCharge)
                 .HasPrecision(6)
                 .HasColumnName("EXTRA_CHARGE");
@@ -6401,6 +6406,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Igst)
                 .HasPrecision(6)
                 .HasColumnName("IGST");
+            entity.Property(e => e.Ipaddress)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("IPADDRESS");
             entity.Property(e => e.Rtotal)
                 .HasPrecision(6)
                 .HasColumnName("RTOTAL");
@@ -6417,6 +6426,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("TYPEOF_GST");
+            entity.Property(e => e.Userid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERID");
         });
 
         modelBuilder.Entity<Labratemaster>(entity =>
@@ -9388,6 +9401,9 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_MARKING_STOPPING_DT");
+            entity.Property(e => e.ContAltIe)
+                .HasPrecision(6)
+                .HasColumnName("CONT_ALT_IE");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
@@ -9888,58 +9904,6 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasDefaultValueSql("\"IBSDEV\".\"T101_IE_CLUSTER_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
-            entity.Property(e => e.ClusterCode)
-                .HasPrecision(6)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NULL")
-                .HasColumnName("CLUSTER_CODE");
-            entity.Property(e => e.Datetime)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NULL")
-                .HasColumnType("DATE")
-                .HasColumnName("DATETIME");
-            entity.Property(e => e.DepartmentCode)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NULL")
-                .IsFixedLength()
-                .HasColumnName("DEPARTMENT_CODE");
-            entity.Property(e => e.IeCode)
-                .HasPrecision(6)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NULL")
-                .HasColumnName("IE_CODE");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NULL")
-                .IsFixedLength()
-                .HasColumnName("USER_ID");
-        });
-
-        modelBuilder.Entity<T101IeClusterHistory>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("T101_IE_CLUSTER_HISTORY_PK");
-
-            entity.ToTable("T101_IE_CLUSTER_HISTORY");
-
-            entity.Property(e => e.Id)
-                .HasPrecision(6)
-                .HasDefaultValueSql("\"IBSDEV\".\"T101_IE_CLUSTER_HISTORY_SEQ\".\"NEXTVAL\"")
-                .HasColumnName("ID");
-            entity.Property(e => e.Actiondate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
-                .HasColumnName("ACTIONDATE");
-            entity.Property(e => e.Actiontype)
-                .HasMaxLength(2)
-                .IsUnicode(false)
-                .HasColumnName("ACTIONTYPE");
-            entity.Property(e => e.Actionuserid)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ACTIONUSERID");
             entity.Property(e => e.ClusterCode)
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
@@ -12006,7 +11970,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_STATUS_DT");
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CLUSTER_CODE");
@@ -22418,6 +22382,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,4)")
                 .HasColumnName("CUM_QTY_PREV_PASSED");
             entity.Property(e => e.DelvDate)
+                .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("DELV_DATE");
             entity.Property(e => e.ItemDescPo)
