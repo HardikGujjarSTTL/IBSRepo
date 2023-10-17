@@ -44,7 +44,7 @@
                 <label for="reference">	Select Client</label>
                 @Html.DropDownList("ddlClient", new SelectList(IBS.Models.Common.GetSector() , "Value", "Text"),"--Select--",new{@onchange="FillRailwayCode()"})
             </div>
-            <div class="col-md-3 mb-3" style="margin-top: 30px;">
+            <div class="col-md-3 mb-3 btnAlign">
                 @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode() , "Value", "Text"),"--Select--")
             </div>
         </div>
