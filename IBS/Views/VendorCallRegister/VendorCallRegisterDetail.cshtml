@@ -194,15 +194,22 @@
                 <div class="reference">
                     <label for="Name">State whether the items is on RDSO Vendor Directory</label>
                     <div class="company-checkbox">
-                        @foreach (var val in IBS.Models.Common.CommonYesNo())
+                        @*@foreach (var val in IBS.Models.Common.CommonYesNo())
                         {
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" name="ItemRdso" asp-for="ItemRdso" value="@val.Value" id="ItemRdso@(val.Value)" onchange="ononchangeItemRdso()" />
-                                    <label for="ItemRdso@(val.Value)">@val.Text</label>
-                                </div>
-                            </div>
-                        }
+                        <div class="remember">
+                        <div class="remecheckbox">
+                        <input type="radio" name="ItemRdso" asp-for="ItemRdso" value="@val.Value" id="ItemRdso@(val.Value)" onchange="ononchangeItemRdso()" />
+                        <label for="ItemRdso@(val.Value)">@val.Text</label>
+                        </div>
+                        </div>
+                        }*@
+                        <div class="remecheckbox">
+                            <input type="radio" asp-for="ItemRdso" value="Y" id="ItemRdso_Y" />
+                            <label for="ItemRdso_Y">Yes</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" asp-for="ItemRdso" value="N" id="ItemRdso_N" />
+                            <label for="ItemRdso_N">No</label>
+                        </div>
                     </div>
                     <span asp-validation-for="ItemRdso" class="text-danger"></span>
                 </div>
@@ -214,15 +221,22 @@
                     <label for="Name">If Yes, whether the vendor is RDSO Aprroved. Indicate validity of approval</label>
                     @*<input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">*@
                     <div class="company-checkbox">
-                        @foreach (var val in IBS.Models.Common.CommonYesNo())
+                        @*@foreach (var val in IBS.Models.Common.CommonYesNo())
                         {
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" name="VendRdso" asp-for="VendRdso" value="@val.Value" id="VendRdso@(val.Value)" onchange="ononchangeVendRdso()" />
-                                    <label for="VendRdso@(val.Value)">@val.Text</label>
-                                </div>
-                            </div>
-                        }
+                        <div class="remember">
+                        <div class="remecheckbox">
+                        <input type="radio" name="VendRdso" asp-for="VendRdso" value="@val.Value" id="VendRdso@(val.Value)" onchange="ononchangeVendRdso()" />
+                        <label for="VendRdso@(val.Value)">@val.Text</label>
+                        </div>
+                        </div>
+                        }*@
+                        <div class="remecheckbox">
+                            <input type="radio" asp-for="VendRdso" value="Y" id="VendRdso_Y" />
+                            <label for="VendRdso_Y">Yes</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" asp-for="VendRdso" value="N" id="VendRdso_N" />
+                            <label for="VendRdso_N">No</label>
+                        </div>
                     </div>
                     <span asp-validation-for="VendRdso" class="text-danger"></span>
                 </div>
@@ -248,15 +262,22 @@
                     <label for="Name">Does PO specified staggered DP</label>
                     @*<input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">*@
                     <div class="company-checkbox">
-                        @foreach (var val in IBS.Models.Common.CommonYesNo())
+                        @*@foreach (var val in IBS.Models.Common.CommonYesNo())
                         {
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" name="StaggeredDp" asp-for="StaggeredDp" value="@val.Value" id="StaggeredDp@(val.Value)" onchange="ononchangeStaggeredDp()" />
-                                    <label for="StaggeredDp@(val.Value)">@val.Text</label>
-                                </div>
-                            </div>
-                        }
+                        <div class="remember">
+                        <div class="remecheckbox">
+                        <input type="radio" name="StaggeredDp" asp-for="StaggeredDp" value="@val.Value" id="StaggeredDp@(val.Value)" onchange="ononchangeStaggeredDp()" />
+                        <label for="StaggeredDp@(val.Value)">@val.Text</label>
+                        </div>
+                        </div>
+                        }*@
+                        <div class="remecheckbox">
+                            <input type="radio" asp-for="StaggeredDp" value="Y" id="StaggeredDp_Y" />
+                            <label for="StaggeredDp_Y">Yes</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" asp-for="StaggeredDp" value="N" id="StaggeredDp_N" />
+                            <label for="StaggeredDp_N">No</label>
+                        </div>
                     </div>
                     <span asp-validation-for="StaggeredDp" class="text-danger"></span>
                 </div>
@@ -339,14 +360,7 @@
             </div>
             </div>*@
     </div>
-    @*<div class="row my-0">
-    <div class="col-md-12 mb-3">
-    <label for="Name">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
-    <div class="savenext-btn">
-    @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd) , "Value", "Text"),"--Select--")
-    </div>
-    </div>
-    </div>*@
+
     <div class="row my-0">
         <div class="col-md-12 mb-3">
             <div class="reference">
@@ -439,8 +453,10 @@
             <div class="company-checkbox">
                 <div class="remember">
                     <div class="remecheckbox">
-                        <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
-                        <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
+                        @*<input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                        <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>*@
+                        <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender">
+                        <label for="Name" style="color:red"> Kindly Check this option, If You are a New Vendor!!!</label>
                     </div>
                 </div>
             </div>
@@ -468,6 +484,8 @@
                             <th>Qty Rejected</th>
                             <th>Qty Due</th>
                             <th>Delivery Date</th>
+                            <th>Bill Paying Officer</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -486,18 +504,16 @@
                 <br />
                 <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan">
                 I hereby accept all the
-                <a href="\RBS\TermsandConditions.aspx"> Terms and Conditions</a>.
-                <br />
-                <br />
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active" id="btnRegiserCallSave">Register Call</button>
-                    <button type="button" class="save-btn" id="btnDelete">Delete</button>
-                    <button type="button" class="save-btn" id="btnPrint">Print Call Letter</button>
-                    <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
-                </div>
+                <a href="#lnkTerms">Terms and Conditions</a>
+
             </div>
         </div>
-
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" id="btnRegiserCallSave">Register Call</button>
+            <button type="button" class="save-btn" id="btnDelete" style="display:none;">Delete</button>
+            <button type="button" class="save-btn" id="btnPrint" style="display:none;">Print Call Letter</button>
+            <a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">Cancel</a>
+        </div>
     </div>
 
     <div class="accordion-body">
@@ -507,10 +523,14 @@
 </div>
 <div id="PopUp" class="modal" tabindex="-1" role="dialog">
 </div>
+
+<div id="TermsConditionPopUp" class="modal" tabindex="-1" role="dialog">
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
+        var PopUpMsg = "";
         $(document).ready(function () {
 
             $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
@@ -540,13 +560,74 @@
                 //InitializeDatatableA();
             }
             else if (actiontype == "M" || actiontype == "D") {
+                $("#btnDelete").show();
+                $("#btnPrint").show();
+
                 if ($("#UpdateAllowed").val() == "N") {
-                    $("#btnRegiserCallSave1").prop("disabled", true);
+                    $("#btnRegiserCallSave").prop("disabled", true);
                     $("#btnDelete").prop("disabled", true);
                 }
                 InitializeDatatableM();
             }
 
+            $("#ItemRdso_Y").change(function () {
+                if ($("#ItemRdso_Y").is(":checked")) {
+                    $("#divRDSOY").show();
+                }
+            });
+            $("#ItemRdso_N").change(function () {
+                if ($("#ItemRdso_N").is(":checked")) {
+                    $("#divRDSOY").hide();
+                    $("#VendApprovalFr").val("");
+                    $("#VendApprovalTo").val("");
+                }
+            });
+            var ItemRdso = $('input[name="ItemRdso"]:checked').val();
+            if (ItemRdso == "N") {
+                $("#divRDSOY").hide();
+                $("#VendApprovalFr").val("");
+                $("#VendApprovalTo").val("");
+            }
+            $("#VendRdso_Y").change(function () {
+                if ($("#VendRdso_Y").is(":checked")) {
+                    $("#divVendApprovalFr").show();
+                    $("#divVendApprovalTo").show();
+                }
+            });
+            $("#VendRdso_N").change(function () {
+                if ($("#VendRdso_N").is(":checked")) {
+                    $("#divVendApprovalFr").hide();
+                    $("#divVendApprovalTo").hide();
+                    $("#VendApprovalFr").val("");
+                    $("#VendApprovalTo").val("");
+                }
+            });
+            var VendRdso = $('input[name="VendRdso"]:checked').val();
+            if (VendRdso == "N") {
+                $("#divVendApprovalFr").hide();
+                $("#divVendApprovalTo").hide();
+                $("#VendApprovalFr").val("");
+                $("#VendApprovalTo").val("");
+            }
+
+            $("#StaggeredDp_Y").change(function () {
+                if ($("#StaggeredDp_Y").is(":checked")) {
+                    $("#divDPDetails").show();
+                }
+            });
+            $("#StaggeredDp_N").change(function () {
+                if ($("#StaggeredDp_N").is(":checked")) {
+                    $("#divDPDetails").hide();
+                    $("#LotDp1").val("");
+                    $("#LotDp2").val("");
+                }
+            });
+            var StaggeredDp = $('input[name="StaggeredDp"]:checked').val();
+            if (StaggeredDp == "N") {
+                $("#divDPDetails").hide();
+                $("#LotDp1").val("");
+                $("#LotDp2").val("");
+            }
         });
 
         function DateFormate() {
@@ -576,7 +657,6 @@
         };
 
         function InitializeDatatableM() {
-            debugger
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
@@ -642,8 +722,9 @@
                     { data: "QtyPassed" },
                     { data: "QtyRejected" },
                     { data: "QtyDue" },
+                    //{ data: "DelvDate" },
                     {
-                        data: "DelvDate",
+                        data: "DelvDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
                                 return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
@@ -651,7 +732,7 @@
                             return data;
                         }
                     },
-
+                    { data: "Bpo" },
 
                 ],
                 "order": [[0, "asc"]]
@@ -727,7 +808,7 @@
                             return data;
                         }
                     },
-
+                    { data: "Bpo" },
 
 
                 ],
@@ -814,43 +895,43 @@
             //});
         }
 
-        function ononchangeItemRdso() {
-            var ItemRdso = $('input:radio[name=ItemRdso]:checked').val();
-            if (ItemRdso == 'Y') {
-                $("#divRDSOY").show();
-            }
-            else {
-                $("#divRDSOY").hide();
-                $("#VendApprovalFr").val("");
-                $("#VendApprovalTo").val("");
-            }
-        }
+        //function ononchangeItemRdso() {
+        //    var ItemRdso = $('input:radio[name=ItemRdso]:checked').val();
+        //    if (ItemRdso == 'Y') {
+        //        $("#divRDSOY").show();
+        //    }
+        //    else {
+        //        $("#divRDSOY").hide();
+        //        $("#VendApprovalFr").val("");
+        //        $("#VendApprovalTo").val("");
+        //    }
+        //}
 
-        function ononchangeVendRdso() {
-            var VendRdso = $('input:radio[name=VendRdso]:checked').val();
-            if (VendRdso == 'Y') {
-                $("#divVendApprovalFr").show();
-                $("#divVendApprovalTo").show();
-            }
-            else {
-                $("#divVendApprovalFr").hide();
-                $("#divVendApprovalTo").hide();
-                $("#VendApprovalFr").val("");
-                $("#VendApprovalTo").val("");
-            }
-        }
+        //function ononchangeVendRdso() {
+        //    var VendRdso = $('input:radio[name=VendRdso]:checked').val();
+        //    if (VendRdso == 'Y') {
+        //        $("#divVendApprovalFr").show();
+        //        $("#divVendApprovalTo").show();
+        //    }
+        //    else {
+        //        $("#divVendApprovalFr").hide();
+        //        $("#divVendApprovalTo").hide();
+        //        $("#VendApprovalFr").val("");
+        //        $("#VendApprovalTo").val("");
+        //    }
+        //}
 
-        function ononchangeStaggeredDp() {
-            var StaggeredDp = $('input:radio[name=StaggeredDp]:checked').val();
-            if (StaggeredDp == 'Y') {
-                $("#divDPDetails").show();
-            }
-            else {
-                $("#divDPDetails").hide();
-                $("#LotDp1").val("");
-                $("#LotDp2").val("");
-            }
-        }
+        //function ononchangeStaggeredDp() {
+        //    var StaggeredDp = $('input:radio[name=StaggeredDp]:checked').val();
+        //    if (StaggeredDp == 'Y') {
+        //        $("#divDPDetails").show();
+        //    }
+        //    else {
+        //        $("#divDPDetails").hide();
+        //        $("#LotDp1").val("");
+        //        $("#LotDp2").val("");
+        //    }
+        //}
 
         $("#SearchDetailsM").click(function () {
             FillVendorClick();
@@ -979,7 +1060,6 @@
         });
 
         $("#btnRegiserCallSave").click(function () {
-            debugger
             $('select').prop('disabled', false);
             var IrfcFunded = $('input:radio[name=IrfcFunded]:checked').val();
             if ($("#MfgCd").is(":hidden")) {
@@ -1024,11 +1104,12 @@
                                 $("#MfgCd").prop("disabled", "");
 
                                 var formData = $("#frmDetails").serialize();
-                                alert(formData);
+
                                 $.post("@Url.Action("DetailsSave", "VendorCallRegister")", formData, function (response) {
                                     if (response.status) {
-                                        ShowHideMsgNew(response.status, response.responseText);
-                                        PopUp(CaseNo);
+                                        //ShowHideMsgNew(response.status, response.responseText);
+                                        PopUpMsg = response.responseText;
+                                        PopUp();
                                     }
                                     else {
                                         ShowHideMsgNew(response.status, response.responseText);
@@ -1042,9 +1123,9 @@
             return false;
         });
 
-        function PopUp(CaseNo) {
+        function PopUp() {
             $.ajax({
-                url: '@Url.Action("PopUp", "VendorCallRegister")?CaseNo=' + CaseNo,
+                url: '@Url.Action("PopUp", "VendorCallRegister")',
                 type: 'GET',
                 cache: false,
                 processData: false,
@@ -1053,6 +1134,7 @@
                 if (response != null) {
                     $("#PopUp").html("");
                     $("#PopUp").html(response);
+                    $("#spnPopUpMsg").html(PopUpMsg);
                     $("#PopUp").modal('show');
                 }
             });
@@ -1156,6 +1238,31 @@
                     }
                 }
             });
+        }
+
+        function BtnTermsCondition() {
+            $.ajax({
+                url: '@Url.Action("TermsCondition", "VendorCallRegister")',
+                type: 'GET',
+                success: function (result) {
+                    $("#TermsConditionPopUp").html("");
+                    $("#TermsConditionPopUp").html(result);
+                    $("#TermsConditionPopUp").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+
+        }
+
+        $('a[href="#lnkTerms"]').click(function (e) {
+            e.preventDefault();
+            BtnTermsCondition();
+        });
+
+        function TermsOk() {
+            $("#TermsConditionPopUp").modal('hide');
         }
     </script>
 }

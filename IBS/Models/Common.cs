@@ -2091,22 +2091,37 @@ namespace IBS.Models
             }
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
+                var query = ModelContext.T12BillPayingOfficers
+                        .Where(bpo => bpo.BpoType == "U")
+                        .GroupBy(bpo => new
+                        {
+                            RLY_CD = bpo.BpoRly.ToUpper().Trim(),
+                            RAILWAY = bpo.BpoOrgn
+                        })
+                        .Select(group => new
+                        {
+                            RLY_CD = group.Key.RLY_CD,
+                            RAILWAY = group.Key.RAILWAY
+                        })
+                        .OrderBy(result => result.RLY_CD)
+                        .ToList();
+
                 List<SelectListItem> dropList = new List<SelectListItem>();
-                dropList = (from a in ModelContext.T12BillPayingOfficers
-                            where a.BpoType == Convert.ToString(RlyNonrly)
+                dropList = (from a in query where a.RLY_CD != null
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.BpoRly),
-                           Value = Convert.ToString(a.BpoOrgn)
-                       }).OrderBy(x => x.Text).ToList();
+                           Text = Convert.ToString(a.RAILWAY),
+                           Value = Convert.ToString(a.RLY_CD)
+                       }).OrderBy(x => x.Value).ToList();
                 dropDownDTOs.AddRange(dropList);
                 SelectListItem drop = new SelectListItem();
                 drop.Text = "Other";
                 drop.Value = "0";
                 dropDownDTOs.Add(drop);
             }
-            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+            return dropDownDTOs.DistinctBy(x => x.Value).ToList();
+            //return dropDownDTOs.ToList();
         }
 
         public static List<SelectListItem> GetAgencyClientForDEOCris()
@@ -2378,7 +2393,7 @@ namespace IBS.Models
             dropList = (from v in ModelContext.T05Vendors
                         join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                         where v.VendCityCd == c.CityCd && v.VendName != null
-                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper().Substring(0, 5))
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
                         orderby v.VendName
                         select
                    new SelectListItem
@@ -3011,6 +3026,32 @@ namespace IBS.Models
             return objdata;
         }
 
+        public static List<SelectListItem> GetEditBillPayingOfficer(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            var query = (from bpo in context.T12BillPayingOfficers
+                        join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                        where bpo.BpoType == "R" && bpo.BpoRly.Trim().ToUpper() == RLY_CD
+                         orderby bpo.BpoName
+                        select new
+                        {
+                            BPO_CD = bpo.BpoCd,
+                            BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
+                                (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                (city.Location != null ? city.City + "/" + city.Location : city.City)
+                        }).ToList();
+
+            List<SelectListItem> objdata = (from a in query
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.BPO_NAME,
+                                           Value = a.BPO_CD
+                                       }).ToList();
+            return objdata;
+        }
+
         public static List<SelectListItem> GetIeCity(int IeCityId)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -3089,6 +3130,44 @@ namespace IBS.Models
                       {
                           Text = a.ConsigneeCd + "-" + a.Consignee,
                           Value = Convert.ToString(a.ConsigneeCd)
+                      }).ToList();
+            }
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetEditConsigneeUsingConsignee(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (RLY_CD != null)
+            {
+                var query = from consignee in context.T06Consignees
+                            join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                            where consignee.ConsigneeType == "R" && consignee.ConsigneeFirm.Trim().ToUpper() == RLY_CD.Trim().ToUpper()
+                            orderby
+                                (consignee.ConsigneeDesig ?? "") + "/" +
+                                (consignee.ConsigneeDept ?? "") + "/" +
+                                (consignee.ConsigneeFirm ?? "") + "/" +
+                                (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                (city.Location ?? city.City)
+                            select new
+                            {
+                                CONSIGNEE_CD = consignee.ConsigneeCd,
+                                CONSIGNEE_NAME =
+                                    consignee.ConsigneeCd + "-" +
+                                    (consignee.ConsigneeDesig ?? "") + "/" +
+                                    (consignee.ConsigneeDept ?? "") + "/" +
+                                    (consignee.ConsigneeFirm ?? "") + "/" +
+                                    (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                    (city.Location != null ? city.Location + " : " + city.City : city.City)
+                            };
+                objdata = (from a in query
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.CONSIGNEE_NAME,
+                          Value = Convert.ToString(a.CONSIGNEE_CD)
                       }).ToList();
             }
             return objdata;

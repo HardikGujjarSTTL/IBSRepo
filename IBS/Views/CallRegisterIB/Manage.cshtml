@@ -12,7 +12,7 @@
             </div>
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="CallRecvDt" />
-            <input type="hidden" asp-for="CallSno" />
+            @*<input type="hidden" asp-for="CallSno" />*@
             <input type="hidden" asp-for="ActionType" />
             <input type="hidden" asp-for="FOS" />
             <input type="hidden" asp-for="RegionCode" />
@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Call Date : </label>
-                    <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
                     @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="CallRecvDt" class="text-danger"></span>
                 </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="PoDt">Purchase Order Date : </label>
-                    <input type="text" class="input" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
                     @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
@@ -75,53 +75,30 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="RegionCode">Region : </label>
-                    @if (Model.RegionCode == "N")
-                    {
-                        <span style="color:orangered">Norther</span>
-                    }
-                    @if (Model.RegionCode == "S")
-                    {
-                        <span style="color:orangered">Southern</span>
-                    }
-                    @if (Model.RegionCode == "W")
-                    {
-                        <span style="color:orangered">Western</span>
-                    }
-                    @if (Model.RegionCode == "E")
-                    {
-                        <span style="color:orangered">Eastern</span>
-                    }
-                    @if (Model.RegionCode == "C")
-                    {
-                        <span style="color:orangered">Central</span>
-                    }
-                    @if (Model.RegionCode == "Q")
-                    {
-                        <span style="color:orangered">CO QA Division</span>
-                    }
-                    <span asp-validation-for="RegionCode" class="text-danger"></span>
+                    <input type="text" class="input" asp-for="Region" style="color:orangered" readonly="readonly">
+                    <span asp-validation-for="Region" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Date of Mark of call to IE</label>
-                        <input type="text" class="input" asp-for="CallMarkDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallMarkDt" placeholder="DD/MM/YYYY">
                         <span asp-validation-for="CallMarkDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Call Status date</label>
-                        <input type="text" class="input" asp-for="CallStatusDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallStatusDt">
                         <span asp-validation-for="CallStatusDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked</label>
-                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="ClusterCode" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="IeCd" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -129,7 +106,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="DtInspDesire">Expected Date of Inspection/Material Readiness Date.</label>
-                    <input type="text" class="input" asp-for="DtInspDesire" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="DtInspDesire" readonly="readonly">
                     <span asp-validation-for="DtInspDesire" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -142,7 +119,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="CallLetterDt">
                         <label for="CallLetterDt">Call Letter Date (DD/MM/YYYY)</label>
-                        <input type="text" class="input" asp-for="CallLetterDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallLetterDt" placeholder="DD/MM/YYYY">
                         <span asp-validation-for="CallLetterDt" class="text-danger"></span>
                     </div>
                 </div>
@@ -159,7 +136,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="CallInstallNo">Call Install No.</label>
-                        <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                        <input type="text" class="input" asp-for="CallInstallNo">
                         <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                     </div>
                 </div>
@@ -176,11 +153,16 @@
                         <div class="company-checkbox">
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" id="huey" name="drone" checked disabled="disabled">
+                                    @*<input type="radio" id="huey" name="drone" checked disabled="disabled">
                                     <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
 
                                     <input type="radio" id="dewey" name="drone" disabled="disabled">
-                                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
+                                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>*@
+                                    <input type="radio" asp-for="CallStage" value="F" id="CallStage_F" checked />
+                                    <label for="CallStage_F">Final</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" asp-for="CallStage" value="S" id="CallStage_S" />
+                                    <label for="CallStage_S">Stage</label>
                                 </div>
                             </div>
                         </div>
@@ -297,7 +279,7 @@
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan">
+                    <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
                     <label for="Name" style="color:orangered">Call for Billing of Cancellation/Rejection Charges!!!</label>
                     <br />
                 </div>
@@ -333,6 +315,11 @@
     <script>
         $(document).ready(function () {
             debugger
+            $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#PoDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#CallStatusDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
             $("#MfgCd").prop("disabled", "disabled");
             if ($("#RlyNonrly").val() == "R") {
                 $("#dvIrfcFunded").show();
@@ -514,21 +501,28 @@
             const actiontype = urlParams.get('ActionType');
             $("#ActionType").val(actiontype);
 
-            if ($("#MfgCd").is(":hidden")) {
-                alert("Please select Manufacturer first and then save it");
+            if ($("#IeCd").val() == "") {
+                ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
-            else if (!$("#CHKRejCan").prop("checked")) {
-                alert("Kindly [Select or Check] the declaration before you click on Register Call button.");
+            else if ($("#CallLetterNo").val() == "") {
+                ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
+            }
+            else if ($("#MfgCd").is(":hidden")) {
+                ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
             else if ($("#CallRemarkStatus").val() == "") {
-                alert("Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
+                ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }
-            else if ($("#RegionCode").val() == "R") {
-                alert("Select The project is IRFC Funded [Yes/No] !!!");
+            else if ($("#IrfcFunded").val() == "") {
+                if ($("#RlyNonrly").val() == "R") {
+                    ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
+                }
             }
+            else if ($("#MfgCd").val() == "") {
+                ShowHideMsgNew(false, "Please add Name of Manufacturer code.");
+            }
+
             else {
-
-
                 event.preventDefault();
                 $("#MfgCd").prop("disabled", "");
 
@@ -536,12 +530,14 @@
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
                     if (response.status) {
+                        $("#btnCDetails").show();
                     }
                 });
                 var UpdateAllowed = $("#UpdateAllowed").val();
                 if (UpdateAllowed == "N") {
                     $("#btnRegiserCallSave").hide();
                     $("#btnDelete").hide();
+
                 }
                 else {
                     $("#btnRegiserCallSave").show();
@@ -571,10 +567,12 @@
             var cstatus = urlParams.get('cstatus');
             var status = "";
             debugger
-            //if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
-            if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
+            if ($('#btnRegisterCallSave').is(':hidden') || $('#btnDelete').is(':hidden')) {
                 status = "M";
             }
+            //if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
+            //    status = "M";
+            //}
             else {
                 status = "N";
             }

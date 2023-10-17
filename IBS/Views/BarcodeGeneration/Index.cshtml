@@ -113,7 +113,7 @@
 
         
         $('#dtbarcode').on('click', 'td a', function (e) {
-            
+           
             e.preventDefault(); 
             var qty = $(this).closest('td').find('input[name="qty"]').val();
             var Id = $(this).attr('href').split('Barcode=')[1]; 

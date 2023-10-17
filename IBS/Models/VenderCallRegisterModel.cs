@@ -136,7 +136,7 @@ namespace IBS.Models
 
         public string? LocalOrOuts { get; set; }
 
-        public byte? ClusterCode { get; set; }
+        public int? ClusterCode { get; set; }
 
         public virtual T09Ie? IeCdNavigation { get; set; }
 
@@ -261,6 +261,8 @@ namespace IBS.Models
 
         public string MsgStatus { get; set; }
 
+        public string CHKRejCan { get; set; }
+
         public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
 
     }
@@ -359,7 +361,45 @@ namespace IBS.Models
 
         public string? VendPOEmail { get; set; }
 
+        public List<PrintCallLetterModel> lstPrintCallLetter { get; set; }
+    }
 
+
+    public class PrintCallLetterModel
+    {
+        public string CaseNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public int? CallSno { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        public decimal? QtyOrdered { get; set; }
+
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? QtyPassed { get; set; }
+
+        public decimal? QtyRejected { get; set; }
+
+        public decimal? QtyDue { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? DelvDt { get; set; }
+
+        public string? Bpo { get; set; }
+
+        public string? ItemCd { get; set; }
     }
 
     public class VenderCallCancellationModel

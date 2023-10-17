@@ -11,6 +11,8 @@
     </div>
     <div class="accordion-body">
         <input type="hidden" asp-for="ReasonDt" />
+        <input type="hidden" asp-for="NwpDt" />
+        <input type="hidden" asp-for="Display_NwpDt" />
         <input type="hidden" id="checkedWork" name="checkedWork" />
         <input type="hidden" id="ActionType" asp-for="ActionType" />
 
@@ -20,14 +22,15 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         @*<label for="Reference">Reason for Not Entering WorkPlan of Date: <strong><span id="RDt" name="RDt" runat="server"></span></strong></label>*@
-                        <label for="Reference">
+                        <label for="Reason">
                             Reason for Not Entering WorkPlan of Date:
                             <strong>
-                                <span id="RDt" name="RDt" runat="server">@Convert.ToDateTime(@Model.NwpDt).ToString("dd/MM/yyyy")</span>
+                                @*<span id="NwpDt" runat="server">@Convert.ToDateTime(@Model.NwpDt).ToString("dd/MM/yyyy")</span>*@
+                                <span id="spnNwpDt"></span>
                             </strong>
                         </label>
                         <textarea rows="4" asp-for="Reason" style="text-transform: uppercase;"></textarea>
-                        <span asp-validation-for="Reason" class="text-danger"></span>
+                        <span class="text-danger" id="spnErrorReason"></span>
                     </div>
                 </div>
             }
@@ -52,25 +55,38 @@
                 </div>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <label for="InspWorkType">Inspection Work Type : </label>
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="InspWorkType_Y" asp-for="InspWorkType" name="InspWorkType" value="Y">
-                                <label for="InspWorkType_Y">Inspection Work</label>
+            @if (Model.errcode == 1)
+            {
+                <div class="col-md-4 mb-3" style="margin-top: 30px;">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="ReasonSubmit();">Submit</button>
+                        <button type="button" class="reset-btn" onclick="ReasonClear();">Clear</button>
+                    </div>
+                </div>
+            }
+
+            @if (Model.errcode != 1)
+            {
+                <div class="col-md-4 mb-3">
+                    <label for="InspWorkType">Inspection Work Type : </label>
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="InspWorkType_Y" asp-for="InspWorkType" name="InspWorkType" value="Y">
+                                    <label for="InspWorkType_Y">Inspection Work</label>
+                                </div>
                             </div>
-                        </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="InspWorkType_N" asp-for="InspWorkType" name="InspWorkType" value="N">
-                                <label for="InspWorkType_N">Non Inspection Work</label>
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="InspWorkType_N" asp-for="InspWorkType" name="InspWorkType" value="N">
+                                    <label for="InspWorkType_N">Non Inspection Work</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
     <section class="table-section secInspectionWork" style="display:none;">
@@ -199,6 +215,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+
             $("#FromDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
 
             $('input[name="InspWorkType"]').on('change', function () {
@@ -232,8 +250,8 @@
                     InitializeDatatableNonInspection();
                 }
             });
-
-
+            var NwpDt = $("#Display_NwpDt").val();
+            $("#spnNwpDt").html(NwpDt);
 
         });
 
@@ -551,5 +569,34 @@
             });
         }
 
+        function ReasonSubmit() {
+            $("#spnErrorReason").html("");
+            var IsValid = true;
+            if ($("#Reason").val() == "") {
+                $("#spnErrorReason").html("Please add Reason for Not Entering WorkPlan.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            var NwpDt = $("#NwpDt").val();
+            var Reason = $("#Reason").val();
+            $.post("@Url.Action("ReasonSave", "DailyWorkPlan")", { NwpDt: NwpDt, Reason: Reason }, function (response) {
+                if (response.status) {
+                    if (response.NwpDt != "") {
+                        debugger
+                        $("#spnNwpDt").html(response.NwpDt);
+                        $("#NwpDt").val(response.NwpDt);
+                        ReasonClear();
+                        ShowHideMsgNew(response.status, response.responseText);
+                    }
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function ReasonClear() {
+            $("#Reason").val("");
+        }
     </script>
     }

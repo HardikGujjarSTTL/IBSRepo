@@ -9,6 +9,13 @@
     // }
 }
 <style>
+    .dataTables_paginate {
+        display: none;
+    }
+
+    .dataTables_length {
+        display: none;
+    }
 
     #popup {
         position: fixed;
@@ -45,7 +52,7 @@
 
     .close-button {
         position: absolute;
-        right: 13%;
+        right: 14%;
         background: none;
         border: none;
         cursor: pointer;
@@ -157,7 +164,7 @@
 </section>
 <div id="popup" style="display: none;">
 
-    <section class="table-section" style="width:75%;height:78%;margin-top:auto;">
+    <section class="table-section" style="width:75%;height:70%;margin-top:7%;overflow: auto;">
         <span class="close-button" id="close" onclick="ClosePopup();">&times;</span>
         <div class="task-listinput">
             <div class="dash-table">
@@ -194,9 +201,21 @@
     <script type="text/javascript">
 
         $(function () {
-            
+           
         });
+        
+        function updateRTotal() {
+           
+            // var handlingCharge = document.getElementById('HandlingCharge').value.trim(); // Remove leading/trailing spaces
+            // var extraCharge = parseFloat(document.getElementById('ExtraCharge').value) || 0;
 
+            // if (handlingCharge === "") {
+            //     document.getElementById('RTotal').value = 0;
+            // } else {
+            //     document.getElementById('RTotal').value = parseFloat(handlingCharge) + extraCharge;
+            // }
+        }
+        
         function InitializeDatatableShow() {
             var CaseNo = $("#CASE_NO").val();
             $("#dtshow").DataTable({
@@ -208,7 +227,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,
-                searching: true,
+                searching: false,
                 ajax: {
                     url: "@Url.Action("CaseNoSearch")",
                     type: "POST",
@@ -326,7 +345,7 @@
                 $("#SGST").val("9");
                 $("#CGST").val("9");
                 $("#IGST").val("18");
-                
+
                 var originalAmount = $("#Total").val();
                 var gstRate = $("#IGST").val();
                 if (originalAmount != null && originalAmount != "") {
@@ -344,7 +363,7 @@
                 $("#SGST").val("");
                 $("#CGST").val("");
                 $("#IGST").val("");
-                
+
             }
         }
         function GridShow() {
@@ -395,7 +414,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            
+
                             return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '">';
                         }
                     },
@@ -424,7 +443,7 @@
             // });
 
             $("#dtcal").on("change", ".row-checkbox", function () {
-                
+
                 var checkbox = $(this);
                 var row = checkbox.closest("tr");
                 var qtyInput = checkbox.closest('tr').find('input[name="qty"]');
@@ -437,7 +456,7 @@
                     qtytotal.val("");
                 }
                 var rowData = dataTable.row(row).data();
-              
+
                 if (rowData) {
                     var testName = rowData.TEST_NAME;
                     var DISCIPLINE_ID = rowData.DISCIPLINE_ID;
@@ -451,13 +470,13 @@
                     else if (DISCIPLINE_ID == "3") {
                         DisciplineName = "Metal";
                     }
-                     else if (DISCIPLINE_ID == "4") {
+                    else if (DISCIPLINE_ID == "4") {
                         DisciplineName = "Mechanical";
                     }
-                     else if (DISCIPLINE_ID == "5") {
+                    else if (DISCIPLINE_ID == "5") {
                         DisciplineName = "Metalographic";
                     }
-                     else if (DISCIPLINE_ID == "6") {
+                    else if (DISCIPLINE_ID == "6") {
                         DisciplineName = "Leather";
                     }
                     else if (DISCIPLINE_ID == "7") {
@@ -466,6 +485,7 @@
                     else if (DISCIPLINE_ID == "8") {
                         DisciplineName = "Other";
                     }
+
                     if (checkbox.is(":checked")) {
                         var price = rowData.PRICE;
                         var qtyTextbox = row.find('input[name="qty"]');
@@ -479,16 +499,16 @@
 
                         if (!testNameExists) {
 
-                            destinationTable.row.add([DisciplineName,testName, price, qtyValue, totalValue, DISCIPLINE_ID]).draw(false);
-                        
+                            destinationTable.row.add([DisciplineName, testName, price, qtyValue, totalValue, DISCIPLINE_ID]).draw(false);
+
                             var sumTotal = 0;
                             destinationTable.rows().eq(0).each(function (index) {
                                 var rowData = destinationTable.row(index).data();
-                                var totalValue = rowData[4]; 
+                                var totalValue = rowData[4];
                                 if (!isNaN(totalValue)) {
                                     sumTotal += parseFloat(totalValue);
                                     $("#Total").val(sumTotal);
-                                    
+
                                     var originalAmount = $("#Total").val();
                                     var gstRate = $("#IGST").val();
                                     if (gstRate != null && gstRate != "") {
@@ -503,23 +523,24 @@
                                     }
                                 }
                             });
-                            
+
                         }
                     } else {
 
                         destinationTable.rows().eq(0).each(function (index) {
+
                             var row = destinationTable.row(index);
                             var rowData = row.data();
-                            if (rowData[0] === testName) {
+                            if (rowData[1] === testName) {
                                 row.remove().draw(false);
-                                return false; 
+                                return false;
                             }
-                            
+
                         });
                         var sumTotal = 0;
                         destinationTable.rows().eq(0).each(function (index) {
                             var rowData = destinationTable.row(index).data();
-                            var totalValue = rowData[3]; 
+                            var totalValue = rowData[3];
                             if (!isNaN(totalValue)) {
                                 sumTotal += parseFloat(totalValue);
                             }
@@ -545,17 +566,17 @@
             });
         }
         function calsavedata() {
-          
+
             $("#spnErrorGST").html("");
-          
+
             var IsValid = true;
             if ($("#ddlTGST").val() == "0") {
                 $("#spnErrorGST").html("Please Select GST Type");
                 IsValid = false;
             }
-           
+
             if (!IsValid) return;
-           
+
             var savedData = [];
             var names = "";
             var amounts = "";
@@ -566,7 +587,7 @@
             var tableData = destinationTable.rows().data().toArray();
 
             $.each(tableData, function (index, row) {
-                names += row[1] + ","; 
+                names += row[1] + ",";
                 amounts += row[2] + ",";
                 quantities += row[3] + ",";
                 subtotals += row[4] + ",";
@@ -581,8 +602,8 @@
                 alert('Please select atleast record for Discipline!!!')
                 return false;
             }
-           // savedData = destinationTable.rows().data().toArray();
-            
+            // savedData = destinationTable.rows().data().toArray();
+
             // var BarCodeGenerate = {
             //     TypeGST: $("#ddlTGST").val(),
             //     SGST: $("#SGST").val(),
@@ -596,8 +617,11 @@
             //     RTotal: $("#RTotal").val(),
             //     Caldata: savedData
             // };
-            
-            
+            var hc = $("#HandlingCharge").val();
+            var ec = $("#ExtraCharge").val();
+            var gtotal = $("#GTotal").val();
+            var sum = (parseInt(hc) || 0) + (parseInt(ec) || 0) + (parseInt(gtotal) || 0);
+           
             var formData = new FormData();
             formData.append("TypeGST", $("#ddlTGST").val());
             formData.append("SGST", $("#SGST").val());
@@ -608,7 +632,7 @@
             formData.append("GTotal", $("#GTotal").val());
             formData.append("HandlingCharge", $("#HandlingCharge").val());
             formData.append("ExtraCharge", $("#ExtraCharge").val());
-            formData.append("RTotal", $("#RTotal").val());            
+            formData.append("RTotal", sum);
             formData.append("Names", names);
             formData.append("Amounts", amounts);
             formData.append("Quantities", quantities);
@@ -624,10 +648,10 @@
                 //data: JSON.stringify(BarCodeGenerate),
                 data: formData,
                 success: function (response) {
-                   
+
                     if (response.status) {
                         $("#BARCODE").val(response.BarcodeGenerate.BARCODE);
-                        $("#TotalRate").val(response.BarcodeGenerate.GTotal);
+                        $("#TotalRate").val(response.BarcodeGenerate.RTotal);
                         $("#GSTAmount").val(response.BarcodeGenerate.Tax);
                         ShowHideMsg("success", response.responseText);
                         $("#popup2").fadeOut();
@@ -637,8 +661,8 @@
                     }
                 }
             });
-            
-        }
 
+        }
+        
     </script>
 }
