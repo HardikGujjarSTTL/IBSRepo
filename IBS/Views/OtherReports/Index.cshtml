@@ -330,15 +330,13 @@
                                 <label for="allregion">For All Region</label>
                             </div>
                         </div>
-                        <div>
+                        <div class="mrgL10">
                             @Html.DropDownList("StatusOffer", new SelectList(IBS.Models.Common.StatusOffer() , "Value", "Text"),"--Select--", new { id = "StatusOffer" })
                         </div>
-                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                        <div>
+                        <div class="mrgL10">
                             @Html.DropDownList("Region", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--", new { id = "Region" })
                         </div>
-                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                        <div class="col-md-5">
+                        <div class="col-md-5 mrgL10">
                             <div class="savenext-btn">
                                 <button type="button" class="save-btn active" onclick="ViewReportONGCON();">Generate Report</button>
                                 <button type="button" class="reset-btn" onclick="ClearControlsONGCON();">Clear</button>
