@@ -585,6 +585,7 @@
                         render: function (data, type, row) {
                             var id = data.Sno;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick= EditPOAmendment(\'' + id + '\') class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="DeletePOAmendment(\'' + id + '\')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -602,18 +603,29 @@
                 ShowHideMsgNew(false, "Amendments and Date is required.");
                 return;
             }
-            var formData = {
-                CaseNo: $("#lblCASE_NO").html(),
-                PO_NO: $("#lblPONO").html(),
-                Sno: $("#hdnSno").val(),
-                Amendments: $("#TxtAmnds").val(),
-                Date: $("#TxtAmndsDate").val(),
-            }
-            $.post("@Url.Action("SaveAmendment", "IC_RPT_Intermediate")", { model: formData }, function (response) {
-                debugger
-                ShowHideMsgNew(response.status, response.responseText);
-                FillItems();
-                SetAccepted();
+
+            var CaseNo = $("#lblCASE_NO").html();
+            var PO_NO = $("#lblPONO").html();
+            var Sno = $("#hdnSNo").val() == "" ? "-1" : $("#hdnSNo").val();
+            var Amendments = $("#TxtAmnds").val();
+            var Date = $("#TxtAmndsDate").val();
+
+            let myObject = { CaseNo, PO_NO, Sno, Amendments, Date };
+            $.ajax({
+                url: '@Url.Action("SaveAmendment", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    FillItems();
+                    SetAccepted();
+                    InitializationPOAmendment();
+                    $("#hdnSNo").val("-1");
+                    $("#TxtAmnds").val("");
+                    $("#TxtAmndsDate").val("");
+                }
             });
         }
 
@@ -630,6 +642,28 @@
                         $("#TxtAmnds").val(response.Amendments.trim());
                         $("#TxtAmndsDate").val(response.Date.trim());
                     }
+                }
+            });
+        }
+
+        function DeletePOAmendment(id) {
+            debugger
+            var CaseNo = $("#lblCASE_NO").html();
+            var PO_NO = $("#lblPONO").html();
+            var Sno = id;
+            let myObject = { CaseNo, PO_NO, Sno };
+            $.ajax({
+                url: '@Url.Action("DeletePOAmendment", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    InitializationPOAmendment();
+                    $("#hdnSNo").val("-1");
+                    $("#TxtAmnds").val("");
+                    $("#TxtAmndsDate").val("");
                 }
             });
         }

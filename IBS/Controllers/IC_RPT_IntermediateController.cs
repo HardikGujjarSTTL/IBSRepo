@@ -25,7 +25,7 @@ namespace IBS.Controllers
         [Authorization("IC_RPT_Intermediate", "Index", "view")]
         public IActionResult Index()
         {
-            IC_RPT_IntermediateModel model = new();            
+            IC_RPT_IntermediateModel model = new();
             var CASE_NO = "N21111089";
             var Call_Recv_dt = Convert.ToString("13/08/2022");
             var Call_SNO = "3";
@@ -48,7 +48,7 @@ namespace IBS.Controllers
             //    ACTIONAR = Convert.ToString(Request.Query["ACTIONAR"]);
             //}
 
-            if(Convert.ToString(Request.Query["filename"]) != null)
+            if (Convert.ToString(Request.Query["filename"]) != null)
             {
                 string filename = Convert.ToString(Request.Query["filename"]);
 
@@ -80,7 +80,7 @@ namespace IBS.Controllers
                 //Response.BinaryWrite(imageBytes);
                 //Response.End();
             }
-            
+
             model = iC_RPT_IntermediateRepository.AcceptedFun(CASE_NO, Call_Recv_dt, Call_SNO, CONSIGNEE_CD);
             model.ACTIONAR = ACTIONAR;
             model.CONSIGNEE_CD = CONSIGNEE_CD;
@@ -191,15 +191,20 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
 
-        public IActionResult SaveAmendment(string CaseNo, string Po_No, PO_Amendments model)
+        public IActionResult SaveAmendment(string CaseNo, string PO_NO, string Sno, string Amendments, string Date)
         {
             int res = 0;
             var Iecd = GetUserInfo.IeCd;
             try
             {
                 List<PO_Amendments> lstPoAhm = objSessionHelper.lstPoAmendments;
-                lstPoAhm.ForEach(x => x.IECD = Iecd);
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, Po_No, model, lstPoAhm);
+                PO_Amendments model = new();
+                model.Sno = Sno;
+                model.Amendments = Amendments;
+                model.Date = Date;
+                model.IECD = Convert.ToString(Iecd);
+                lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
@@ -211,5 +216,33 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
+        public IActionResult DeletePOAmendment(string CaseNo, string PO_NO, string Sno)
+        {
+            int res = 0;
+            var Iecd = GetUserInfo.IeCd;
+            try
+            {
+                List<PO_Amendments> lstPoAhm = objSessionHelper.lstPoAmendments;
+                PO_Amendments model = new();
+                model.Sno = "";
+                model.Amendments = "";
+                model.Date = "";
+                lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
+
+                var data = lstPoAhm.Where(x => x.Sno == Sno).Select(x => x).FirstOrDefault();
+                lstPoAhm.Remove(data);
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
+                if (res > 0)
+                {
+                    return Json(new { status = true, responseText = "PO Amendment Record Delete Successfully." });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_RPT_Intermediate", "SaveAmendment", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
+        }
+
     }
 }

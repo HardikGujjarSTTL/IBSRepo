@@ -4621,10 +4621,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<IcPoAmendment>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("IC_PO_AMENDMENT");
+            entity.HasKey(e => e.Id).HasName("IC_PO_AMENDMENT_PK");
 
+            entity.ToTable("IC_PO_AMENDMENT");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IC_PO_AMENDMENT_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AmendmentDetail)
                 .IsUnicode(false)
                 .HasColumnName("AMENDMENT_DETAIL");
@@ -24353,6 +24357,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
         modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("IC_INTERMEDIATE_HISTORY_SEQ");
+        modelBuilder.HasSequence("IC_PO_AMENDMENT_SEQ");
         modelBuilder.HasSequence("LABTRAN");
         modelBuilder.HasSequence("LABTRANDTL");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");

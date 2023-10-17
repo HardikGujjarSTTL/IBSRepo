@@ -594,12 +594,11 @@ namespace IBS.Repositories
                                 item.Amendments = model.Amendments;
                                 item.Date = model.Date;
                             }
-                            else
-                            {
-                                item.Amendments = model.Amendments;
-                                item.Date = model.Date;
-                            }
-                            strUpdateSet = strUpdateSet + item.Amendments.Trim().PadRight(100, ' ') + ";" + item.Date.Trim().PadRight(10, ' ') + ";" + item.IECD + "#";
+                            strUpdateSet = strUpdateSet + item.Amendments.Trim().PadRight(100, ' ') + ";" + item.Date.Trim().PadRight(10, ' ') + ";" + item.IECD + "#";                                                     
+                        }
+                        if (!string.IsNullOrEmpty(model.Sno) && Convert.ToInt32(model.Sno) == -1)
+                        {
+                            strUpdateSet = strUpdateSet + model.Amendments.Trim().PadRight(100, ' ') + ";" + model.Date.Trim().PadRight(10, ' ') + ";" + model.IECD + "#";
                         }
 
 
@@ -609,7 +608,7 @@ namespace IBS.Repositories
 
                         if (POAhmdetail != null)
                         {
-                            POAhmdetail.AmendmentDetail = strUpdateSet;
+                            POAhmdetail.AmendmentDetail = strUpdateSet.Substring(0, strUpdateSet.Length - 1);
                             context.SaveChanges();
                         }
                     }
@@ -623,6 +622,7 @@ namespace IBS.Repositories
                         context.IcPoAmendments.Add(obj);
                         context.SaveChanges();
                     }
+                    trans.Commit();
                 }
                 catch (Exception ex)
                 {
