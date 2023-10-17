@@ -79,6 +79,8 @@ namespace IBS.Helper
             TESTPLAN = 26,
             [Description("/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")]
             CALLCANCELLATIONDOCUMENTS = 27,
+            [Description("/ReadWriteData/DigiSignatureFiles")]
+            DigiSignatureFiles = 24,
         }
 
         public enum DocumentCategory : int
