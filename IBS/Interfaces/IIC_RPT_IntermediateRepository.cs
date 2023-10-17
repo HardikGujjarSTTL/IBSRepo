@@ -20,5 +20,6 @@ namespace IBS.Interfaces
         int SaveAmendment(string CaseNo, string PO_NO, PO_Amendments model, List<PO_Amendments> lst);
 
         string RefreshDetail(IC_RPT_IntermediateModel model, UserSessionModel user);
+        void DeleteNotReq(IC_RPT_IntermediateModel model);
     }
 }

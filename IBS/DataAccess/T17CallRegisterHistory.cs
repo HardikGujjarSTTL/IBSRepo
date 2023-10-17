@@ -97,7 +97,7 @@ public partial class T17CallRegisterHistory
 
     public string? LocalOrOuts { get; set; }
 
-    public byte? ClusterCode { get; set; }
+    public int? ClusterCode { get; set; }
 
     public string? Createdby { get; set; }
 

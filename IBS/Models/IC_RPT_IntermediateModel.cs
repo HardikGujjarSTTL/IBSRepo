@@ -102,6 +102,8 @@ namespace IBS.Models
         public virtual string PUR_AUTH_DESC { get; set; }
         public virtual string OFF_INST_NO { get; set; }
         public virtual string ITEM_UNIT { get; set; }
+        public virtual string IESTAMP_PATH { get; set; }
+        public virtual string IESTAMP2_PATH { get; set; }
 
         public string Region { get; set; }
         List<PO_Amendments> lstAmendment { get; set; }
@@ -109,7 +111,7 @@ namespace IBS.Models
 
     public class PO_Amendments
     {
-        public int Sno { get; set; }
+        public string Sno { get; set; }
         public string Amendments { get; set; }
         public string Date { get; set; }
         public int IECD { get; set; }

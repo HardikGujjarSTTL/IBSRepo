@@ -229,14 +229,13 @@ namespace IBS.Repositories
                 for (int i = 0; i < arrAmd.Length; i++)
                 {
                     var arrdetail = arrAmd[i].Split(";");
-                    //for(int j = 0; j < arrdetail.Length; j++)
-                    //{
+
                     PO_Amendments obj = new PO_Amendments();
-                    obj.Sno = i;
+                    obj.Sno = i.ToString();
                     obj.Amendments = arrdetail[0];
                     obj.Date = arrdetail[1];
                     modelList.Add(obj);
-                    //}
+
                 }
             }
             query = modelList.AsQueryable();
@@ -435,95 +434,144 @@ namespace IBS.Repositories
 
         public bool SaveDetail(IC_RPT_IntermediateModel model, UserSessionModel user)
         {
-            var CallRecvDt = Convert.ToDateTime(model.Call_Recv_dt).ToString("dd/MM/yyyy");
-            using (var trans = context.Database.BeginTransaction())
+            DateTime callRecDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            #region Code Comment
+            //using (var trans = context.Database.BeginTransaction())
+            //{                
+            //    try
+            //    {
+            //        if (user.Region != "C")
+            //        {
+            //            model.MAN_TYPE = "";
+            //        }
+            //        var _data = (from x in context.IcIntermediates
+            //                     where x.ItemSrnoPo == Convert.ToByte(model.ITEM_SRNO_PO)
+            //                     && x.CaseNo == model.CASE_NO
+            //                     && x.BkNo == model.BK_NO
+            //                     && x.SetNo == model.SET_NO
+            //                     && x.CallRecvDt == callRecDt
+            //                     && x.CallSno == Convert.ToInt16(model.Call_SNO)
+            //                     && x.ConsigneeCd == Convert.ToInt32(model.DP_CONSIGNEE_CD)
+            //                     select x).FirstOrDefault();                                        
+            //        if (_data != null)
+            //        {
+            //            _data.ConsgnCallStatus = "Z";
+            //            _data.ItemSrnoPo = Convert.ToByte(model.ITEM_SRNO_PO);
+            //            _data.ItemDescPo = model.ITEM_DESC_PO;
+            //            _data.ItemRemark = model.ITEM_REMARK;
+            //            _data.QtyOrdered = Convert.ToDecimal(model.QTY_ORDERED);
+            //            _data.CumQtyPrevOffered = Convert.ToDecimal(model.CUM_QTY_PREV_OFFERED);
+            //            _data.CumQtyPrevPassed = Convert.ToDecimal(model.CUM_QTY_PREV_PASSED);
+            //            _data.QtyToInsp = Convert.ToDecimal(model.QTY_TO_INSP);
+            //            _data.QtyPassed = Convert.ToDecimal(model.QTY_PASSED);
+            //            _data.QtyRejected = Convert.ToDecimal(model.QTY_REJECTED);
+            //            _data.QtyDue = Convert.ToDecimal(model.QTY_DUE);
+            //            _data.PoNo = model.PO_NO;
+            //            _data.UnitDtl = model.UNIT_DTL;
+            //            context.SaveChanges();
+            //        }
+            //        var _data1 = context.IcIntermediates
+            //                    .Where(x => x.IeCd == Convert.ToInt32(user.IeCd))
+            //                    .Select(x => x);
+            //        if (_data1 != null)
+            //        {
+            //            foreach (var row in _data1)
+            //            {
+            //                row.IeStamp = "";
+            //                row.IeStamp2 = "";
+            //                row.IeStampsDetail = model.IE_STAMPS_DETAIL;
+            //                row.IeStampsDetail2 = model.IE_STAMPS_DETAIL2;
+            //                context.SaveChanges();
+            //            }
+            //        }
+
+            //        var query = context.IcIntermediates
+            //                    .Where(x => x.CaseNo == model.CASE_NO && x.BkNo == model.BK_NO && x.SetNo == model.SET_NO
+            //                    && x.CallRecvDt == callRecDt && x.CallSno == Convert.ToInt32(model.Call_SNO))
+            //                    .Select(x => x);
+            //        if (query != null)
+            //        {
+            //            foreach (var row in query)
+            //            {
+            //                row.ReasonOfRejection = model.REMARK;
+            //                row.PassedInstNo = model.PASSED_INST_NO;
+            //                row.LabTstRectDt = string.IsNullOrEmpty(model.LAB_TST_RECT_DT) ? null : DateTime.ParseExact(model.LAB_TST_RECT_DT, "dd/MM/yyyy", null);
+            //                row.Hologram = model.HOLOGRAM;
+            //                row.Remark = model.REMARK;
+            //                row.ManType = model.MAN_TYPE;
+            //                row.DispatchPackingNo = model.DISPATCH_PACKING_NO;
+            //                row.InvoiceNo = model.INVOICE_NO;
+            //                row.NameOfIe = model.NAME_OF_IE;
+            //                row.ConsigneeDesg = model.CONSIGNEE_DESG;
+
+            //                row.ConsigneeDtl = model.CONSIGNEE_DTL;
+            //                row.BpoDtl = model.BPO_DTL;
+            //                row.GovBillAuth = model.GOV_BILL_AUTH;
+            //                row.PurDtl = model.PUR_DTL;
+            //                row.PurAutDtl = model.PUR_AUT_DTL;
+            //                row.OffInstNoDtl = model.OFF_INST_NO_DTL;
+            //                context.SaveChanges();
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        trans.Rollback();
+            //        return false;
+            //    }
+            //    trans.Commit();
+            //}
+            #endregion
+
+            if (user.Region != "C")
             {
-                try
-                {
-                    if (user.Region != "C")
-                    {
-                        model.MAN_TYPE = "";
-                    }
-                    var _data = context.IcIntermediates
-                                .Where(x => x.ItemSrnoPo == Convert.ToByte(model.ITEM_SRNO_PO) && x.CaseNo == model.CASE_NO && x.BkNo == model.BK_NO && x.SetNo == model.SET_NO
-                                && x.CallRecvDt == Convert.ToDateTime(model.Call_Recv_dt) && x.CallSno == Convert.ToInt32(model.Call_SNO) && x.ConsigneeCd == Convert.ToInt32(model.DP_CONSIGNEE_CD))
-                                .Select(x => x).FirstOrDefault();
-
-                    if (_data != null)
-                    {
-                        _data.ConsgnCallStatus = "Z";
-                        _data.ItemSrnoPo = Convert.ToByte(model.ITEM_SRNO_PO);
-                        _data.ItemDescPo = model.ITEM_DESC_PO;
-                        _data.ItemRemark = model.ITEM_REMARK;
-                        _data.QtyOrdered = Convert.ToDecimal(model.QTY_ORDERED);
-                        _data.CumQtyPrevOffered = Convert.ToDecimal(model.CUM_QTY_PREV_OFFERED);
-                        _data.CumQtyPrevPassed = Convert.ToDecimal(model.CUM_QTY_PREV_PASSED);
-                        _data.QtyToInsp = Convert.ToDecimal(model.QTY_TO_INSP);
-                        _data.QtyPassed = Convert.ToDecimal(model.QTY_PASSED);
-                        _data.QtyRejected = Convert.ToDecimal(model.QTY_REJECTED);
-                        _data.QtyDue = Convert.ToDecimal(model.QTY_DUE);
-                        _data.PoNo = model.PO_NO;
-                        _data.UnitDtl = model.UNIT_DTL;
-                        context.SaveChanges();
-                    }
-
-                    var _data1 = context.IcIntermediates
-                                .Where(x => x.IeCd == Convert.ToInt32(user.IeCd))
-                                .Select(x => x);
-                    if (_data1 != null)
-                    {
-                        foreach (var row in _data1)
-                        {
-                            row.IeStamp = "";
-                            row.IeStamp2 = "";
-                            row.IeStampsDetail = model.IE_STAMPS_DETAIL;
-                            row.IeStampsDetail2 = model.IE_STAMPS_DETAIL2;
-                            context.SaveChanges();
-                        }
-                    }
-
-                    var query = context.IcIntermediates
-                                .Where(x => x.CaseNo == model.CASE_NO && x.BkNo == model.BK_NO && x.SetNo == model.SET_NO
-                                && x.CallRecvDt == DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null) && x.CallSno == Convert.ToInt32(model.Call_SNO))
-                                .Select(x => x);
-                    if (query != null)
-                    {
-                        foreach (var row in query)
-                        {
-                            row.ReasonOfRejection = model.REMARK;
-                            row.PassedInstNo = model.PASSED_INST_NO;
-                            row.LabTstRectDt = string.IsNullOrEmpty(model.LAB_TST_RECT_DT) ? null : DateTime.ParseExact(model.LAB_TST_RECT_DT, "dd/MM/yyyy", null);
-                            row.Hologram = model.HOLOGRAM;
-                            row.Remark = model.REMARK;
-                            row.ManType = model.MAN_TYPE;
-                            row.DispatchPackingNo = model.DISPATCH_PACKING_NO;
-                            row.InvoiceNo = model.INVOICE_NO;
-                            row.NameOfIe = model.NAME_OF_IE;
-                            row.ConsigneeDesg = model.CONSIGNEE_DESG;
-
-                            row.ConsigneeDtl = model.CONSIGNEE_DTL;
-                            row.BpoDtl = model.BPO_DTL;
-                            row.GovBillAuth = model.GOV_BILL_AUTH;
-                            row.PurDtl = model.PUR_DTL;
-                            row.PurAutDtl = model.PUR_AUT_DTL;
-                            row.OffInstNoDtl = model.OFF_INST_NO_DTL;
-                            context.SaveChanges();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    trans.Rollback();
-                    return false;
-                }
-                trans.Commit();
+                model.MAN_TYPE = "";
             }
-
+            OracleParameter[] par = new OracleParameter[38];
+            par[0] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, model.CASE_NO, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_CALL_RECV_DT", OracleDbType.Varchar2, model.Display_Call_Recv_dt, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_CALL_SNO", OracleDbType.Varchar2, model.Call_SNO, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, model.BK_NO, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, model.SET_NO, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_CONSIGNEE_CD", OracleDbType.Int32, model.CONSIGNEE_CD, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_ITEM_SRNO_PO", OracleDbType.Int32, model.ITEM_SRNO_PO, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_ITEM_DESC_PO", OracleDbType.Varchar2, model.ITEM_DESC_PO, ParameterDirection.Input);
+            par[8] = new OracleParameter("P_ITEM_REMARK", OracleDbType.Varchar2, model.ITEM_REMARK, ParameterDirection.Input);
+            par[9] = new OracleParameter("P_QTY_ORDERED", OracleDbType.Varchar2, model.QTY_ORDERED, ParameterDirection.Input);
+            par[10] = new OracleParameter("P_CUM_QTY_PREV_OFFERED", OracleDbType.Int32, model.CUM_QTY_PREV_OFFERED, ParameterDirection.Input);
+            par[11] = new OracleParameter("P_CUM_QTY_PREV_PASSED", OracleDbType.Int32, model.CUM_QTY_PREV_PASSED, ParameterDirection.Input);
+            par[12] = new OracleParameter("P_QTY_TO_INSP", OracleDbType.Int32, model.QTY_TO_INSP, ParameterDirection.Input);
+            par[13] = new OracleParameter("P_QTY_PASSED", OracleDbType.Int32, model.QTY_PASSED, ParameterDirection.Input);
+            par[14] = new OracleParameter("P_QTY_REJECTED", OracleDbType.Int32, model.QTY_REJECTED, ParameterDirection.Input);
+            par[15] = new OracleParameter("P_QTY_DUE", OracleDbType.Int32, model.QTY_DUE, ParameterDirection.Input);
+            par[16] = new OracleParameter("P_PO_NO", OracleDbType.Varchar2, model.PO_NO, ParameterDirection.Input);
+            par[17] = new OracleParameter("P_UNIT_DTL", OracleDbType.Varchar2, model.UNIT_DTL, ParameterDirection.Input);
+            par[18] = new OracleParameter("P_IE_STAMPS_DETAIL", OracleDbType.Varchar2, model.IE_STAMPS_DETAIL, ParameterDirection.Input);
+            par[19] = new OracleParameter("P_IE_STAMPS_DETAIL2", OracleDbType.Varchar2, model.IE_STAMPS_DETAIL2, ParameterDirection.Input);
+            par[20] = new OracleParameter("P_REMARK", OracleDbType.Varchar2, model.REMARK, ParameterDirection.Input);
+            par[21] = new OracleParameter("P_PASSED_INST_NO", OracleDbType.Varchar2, model.PASSED_INST_NO, ParameterDirection.Input);
+            par[22] = new OracleParameter("P_LAB_TST_RECT_DT", OracleDbType.Varchar2, model.LAB_TST_RECT_DT, ParameterDirection.Input);
+            par[23] = new OracleParameter("P_HOLOGRAM", OracleDbType.Varchar2, model.HOLOGRAM, ParameterDirection.Input);
+            par[24] = new OracleParameter("P_MAN_TYPE", OracleDbType.Varchar2, model.MAN_TYPE, ParameterDirection.Input);
+            par[25] = new OracleParameter("P_DISPATCH_PACKING_NO", OracleDbType.Varchar2, model.DISPATCH_PACKING_NO, ParameterDirection.Input);
+            par[26] = new OracleParameter("P_INVOICE_NO", OracleDbType.Varchar2, model.INVOICE_NO, ParameterDirection.Input);
+            par[27] = new OracleParameter("P_NAME_OF_IE", OracleDbType.Varchar2, model.NAME_OF_IE, ParameterDirection.Input);
+            par[28] = new OracleParameter("P_CONSIGNEE_DESG", OracleDbType.Varchar2, model.CONSIGNEE_DESG, ParameterDirection.Input);
+            par[29] = new OracleParameter("P_CONSIGNEE_DTL", OracleDbType.Varchar2, model.CONSIGNEE_DTL, ParameterDirection.Input);
+            par[30] = new OracleParameter("P_BPO_DTL", OracleDbType.Varchar2, model.BPO_DTL, ParameterDirection.Input);
+            par[31] = new OracleParameter("P_GOV_BILL_AUTH", OracleDbType.Varchar2, model.GOV_BILL_AUTH, ParameterDirection.Input);
+            par[32] = new OracleParameter("P_PUR_DTL", OracleDbType.Varchar2, model.PUR_DTL, ParameterDirection.Input);
+            par[33] = new OracleParameter("P_PUR_AUT_DTL", OracleDbType.Varchar2, model.PUR_AUT_DTL, ParameterDirection.Input);
+            par[34] = new OracleParameter("P_OFF_INST_NO_DTL", OracleDbType.Varchar2, model.OFF_INST_NO_DTL, ParameterDirection.Input);
+            par[35] = new OracleParameter("P_IECD", OracleDbType.Varchar2, Convert.ToString(user.IeCd), ParameterDirection.Input);
+            par[36] = new OracleParameter("P_IESTAMP_PATH", OracleDbType.Varchar2, model.IESTAMP_PATH, ParameterDirection.Input);
+            par[37] = new OracleParameter("P_IESTAMP2_PATH", OracleDbType.Varchar2, model.IESTAMP2_PATH, ParameterDirection.Input);
+            var ds = DataAccessDB.ExecuteNonQuery("SP_UPDATE_IC_INTERMEDIATE", par, 1);
             try
             {
-                var date = SaveUpdateVisit(model.CASE_NO, CallRecvDt, model.Call_SNO, model.VISIT_DATES, model.VISIT_DATES);
+                var date = SaveUpdateVisit(model.CASE_NO, model.Display_Call_Recv_dt, model.Call_SNO, model.VISIT_DATES, model.VISIT_DATES);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -542,6 +590,11 @@ namespace IBS.Repositories
                         foreach (var item in lst)
                         {
                             if (item.Sno == model.Sno)
+                            {
+                                item.Amendments = model.Amendments;
+                                item.Date = model.Date;
+                            }
+                            else
                             {
                                 item.Amendments = model.Amendments;
                                 item.Date = model.Date;
@@ -886,7 +939,6 @@ namespace IBS.Repositories
                 {
                     var trans = cont.Database.BeginTransaction();
                     bool wasOpen = command.Connection.State == ConnectionState.Open;
-                    if (!wasOpen) command.Connection.Open();
                     foreach (var item in query)
                     {
                         var ItemSrnoPo = (from a in context.IcIntermediates
@@ -896,11 +948,11 @@ namespace IBS.Repositories
                         if (string.IsNullOrEmpty(Convert.ToString(ItemSrnoPo)))
                         {
                             var sqlQuery = "";
-                            sqlQuery = "U";
+                            if (!wasOpen) command.Connection.Open();
+                            sqlQuery = "DELETE FROM IC_INTERMEDIATE WHERE CASE_NO = '" + Convert.ToString(item.CASE_NO) + "' AND CALL_SNO = '" + Convert.ToString(item.CALL_SNO) + "' AND CALL_RECV_DT =  TO_date('" + Convert.ToString(item.CALL_RECV_DT) + "', 'dd/mm/yyyy') and BK_NO = '" + model.BK_NO + "' and SET_NO = '" + model.SET_NO + "' AND CONSIGNEE_CD = '" + Convert.ToString(item.CONSIGNEE_CD) + "' AND ITEM_SRNO_PO = '" + Convert.ToString(item.ITEM_SRNO_PO) + "' ";
                             command.CommandText = sqlQuery;
                         }
                     }
-
                     try
                     {
                         var res = command.ExecuteNonQuery();

@@ -57,9 +57,10 @@
 
             <div class="row my-0 m-lg-1" style="border: 1px solid;">
                 <label for="Reference">PO AMENDMENTS</label>
+                <input type="hidden" id="hdnSNo" />
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Amendments</label>
-                    <input type="text" class="input" id="TxtAmnds" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" id="TxtAmnds" /> @*asp-for="test"*@
                     @*<span asp-validation-for="test" class="text-danger"></span>*@
                 </div>
                 <div class="col-md-3 mb-3">
@@ -69,7 +70,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Save Ammendments</button>
+                        <button type="button" class="save-btn active" id="btnSavePOAmendment" onclick="SavePOAmendment()" data-id="">Save Ammendments</button>
                     </div>
                 </div>
             </div>
@@ -267,8 +268,8 @@
                 <div class="col-md-10 mb-3">
                     <label for="Reference">IE Stamp</label>
                     <div style="display:flex;">
-                        @Html.DropDownListFor(model => model.IE_STAMPS_DETAIL, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))
-                        @Html.DropDownListFor(model => model.IE_STAMPS_DETAIL2, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))
+                        <div class="col-md-5 mb-3" style="margin-right:25px;">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
+                        <div class="col-md-5 mb-3">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL2, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
                     </div>
                 </div>
             </div>
@@ -288,10 +289,12 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+        debugger
         var Case_No = "@Model.CASE_NO";
         var Call_Recv_Dt = "@Model.Call_Recv_dt";
         var Call_SNo = "@Model.Call_SNO";
         var Consignee_Cd = "@Model.CONSIGNEE_CD";
+        var ActionAR = "@Model.ACTIONAR";
         $(document).ready(function () {
             if ("@Model.ACTIONAR" == "R") {
                 $(".clsRemark").css("display", "");
@@ -388,7 +391,7 @@
                 ShowHideMsgNew(false, "QTY REJECTED + QTY PASSED should not be greater than (>) QTY TO INSP !");
                 return;
             }
-
+            debugger
             var formData = {
                 CASE_NO: $("#lblCASE_NO").html(),
                 CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
@@ -506,11 +509,22 @@
             }
             $.post("@Url.Action("RefreshDetail", "IC_RPT_Intermediate")", { model: formData }, function (response) {
                 debugger
-                //ShowHideMsgNew(response, response.responseText);
-                if (response) {
-
-                }
+                ShowHideMsgNew(response.status, response.responseText);
+                FillItems();
+                SetAccepted();
             });
+        });
+
+        $("#btnCancel").click(function () {
+            var CASE_NO = Case_No;
+            var CALL_RECV_DT = Call_Recv_Dt;
+            var CALL_SNO = Call_SNo;
+            var CONSIGNEE_CD = Consignee_Cd;
+            var ACTIONAR = ActionAR;
+
+            let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
+            var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
+            window.location.href = url;
         });
 
         function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
@@ -569,15 +583,54 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.AccCd;
-                            var editUrl = '@Url.Action("Manage", "AccountCodesDirectory")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var id = data.Sno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick= EditPOAmendment(\'' + id + '\') class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
                 "order": [[1, "asc"]]
+            });
+        }
+
+        function SavePOAmendment() {
+            debugger
+            var Amendment = $("#TxtAmnds").val();
+            var date = $("#TxtAmndsDate").val();
+            if (Amendment.trim() == "" || date.trim() == "") {
+                ShowHideMsgNew(false, "Amendments and Date is required.");
+                return;
+            }
+            var formData = {
+                CaseNo: $("#lblCASE_NO").html(),
+                PO_NO: $("#lblPONO").html(),
+                Sno: $("#hdnSno").val(),
+                Amendments: $("#TxtAmnds").val(),
+                Date: $("#TxtAmndsDate").val(),
+            }
+            $.post("@Url.Action("SaveAmendment", "IC_RPT_Intermediate")", { model: formData }, function (response) {
+                debugger
+                ShowHideMsgNew(response.status, response.responseText);
+                FillItems();
+                SetAccepted();
+            });
+        }
+
+        function EditPOAmendment(id) {
+            $.ajax({
+                url: '@Url.Action("GetPOAmendment", "IC_RPT_Intermediate")/' + id,
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != null) {
+                        $("#hdnSNo").val(response.Sno);
+                        $("#TxtAmnds").val(response.Amendments.trim());
+                        $("#TxtAmndsDate").val(response.Date.trim());
+                    }
+                }
             });
         }
 
@@ -707,7 +760,6 @@
         }
 
         function SetAccepted() {
-            debugger
             let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
 
             $("#btnSave").css("display", "");
