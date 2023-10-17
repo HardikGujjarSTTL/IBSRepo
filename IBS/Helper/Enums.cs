@@ -71,6 +71,8 @@ namespace IBS.Helper
             CaseNo = 22,
             [Description("/ReadWriteData/LAB")]
             Lab = 23,
+            [Description("/ReadWriteData/DigiSignatureFiles")]
+            DigiSignatureFiles = 24,
         }
 
         public enum DocumentCategory : int
