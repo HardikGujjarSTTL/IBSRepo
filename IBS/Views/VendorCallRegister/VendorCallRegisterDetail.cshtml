@@ -131,7 +131,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked</label>
-                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEName(@Model.Region) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEName(@Model.RegionCode) , "Value", "Text"),"--Select--")
                         <span asp-validation-for="IeCd" class="text-danger"></span>
                     </div>
                 </div>
@@ -159,8 +159,8 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
-                    @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
-                    <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
+                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -392,8 +392,8 @@
                 <span asp-validation-for="VendContactTel1" class="text-danger"></span>
             </div>
         </div>
-        <div class="col-md-4 mb-3" style="margin-top: 30px;">
-            <div class="savenext-btn">
+        <div class="col-md-4 mb-3">
+            <div class="savenext-btn btnAlign">
                 <button type="button" class="save-btn active" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
             </div>
         </div>
@@ -562,7 +562,7 @@
             else if (actiontype == "M" || actiontype == "D") {
                 $("#btnDelete").show();
                 $("#btnPrint").show();
-
+                $("#CHKRejCan").prop("checked", true);
                 if ($("#UpdateAllowed").val() == "N") {
                     $("#btnRegiserCallSave").prop("disabled", true);
                     $("#btnDelete").prop("disabled", true);

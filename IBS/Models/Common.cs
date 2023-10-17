@@ -1881,6 +1881,21 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> RejectionType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Local (10,000/- Per Manday)";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Out Station (15,000/- Per Manday)";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> TrainingArea()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -3458,6 +3473,22 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        
+        public static List<SelectListItem> ICType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Finalization";
+            single.Value = "F";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Stage";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> GetUsers()
         {
@@ -4220,6 +4251,87 @@ namespace IBS.Models
                 new SelectListItem() { Text = "Others", Value = "X" }
             };
             return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> BindIEStamps()
+        {
+            DataSet ds = new DataSet();
+            ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
+            try
+            {
+                using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "SELECT 0 AS IE_STAMP_CD,'SELECT STAMP' AS IE_STAMPS_DETAIL FROM DUAL UNION SELECT IE_STAMP_CD, IE_STAMPS_DETAIL FROM IE_STAMPS ORDER BY IE_STAMP_CD"; ;
+
+                        using (var adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions if needed
+            }
+            DataTable dt = ds.Tables[0];
+            List<SelectListItem> lst = dt.AsEnumerable().Select(row => new SelectListItem
+            {
+                Text = row["IE_STAMPS_DETAIL"].ToString(),
+                Value = row["IE_STAMP_CD"].ToString()
+            }).ToList();
+            return lst;
+        }
+
+        public static List<SelectListItem> BindConsignee(string CASE_NO, string CALL_RECV_DT, string CALL_SNO)
+        {
+            DataSet ds = new DataSet();
+            ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
+            try
+            {
+                using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        var sql = "";
+                        sql = "select 0 as consignee_cd,'Select Consignee' as consignee_firm from dual union select distinct csn.consignee_cd,CSN.consignee_cd ||'-'|| csn.consignee consignee_firm   from t18_call_details CDT inner join V06_CONSIGNEE CSN ";
+                        sql += " on cdt.consignee_cd = csn.consignee_cd where case_no = '" + CASE_NO + "' and call_recv_dt = TO_date('" + Convert.ToDateTime(CALL_RECV_DT).ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') and call_sno = '" + CALL_SNO + "' ";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sql;
+
+                        using (var adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions if needed
+            }
+            DataTable dt = ds.Tables[0];
+            List<SelectListItem> lst = dt.AsEnumerable().Select(row => new SelectListItem
+            {
+                Text = row["consignee_firm"].ToString(),
+                Value = row["consignee_cd"].ToString()
+            }).ToList();
+            return lst;
+        }
+
+        public static List<SelectListItem> GetConsignneManufacturingType()
+        {
+            List<SelectListItem> lstManuf = new List<SelectListItem>() {
+                new SelectListItem() { Text = "BHILAI STEEL PLANT", Value = "B" },
+                new SelectListItem() { Text = "JINDAL STEEL & POWER LTD", Value = "J" },
+                new SelectListItem() { Text = "Others", Value = "O" }                
+            };
+            return lstManuf;
         }
     }
 

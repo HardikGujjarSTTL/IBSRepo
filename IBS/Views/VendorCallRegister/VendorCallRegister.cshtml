@@ -11,6 +11,9 @@
 <div class="task-listinput">
     <form asp-controller="VendorCallRegister" asp-action="VendorCallRegister" id="frmVendor">
         <div class="accordion-body">
+            <div class="row my-0">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">
             <span class="text-danger">
                 <b>Attention :</b>
                 <br />
@@ -18,7 +21,9 @@
                 <br />
                 * Calls recieved upto 3 P.M. shall be marked on same day and calls recieved after 3 P.M. shall be marked on next working day except Saturday.
             </span>
-
+                    </div>
+            </div>
+            </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
@@ -80,7 +85,8 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="alert alert-warning center">
+                <div class="col-lg-12">
+                <div class="alert alert-info center">
                     <span style="color:DarkMagenta;">
                         * Select Stage in case of Stage Inspection/Raw Material Inspection.
                     </span>
@@ -91,7 +97,7 @@
                     </span>
                 </div>
             </div>
-
+            </div>
 
             <div class="savenext-btn">
                 @*<a asp-controller="VendorCallRegister" asp-action="VendorCallRegister" class="reset-btn">New Call</a>*@

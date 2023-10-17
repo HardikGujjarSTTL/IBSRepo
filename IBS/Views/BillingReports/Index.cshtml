@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="custom-readio">
                         <div class="company-checkbox">
                             <div class="remember">
@@ -182,7 +182,7 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="custom-readio">
                         <div class="company-checkbox">
                             <div class="remember">
@@ -200,7 +200,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3" id="tdClientType" style="display:none;">
+                <div class="col-md-3 mb-3" id="tdClientType" style="display:none;">
                     <label for="ClientTypeNSC" id="lblClientTypeNSC">Particular Railway Types</label> <br />
                     @*@Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })*@
                     @Html.DropDownList("ClientTypeNSC", Common.GetRailway(),"--Select--", new { @class = "", @onchange = "BindlstAU();" })

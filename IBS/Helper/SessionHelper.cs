@@ -112,5 +112,25 @@ namespace IBS.Helper
                 httpContextAccessor.HttpContext.Session.SetString("sessionInterUnitTransferRegionModel", JsonSerializer.Serialize(value));
             }
         }
+
+        public List<PO_Amendments> lstPoAmendments
+        {
+            get
+            {
+                string UnitTransfer = httpContextAccessor.HttpContext.Session.GetString("sessionPO_AmendmentsModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(UnitTransfer))
+                {
+                    List<PO_Amendments> PO_AmendmentModels = JsonSerializer.Deserialize<List<PO_Amendments>>(UnitTransfer);
+
+                    if (PO_AmendmentModels != null)
+                        return PO_AmendmentModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionPO_AmendmentsModel", JsonSerializer.Serialize(value));
+            }
+        }
     }
 }

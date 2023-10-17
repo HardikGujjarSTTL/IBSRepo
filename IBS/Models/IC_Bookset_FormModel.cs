@@ -68,6 +68,10 @@ namespace IBS.Models
 
         public string? _SetNoTo { get; set; }
 
+        [Display(Name = "IC Type")]
+        [Required]
+        public string? ICType { get; set; }
+
     }
 
     public class SetNoGreaterThenAttribute : ValidationAttribute

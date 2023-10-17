@@ -61,7 +61,7 @@
             else
             {
                 @*var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
-                var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
+            var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
                 var tifpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".tif");
                 var pdfpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".pdf");
                 if (System.IO.File.Exists(tifpath) == true)
@@ -367,7 +367,15 @@
     });
 
     $("#btnBack").click(function () {
-        var url = '@Url.Action("Index", "Dashboard")';
+        const urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var url;
+        if (type == "C") {
+            url = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=' + type;
+        }
+        else {
+            var url = '@Url.Action("Index", "Dashboard")';
+        }
         window.location.href = url;
     });
 
