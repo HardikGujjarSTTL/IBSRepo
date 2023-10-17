@@ -106,11 +106,11 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
-                    <input type="text" class="input" asp-for="BK_NO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="BK_NO" maxlength="12" readonly="readonly" style="text-transform: uppercase;" /> @*asp-for="test"*@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">SET No.</label>
-                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" readonly="readonly" /> @*asp-for="test"*@
                 </div>
             </div>
 
@@ -124,29 +124,29 @@
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Consignee DESCRIPTION : </label>
-                    <input type="text" class="input" asp-for="CONSIGNEE_DESC" maxlength="200" />
+                    <input type="text" class="input" asp-for="CONSIGNEE_DESC" maxlength="200" onkeydown="checkTextAreaMaxLength(this,event,'200');" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Bill Paying Officer DESCRIPTION : </label>
-                    <input type="text" class="input" asp-for="BPO_DESC" maxlength="200" />
+                    <input type="text" class="input" asp-for="BPO_DESC" maxlength="200" onkeydown="checkTextAreaMaxLength(this,event,'200');" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3 clsGBPA">
                     <label for="Reference">Governing Bill Paying Authority : </label>
-                    <input type="text" class="input" asp-for="GBPO_AUTH" maxlength="200" />
+                    <input type="text" class="input" asp-for="GBPO_AUTH" maxlength="200" onkeydown="checkTextAreaMaxLength(this,event,'200');" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Manufacturer DESCRIPTION : </label>
-                    <input type="text" class="input" asp-for="MANUFAC_DESC" maxlength="200" />
+                    <input type="text" class="input" asp-for="MANUFAC_DESC" maxlength="200" onkeydown="checkTextAreaMaxLength(this,event,'200');" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Purchasing Authority DESCRIPTION : </label>
-                    <input type="text" class="input" asp-for="PUR_AUTH_DESC" maxlength="200" />
+                    <input type="text" class="input" asp-for="PUR_AUTH_DESC" maxlength="200" onkeydown="checkTextAreaMaxLength(this,event,'200');" />
                 </div>
                 <div class="col-md-3 mb-3 clsOffInsNo">
                     <label for="Reference">Offered Inst. No. : </label>
@@ -161,14 +161,14 @@
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM DESCRIPTION : </label>
-                    <textarea maxlength="750" asp-for="ITEM_DESC_PO"></textarea>
+                    <textarea maxlength="750" asp-for="ITEM_DESC_PO" onkeydown="checkTextAreaMaxLength(this,event,'750');" onblur="RemoveSpecialChar('ITEM_DESC_PO')"></textarea>
                     @*<input type="text" class="input"  />*@
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM REMARK : </label>
-                    <input type="text" class="input" asp-for="ITEM_REMARK" maxlength="750" />
+                    <input type="text" class="input" asp-for="ITEM_REMARK" onkeydown="checkTextAreaMaxLength(this,event,'250');" onblur="RemoveSpecialChar('ITEM_REMARK')" maxlength="750" />
                 </div>
             </div>
             <div class="row my-0">
@@ -206,15 +206,15 @@
 
             <div class="row my-0 clsRemark" style="display:none;">
                 <div class="col-md-12 mb-3">
-                    <label for="Reference">Remark<span class="text-danger">* (Max 400 Chars)</span></label>
-                    <input type="text" class="input" asp-for="REMARK" maxlength="750" />
+                    <label for="Reference">Remark@*<span class="text-danger">* (Max 400 Chars)</span>*@</label>
+                    <input type="text" class="input" asp-for="REMARK" maxlength="400" onkeydown="checkTextAreaMaxLength(this,event,'400');" onblur="RemoveSpecialChar('REMARK')" />
                     <span class="text-danger">* Add Rejection Remarks.</span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <label for="Reference">Holograms<span class="text-danger">* (Max 250 Chars)</span></label>
-                    <input type="text" class="input" asp-for="HOLOGRAM" maxlength="750" />
+                    <label for="Reference">Holograms@*<span class="text-danger">* (Max 250 Chars)</span>*@</label>
+                    <input type="text" class="input" asp-for="HOLOGRAM" maxlength="250" onkeydown="checkTextAreaMaxLength(this,event,'250');" onblur="RemoveSpecialChar('HOLOGRAM')" />
                     <span class="text-danger">* Enter series of Holograms Used on material and if Holograms not used then kindly mention type of seal & it's No..</span>
                 </div>
             </div>
@@ -246,21 +246,21 @@
             <div class="row my-0">
                 <div class="col-md-6 mb-3 clsDIS_PAC_NO">
                     <label for="Reference" id="lblDisAdvNo">Dispatch Advice No.</label>
-                    <input type="text" class="input" asp-for="DISPATCH_PACKING_NO" />
+                    <input type="text" class="input" asp-for="DISPATCH_PACKING_NO" onkeydown="checkTextAreaMaxLength(this,event,'500');" onblur="RemoveSpecialChar('DISPATCH_PACKING_NO')" />
                 </div>
                 <div class="col-md-6 mb-3 clsINVOICE_NO">
                     <label for="Reference">Invoice No.</label>
-                    <input type="text" class="input" asp-for="INVOICE_NO" />
+                    <input type="text" class="input" asp-for="INVOICE_NO" onkeydown="checkTextAreaMaxLength(this,event,'300');" onblur="RemoveSpecialChar('INVOICE_NO')" />
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-6 mb-3 clsNAME_INS_ENG">
                     <label for="Reference">Name of Inspecting Engineer</label>
-                    <input type="text" class="input" asp-for="NAME_OF_IE" />
+                    <input type="text" class="input" asp-for="NAME_OF_IE" onkeydown="checkTextAreaMaxLength(this,event,'500');" onblur="RemoveSpecialChar('NAME_OF_IE')" />
                 </div>
                 <div class="col-md-6 mb-3 clsCONS_DESG">
                     <label for="Reference">Consignee Destination</label>
-                    <input type="text" class="input" asp-for="CONSIGNEE_DESG" />
+                    <input type="text" class="input" asp-for="CONSIGNEE_DESG" onkeydown="checkTextAreaMaxLength(this,event,'50');" onblur="RemoveSpecialChar('CONSIGNEE_DESG')" />
                 </div>
             </div>
 
@@ -274,12 +274,13 @@
                 </div>
             </div>
 
-            <div class="savenext-btn">
+            <div class="savenext-btn mb-3">
                 <button type="button" class="save-btn active" id="btnSave">Save</button>
                 <button type="button" class="save-btn" id="btnRefresh">Refresh</button>
                 <button type="button" class="save-btn" id="btnCancel">Cancel</button>
                 <button type="button" class="save-btn" id="btnReport">Show Report</button>
             </div>
+            <h5 class="center">Refresh <span class="text-danger">* It will refresh the current records!</span></h5>
         </div>
     </form>
 </div>
@@ -289,7 +290,6 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        debugger
         var Case_No = "@Model.CASE_NO";
         var Call_Recv_Dt = "@Model.Call_Recv_dt";
         var Call_SNo = "@Model.Call_SNO";
@@ -303,6 +303,9 @@
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
 
             $("#CONSIGNEE_CD").change(function () {
+                $("#BK_NO").val("");
+                $("#SET_NO").val("");
+                Reset();
                 FillItems();
                 SetAccepted();
             });
@@ -391,7 +394,7 @@
                 ShowHideMsgNew(false, "QTY REJECTED + QTY PASSED should not be greater than (>) QTY TO INSP !");
                 return;
             }
-            debugger
+
             var formData = {
                 CASE_NO: $("#lblCASE_NO").html(),
                 CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
@@ -508,7 +511,6 @@
                 ITEM_UNIT: $("#ITEM_UNIT").val(),
             }
             $.post("@Url.Action("RefreshDetail", "IC_RPT_Intermediate")", { model: formData }, function (response) {
-                debugger
                 ShowHideMsgNew(response.status, response.responseText);
                 FillItems();
                 SetAccepted();
@@ -596,7 +598,6 @@
         }
 
         function SavePOAmendment() {
-            debugger
             var Amendment = $("#TxtAmnds").val();
             var date = $("#TxtAmndsDate").val();
             if (Amendment.trim() == "" || date.trim() == "") {
@@ -647,7 +648,6 @@
         }
 
         function DeletePOAmendment(id) {
-            debugger
             var CaseNo = $("#lblCASE_NO").html();
             var PO_NO = $("#lblPONO").html();
             var Sno = id;
@@ -712,10 +712,8 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (response != null) {
                         FillItemDropDown();
-                        debugger
                         $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
                         $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL);
@@ -726,12 +724,14 @@
                         $("#HOLOGRAM").val(response.HOLOGRAM);
                         //setItemVal();
                     }
+                    else {
+                        Reset();
+                    }
                 }
             });
         }
 
         function setItemVal() {
-            debugger
             var ITEM_SRNO_PO = $("#ITEM_SRNO_PO").val();
             let myObject = { Case_No, Call_Recv_Dt, Call_SNo, ITEM_SRNO_PO, Consignee_Cd };
             $.ajax({
@@ -741,7 +741,6 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (response != null) {
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
@@ -787,7 +786,9 @@
                     $.each(response, function (ind, val) {
                         $("#ITEM_SRNO_PO").append($('<option></option>').val(val.Value).html(val.Text));
                     });
-                    $("#ITEM_SRNO_PO").val(response[0].Value);
+                    if (response.length > 0) {
+                        $("#ITEM_SRNO_PO").val(response[0].Value);
+                    }
                     setItemVal();
                 }
             });
@@ -807,7 +808,6 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (parseInt(response) > 0) {
                         $("#btnSave").css("display", "none");
                         $("#btnRefresh").css("display", "none");
@@ -821,6 +821,59 @@
 
                 }
             });
+        }
+
+        function Reset() {
+            //txtBKNO1.Enabled = false;
+            //txtSetNo1.Enabled = false;
+            $("#ITEM_DESC_PO").val("");
+            $("#ITEM_REMARK").val("");
+            //$("#QTY_ORDERED").val("");
+            $("#lblQtyOrder").html("");
+            $("#CUM_QTY_PREV_OFFERED").val("");
+            $("#CUM_QTY_PREV_PASSED").val("");
+            //$("#QTY_TO_INSP").val("");
+            $("#lblQtyINSP").html("");
+            $("#QTY_PASSED").val("");
+            $("#QTY_REJECTED").val("");
+            $("#QTY_DUE").val("");
+            $("#DISPATCH_PACKING_NO").val("");
+            $("#INVOICE_NO").val("");
+            $("#NAME_OF_IE").val("");
+            $("#CONSIGNEE_DESG").val("");
+        }
+
+        function RemoveSpecialChar(id) {
+            debugger
+            var Name = "#" + id;
+            var value = $(Name).val();
+            var desired = value.replace(/[ ](?=[ ])|[^-~`!#$%^&*()=+:/\\;<,>.?_A-Za-z0-9 ]+/g, ' ');
+            //var desired = value.replace(/[^-~`!#$%^&*()=+:/\\;<,>.?_A-Za-z0-9 ]+/g, ' ');
+
+            $(Name).val(desired);
+        }
+
+        function checkTextAreaMaxLength(textBox, e, length) {
+            debugger
+            var mLen = textBox["MaxLength"];
+            if (null == mLen)
+                mLen = length;
+
+            var maxLength = parseInt(mLen);
+            if (!checkSpecialKeys(e)) {
+                if (textBox.value.length > maxLength - 1) {
+                    if (window.event)//IE
+                        e.returnValue = false;
+                    else//Firefox
+                        e.preventDefault();
+                }
+            }
+        }
+        function checkSpecialKeys(e) {
+            if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40)
+                return false;
+            else
+                return true;
         }
     </script>
 }
