@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -656,10 +652,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -4090,7 +4082,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("SET_NO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("ITEM_SRNO_PO");
@@ -4621,10 +4613,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<IcPoAmendment>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("IC_PO_AMENDMENT");
+            entity.HasKey(e => e.Id).HasName("IC_PO_AMENDMENT_PK");
 
+            entity.ToTable("IC_PO_AMENDMENT");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IC_PO_AMENDMENT_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AmendmentDetail)
                 .IsUnicode(false)
                 .HasColumnName("AMENDMENT_DETAIL");
@@ -11891,7 +11887,7 @@ public partial class ModelContext : DbContext
 
             entity.ToTable("T17_CALL_REGISTER");
 
-            entity.HasIndex(e => new { e.RegionCode, e.CallRecvDt, e.CallSno }, "UK_CALL_REGISTER").IsUnique();
+            entity.HasIndex(e => new { e.RegionCode, e.CallRecvDt, e.CallSno, e.CaseNo }, "UK_CALL_REGISTER").IsUnique();
 
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
@@ -12254,7 +12250,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
@@ -24353,6 +24349,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
         modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("IC_INTERMEDIATE_HISTORY_SEQ");
+        modelBuilder.HasSequence("IC_PO_AMENDMENT_SEQ");
         modelBuilder.HasSequence("LABTRAN");
         modelBuilder.HasSequence("LABTRANDTL");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");

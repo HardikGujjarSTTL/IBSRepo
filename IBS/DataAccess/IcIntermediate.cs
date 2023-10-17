@@ -37,7 +37,7 @@ public partial class IcIntermediate
 
     public string? File10 { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 
