@@ -10,32 +10,29 @@
     <div class="tast-list">
         <h2>DOWNLOAD ONLINE BILLS/PO/IC</h2>
     </div>
-    <div class="col-md-3">
+   
         <div class="list-btn">
             <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
             <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
             <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
         </div>
-    </div>
+  
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
+<div class="accordion-body">
 
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
-                    <label for="PropertyId">For the Month</label>
-                    <input type="radio" name="radioGroup" id="rb1" />
+                    <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For the Month</label>                    
                     <span class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="PropertyId">For Given Period</label>
-                    <input type="radio" name="radioGroup" id="rb2" />
+            <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> For Given Period</label>
                     <span class="text-danger"></span>
                 </div>
 
             </div>
-            <div class="row my-0" id="monthyear" style="display:none;">
+            <div id="monthyear" style="display:none;">
+        <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="PropertyId">Month</label>
                     @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),new { @id = "ddlmonth", @class = "form-control" })
@@ -44,9 +41,10 @@
                     <label for="PropertyId">Year</label>
                     @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),new { @id = "ddlyear", @class = "form-control" })
                 </div>
-
+        </div>
             </div>
-            <div class="row my-0" id="fdtodt" style="display:none;">
+            <div id="fdtodt" style="display:none;">
+        <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="PropertyId">Month</label>
                     <input type="text" class="input datepicker" id="fdt" />
@@ -55,12 +53,15 @@
                     <label for="PropertyId">Year</label>
                     <input type="text" class="input datepicker" id="tdt" />
                 </div>
-
-            </div>
         </div>
+            </div>
+        
+    <div class="savenext-btn">
+        <button type="submit" class="save-btn active" id="btngr">Generate Report</button>
     </div>
-</section>
-<button type="submit" class="btn btn-primary" style="width:auto;margin-left:48%;" id="btngr">Generate Report</button>
+</div>
+
+
 <div style="display:none" id="hide">
     <section class="table-section">
         <div class="task-listinput">
