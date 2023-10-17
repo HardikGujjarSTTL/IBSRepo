@@ -610,7 +610,7 @@
                         $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
                         $("#btnSave").attr("disabled", "disabled");
                         $("#btnAcceptPO").attr("disabled", "disabled");
-                        //window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
+                        window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
                     }
                     else {
                         ShowHideMsgNew(response.status, response.responseText);
