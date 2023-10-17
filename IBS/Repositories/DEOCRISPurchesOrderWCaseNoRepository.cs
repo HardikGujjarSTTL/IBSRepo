@@ -34,13 +34,13 @@ namespace IBS.Repositories
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                model1 = JsonConvert.DeserializeObject< List<DEO_CRIS_PurchesOrderModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                model1 = JsonConvert.DeserializeObject<List<DEO_CRIS_PurchesOrderModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 if (model1 != null)
                 {
                     model = model1.FirstOrDefault();
                 }
             }
-            
+
             return model;
         }
 
@@ -120,7 +120,7 @@ namespace IBS.Repositories
                 immsRitesPoHdr.RlyCd = model.RLY_CD;
                 immsRitesPoHdr.Remarks = model.REMARKS;
                 immsRitesPoHdr.UserId = model.UserId;
-                immsRitesPoHdr.PoId =Convert.ToDecimal(model.POI_CD);
+                immsRitesPoHdr.PoId = Convert.ToDecimal(model.POI_CD);
                 immsRitesPoHdr.VendCd = Convert.ToInt32(model.VEND_CD);
                 immsRitesPoHdr.BpoCd = model.BPO_CD;
                 immsRitesPoHdr.Datetime = DateTime.Now;
@@ -135,15 +135,15 @@ namespace IBS.Repositories
         {
             bool retVal = false;
             var immsRitesPoHdr = (from m in context.ImmsRitesPoHdrs
-                              where m.ImmsPokey == IMMS_POKEY && m.ImmsRlyCd == IMMS_RLY_CD
-                              select m).FirstOrDefault();
+                                  where m.ImmsPokey == IMMS_POKEY && m.ImmsRlyCd == IMMS_RLY_CD
+                                  select m).FirstOrDefault();
 
             #region save
             if (immsRitesPoHdr != null)
             {
                 immsRitesPoHdr.Remarks = REMARKS;
                 context.SaveChanges();
-                retVal =true;
+                retVal = true;
             }
             #endregion
             return retVal;
@@ -163,7 +163,7 @@ namespace IBS.Repositories
             return vendorEmail;
         }
 
-        public string[] GenerateRealCaseNoCRIS(string REGION_CD, string IMMS_POKEY,string IMMS_RLY_CD, string USER_ID)
+        public string[] GenerateRealCaseNoCRIS(string REGION_CD, string IMMS_POKEY, string IMMS_RLY_CD, string USER_ID)
         {
             string[] result = new string[2];
             OracleParameter[] par = new OracleParameter[5];
@@ -183,8 +183,58 @@ namespace IBS.Repositories
 
         public DEO_CRIS_PO_MasterDetailsModel DetailsFindByID(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD)
         {
-            DEO_CRIS_PO_MasterDetailsModel model = new();
-            
+            DEO_CRIS_PO_MasterDetailsModel model = new DEO_CRIS_PO_MasterDetailsModel();
+            //OracleParameter[] par = new OracleParameter[4];
+            //par[0] = new OracleParameter("p_IMMS_POKEY", OracleDbType.Varchar2, IMMS_POKEY, ParameterDirection.Input);
+            //par[1] = new OracleParameter("p_IMMS_RLY_CD", OracleDbType.Varchar2, IMMS_RLY_CD, ParameterDirection.Input);
+            //par[2] = new OracleParameter("p_ITEM_SRNO", OracleDbType.Int32, ITEM_SRNO, ParameterDirection.Input);
+            //par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            //var ds = DataAccessDB.GetDataSet("SP_Get_Cris_PODetailsByID", par, 1);
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            //    model = JsonConvert.DeserializeObject<DEO_CRIS_PO_MasterDetailsModel>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //}
+
+            model = (from d in context.ImmsRitesPoDetails
+                          join h in context.ImmsRitesPoHdrs on new { d.ImmsPokey, d.ImmsRlyCd } equals new { h.ImmsPokey, h.ImmsRlyCd }
+                          join u in context.T04Uoms on d.ImmsUomCd equals u.ImmsUomCd into uomGroup
+                          from uom in uomGroup.DefaultIfEmpty()
+                          where d.ImmsPokey == Convert.ToInt32(IMMS_POKEY)
+                          && d.ImmsRlyCd == IMMS_RLY_CD
+                          && d.ItemSrno == ITEM_SRNO
+                          select new DEO_CRIS_PO_MasterDetailsModel
+                          {
+                              IMMS_POKEY = d.ImmsPokey,
+                              IMMS_RLY_CD = d.ImmsRlyCd,
+                              ITEM_SRNO = d.ItemSrno,
+                              ITEM_DESC = d.ItemDesc.Replace("'", "").Substring(0, 400),
+                              ConsigneeCd = d.ConsigneeCd ?? 0,
+                              IMMS_CONSIGNEE_CD = d.ImmsConsigneeCd,
+                              Consignee = d.ImmsConsigneeCd + "-" + d.ImmsConsigneeName + "/" + d.ImmsConsigneeDetail,
+                              BpoCd = h.BpoCd,
+                              IMMS_BPO_CD = h.ImmsBpoCd,
+                              Bpo = h.ImmsBpoName + "/" + h.ImmsBpoDetail,
+                              Qty = d.Qty,
+                              UomCd = d.UomCd ?? 0,
+                              UOM = Convert.ToString(uom.UomCd),
+                              IMMS_UOM_CD = d.ImmsUomCd,
+                              IMMS_UOM_DESC = d.ImmsUomDesc,
+                              Rate = d.Rate,
+                              BasicValue = d.BasicValue,
+                              SalesTaxPer = d.SalesTaxPer,
+                              SalesTax = d.SalesTax,
+                              ExciseType = d.ExciseType,
+                              ExcisePer = d.ExcisePer,
+                              Excise = d.Excise,
+                              OT_CHARGE_TYPE = d.OtChargeType,
+                              OT_CHARGE_PER = d.OtChargePer,
+                              OT_CHARGES = d.OtCharges,
+                              Value = d.Value,
+                              DelvDt = d.DelvDt,
+                              ExtDelvDt = d.ExtDelvDt,
+                              PlNo = d.PlNo
+                          }).FirstOrDefault();
 
             return model;
         }
@@ -247,6 +297,25 @@ namespace IBS.Repositories
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+        }
+
+        public int POMasterSubDetailsInsertUpdate(DEO_CRIS_PO_MasterDetailsModel model)
+        {
+            int ItemSrno = 0;
+            var immsRitesPoDetail = context.ImmsRitesPoDetails.Where(x => x.ImmsPokey == model.IMMS_POKEY
+            && x.ImmsRlyCd == model.IMMS_RLY_CD && x.ImmsConsigneeCd == model.IMMS_CONSIGNEE_CD && x.ItemSrno == model.ITEM_SRNO).FirstOrDefault();
+            if (immsRitesPoDetail != null)
+            {
+                immsRitesPoDetail.ConsigneeCd = model.ConsigneeCd;
+                immsRitesPoDetail.UserId = model.UserId;
+                immsRitesPoDetail.Datetime = DateTime.Now;
+                immsRitesPoDetail.UomCd = model.UomCd;
+                immsRitesPoDetail.PlNo = model.PlNo;
+                immsRitesPoDetail.ItemCd = model.ItemCd;
+                context.SaveChanges();
+                ItemSrno = Convert.ToInt32(immsRitesPoDetail.ItemSrno);
+            }
+            return ItemSrno;
         }
     }
 }
