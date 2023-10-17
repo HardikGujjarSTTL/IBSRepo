@@ -63,7 +63,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
-                                <input type="text" class="input" asp-for="RlyCdDesc">
+                                <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Remarks</label>
-                        <textarea class="input" asp-for="Remarks"> </textarea>
+                        <textarea class="input" asp-for="Remarks" maxlength="500"> </textarea>
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
                 </div>

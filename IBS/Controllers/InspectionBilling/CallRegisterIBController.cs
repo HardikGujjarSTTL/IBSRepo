@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace IBS.Controllers.InspectionBilling
@@ -216,11 +217,11 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
                     #region File Upload Profile Picture
-                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                     {
                         msg = "Document Upload Successfully.";
                         int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.CallRegistrationDoc };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                         DocumentHelper.SaveFiles(DocID, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CallRegistrationDoc), env, iDocument, "CallRegistrationDoc", string.Empty, DocumentIds);
                     }
                     #endregion
@@ -478,6 +479,143 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult CallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, string IeCd, string ActionType)
         {
             VenderCallStatusModel model = new();
+            #region Image Files
+            List<IBS_DocumentDTO> lstDocumentUpload_1 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_1"));
+            FileUploaderDTO FileUploaderUpload_1 = new FileUploaderDTO();
+            FileUploaderUpload_1.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_1.IBS_DocumentList = lstDocumentUpload_1.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1).ToList();
+            FileUploaderUpload_1.OthersSection = false;
+            FileUploaderUpload_1.MaxUploaderinOthers = 5;
+            FileUploaderUpload_1.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload1 = FileUploaderUpload_1;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_2 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_2"));
+            FileUploaderDTO FileUploaderUpload_2 = new FileUploaderDTO();
+            FileUploaderUpload_2.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_2.IBS_DocumentList = lstDocumentUpload_2.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload2).ToList();
+            FileUploaderUpload_2.OthersSection = false;
+            FileUploaderUpload_2.MaxUploaderinOthers = 5;
+            FileUploaderUpload_2.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload2 = FileUploaderUpload_2;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_3 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_3"));
+            FileUploaderDTO FileUploaderUpload_3 = new FileUploaderDTO();
+            FileUploaderUpload_3.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_3.IBS_DocumentList = lstDocumentUpload_3.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload3).ToList();
+            FileUploaderUpload_3.OthersSection = false;
+            FileUploaderUpload_3.MaxUploaderinOthers = 5;
+            FileUploaderUpload_3.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload3 = FileUploaderUpload_3;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_4 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_4"));
+            FileUploaderDTO FileUploaderUpload_4 = new FileUploaderDTO();
+            FileUploaderUpload_4.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_4.IBS_DocumentList = lstDocumentUpload_4.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload4).ToList();
+            FileUploaderUpload_4.OthersSection = false;
+            FileUploaderUpload_4.MaxUploaderinOthers = 5;
+            FileUploaderUpload_4.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload4 = FileUploaderUpload_4;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_5 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_5"));
+            FileUploaderDTO FileUploaderUpload_5 = new FileUploaderDTO();
+            FileUploaderUpload_5.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_5.IBS_DocumentList = lstDocumentUpload_5.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload5).ToList();
+            FileUploaderUpload_5.OthersSection = false;
+            FileUploaderUpload_5.MaxUploaderinOthers = 5;
+            FileUploaderUpload_5.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload5 = FileUploaderUpload_5;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_6 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_6"));
+            FileUploaderDTO FileUploaderUpload_6 = new FileUploaderDTO();
+            FileUploaderUpload_6.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_6.IBS_DocumentList = lstDocumentUpload_6.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload6).ToList();
+            FileUploaderUpload_6.OthersSection = false;
+            FileUploaderUpload_6.MaxUploaderinOthers = 5;
+            FileUploaderUpload_6.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload6 = FileUploaderUpload_6;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_7 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_7"));
+            FileUploaderDTO FileUploaderUpload_7 = new FileUploaderDTO();
+            FileUploaderUpload_7.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_7.IBS_DocumentList = lstDocumentUpload_7.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload7).ToList();
+            FileUploaderUpload_7.OthersSection = false;
+            FileUploaderUpload_7.MaxUploaderinOthers = 5;
+            FileUploaderUpload_7.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload7 = FileUploaderUpload_7;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_8 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_8"));
+            FileUploaderDTO FileUploaderUpload_8 = new FileUploaderDTO();
+            FileUploaderUpload_8.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_8.IBS_DocumentList = lstDocumentUpload_8.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload8).ToList();
+            FileUploaderUpload_8.OthersSection = false;
+            FileUploaderUpload_8.MaxUploaderinOthers = 5;
+            FileUploaderUpload_8.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload8 = FileUploaderUpload_8;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_9 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_9"));
+            FileUploaderDTO FileUploaderUpload_9 = new FileUploaderDTO();
+            FileUploaderUpload_9.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_9.IBS_DocumentList = lstDocumentUpload_9.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload9).ToList();
+            FileUploaderUpload_9.OthersSection = false;
+            FileUploaderUpload_9.MaxUploaderinOthers = 5;
+            FileUploaderUpload_9.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload9 = FileUploaderUpload_9;
+
+            List<IBS_DocumentDTO> lstDocumentUpload_10 = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPHOTOS, Convert.ToString(CaseNo + "_10"));
+            FileUploaderDTO FileUploaderUpload_10 = new FileUploaderDTO();
+            FileUploaderUpload_10.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload_10.IBS_DocumentList = lstDocumentUpload_10.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload10).ToList();
+            FileUploaderUpload_10.OthersSection = false;
+            FileUploaderUpload_10.MaxUploaderinOthers = 5;
+            FileUploaderUpload_10.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.IC_Photos_Upload10 = FileUploaderUpload_10;
+
+            List<IBS_DocumentDTO> lstDocumentUpload = iDocument.GetRecordsList((int)Enums.DocumentCategory.ICPhotoDigSign, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderUpload = new FileUploaderDTO();
+            FileUploaderUpload.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderUpload.IBS_DocumentList = lstDocumentUpload.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign).ToList();
+            FileUploaderUpload.OthersSection = false;
+            FileUploaderUpload.MaxUploaderinOthers = 5;
+            FileUploaderUpload.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.ICPhoto_Dig_Sign = FileUploaderUpload;
+
+            List<IBS_DocumentDTO> lstDocumentTestplan = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadTestPlan, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploadertestplan = new FileUploaderDTO();
+            FileUploadertestplan.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploadertestplan.IBS_DocumentList = lstDocumentTestplan.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan).ToList();
+            FileUploadertestplan.OthersSection = false;
+            FileUploadertestplan.MaxUploaderinOthers = 5;
+            FileUploadertestplan.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_Test_Plan = FileUploadertestplan;
+
+            List<IBS_DocumentDTO> lstDocumentICAnnexue1 = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadICAnnexue1, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderICAnnexue1 = new FileUploaderDTO();
+            FileUploaderICAnnexue1.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderICAnnexue1.IBS_DocumentList = lstDocumentICAnnexue1.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1).ToList();
+            FileUploaderICAnnexue1.OthersSection = false;
+            FileUploaderICAnnexue1.MaxUploaderinOthers = 5;
+            FileUploaderICAnnexue1.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_IC_Annexue1 = FileUploaderICAnnexue1;
+
+            List<IBS_DocumentDTO> lstDocumentICAnnexue2 = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadICAnnexue2, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderICAnnexue2 = new FileUploaderDTO();
+            FileUploaderICAnnexue2.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderICAnnexue2.IBS_DocumentList = lstDocumentICAnnexue2.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2).ToList();
+            FileUploaderICAnnexue2.OthersSection = false;
+            FileUploaderICAnnexue2.MaxUploaderinOthers = 5;
+            FileUploaderICAnnexue2.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Upload_IC_Annexue2 = FileUploaderICAnnexue2;
+            
+            List<IBS_DocumentDTO> lstDocumentCancellationDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.CancellationDocument, Convert.ToString(CaseNo));
+            FileUploaderDTO FileUploaderlstDocumentCancellationDocument = new FileUploaderDTO();
+            FileUploaderlstDocumentCancellationDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderlstDocumentCancellationDocument.IBS_DocumentList = lstDocumentCancellationDocument.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document).ToList();
+            FileUploaderlstDocumentCancellationDocument.OthersSection = false;
+            FileUploaderlstDocumentCancellationDocument.MaxUploaderinOthers = 5;
+            FileUploaderlstDocumentCancellationDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.Cancellation_Document = FileUploaderlstDocumentCancellationDocument;
+            #endregion
+
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
@@ -485,6 +623,93 @@ namespace IBS.Controllers.InspectionBilling
             model.IeCd = IeCd;
             model.ActionType = ActionType;
             return View(model);
+        }
+
+        public IActionResult CallStatusFiles(VenderCallStatusModel model, IFormCollection FrmCollection)
+        {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+            model.UserId = Convert.ToString(UserId);
+            model.IeCd = Convert.ToString(GetIeCd);
+            model = callregisterRepository.CallStatusFilesSave(model,DocumentsList);
+            if (model.AlertMsg == "Success")
+            {
+                if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
+                {
+                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                    DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+                model.AlertMsg = "Upload done Successfully!!!";
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+        }
+
+        public IActionResult SaveCancellation(VenderCallStatusModel model, IFormCollection FrmCollection)
+        {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+
+            string myYear, myMonth, myDay;
+            string ConcatDate = Convert.ToString(model.CallRecvDt);
+            myDay = ConcatDate.Substring(0, 2);
+            myMonth = ConcatDate.Substring(3, 2);
+            myYear = ConcatDate.Substring(6, 4);
+            string dt_out = myYear + myMonth + myDay;
+
+
+            model.UserId = Convert.ToString(UserId);
+            model.IeCd = Convert.ToString(GetIeCd);
+            model = callregisterRepository.CallCancellationSave(model,DocumentsList);
+            if (model.AlertMsg == "Success")
+            {
+                if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
+                {
+                    var FileName = model.CaseNo + "-" + dt_out + "-" + model.CallSno;
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document };
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CALLCANCELLATIONDOCUMENTS), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+                model.AlertMsg = "Upload done Successfully!!!";
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CallStatusUpload(VenderCallStatusModel model,IFormCollection FrmCollection)
+        {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+            model.UserId = Convert.ToString(UserId);
+            model = callregisterRepository.CallStatusUploadSave(model, DocumentsList);
+            if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
+            {
+                var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo;
+                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
+                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                if (DocumentsList[0].DocName == "Upload TestPlan")
+                {
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+                else
+                {
+                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
+            }
+            if (model.AlertMsg == "Success")
+            {
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
         }
 
         [HttpPost]
@@ -505,7 +730,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "CallStatusSave", 1, GetIPAddress());
             }
-            return View(model);
+            return Json(model);
         }
 
         public IActionResult CallDetails(string CaseNo, string _CallRecvDt, int CallSno, int ItemSrNoPo)
@@ -572,6 +797,40 @@ namespace IBS.Controllers.InspectionBilling
             return RedirectToAction("Index");
         }
 
+        public IActionResult GetBkNoAndSetNo(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        {
+             model = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno,model, selectedConsigneeCd);
+
+            return Json(model);
+        }
+
+        public IActionResult CancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = callregisterRepository.GetCancelChargeByStatus(CaseNo, DesireDt, CallSno, selectedValue);
+            return Json(model);
+        }
+        
+        public IActionResult GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            string IeCd = Convert.ToString(GetIeCd);
+            string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
+            VenderCallStatusModel model = callregisterRepository.GetRlyDrp(CaseNo, DesireDt, CallSno, selectedValue, IeCd, Region);
+            if(model.AlertMsg  != "Success!!!")
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+            return Json(model);         
+        }
+        
+        public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = callregisterRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
+            if(model.AlertMsg  != "Success!!!")
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+            return Json(model);
+        }
 
     }
 }

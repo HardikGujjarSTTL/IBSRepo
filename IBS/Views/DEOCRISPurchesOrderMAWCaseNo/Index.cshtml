@@ -90,9 +90,10 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.CaseNo;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
+                            var ImmsPokey = data.IMMS_POKEY;
+                            var ImmsRlyCd = data.IMMS_RLY_CD;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + ImmsPokey + "&IMMS_RLY_CD=" + ImmsRlyCd;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="View"></i></a>';
                             html += '</div>';
                             return html;
                         }

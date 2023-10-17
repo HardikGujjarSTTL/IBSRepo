@@ -79,7 +79,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Purchase Order No./ LOA No.</label>
-                        <input type="text" class="input" asp-for="PO_NO">
+                        <input type="text" class="input" asp-for="PO_NO" maxlength="50">
                         <span asp-validation-for="PO_NO" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -183,7 +183,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Remarks</label>
-                        <textarea class="input" asp-for="REMARKS"> </textarea>
+                        <textarea class="input" asp-for="REMARKS" maxlength="500"> </textarea>
                         <span asp-validation-for="REMARKS" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">

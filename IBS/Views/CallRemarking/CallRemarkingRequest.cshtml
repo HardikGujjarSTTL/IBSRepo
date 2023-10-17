@@ -31,8 +31,9 @@
                     </div>
                 </div>
                 <div class="row my-0 iedata">
-                    <h3 class="heading3">List of No of Pending Calls From IE</h3>
+                    
                     <div class="col-md-12 mb-3">
+                        <h3 class="heading3">List of No of Pending Calls From IE</h3>
                         <div class="dash-table">
                             <table id="dtPendingCallsList1" class="table-responsive">
                                 <thead>
@@ -56,7 +57,9 @@
                     </div>
                 </div>
                 <div class="row my-0 iedata">
-                    <h3 class="heading3">*** Proposed for remarking should be posted by 14:30 - hrs for same date. ***</h3>
+                    <div class="col-lg-12">
+                        <h3 class="heading3">*** Proposed for remarking should be posted by 14:30 - hrs for same date. ***</h3>
+                    </div>
                     <div class="col-md-4 mb-3">
                         <label for="ToIeCd">Remarking To Inspection Engineer <i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.ToIeCd, Common.GetRemarkingToIE(Model.Region), "--Select--",  new { @class = "" })
@@ -170,7 +173,7 @@
             $("#dtPendingCallsList1").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+                //scrollX: true,
                 scrollY: '500px',
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
@@ -230,6 +233,9 @@
                     },
                     { data: "CallRemarkStatus" },
                 ],
+                "initComplete": function (settings, json) {
+                    $("#dtPendingCallsList1").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 

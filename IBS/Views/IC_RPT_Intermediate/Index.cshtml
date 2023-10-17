@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IBS.Models.IC_RPT_IntermediateModel;
+@{
     ViewData["Title"] = "IC REPORT EDIT FORM";
     string clsView = "";
     //if (Model.ErrorMsg != null)
@@ -15,50 +16,59 @@
 <div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
         <div class="accordion-body">
-            <table class="borderGrid mb-2">
-                <tr>
-                    <td>
-                        <label for="Reference">Case No. : </label>
-                    </td>
-                    <td>
-                        <label class="text-danger" id="lblBank">N22010890</label>
-                    </td>
-                    <td>
-                        <label for="Reference">Call Serial No : </label>
-                    </td>
-                    <td>
-                        <label class="text-danger" id="lblChqNo">80</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Reference">Call Date : </label>
-                    </td>
-                    <td>
-                        <label class="text-danger" id="lblChqDate">02/08/2022</label>
-                    </td>
-                    <td>
-                        <label for="Reference">PO No. : </label>
-                    </td>
-                    <td>
-                        <label class="text-danger" id="lblVNo">02211400100166</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Reference">PO Date :</label>
-                    </td>
-                    <td>
-                        <label class="text-danger" id="lblJVNO">02/08/2022</label>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="row my-0 m-lg-1" style="border: 1px solid;">
-                <label for="Reference">PO AMENDMENTS</label>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="borderGrid mb-2">
+                        <tr>
+                            <td>
+                                <label for="Reference">Case No. : </label>
+                            </td>
+                            <td>
+                                <label id="lblCASE_NO">@Model.CASE_NO</label>
+                            </td>
+                            <td>
+                                <label for="Reference">Call Serial No : </label>
+                            </td>
+                            <td>
+                                <label id="lblCall_SNO">@Model.Call_SNO</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="Reference">Call Date : </label>
+                            </td>
+                            <td>
+                                <label id="lblCall_Recv_dt">@Model.Display_Call_Recv_dt</label>
+                            </td>
+                            <td>
+                                <label for="Reference">PO No. : </label>
+                            </td>
+                            <td>
+                                <label id="lblPONO">@Model.PO_NO</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="Reference">PO Date :</label>
+                            </td>
+                            <td>
+                                <label id="lblPODT">@Model.PO_DT</label>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          
+            <div class="row my-0">
+                <div class="col-lg-12">
+                <h3 class="heading3">PO AMENDMENTS</h3>
+                </div>
+                <input type="hidden" id="hdnSNo" />
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Amendments</label>
-                    <input type="text" class="input" id="TxtAmnds" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" id="TxtAmnds" /> @*asp-for="test"*@
                     @*<span asp-validation-for="test" class="text-danger"></span>*@
                 </div>
                 <div class="col-md-3 mb-3">
@@ -67,8 +77,8 @@
                     @*<span asp-validation-for="test" class="text-danger"></span>*@
                 </div>
                 <div class="col-md-3 mb-3">
-                    <div class="savenext-btn">
-                        <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Save Ammendments</button>
+                    <div class="savenext-btn btnAlign">
+                        <button type="button" class="save-btn active" id="btnSavePOAmendment" onclick="SavePOAmendment()" data-id="">Save Ammendments</button>
                     </div>
                 </div>
             </div>
@@ -76,7 +86,7 @@
                 <div class="col-md-12">
                     <div class="task-listinput">
                         <div class="dash-table mb-0">
-                            <table id="dtList" class="table-responsive mb-0">
+                            <table id="dtPoAmendment" class="table-responsive mb-0">
                                 <thead>
                                     <tr>
                                         <th>SNo.</th>
@@ -96,134 +106,130 @@
             <div class="row my-3">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee</label>
-                    @Html.DropDownList("dpConsignee", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.CONSIGNEE_CD, new SelectList(IBS.Models.Common.BindConsignee(Model.CASE_NO, Model.Display_Call_Recv_dt, Model.Call_SNO) , "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Item</label>
-                    @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    <label for="Reference">Items</label>
+                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
-                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="BK_NO" maxlength="12" /> @*asp-for="test"*@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">SET No.</label>
-                    <input type="text" class="input" id="txtBkNO" maxlength="12" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" /> @*asp-for="test"*@
                 </div>
             </div>
 
-            <div class="row my-3">
+            <div class="row my-3 clsMan_type">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee Manufacture Type : </label>
-                    @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.MAN_TYPE, new SelectList(IBS.Models.Common.GetConsignneManufacturingType() , "Value", "Text"))
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Consignee DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="CONSIGNEE_DESC" maxlength="200" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Bill Paying Officer DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="BPO_DESC" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3 clsGBPA">
                     <label for="Reference">Governing Bill Paying Authority : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="GBPO_AUTH" maxlength="200" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Manufacturer DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="MANUFAC_DESC" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
                     <label for="Reference">Purchasing Authority DESCRIPTION : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="PUR_AUTH_DESC" maxlength="200" />
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-3 mb-3 clsOffInsNo">
                     <label for="Reference">Offered Inst. No. : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="OFF_INST_NO" maxlength="200" />
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-3 mb-3 clsIUnit">
                     <label for="Reference">ITEM UNIT (UOM) : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="200" />
+                    <input type="text" class="input" asp-for="ITEM_UNIT" maxlength="200" />
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM DESCRIPTION : </label>
-                    <textarea id="txtConsDesc" maxlength="750"></textarea>
+                    <textarea maxlength="750" asp-for="ITEM_DESC_PO"></textarea>
                     @*<input type="text" class="input"  />*@
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">ITEM REMARK : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="ITEM_REMARK" maxlength="750" />
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">QTY ORDER : </label>
-                    <label id="lblQtyOrder">347</label>
+                    <label for="Reference" id="lblQtyOrderd">QTY ORDER : </label>
+                    <label id="lblQtyOrder">@Model.QTY_ORDERED</label>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">CUM QTY PREV OFFERED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <label for="Reference" id="lblCumQtyPreOffer">CUM QTY PREV OFFERED : </label>
+                    <input type="number" class="input" asp-for="CUM_QTY_PREV_OFFERED" maxlength="10" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">CUM QTY PREV PASSED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="CUM_QTY_PREV_PASSED" maxlength="10" />
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">QTY TO INSP : </label>
-                    <label id="lblQtyINSP">347</label>
+                    <label id="lblQtyINSP">@Model.QTY_TO_INSP</label>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">QTY PASSED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <label for="Reference" id="lblQtyPassed">QTY PASSED : </label>
+                    <input type="number" class="input" asp-for="QTY_PASSED" maxlength="10" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">QTY REJECTED : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="QTY_REJECTED" maxlength="10" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">QTY DUE : </label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="10" />
-                    <span class="text-danger">Only numeric is allowed!</span>
+                    <input type="number" class="input" asp-for="QTY_DUE" maxlength="10" />
                 </div>
             </div>
 
-            <div class="row my-0">
+            <div class="row my-0 clsRemark" style="display:none;">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Remark<span class="text-danger">* (Max 400 Chars)</span></label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="REMARK" maxlength="750" />
+                    <span class="text-danger">* Add Rejection Remarks.</span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Holograms<span class="text-danger">* (Max 250 Chars)</span></label>
-                    <input type="text" class="input" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="HOLOGRAM" maxlength="750" />
                     <span class="text-danger">* Enter series of Holograms Used on material and if Holograms not used then kindly mention type of seal & it's No..</span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Case Status Date</label>
-                    <input type="text" class="input datepicker" id="txtConsDesc" maxlength="750" />
+                    <input type="text" class="input" asp-for="CALL_STATUS_DT" readonly="readonly" />
                 </div>
                 <div class="col-md-9 mb-3">
                     <label for="Reference"> </label>
@@ -232,17 +238,37 @@
             </div>
 
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-3 mb-3 clsLAB_RE">
                     <label for="Reference">Case Lab report receipt Date</label>
-                    <input type="text" class="input datepicker" id="txtLabReceDate" placeholder="(DD/MM/YYYY)" />
+                    <input type="text" class="input datepicker" asp-for="LAB_TST_RECT_DT" id="txtLabReceDate" placeholder="(DD/MM/YYYY)" />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="Reference">Passed instt. Note</label>
-                    <input type="text" class="input" id="txtConsDesc" />
+                    <label for="Reference" id="lblPassIns">Passed instt. Note</label>
+                    <input type="text" class="input" asp-for="PASSED_INST_NO" />
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Visits Dates</label>
-                    <input type="text" class="input" id="txtConsDesc" />
+                    <label for="Reference" id="lblVisitDates">Visits Dates</label>
+                    <input type="text" class="input" asp-for="VISIT_DATES" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3 clsDIS_PAC_NO">
+                    <label for="Reference" id="lblDisAdvNo">Dispatch Advice No.</label>
+                    <input type="text" class="input" asp-for="DISPATCH_PACKING_NO" />
+                </div>
+                <div class="col-md-6 mb-3 clsINVOICE_NO">
+                    <label for="Reference">Invoice No.</label>
+                    <input type="text" class="input" asp-for="INVOICE_NO" />
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6 mb-3 clsNAME_INS_ENG">
+                    <label for="Reference">Name of Inspecting Engineer</label>
+                    <input type="text" class="input" asp-for="NAME_OF_IE" />
+                </div>
+                <div class="col-md-6 mb-3 clsCONS_DESG">
+                    <label for="Reference">Consignee Destination</label>
+                    <input type="text" class="input" asp-for="CONSIGNEE_DESG" />
                 </div>
             </div>
 
@@ -250,8 +276,8 @@
                 <div class="col-md-10 mb-3">
                     <label for="Reference">IE Stamp</label>
                     <div style="display:flex;">
-                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
-                        @Html.DropDownList("dpItem", new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                        <div class="col-md-5 mb-3" style="margin-right:25px;">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
+                        <div class="col-md-5 mb-3">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL2, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
                     </div>
                 </div>
             </div>
@@ -265,3 +291,544 @@
         </div>
     </form>
 </div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        debugger
+        var Case_No = "@Model.CASE_NO";
+        var Call_Recv_Dt = "@Model.Call_Recv_dt";
+        var Call_SNo = "@Model.Call_SNO";
+        var Consignee_Cd = "@Model.CONSIGNEE_CD";
+        var ActionAR = "@Model.ACTIONAR";
+        $(document).ready(function () {
+            if ("@Model.ACTIONAR" == "R") {
+                $(".clsRemark").css("display", "");
+            }
+
+            if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
+
+            $("#CONSIGNEE_CD").change(function () {
+                FillItems();
+                SetAccepted();
+            });
+
+            $("#ITEM_SRNO_PO").change(function () {
+                setItemVal();
+            });
+
+            AcceptedFun();
+            GetVisitsChanges();
+
+            if ("@Model.Region" == "C") {
+                $(".clsMan_type").css("display", "");
+                $(".clsGBPA").css("display", "");
+                $(".clsOffInsNo").css("display", "none");
+                $(".clsIUnit").css("display", "none");
+                $("#lblQtyOrderd").html("QUANTITY ORDERED(MT)")
+                $("#lblCumQtyPreOffer").html("CUM QTY DISPATCHED PREV(MT)");
+                $("#lblQtyPassed").html("QTY NOW DISPATCHED(MT)");
+                $("#lblVisitDates").html("Dates of Dispatch");
+                $(".clsLAB_RE").css("display", "none");
+                $("#lblPassIns").html("INSTALLMENT NO.");
+                $(".clsDIS_PAC_NO").css("display", "");
+                $(".clsINVOICE_NO").css("display", "");
+                $(".clsNAME_INS_ENG").css("display", "");
+                $(".clsCONS_DESG").css("display", "");
+                lstman();
+            } else {
+                $(".clsMan_type").css("display", "none");
+                $(".clsGBPA").css("display", "none");
+                $(".clsOffInsNo").css("display", "");
+                $(".clsIUnit").css("display", "");
+                $("#lblQtyOrderd").html("QTY ORDERED :")
+                $("#lblCumQtyPreOffer").html("CUM QTY PREV OFFERED");
+                $("#lblQtyPassed").html("QTY PASSED");
+                $("#lblVisitDates").html("Visits Dates");
+                $(".clsLAB_RE").css("display", "");
+                $("#lblPassIns").html("Passed instt. Note");
+                $(".clsDIS_PAC_NO").css("display", "none");
+                $(".clsINVOICE_NO").css("display", "none");
+                $(".clsNAME_INS_ENG").css("display", "none");
+                $(".clsCONS_DESG").css("display", "none");
+            }
+            FillItems();
+
+            InitializationPOAmendment();
+            SetAccepted();
+        });
+
+
+
+        function lstman() {
+            if ($("#MAN_TYPE").val() == "B") {
+                $("#lblDisAdvNo").html("Dispatch Adive No.");
+            }
+            else if ($("#MAN_TYPE").val() == "J") {
+                $("#lblDisAdvNo").html("Packing List No.");
+            }
+            else {
+                $(".clsGBPA").css("display", "none"); // GBPO_DES.Visible = false;
+                $(".clsOffInsNo").css("display", ""); //OFF_INST_NO.Visible = true;
+                $(".clsIUnit").css("display", ""); //I_UOM.Visible = true;
+                $("#lblQtyOrderd").html("QTY ORDERED :") //Labelqtyod.Text = "QTY ORDERED";
+                $("#lblCumQtyPreOffer").html("CUM QTY PREV OFFERED"); //Labelcumqtyoffer.Text = "CUM QTY PREV OFFERED";
+                $("#lblQtyPassed").html("QTY PASSED :");  //Labelqtypass.Text = "QTY PASSED";
+                $("#lblVisitDates").html("Visits Dates"); //LabelVT.Text = "Visits Dates";
+                $(".clsLAB_RE").css("display", "");  //LAB_RE.Visible = true;
+                $("#lblPassIns").html("Passed instt. Note");  //Labelinst.Text = "Passed instt. Note";
+                $(".clsDIS_PAC_NO").css("display", "none"); //DIS_PAC_NO.Visible = false;
+                $(".clsINVOICE_NO").css("display", "none"); //INVOICE_NO.Visible = false;
+                $(".clsNAME_INS_ENG").css("display", "none"); //NAME_INS_ENG.Visible = false;
+                $(".clsCONS_DESG").css("display", "none"); //CONS_DESG.Visible = false;
+            }
+        }
+
+        $("#btnSave").click(function () {
+            if ($("#CONSIGNEE_CD").val() == "0" || $("#CONSIGNEE_CD").val() == "") {
+                ShowHideMsgNew(false, "Please select consignee !");
+                return;
+            }
+
+            var Qty_TO_Ins = "@Model.QTY_TO_INSP";
+            var QtyRejected = $("#QTY_REJECTED").val() == "" ? "0" : $("#QTY_REJECTED").val();
+            var QtyPassed = $("#QTY_PASSED").val() == "" ? "0" : $("#QTY_PASSED").val();
+            if (!IsValidQty(Qty_TO_Ins, QtyRejected, QtyPassed)) {
+                ShowHideMsgNew(false, "QTY REJECTED + QTY PASSED should not be greater than (>) QTY TO INSP !");
+                return;
+            }
+            debugger
+            var formData = {
+                CASE_NO: $("#lblCASE_NO").html(),
+                CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
+                DP_CONSIGNEE_CD: $("#CONSIGNEE_CD").val(),
+                ACTIONAR: "@Model.ACTIONAR",
+                //IE_CD: $("#ClusterID option:selected").text(),
+                PO_NO: $("#lblPONO").html(),
+                PO_DT: $("#lblPODT").html(),
+                Call_SNO: $("#lblCall_SNO").html(),
+                Call_Recv_dt: $("#lblCall_Recv_dt").html(),
+                Call_Install_No: $("#OFF_INST_NO").val(),
+                MFG_Name: $("#MANUFAC_DESC").val(),
+                ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
+                ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
+                ITEM_REMARK: $("#ITEM_REMARK").val(),
+                QTY_ORDERED: $("#lblQtyOrder").html(),
+                CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
+                CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
+                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_PASSED: $("#QTY_PASSED").val(),
+                QTY_REJECTED: $("#QTY_REJECTED").val(),
+                QTY_DUE: $("#QTY_DUE").val(),
+                UNIT_DTL: $("#ITEM_UNIT").val(),
+                BK_NO: $("#BK_NO").val(),
+                SET_NO: $("#SET_NO").val(),
+                IE_STAMPS_DETAIL: $("#IE_STAMPS_DETAIL").val(),
+                IE_STAMPS_DETAIL2: $("#IE_STAMPS_DETAIL2").val(),
+                REMARK: $("#REMARK").val(),
+                PASSED_INST_NO: $("#PASSED_INST_NO").val(),
+                LAB_TST_RECT_DT: $("#LAB_TST_RECT_DT").val(),
+                HOLOGRAM: $("#HOLOGRAM").val(),
+                MAN_TYPE: $("#MAN_TYPE").val(),
+                DISPATCH_PACKING_NO: $("#DISPATCH_PACKING_NO").val(),
+                INVOICE_NO: $("#INVOICE_NO").val(),
+                NAME_OF_IE: $("#NAME_OF_IE").val(),
+                CONSIGNEE_DESG: $("#CONSIGNEE_DESG").val(),
+                CONSIGNEE_DTL: $("#CONSIGNEE_DESC").val(),
+                CONSIGNEE_DESC: $("#CONSIGNEE_DESC").val(),
+                BPO_DTL: $("#BPO_DESC").val(),
+                GOV_BILL_AUTH: $("#GBPO_AUTH").val(),
+                PUR_DTL: $("#MANUFAC_DESC").val(),
+                MANUFAC_DESC: $("#MANUFAC_DESC").val(),
+                PUR_AUT_DTL: $("#PUR_AUTH_DESC").val(),
+                PUR_AUTH_DESC: $("#PUR_AUTH_DESC").val(),
+                OFF_INST_NO_DTL: $("#OFF_INST_NO").val(),
+                VISIT_DATES: $("#VISIT_DATES").val(),
+                VISITS_DATES: $("#VISIT_DATES").val(),
+                BPO_DESC: $("#BPO_DESC").val(),
+                GBPO_AUTH: $("#GBPO_AUTH").val(),
+                OFF_INST_NO: $("#OFF_INST_NO").val(),
+                ITEM_UNIT: $("#ITEM_UNIT").val(),
+            }
+            $.post("@Url.Action("SaveDetails", "IC_RPT_Intermediate")", { model: formData }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+
+                }
+            });
+        });
+
+
+        $("#btnRefresh").click(function () {
+
+            var formData = {
+                CASE_NO: $("#lblCASE_NO").html(),
+                CONSIGNEE_CD: "@Model.CONSIGNEE_CD",
+                DP_CONSIGNEE_CD: $("#CONSIGNEE_CD").val(),
+                ACTIONAR: "@Model.ACTIONAR",
+                //IE_CD: $("#ClusterID option:selected").text(),
+                PO_NO: $("#lblPONO").html(),
+                PO_DT: $("#lblPODT").html(),
+                Call_SNO: $("#lblCall_SNO").html(),
+                Call_Recv_dt: $("#lblCall_Recv_dt").html(),
+                Call_Install_No: $("#OFF_INST_NO").val(),
+                MFG_Name: $("#MANUFAC_DESC").val(),
+                ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
+                ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
+                ITEM_REMARK: $("#ITEM_REMARK").val(),
+                QTY_ORDERED: $("#lblQtyOrder").html(),
+                CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
+                CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
+                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_PASSED: $("#QTY_PASSED").val(),
+                QTY_REJECTED: $("#QTY_REJECTED").val(),
+                QTY_DUE: $("#QTY_DUE").val(),
+                UNIT_DTL: $("#ITEM_UNIT").val(),
+                BK_NO: $("#BK_NO").val(),
+                SET_NO: $("#SET_NO").val(),
+                IE_STAMPS_DETAIL: $("#IE_STAMPS_DETAIL").val(),
+                IE_STAMPS_DETAIL2: $("#IE_STAMPS_DETAIL2").val(),
+                REMARK: $("#REMARK").val(),
+                PASSED_INST_NO: $("#PASSED_INST_NO").val(),
+                LAB_TST_RECT_DT: $("#LAB_TST_RECT_DT").val(),
+                HOLOGRAM: $("#HOLOGRAM").val(),
+                MAN_TYPE: $("#MAN_TYPE").val(),
+                DISPATCH_PACKING_NO: $("#DISPATCH_PACKING_NO").val(),
+                INVOICE_NO: $("#INVOICE_NO").val(),
+                NAME_OF_IE: $("#NAME_OF_IE").val(),
+                CONSIGNEE_DESG: $("#CONSIGNEE_DESG").val(),
+                CONSIGNEE_DTL: $("#CONSIGNEE_DESC").val(),
+                CONSIGNEE_DESC: $("#CONSIGNEE_DESC").val(),
+                BPO_DTL: $("#BPO_DESC").val(),
+                GOV_BILL_AUTH: $("#GBPO_AUTH").val(),
+                PUR_DTL: $("#MANUFAC_DESC").val(),
+                MANUFAC_DESC: $("#MANUFAC_DESC").val(),
+                PUR_AUT_DTL: $("#PUR_AUTH_DESC").val(),
+                PUR_AUTH_DESC: $("#PUR_AUTH_DESC").val(),
+                OFF_INST_NO_DTL: $("#OFF_INST_NO").val(),
+                VISIT_DATES: $("#VISIT_DATES").val(),
+                VISITS_DATES: $("#VISIT_DATES").val(),
+                BPO_DESC: $("#BPO_DESC").val(),
+                GBPO_AUTH: $("#GBPO_AUTH").val(),
+                OFF_INST_NO: $("#OFF_INST_NO").val(),
+                ITEM_UNIT: $("#ITEM_UNIT").val(),
+            }
+            $.post("@Url.Action("RefreshDetail", "IC_RPT_Intermediate")", { model: formData }, function (response) {
+                debugger
+                ShowHideMsgNew(response.status, response.responseText);
+                FillItems();
+                SetAccepted();
+            });
+        });
+
+        $("#btnCancel").click(function () {
+            var CASE_NO = Case_No;
+            var CALL_RECV_DT = Call_Recv_Dt;
+            var CALL_SNO = Call_SNo;
+            var CONSIGNEE_CD = Consignee_Cd;
+            var ACTIONAR = ActionAR;
+
+            let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
+            var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
+            window.location.href = url;
+        });
+
+        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
+            var inspqty = 0;
+            var rejectedqty = 0;
+            var passedqty = 0;
+
+            inspqty = parseFloat(pinspqty);
+            rejectedqty = parseFloat(prejectedqty);
+            passedqty = parseFloat(ppassedqty);
+
+            if ((rejectedqty + passedqty) > inspqty) {
+                return false;
+
+            }
+            return true;
+        }
+
+
+        function InitializationPOAmendment() {
+
+            var Case_No = "@Model.CASE_NO";
+            $("#dtPoAmendment").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadPOAmendmentTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            Case_No
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    //{
+                    //    data: '', orderable: false, width: '5%',
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    { data: "Sno" },
+                    { data: "Amendments" },
+                    { data: "Date" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Sno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick= EditPOAmendment(\'' + id + '\') class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="DeletePOAmendment(\'' + id + '\')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[1, "asc"]]
+            });
+        }
+
+        function SavePOAmendment() {
+            debugger
+            var Amendment = $("#TxtAmnds").val();
+            var date = $("#TxtAmndsDate").val();
+            if (Amendment.trim() == "" || date.trim() == "") {
+                ShowHideMsgNew(false, "Amendments and Date is required.");
+                return;
+            }
+
+            var CaseNo = $("#lblCASE_NO").html();
+            var PO_NO = $("#lblPONO").html();
+            var Sno = $("#hdnSNo").val() == "" ? "-1" : $("#hdnSNo").val();
+            var Amendments = $("#TxtAmnds").val();
+            var Date = $("#TxtAmndsDate").val();
+
+            let myObject = { CaseNo, PO_NO, Sno, Amendments, Date };
+            $.ajax({
+                url: '@Url.Action("SaveAmendment", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    FillItems();
+                    SetAccepted();
+                    InitializationPOAmendment();
+                    $("#hdnSNo").val("-1");
+                    $("#TxtAmnds").val("");
+                    $("#TxtAmndsDate").val("");
+                }
+            });
+        }
+
+        function EditPOAmendment(id) {
+            $.ajax({
+                url: '@Url.Action("GetPOAmendment", "IC_RPT_Intermediate")/' + id,
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != null) {
+                        $("#hdnSNo").val(response.Sno);
+                        $("#TxtAmnds").val(response.Amendments.trim());
+                        $("#TxtAmndsDate").val(response.Date.trim());
+                    }
+                }
+            });
+        }
+
+        function DeletePOAmendment(id) {
+            debugger
+            var CaseNo = $("#lblCASE_NO").html();
+            var PO_NO = $("#lblPONO").html();
+            var Sno = id;
+            let myObject = { CaseNo, PO_NO, Sno };
+            $.ajax({
+                url: '@Url.Action("DeletePOAmendment", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    InitializationPOAmendment();
+                    $("#hdnSNo").val("-1");
+                    $("#TxtAmnds").val("");
+                    $("#TxtAmndsDate").val("");
+                }
+            });
+        }
+
+        function AcceptedFun() {
+            let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
+            $.ajax({
+                url: '@Url.Action("AcceptedFun", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    if (response != null || response != undefined) {
+
+                    } else {
+
+                    }
+                    $("#CALL_STATUS_DT").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+                }
+            });
+        }
+
+        function GetVisitsChanges() {
+            var VisitDate = $("#VISIT_DATES").val();
+            let myObject = { Case_No, Call_Recv_Dt, Call_SNo, VisitDate };
+            $.ajax({
+                url: '@Url.Action("GetVisitsChanges", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    $("#VISIT_DATES").val(response);
+                }
+            });
+        }
+
+
+        function FillItems() {
+            let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
+            $.ajax({
+                url: '@Url.Action("FillItems", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    debugger
+                    if (response != null) {
+                        FillItemDropDown();
+                        debugger
+                        $("#BK_NO").val(response.BK_NO);
+                        $("#SET_NO").val(response.SET_NO);
+                        $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL);
+                        $("#IE_STAMPS_DETAIL2").val(response.IE_STAMPS_DETAIL2 == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL2);
+                        $("#LAB_TST_RECT_DT").val(response.LAB_TST_RECT_DT);
+                        $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
+                        $("#REMARK").val(response.REMARK);
+                        $("#HOLOGRAM").val(response.HOLOGRAM);
+                        //setItemVal();
+                    }
+                }
+            });
+        }
+
+        function setItemVal() {
+            debugger
+            var ITEM_SRNO_PO = $("#ITEM_SRNO_PO").val();
+            let myObject = { Case_No, Call_Recv_Dt, Call_SNo, ITEM_SRNO_PO, Consignee_Cd };
+            $.ajax({
+                url: '@Url.Action("SetItemVal", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    debugger
+                    if (response != null) {
+                        $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
+                        $("#ITEM_REMARK").val(response.ITEM_REMARK);
+                        $("#QTY_ORDERED").val(response.QTY_ORDERED);
+                        $("#lblQtyOrder").html(response.QTY_ORDERED);
+                        $("#CUM_QTY_PREV_OFFERED").val(response.CUM_QTY_PREV_OFFERED);
+                        $("#CUM_QTY_PREV_PASSED").val(response.CUM_QTY_PREV_PASSED);
+                        $("#QTY_TO_INSP").val(response.QTY_TO_INSP);
+                        $("#lblQtyINSP").html(response.QTY_TO_INSP);
+                        $("#QTY_PASSED").val(response.QTY_PASSED);
+                        $("#QTY_REJECTED").val(response.QTY_REJECTED);
+                        $("#QTY_DUE").val(response.QTY_DUE);
+                        $("#DISPATCH_PACKING_NO").val(response.DISPATCH_PACKING_NO);
+                        $("#INVOICE_NO").val(response.INVOICE_NO);
+                        $("#NAME_OF_IE").val(response.NAME_OF_IE);
+                        $("#CONSIGNEE_DESG").val(response.CONSIGNEE_DESG);
+                        if ("@Model.Region" == "C") {
+                            $("#MAN_TYPE").val(response.MAN_TYPE);
+                            lstman();
+                            $("#MAN_TYPE").css("display", "none"); //false
+                        }
+                        else {
+                            $("#MAN_TYPE").css("display", ""); //true
+                        }
+                        $("#CONSIGNEE_DESC").val(response.CONSIGNEE_DESC);
+                        $("#BPO_DESC").val(response.BPO_DESC);
+                        $("#GBPO_AUTH").val(response.GBPO_AUTH);
+                        $("#MANUFAC_DESC").val(response.MANUFAC_DESC);
+                        $("#PUR_AUTH_DESC").val(response.PUR_AUTH_DESC);
+                        $("#OFF_INST_NO").val(response.OFF_INST_NO);
+                        $("#ITEM_UNIT").val(response.ITEM_UNIT);
+                    }
+                }
+            });
+        }
+
+        function FillItemDropDown() {
+            var Consignee_Cd = $('#CONSIGNEE_CD').val();
+            $.get("@Url.Action("FillItemDropDown", "IC_RPT_Intermediate")", { Case_No: Case_No, Call_Recv_Dt: Call_Recv_Dt, Call_SNo: Call_SNo, Consignee_Cd: Consignee_Cd }, function (response) {
+                if (response != null) {
+                    $("#ITEM_SRNO_PO").empty();
+                    //$("#ITEM_SRNO_PO").append($('<option value="">--Select--</option>'));
+                    $.each(response, function (ind, val) {
+                        $("#ITEM_SRNO_PO").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                    $("#ITEM_SRNO_PO").val(response[0].Value);
+                    setItemVal();
+                }
+            });
+        }
+
+        function SetAccepted() {
+            let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
+
+            $("#btnSave").css("display", "");
+            $("#btnRefresh").css("display", "");
+            $("#btnCancel").css("display", "");
+
+            $.ajax({
+                url: '@Url.Action("SetAccepted", "IC_RPT_Intermediate")?' + $.param(myObject),
+                type: "GET",
+                dataType: "JSON",
+                processData: false, // Prevent jQuery from converting the data to a string
+                contentType: false,
+                success: function (response) {
+                    debugger
+                    if (parseInt(response) > 0) {
+                        $("#btnSave").css("display", "none");
+                        $("#btnRefresh").css("display", "none");
+                        $("#btnCancel").css("display", "none");
+
+                    } else {
+                        $("#btnSave").css("display", "");
+                        $("#btnRefresh").css("display", "");
+                        $("#btnCancel").css("display", "");
+                    }
+
+                }
+            });
+        }
+    </script>
+}
