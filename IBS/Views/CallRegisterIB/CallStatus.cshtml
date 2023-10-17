@@ -8,7 +8,12 @@
         <h2>Call Status Update form</h2>
     </div>
 </div>
-
+<style>
+    .disabled-button {
+        cursor: not-allowed; /* Change cursor to not-allowed */
+        opacity: 0.6; /* Reduce opacity for a disabled look */
+    }
+</style>
 <div class="task-listinput">
     <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatus" id="frmCallStatus">
         <input type="hidden" asp-for="ActionType" />
@@ -374,7 +379,7 @@
                                 <label for="chk_2">02 - Call letter recieved after expiry of delivery period</label>
                     </label>
                      <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[2]" class="custom" />
+                                <input type="checkbox" asp-for="chkItems[2]"  class="custom" />
                                 <label for="chk_3">03 - your call letter was not in prescribed format</label>
                     </label>
                      <label class="custom-checkbox">
@@ -382,19 +387,19 @@
                                 <label for="chk_4">04 - Your refusal to undertake test on samples in approved independent test houses or RITES Lab at your cost (Whichever applicable)</label>
                     </label>
                      <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[4]" class="custom" />
+                                <input type="checkbox" asp-for="chkItems[4]"  class="custom" />
                                 <label for="chk_5">05 - Material offered at premises where adequate room or lighting etc. not available for proper sampling or inspection.</label>
                     </label>
                      <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[5]" class="custom" />
+                                <input type="checkbox" asp-for="chkItems[5]"  class="custom" />
                                 <label for="chk_6">06 - Internal inspection and test records incomplete / not as per contractual requirement.</label>
                     </label>
                      <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[6]" class="custom" />
+                                <input type="checkbox" asp-for="chkItems[6]"  class="custom" />
                                 <label for="chk_7">07 - Packing list showing quantities offered item wise and consignee wise not read (Whichever applicable)</label>
                     </label>
                      <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[7]" class="custom" />
+                                <input type="checkbox" asp-for="chkItems[7]"  class="custom" />
                                 <label for="chk_8">08 - Lot mixed not segregated. Please re-offer after proper segregation.</label>
                     </label>
                      <label class="custom-checkbox">
@@ -426,7 +431,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active" onclick="SaveCancellation();">Save</button>
+                        <button type="button" class="save-btn active" id="canlsave" onclick="SaveCancellation();">Save</button>
                     </div>
                 </div>
             </div>
@@ -442,7 +447,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
+            
             //var bknoaccpted = $('#bknoaccpted').val();
             //var setnoaccpted = $('#setnoaccpted').val();
             //if (bknoaccpted != "" || setnoaccpted!= ""){
@@ -461,14 +466,7 @@
             $('#localdrp').hide();
             $('#rejvalue').hide();
 
-            var status = $('#CallStatusdrp').val();
-            if(status == "C"){
-                $('#frmcancelled').show();
-                $('#savedetails').hide();
-            }else{
-                $('#frmcancelled').hide();
-            }
-
+            
             $('#consigneeFirmDropdown').change(function () {
                 var selectedValue = $('#consigneeFirmDropdown').val();
                 var CaseNo = $('#CaseNo').val();
@@ -506,6 +504,7 @@
                     $('#CallCancelStatusdrp').hide();
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
+                    $('#AcceptReject').text('Accepted');
                     $('#rejvalue').hide();
                     $('#frmcancelled').hide();
                 } else if (selectedValue == "R") {
@@ -618,7 +617,115 @@
                     }
                 });
             });
-
+            var CallStatusdrp = $('#CallStatusdrp').val();
+            if (CallStatusdrp == "C") {
+                $('#canlsave').prop('disabled', true);
+                $('#canlsave').addClass('disabled-button');
+                $('#CallStatusdrp').prop('disabled', true);
+                $('#savedetails').hide();
+            } else if (CallStatusdrp == "A") {
+                $('#accepteddrp').show();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#CallCancelStatusdrp').hide();
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#AcceptReject').text('Accepted');
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "R") {
+                $('#MatValue').show();
+                $('#accepteddrp').show();
+                $('#localdrp').show();
+                $('#rejvalue').show();
+                $('#accepteuploadddrp').show();
+                $('#ReasonFIFOdv').show();
+                $('#AcceptReject').text('Rejected');
+                $('#frmcancelled').hide();
+                $('#LocalOutstationdrp').show();
+            } else if (CallStatusdrp == "G") {
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#ReasonFIFOdv').show();
+                $('#bkset').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+                $('#AcceptReject').hide();
+            } else if (CallStatusdrp == "T") {
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').show();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "S") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "U") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "W") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "M") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').hide();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "C") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#frmcancelled').show();
+                $('#CallCancelStatusdrp').show();
+                $('#MatValue').show();
+            }
             $('#LocalOutstationdrp').change(function () {
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
@@ -700,7 +807,7 @@
 
         function UploadFiles(){
             var formData = new FormData();
-            debugger
+           
             SaveSingleDocuments("tab-2");
 
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
@@ -733,7 +840,7 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        if (response == 1) {
+                        if (response.Id == 1) {
                             ShowHideMsgNew(true, response.responseText);
                         }
                         else {
@@ -764,7 +871,7 @@
                     type: 'POST',
                     data: formData,
                     success: function (response) {
-                        if (response == 1) {
+                        if (response.Id == 1) {
                             ShowHideMsgNew(true, response.responseText);
                         }
                         else {
@@ -800,7 +907,7 @@
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
-            debugger
+           
             if (bknoaccpted != "" || setnoaccpted != "") {
                 var ajaxData = AjaxModel();
 
@@ -829,8 +936,8 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                       
-                        if (response == 1) {
+
+                        if (response.Id == 1) {
                             ShowHideMsgNew(true, response.responseText);
                         }
                         else {
@@ -853,7 +960,7 @@
             var formData = new FormData();
 
             SaveSingleDocuments("tab-3");
-            debugger
+            
             var ajaxData = AjaxModel();
 
             if (ajaxData) {
@@ -880,7 +987,7 @@
                 return;
             }
 
-            var formData = new FormData();
+            console.log('FormData contents:', formData);
 
             $('input[name^="chkItems"]').each(function () {
                 var index = $(this).attr('name').match(/\[([\d]+)\]/)[1];
@@ -895,9 +1002,11 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    if (response == 1) {
+                    
+                    if (response.Id == 1) {
+                        var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                         ShowHideMsgNew(true, response.responseText);
-                        window.location.href = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE") + "?type=C"';
+                        window.location.href = redirectUrl;
                     }
                     else {
                         ShowHideMsgNew(false, response.responseText);
