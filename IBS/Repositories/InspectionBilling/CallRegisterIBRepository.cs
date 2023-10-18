@@ -2638,10 +2638,8 @@ namespace IBS.Repositories.InspectionBilling
                                   chk11 = Convert.ToInt32(l.CancelCd11),
                                   chk12 = Convert.ToInt32(l.CancelCd12),
                               }).FirstOrDefault();
-            if (CancelData == null)
-                throw new Exception("Record Not found");
-            else
-            {
+            if (CancelData != null)
+            { 
                 model.CaseNo = CancelData.CaseNo;
                 model.CallRecvDt = CancelData.CallRecvDt;
                 model.CallSno = CancelData.CallSno;

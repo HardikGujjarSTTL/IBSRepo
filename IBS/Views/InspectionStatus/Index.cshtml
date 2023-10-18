@@ -356,26 +356,26 @@
             </div>
         </div>
         <div class="task-inner row report5" style="display: none">
-            <div class="row">
-                <div class="col-md-3 mb-3">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
                     <label for="PropertyId">Client Type</label>
                     @Html.DropDownList("ClientType", Common.ClientWise(),"--Select--", new { @id="ddlclienttype"})
                     <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
                 </div>
-                <div class="col-md-7 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="col-md-12 mb-3">
                         <label for="PropertyId">Select Client</label>
                         <select id="selectclient"></select>
                         <span class="text-danger field-validation-error" id="spnErrorSelectClient"></span>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="PropertyId">PO Date</label>
                     <input type="text" class="input datepicker" id="dtpo" />
                     <span class="text-danger field-validation-error" id="spnErrorPODate"></span>
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 30px;margin-left:40%;">
+            <div class="col-md-12">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="Submit();">Submit</button>
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>

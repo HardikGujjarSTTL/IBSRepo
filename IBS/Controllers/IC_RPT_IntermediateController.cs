@@ -22,7 +22,7 @@ namespace IBS.Controllers
         }
         #endregion
 
-        [Authorization("IC_RPT_Intermediate", "Index", "view")]
+        //[Authorization("IC_RPT_Intermediate", "Index", "view")]
         public IActionResult Index()
         {
             IC_RPT_IntermediateModel model = new();
@@ -244,5 +244,19 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
 
+        public IActionResult PKIDATA(string file, string filename)
+        {
+            if (file != null)
+            {
+                string xmlResp = file;
+                using (StreamWriter writetext = new StreamWriter(Path.Combine(env.WebRootPath + "/IC_XML/" + filename + ".xml")))
+                {
+                    writetext.WriteLine(xmlResp);
+
+                }
+                //Response.Write(filename);                
+            }
+            return Json(filename);
+        }
     }
 }
