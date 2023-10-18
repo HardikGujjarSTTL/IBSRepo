@@ -1,0 +1,207 @@
+﻿@model IBS.Models.CMDailyWorkPlanModel
+@{
+    ViewData["Title"] = "CM Daily Work Plan";
+}
+
+<form role="form" asp-controller="CMDailyWorkPlan" asp-action="CMDailyWorkPlan" id="frmDetails">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <input type="hidden" id="checkedWork" name="checkedWork" />
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="PlanDt">Work Plan Dated : </label>
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="PlanDt_F" asp-for="PlanDt" name="PlanDt" value=@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") checked>
+                                <label for="PlanDt_F">@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy")</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="PlanDt_T" asp-for="PlanDt" name="PlanDt" value=@Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")>
+                                <label for="PlanDt_T">@Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3" style="display:none;">
+                <label for="InspWorkType">Inspection Work Type : </label>
+                <div class="custom-readio">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InspWorkType_Y" asp-for="InspWorkType" name="InspWorkType" value="Y" checked>
+                                <label for="InspWorkType_Y">Inspection Work</label>
+                            </div>
+                        </div>
+                        <div c lass="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" id="InspWorkType_N" asp-for="InspWorkType" name="InspWorkType" value="N">
+                                <label for="InspWorkType_N">Non Inspection Work</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="table-section secInspectionWork">
+        <h3 class="heading3">IE Calls Added in Daily Work Plan For the Day. </h3>
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Approval</th>
+                            <th>IE Name</th>
+                            <th>Visit Date</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call SNo.</th>
+                            <th>Manufacturer</th>
+                            <th>Manufacturer Place</th>
+                            <th>Manufacturer City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="savenext-btn btnAlign">
+                <button type="button" class="save-btn active" onclick="ApprovalSave();">Submit</button>
+                <button type="button" class="reset-btn" onclick="ReasonClear();">Clear</button>
+            </div>
+        </div>
+        @*<div class="row my-0">
+        <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="Delete();">Delete</button>
+        </div>
+        </div>*@
+    </section>
+</form>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            InitializeDatatable();
+            $('input[name="PlanDt"]').on('change', function () {
+                InitializeDatatable();
+            });
+
+        });
+
+        function InitializeDatatable() {
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadDtlTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "PlanDt": PlanDt,
+                            "InspWorkType": InspWorkType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            if (data.CmApproval == "A") {
+                                var html = "";
+                                var html = '<div align=\"center\" class=\"reportIcon\" style="text-align: center;cursor: pointer;"> Approved </div>';
+                                return html;
+                            }
+                            else {
+                                return '<input type="checkbox" name="chkDWplan" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                            }
+
+                        }
+                    },
+                    { data: "IeName" },
+                    {
+                        data: "VisitDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "VendName" },
+                    { data: "MfgPlace" },
+                    { data: "MFGCity" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function ApprovalSave() {
+            checkedWork = [];
+            var dt = $('#dtList').DataTable();
+            $(dt.$('input[name="chkDWplan"]:checked').each(function () {
+                var CaseNo = $(this).attr('CaseNo');
+                var CallRecvDt = $(this).attr('CallRecvDt');
+                var CallSno = $(this).attr('CallSno');
+                //var caseNo = dt.cell($(this).closest('tr'), 2).data();
+                checkedWork.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno });
+            }));
+
+            if (checkedWork.length == 0) {
+                //alert('Please select at least record for daily plan for work for approval!!!')
+                ShowHideMsgNew(false, "Please select at least record for daily plan for work for approval!!!");
+                return false;
+            }
+            var PlanDt = $('input[name="PlanDt"]:checked').val();
+            var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+            $("#PlanDt").val(PlanDt);
+            $("#InspWorkType").val(InspWorkType);
+            $("#checkedWork").val(JSON.stringify(checkedWork));
+            if ($("#frmDetails").valid()) {
+                $("#frmDetails").submit();
+            }
+        }
+    </script>
+    }

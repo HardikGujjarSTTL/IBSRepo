@@ -197,6 +197,7 @@ namespace IBS.Repositories
                     i.DATETIME = Convert.ToString(i.DATETIME);
                     i.LAB_STATUS = Convert.ToString(i.LAB_STATUS);
                     i.PAYMENT_RECIEPT = Convert.ToInt32(i.PAYMENT_RECIEPT);
+                    i.CM_APPROVAL = Convert.ToString(i.CM_APPROVAL);
 
                 });
 

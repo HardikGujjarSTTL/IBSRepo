@@ -545,5 +545,18 @@ ALTER TABLE T22_Adjustment_bill ADD CONSTRAINT T22_Adjustment_bill_pk  PRIMARY K
 
 ALTER TABLE t22_bill ADD REFERENCE_AID NUMBER(6)
 ALTER TABLE t22_bill ADD BILLADTYPE VARCHAR2(10 BYTE)
+
+
+IE Login 
+Sorted on call
+SP = SP_CallsMarkedToIE
+Sorted on Vendor
+SP = SP_VendorMarkedToIE
+Sorted on inpection Dt
+SP = SP_DtInspectionMarkedToIE
+
+CM Approval in Admin
+ALTER TABLE T17_CALL_REGISTER ADD CM_APPROVAL CHAR
+ALTER TABLE T17_CALL_REGISTER ADD CM_APPROVAL_DT DATE
 =============================================================================================================================================
 
