@@ -190,40 +190,49 @@ namespace IBS.Controllers.Vendor
                     if(model.ActionType == "A")
                     {
                         model = venderRepository.GetValidate(model);
-                        if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                        if(model.callval == 0)
                         {
-                            i = venderRepository.RegiserCallSave(model);
-                            if (model.callval == 0)
-                            {
-                                msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!";
-                            }
-                            else
-                            {
-                                msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
-                            }
+                            //msg = "Master data not entered.So please enter master data cluster/vender/ie";
+                            msg = "Call can't be assigned to IE beyond the maximumn call limit.";
+                            return Json(new { status = false, responseText = msg, callval = model.callval });
                         }
                         else
                         {
-                            if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
                             {
-                                msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
+                                i = venderRepository.RegiserCallSave(model);
+                                if (model.callval == 0)
+                                {
+                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!";
+                                }
+                                else
+                                {
+                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
+                                }
                             }
-                            else if (model.wMat_value < 1000)
+                            else
                             {
-                                msg = "Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!";
+                                if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                                {
+                                    msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
+                                }
+                                else if (model.wMat_value < 1000)
+                                {
+                                    msg = "Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!";
+                                }
+                                else if (model.desire_dt > 0)
+                                {
+                                    msg = "Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!";
+                                }
+                                return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                             }
-                            else if (model.desire_dt > 0)
-                            {
-                                msg = "Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!";
-                            }
-                            return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                         }
                     }
                     else
                     {
                         i = venderRepository.RegiserCallSave(model);
                         msg = "Record Update Successfully.";
-                        return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
+                        return Json(new { status = true, responseText = msg, callval = model.callval });
                     }
                 }
                 if (i != null)

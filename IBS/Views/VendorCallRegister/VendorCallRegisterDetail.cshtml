@@ -20,6 +20,8 @@
         <input type="hidden" asp-for="RlyNonrly" />
         <input type="hidden" asp-for="UpdateAllowed" />
         <input type="hidden" asp-for="ItemSrnoPo" />
+        <input type="hidden" asp-for="hdnIsNewVender" />
+
 
     </div>
     <div class="accordion-body">
@@ -485,7 +487,7 @@
                             <th>Qty Due</th>
                             <th>Delivery Date</th>
                             <th>Bill Paying Officer</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -563,10 +565,20 @@
                 $("#btnDelete").show();
                 $("#btnPrint").show();
                 $("#CHKRejCan").prop("checked", true);
-                if ($("#UpdateAllowed").val() == "N") {
-                    $("#btnRegiserCallSave").prop("disabled", true);
-                    $("#btnDelete").prop("disabled", true);
+
+                if ($("#hdnIsNewVender").val() == "Y") {
+                    $("#IsNewVender").prop("checked", true);
                 }
+
+                if ($("#UpdateAllowed").val() == "N") {
+                    $("#btnRegiserCallSave").hide();
+                    $("#btnDelete").hide();
+                }
+                else {
+                    $("#btnRegiserCallSave").show();
+                    $("#btnDelete").show();
+                }
+
                 InitializeDatatableM();
             }
 
@@ -1102,9 +1114,7 @@
                             else {
                                 //event.preventDefault();
                                 $("#MfgCd").prop("disabled", "");
-
                                 var formData = $("#frmDetails").serialize();
-
                                 $.post("@Url.Action("DetailsSave", "VendorCallRegister")", formData, function (response) {
                                     if (response.status) {
                                         //ShowHideMsgNew(response.status, response.responseText);
@@ -1112,7 +1122,15 @@
                                         PopUp();
                                     }
                                     else {
-                                        ShowHideMsgNew(response.status, response.responseText);
+                                        if(response.callval == "0")
+                                        {
+                                            ShowHideMsgNew(response.status, response.responseText);
+                                        }
+                                        else
+                                        {
+                                            PopUpMsg = response.responseText;
+                                            PopUp();
+                                        }
                                     }
                                 });
                             }

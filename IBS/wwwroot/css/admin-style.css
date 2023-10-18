@@ -1442,6 +1442,7 @@ input[type="datetime-local"]{ height:43px;}
 .heading3 .subText{ font-weight:normal; color:#222; font-size:14px;}
 .radioListForm{ display:flex; list-style:none; margin:0; padding:0; margin-bottom:20px; flex-wrap:wrap;}
 .radioListForm li{ margin-right:30px;}
+.radioListForm li .form-check-input{ vertical-align:middle;}
 .commonBtn{ padding:8px 15px; border-radius:6px;}
 .navbar-static-side ul li .nav-second-level li a.active3Label{ background:#0a6c29;}
 .active3Label > .fa.arrow:before{content:"\f106"!important;}

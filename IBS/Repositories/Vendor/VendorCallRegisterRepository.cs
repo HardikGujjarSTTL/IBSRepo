@@ -161,7 +161,7 @@ namespace IBS.Repositories.Vendor
                     model.MfgCd = Convert.ToInt32(user.MfgCd);
                     model.MfgPlace = user.MfgPlace;
                     model.DepartmentCode = user.DepartmentCode;
-                    model.UpdateAllowed = user.UpdateAllowed == null ? "Y" : user.UpdateAllowed;
+                    model.UpdateAllowed = user.UpdateAllowed == null ? "N" : user.UpdateAllowed;
                     model.Remarks = user.Remarks;
                     model.FinalOrStage = user.FinalOrStage;
                     model.Bpo = user.Bpo;
@@ -176,6 +176,7 @@ namespace IBS.Repositories.Vendor
                     model.LotDp1 = user.LotDp1;
                     model.LotDp2 = user.LotDp2;
                     model.IsNewVender = user.NewVendor == "Y" ? "Y" : "N";
+                    model.hdnIsNewVender = user.NewVendor == "Y" ? "Y" : "N";
                 }
 
                 if (GetView != null)
@@ -1190,7 +1191,7 @@ namespace IBS.Repositories.Vendor
                             .Where(joined => joined.CallRegister.CallRecvDt > startDate)
                             .Count();
 
-                        if (callStatusCount > 0)
+                        if (callStatusCount >= 0)
                         {
                             int countcalls = callStatusCount;
                             var ieCallMarking = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
@@ -1232,7 +1233,7 @@ namespace IBS.Repositories.Vendor
                                             .Where(joined => joined.CallRegister.IeCd == Alt_ieCode)
                                             .Where(joined => joined.CallRegister.CallRecvDt > startDate1)
                                             .Count();
-                                        if (callStatusCount1 > 0)
+                                        if (callStatusCount1 >= 0)
                                         {
                                             int countcalls123 = callStatusCount1;
                                             var ieCallMarking1 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
@@ -1281,7 +1282,7 @@ namespace IBS.Repositories.Vendor
                                                                 .Where(joined => joined.CallRegister.IeCd == Alt_ieCode_TWO)
                                                                 .Where(joined => joined.CallRegister.CallRecvDt > startDate2)
                                                                 .Count();
-                                                            if (callStatusCount2 > 0)
+                                                            if (callStatusCount2 >= 0)
                                                             {
                                                                 int countcalls1234 = callStatusCount2;
                                                                 var ieCallMarking2 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_TWO).Select(ie => ie.IeCallMarking).FirstOrDefault();
@@ -1325,7 +1326,7 @@ namespace IBS.Repositories.Vendor
                                                                                     .Where(joined => joined.CallRegister.IeCd == Alt_ieCode_THREE)
                                                                                     .Where(joined => joined.CallRegister.CallRecvDt > startDate3)
                                                                                     .Count();
-                                                                                if (callStatusCount3 > 0)
+                                                                                if (callStatusCount3 >= 0)
                                                                                 {
                                                                                     int countcalls1233 = callStatusCount3;
                                                                                     var ieCallMarking3 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_THREE).Select(ie => ie.IeCallMarking).FirstOrDefault();

@@ -219,6 +219,7 @@ namespace IBS.Models
         public string FOS { get; set; }
 
         public string IsNewVender { get; set; }
+        public string hdnIsNewVender { get; set; }
 
         public string? Createdby { get; set; }
 

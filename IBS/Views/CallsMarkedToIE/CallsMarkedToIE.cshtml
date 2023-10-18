@@ -73,18 +73,48 @@
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">User(other then ie)</font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Last Updation Date</font></b></th>
                     </tr>
-                    @if (Model != null && Model.ReportLst != null && Model.ReportLst.Count > 0)
+                    @if (Model != null && Model.ReportLstNew != null && Model.ReportLstNew.Count > 0)
                     {
-                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "";
-                        @foreach (var item in Model.ReportLst)
+                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", LabDetails = "", PaymentReciept = "", CallStausF = "";
+                        @foreach (var item in Model.ReportLstNew)
                         {
                             //wSelect = "/CallRegisterIB/CallStatus?CaseNo=" + @item.CaseNo + "&CallRecvDt=" + @item.CallRecvDt + "&CallSno=" + @item.CallSno;
-                            wSelect = $"/CallRegisterIB/CallStatus?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("yyyy-MM-dd")}&IeCd={@item.IeCd}&ActionType=C&type=C";
+                            wSelect = $"/CallRegisterIB/CallStatus?CaseNo={@item.CASE_NO}&CallSno={@item.CALL_SNO}&CallRecvDt={Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd")}&IeCd={@item.IE_CD}&ActionType=C&type=C";
 
-                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("dd/MM/yyyy")}&type=C";
+                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CASE_NO}&CallSno={@item.CALL_SNO}&CallRecvDt={Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy")}&type=C";
 
-                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CaseNo}&ActionType=CHI&type=C";
-                            @if (@item.NewVendor == "Y")
+                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CASE_NO}&ActionType=CHI&type=C";
+
+                            callDocAny = $"/RBS/Vendor/CALLS_DOCUMENTS/{@item.CASE_NO}-{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{@item.CALL_SNO}.PDF";
+
+                            CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{@item.PO_YR}/{@item.IMMS_RLY_CD}/{@item.PO_NO}.PDF";
+
+                            CallStausF = $"{@item.CALL_STATUS_FULL}";
+
+                            @if (item.CALL_STATUS == "U")
+                            {
+                                @if (@item.LAB_STATUS != null)
+                                {
+                                    CallStausF += $"{@item.LAB_STATUS}";
+                                }
+                                else
+                                {
+                                    CallStausF += "\nSample Not Recieved in Lab.";
+                                }
+                                @if (@item.PAYMENT_RECIEPT != 0)
+                                {
+                                    CallStausF += "\n";
+                                    CallStausF += "\nPayment Reciept Uploaded By Vendor.";
+                                }
+                                else
+                                {
+                                    CallStausF += "\n";
+                                    CallStausF += "\nPayment Reciept Not Uploaded By Vendor.";
+                                }
+                            }
+                            
+
+                            @if (@item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
                             }
@@ -92,21 +122,21 @@
                             {
                                 NewVendor = "";
                             }
-                            @if (@item.cnt > 0)
+                            @if (@item.COUNT > 0)
                             {
-                                ItemDescPo = @item.ItemDescPo + "<span color='#FF00CC'> and more items as per call</span>";
+                                ItemDescPo = @item.ITEM_DESC_PO + "<span color='#FF00CC'> and more items as per call</span>";
                             }
                             else
                             {
-                                ItemDescPo = @item.ItemDescPo;
+                                ItemDescPo = @item.ITEM_DESC_PO;
                             }
-                            @if (@item.VendCd == @item.MfgCd)
+                            @if (@item.VEND_CD == @item.MFG_CD)
                             {
-                                wVendor = @item.Vendor;
+                                wVendor = @item.VENDOR;
                             }
                             else
                             {
-                                wVendor = @item.Vendor + "At" + @item.Manufacturer;
+                                wVendor = @item.VENDOR + "At" + @item.MANUFACTURER;
                             }
                             <tr>
 
@@ -115,42 +145,47 @@
                                 <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
                                 <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
                                 <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.Consignee</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
                                 <td align="center">
 
-                                    @if (@item.cnt > 0)
+                                    @if (@item.COUNT > 0)
                                     {
                                         <font size="1" face="Verdana">
-                                            @item.ItemDescPo
+                                            @item.ITEM_DESC_PO
                                         </font>
                                         <font size="1" face="Verdana" color='#FF00CC'>and more items as per call</font>
                                     }
                                     else
                                     {
                                         <font size="1" face="Verdana">
-                                            @item.ItemDescPo
+                                            @item.ITEM_DESC_PO
                                         </font>
                                     }
                                 </td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.ExtDelvDt).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DtInspDesire).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CallMarkDt).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.CallSno</font></td>
-                                <td align="center"><font size="2" face="Verdana"><a href=@item.callDocAny>Call Documents</a></font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.CaseNo</font></td>
-                                @if (@item.PoSource == "C")
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.EXT_DELV_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.INSP_DESIRE_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CALL_MARK_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                                @*<td align="center"><font size="2" face="Verdana"><a href=@item.callDocAny>Call Documents</a></font></td>*@
+                                <td align="center"><font size="2" face="Verdana"><a href=@callDocAny>Call Documents</a></font></td>
+
+                                @if (@item.PO_SOURCE == "C")
                                 {
-                                    <td align="center"><font size="1" face="Verdana"><a href=@item.PoSource>PO Source</a></font></td>
+                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
                                 }
-                                <td align="center"><font size="1" face="Verdana">@item.Source</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.CallStatusFull</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.Remarks</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.PoNo</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PoDt).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MfgPers</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MfgPhone</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.UserId</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.Datetime).ToString("dd/MM/yyyy")</font></td>
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                }
+                                <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
+                                <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.REMARKS</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.MFG_PERS</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.MFG_PHONE</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.USER_ID</font></td>
+                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DATETIME).ToString("dd/MM/yyyy")</font></td>
                             </tr>
                         }
                     }

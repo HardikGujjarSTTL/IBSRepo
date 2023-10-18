@@ -277,6 +277,11 @@
         }
 
         $("#AddCluster").click(function () {
+            if($("#IeName").val() == "")
+            {
+                ShowHideMsgNew(false, "Please add IE Name");
+                return;
+            }
             if (ValidateClusterData() == false) {
                 return false;
             }
