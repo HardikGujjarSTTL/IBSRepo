@@ -204,8 +204,8 @@
                         @*<span style="color:#d52127;" class="note">@Model.City @Model.State @Model.Pincode</span>*@
                     </div>
                 </div>
-                <div class="col-md-4" style="margin-top: 30px;">
-                    <div class="reference">
+                <div class="col-md-4">
+                    <div class="reference btnAlign">
                         @*<label for="Reference">GSTIN No. & Legal Name</label>*@
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" id="btnGSTNUpdate" onclick="GSTNUpdate();">GSTIN No. & Legal Name Update</button>
@@ -222,12 +222,12 @@
                         @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
-                <div class="col-md-4 mb-3" style="margin-top: 30px;">
-                    <label for="Reference">AU Code : </label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference btnAlign">AU Code : </label>
                     <label class="darkRedBoldText">@Model.Au</label>
                 </div>
-                <div class="col-md-4 mb-3" style="margin-top: 30px;">
-                    <label for="Reference">Bill Paying Officer : </label>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference btnAlign">Bill Paying Officer : </label>
                     @*<input type="text" class="input" asp-for="Bpo" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>*@
                     <label class="darkRedBoldText">@Model.BpoName</label>
                 </div>
@@ -421,8 +421,8 @@
                         <span id="spnBillDt" style="color:#d52127;"></span>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3" style="margin-top: 30px;">
-                    <div class="reference">
+                <div class="col-md-2 mb-3">
+                    <div class="reference btnAlign">
                         @*<label for="Reference" id="lblBillDtUpdate">Bill Date</label>*@
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" id="btnBillDtUpdate" style="display:none;">Bill Date Update</button>
@@ -575,8 +575,8 @@
                     <div class="col-md-4">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICDocument" />
                     </div>
-                    <div class="col-md-4" style="margin-top: 30px;">
-                        <div class="savenext-btn">
+                    <div class="col-md-4">
+                        <div class="savenext-btn btnAlign">
                             <button type="button" class="save-btn active" id="btnUpload" onclick="UploadDocument()">Upload Invoice Supporting Docs</button>
                         </div>
                     </div>

@@ -396,10 +396,9 @@ namespace IBS.Controllers
         {
             try
             {
-                int VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
                 string msg = "PO Master Details Updated Successfully.";
                 model.Updatedby = UserId;
-                model.UserId =Convert.ToString(VendCd);
+                model.UserId =Convert.ToString(UserId);
                 int i = purchesorderRepository.POMasterSubDetailsInsertUpdate(model);
                 if (i > 0)
                 {
@@ -414,31 +413,76 @@ namespace IBS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEditBillPayingOfficer(string IMMS_RLY_CD)
+        public IActionResult GetEditBillPayingOfficer(string BpoCd)
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetEditBillPayingOfficer(IMMS_RLY_CD);
+                List<SelectListItem> agencyClient = Common.GetEditBillPayingOfficer(BpoCd);
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetBillPayingOfficer", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "GetEditBillPayingOfficer", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         [HttpGet]
-        public IActionResult GetEditConsigneeUsingConsignee(string IMMS_RLY_CD)
+        public IActionResult GetConsigneeUsingConsigneeBeforEdit(string IMMS_RLY_CD)
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetEditConsigneeUsingConsignee(IMMS_RLY_CD);
+                List<SelectListItem> agencyClient = Common.GetConsigneeUsingConsigneeBeforEdit(IMMS_RLY_CD);
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetConsigneeUsingConsignee", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "GetConsigneeUsingConsigneeBeforEdit", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetBillPayingOfficerBeforEdit(string IMMS_RLY_CD)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetBillPayingOfficerBeforEdit(IMMS_RLY_CD);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "GetBillPayingOfficerBeforEdit", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetEditConsigneeUsingConsignee(string ConsigneeCd)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetEditConsigneeUsingConsignee(ConsigneeCd);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "GetConsigneeUsingConsignee", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult getConsigneeCd(string ConsigneeCd, string IMMS_RLY_CD)
+        {
+            try
+            {
+                int? ID = Common.getConsigneeCd(ConsigneeCd, IMMS_RLY_CD);
+                return Json(new { status = true, ConsigneeCd = ID });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOCRISPurchesOrderMAWCaseNo", "getConsigneeCd", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

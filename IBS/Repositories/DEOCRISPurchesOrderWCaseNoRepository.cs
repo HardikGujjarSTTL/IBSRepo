@@ -184,18 +184,6 @@ namespace IBS.Repositories
         public DEO_CRIS_PO_MasterDetailsModel DetailsFindByID(string IMMS_POKEY, string ITEM_SRNO, string IMMS_RLY_CD)
         {
             DEO_CRIS_PO_MasterDetailsModel model = new DEO_CRIS_PO_MasterDetailsModel();
-            //OracleParameter[] par = new OracleParameter[4];
-            //par[0] = new OracleParameter("p_IMMS_POKEY", OracleDbType.Varchar2, IMMS_POKEY, ParameterDirection.Input);
-            //par[1] = new OracleParameter("p_IMMS_RLY_CD", OracleDbType.Varchar2, IMMS_RLY_CD, ParameterDirection.Input);
-            //par[2] = new OracleParameter("p_ITEM_SRNO", OracleDbType.Int32, ITEM_SRNO, ParameterDirection.Input);
-            //par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-            //var ds = DataAccessDB.GetDataSet("SP_Get_Cris_PODetailsByID", par, 1);
-            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            //{
-            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-            //    model = JsonConvert.DeserializeObject<DEO_CRIS_PO_MasterDetailsModel>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            //}
-
             model = (from d in context.ImmsRitesPoDetails
                           join h in context.ImmsRitesPoHdrs on new { d.ImmsPokey, d.ImmsRlyCd } equals new { h.ImmsPokey, h.ImmsRlyCd }
                           join u in context.T04Uoms on d.ImmsUomCd equals u.ImmsUomCd into uomGroup
@@ -233,7 +221,10 @@ namespace IBS.Repositories
                               Value = d.Value,
                               DelvDt = d.DelvDt,
                               ExtDelvDt = d.ExtDelvDt,
-                              PlNo = d.PlNo
+                              PlNo = d.PlNo,
+                              DiscountType=d.DiscountType,
+                              DiscountPer = d.DiscountPer,
+                              Discount = d.Discount
                           }).FirstOrDefault();
 
             return model;

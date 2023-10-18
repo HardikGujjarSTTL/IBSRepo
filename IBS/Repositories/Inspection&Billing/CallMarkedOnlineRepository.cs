@@ -391,7 +391,7 @@ namespace IBS.Repositories.Inspection_Billing
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
                     join t91 in context.T91Railways on t13.RlyCd equals t91.RlyCd into railways
                     from t91 in railways.DefaultIfEmpty()
-                    where t13.CaseNo == "N19101278" && t13.RegionCode == "N"
+                    where t13.CaseNo == Case_No && t13.RegionCode == Region
                     select new CaseHistoryModel
                     {
                         CASE_NO = t13.CaseNo,

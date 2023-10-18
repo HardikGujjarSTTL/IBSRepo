@@ -2122,7 +2122,8 @@ namespace IBS.Models
                         .ToList();
 
                 List<SelectListItem> dropList = new List<SelectListItem>();
-                dropList = (from a in query where a.RLY_CD != null
+                dropList = (from a in query
+                            where a.RLY_CD != null
                             select
                        new SelectListItem
                        {
@@ -3041,21 +3042,84 @@ namespace IBS.Models
             return objdata;
         }
 
-        public static List<SelectListItem> GetEditBillPayingOfficer(string IMMS_RLY_CD)
+        public static List<SelectListItem> GetEditBillPayingOfficer(string BpoCd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
             var query = (from bpo in context.T12BillPayingOfficers
                         join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                        where bpo.BpoType == "R" && bpo.BpoRly.Trim().ToUpper() == RLY_CD
+                        where bpo.BpoCd == BpoCd
                          orderby bpo.BpoName
                         select new
                         {
                             BPO_CD = bpo.BpoCd,
                             BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
-                                (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
-                                (city.Location != null ? city.City + "/" + city.Location : city.City)
+                                 (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                 (city.Location != null ? city.City + "/" + city.Location : city.City)
                         }).ToList();
+
+            List<SelectListItem> objdata = (from a in query
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.BPO_NAME,
+                                           Value = a.BPO_CD
+                                       }).ToList();
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetConsigneeUsingConsigneeBeforEdit(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (RLY_CD != null)
+            {
+                var query = from consignee in context.T06Consignees
+                            join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                            where consignee.ConsigneeType == "R" && consignee.ConsigneeFirm.Trim().ToUpper() == RLY_CD.Trim().ToUpper()
+                            orderby
+                                (consignee.ConsigneeDesig ?? "") + "/" +
+                                (consignee.ConsigneeDept ?? "") + "/" +
+                                (consignee.ConsigneeFirm ?? "") + "/" +
+                                (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                (city.Location ?? city.City)
+                            select new
+                            {
+                                CONSIGNEE_CD = consignee.ConsigneeCd,
+                                CONSIGNEE_NAME =
+                                    consignee.ConsigneeCd + "-" +
+                                    (consignee.ConsigneeDesig ?? "") + "/" +
+                                    (consignee.ConsigneeDept ?? "") + "/" +
+                                    (consignee.ConsigneeFirm ?? "") + "/" +
+                                    (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                    (city.Location != null ? city.Location + " : " + city.City : city.City)
+                            };
+                objdata = (from a in query
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.CONSIGNEE_NAME,
+                          Value = Convert.ToString(a.CONSIGNEE_CD)
+                      }).ToList();
+            }
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetBillPayingOfficerBeforEdit(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            var query = (from bpo in context.T12BillPayingOfficers
+                         join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                         where bpo.BpoType == "R" && bpo.BpoRly.Trim().ToUpper() == RLY_CD
+                         orderby bpo.BpoName
+                         select new
+                         {
+                             BPO_CD = bpo.BpoCd,
+                             BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
+                                 (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                 (city.Location != null ? city.City + "/" + city.Location : city.City)
+                         }).ToList();
 
             List<SelectListItem> objdata = (from a in query
                                             select
@@ -3150,22 +3214,22 @@ namespace IBS.Models
             return objdata;
         }
 
-        public static List<SelectListItem> GetEditConsigneeUsingConsignee(string IMMS_RLY_CD)
+        public static List<SelectListItem> GetEditConsigneeUsingConsignee(string ConsigneeCd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
             List<SelectListItem> objdata = new List<SelectListItem>();
-            if (RLY_CD != null)
+            if (ConsigneeCd != null)
             {
-                var query = from consignee in context.T06Consignees
+                var query = (from consignee in context.T06Consignees
                             join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
-                            where consignee.ConsigneeType == "R" && consignee.ConsigneeFirm.Trim().ToUpper() == RLY_CD.Trim().ToUpper()
-                            orderby
+                            where consignee.ConsigneeCd == Convert.ToInt32(ConsigneeCd)
+                            orderby (
                                 (consignee.ConsigneeDesig ?? "") + "/" +
                                 (consignee.ConsigneeDept ?? "") + "/" +
                                 (consignee.ConsigneeFirm ?? "") + "/" +
                                 (consignee.ConsigneeAdd1 ?? "") + "/" +
                                 (city.Location ?? city.City)
+                            )
                             select new
                             {
                                 CONSIGNEE_CD = consignee.ConsigneeCd,
@@ -3176,7 +3240,8 @@ namespace IBS.Models
                                     (consignee.ConsigneeFirm ?? "") + "/" +
                                     (consignee.ConsigneeAdd1 ?? "") + "/" +
                                     (city.Location != null ? city.Location + " : " + city.City : city.City)
-                            };
+                            });
+
                 objdata = (from a in query
                            select
                       new SelectListItem
@@ -3186,6 +3251,18 @@ namespace IBS.Models
                       }).ToList();
             }
             return objdata;
+        }
+
+        public static int? getConsigneeCd(string ConsigneeCd, string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            int? ConsigneeCd1 = (from detail in context.ImmsRitesPoDetails
+                                 where detail.ImmsConsigneeCd == ConsigneeCd
+                                && detail.ImmsRlyCd == IMMS_RLY_CD
+                                && detail.ConsigneeCd != null
+                                select detail.ConsigneeCd).Distinct().FirstOrDefault();
+            
+            return ConsigneeCd1;
         }
 
         public static List<SelectListItem> GetSummaryConsignee()

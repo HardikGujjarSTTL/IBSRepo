@@ -108,7 +108,8 @@ namespace IBS.Repositories
 
         public IBS_DocumentDTO FindRecord(int ID)
         {
-            ModelContext repository = new ModelContext();
+            //ModelContext repository = new ModelContext();
+            using ModelContext repository = new(DbContextHelper.GetDbContextOptions());
             IbsDocument objAdd = repository.IbsDocuments.SingleOrDefault(x => x.Id == ID);
 
 
