@@ -1,6 +1,7 @@
 
 Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
 
+Scaffold-DbContext name=DefaultConnection Oracle.EntityFrameworkCore -noOnConfiguring -OutputDir DataAccess -Force
 =============================================================================================================================================
 By Hardik Gujjar
 =============================================================================================================================================
@@ -839,7 +840,7 @@ BEGIN
 END;
 
 ==============================
-CREATE OR REPLACE PROCEDURE GENERATE_REAL_CASE_NO
+create or replace PROCEDURE GENERATE_REAL_CASE_NO
 (
     IN_REGION_CD IN CHAR,
     IN_TEMP_CASE_NO IN CHAR,
@@ -863,19 +864,33 @@ IS
     p_Result_Cursor SYS_REFCURSOR;
 BEGIN
     ---
+    DBMS_OUTPUT.PUT_LINE('1');
     SELECT PURCHASER_CD, TRIM(RLY_CD)
     INTO w_Purchaser, w_Rly_Cd
     FROM T80_PO_MASTER
     WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
-
+    
     IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
+    DBMS_OUTPUT.PUT_LINE('2');
         OUT_ERR_CD := 2;
+            OPEN p_Result_Cursor FOR
+            SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+            FROM DUAL;
+            p_Result := p_Result_Cursor;
+            
         RAISE my_exception;
+        
     END IF;
     ---
     FOR r1 IN po_detail LOOP
         IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
             OUT_ERR_CD := 3;
+            
+                OPEN p_Result_Cursor FOR
+                SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+                FROM DUAL;
+                p_Result := p_Result_Cursor;
+                
             RAISE my_exception;
             EXIT;
         END IF;
@@ -912,7 +927,7 @@ From T80_PO_MASTER Where  REGION_CODE =IN_REGION_CD and CASE_NO=IN_TEMP_CASE_NO;
     WHERE CASE_NO = IN_TEMP_CASE_NO;
     ---
     OUT_ERR_CD := 6;
-    
+
     Insert into T15_PO_DETAIL (case_no,item_srno,item_desc,consignee_cd,qty,rate,uom_cd,basic_value,sales_tax_per,
     sales_tax,excise_type,excise_per,excise,discount_type,discount_per,discount,other_charges,value,
     delv_dt,ext_delv_dt,user_id,datetime,ot_charge_type,ot_charge_per,item_cd,
@@ -946,7 +961,6 @@ EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
 END;
-/
 
 
 
@@ -3922,7 +3936,7 @@ END;
 
 ==========
 
-CREATE OR REPLACE PROCEDURE GENERATE_REAL_CASE_NO_CRIS_new (
+create or replace PROCEDURE GENERATE_REAL_CASE_NO_CRIS_new (
     IN_REGION_CD IN CHAR,
     IN_TEMP_POKEY IN NUMBER,
     IN_TEMP_RLY_CD IN CHAR,
@@ -3960,12 +3974,21 @@ BEGIN
 
     IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
         OUT_ERR_CD := 2;
+            OPEN p_Result_Cursor FOR
+                SELECT OUT_ERR_CD AS ERR_CD, w_Case_No AS CASE_NO FROM DUAL;
+            p_Result := p_Result_Cursor;
+            
         RAISE my_exception;
     END IF;
 
     FOR r1 IN po_detail LOOP
         IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
             OUT_ERR_CD := 3;
+            
+            OPEN p_Result_Cursor FOR
+                SELECT OUT_ERR_CD AS ERR_CD, w_Case_No AS CASE_NO FROM DUAL;
+            p_Result := p_Result_Cursor;
+            
             RAISE my_exception;
             EXIT;
         END IF;
@@ -4063,7 +4086,7 @@ BEGIN
     WHERE IMMS_POKEY = IN_TEMP_POKEY
         AND IMMS_RLY_CD = IN_TEMP_RLY_CD;
 
-
+    OUT_ERR_CD := 0;
     COMMIT;
 
     OPEN p_Result_Cursor FOR
@@ -4080,7 +4103,7 @@ EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
 END;
-/
+
 
 =================
 

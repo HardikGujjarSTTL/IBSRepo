@@ -183,6 +183,7 @@ namespace IBS.Repositories
                                  UserId = l.UserId == UserId ? "" : l.UserId,
                                  Datetime = l.Datetime,
                                  CaseNo = l.CaseNo,
+                                 CallRecvDt = l.CallRecvDt,
                                  VendCd = l.VendCd,
                                  MfgCd = l.MfgCd,
                                  Manufacturer = l.Manufacturer,
@@ -220,6 +221,7 @@ namespace IBS.Repositories
                                  UserId = l.UserId == UserId ? "" : l.UserId,
                                  Datetime = l.Datetime,
                                  CaseNo = l.CaseNo,
+                                 CallRecvDt = l.CallRecvDt,
                                  VendCd = l.VendCd,
                                  MfgCd = l.MfgCd,
                                  Manufacturer = l.Manufacturer,
@@ -256,6 +258,7 @@ namespace IBS.Repositories
                     i.UserId = Convert.ToString(i.UserId);
                     i.Datetime = Convert.ToDateTime(i.Datetime);
                     i.CaseNo = Convert.ToString(i.CaseNo);
+                    i.CallRecvDt = Convert.ToDateTime(i.CallRecvDt);
                     i.cnt = Convert.ToDecimal(i.cnt);
                 });
 

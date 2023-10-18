@@ -8,7 +8,7 @@
         <div class="tast-list">
             <h2>Call Details</h2>
         </div>
-        <input type="hidden" id="hdnQtyToInsp" asp-for="QtyToInsp" />
+        <input type="hidden" id="hdnQtyToInsp" name="hdnQtyToInsp" asp-for="QtyToInsp" />
         <input type="hidden" asp-for="CaseNo" />
         <input type="hidden" asp-for="CallRecvDt" />
         <input type="hidden" asp-for="CallSno" />
@@ -43,8 +43,8 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Item SNo.</label>
-                    @*<input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;">*@
-                    <label style="text-transform: uppercase; color:red;"><b>@Model.ItemSrNoPo</b></label>
+                    <input type="text" class="input" asp-for="ItemSrNoPo" maxlength="100" style="text-transform: uppercase;" readonly>
+                    @*<label style="text-transform: uppercase; color:red;"><b>@Model.ItemSrNoPo</b></label>*@
                     <span asp-validation-for="ItemSrNoPo" class="text-danger"></span>
                 </div>
             </div>
@@ -180,10 +180,10 @@
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
             var CallSNo = $("#CallSno").val();
-
             var getDt = moment('@Model.CallRecvDt', "DD/MM/YYYY");
             var setDt = getDt.toDate();
-            var CallRecvDt = moment(setDt).format("DD/MM/YYYY");
+            //var CallRecvDt = moment(setDt).format("DD/MM/YYYY");
+            var CallRecvDt = $("#CallRecvDt").val();
 
             const urlParams = new URLSearchParams(window.location.search);
             var cstatus = urlParams.get('cstatus');

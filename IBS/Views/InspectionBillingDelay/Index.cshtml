@@ -11,7 +11,8 @@
     <div class="accordion-body">
 
         <div class="row my-0">
-            <ul class="radioListForm">
+            <div class="col-md-12">
+            <ul class="radioListForm mb-0">
                 <li>
                     <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Month", new {  @id="rdbMonth", @checked = true }) Inspection Billing For The Month </label>
                 </li>
@@ -19,6 +20,7 @@
                     <label formaction="rdbAllCallMarked"> @Html.RadioButton("rdbInspBill", "Inspection Billing For The Period", new {  @id="rdbDate" }) Inspection Billing For The Period (DD/MM/YYYY) </label>
                 </li>
             </ul>
+            </div>
             <div class="col-md-3">
                 <label for="reference" id="lblHeader1">From</label>
                 @Html.DropDownList("lstMonths", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--", new {@class = "clsMonthYear"})

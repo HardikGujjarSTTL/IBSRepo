@@ -323,7 +323,18 @@
     });
 
     $("#btnBack").click(function () {
-        var url = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
+        const urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var url;
+        if(type == "C")
+        {
+            url = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=' + type;
+        }
+        else
+        {
+            url = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
+        }
+
         window.location.href = url;
     });
 

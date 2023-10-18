@@ -79,11 +79,11 @@
                         @foreach (var item in Model.ReportLst)
                         {
                             //wSelect = "/CallRegisterIB/CallStatus?CaseNo=" + @item.CaseNo + "&CallRecvDt=" + @item.CallRecvDt + "&CallSno=" + @item.CallSno;
-                            wSelect = $"/CallRegisterIB/CallStatus?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("yyyy-MM-dd")}&IeCd={@item.IeCd}&ActionType=C";
+                            wSelect = $"/CallRegisterIB/CallStatus?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("yyyy-MM-dd")}&IeCd={@item.IeCd}&ActionType=C&type=C";
 
-                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("dd/MM/yyyy")}";
+                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CaseNo}&CallSno={@item.CallSno}&CallRecvDt={Convert.ToDateTime(@item.CallRecvDt).ToString("dd/MM/yyyy")}&type=C";
 
-                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CaseNo}&ActionType=CHI";
+                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CaseNo}&ActionType=CHI&type=C";
                             @if (@item.NewVendor == "Y")
                             {
                                 NewVendor = "Yes";
