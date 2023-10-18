@@ -170,6 +170,12 @@
                         <textarea class="input" asp-for="Remarks" maxlength="500"> </textarea>
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
+                    @if (Model.CaseNo != null)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.CopyOfPurchaseOrderDocument" />
+                        </div>
+                    }
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">

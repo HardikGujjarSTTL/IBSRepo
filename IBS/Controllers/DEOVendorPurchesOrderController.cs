@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Drawing;
+using static IBS.Helper.Enums;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace IBS.Controllers
 {
@@ -426,13 +428,16 @@ namespace IBS.Controllers
                     IsDigit = Char.IsDigit(characterToCheck);
                 }
                 List<SelectListItem> agencyClient = new List<SelectListItem>();
-                if (IsDigit)
+                if (VEND_CD != null)
                 {
-                    agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
-                }
-                else
-                {
-                    agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    if (IsDigit)
+                    {
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    }
                 }
 
                 return Json(new { status = true, list = agencyClient});
@@ -530,6 +535,14 @@ namespace IBS.Controllers
                 {
                     if (result[1] != null)
                     {
+                        string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO);
+                        string VendorPath = Path.Combine(TempFilePath, CaseNo + ".PDF");
+                        string TempFilePath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO);
+                        string DestinationPath = Path.Combine(TempFilePath1, CaseNo + ".PDF");
+                        if (System.IO.File.Exists(VendorPath) && !System.IO.File.Exists(DestinationPath))
+                        {
+                            System.IO.File.Copy(VendorPath, DestinationPath, true);
+                        }
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }
