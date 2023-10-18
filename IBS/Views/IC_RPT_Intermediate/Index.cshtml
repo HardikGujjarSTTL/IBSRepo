@@ -60,10 +60,10 @@
                     </table>
                 </div>
             </div>
-          
+
             <div class="row my-0">
                 <div class="col-lg-12">
-                <h3 class="heading3">PO AMENDMENTS</h3>
+                    <h3 class="heading3">PO AMENDMENTS</h3>
                 </div>
                 <input type="hidden" id="hdnSNo" />
                 <div class="col-md-3 mb-3">
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">SET No.</label>
-                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" readonly="readonly" /> @*asp-for="test"*@
+                    <input type="text" class="input" asp-for="SET_NO" maxlength="12" onblur="Change('SET_NO');" readonly="readonly" /> @*asp-for="test"*@
                 </div>
             </div>
 
@@ -395,7 +395,7 @@
                 return;
             }
 
-            var Qty_TO_Ins = "@Model.QTY_TO_INSP";
+            var Qty_TO_Ins = $("#lblQtyINSP").html();//"@Model.QTY_TO_INSP";
             var QtyRejected = $("#QTY_REJECTED").val() == "" ? "0" : $("#QTY_REJECTED").val();
             var QtyPassed = $("#QTY_PASSED").val() == "" ? "0" : $("#QTY_PASSED").val();
             if (!IsValidQty(Qty_TO_Ins, QtyRejected, QtyPassed)) {
@@ -458,7 +458,7 @@
             $.post("@Url.Action("SaveDetails", "IC_RPT_Intermediate")", { model: formData }, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
-
+                    $("#btnCancel").trigger("click");
                 }
             });
         });
@@ -537,7 +537,7 @@
             window.location.href = url;
         });
 
-        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
+        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {            
             var inspqty = 0;
             var rejectedqty = 0;
             var passedqty = 0;
@@ -749,6 +749,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
+                    debugger
                     if (response != null) {
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
@@ -826,14 +827,39 @@
                         $("#btnRefresh").css("display", "");
                         $("#btnCancel").css("display", "");
                     }
+                }
+            });
+        }
+
+        function abc(xmldata, xmlfilename) {
+            //alert(xmldata);
+            //var xml=encodeURI(xmldata);
+            //alert(xml);
+
+            var xml = xmldata;
+            $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
+                //alert("IN function");
+                var status = $(exeResponse).find("status").text();
+
+                if (status == "failed") {
 
                 }
+                else {
+                    var Url = "@Url.Action("PKIDATA","IC_RPT_Intermediate")"; // "/RBS/PKIDATA.aspx";
+                    $.post(Url, { "file": exeResponse, "filename": xmlfilename }, function (res) {
+                        window.location.href = "@Url.Action("Index","IC_RPT_Intermediate")?filename=" + res; //"/RBS/IC_RPT_Intermediate.aspx?filename=" + res;
+                    });
+                }
+            }).fail(function (xhr, textStatus, errorThrown) {
+                window.location.href = "@Url.Action("Index","IC_RPT_Intermediate")?filename=" + xmlfilename;
             });
         }
 
         function Reset() {
             //txtBKNO1.Enabled = false;
             //txtSetNo1.Enabled = false;
+            $('#BK_NO').prop('disabled', true);
+            $('#SET_NO').prop('disabled', true);
             $("#ITEM_DESC_PO").val("");
             $("#ITEM_REMARK").val("");
             //$("#QTY_ORDERED").val("");
@@ -882,6 +908,23 @@
                 return false;
             else
                 return true;
+        }
+
+        function Change(id) {
+            var Name = "#" + id;
+            var value = $(Name).val();
+            var dlength = value.length;
+            if (dlength == 1) {
+                value = "00" + value;
+                $(Name).val(value);
+                event.returnValue = false;
+            }
+            else if (dlength == 2) {
+                value = "0" + value;
+                $(Name).val(value);
+                event.returnValue = false;
+            }
+            return false;
         }
     </script>
 }
