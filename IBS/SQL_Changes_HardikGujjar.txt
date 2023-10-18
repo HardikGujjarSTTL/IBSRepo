@@ -1303,8 +1303,8 @@ BEGIN
             '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
             'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
             'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
-            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, ''CASE_NO/'' || m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
-            '''CASE_NO/'' || m.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            'm.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
             'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
             'WHERE m.VEND_CD = v.VEND_CD ' ||
             'AND v.VEND_CITY_CD = t.CITY_CD ' ||

@@ -41,6 +41,15 @@ namespace IBS.Controllers.Vendor
                 model = pOMasterRepository.FindByID(CaseNo);
             }
 
+            List<IBS_DocumentDTO> lstCopyOfPurchaseOrderDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, CaseNo);
+            FileUploaderDTO FileUploaderCopyOfPurchaseOrderDocument = new FileUploaderDTO();
+            FileUploaderCopyOfPurchaseOrderDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCopyOfPurchaseOrderDocument.IBS_DocumentList = lstCopyOfPurchaseOrderDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+            FileUploaderCopyOfPurchaseOrderDocument.OthersSection = false;
+            FileUploaderCopyOfPurchaseOrderDocument.MaxUploaderinOthers = 5;
+            FileUploaderCopyOfPurchaseOrderDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.CopyOfPurchaseOrderDocument = FileUploaderCopyOfPurchaseOrderDocument;
+
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
             FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
             FileUploaderDrawingSpecification.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -141,8 +150,13 @@ namespace IBS.Controllers.Vendor
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
+                        string SpecificFileName = id.Trim();
+                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder };
+                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
                     }
                     return Json(new { status = true, responseText = msg });
