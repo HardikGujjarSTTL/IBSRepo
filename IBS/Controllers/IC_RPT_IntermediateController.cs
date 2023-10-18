@@ -22,7 +22,7 @@ namespace IBS.Controllers
         }
         #endregion
 
-        [Authorization("IC_RPT_Intermediate", "Index", "view")]
+        //[Authorization("IC_RPT_Intermediate", "Index", "view")]
         public IActionResult Index()
         {
             IC_RPT_IntermediateModel model = new();

@@ -163,7 +163,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Contract Alternate IE</label>
-                    @Html.DropDownListFor(model => model.AltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
+                    @Html.DropDownListFor(model => model.ContAltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
                 </div>
                 <div class="col-md-4 mb-3" style="display:none;">
                     <label for="Reference">Cluster Name <i class="text-danger">*</i></label>
