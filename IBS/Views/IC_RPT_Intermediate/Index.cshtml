@@ -110,7 +110,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Items</label>
-                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(IBS.Models.Common.GetIterUnitRegionList() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(null , "Value", "Text"),"--Select--")
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
@@ -537,7 +537,7 @@
             window.location.href = url;
         });
 
-        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {            
+        function IsValidQty(pinspqty, prejectedqty, ppassedqty) {
             var inspqty = 0;
             var rejectedqty = 0;
             var passedqty = 0;

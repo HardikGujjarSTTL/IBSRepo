@@ -2992,7 +2992,7 @@ namespace IBS.Repositories.InspectionBilling
                 var bsCheck = context.T10IcBooksets.Where(bookset =>bookset.BkNo.Trim().ToUpper() == model.BkNo &&Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
                               Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
 
-                if (bsCheck != 0)
+                if (bsCheck != null)
                 {
                     if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
                     {
