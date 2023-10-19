@@ -1105,7 +1105,9 @@
                 }
                 else {
                     var CaseNo = $("#CaseNo").val();
-                    let myObject = { CaseNo };
+                    var CallRecvDt = $("#CallRecvDt").val();
+                    var CallSno = $("#CallSno").val();
+                    let myObject = { CaseNo, CallRecvDt, CallSno };
                     $.get("@Url.Action("GetItemDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                         if (response.status) {
                             if (response.responseText == "0") {
@@ -1245,7 +1247,10 @@
 
         function ItemDetails() {
             var CaseNo = $("#CaseNo").val();
-            let myObject = { CaseNo };
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+            
+            let myObject = { CaseNo,CallRecvDt,CallSno };
             $.get("@Url.Action("GetItemDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                 if (response.status) {
                     if (response.responseText == "0") {

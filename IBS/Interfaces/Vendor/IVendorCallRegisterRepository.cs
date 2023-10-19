@@ -42,6 +42,6 @@ namespace IBS.Interfaces.Vendor
 
         string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo);
 
-        int GetItemList(string CaseNo);
+        int GetItemList(string CaseNo, DateTime CallRecvDt, int CallSno);
     }
 }

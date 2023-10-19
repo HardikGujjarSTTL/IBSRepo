@@ -401,7 +401,7 @@ namespace IBS.Repositories.Vendor
                     from bpo in bpoGroup.DefaultIfEmpty()
                      join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
                     from city in cityGroup.DefaultIfEmpty()
-                     where t15.CaseNo == CaseNo && t18.ItemSrnoPo == ItemSrnoPo
+                     where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t18.CallSno == Convert.ToInt32(CallSno) && t18.ItemSrnoPo == ItemSrnoPo
                      select new VenderCallRegisterModel
                     {
                         Status = "Available",
@@ -2104,7 +2104,7 @@ namespace IBS.Repositories.Vendor
         public string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo)
         {
             string ID = "";
-            var Details = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            var Details = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && x.CallSno == Convert.ToInt32(model.CallSno) && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
             if (Details == null)
             {
                 T18CallDetail T18 = new T18CallDetail();
@@ -2137,10 +2137,10 @@ namespace IBS.Repositories.Vendor
             return ID;
         }
 
-        public int GetItemList(string CaseNo)
+        public int GetItemList(string CaseNo, DateTime CallRecvDt, int CallSno)
         {
             int item = 0;
-            var ItemsDet = context.T18CallDetails.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
+            var ItemsDet = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
             if (ItemsDet != null)
             {
                 item = Convert.ToInt32(ItemsDet.QtyToInsp);
