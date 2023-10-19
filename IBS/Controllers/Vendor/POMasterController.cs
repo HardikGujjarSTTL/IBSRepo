@@ -153,11 +153,16 @@ namespace IBS.Controllers.Vendor
                         string SpecificFileName = id.Trim();
                         int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder };
                         List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
-                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
-
+                        if (DocumentsCaseList.Count > 0)
+                        {
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        }
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
-                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        if (DocumentsList.Count > 0)
+                        {
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        }
                     }
                     return Json(new { status = true, responseText = msg });
                 }
@@ -245,14 +250,14 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor(string searchValues = null,bool isSameAs =false)
+        public IActionResult GetVendor(string searchValues = null, bool isSameAs = false)
         {
             try
             {
                 bool IsDigit = false;
                 if (searchValues != null && searchValues != "0")
                 {
-                    char characterToCheck = searchValues[3]; 
+                    char characterToCheck = searchValues[3];
                     IsDigit = Char.IsDigit(characterToCheck);
                     //IsDigit = Char.IsDigit(searchValues, 5);
                 }

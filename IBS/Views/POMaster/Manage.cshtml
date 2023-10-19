@@ -47,7 +47,7 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Railway/Non-Railway</label>
+                        <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
 
                         <span asp-validation-for="RlyNonrly" class="text-danger"></span>
@@ -553,6 +553,14 @@
         }
 
         function Save() {
+            if($("#PurchaserCd").val() == "0")
+            {
+                if ($("#Purchaser").val() == "")
+                {
+                    ShowHideMsgNew(false, "Purchaser details is required.");
+                    return;
+                }
+            }
             if ($("#frmPOMaster").valid()) {
                 if (!SaveSingleDocuments("tab-1")) { return; }
                 $("#frmPOMaster").submit();

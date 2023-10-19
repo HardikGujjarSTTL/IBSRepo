@@ -187,10 +187,10 @@ namespace IBS.Controllers.Vendor
                 {
                     model.UserId = UserName.Trim();
                     model.Createdby = UserName.Trim();
-                    if(model.ActionType == "A")
+                    if (model.ActionType == "A")
                     {
                         model = venderRepository.GetValidate(model);
-                        if(model.callval == 0)
+                        if (model.callval == 0)
                         {
                             //msg = "Master data not entered.So please enter master data cluster/vender/ie";
                             msg = "Call can't be assigned to IE beyond the maximumn call limit.";
@@ -506,14 +506,14 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GetItemDetails(string CaseNo)
+        public IActionResult GetItemDetails(string CaseNo, string CallRecvDt, int CallSno)
         {
             try
             {
                 int item = 0;
-                if (CaseNo != null)
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
                 {
-                    item = venderRepository.GetItemList(CaseNo);
+                    item = venderRepository.GetItemList(CaseNo, Convert.ToDateTime(CallRecvDt), CallSno);
                 }
                 return Json(new { status = true, responseText = item });
             }
