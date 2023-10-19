@@ -109,6 +109,10 @@ public partial class T17CallRegister
 
     public byte? Isdeleted { get; set; }
 
+    public string? CmApproval { get; set; }
+
+    public DateTime? CmApprovalDt { get; set; }
+
     public virtual T09Ie? IeCdNavigation { get; set; }
 
     public virtual T05Vendor? MfgCdNavigation { get; set; }

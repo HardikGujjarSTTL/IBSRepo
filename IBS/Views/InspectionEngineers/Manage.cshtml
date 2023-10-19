@@ -498,11 +498,14 @@
 
             var formData = $("#frmInspectionEngineers").serialize();
             $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
-                ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "InspectionEngineers")';
+                        }, 2000);
                 }
             });
-            //}
             return false;
         });
 

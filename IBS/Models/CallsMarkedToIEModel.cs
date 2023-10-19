@@ -198,6 +198,10 @@
         public string LAB_STATUS { get; set; }
 
         public int PAYMENT_RECIEPT { get; set; }
+
+        public string CM_APPROVAL { get; set; }
+
+        
     }
 
 }
