@@ -16,6 +16,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th class="padR10 center">Action</th>
+                            <th class="padR10 center">Edit Case No</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Ref No.</th>
                             <th>Purchase Order Number</th>
                             <th>Purchase Order Date</th>
@@ -24,9 +27,6 @@
                             <th>Vendor</th>
                             <th>Remarks</th>
                             <th></th>
-                            <th class="padR10 center">Edit Case No</th>
-                            <th class="padR10 center">View PO Details</th>
-                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +82,39 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            //html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var RealCaseNo = data.RealCaseNo == null ? "" : data.RealCaseNo;
+                            //var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="OpenCaseNoModal(\'' + data.CaseNo + '\',\'' + data.PoNo + '\',\'' + data.PoDt + '\',\'' + data.RlyCd + '\',\'' + RealCaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit Case No"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CaseNo;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="View PO Details"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -113,38 +146,7 @@
                             return html;
                         }
                     },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            var RealCaseNo = data.RealCaseNo == null ? "" : data.RealCaseNo;
-                            //var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?MessageId=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="OpenCaseNoModal(\'' + data.CaseNo + '\',\'' + data.PoNo + '\',\'' + data.PoDt + '\',\'' + data.RlyCd + '\',\'' + RealCaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var id = data.CaseNo;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOVendorPurchesOrder")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            var editUrl = '@Url.Action("Manage", "DEOVendorPurchesOrder")?CaseNo=' + CaseNo;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            //html += '<a onclick="MessageDelete(\'' + CaseNo + '\'); return false;" href="javascript:void(\'0\');" id=\"' + CaseNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
+                    
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {

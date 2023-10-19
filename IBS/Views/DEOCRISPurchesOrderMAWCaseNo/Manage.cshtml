@@ -256,6 +256,10 @@
             var VEND_CD = '@Model.VEND_CD';
             if (i == 1) {
                 VEND_CD = $("#txtVend").val();
+                if (i == 1 && (VEND_CD == "" || VEND_CD == null)) {
+                    ShowHideMsgNew(false, "ENTER VENDOR CODE OR 1ST Few CHARACTERS OF VENDOR NAME AND THEN CLICK ON SELECT VENDOR BUTTON");
+                    return;
+                }
             }
             var IMMS_VENDOR_CD = ('@Model.IMMS_VENDOR_CD').replace(':', '');
             var VENDOR = ('@Model.VENDOR');

@@ -215,8 +215,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
-
             $("#FromDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
 
             $('input[name="InspWorkType"]').on('change', function () {
@@ -419,7 +417,8 @@
             }));
 
             if (checkedWork.length == 0) {
-                alert('Please select atleast record for daily plan for work!!!')
+                //alert('Please select atleast record for daily plan for work!!!')
+                ShowHideMsgNew(false, "Please select atleast record for daily plan for work!!!");
                 return false;
             }
 
@@ -447,7 +446,7 @@
             }));
 
             if (checkedWork.length == 0) {
-                alert('Please select atleast record for daily plan for work!!!')
+                ShowHideMsgNew(false, "Please select atleast record for daily plan for work!!!");
                 return false;
             }
             $("#ActionType").val("D");

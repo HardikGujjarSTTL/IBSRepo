@@ -15,6 +15,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Action</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Ref No.</th>
                             <th>Purchase Order Number</th>
                             <th>Purchase Order Date</th>
@@ -24,8 +26,6 @@
                             <th>Place of Inspection</th>
                             <th>Region</th>
                             <th>Remarks</th>
-                            <th class="padR10 center">View PO Details</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,26 +78,6 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "IMMS_POKEY" },
-                    { data: "PO_NO" },
-                    { data: "PO_DT" },
-                    { data: "RECV_DT" },
-                    { data: "RLY_CD" },
-                    { data: "VEND_NAME" },
-                    { data: "POI" },
-                    { data: "REGION" },
-                    { data: "REMARKS" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var ImmsPokey = data.IMMS_POKEY;
-                            var ImmsRlyCd = data.IMMS_RLY_CD;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + ImmsPokey + "&IMMS_RLY_CD=" + ImmsRlyCd;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="View"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -109,6 +89,28 @@
                             return html;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var ImmsPokey = data.IMMS_POKEY;
+                            var ImmsRlyCd = data.IMMS_RLY_CD;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + ImmsPokey + "&IMMS_RLY_CD=" + ImmsRlyCd;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye Permission_EditView\" title="View PO Details"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
+                    { data: "IMMS_POKEY" },
+                    { data: "PO_NO" },
+                    { data: "PO_DT" },
+                    { data: "RECV_DT" },
+                    { data: "RLY_CD" },
+                    { data: "VEND_NAME" },
+                    { data: "POI" },
+                    { data: "REGION" },
+                    { data: "REMARKS" },
+                    
                     //{ data: "MaStatus" },
                 ],
                 "order": [[0, "asc"]],

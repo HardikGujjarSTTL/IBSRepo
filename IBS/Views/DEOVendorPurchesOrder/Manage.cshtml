@@ -417,7 +417,7 @@
         function fill_consignee_purcher() {
             var RlyNonrlyValue = '@Model.RlyNonrly';
             var RlyNonrlyText = "";
-            if(RlyNonrlyValue == "R")
+            if (RlyNonrlyValue == "R")
                 RlyNonrlyText = "Railways";
             else if (RlyNonrlyValue == "P")
                 RlyNonrlyText = "Private";
@@ -554,9 +554,14 @@
         function ChanedVendCd() {
             $("#txtVend").val($("#VendCd").val());
         }
-        
+
         function GetVendor(i) {
             var VEND_CD = $("#txtVend").val();
+            if (i == 1 && (VEND_CD == "" || VEND_CD == null)) {
+                ShowHideMsgNew(false, "ENTER VENDOR CODE OR 1ST Few CHARACTERS OF VENDOR NAME AND THEN CLICK ON SELECT VENDOR BUTTON");
+                return;
+            }
+
             $.ajax({
                 url: '@Url.Action("GetVend_CD", "DEOVendorPurchesOrder")?VEND_CD=' + VEND_CD,
                 type: 'GET',

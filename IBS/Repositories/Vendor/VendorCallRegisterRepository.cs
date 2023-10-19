@@ -1215,6 +1215,7 @@ namespace IBS.Repositories.Vendor
                                 if (countcalls < Maximumcalls && callmarking == "Y")
                                 {
                                     strval = ieCode;
+                                    model.IeCd = ieCode;
                                 }
                                 else
                                 {
@@ -1260,6 +1261,7 @@ namespace IBS.Repositories.Vendor
                                                     if (countcalls123 < Maximumcalls1 && callmarkings == "Y")
                                                     {
                                                         strval = Alt_ieCode;
+                                                        model.IeCd = Alt_ieCode;
                                                     }
                                                     else
                                                     {
@@ -1308,6 +1310,7 @@ namespace IBS.Repositories.Vendor
                                                                         if (countcalls1234 < Maximumcalls12 && callmarkings1 == "Y")
                                                                         {
                                                                             strval = Alt_ieCode_TWO;
+                                                                            model.IeCd = Alt_ieCode_TWO;
                                                                         }
                                                                         else
                                                                         {
@@ -1351,6 +1354,7 @@ namespace IBS.Repositories.Vendor
                                                                                             if (countcalls1233 < Maximumcalls131 && callmarkings123 == "Y")
                                                                                             {
                                                                                                 strval = Alt_ieCode_THREE;
+                                                                                                model.IeCd = Alt_ieCode_THREE;
                                                                                             }
                                                                                             else
                                                                                             {

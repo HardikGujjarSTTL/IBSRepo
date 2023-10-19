@@ -53,6 +53,7 @@
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
+                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Approval for CM</font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor Name</font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">New Vendor</font></b></th>
                         <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Purchaser</font></b></th>
@@ -75,7 +76,7 @@
                     </tr>
                     @if (Model != null && Model.ReportLstNew != null && Model.ReportLstNew.Count > 0)
                     {
-                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", LabDetails = "", PaymentReciept = "", CallStausF = "";
+                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", CallStausF = "";
                         @foreach (var item in Model.ReportLstNew)
                         {
                             //wSelect = "/CallRegisterIB/CallStatus?CaseNo=" + @item.CaseNo + "&CallRecvDt=" + @item.CallRecvDt + "&CallSno=" + @item.CallSno;
@@ -112,7 +113,7 @@
                                     CallStausF += "\nPayment Reciept Not Uploaded By Vendor.";
                                 }
                             }
-                            
+
 
                             @if (@item.NEWVENDOR == "Y")
                             {
@@ -140,9 +141,25 @@
                             }
                             <tr>
 
-                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
-                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>
-                                <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
+
+                                @if (@item.CM_APPROVAL == "A")
+                                {
+                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
+                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>
+                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
+
+                                    <td align="center"><font size="1" face="Verdana" color='#FF00CC'>Approved by CM</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center" colspan="1"><font size="2" face="Verdana">Select</font></td>
+                                    <td align="center" colspan="1"><font size="2" face="Verdana">Print</font></td>
+                                    <td align="center" colspan="1"><font size="2" face="Verdana">History</font></td>
+
+                                    <td align="center"><font size="1" face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
+                                }
+
+
                                 <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
                                 <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
                                 <td align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>

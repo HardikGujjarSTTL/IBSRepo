@@ -93,6 +93,8 @@ builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IE
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
 
+builder.Services.AddScoped<ICMDailyWorkPlanRepository, IBS.Repositories.CMDailyWorkPlanRepository>();
+
 builder.Services.AddScoped<ICallRegisterIBRepository, IBS.Repositories.InspectionBilling.CallRegisterIBRepository>();
 builder.Services.AddScoped<IInspectionCertRepository, IBS.Repositories.InspectionBilling.InspectionCertRepository>();
 builder.Services.AddScoped<IBillAdjustmentsRepository, IBS.Repositories.InspectionBilling.BillAdjustmentsRepository>();

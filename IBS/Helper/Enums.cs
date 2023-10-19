@@ -81,6 +81,10 @@ namespace IBS.Helper
             CALLCANCELLATIONDOCUMENTS = 27,
             [Description("/ReadWriteData/DigiSignatureFiles")]
             DigiSignatureFiles = 24,
+            [Description("/ReadWriteData/Files/CASE_NO")]
+            AdministratorPurchaseOrderCASE_NO = 28,
+            [Description("/ReadWriteData/Files/Vendor/PO")]
+            VendorPO = 29,
         }
 
         public enum DocumentCategory : int
@@ -109,6 +113,8 @@ namespace IBS.Helper
             UploadICAnnexue1 = 25,
             UploadICAnnexue2 = 26,
             CancellationDocument = 27,
+            PurchaseOrderFormCase = 28,
+            VendorPO = 29,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -156,6 +162,7 @@ namespace IBS.Helper
             DrawingSpecification = 56,
             Amendment = 57,
             ParentLOA = 58,
+            CopyOfPurchaseOrder = 3,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
