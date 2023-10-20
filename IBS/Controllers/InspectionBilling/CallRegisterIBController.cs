@@ -652,6 +652,19 @@ namespace IBS.Controllers.InspectionBilling
                 return Json(new { status = false, responseText = model.AlertMsg });
             }
         }
+        public IActionResult RefreshAllDlt(VenderCallStatusModel model)
+        {
+            model = callregisterRepository.RefreshAllDlt(model);
+            if (model.AlertMsg == "Success")
+            {
+                model.AlertMsg = "Your request has been Accepted!";
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+        }
 
         public IActionResult SaveCancellation(VenderCallStatusModel model, IFormCollection FrmCollection)
         {
@@ -835,20 +848,12 @@ namespace IBS.Controllers.InspectionBilling
             string IeCd = Convert.ToString(GetIeCd);
             string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
             VenderCallStatusModel model = callregisterRepository.GetRlyDrp(CaseNo, DesireDt, CallSno, selectedValue, IeCd, Region);
-            if(model.AlertMsg  != "Success!!!")
-            {
-                return Json(new { status = false, responseText = model.AlertMsg });
-            }
             return Json(model);         
         }
         
         public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
         {
             VenderCallStatusModel model = callregisterRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
-            if(model.AlertMsg  != "Success!!!")
-            {
-                return Json(new { status = false, responseText = model.AlertMsg });
-            }
             return Json(model);
         }
 

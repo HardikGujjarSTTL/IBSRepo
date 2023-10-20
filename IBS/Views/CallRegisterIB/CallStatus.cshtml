@@ -255,13 +255,13 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
+                        <partial name="_FileUploader" id="Img1" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
                     </div>
                     <div class="col-md-4 mb-3">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload2" />
+                        <partial name="_FileUploader" id="Img2" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload2" />
                     </div>
                     <div class="col-md-4 mb-3">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload3" />
+                        <partial name="_FileUploader" id="Img3" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload3" />
                     </div>
                 </div>
                 <div class="row my-0">
@@ -345,8 +345,11 @@
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                             <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
+                            <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
                         </div>
                     </div>
+                    <p style="color:red;"><b>RefreshAll:It will delete all the records which are not accepted or rejected!</b></p>
+
                 </div>
             </div>
         </form>
@@ -531,6 +534,7 @@
                     $('#accepteddrp').show();
                     $('#localdrp').show();
                     $('#rejvalue').show();
+                    $('#savedetails').hide();
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
                     $('#AcceptReject').text('Rejected');
@@ -644,6 +648,11 @@
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savedetails').hide();
             } else if (CallStatusdrp == "A") {
+                $('#CallStatusdrp').prop('disabled', true);
+                $('#savefiles').prop('disabled', true);
+                $('#uploadfile').prop('disabled', true);
+                $('#AcceptReject').prop('disabled', true);
+                $('#RefreshAll').prop('disabled', true);
                 $('#accepteddrp').show();
                 $('#savedetails').hide();
                 $('#bkset').hide();
@@ -654,11 +663,17 @@
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "R") {
+                $('#CallStatusdrp').prop('disabled', true);
+                $('#savefiles').prop('disabled', true);
+                $('#uploadfile').prop('disabled', true);
+                $('#AcceptReject').prop('disabled', true);
+                $('#RefreshAll').prop('disabled', true);
                 $('#MatValue').show();
                 $('#accepteddrp').show();
                 $('#localdrp').show();
                 $('#rejvalue').show();
                 $('#accepteuploadddrp').show();
+                $('#savedetails').hide();
                 $('#ReasonFIFOdv').show();
                 $('#AcceptReject').text('Rejected');
                 $('#frmcancelled').hide();
@@ -892,7 +907,13 @@
                     data: formData,
                     success: function (response) {
                         if (response.Id == 1) {
+                            var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                             ShowHideMsgNew(true, response.responseText);
+
+                            setTimeout(function () {
+                                window.location.href = redirectUrl;
+                            }, 1000);
+
                         }
                         else {
                             ShowHideMsgNew(false, response.responseText);
@@ -924,7 +945,7 @@
         }
 
         function SaveImages() {
-            debugger
+
             var formData = new FormData();
             debugger
             SaveSingleDocuments("tab-1");
@@ -941,50 +962,59 @@
 
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
 
+               
                 // Get the value of the hidden input (assuming it contains file information)
                 var uploadedDocuments = hiddenInput.val();
 
+                if (uploadedDocuments == "" || uploadedDocuments == null) {
+                    alert('Please select the first five (5) Images!');
+                    return;
+                }
                 var uploadedDocumentsArray = JSON.parse(uploadedDocuments);
-                var firstFiveFiles = uploadedDocumentsArray.slice(0, 5);
+
                 if (uploadedDocumentsArray.length >= 5) {
 
-                    var ajaxData = AjaxModel();
+                    if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
+                        var ajaxData = AjaxModel();
 
-                    if (ajaxData) {
-                        for (var key in ajaxData) {
-                            if (ajaxData.hasOwnProperty(key)) {
-                                formData.append(key, ajaxData[key]);
+                        if (ajaxData) {
+                            for (var key in ajaxData) {
+                                if (ajaxData.hasOwnProperty(key)) {
+                                    formData.append(key, ajaxData[key]);
+                                }
                             }
                         }
-                    }
-                    var files = $('#hdnUploadedDocumentList_tab-1')[0];
+                        var files = $('#hdnUploadedDocumentList_tab-1')[0];
 
 
-                    if (files && files.defaultValue && files.defaultValue != null) {
-                        var files = files.defaultValue;
-                        formData.append("UploadeFile", files);
-                    }
-                    $.ajax({
-                        url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-
-                            if (response.Id == 1) {
-                                ShowHideMsgNew(true, response.responseText);
-                            }
-                            else {
-                                ShowHideMsgNew(false, response.responseText);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            // Handle error
-                            console.error('Error: ' + textStatus, errorThrown);
+                        if (files && files.defaultValue && files.defaultValue != null) {
+                            var files = files.defaultValue;
+                            formData.append("UploadeFile", files);
                         }
-                    });
+                        $.ajax({
+                            url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
 
+                                if (response.Id == 1) {
+                                    ShowHideMsgNew(true, response.responseText);
+                                }
+                                else {
+                                    ShowHideMsgNew(false, response.responseText);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                // Handle error
+                                console.error('Error: ' + textStatus, errorThrown);
+                            }
+                        });
+                    }
+                    else {
+                        alert('Please select the first five (5) Images!');
+                    }
                 } else {
                     alert('Please select the first five (5) Images!');
                 }
@@ -1045,7 +1075,9 @@
                     if (response.Id == 1) {
                         var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                         ShowHideMsgNew(true, response.responseText);
-                        window.location.href = redirectUrl;
+                        setTimeout(function () {
+                            window.location.href = redirectUrl;
+                        }, 1000);
                     }
                     else {
                         ShowHideMsgNew(false, response.responseText);
@@ -1073,6 +1105,7 @@
             var CallCancelCharges = $('#CanCharges').val();
             var CancellationDescription = $('#Candesc').val();
             var PoNo = $('#PoNo').val();
+            var ReasonFIFO = $('#ReasonFIFO').val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1085,7 +1118,8 @@
                 CallSno: CallSno,
                 CallStatusDt: CallStatusDt,
                 CancellationDescription: CancellationDescription,
-                PoNo: PoNo
+                PoNo: PoNo,
+                ReasonFIFO: ReasonFIFO
             };
 
             return formData;
@@ -1101,6 +1135,35 @@
             let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
             var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
             window.location.href = url;
+        }
+
+        function RefreshAll(){
+            var formData = AjaxModel();
+
+            $.ajax({
+                url: '@Url.Action("RefreshAllDlt", "CallRegisterIB")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+
+                    if (response.Id == 1) {
+                        var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
+                        ShowHideMsgNew(true, response.responseText);
+                        setTimeout(function () {
+                            window.location.href = redirectUrl;
+                        }, 1000);
+                    }
+                    else {
+                        ShowHideMsgNew(false, response.responseText);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error
+                    console.error('Error: ' + textStatus, errorThrown);
+                }
+            });
         }
 
     </script>

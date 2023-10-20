@@ -3227,6 +3227,23 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
+        public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model)
+        {
+                var query = context.IcIntermediates
+            .Where(i => i.CaseNo == model.CaseNo &&
+                        i.CallRecvDt == model.CallRecvDt &&
+                        i.CallSno == model.CallSno &&
+                        (i.ConsgnCallStatus != "A" && i.ConsgnCallStatus != "R") || i.ConsgnCallStatus == null);
+
+            context.IcIntermediates.RemoveRange(query);
+
+            context.SaveChanges();
+
+            model.AlertMsg = "Success";
+
+            return model;
+        }
+
         public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
             if (model.CallStatus == null || (model.CallStatus == "C" && model.CallStatus == ""))
