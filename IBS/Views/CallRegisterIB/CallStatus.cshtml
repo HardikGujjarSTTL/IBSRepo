@@ -617,115 +617,115 @@
                     }
                 });
             });
-            var CallStatusdrp = $('#CallStatusdrp').val();
-            if (CallStatusdrp == "C") {
-                $('#canlsave').prop('disabled', true);
-                $('#canlsave').addClass('disabled-button');
-                $('#CallStatusdrp').prop('disabled', true);
-                $('#savedetails').hide();
-            } else if (CallStatusdrp == "A") {
-                $('#accepteddrp').show();
-                $('#savedetails').hide();
-                $('#bkset').hide();
-                $('#CallCancelStatusdrp').hide();
-                $('#accepteuploadddrp').show();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#AcceptReject').text('Accepted');
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "R") {
-                $('#MatValue').show();
-                $('#accepteddrp').show();
-                $('#localdrp').show();
-                $('#rejvalue').show();
-                $('#accepteuploadddrp').show();
-                $('#ReasonFIFOdv').show();
-                $('#AcceptReject').text('Rejected');
-                $('#frmcancelled').hide();
-                $('#LocalOutstationdrp').show();
-            } else if (CallStatusdrp == "G") {
-                $('#accepteuploadddrp').show();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').hide();
-                $('#ReasonFIFOdv').show();
-                $('#bkset').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-                $('#AcceptReject').hide();
-            } else if (CallStatusdrp == "T") {
-                $('#accepteuploadddrp').show();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').hide();
-                $('#bkset').show();
-                $('#ReasonFIFOdv').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "S") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').show();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "U") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').show();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "W") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').show();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "M") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').show();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').hide();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').show();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#CallCancelStatusdrp').hide();
-                $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "C") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').hide();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#frmcancelled').show();
-                $('#CallCancelStatusdrp').show();
-                $('#MatValue').show();
-            }
+            //var CallStatusdrp = $('#CallStatusdrp').val();
+            //if (CallStatusdrp == "C") {
+            //    $('#canlsave').prop('disabled', true);
+            //    $('#canlsave').addClass('disabled-button');
+            //    $('#CallStatusdrp').prop('disabled', true);
+            //    $('#savedetails').hide();
+            //} else if (CallStatusdrp == "A") {
+            //    $('#accepteddrp').show();
+            //    $('#savedetails').hide();
+            //    $('#bkset').hide();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#accepteuploadddrp').show();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#AcceptReject').text('Accepted');
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "R") {
+            //    $('#MatValue').show();
+            //    $('#accepteddrp').show();
+            //    $('#localdrp').show();
+            //    $('#rejvalue').show();
+            //    $('#accepteuploadddrp').show();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#AcceptReject').text('Rejected');
+            //    $('#frmcancelled').hide();
+            //    $('#LocalOutstationdrp').show();
+            //} else if (CallStatusdrp == "G") {
+            //    $('#accepteuploadddrp').show();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#bkset').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //    $('#AcceptReject').hide();
+            //} else if (CallStatusdrp == "T") {
+            //    $('#accepteuploadddrp').show();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').hide();
+            //    $('#bkset').show();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "S") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').show();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "U") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').show();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "W") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').show();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "M") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').show();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').hide();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').show();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#CallCancelStatusdrp').hide();
+            //    $('#frmcancelled').hide();
+            //} else if (CallStatusdrp == "C") {
+            //    $('#accepteuploadddrp').hide();
+            //    $('#localdrp').hide();
+            //    $('#rejvalue').hide();
+            //    $('#accepteddrp').hide();
+            //    $('#savedetails').hide();
+            //    $('#bkset').hide();
+            //    $('#ReasonFIFOdv').show();
+            //    $('#frmcancelled').show();
+            //    $('#CallCancelStatusdrp').show();
+            //    $('#MatValue').show();
+            //}
             $('#LocalOutstationdrp').change(function () {
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
