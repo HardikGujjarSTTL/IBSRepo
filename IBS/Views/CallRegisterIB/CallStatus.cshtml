@@ -467,7 +467,8 @@
             //}else{
 
             //}
-            $('#ViewPrintIC').prop('disabled', false);
+            $('#ViewPrintIC').prop('disabled', true);
+            $("#ViewPrintIC").css("cursor", "auto");
             $('#accepteddrp').hide();
             $('#CallCancelChargesdrp').hide();
             $('#MatCanvalue').hide();
@@ -496,6 +497,9 @@
                         //$('#SetNo').val(data.SetNo);
                         $('#bknoaccpted').val(data.BkNo);
                         $('#setnoaccpted').val(data.SetNo);
+
+                        $('#ViewPrintIC').prop('disabled', false);
+                        $("#ViewPrintIC").css("cursor", "pointer");
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
