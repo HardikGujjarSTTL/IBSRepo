@@ -183,7 +183,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">IE</label>
-                    <input type="text" id="lblCallDT" class="input" readonly="readonly" />
+                    <input type="text" id="lblIE" class="input" readonly="readonly" />
 
                 </div>
 
@@ -526,6 +526,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            
                             sessionStorage.removeItem("Flag");
                             // var Id = data.LabId;
                             // var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")?LabId=' + Id;
@@ -600,6 +601,8 @@
 
                         var regNo1 = data[i].SampleRegNo;
                         var sno1 = data[i].SNO;
+
+                        
                     }
                     //editButton.click(function(event) {
                     snoLink.click(function (event) {
@@ -623,7 +626,16 @@
                 dataType: 'json',
                 data: { CaseNo: CaseNo, VCode: VCode },
                 success: function (data) {
-
+                    debugger;
+                    if(data.length == 0){
+                        sessionStorage.setItem("count", 0);
+                    }
+                    else
+                    {
+                        $("#grid1h").css("display", "block");
+                        $("#gridshow1").css("display", "block");
+                        $("#btnpostamt").css("display", "block");
+                    }
                     // Once data is successfully received, populate the table
                     var tableBody = $('#tableBody1');
                     tableBody.empty(); // Clear existing rows (if any)
@@ -703,7 +715,7 @@
                 data: { RegNo: RegNo },
 
                 success: function (success) {
-                    
+                   
                     if (success.SampleRegNo != null) {
                         if (success.TestingType == "R") {
                             $('#RT').prop('checked', true);
@@ -750,12 +762,12 @@
                         $("#gridh").css("display", "block");
                         $("#gridshow").css("display", "block");
                     }
-
+                    debugger;
                     if (parseInt(success.AmountRecieved) < parseInt(success.TotalLabCharges)) {
+                       
+                        sessionStorage.removeItem("count");
                         grid1(CaseNo, VCode);
-                        $("#grid1h").css("display", "block");
-                        $("#gridshow1").css("display", "block");
-                        $("#btnpostamt").css("display", "block");
+                        
                         $("#btninvoice").css("display", "none");
                     }
 
@@ -803,13 +815,14 @@
         }
 
         function SaveDetails() {
+           
             var parts1 = $("#dtofrr").val().split('/');
-            var wFrmDtO1 = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            var wFrmDtO1 = parts1[0] + '/' + parts1[1] + '/' + parts1[2];
             var parts2 = $("#dtoftestr").val().split('/');
-            var wFrmDtO2 = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+            var wFrmDtO2 = parts2[0] + '/' + parts2[1] + '/' + parts2[2];
             var parts3 = $("#dtofdistolab").val().split('/');
-            var wFrmDtO3 = parts3[1] + '/' + parts3[0] + '/' + parts3[2];
-
+            var wFrmDtO3 = parts3[0] + '/' + parts3[1] + '/' + parts3[2];
+            
             var LABREGISTERModel = {
                 SampleRegNo: $("#lblRNo").val(),
                 SNO: $("#lblSno").val(),
@@ -917,21 +930,26 @@
                 selectedschqdt.push(chqdt);
                 selectedamt.push(amt);
             });
-            
+            debugger;
             var BankCd = selectednkcd.join(',');
             var SusAmt = selectedsusamt.join(',');
             var ChqNo = selectedchqno.join(',');
             var ChqDt = selectedschqdt.join(',');
             var Amt = selectedamt.join(',');
-
+            var parts = ChqDt.split('/');
+            var wFrmDt = parts[1] + '/' + parts[0] + '/' + parts[2];
             var RegNo = $("#lblRNo").val();
             var LABREGISTERModel = {
                 BANK_CD: BankCd,
                 SUSPENSE_AMT: SusAmt,
                 CHQ_NO: ChqNo,
-                CHQ_DATE: ChqDt,
+                CHQ_DATE: wFrmDt,
                 AMOUNT: Amt,
-                SampleRegNo: RegNo
+                SampleRegNo: RegNo,
+                TotalLabCharges: $("#lbltolc").val(),
+                AmountRecieved: $("#lblar").val(),
+                TotalTDS: $("#lbltotds").val()
+
             };
             $.ajax({
                 type: "POST",

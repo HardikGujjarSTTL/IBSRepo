@@ -27,7 +27,11 @@ namespace IBS.Models
         public string SGST { get; set; }
         public string IGST { get; set; }
         public string GSTINNO { get; set; }
-        
+        public string State { get; set; }
+        public string UserId { get; set; }
+        public string Region { get; set; }
+        public int ErrorCode { get; set; }
+
 
     }
 

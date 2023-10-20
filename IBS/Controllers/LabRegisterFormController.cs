@@ -38,7 +38,7 @@ namespace IBS.Controllers
             //lABREGISTERModel.TestingType= "Normal";
             //lABREGISTERModel.CaseNo = "N12081010";
             lABREGISTERModel.CallRecDt = lABREGISTERModel.CallDateAndSno;
-            //lABREGISTERModel.CallSNO = "70";
+           
             return View(lABREGISTERModel);
         }
         [HttpPost]
@@ -105,8 +105,14 @@ namespace IBS.Controllers
         public bool SaveDataDetails([FromBody]LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();
+            var RegNo = LABREGISTERModel.SampleRegNo;
             bool result;
-            if(LABREGISTERModel.Flag == "1")
+            var testing = LABREGISTERModel.DTestingFee;
+            var tax = LABREGISTERModel.DServiceTax;
+            var hand = LABREGISTERModel.DHandlingCharges;
+            var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
+            if (LABREGISTERModel.Flag == "1")
             {
                 result = LabRegFormRepository.SaveDataDetails(LABREGISTERModel);
             }
@@ -129,6 +135,12 @@ namespace IBS.Controllers
         [Authorization("LabRegisterForm", "Index", "edit")]
         public bool InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
         {
+            var testing = LABREGISTERModel.DTestingFee;
+            var tax = LABREGISTERModel.DServiceTax;
+            var hand = LABREGISTERModel.DHandlingCharges;
+            var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
+            
             LABREGISTERModel.UName = UserId.ToString();
             LABREGISTERModel.Region = GetRegionCode;
             bool result;

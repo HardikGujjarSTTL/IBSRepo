@@ -8,7 +8,8 @@
 <form role="form" asp-controller="VendorCallRegister" asp-action="VendorCallRegisterDetail" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>@ViewData["Title"] </h2>
+            @*<h2>@ViewData["Title"] </h2>*@
+            <h3 class="heading3">@ViewData["Title"]</h3>
         </div>
         <input type="hidden" asp-for="CaseNo" />
         <input type="hidden" asp-for="CallRecvDt" />
@@ -102,9 +103,9 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Call Install No.</label>
+                    <label for="Name">Call Install No. <i class="text-danger">*</i></label>
                     <input type="text" class="input" asp-for="CallInstallNo">
-                    <span asp-validation-for="CallInstallNo" class="text-danger"></span>
+                    <span asp-validation-for="CallInstallNo" class="text-danger" id="spnCallInstallNo"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -114,18 +115,18 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Call Letter Number\ Dispatch Reference No.</label>
+                    <label for="Name">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
                     <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
-                    <span asp-validation-for="CallLetterNo" class="text-danger"></span>
+                    <span asp-validation-for="CallLetterNo" class="text-danger" id="spnCallLetterNo"></span>
                 </div>
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Call Letter Date (DD/MM/YYYY)</label>
+                    <label for="Name">Call Letter Date (DD/MM/YYYY) <i class="text-danger">*</i></label>
                     <input type="text" class="datepicker" asp-for="CallLetterDt" placeholder="DD/MM/YYYY">
-                    <span asp-validation-for="CallLetterDt" class="text-danger"></span>
+                    <span asp-validation-for="CallLetterDt" class="text-danger" id="spnCallLetterDt"></span>
                 </div>
             </div>
             @if (Model.ActionType == "M" || Model.ActionType == "D")
@@ -160,9 +161,9 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
+                    <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
-                    <span asp-validation-for="DepartmentCode" class="text-danger"></span>
+                    <span asp-validation-for="DepartmentCode" class="text-danger" id="spnDepartmentCode"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -187,9 +188,18 @@
                         </div>
                     </div>
                     <label for="Name" style="color:DarkMagenta">* Select Stage in case of Stage Inspection Call.</label>
-
                 </div>
             </div>
+            <div class="col-md-4 mb-3">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus" value="F">
+                                Is Finalized or Not
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
         <div class="row my-0">
             <div class="col-md-6 mb-3">
@@ -310,28 +320,21 @@
 
     </div>
 
-    <div class="row my-0">
-        @*<div class="col-md-3 mb-3">
-        <div class="reference">
-        <label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>
-        </div>
-        </div>*@
-        <div class="col-md-3 mb-3">
-            <h3 class="heading3">Manufacturer's Information</h3>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="company-checkbox">
-                <div class="remember">
-                    <div class="remecheckbox">
-                        <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
-                        Same As Vendor
+    <h3 class="heading3">Manufacturer's Information</h3>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
+                            Same As Vendor
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="accordion-body">
-        <di class="row my-0">
+        <div class="row my-0">
             <div class="col-md-2 mb-3">
                 <div class="reference">
                     @*<label for="Name">Name of Manufacturer/Name Of Firm (In case place of inspection is other than place of manufacturer)</label>*@
@@ -342,127 +345,118 @@
             </div>
             <div class="col-md-8 mb-3">
                 <div class="reference">
-                    <label for="MfgCd">* To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
+                    <label for="MfgCd"><i class="text-danger">*</i> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                     @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd) , "Value", "Text"),"--Select--")
                     <span asp-validation-for="MfgCd" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2 mb-3">
+                <div class="savenext-btn btnAlign">
+                    <button type="button" class="save-btn active" id="SearchDetailsM">Select Manufacturer</button>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
                 <div class="reference">
-                    <label for="Name"><br /></label>
-                    <div class="savenext-btn">
-                        @*<button type="button" class="search-btn" id="SearchDetailsM" onclick="location.href='@Url.Action("VendorCallRegisterDetail", "VendorCallRegister",new { Action = "M",CaseNo = @Model.CaseNo,CallRecvDt = Convert.ToDateTime(@Model.CallRecvDt).ToString("dd-MM-yyyy"), CallSno = @Model.CallSno })'">Select Manufacturer</button>*@
-                        <button type="button" class="search-btn" id="SearchDetailsM">Select Manufacturer</button>
-                    </div>
+                    <label for="Name">Place of Inspection</label>
+                    <textarea rows="4" asp-for="VendAdd1"></textarea>
+                    <span asp-validation-for="VendAdd1" class="text-danger"></span>
                 </div>
             </div>
-            @*<div class="col-md-6" style="margin-top: 30px;">
-            <div class="savenext-btn">
-            <button type="button" class="save-btn active" id="SearchDetailsM">Select Manufacturer</button>
-            </div>
-            </div>*@
-    </div>
-
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="reference">
-                <label for="Name">Place of Inspection</label>
-                <textarea rows="4" asp-for="VendAdd1"></textarea>
-                <span asp-validation-for="VendAdd1" class="text-danger"></span>
-            </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-4 mb-3">
-            <div class="reference">
-                <label for="Name">Contact Person's Name</label>
-                <input type="text" class="input" asp-for="VendContactPer1">
-                <span asp-validation-for="VendContactPer1" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="reference">
-                <label for="Name">Manufacturer Email</label>
-                <input type="text" class="input" asp-for="VendEmail">
-                <span asp-validation-for="VendEmail" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="reference">
-                <label for="Name">Phone No.</label>
-                <input type="text" class="input" asp-for="VendContactTel1">
-                <span asp-validation-for="VendContactTel1" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="savenext-btn btnAlign">
-                <button type="button" class="save-btn active" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
-            </div>
-        </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-6 mb-3">
-            <div class="reference">
-                <label for="Name" style="color:orangered">In case of IRFC Funded Project, Select 'Yes'</label>
-                @*<input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">*@
-                @*<div class="company-checkbox">
-                @foreach (var val in IBS.Models.Common.CommonYesNo())
-                {
-                <div class="remember">
-                <div class="remecheckbox">
-                <input type="radio" name="IrfcFunded" asp-for="IrfcFunded" value="@val.Value" id="IrfcFunded@(val.Value)" />
-                <label for="IrfcFunded@(val.Value)">@val.Text</label>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Name">Contact Person's Name</label>
+                    <input type="text" class="input" asp-for="VendContactPer1">
+                    <span asp-validation-for="VendContactPer1" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Name">Manufacturer Email</label>
+                    <input type="text" class="input" asp-for="VendEmail">
+                    <span asp-validation-for="VendEmail" class="text-danger"></span>
                 </div>
-                }
-                </div>*@
-                <div class="company-checkbox">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <label for="Name">Phone No.</label>
+                    <input type="text" class="input" asp-for="VendContactTel1">
+                    <span asp-validation-for="VendContactTel1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="savenext-btn btnAlign">
+                    <button type="button" class="save-btn active" id="btnUpdateMDetails">Update Manufacturer's Contact Details.</button>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="reference">
+                    <label for="Name" style="color:orangered">In case of IRFC Funded Project, Select 'Yes'</label>
+                    @*<input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">*@
+                    @*<div class="company-checkbox">
+                    @foreach (var val in IBS.Models.Common.CommonYesNo())
+                    {
                     <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="radio" asp-for="IrfcFunded" value="Y" id="IrfcFunded_Y" />
-                            <label for="IrfcFunded_Y">Yes</label>
-                            &nbsp;&nbsp;
-                            <input type="radio" asp-for="IrfcFunded" value="N" id="IrfcFunded_N" />
-                            <label for="IrfcFunded_N">No</label>
+                    <div class="remecheckbox">
+                    <input type="radio" name="IrfcFunded" asp-for="IrfcFunded" value="@val.Value" id="IrfcFunded@(val.Value)" />
+                    <label for="IrfcFunded@(val.Value)">@val.Text</label>
+                    </div>
+                    </div>
+                    }
+                    </div>*@
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="radio" asp-for="IrfcFunded" value="Y" id="IrfcFunded_Y" />
+                                <label for="IrfcFunded_Y">Yes</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="IrfcFunded" value="N" id="IrfcFunded_N" />
+                                <label for="IrfcFunded_N">No</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="reference">
-                <label for="Name">Bill Paying Officer & Address</label>
-                <label for="Name" style="color:orangered">(Mention the Name of the party in whose favour invoice is to be raised and it's Address.)</label>
-                <input type="text" class="input" asp-for="Bpo">
-                <span asp-validation-for="Bpo" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="reference">
-                <label for="Name">GSTIN No.</label>
-                <label for="Name" style="color:orangered">(Mention the GST NO. of the party in whose favour invoice is to be raised.)</label>
-                <input type="text" class="input" asp-for="RecipientGstinNo">
-                <span asp-validation-for="RecipientGstinNo" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-6 mb-3">
-            <div class="company-checkbox">
-                <div class="remember">
-                    <div class="remecheckbox">
-                        @*<input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
-                        <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>*@
-                        <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender">
-                        <label for="Name" style="color:red"> Kindly Check this option, If You are a New Vendor!!!</label>
-                    </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="reference">
+                    <label for="Name">Bill Paying Officer & Address</label>
+                    <label for="Name" style="color:orangered">(Mention the Name of the party in whose favour invoice is to be raised and it's Address.)</label>
+                    <input type="text" class="input" asp-for="Bpo">
+                    <span asp-validation-for="Bpo" class="text-danger"></span>
                 </div>
             </div>
-            @*<span asp-validation-for="CallInstallNo" class="text-danger"></span>*@
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <div class="reference">
+                    <label for="Name">GSTIN No.</label>
+                    <label for="Name" style="color:orangered">(Mention the GST NO. of the party in whose favour invoice is to be raised.)</label>
+                    <input type="text" class="input" asp-for="RecipientGstinNo">
+                    <span asp-validation-for="RecipientGstinNo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            @*<input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                            <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>*@
+                            <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender">
+                            Kindly Check this option, If You are a New Vendor!!!
+                        </div>
+                    </div>
+                </div>
+                @*<span asp-validation-for="CallInstallNo" class="text-danger"></span>*@
+            </div>
         </div>
     </div>
 
@@ -518,8 +512,7 @@
         </div>
     </div>
 
-    <div class="accordion-body">
-    </div>
+
 </form>
 <div id="EditCallDetailsModal" class="modal" tabindex="-1" role="dialog">
 </div>
@@ -1074,6 +1067,26 @@
         $("#btnRegiserCallSave").click(function () {
             $('select').prop('disabled', false);
             var IrfcFunded = $('input:radio[name=IrfcFunded]:checked').val();
+            $("#spnDepartmentCode").html("");
+            var IsValid = true;
+            if ($("#CallInstallNo").val() == "") {
+                $("#spnCallInstallNo").html("Please add Call Install No.");
+                IsValid = false;
+            }
+            if ($("#CallLetterNo").val() == "") {
+                $("#spnCallLetterNo").html("Please add Call Letter Number\ Dispatch Reference No.");
+                IsValid = false;
+            }
+            if ($("#CallLetterDt").val() == "") {
+                $("#spnCallLetterDt").html("Please add Call Letter Date.");
+                IsValid = false;
+            }
+            if ($("#DepartmentCode").val() == "") {
+                $("#spnDepartmentCode").html("Please select Item to be inspected viz. Mechanical, Electrical, Civil etc.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+
             if ($("#MfgCd").is(":hidden")) {
                 alert("Please select Manufacturer first and then save it");
             }
@@ -1124,12 +1137,10 @@
                                         PopUp();
                                     }
                                     else {
-                                        if(response.callval == "0")
-                                        {
+                                        if (response.callval == "0") {
                                             ShowHideMsgNew(response.status, response.responseText);
                                         }
-                                        else
-                                        {
+                                        else {
                                             PopUpMsg = response.responseText;
                                             PopUp();
                                         }
@@ -1249,8 +1260,8 @@
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
-            
-            let myObject = { CaseNo,CallRecvDt,CallSno };
+
+            let myObject = { CaseNo, CallRecvDt, CallSno };
             $.get("@Url.Action("GetItemDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                 if (response.status) {
                     if (response.responseText == "0") {

@@ -364,6 +364,9 @@
             SetAccepted();
             debugger
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
+
+            $("#btnCancel").css("cursor", "pointer");
+            $("#btnReport").css("cursor", "pointer");
         });
 
 
@@ -728,8 +731,8 @@
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
-                        $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL);
-                        $("#IE_STAMPS_DETAIL2").val(response.IE_STAMPS_DETAIL2 == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL2);
+                        $("#IE_STAMPS_DETAIL").val((response.IE_STAMPS_DETAIL == "SELECT STAMP" ||  response.IE_STAMPS_DETAIL == null) ? 0 : response.IE_STAMPS_DETAIL);
+                        $("#IE_STAMPS_DETAIL2").val((response.IE_STAMPS_DETAIL2 == "SELECT STAMP" || response.IE_STAMPS_DETAIL2 == null) ? 0 : response.IE_STAMPS_DETAIL2);
                         $("#LAB_TST_RECT_DT").val(response.LAB_TST_RECT_DT);
                         $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
                         $("#REMARK").val(response.REMARK);
@@ -812,7 +815,7 @@
 
             $("#btnSave").css("display", "");
             $("#btnRefresh").css("display", "");
-            $("#btnCancel").css("display", "");
+            $("#btnSavePOAmendment").css("display", "");
 
             $.ajax({
                 url: '@Url.Action("SetAccepted", "IC_RPT_Intermediate")?' + $.param(myObject),
@@ -823,14 +826,26 @@
                 success: function (response) {
                     debugger
                     if (parseInt(response) > 0) {
-                        $("#btnSave").css("display", "none");
-                        $("#btnRefresh").css("display", "none");
-                        $("#btnCancel").css("display", "none");
+                        //$("#btnSave").css("display", "none");
+                        //$("#btnRefresh").css("display", "none");
+                        //$("#btnSavePOAmendment").css("display", "none");
+
+                        $("#btnSave").prop('disabled', true);
+                        $("#btnRefresh").prop('disabled', true);
+                        $("#btnSavePOAmendment").prop('disabled', true);
+
+                        $("#btnSave").css("cursor", "auto");
+                        $("#btnRefresh").css("cursor", "auto");
+                        $("#btnSavePOAmendment").css("cursor", "auto");
 
                     } else {
-                        $("#btnSave").css("display", "");
-                        $("#btnRefresh").css("display", "");
-                        $("#btnCancel").css("display", "");
+                        $("#btnSave").prop('disabled', false);
+                        $("#btnRefresh").prop('disabled', false);
+                        $("#btnSavePOAmendment").prop('disabled', false);
+
+                        $("#btnSave").css("cursor", "pointer");
+                        $("#btnRefresh").css("cursor", "pointer");
+                        $("#btnSavePOAmendment").css("cursor", "pointer");
                     }
                 }
             });

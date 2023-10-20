@@ -154,7 +154,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     if (i == "NoFound")
                     {
-                        return Json(new { status = true, responseText = "The Call Letter No. is already present for this Case No.", Id = i });
+                        return Json(new { status = false, responseText = "The Call Letter No. is already present for this Case No.", Id = i });
                     }
                     else
                     {

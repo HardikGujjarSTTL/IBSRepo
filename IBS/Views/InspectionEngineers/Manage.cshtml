@@ -44,8 +44,9 @@
                     <span asp-validation-for="IePhoneNo" class="text-danger" id="spnIePhoneNo"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">IE Controlling Officer</label>
+                    <label for="Reference">IE Controlling Officer<i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.IeCoCd, new SelectList(IBS.Models.Common.GetControllingOfficer(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeCoCd" class="text-danger" id="spnIeCoCd"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -477,6 +478,10 @@
             }
             if ($("#IePhoneNo").val() == "") {
                 $("#spnIePhoneNo").html("Please add Phone No.");
+                IsValid = false;
+            }
+            if ($("#IeCoCd").val() == "") {
+                $("#spnIeCoCd").html("Please add IE Controlling Officer");
                 IsValid = false;
             }
             if ($("#IeEmpNo").val() == "") {

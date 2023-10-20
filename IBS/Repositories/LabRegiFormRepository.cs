@@ -32,11 +32,12 @@ namespace IBS.Repositories
 
             using (var dbContext = context.Database.GetDbConnection())
             {
-                OracleParameter[] par = new OracleParameter[2];
+                OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.NVarchar2, RegNo, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[2] = new OracleParameter("p_CURSOR2", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("SP_LabRegLoadData", par, 1);
+                var ds = DataAccessDB.GetDataSet("SP_LabRegLoadData", par, 2);
 
                 LABREGISTERModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -69,14 +70,25 @@ namespace IBS.Repositories
                         SNO = Convert.ToString(row["sno"]),
                     };
                 }
-                //if (ds != null && ds.Tables.Count > 0)
-                //{
-                //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                //    List<LabTDSEntryModel> modelList = JsonConvert.DeserializeObject<List<LabTDSEntryModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                //    model = modelList.FirstOrDefault();
-                //    //model = JsonConvert.DeserializeObject<List<LabTDSEntryModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                //}
+                LABREGISTERModel sampleDetail = new();
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
 
+                    DataRow row = ds.Tables[1].Rows[0];
+                    sampleDetail = new LABREGISTERModel
+                    {
+                        SumTestingFee = Convert.ToString(row["sum_testing_fee"]),
+                        SumServiceTax = Convert.ToString(row["sum_service_tax"]),
+                        SumHandlingCharges = Convert.ToString(row["sum_handling_charges"]),
+                        TotalSum = Convert.ToString(row["total_sum"])
+                    };
+
+
+                }
+                model.TotalTestingFee = sampleDetail.SumTestingFee;
+                model.TotalHandlingCharges = sampleDetail.SumHandlingCharges;
+                model.TotalServiceTax = sampleDetail.SumServiceTax;
+                model.TotalLabCharges = sampleDetail.TotalSum;
 
                 return model;
             }
@@ -447,6 +459,9 @@ namespace IBS.Repositories
         }
         public bool SaveDataDetails(LABREGISTERModel LABREGISTERModel)
         {
+            var reqdt = Convert.ToDateTime(LABREGISTERModel.TestReportRequestDate).ToString("MM/dd/yyyy");
+            var recdt = Convert.ToDateTime(LABREGISTERModel.TestReportReceiveDate).ToString("MM/dd/yyyy");
+            var sampdt = Convert.ToDateTime(LABREGISTERModel.SampleDispatchLabDate).ToString("MM/dd/yyyy");
             using (var conn1 = context.Database.GetDbConnection())
             {
                 conn1.Open();
@@ -478,11 +493,11 @@ namespace IBS.Repositories
                         cmd.Parameters.Add("p_TESTING_FEE", OracleDbType.Varchar2).Value = LABREGISTERModel.DTestingFee;
                         cmd.Parameters.Add("p_SERVICE_TAX", OracleDbType.Varchar2).Value = LABREGISTERModel.DServiceTax;
                         cmd.Parameters.Add("p_HANDLING_CHARGES", OracleDbType.Varchar2).Value = LABREGISTERModel.DHandlingCharges;
-                        cmd.Parameters.Add("p_TEST_REPORT_REQ_DT", OracleDbType.Date).Value = LABREGISTERModel.TestReportRequestDate;
-                        cmd.Parameters.Add("p_TEST_REPORT_REC_DT", OracleDbType.Date).Value = LABREGISTERModel.TestReportReceiveDate;
+                        cmd.Parameters.Add("p_TEST_REPORT_REQ_DT", OracleDbType.Date).Value = reqdt;
+                        cmd.Parameters.Add("p_TEST_REPORT_REC_DT", OracleDbType.Date).Value = recdt;
                         cmd.Parameters.Add("p_TEST_STATUS", OracleDbType.Varchar2).Value = LABREGISTERModel.TestStatus;
                         cmd.Parameters.Add("p_REMARKS", OracleDbType.Varchar2).Value = LABREGISTERModel.DRemarks;
-                        cmd.Parameters.Add("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date).Value = LABREGISTERModel.SampleDispatchLabDate;
+                        cmd.Parameters.Add("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date).Value = sampdt;
                         cmd.Parameters.Add("p_USER_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.UName;
                         cmd.Parameters.Add("p_DATETIME", OracleDbType.Date).Value = ss;
                         cmd.Parameters.Add("p_DISCIPLINE_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.DISCIPLINE_ID;
@@ -523,9 +538,9 @@ namespace IBS.Repositories
                     OracleCommand cmd = new OracleCommand("SP_UPDATE_LAB_DETAILS_50", (OracleConnection)conn1);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("p_TOTAL_TESTING_FEE", OracleDbType.Varchar2).Value = LABREGISTERModel.TotalTestingFee;
-                    cmd.Parameters.Add("p_TOTAL_SERVICE_TAX", OracleDbType.Varchar2).Value = LABREGISTERModel.TotalServiceTax;
-                    cmd.Parameters.Add("p_TOTAL_HANDLING_CHARGES", OracleDbType.Varchar2).Value = LABREGISTERModel.TotalHandlingCharges;
+                    cmd.Parameters.Add("p_TOTAL_TESTING_FEE", OracleDbType.Varchar2).Value = LABREGISTERModel.DTestingFee;
+                    cmd.Parameters.Add("p_TOTAL_SERVICE_TAX", OracleDbType.Varchar2).Value = LABREGISTERModel.DServiceTax;
+                    cmd.Parameters.Add("p_TOTAL_HANDLING_CHARGES", OracleDbType.Varchar2).Value = LABREGISTERModel.DHandlingCharges;
                     cmd.Parameters.Add("p_TOTAL_LAB_CHARGES", OracleDbType.Varchar2).Value = LABREGISTERModel.TotalLabCharges;
                     cmd.Parameters.Add("p_SAMPLE_REG_NO", OracleDbType.Varchar2).Value = LABREGISTERModel.SampleRegNo;
                     cmd.Parameters.Add("p_USER_ID", OracleDbType.Varchar2).Value = LABREGISTERModel.UName;
@@ -604,9 +619,45 @@ namespace IBS.Repositories
                 OracleParameter[] par = new OracleParameter[15];
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, REG_NO, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_SAMPLE_REG_DT", OracleDbType.Date, LABREGISTERModel.SampleRegDate, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_SAMPLE_DRAWL_DT", OracleDbType.Date, LABREGISTERModel.SampleDrawalDate, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_SAMPLE_RECIEPT_DT", OracleDbType.Date, LABREGISTERModel.SampleReceiptDate, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_SAMPLE_DISPATCH_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchDate, ParameterDirection.Input);
+                //par[2] = new OracleParameter("p_SAMPLE_DRAWL_DT", OracleDbType.Date, LABREGISTERModel.SampleDrawalDate, ParameterDirection.Input);
+                OracleParameter param2;
+
+                if (LABREGISTERModel.SampleDrawalDate == null && LABREGISTERModel.SampleDrawalDate == "")
+                {
+                    param2 = new OracleParameter("p_SAMPLE_DRAWL_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param2 = new OracleParameter("p_SAMPLE_DRAWL_DT", OracleDbType.Date, LABREGISTERModel.SampleDrawalDate, ParameterDirection.Input);
+                }
+
+                par[2] = param2;
+                OracleParameter param3;
+
+                if (LABREGISTERModel.SampleReceiptDate == null && LABREGISTERModel.SampleReceiptDate == "")
+                {
+                    param3 = new OracleParameter("p_SAMPLE_RECIEPT_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param3 = new OracleParameter("p_SAMPLE_RECIEPT_DT", OracleDbType.Date, LABREGISTERModel.SampleReceiptDate, ParameterDirection.Input);
+                }
+
+                par[3] = param3;
+                OracleParameter param4;
+
+                if (LABREGISTERModel.SampleDispatchDate == null && LABREGISTERModel.SampleDispatchDate == "")
+                {
+                    param4 = new OracleParameter("p_SAMPLE_DISPATCH_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param4 = new OracleParameter("p_SAMPLE_DISPATCH_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchDate, ParameterDirection.Input);
+                }
+
+                par[4] = param4;
+                //par[3] = new OracleParameter("p_SAMPLE_RECIEPT_DT", OracleDbType.Date, LABREGISTERModel.SampleReceiptDate, ParameterDirection.Input);
+                //par[4] = new OracleParameter("p_SAMPLE_DISPATCH_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchDate, ParameterDirection.Input);
                 par[5] = new OracleParameter("p_IE_CD", OracleDbType.Varchar2, LABREGISTERModel.IECode, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, LABREGISTERModel.CaseNo, ParameterDirection.Input);
                 par[7] = new OracleParameter("p_CALL_SNO", OracleDbType.Varchar2, LABREGISTERModel.CallSNO, ParameterDirection.Input);
@@ -616,8 +667,19 @@ namespace IBS.Repositories
                 par[11] = new OracleParameter("p_DATETIME", OracleDbType.Date, ss, ParameterDirection.Input);
                 par[12] = new OracleParameter("p_TESTING_TYPE", OracleDbType.Varchar2, LABREGISTERModel.TestingType, ParameterDirection.Input);
                 par[13] = new OracleParameter("p_CODE_NO", OracleDbType.Varchar2, LABREGISTERModel.CodeNo, ParameterDirection.Input);
-                par[14] = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
+                //par[14] = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
+                OracleParameter param14;
 
+                if (LABREGISTERModel.CodeDate == null && LABREGISTERModel.CodeDate == "")
+                {
+                    param14 = new OracleParameter("p_CODE_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param14 = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
+                }
+
+                par[14] = param14;
 
                 var ds = DataAccessDB.ExecuteNonQuery("SP_INSERT_LAB_REGISTER", par, 1);
                 string Sno = GetSNo(REG_NO);
@@ -667,7 +729,9 @@ namespace IBS.Repositories
                 {
                     LABREGISTERModel.Test = LABREGISTERModel.TestTobeCon;
                 }
-                
+                //var reqdt = Convert.ToDateTime(LABREGISTERModel.TestReportRequestDate).ToString("MM/dd/yyyy");
+                //var recdt = Convert.ToDateTime(LABREGISTERModel.TestReportReceiveDate).ToString("MM/dd/yyyy");
+                //var sampdt = Convert.ToDateTime(LABREGISTERModel.SampleDispatchLabDate).ToString("MM/dd/yyyy");
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 ss = GetDateString(sqlQuery);
@@ -682,11 +746,47 @@ namespace IBS.Repositories
                 par[7] = new OracleParameter("p_TESTING_FEE", OracleDbType.Varchar2, LABREGISTERModel.DTestingFee, ParameterDirection.Input);
                 par[8] = new OracleParameter("p_SERVICE_TAX", OracleDbType.Varchar2, LABREGISTERModel.DServiceTax, ParameterDirection.Input);
                 par[9] = new OracleParameter("p_HANDLING_CHARGES", OracleDbType.Varchar2, LABREGISTERModel.DHandlingCharges, ParameterDirection.Input);
-                par[10] = new OracleParameter("p_TEST_REPORT_REQ_DT", OracleDbType.Date, LABREGISTERModel.TestReportRequestDate, ParameterDirection.Input);
-                par[11] = new OracleParameter("p_TEST_REPORT_REC_DT", OracleDbType.Date, LABREGISTERModel.TestReportReceiveDate, ParameterDirection.Input);
+                //par[10] = new OracleParameter("p_TEST_REPORT_REQ_DT", OracleDbType.Date, reqdt, ParameterDirection.Input);
+                //par[11] = new OracleParameter("p_TEST_REPORT_REC_DT", OracleDbType.Date, recdt, ParameterDirection.Input);
+                OracleParameter param10;
+
+                if (LABREGISTERModel.TestReportRequestDate == null && LABREGISTERModel.TestReportRequestDate == "")
+                {
+                    param10 = new OracleParameter("p_TEST_REPORT_REQ_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param10 = new OracleParameter("p_TEST_REPORT_REQ_DT", OracleDbType.Date, LABREGISTERModel.TestReportRequestDate, ParameterDirection.Input);
+                }
+
+                par[10] = param10;
+                OracleParameter param11;
+
+                if (LABREGISTERModel.TestReportReceiveDate == null && LABREGISTERModel.TestReportReceiveDate == "")
+                {
+                    param11 = new OracleParameter("p_TEST_REPORT_REC_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param11 = new OracleParameter("p_TEST_REPORT_REC_DT", OracleDbType.Date, LABREGISTERModel.TestReportReceiveDate, ParameterDirection.Input);
+                }
+
+                par[11] = param11;
                 par[12] = new OracleParameter("p_TEST_STATUS", OracleDbType.Varchar2, LABREGISTERModel.TestStatus, ParameterDirection.Input);
                 par[13] = new OracleParameter("p_REMARKS", OracleDbType.Varchar2, LABREGISTERModel.DRemarks, ParameterDirection.Input);
-                par[14] = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchLabDate, ParameterDirection.Input);
+                //par[14] = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, sampdt, ParameterDirection.Input);
+                OracleParameter param14;
+
+                if (LABREGISTERModel.SampleDispatchLabDate == null && LABREGISTERModel.SampleDispatchLabDate == "")
+                {
+                    param14 = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                }
+                else
+                {
+                    param14 = new OracleParameter("p_SAMPLE_DISPATCHED_TO_LAB_DT", OracleDbType.Date, LABREGISTERModel.SampleDispatchLabDate, ParameterDirection.Input);
+                }
+
+                par[14] = param14;
                 par[15] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
                 par[16] = new OracleParameter("p_DATETIME", OracleDbType.Date, ss, ParameterDirection.Input);
                 par[17] = new OracleParameter("p_DISCIPLINE_ID", OracleDbType.Varchar2, LABREGISTERModel.DISCIPLINE_ID, ParameterDirection.Input);
@@ -706,9 +806,9 @@ namespace IBS.Repositories
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                 ss = GetDateString(sqlQuery);
                 OracleParameter[] par = new OracleParameter[7];
-                par[0] = new OracleParameter("p_TOTAL_TESTING_FEE", OracleDbType.Varchar2, LABREGISTERModel.TotalTestingFee, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_TOTAL_SERVICE_TAX", OracleDbType.Varchar2, LABREGISTERModel.TotalServiceTax, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_TOTAL_HANDLING_CHARGES", OracleDbType.Varchar2, LABREGISTERModel.TotalHandlingCharges, ParameterDirection.Input);
+                par[0] = new OracleParameter("p_TOTAL_TESTING_FEE", OracleDbType.Varchar2, LABREGISTERModel.DTestingFee, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_TOTAL_SERVICE_TAX", OracleDbType.Varchar2, LABREGISTERModel.DServiceTax, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_TOTAL_HANDLING_CHARGES", OracleDbType.Varchar2, LABREGISTERModel.DHandlingCharges, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_TOTAL_LAB_CHARGES", OracleDbType.Varchar2, LABREGISTERModel.TotalLabCharges, ParameterDirection.Input);
                 par[4] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, REG_NO, ParameterDirection.Input);
                 par[5] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
@@ -872,5 +972,6 @@ namespace IBS.Repositories
             return true;
 
         }
+
     }
 }
