@@ -26,27 +26,33 @@ namespace IBS.Controllers
         public IActionResult Index()
         {
             IC_RPT_IntermediateModel model = new();
-            var CASE_NO = "N21111089";
-            var Call_Recv_dt = Convert.ToString("13/08/2022");
-            var Call_SNO = "3";
-            var CONSIGNEE_CD = "39";
-            var ACTIONAR = "A";
-            //if (Convert.ToString(Request.Query["CASE_NO"]) == null || Convert.ToString(Request.Query["CALL_RECV_DT"]) == null)
-            //{
-            //    CASE_NO = "";
-            //    Call_Recv_dt = "";
-            //    Call_SNO = "";
-            //    CONSIGNEE_CD = "";
-            //    ACTIONAR = "";
-            //}
-            //else
-            //{
-            //    CASE_NO = Convert.ToString(Request.Query["CASE_NO"]);
-            //    Call_Recv_dt = Convert.ToString(Request.Query["CALL_RECV_DT"]);
-            //    Call_SNO = Convert.ToString(Request.Query["CALL_SNO"]);
-            //    CONSIGNEE_CD = Convert.ToString(Request.Query["CONSIGNEE_CD"]);
-            //    ACTIONAR = Convert.ToString(Request.Query["ACTIONAR"]);
-            //}
+            //var CASE_NO = "N21111089";
+            //var Call_Recv_dt = Convert.ToString("13/08/2022");
+            //var Call_SNO = "3";
+            //var CONSIGNEE_CD = "39";
+            //var ACTIONAR = "A";
+
+            var CASE_NO = "";
+            var Call_Recv_dt = "";
+            var Call_SNO = "";
+            var CONSIGNEE_CD = "";
+            var ACTIONAR = "";
+            if (Convert.ToString(Request.Query["CASE_NO"]) == null || Convert.ToString(Request.Query["CALL_RECV_DT"]) == null)
+            {
+                CASE_NO = "";
+                Call_Recv_dt = "";
+                Call_SNO = "";
+                CONSIGNEE_CD = "";
+                ACTIONAR = "";
+            }
+            else
+            {
+                CASE_NO = Convert.ToString(Request.Query["CASE_NO"]);
+                Call_Recv_dt = Convert.ToString(Request.Query["CALL_RECV_DT"]);
+                Call_SNO = Convert.ToString(Request.Query["CALL_SNO"]);
+                CONSIGNEE_CD = Convert.ToString(Request.Query["CONSIGNEE_CD"]);
+                ACTIONAR = Convert.ToString(Request.Query["ACTIONAR"]);
+            }
 
             if (Convert.ToString(Request.Query["filename"]) != null)
             {
@@ -204,7 +210,7 @@ namespace IBS.Controllers
                 model.Date = Date;
                 model.IECD = Convert.ToString(Iecd);
                 lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Insert");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
@@ -231,7 +237,7 @@ namespace IBS.Controllers
 
                 var data = lstPoAhm.Where(x => x.Sno == Sno).Select(x => x).FirstOrDefault();
                 lstPoAhm.Remove(data);
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Delete");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Delete Successfully." });
