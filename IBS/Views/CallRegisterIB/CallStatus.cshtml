@@ -846,14 +846,12 @@
             var formData = new FormData();
 
             SaveSingleDocuments("tab-2");
-
+            debugger
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
-            var bknoaccpted = $('#BkNo').val();
-            var setnoaccpted = $('#SetNo').val();
 
-            if (bknoaccpted != "" || setnoaccpted != "") {
+            if (bknoaccpted != "" && setnoaccpted != "") {
                 var ajaxData = AjaxModel();
 
                 if (ajaxData) {
@@ -960,7 +958,7 @@
                 return;
             }
 
-            if (bknoaccpted != "" || setnoaccpted != "") {
+            if (bknoaccpted != "" && setnoaccpted != "") {
 
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
 
