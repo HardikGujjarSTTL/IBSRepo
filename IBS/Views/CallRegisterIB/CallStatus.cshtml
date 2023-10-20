@@ -916,7 +916,7 @@
 
         function SaveImages() {
             var formData = new FormData();
-
+            debugger
             SaveSingleDocuments("tab-1");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
@@ -939,8 +939,12 @@
                     return;
                 }
 
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('UploadeFile[]', files[i]);
+                //for (var i = 0; i < files.length; i++) {
+                //    formData.append('UploadeFile[]', files[i]);
+                //}
+                if (files && files.defaultValue && files.defaultValue != null) {
+                    var files = files.defaultValue;
+                    formData.append("UploadeFile", files);
                 }
 
                 $.ajax({
