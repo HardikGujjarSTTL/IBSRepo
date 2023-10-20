@@ -157,7 +157,7 @@ namespace IBS.Repositories.Vendor
                     model.CallRemarkStatus = user.CallRemarkStatus;
                     model.CallInstallNo = user.CallInstallNo;
                     model.SetRegionCode = user.RegionCode;
-                    model.Region = user.CaseNo.Substring(0, 1).Equals("N") ? "Northern" : user.CaseNo.Substring(0, 1).Equals("S") ? "Southern" : user.CaseNo.Substring(0, 1).Equals("E") ? "Eastern" : user.CaseNo.Substring(0, 1).Equals("W") ? "Western" : "Central";
+                    model.Region = user.CaseNo.Substring(0, 1).Equals("N") ? "Northern Region" : user.CaseNo.Substring(0, 1).Equals("S") ? "Southern Region" : user.CaseNo.Substring(0, 1).Equals("E") ? "Eastern Region" : user.CaseNo.Substring(0, 1).Equals("W") ? "Western Region" : "Central Region";
                     model.MfgCd = Convert.ToInt32(user.MfgCd);
                     model.MfgPlace = user.MfgPlace;
                     model.DepartmentCode = user.DepartmentCode;
@@ -177,6 +177,7 @@ namespace IBS.Repositories.Vendor
                     model.LotDp2 = user.LotDp2;
                     model.IsNewVender = user.NewVendor == "Y" ? "Y" : "N";
                     model.hdnIsNewVender = user.NewVendor == "Y" ? "Y" : "N";
+                    model.IsFinalizedStatus = user.Isfinalizedstatus == "F" ? true : false;
                 }
 
                 if (GetView != null)
@@ -671,6 +672,7 @@ namespace IBS.Repositories.Vendor
                         obj.RecipientGstinNo = model.RecipientGstinNo;
                         obj.NewVendor = w_New_Vendor;
                         obj.IrfcFunded = w_irfc_funded;
+                        obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
                         obj.Createdby = model.Createdby;
                         obj.Createddate = DateTime.Now;
@@ -716,6 +718,8 @@ namespace IBS.Repositories.Vendor
                         obj.NewVendor = w_New_Vendor;
                         obj.IrfcFunded = w_irfc_funded;
                         obj.ClusterCode = model.ClusterCode;
+                        obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
+
                         obj.Createdby = model.Createdby;
                         obj.Createddate = DateTime.Now;
                         context.T17CallRegisters.Add(obj);
@@ -744,6 +748,8 @@ namespace IBS.Repositories.Vendor
                     GetCall.CallRemarkStatus = model.CallRemarkStatus;
                     GetCall.DepartmentCode = model.DepartmentCode;
                     GetCall.CallInstallNo = model.CallInstallNo;
+                    GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
+
                     GetCall.Remarks = model.Remarks;
                     GetCall.MfgCd = model.MfgCd;
                     GetCall.MfgPlace = model.VendAdd1;
@@ -1886,6 +1892,8 @@ namespace IBS.Repositories.Vendor
                 model.DelvDt = GetReport.DelvDt;
                 model.ItemCd = GetReport.ItemCd;
                 model.IrfcFunded = GetReport.IrfcFunded;
+                model.RegionCode = GetReport.CaseNo.Substring(0, 1).ToString();
+
 
             }
 
