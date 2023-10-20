@@ -113,6 +113,8 @@ public partial class T17CallRegister
 
     public DateTime? CmApprovalDt { get; set; }
 
+    public string? Isfinalizedstatus { get; set; }
+
     public virtual T09Ie? IeCdNavigation { get; set; }
 
     public virtual T05Vendor? MfgCdNavigation { get; set; }

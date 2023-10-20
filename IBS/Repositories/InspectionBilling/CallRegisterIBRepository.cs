@@ -311,12 +311,9 @@ namespace IBS.Repositories.InspectionBilling
                                        //COUNT_DT = t17.CountDt ?? 0,
                                        IrfcFunded = t17.IrfcFunded,
                                        DepartmentCode = t17.DepartmentCode,
-                                       ClusterCode = t17.ClusterCode
+                                       ClusterCode = t17.ClusterCode,
+                                       Isfinalizedstatus = t17.Isfinalizedstatus
                                    }).FirstOrDefault();
-
-
-
-
                 if (CallDetails == null)
                     throw new Exception("Record Not found");
                 else
@@ -345,6 +342,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.IrfcFunded = CallDetails.IrfcFunded;
                     model.DepartmentCode = CallDetails.DepartmentCode;
                     model.ClusterCode = CallDetails.ClusterCode;
+                    model.IsFinalizedStatus = CallDetails.Isfinalizedstatus == "F" ? true : false;
 
                     T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(CallDetails.MfgCd)).FirstOrDefault();
                     if (Vendor != null)
@@ -527,6 +525,7 @@ namespace IBS.Repositories.InspectionBilling
                         obj.IrfcFunded = w_irfc_funded;
                         obj.ClusterCode = model.ClusterCode;
                         obj.DepartmentCode = model.DepartmentCode;
+                        obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
                         obj.Createdby = model.Createdby;
                         obj.Createddate = DateTime.Now;
@@ -567,6 +566,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -593,6 +593,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -622,6 +623,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();
@@ -647,6 +649,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();
@@ -1920,7 +1923,7 @@ namespace IBS.Repositories.InspectionBilling
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            
+
             ext_delv_dt = result.ExtDelvDt;
             INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
@@ -2632,7 +2635,7 @@ namespace IBS.Repositories.InspectionBilling
                                   chk12 = Convert.ToInt32(l.CancelCd12),
                               }).FirstOrDefault();
             if (CancelData != null)
-            { 
+            {
                 model.CaseNo = CancelData.CaseNo;
                 model.CallRecvDt = CancelData.CallRecvDt;
                 model.CallSno = CancelData.CallSno;
@@ -2695,7 +2698,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
 
                 model.chkItems = chk;
-                
+
             }
 
             return model;
@@ -3006,7 +3009,7 @@ namespace IBS.Repositories.InspectionBilling
 
             if (model.BkNo != null && model.SetNo != null)
             {
-                var bsCheck = context.T10IcBooksets.Where(bookset =>bookset.BkNo.Trim().ToUpper() == model.BkNo &&Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
+                var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
                               Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
 
                 if (bsCheck != 0)
@@ -3141,7 +3144,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     model.AlertMsg = "Success";
                 }
-                else if(model.BkNo != "" && model.SetNo != "" && bsCheck == 0)
+                else if (model.BkNo != "" && model.SetNo != "" && bsCheck == 0)
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                     return model;
@@ -3158,7 +3161,7 @@ namespace IBS.Repositories.InspectionBilling
 
         public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
-            if(model.CallStatus == null || (model.CallStatus == "C" && model.CallStatus == ""))
+            if (model.CallStatus == null || (model.CallStatus == "C" && model.CallStatus == ""))
             {
                 model.AlertMsg = "Mention Call Chargeable/Call Non-Chargeable & Select One of the Given Call Cancellation Charges in Case the Call is Chargeable!!!";
                 return model;
@@ -3383,7 +3386,7 @@ namespace IBS.Repositories.InspectionBilling
                             CallCancalltion.CancelCd11 = 0;
                             CallCancalltion.CancelCd12 = 0;
 
-                            var indexes = model?.chkItems?.Select((v, i) => new { v, i })?.Where(x => x.v == true)?.Select(x => x.i)?? Enumerable.Empty<int>();
+                            var indexes = model?.chkItems?.Select((v, i) => new { v, i })?.Where(x => x.v == true)?.Select(x => x.i) ?? Enumerable.Empty<int>();
 
                             int count = indexes.Count();
 
@@ -3551,7 +3554,7 @@ namespace IBS.Repositories.InspectionBilling
 
         public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
-            if(model.CallStatus == "A")
+            if (model.CallStatus == "A")
             {
                 var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.BkNo && t.SetNo == model.SetNo).Count();
                 if (count > 0)
@@ -3573,7 +3576,7 @@ namespace IBS.Repositories.InspectionBilling
                     return model;
                 }
             }
-            else if(model.CallStatus == "R")
+            else if (model.CallStatus == "R")
             {
                 var groupedResults = (from t49 in context.T49IcPhotoEncloseds
                                       join ic in context.IcIntermediates
@@ -3620,82 +3623,82 @@ namespace IBS.Repositories.InspectionBilling
                     model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
                     return model;
                 }
-                
-                    var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
 
-                    var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
+                var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
 
-                    if (result.Count > 0)
+                var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
+
+                if (result.Count > 0)
+                {
+                    foreach (var entity in result)
                     {
-                        foreach (var entity in result)
+                        int len_item = 0;
+                        string formatedItem = "";
+                        if (!string.IsNullOrEmpty(entity.ItemDescPo))
                         {
-                            int len_item = 0;
-                            string formatedItem = "";
-                            if (!string.IsNullOrEmpty(entity.ItemDescPo))
+                            if (entity.ItemDescPo.Length > 400)
                             {
-                                if (entity.ItemDescPo.Length > 400)
-                                {
-                                    len_item = 390;
-                                }
-                                else
-                                {
-                                    len_item = entity.ItemDescPo.Length;
-                                }
-
-                                formatedItem = entity.ItemDescPo.Substring(0, len_item);
-                                var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
-                                existingEntity.ItemDescPo = formatedItem;
-                                existingEntity.QtyPassed = entity.QtyPassed;
-                                existingEntity.QtyRejected = entity.QtyRejected;
-                                existingEntity.QtyDue = entity.QtyDue;
-                                context.SaveChanges();
+                                len_item = 390;
                             }
-                        }
-                        double wRejCharges = 0;
-                        string wRejType = "";
-                        if (callStatus == "R")
-                        {
-                            wRejCharges = Convert.ToDouble(model.RejectionCharge);
+                            else
+                            {
+                                len_item = entity.ItemDescPo.Length;
+                            }
 
-                        }
-                        if (model.LocalOutstation != "" && model.LocalOutstation != null)
-                        {
-                            wRejType = model.LocalOutstation;
-                        }
-
-                        var existingRecord = context.T17CallRegisters.FirstOrDefault(c => c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt && c.CallSno == model.CallSno);
-
-                        if (existingRecord != null)
-                        {
-                            existingRecord.CallStatus = model.CallStatus;
-                            existingRecord.CallStatusDt = model.CallStatusDt;
-                            existingRecord.BkNo = model.BkNo;
-                            existingRecord.SetNo = model.SetNo;
-                            existingRecord.UserId = model.UserId;
-                            existingRecord.Datetime = DateTime.Now;
-                            existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
-                            existingRecord.FifoVoilateReason = model.ReasonFIFO;
-                            existingRecord.LocalOrOuts = wRejType;
-
-                            context.SaveChanges();
-                        }
-
-                        var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
-
-                        if (existingRecord1 != null)
-                        {
-                            existingRecord1.ConsgnCallStatus = model.CallStatus;
-                            context.SaveChanges();
-                        }
-
-                        if (model.CallStatus == "R" && callStatus != "R")
-                        {
-                            var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
-
-                            existingRecord2.PendingCharges = (byte?)((existingRecord2.PendingCharges ?? 0) + 1);
+                            formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                            existingEntity.ItemDescPo = formatedItem;
+                            existingEntity.QtyPassed = entity.QtyPassed;
+                            existingEntity.QtyRejected = entity.QtyRejected;
+                            existingEntity.QtyDue = entity.QtyDue;
                             context.SaveChanges();
                         }
                     }
+                    double wRejCharges = 0;
+                    string wRejType = "";
+                    if (callStatus == "R")
+                    {
+                        wRejCharges = Convert.ToDouble(model.RejectionCharge);
+
+                    }
+                    if (model.LocalOutstation != "" && model.LocalOutstation != null)
+                    {
+                        wRejType = model.LocalOutstation;
+                    }
+
+                    var existingRecord = context.T17CallRegisters.FirstOrDefault(c => c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt && c.CallSno == model.CallSno);
+
+                    if (existingRecord != null)
+                    {
+                        existingRecord.CallStatus = model.CallStatus;
+                        existingRecord.CallStatusDt = model.CallStatusDt;
+                        existingRecord.BkNo = model.BkNo;
+                        existingRecord.SetNo = model.SetNo;
+                        existingRecord.UserId = model.UserId;
+                        existingRecord.Datetime = DateTime.Now;
+                        existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
+                        existingRecord.FifoVoilateReason = model.ReasonFIFO;
+                        existingRecord.LocalOrOuts = wRejType;
+
+                        context.SaveChanges();
+                    }
+
+                    var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
+
+                    if (existingRecord1 != null)
+                    {
+                        existingRecord1.ConsgnCallStatus = model.CallStatus;
+                        context.SaveChanges();
+                    }
+
+                    if (model.CallStatus == "R" && callStatus != "R")
+                    {
+                        var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
+
+                        existingRecord2.PendingCharges = (byte?)((existingRecord2.PendingCharges ?? 0) + 1);
+                        context.SaveChanges();
+                    }
+                }
             }
 
             return model;
@@ -3738,7 +3741,7 @@ namespace IBS.Repositories.InspectionBilling
         {
             string msg = "";
             double w_cancharges = 0;
-            VenderCallStatusModel model = new(); 
+            VenderCallStatusModel model = new();
             string formattedCallRecvDt = "";
             if (DesireDt != null && DesireDt != DateTime.MinValue)
             {
@@ -3752,8 +3755,8 @@ namespace IBS.Repositories.InspectionBilling
             if (rly_nonrly == "R")
             {
                 var result = (from t18 in context.T18CallDetails
-                               join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
-                               where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                              join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                              where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
                               select new
                               {
                                   t18.CaseNo,
@@ -3790,7 +3793,8 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.CallCancelCharges = Convert.ToString(11000);
                     }
-                }else if (selectedValue == "A")
+                }
+                else if (selectedValue == "A")
                 {
 
                     w_cancharges = Math.Round(Convert.ToDouble(model.CallCancelCharges));
@@ -3811,7 +3815,7 @@ namespace IBS.Repositories.InspectionBilling
         public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue, string IeCd, string Region)
         {
             string formattedCallRecvDt = "";
-            VenderCallStatusModel model = new(); 
+            VenderCallStatusModel model = new();
             if (DesireDt != null && DesireDt != DateTime.MinValue)
             {
                 DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
@@ -3823,7 +3827,7 @@ namespace IBS.Repositories.InspectionBilling
                 var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
 
 
-                if(rly_nonrly == "R")
+                if (rly_nonrly == "R")
                 {
                     model = new VenderCallStatusModel
                     {
@@ -3849,8 +3853,8 @@ namespace IBS.Repositories.InspectionBilling
             }
             if (selectedValue != "A" && selectedValue != "R")
             {
-                var callCount = context.T17CallRegisters.Where(t => t.DtInspDesire < Convert.ToDateTime(formattedCallRecvDt) && t.CallStatus == "M" &&t.IeCd == Convert.ToInt32(IeCd) &&
-                            t.RegionCode == Region &&t.CallRecvDt > DateTime.ParseExact("01/04/2021", "dd/MM/yyyy", null)).Count();
+                var callCount = context.T17CallRegisters.Where(t => t.DtInspDesire < Convert.ToDateTime(formattedCallRecvDt) && t.CallStatus == "M" && t.IeCd == Convert.ToInt32(IeCd) &&
+                            t.RegionCode == Region && t.CallRecvDt > DateTime.ParseExact("01/04/2021", "dd/MM/yyyy", null)).Count();
 
                 if (callCount > 0)
                 {
@@ -3880,17 +3884,17 @@ namespace IBS.Repositories.InspectionBilling
             var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
 
             var SumValue = (from t18 in context.T18CallDetails
-                          join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
-                          where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
-                              select new
-                              {
-                                  t18.CaseNo,
-                                  t18.CallRecvDt,
-                                  t18.CallSno,
-                                  Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
-                          ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
-                          : (decimal)0
-                              })
+                            join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                            where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                            select new
+                            {
+                                t18.CaseNo,
+                                t18.CallRecvDt,
+                                t18.CallSno,
+                                Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
+                        ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
+                        : (decimal)0
+                            })
                               .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
                               .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
                               .FirstOrDefault();
@@ -3906,12 +3910,13 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.RejectionCharge = "5000";
                 }
-            }else if (rly_nonrly != "R")
+            }
+            else if (rly_nonrly != "R")
             {
                 model.RejectionCharge = Convert.ToString(SumValue.Value * 1 / 100);
                 w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
 
-                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == model.CaseNo &&t.CallRecvDt == model.CallRecvDt &&t.CallSno == model.CallSno).Count();
+                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Count();
                 double w_rejcharges = 0;
                 if (selectedValue == "L")
                 {

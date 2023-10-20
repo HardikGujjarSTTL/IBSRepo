@@ -116,4 +116,10 @@ public partial class T17CallRegisterHistory
     public string? Actionuserid { get; set; }
 
     public int Id { get; set; }
+
+    public string? CmApproval { get; set; }
+
+    public DateTime? CmApprovalDt { get; set; }
+
+    public string? Isfinalizedstatus { get; set; }
 }
