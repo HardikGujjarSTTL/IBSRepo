@@ -210,7 +210,7 @@ namespace IBS.Controllers
                 model.Date = Date;
                 model.IECD = Convert.ToString(Iecd);
                 lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Insert");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
@@ -237,7 +237,7 @@ namespace IBS.Controllers
 
                 var data = lstPoAhm.Where(x => x.Sno == Sno).Select(x => x).FirstOrDefault();
                 lstPoAhm.Remove(data);
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm);
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Delete");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Delete Successfully." });

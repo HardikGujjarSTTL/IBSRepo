@@ -110,7 +110,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Items</label>
-                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(null , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(new List<SelectListItem>() , "Value", "Text"),"--Select--")
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
@@ -182,6 +182,7 @@
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference" id="lblQtyOrderd">QTY ORDER : </label>
+                    <input type="number" class="input" asp-for="QTY_ORDERED" maxlength="10" readonly="readonly" />
                     <label id="lblQtyOrder">@Model.QTY_ORDERED</label>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -194,6 +195,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">QTY TO INSP : </label>
+                    <input type="number" class="input" asp-for="QTY_TO_INSP" maxlength="10" readonly="readonly" />
                     <label id="lblQtyINSP">@Model.QTY_TO_INSP</label>
                 </div>
             </div>
@@ -308,9 +310,8 @@
                 $(".clsRemark").css("display", "");
             }
 
-            if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
-
             $("#CONSIGNEE_CD").change(function () {
+                debugger;
                 $("#BK_NO").val("");
                 $("#SET_NO").val("");
                 Reset();
@@ -361,6 +362,8 @@
 
             InitializationPOAmendment();
             SetAccepted();
+            debugger
+            if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
         });
 
 
@@ -395,7 +398,7 @@
                 return;
             }
 
-            var Qty_TO_Ins = $("#lblQtyINSP").html();//"@Model.QTY_TO_INSP";
+            var Qty_TO_Ins = $("#QTY_TO_INSP").val(); //$("#lblQtyINSP").html();//"@Model.QTY_TO_INSP";
             var QtyRejected = $("#QTY_REJECTED").val() == "" ? "0" : $("#QTY_REJECTED").val();
             var QtyPassed = $("#QTY_PASSED").val() == "" ? "0" : $("#QTY_PASSED").val();
             if (!IsValidQty(Qty_TO_Ins, QtyRejected, QtyPassed)) {
@@ -418,10 +421,10 @@
                 ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
                 ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
                 ITEM_REMARK: $("#ITEM_REMARK").val(),
-                QTY_ORDERED: $("#lblQtyOrder").html(),
+                QTY_ORDERED: $("#QTY_ORDERED").val(),
                 CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
                 CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
-                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_TO_INSP: $("#QTY_TO_INSP").val(), //$("#lblQtyINSP").html(),
                 QTY_PASSED: $("#QTY_PASSED").val(),
                 QTY_REJECTED: $("#QTY_REJECTED").val(),
                 QTY_DUE: $("#QTY_DUE").val(),
@@ -481,10 +484,10 @@
                 ITEM_SRNO_PO: $("#ITEM_SRNO_PO").val(),
                 ITEM_DESC_PO: $("#ITEM_DESC_PO").val(),
                 ITEM_REMARK: $("#ITEM_REMARK").val(),
-                QTY_ORDERED: $("#lblQtyOrder").html(),
+                QTY_ORDERED: $("#QTY_ORDERED").val(),
                 CUM_QTY_PREV_OFFERED: $("#CUM_QTY_PREV_OFFERED").val(),
                 CUM_QTY_PREV_PASSED: $("#CUM_QTY_PREV_PASSED").val(),
-                QTY_TO_INSP: $("#lblQtyINSP").html(),
+                QTY_TO_INSP: $("#QTY_TO_INSP").val(), //$("#lblQtyINSP").html(),
                 QTY_PASSED: $("#QTY_PASSED").val(),
                 QTY_REJECTED: $("#QTY_REJECTED").val(),
                 QTY_DUE: $("#QTY_DUE").val(),
@@ -720,6 +723,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
+                    debugger
                     if (response != null) {
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
@@ -754,11 +758,11 @@
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
                         $("#QTY_ORDERED").val(response.QTY_ORDERED);
-                        $("#lblQtyOrder").html(response.QTY_ORDERED);
+                        $("#QTY_ORDERED").val(response.QTY_ORDERED);
                         $("#CUM_QTY_PREV_OFFERED").val(response.CUM_QTY_PREV_OFFERED);
                         $("#CUM_QTY_PREV_PASSED").val(response.CUM_QTY_PREV_PASSED);
                         $("#QTY_TO_INSP").val(response.QTY_TO_INSP);
-                        $("#lblQtyINSP").html(response.QTY_TO_INSP);
+                        //$("#lblQtyINSP").html(response.QTY_TO_INSP);
                         $("#QTY_PASSED").val(response.QTY_PASSED);
                         $("#QTY_REJECTED").val(response.QTY_REJECTED);
                         $("#QTY_DUE").val(response.QTY_DUE);
@@ -817,6 +821,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
+                    debugger
                     if (parseInt(response) > 0) {
                         $("#btnSave").css("display", "none");
                         $("#btnRefresh").css("display", "none");
@@ -863,11 +868,11 @@
             $("#ITEM_DESC_PO").val("");
             $("#ITEM_REMARK").val("");
             //$("#QTY_ORDERED").val("");
-            $("#lblQtyOrder").html("");
+            $("#QTY_ORDERED").val("");
             $("#CUM_QTY_PREV_OFFERED").val("");
             $("#CUM_QTY_PREV_PASSED").val("");
-            //$("#QTY_TO_INSP").val("");
-            $("#lblQtyINSP").html("");
+            $("#QTY_TO_INSP").val("");
+            //$("#lblQtyINSP").html("");
             $("#QTY_PASSED").val("");
             $("#QTY_REJECTED").val("");
             $("#QTY_DUE").val("");

@@ -89,7 +89,7 @@ public partial class IcIntermediate
 
     public byte[]? IeStampImage1 { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public int? NumVisits { get; set; }
 
