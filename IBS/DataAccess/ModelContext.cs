@@ -11973,9 +11973,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CmApproval)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("CM_APPROVAL");
             entity.Property(e => e.CmApprovalDt)
+                .ValueGeneratedOnAdd()
                 .HasColumnType("DATE")
                 .HasColumnName("CM_APPROVAL_DT");
             entity.Property(e => e.CoCd)
@@ -12047,6 +12049,12 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Isfinalizedstatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .IsFixedLength()
+                .HasColumnName("ISFINALIZEDSTATUS");
             entity.Property(e => e.ItemRdso)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -12260,6 +12268,14 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.ClusterCode)
                 .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
+            entity.Property(e => e.CmApproval)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CM_APPROVAL");
+            entity.Property(e => e.CmApprovalDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CM_APPROVAL_DT");
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
                 .HasColumnName("CO_CD");
@@ -12311,6 +12327,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Isfinalizedstatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("ISFINALIZEDSTATUS");
             entity.Property(e => e.ItemRdso)
                 .HasMaxLength(1)
                 .IsUnicode(false)
