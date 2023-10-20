@@ -270,18 +270,18 @@ namespace IBS.Controllers.InspectionBilling
                         string SpecificFileName = id.Trim();
                         int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order};
                         List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x=>x.Documentid == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
-                        if (DocumentsCaseList.Count > 0)
-                        {
+                        //if (DocumentsCaseList.Count > 0)
+                        //{
                             DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
-                        }
+                        //}
 
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification,
                         (int)Enums.DocumentPurchaseOrderForm.Amendment,(int)Enums.DocumentPurchaseOrderForm.ParentLOA};
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList(); ;
-                        if (DocumentsList.Count > 0)
-                        {
+                        //if (DocumentsList.Count > 0)
+                        //{
                             DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
-                        }
+                        //}
                     }
                     return Json(new { status = true, responseText = msg });
                 }

@@ -91,8 +91,13 @@ namespace IBS.Repositories
                 }
                 context.IbsAppdocuments.AddRange(objSaveData);
                 context.SaveChanges();
+                return objSaveData.FirstOrDefault().Id;
             }
-            return objSaveData.FirstOrDefault().Id;
+            else
+            {
+                return 0;
+            }
+            
         }
 
         public void DeleteAllFiles(string ApplicationID)
