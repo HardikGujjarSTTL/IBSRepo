@@ -318,12 +318,7 @@
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
-            if (CallRecvDt == null || CallRecvDt == "") {
-                ShowHideMsgNew(false, "Please select Call Date");
-                return;
-            }
-            
-            if (CaseNo != null || CallRecvDt != null || CallSno != null) {
+            if (CaseNo != null) {
                 $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
                     debugger
                     if (response.status) {

@@ -91,8 +91,13 @@ namespace IBS.Repositories
                 }
                 context.IbsAppdocuments.AddRange(objSaveData);
                 context.SaveChanges();
+                return objSaveData.FirstOrDefault().Id;
             }
-            return objSaveData.FirstOrDefault().Id;
+            else
+            {
+                return 0;
+            }
+            
         }
 
         public void DeleteAllFiles(string ApplicationID)
@@ -108,7 +113,8 @@ namespace IBS.Repositories
 
         public IBS_DocumentDTO FindRecord(int ID)
         {
-            ModelContext repository = new ModelContext();
+            //ModelContext repository = new ModelContext();
+            using ModelContext repository = new(DbContextHelper.GetDbContextOptions());
             IbsDocument objAdd = repository.IbsDocuments.SingleOrDefault(x => x.Id == ID);
 
 

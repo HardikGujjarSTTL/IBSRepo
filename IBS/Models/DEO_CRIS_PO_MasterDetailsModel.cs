@@ -6,10 +6,13 @@ namespace IBS.Models
 {
     public class DEO_CRIS_PO_MasterDetailsModel
     {
-        public string CaseNo { get; set; } = null!;
+        public int IMMS_POKEY { get; set; }
 
-        public int ItemSrno { get; set; }
+        public string IMMS_RLY_CD { get; set; }
 
+        public string ITEM_SRNO { get; set; }
+
+        public string ITEM_DESC { get; set; }
         public DateTime? PoDt { get; set; }
 
         public string? ItemDesc { get; set; }
@@ -26,6 +29,11 @@ namespace IBS.Models
         public decimal? Rate { get; set; }
 
         public byte? UomCd { get; set; }
+        public string? UOM { get; set; }
+
+        public string? IMMS_UOM_CD { get; set; }
+
+        public string? IMMS_UOM_DESC { get; set; }
 
         public decimal? BasicValue { get; set; }
 
@@ -38,6 +46,13 @@ namespace IBS.Models
         public decimal? ExcisePer { get; set; }
 
         public decimal? Excise { get; set; }
+
+        public string? OT_CHARGE_TYPE { get; set; }
+
+        public decimal? OT_CHARGE_PER { get; set; }
+
+        public decimal? OT_CHARGES { get; set; }
+
 
         public string? DiscountType { get; set; }
 
@@ -75,15 +90,17 @@ namespace IBS.Models
         public string? SBPO { get; set; }
                 
         public string? BPO_CD { get; set; }
+
+        public string? IMMS_BPO_CD { get; set; }
         public string? BPO_NAME { get; set; }
+
 
         public string? RlyCd { get; set; }
         public string? RlyNonrly { get; set; }
-        public string? CONSIGNEE_CD { get; set; }
+        public string? IMMS_CONSIGNEE_CD { get; set; }
         public string? CONSIGNEE_NAME { get; set; }
 
         public int? Createdby { get; set; }
-
         public DateTimeOffset? Createddate { get; set; }
 
         public int? Updatedby { get; set; }

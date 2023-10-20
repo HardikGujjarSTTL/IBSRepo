@@ -25,15 +25,14 @@
                         <input type="text" class="input" asp-for="RegNo" id="txtregno">
                         <span asp-validation-for="RegNo" class="text-danger"></span>
                     </div>
-
-                </div>
-
-                <div class="savenext-btn">
+                    <div class="col-md-4 mb-3">
+                    <div class="savenext-btn btnAlign">
                 @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active" style="margin-left:40%;" onclick="search();">Search</button>
+                    <button type="button" class="save-btn active" onclick="search();">Search</button>
                 </div>
+                    </div>
+                </div>                
             </div>
-
     </div>
 </section>
 

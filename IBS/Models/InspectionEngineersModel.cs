@@ -77,6 +77,9 @@ namespace IBS.Models
 
         public int? AltIeThree { get; set; }
 
+        public int? ContAltIe { get; set; }
+
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? CallMarkingStoppingDt { get; set; }

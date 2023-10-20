@@ -1,8 +1,10 @@
 ﻿function ShowHideMsg(type, msg) {
+    toastr.remove();
     toastr[type](msg);
 }
 
 function ShowHideMsgNew(type, msg) {
+    toastr.remove();
     if (type) {
         toastr["success"](msg);
     }

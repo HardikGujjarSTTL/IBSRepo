@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Drawing;
+using static IBS.Helper.Enums;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace IBS.Controllers
 {
@@ -55,6 +57,15 @@ namespace IBS.Controllers
             {
                 model = pOMasterRepository.FindByID(CaseNo);
             }
+            List<IBS_DocumentDTO> lstCopyOfPurchaseOrderDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, CaseNo);
+            FileUploaderDTO FileUploaderCopyOfPurchaseOrderDocument = new FileUploaderDTO();
+            FileUploaderCopyOfPurchaseOrderDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCopyOfPurchaseOrderDocument.IBS_DocumentList = lstCopyOfPurchaseOrderDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+            FileUploaderCopyOfPurchaseOrderDocument.OthersSection = false;
+            FileUploaderCopyOfPurchaseOrderDocument.MaxUploaderinOthers = 5;
+            FileUploaderCopyOfPurchaseOrderDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.CopyOfPurchaseOrderDocument = FileUploaderCopyOfPurchaseOrderDocument;
+
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
             FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
             FileUploaderDrawingSpecification.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -120,9 +131,23 @@ namespace IBS.Controllers
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
+                        //int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
+                        //List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        //DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+
+                        string SpecificFileName = id.Trim();
+                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder };
+                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsCaseList.Count > 0)
+                        //{
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        //}
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsList.Count > 0)
+                        //{
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        //}
                     }
                     return Json(new { status = true, responseText = msg });
                 }
@@ -426,13 +451,16 @@ namespace IBS.Controllers
                     IsDigit = Char.IsDigit(characterToCheck);
                 }
                 List<SelectListItem> agencyClient = new List<SelectListItem>();
-                if (IsDigit)
+                if (VEND_CD != null)
                 {
-                    agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
-                }
-                else
-                {
-                    agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    if (IsDigit)
+                    {
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    }
                 }
 
                 return Json(new { status = true, list = agencyClient});
@@ -530,6 +558,14 @@ namespace IBS.Controllers
                 {
                     if (result[1] != null)
                     {
+                        string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO);
+                        string VendorPath = Path.Combine(TempFilePath, CaseNo + ".PDF");
+                        string TempFilePath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO);
+                        string DestinationPath = Path.Combine(TempFilePath1, CaseNo + ".PDF");
+                        if (System.IO.File.Exists(VendorPath) && !System.IO.File.Exists(DestinationPath))
+                        {
+                            System.IO.File.Copy(VendorPath, DestinationPath, true);
+                        }
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }

@@ -83,7 +83,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">IE Joining Date</label>
-                    <input type="text" class="datepicker" asp-for="IeJoinDt" placeholder="DD/MM/YYYY" maxlength="30" readonly>
+                    <input type="text" class="datepicker" asp-for="IeJoinDt" placeholder="DD/MM/YYYY" maxlength="30">
                     <span asp-validation-for="IeJoinDt" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -163,7 +163,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Contract Alternate IE</label>
-                    @Html.DropDownListFor(model => model.AltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
+                    @Html.DropDownListFor(model => model.ContAltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
                 </div>
                 <div class="col-md-4 mb-3" style="display:none;">
                     <label for="Reference">Cluster Name <i class="text-danger">*</i></label>
@@ -277,6 +277,11 @@
         }
 
         $("#AddCluster").click(function () {
+            if($("#IeName").val() == "")
+            {
+                ShowHideMsgNew(false, "Please add IE Name");
+                return;
+            }
             if (ValidateClusterData() == false) {
                 return false;
             }
@@ -493,11 +498,14 @@
 
             var formData = $("#frmInspectionEngineers").serialize();
             $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
-                ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "InspectionEngineers")';
+                        }, 2000);
                 }
             });
-            //}
             return false;
         });
 

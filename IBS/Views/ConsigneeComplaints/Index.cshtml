@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="reference">Po Date</label>
-                        <input type="text" class="input datepicker"  readonly="true" id="PoDt">
+                        <input type="text" class="input datepicker" id="PoDt">
                         </div>
                 <div class="col-md-4 mb-3">
                     <div class="savenext-btn">
@@ -113,43 +113,6 @@
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
-            });
-        }
-
-        function InitializeDatatable1() {
-            var PoNo = $("#PoNo").val();
-            var PoDt = $("#PoDt").val();
-
-            $("#dtList").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-
-                ajax: {// Ajax Filter
-                    //url: "@Url.Action("LoadTable")",
-                    url: "@Url.Action("GetCombinedData", "ConsigneeComplaints")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "PoNo": PoNo,
-                            "PoDt": PoDt
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-                columns: [
-                    { data: "CASE_NO" },
-                ],
-                "order": [[0, "asc"]]
             });
         }
 

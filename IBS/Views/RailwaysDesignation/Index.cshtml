@@ -25,8 +25,8 @@
                     <input type="text" class="input" id="Designation" />
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 30px;">
-                <div class="savenext-btn">
+            <div class="col-md-3">
+                <div class="savenext-btn btnAlign">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
                     <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
                 </div>
@@ -104,7 +104,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.RlyDesigCd;
+                            var id = data.ID;
                             var editUrl = '@Url.Action("Manage", "RailwaysDesignation")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '<a onclick="Delete(\'' + id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
