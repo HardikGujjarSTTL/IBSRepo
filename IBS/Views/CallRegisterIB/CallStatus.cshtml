@@ -242,13 +242,13 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Book No : </label>
-                        <input type="text" asp-for="BkNo" id="bknoaccpted" maxlength="100">
+                        <input type="text" id="bknoaccpted" maxlength="100">
                         <span asp-validation-for="BkNo" class="text-danger"></span>
 
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Set No : </label>
-                        <input type="text" asp-for="SetNo" id="setnoaccpted" maxlength="100">
+                        <input type="text" id="setnoaccpted" maxlength="100">
                         <span asp-validation-for="SetNo" class="text-danger"></span>
 
                     </div>
@@ -290,7 +290,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="savenext-btn" style="margin-top:30px;">
-                            <button type="button" class="save-btn active" onclick="SaveImages();">Save Files</button>
+                            <button type="button" class="save-btn active" id="savefiles" onclick="SaveImages();">Save Files</button>
                             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
                             <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                         </div>
@@ -343,7 +343,7 @@
                     </div>
                     <div class="col-md-4 mb-3" style="margin-top:30px;">
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active" onclick="UploadFiles();">Upload Files</button>
+                            <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                             <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
                         </div>
                     </div>
@@ -633,115 +633,115 @@
                     }
                 });
             });
-            //var CallStatusdrp = $('#CallStatusdrp').val();
-            //if (CallStatusdrp == "C") {
-            //    $('#canlsave').prop('disabled', true);
-            //    $('#canlsave').addClass('disabled-button');
-            //    $('#CallStatusdrp').prop('disabled', true);
-            //    $('#savedetails').hide();
-            //} else if (CallStatusdrp == "A") {
-            //    $('#accepteddrp').show();
-            //    $('#savedetails').hide();
-            //    $('#bkset').hide();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#accepteuploadddrp').show();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#AcceptReject').text('Accepted');
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "R") {
-            //    $('#MatValue').show();
-            //    $('#accepteddrp').show();
-            //    $('#localdrp').show();
-            //    $('#rejvalue').show();
-            //    $('#accepteuploadddrp').show();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#AcceptReject').text('Rejected');
-            //    $('#frmcancelled').hide();
-            //    $('#LocalOutstationdrp').show();
-            //} else if (CallStatusdrp == "G") {
-            //    $('#accepteuploadddrp').show();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#bkset').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //    $('#AcceptReject').hide();
-            //} else if (CallStatusdrp == "T") {
-            //    $('#accepteuploadddrp').show();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').hide();
-            //    $('#bkset').show();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "S") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').show();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "U") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').show();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "W") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').show();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "M") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').show();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').hide();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').show();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#CallCancelStatusdrp').hide();
-            //    $('#frmcancelled').hide();
-            //} else if (CallStatusdrp == "C") {
-            //    $('#accepteuploadddrp').hide();
-            //    $('#localdrp').hide();
-            //    $('#rejvalue').hide();
-            //    $('#accepteddrp').hide();
-            //    $('#savedetails').hide();
-            //    $('#bkset').hide();
-            //    $('#ReasonFIFOdv').show();
-            //    $('#frmcancelled').show();
-            //    $('#CallCancelStatusdrp').show();
-            //    $('#MatValue').show();
-            //}
+            var CallStatusdrp = $('#CallStatusdrp').val();
+            if (CallStatusdrp == "C") {
+                $('#canlsave').prop('disabled', true);
+                $('#canlsave').addClass('disabled-button');
+                $('#CallStatusdrp').prop('disabled', true);
+                $('#savedetails').hide();
+            } else if (CallStatusdrp == "A") {
+                $('#accepteddrp').show();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#CallCancelStatusdrp').hide();
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#AcceptReject').text('Accepted');
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "R") {
+                $('#MatValue').show();
+                $('#accepteddrp').show();
+                $('#localdrp').show();
+                $('#rejvalue').show();
+                $('#accepteuploadddrp').show();
+                $('#ReasonFIFOdv').show();
+                $('#AcceptReject').text('Rejected');
+                $('#frmcancelled').hide();
+                $('#LocalOutstationdrp').show();
+            } else if (CallStatusdrp == "G") {
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#ReasonFIFOdv').show();
+                $('#bkset').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+                $('#AcceptReject').hide();
+            } else if (CallStatusdrp == "T") {
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').show();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "S") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "U") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "W") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "M") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').hide();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').show();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#CallCancelStatusdrp').hide();
+                $('#frmcancelled').hide();
+            } else if (CallStatusdrp == "C") {
+                $('#accepteuploadddrp').hide();
+                $('#localdrp').hide();
+                $('#rejvalue').hide();
+                $('#accepteddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#ReasonFIFOdv').show();
+                $('#frmcancelled').show();
+                $('#CallCancelStatusdrp').show();
+                $('#MatValue').show();
+            }
             $('#LocalOutstationdrp').change(function () {
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
@@ -893,6 +893,9 @@
                         else {
                             ShowHideMsgNew(false, response.responseText);
                         }
+                        $('#uploadfile').prop('disabled', true);
+                        $('#AcceptReject').prop('disabled', true);
+                        $('#savefiles').prop('disabled', true);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.error('Error: ' + textStatus, errorThrown);
@@ -931,50 +934,56 @@
             }
 
             if (bknoaccpted != "" || setnoaccpted != "") {
-                var ajaxData = AjaxModel();
 
-                if (ajaxData) {
-                    for (var key in ajaxData) {
-                        if (ajaxData.hasOwnProperty(key)) {
-                            formData.append(key, ajaxData[key]);
+                var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
+
+                // Get the value of the hidden input (assuming it contains file information)
+                var uploadedDocuments = hiddenInput.val();
+
+                var uploadedDocumentsArray = JSON.parse(uploadedDocuments);
+                var firstFiveFiles = uploadedDocumentsArray.slice(0, 5);
+                if (uploadedDocumentsArray.length >= 5) {
+
+                    var ajaxData = AjaxModel();
+
+                    if (ajaxData) {
+                        for (var key in ajaxData) {
+                            if (ajaxData.hasOwnProperty(key)) {
+                                formData.append(key, ajaxData[key]);
+                            }
                         }
                     }
-                }
-                var files = $('#hdnUploadedDocumentList_tab-1')[0];
+                    var files = $('#hdnUploadedDocumentList_tab-1')[0];
 
-                if (files == null) {
-                    alert('Please Upload images.');
-                    return;
-                }
 
-                //for (var i = 0; i < files.length; i++) {
-                //    formData.append('UploadeFile[]', files[i]);
-                //}
-                if (files && files.defaultValue && files.defaultValue != null) {
-                    var files = files.defaultValue;
-                    formData.append("UploadeFile", files);
-                }
-
-                $.ajax({
-                    url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-
-                        if (response.Id == 1) {
-                            ShowHideMsgNew(true, response.responseText);
-                        }
-                        else {
-                            ShowHideMsgNew(false, response.responseText);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        // Handle error
-                        console.error('Error: ' + textStatus, errorThrown);
+                    if (files && files.defaultValue && files.defaultValue != null) {
+                        var files = files.defaultValue;
+                        formData.append("UploadeFile", files);
                     }
-                });
+                    $.ajax({
+                        url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+
+                            if (response.Id == 1) {
+                                ShowHideMsgNew(true, response.responseText);
+                            }
+                            else {
+                                ShowHideMsgNew(false, response.responseText);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            // Handle error
+                            console.error('Error: ' + textStatus, errorThrown);
+                        }
+                    });
+
+                } else {
+                    alert('Please select the first five (5) Images!');
+                }
             }
             else {
                 alert("BKNO & SetNo Is Required.");
