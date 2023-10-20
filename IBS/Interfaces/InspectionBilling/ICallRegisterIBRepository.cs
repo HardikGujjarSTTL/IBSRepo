@@ -32,7 +32,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetMatch(string CaseNo, string GetRegionCode);
 
-        public int show2(string CaseNo, string CallRecvDt, int CallSno);
+        public int show2(string CaseNo);
 
         public string GetCaseNoFind(string CaseNo, string CallRecvDt, int CallSno);
 

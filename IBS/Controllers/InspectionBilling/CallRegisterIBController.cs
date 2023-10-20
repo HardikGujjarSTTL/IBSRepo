@@ -238,70 +238,72 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GetAddDetails(string CaseNo, string CallRecvDt, int CallSno)
+        public IActionResult GetAddDetails(string CaseNo)
         {
             try
             {
                 string Client = "";
+                string msg ="";
+                DateTime CallRecvDt = DateTime.Now.Date;
                 if (CaseNo != null)
                 {
                     var GetData = callregisterRepository.FindAddDetails(CaseNo);
                     Client = GetData.OfflineCallStatus;
                     if (GetData.InspectingAgency == "R")
                     {
-                        DateTime inputDateTime = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
-                        int ss = Math.Sign((DateTime.Now - inputDateTime).TotalDays);
+                        //DateTime inputDateTime = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+                        int ss = Math.Sign((DateTime.Now - CallRecvDt).TotalDays);
                         if (ss == 1)
                         {
                             var check = callregisterRepository.GetMatch(CaseNo, GetRegionCode);
                             if (check == "2")
                             {
                                 string code = CaseNo;
-                                string dt = CallRecvDt;
+                                string dt = Convert.ToString(CallRecvDt);
                                 if (GetData.VendInspStopped == "Y")
                                 {
                                     var w_itemBlocked = GetData.VendInspStopped;
-                                    string msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + GetData.VendRemarks + "\\nDo You Still Want to Register/Update This Call?";
-                                    return Json(new { status = true, responseText = msg, code, dt, CallSno, w_itemBlocked });
+                                    msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + GetData.VendRemarks + "\\nDo You Still Want to Register/Update This Call?";
+                                    return Json(new { status = true, responseText = msg, code, dt, w_itemBlocked, Client = Client });
                                 }
                                 else
                                 {
                                     if (GetData.RlyNonrly == "R" || GetData.RlyNonrly == "U")
                                     {
-                                        int dp = callregisterRepository.show2(CaseNo, CallRecvDt, CallSno);
+                                        int dp = callregisterRepository.show2(CaseNo);
                                         if (dp == 0)
                                         {
-                                            AlertDanger("Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.");
+                                            msg = "Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.";
+                                            return Json(new { status = true, responseText = msg, code, dt, Client = Client });
                                         }
                                         else if (dp == 2)
                                         {
-                                            AlertDanger("Delivery Period not available, so Call shall not be accepted.");
+                                            msg = "Delivery Period not available, so Call shall not be accepted.";
+                                            return Json(new { status = true, responseText = msg, code, dt, Client = Client });
                                         }
                                         else
                                         {
-                                            //return RedirectToAction("Manage", "CallRegisterIB", new { ActionType = "A", Case_No = code, CallRecvDt = dt });
-                                            return Json(new { status = true, responseText = "", code, dt, CallSno, w_itemBlocked = "N" });
+                                            return Json(new { status = true, responseText = "", code, dt, w_itemBlocked = "N", Client = Client });
                                         }
                                     }
                                     else
                                     {
-                                        //return RedirectToAction("Manage", "CallRegisterIB", new { ActionType = "A", Case_No = code, CallRecvDt = dt });
-                                        return Json(new { status = true, responseText = "", code, dt, CallSno, w_itemBlocked = "N" });
+                                        return Json(new { status = true, responseText = "", code, dt, w_itemBlocked = "N", Client = Client });
                                     }
                                 }
                             }
                             else if (check == "0")
                             {
-                                AlertDanger("No Record Present for the Given Case No.!!! ");
+                                msg = "No Record Present for the Given Case No.!!! ";
                             }
                             else
                             {
-                                AlertDanger("You are not Authorised to Add The Call For Other Regions.!!! ");
+                                msg= "You are not Authorised to Add The Call For Other Regions.!!! ";
                             }
                         }
                         else
                         {
-                            AlertDanger("The Call Date Cannot be greater then Current Date.");
+                            msg = "The Call Date Cannot be greater then Current Date.";
                         }
                     }
                     else
@@ -310,38 +312,38 @@ namespace IBS.Controllers.InspectionBilling
                         {
                             if (GetData.Remarks == "")
                             {
-                                AlertDanger("RITES is not the Inspection Agency for this CASE.");
+                                msg = "RITES is not the Inspection Agency for this CASE.";
                             }
                             else
                             {
-                                AlertDanger("RITES is not the Inspection Agency for this CASE. Kindly see the comments below : " + "\\n" + GetData.Remarks);
+                                msg = "RITES is not the Inspection Agency for this CASE. Kindly see the comments below : " + "\\n" + GetData.Remarks;
                             }
                         }
                         else if (GetData.InspectingAgency == "X")
                         {
                             if (GetData.Remarks == "")
                             {
-                                AlertDanger("Railways has cancelled the PO for this CASE.");
+                                msg = "Railways has cancelled the PO for this CASE.";
                             }
                             else
                             {
-                                AlertDanger("Railways has cancelled the PO for this CASE. Kindly see the comments below : " + "\\n" + GetData.Remarks);
+                                msg = "Railways has cancelled the PO for this CASE. Kindly see the comments below : " + "\\n" + GetData.Remarks;
                             }
                         }
                         else if (GetData.InspectingAgency == "S")
                         {
                             if (GetData.Remarks == "")
                             {
-                                AlertDanger("RITES has Suspended the Inspection against this PO.");
+                                msg = "RITES has Suspended the Inspection against this PO.";
                             }
                             else
                             {
-                                AlertDanger("RITES has Suspended the Inspection against this PO. Kindly see the comments below : " + "\\n" + GetData.Remarks);
+                                msg = "RITES has Suspended the Inspection against this PO. Kindly see the comments below : " + "\\n" + GetData.Remarks;
                             }
                         }
                     }
                 }
-                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, CallSno = CallSno, w_itemBlocked = "", Client = Client });
+                return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
             }
             catch (Exception ex)
             {
@@ -765,7 +767,7 @@ namespace IBS.Controllers.InspectionBilling
                     model.Updatedby = UserName;
                 }
 
-                int i = callregisterRepository.CallDetailsSave(model, UserName);
+                int i = callregisterRepository.CallDetailsSave(model, UserName.Trim());
                 if (i > 0)
                 {
                     return Json(new { success = true, responseText = msg, Status = i });

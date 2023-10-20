@@ -4090,7 +4090,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("SET_NO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("ITEM_SRNO_PO");
@@ -4621,10 +4621,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<IcPoAmendment>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("IC_PO_AMENDMENT");
+            entity.HasKey(e => e.Id).HasName("IC_PO_AMENDMENT_PK");
 
+            entity.ToTable("IC_PO_AMENDMENT");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"IC_PO_AMENDMENT_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AmendmentDetail)
                 .IsUnicode(false)
                 .HasColumnName("AMENDMENT_DETAIL");
@@ -11891,7 +11895,7 @@ public partial class ModelContext : DbContext
 
             entity.ToTable("T17_CALL_REGISTER");
 
-            entity.HasIndex(e => new { e.RegionCode, e.CallRecvDt, e.CallSno }, "UK_CALL_REGISTER").IsUnique();
+            entity.HasIndex(e => new { e.RegionCode, e.CallRecvDt, e.CallSno, e.CaseNo }, "UK_CALL_REGISTER").IsUnique();
 
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)
@@ -11974,6 +11978,14 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CLUSTER_CODE");
+            entity.Property(e => e.CmApproval)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CM_APPROVAL");
+            entity.Property(e => e.CmApprovalDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CM_APPROVAL_DT");
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
@@ -12254,7 +12266,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ClusterCode)
-                .HasPrecision(3)
+                .HasPrecision(6)
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
@@ -24353,6 +24365,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_DOCUMENTCATEGORY_SEQ");
         modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("IC_INTERMEDIATE_HISTORY_SEQ");
+        modelBuilder.HasSequence("IC_PO_AMENDMENT_SEQ");
         modelBuilder.HasSequence("LABTRAN");
         modelBuilder.HasSequence("LABTRANDTL");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");

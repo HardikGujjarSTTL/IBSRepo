@@ -131,6 +131,18 @@
                     </td>
                 </tr>
                 <tr>
+                    @{
+
+                        var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
+                        <td class="center" colspan="5">
+                            <label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
+                            <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
+                            <br>
+                            <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
+                        </td>
+                    }
+                </tr>
+                <tr>
                     <td>
                         <label for="Reference">Case Status : </label>
                     </td>
@@ -201,7 +213,7 @@
                             <span style="color:red;">(Current Date Will be the Case Status Date i.e Date of Cancellation/Acceptance..etc)</span>
                         </td>
                     </tr>
-                }
+                }                
             </table>
         </div>
         <div class="savenext-btn" id="savedetails">
@@ -230,7 +242,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Book No : </label>
-                        <input type="text" asp-for="BkNo" id="bknoaccpted" maxlength="100" >
+                        <input type="text" asp-for="BkNo" id="bknoaccpted" maxlength="100">
                         <span asp-validation-for="BkNo" class="text-danger"></span>
 
                     </div>
@@ -292,7 +304,7 @@
 
 <div id="accepteuploadddrp">
     <div id="tab-2" class="task-listinput">
-         <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatusUpload" id="frmCallStatusAcceptupload">
+        <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatusUpload" id="frmCallStatusAcceptupload">
             <input type="hidden" asp-for="ActionType" />
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="BkNo" />
@@ -308,36 +320,36 @@
             <input type="hidden" asp-for="CallStatusDt" />
             <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
             <div class="accordion-body" style="overflow-x: auto;">
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
-                 </div>
-                <div class="col-md-4 mb-3">
-                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
-                 </div>
-                <div class="col-md-4 mb-3">
-                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
-                </div>
-                <div class="col-md-4 mb-3">
-                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
-                </div>
-                <div class="col-md-4 mb-3" id="localdrp">
-                   <label for="Reference">Local or Outstation : </label>
-                   @Html.DropDownListFor(model => model.LocalOutstation,new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new { @class = "form-control" ,@id="LocalOutstationdrp"})
-                </div>
-                 <div class="col-md-4 mb-3" id="rejvalue">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
+                    </div>
+                    <div class="col-md-4 mb-3" id="localdrp">
+                        <label for="Reference">Local or Outstation : </label>
+                        @Html.DropDownListFor(model => model.LocalOutstation,new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new { @class = "form-control" ,@id="LocalOutstationdrp"})
+                    </div>
+                    <div class="col-md-4 mb-3" id="rejvalue">
                         <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                         <input type="text" asp-for="RejectionCharge" id="RejectionCharges" maxlength="100">
-                 </div>
+                    </div>
                     <div class="col-md-4 mb-3" style="margin-top:30px;">
-                    <div class="savenext-btn">
-                        <button type="button" class="save-btn active" onclick="UploadFiles();">Upload Files</button>
-                        <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="UploadFiles();">Upload Files</button>
+                            <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
-          </form>
+        </form>
     </div>
 </div>
 
@@ -359,85 +371,85 @@
             <input type="hidden" asp-for="CallStatusDt" />
             <input type="hidden" name="hdnUploadedDocumentList_tab-3" id="hdnUploadedDocumentList_tab-3" value="" />
             <div class="row my-0">
-        <div class="alert alert-warning center">
-            <span id="Label8">
-                <b style="color:red;">Attention IE's - Please Select the reasons for cancellation carefully. The reason of cancellation should be same to what is being entered on Call Cancellation Form. There should not be any difference in both the cases, If difference is found that will be viewed seriously.</b>
-            </span>
-        </div>
-        <div class="col-md-10 mb-10">
-            <div class="reference">
-                <label>Reasons For Cancellation:-</label>
-                <div class="custom-control custom-checkbox">
-                    <label class="custom-checkbox">
+                <div class="alert alert-warning center">
+                    <span id="Label8">
+                        <b style="color:red;">Attention IE's - Please Select the reasons for cancellation carefully. The reason of cancellation should be same to what is being entered on Call Cancellation Form. There should not be any difference in both the cases, If difference is found that will be viewed seriously.</b>
+                    </span>
+                </div>
+                <div class="col-md-10 mb-10">
+                    <div class="reference">
+                        <label>Reasons For Cancellation:-</label>
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[0]" class="custom" />
 
                                 <label for="chk_1">01 - Material Not Found</label>
-                    </label>
-                    <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[1]" class="custom" />
 
                                 <label for="chk_2">02 - Call letter recieved after expiry of delivery period</label>
-                    </label>
-                     <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[2]"  class="custom" />
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" asp-for="chkItems[2]" class="custom" />
                                 <label for="chk_3">03 - your call letter was not in prescribed format</label>
-                    </label>
-                     <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[3]" class="custom" />
                                 <label for="chk_4">04 - Your refusal to undertake test on samples in approved independent test houses or RITES Lab at your cost (Whichever applicable)</label>
-                    </label>
-                     <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[4]"  class="custom" />
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" asp-for="chkItems[4]" class="custom" />
                                 <label for="chk_5">05 - Material offered at premises where adequate room or lighting etc. not available for proper sampling or inspection.</label>
-                    </label>
-                     <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[5]"  class="custom" />
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" asp-for="chkItems[5]" class="custom" />
                                 <label for="chk_6">06 - Internal inspection and test records incomplete / not as per contractual requirement.</label>
-                    </label>
-                     <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[6]"  class="custom" />
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" asp-for="chkItems[6]" class="custom" />
                                 <label for="chk_7">07 - Packing list showing quantities offered item wise and consignee wise not read (Whichever applicable)</label>
-                    </label>
-                     <label class="custom-checkbox">
-                                <input type="checkbox" asp-for="chkItems[7]"  class="custom" />
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" asp-for="chkItems[7]" class="custom" />
                                 <label for="chk_8">08 - Lot mixed not segregated. Please re-offer after proper segregation.</label>
-                    </label>
-                     <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[8]" class="custom" />
                                 <label for="chk_9">09 - You could not arrange for inspection in spite of personal contact / phone with your Shri.</label>
-                    </label>
-                     <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[9]" class="custom" />
                                 <label for="chk_10">10 - You could not produce following documents drg, / spec. / P.O.: at the time of inspection in absence of which inspection could not be done.</label>
-                    </label>
-                     <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[10]" class="custom" />
 
                                 <label for="chk_11">11 - Call Withdrawn By Vendor</label>
-                    </label>
-                     <label class="custom-checkbox">
+                            </label>
+                            <label class="custom-checkbox">
                                 <input type="checkbox" asp-for="chkItems[11]" class="custom" />
                                 <label for="chk_12">12 - Others (Specify)</label>
-                    </label>
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">Cancellation Description:-</label>
-                        <textarea rows="4" asp-for="CancellationDescription" id="Candesc" style="color:red;text-transform: uppercase;"></textarea>
+                            </label>
+                            <div class="col-md-4 mb-3">
+                                <label for="Reference">Cancellation Description:-</label>
+                                <textarea rows="4" asp-for="CancellationDescription" id="Candesc" style="color:red;text-transform: uppercase;"></textarea>
                                 <span asp-validation-for="CancellationDescription" class="text-danger"></span>
 
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Cancellation_Document" />
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="savenext-btn">
-                        <button type="button" class="save-btn active" id="canlsave" onclick="SaveCancellation();">Save</button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Cancellation_Document" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" id="canlsave" onclick="SaveCancellation();">Save</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    </form>
+        </form>
     </div>
 </div>
 
@@ -447,7 +459,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            
+
             //var bknoaccpted = $('#bknoaccpted').val();
             //var setnoaccpted = $('#setnoaccpted').val();
             //if (bknoaccpted != "" || setnoaccpted!= ""){
@@ -466,7 +478,7 @@
             $('#localdrp').hide();
             $('#rejvalue').hide();
 
-            
+
             $('#consigneeFirmDropdown').change(function () {
                 var selectedValue = $('#consigneeFirmDropdown').val();
                 var CaseNo = $('#CaseNo').val();
@@ -478,7 +490,7 @@
                 $.ajax({
                     url: '/CallRegisterIB/GetBkNoAndSetNo',
                     type: 'GET',
-                    data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno,DesireDt:DesireDt },
+                    data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
                         $('#BkNo').val(data.BkNo);
                         $('#SetNo').val(data.SetNo);
@@ -497,7 +509,7 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#callRecdt').val();
 
-                if(selectedValue == "A"){
+                if (selectedValue == "A") {
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -507,6 +519,7 @@
                     $('#AcceptReject').text('Accepted');
                     $('#rejvalue').hide();
                     $('#frmcancelled').hide();
+                    $("#linkICPhotoAR").css("display","");
                 } else if (selectedValue == "R") {
                     $('#MatValue').show();
                     $('#accepteddrp').show();
@@ -517,6 +530,7 @@
                     $('#AcceptReject').text('Rejected');
                     $('#frmcancelled').hide();
                     $('#LocalOutstationdrp').show();
+                    $("#linkICPhotoAR").css("display", "");
                 } else if (selectedValue == "G") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
@@ -528,7 +542,7 @@
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
                     $('#AcceptReject').hide();
-                }else if (selectedValue == "T") {
+                } else if (selectedValue == "T") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -548,7 +562,7 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                }else if (selectedValue == "U") {
+                } else if (selectedValue == "U") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -558,7 +572,7 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                }else if (selectedValue == "W") {
+                } else if (selectedValue == "W") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -568,7 +582,7 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                }else if (selectedValue == "M") {
+                } else if (selectedValue == "M") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -578,7 +592,7 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                }else if (selectedValue == "RB" || selectedValue == "PR"|| selectedValue == "PRB"|| selectedValue == "CB") {
+                } else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -588,7 +602,7 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                }else if (selectedValue == "C") {
+                } else if (selectedValue == "C") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -606,9 +620,9 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        if(data.ChkFIFO == "true"){
+                        if (data.ChkFIFO == "true") {
                             $('#ReasonFIFOdv').show();
-                        } else if (data.ChkFIFO == "false"){
+                        } else if (data.ChkFIFO == "false") {
                             $('#ReasonFIFOdv').hide();
                         }
                     },
@@ -801,13 +815,13 @@
                         alert('Error occurred while retrieving BkNo and SetNo.');
                     }
                 });
-               
+
             });
         });
 
-        function UploadFiles(){
+        function UploadFiles() {
             var formData = new FormData();
-           
+
             SaveSingleDocuments("tab-2");
 
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
@@ -816,7 +830,7 @@
             var bknoaccpted = $('#BkNo').val();
             var setnoaccpted = $('#SetNo').val();
 
-            if (bknoaccpted != "" || setnoaccpted != ""){
+            if (bknoaccpted != "" || setnoaccpted != "") {
                 var ajaxData = AjaxModel();
 
                 if (ajaxData) {
@@ -852,7 +866,7 @@
                         console.error('Error: ' + textStatus, errorThrown);
                     }
                 });
-            }else{
+            } else {
                 alert("BKNO & SetNo Is Required.");
                 return;
             }
@@ -907,7 +921,7 @@
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
-           
+
             if (bknoaccpted != "" || setnoaccpted != "") {
                 var ajaxData = AjaxModel();
 
@@ -960,7 +974,7 @@
             var formData = new FormData();
 
             SaveSingleDocuments("tab-3");
-            
+
             var ajaxData = AjaxModel();
 
             if (ajaxData) {
@@ -975,7 +989,7 @@
             if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
                 var file = fileInput.defaultValue;
                 formData.append("UploadeFile", file);
-            }else{
+            } else {
                 alert("Upload File");
                 return;
             }
@@ -1002,7 +1016,7 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    
+
                     if (response.Id == 1) {
                         var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                         ShowHideMsgNew(true, response.responseText);
@@ -1046,11 +1060,11 @@
                 CallStatusDt: CallStatusDt,
                 CancellationDescription: CancellationDescription
             };
-            
+
             return formData;
         }
 
-        function RedirectViewPrintIC(){
+        function RedirectViewPrintIC() {
             var CASE_NO = $('#caseno').val();
             var CALL_RECV_DT = $('#callRecdt').val();
             var CALL_SNO = $('#callsnos').val();

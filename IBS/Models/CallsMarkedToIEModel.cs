@@ -71,6 +71,8 @@
         public string? PType { get; set; }
 
         public List<CallsMarkedToIEModelList> ReportLst { get; set; }
+
+        public List<CallsMarkedToIEModelListNew> ReportLstNew { get; set; }
     }
 
     public class CallsMarkedToIEModelList
@@ -129,6 +131,77 @@
 
         public int? IeCd { get; set; }
 
+    }
+
+    public class CallsMarkedToIEModelListNew
+    {
+        public string VENDOR { get; set; }
+
+        public string NEWVENDOR { get; set; }
+
+        public string CONSIGNEE { get; set; }
+
+        public string ITEM_DESC_PO { get; set; }
+
+        public string EXT_DELV_DT { get; set; }
+
+        public string INSP_DESIRE_DT { get; set; }
+
+        public string CALL_MARK_DT { get; set; }
+
+        public string CALL_SNO { get; set; }
+
+        //public string? callDocAny { get; set; }
+
+        public string PO_SOURCE { get; set; }
+
+        public string CALL_STATUS { get; set; }
+
+        public string REMARKS { get; set; }
+
+        public string PO_NO { get; set; }
+
+        public string PO_DATE { get; set; }
+
+        public string PO_YR { get; set; }
+
+        public string MFG_PERS { get; set; }
+
+        public string MFG_PHONE { get; set; }
+
+        public string USER_ID { get; set; }
+
+        public string DATETIME { get; set; }
+
+        public string CASE_NO { get; set; }
+
+        public string CALL_RECV_DT { get; set; }
+
+        public int COUNT { get; set; }
+
+        public string VEND_CD { get; set; }
+
+        public string MFG_CD { get; set; }
+
+        public string MANUFACTURER { get; set; }
+
+        public string SOURCE { get; set; }
+
+        public string CALL_STATUS_FULL { get; set; }
+
+        public string IE_CD { get; set; }
+
+        public string IMMS_RLY_CD { get; set; }
+
+        public string COLOUR { get; set; }
+
+        public string LAB_STATUS { get; set; }
+
+        public int PAYMENT_RECIEPT { get; set; }
+
+        public string CM_APPROVAL { get; set; }
+
+        
     }
 
 }

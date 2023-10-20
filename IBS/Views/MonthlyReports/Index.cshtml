@@ -34,9 +34,11 @@
             </div>
             </div>
             <div class="row my-0">
+                <div class="col-lg-12">    
+                    <h3 class="heading3">Status of IE</h3>
+                </div>
             <div class="col-md-4 mb-3" style="font-weight: bold;">
                 <div class="reference">
-                    <label for="Name">Status of IE</label>
                     @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's
                     &nbsp;&nbsp;
                     @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
@@ -52,7 +54,7 @@
             </div>
         </div>
             <div class="row my-0">
-                <div class="col-md-3">
+                <div class="col-md-3 mb-4">
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="ViewReportICStatus();">Submit</button>
                         <button type="button" class="reset-btn" onclick="ClearControlsICStatus();">Clear</button>
@@ -76,8 +78,8 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-3" style="margin-top: 30px;">
-                    <div class="savenext-btn">
+                <div class="col-md-3">
+                    <div class="savenext-btn btnAlign">
                         <button type="button" class="save-btn active" onclick="ViewReportReInspectionICs();">Submit</button>
                         <button type="button" class="reset-btn" onclick="ClearControlsReInspectionICs();">Clear</button>
                     </div>

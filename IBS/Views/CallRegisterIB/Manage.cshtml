@@ -530,6 +530,8 @@
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
                     if (response.status) {
+
+                        $("#btnRegiserCallSave").hide();
                         $("#btnCDetails").show();
                     }
                 });

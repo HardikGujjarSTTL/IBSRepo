@@ -200,6 +200,12 @@
                         <textarea class="input" asp-for="Remarks" maxlength="500"> </textarea>
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
+                    @if (Model.CaseNo != null)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.CopyOfPurchaseOrderDocument" />
+                        </div>
+                    }
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -280,6 +286,14 @@
         });
 
         function Save() {
+            if($("#PurchaserCd").val() == "0")
+            {
+                if ($("#Purchaser").val() == "")
+                {
+                    ShowHideMsgNew(false, "Purchaser details is required.");
+                    return;
+                }
+            }
             if ($("#frmPOMaster").valid()) {
                 //SaveSingleDcuments("tab-1");
                 if (!SaveSingleDocuments("tab-1")) { return; }
@@ -417,7 +431,7 @@
         function fill_consignee_purcher() {
             var RlyNonrlyValue = '@Model.RlyNonrly';
             var RlyNonrlyText = "";
-            if(RlyNonrlyValue == "R")
+            if (RlyNonrlyValue == "R")
                 RlyNonrlyText = "Railways";
             else if (RlyNonrlyValue == "P")
                 RlyNonrlyText = "Private";
@@ -554,9 +568,14 @@
         function ChanedVendCd() {
             $("#txtVend").val($("#VendCd").val());
         }
-        
+
         function GetVendor(i) {
             var VEND_CD = $("#txtVend").val();
+            if (i == 1 && (VEND_CD == "" || VEND_CD == null)) {
+                ShowHideMsgNew(false, "ENTER VENDOR CODE OR 1ST Few CHARACTERS OF VENDOR NAME AND THEN CLICK ON SELECT VENDOR BUTTON");
+                return;
+            }
+
             $.ajax({
                 url: '@Url.Action("GetVend_CD", "DEOVendorPurchesOrder")?VEND_CD=' + VEND_CD,
                 type: 'GET',

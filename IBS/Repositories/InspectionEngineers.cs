@@ -70,6 +70,7 @@ namespace IBS.Repositories
                          IeCallMarking = t09.IeCallMarking,
                          AltIeTwo = t09.AltIeTwo,
                          AltIeThree = t09.AltIeThree,
+                         ContAltIe = t09.ContAltIe,
                          CallMarkingStoppingDt = t09.CallMarkingStoppingDt,
                          CallMarkingStartDt = t09.CallMarkingStartDt,
                          InspectionStartDt = t09.InspectionStartDt,
@@ -206,6 +207,7 @@ namespace IBS.Repositories
                     obj.AltIe = model.AltIe;
                     obj.AltIeTwo = model.AltIeTwo;
                     obj.AltIeThree = model.AltIeThree;
+                    obj.ContAltIe = model.ContAltIe;
                     obj.IeCallMarking = model.IeCallMarking;
                     obj.IePwd = model.IeEmpNo;
                     obj.UserId = model.UserId;
@@ -258,6 +260,7 @@ namespace IBS.Repositories
                     IE.AltIe = model.AltIe;
                     IE.AltIeTwo = model.AltIeTwo;
                     IE.AltIeThree = model.AltIeThree;
+                    IE.ContAltIe = model.ContAltIe;
                     IE.IeCallMarking = model.IeCallMarking;
                     IE.CallMarkingStoppingDt = model.CallMarkingStoppingDt;
                     IE.CallMarkingStartDt = model.CallMarkingStartDt;

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using IBS.Helper;
+@{
     ViewData["Title"] = "Purchase Order List";
 }
 
@@ -56,7 +57,7 @@
         <div class="row my-0">
             <div class="col-md-2 mb-3">
                 <label for="reference">Case Number</label>
-                <input type="text" class="input" id="txtCaseNumber">
+                <input type="text" class="input" id="txtCaseNumber" autocomplete="on">
             </div>
             <div class="col-md-3 mb-3">
                 <label for="reference">PO/Offer Letter No.</label>
@@ -77,13 +78,16 @@
             </div>
         </div>
     </div>
-    <section class="table-section">
+    <section class="table-section" id="dvdtPOMaster" style="display:none;">
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtPOMaster" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th class="padR10 center">Action</th>
+                            <th class="padR10 center">Edit PO Date</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Case Number</th>
                             <th>Purchase Order Number</th>
                             <th>Purchase Order Date</th>
@@ -94,9 +98,6 @@
                             <th>Inspection By/PO Cancelled</th>
                             <th>View PO</th>
                             <th>View PO</th>
-                            <th class="padR10 center">Edit PO Date</th>
-                            <th class="padR10 center">View PO Details</th>
-                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,11 +114,12 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
-        $(function () {
-            InitializePOMasterDatatable();
-        });
+        //$(function () {
+        //    InitializePOMasterDatatable();
+        //});
 
         function Search() {
+            $("#dvdtPOMaster").css("display", "block");
             InitializePOMasterDatatable();
         }
         function InitializePOMasterDatatable() {
@@ -155,35 +157,6 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CASE_NO" },
-                    { data: "PO_NO" },
-                    { data: "PO_DT" },
-                    { data: "INSPECTING_AGENCY" },
-                    { data: "RLY_CD" },
-                    { data: "SOURCE" },
-                    { data: "VEND_NAME" },
-                    { data: "CONSIGNEE_S_NAME" },
-                    { data: "PO_DOC" },
-                    { data: "PO_DOC1" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CASE_NO;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="OpenEditPODateModal(\'' + CaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var id = data.CASE_NO;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "AdministratorPurchaseOrder")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -194,6 +167,46 @@
                             return html;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CASE_NO;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="OpenEditPODateModal(\'' + CaseNo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit PO Date"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CASE_NO;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "AdministratorPurchaseOrder")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View PO Details"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
+                    { data: "CASE_NO" },
+                    { data: "PO_NO" },
+                    { data: "PO_DT" },
+                    { data: "INSPECTING_AGENCY" },
+                    { data: "RLY_CD" },
+                    { data: "SOURCE" },
+                    { data: "VEND_NAME" },
+                    { data: "CONSIGNEE_S_NAME" },
+                    { data: "PO_DOC" },
+                    //{ data: "PO_DOC1" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var PO_DOC1 = data.PO_DOC1;
+                            var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> "
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {

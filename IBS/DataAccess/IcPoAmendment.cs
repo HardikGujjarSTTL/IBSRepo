@@ -10,4 +10,6 @@ public partial class IcPoAmendment
     public string? PoNo { get; set; }
 
     public string? AmendmentDetail { get; set; }
+
+    public int Id { get; set; }
 }
