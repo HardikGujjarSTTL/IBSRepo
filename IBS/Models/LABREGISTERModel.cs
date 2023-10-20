@@ -74,6 +74,11 @@ namespace IBS.Models
         public string BANK_CD { get; set; }
         public string Flag { get; set; }
 
+        public string SumTestingFee { get; set; }
+        public string SumServiceTax { get; set; }
+        public string SumHandlingCharges { get; set; }
+
+        public string TotalSum { get; set; }
 
 
 

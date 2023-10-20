@@ -101,6 +101,101 @@
     <script type="text/javascript">
         $(".select2").select2();
         $(function () {
+            $('#Joiningdate').datepicker({
+                onSelect: function (dateStr) {
+                    var max = $(this).datepicker('getDate');
+                    max.setDate(max.getDate());
+                    $('#Postingdate').datepicker('option', { minDate: max });
+                    $('#Retirementdate').datepicker('option', { minDate: max });
+                    $('#Transferdate').datepicker('option', { minDate: max });
+                }
+            });
+            $('#Deputationfromdate').datepicker({
+                onSelect: function (dateStr) {
+                    var max = $(this).datepicker('getDate');
+                    max.setDate(max.getDate());
+                    $('#Deputationtodate').datepicker('option', { minDate: max });
+                }
+            });
+            $('#Ietenurefromdate').datepicker({
+                onSelect: function (dateStr) {
+                    var max = $(this).datepicker('getDate');
+                    max.setDate(max.getDate());
+                    $('#Ietenuretodate').datepicker('option', { minDate: max });
+                }
+            });
+
+            //function DateValidation(fromdate,toddate,message,focuscontrol)
+            //{
+            //    if (fromdate != "" && toddate != "") {
+            //        var strJoiningdate = fromdate.split("/");
+            //        var _Joiningdate = new Date(+strJoiningdate[2], strJoiningdate[1] - 1, +strJoiningdate[0]);
+
+            //        var strPostingdate = toddate.split("/");
+            //        var _Postingdate = new Date(+strPostingdate[2], strPostingdate[1] - 1, +strPostingdate[0]);
+            //        if (_Joiningdate > _Postingdate) {
+            //            ShowHideMsgNew(false, message);
+            //            $("#" + focuscontrol).focus();
+            //        }
+            //    }
+            //}
+            //$('#Postingdate').datepicker({
+            //    onSelect: function (dateStr) {
+            //        var Joiningdate = $('#Joiningdate').val();
+            //        var Postingdate = $('#Postingdate').val();
+            //        //DateValidation($('#Joiningdate').val(), $('#Postingdate').val(), "Posting date Cannot Be Less Than Joining Date", "Postingdate");
+
+            //        if (Joiningdate != "" && Postingdate != "") {
+            //            var strJoiningdate = Joiningdate.split("/");
+            //            var _Joiningdate = new Date(+strJoiningdate[2], strJoiningdate[1] - 1, +strJoiningdate[0]);
+
+            //            var strPostingdate = Postingdate.split("/");
+            //            var _Postingdate = new Date(+strPostingdate[2], strPostingdate[1] - 1, +strPostingdate[0]);
+            //            if (_Joiningdate > _Postingdate) {
+            //                ShowHideMsgNew(false, "Posting date Cannot Be Less Than Joining Date");
+            //                $("#Postingdate").focus();
+            //            }
+            //        }
+            //    }
+            //});
+
+            //$('#Deputationtodate').datepicker({
+            //    onSelect: function (dateStr) {
+            //        var Joiningdate = $('#Deputationfromdate').val();
+            //        var Postingdate = $('#Deputationtodate').val();
+            //        //DateValidation($('#Deputationfromdate').val(), $('#Deputationtodate').val());
+
+            //        if (Joiningdate != "" && Postingdate != "") {
+            //            var strJoiningdate = Joiningdate.split("/");
+            //            var _Joiningdate = new Date(+strJoiningdate[2], strJoiningdate[1] - 1, +strJoiningdate[0]);
+
+            //            var strPostingdate = Postingdate.split("/");
+            //            var _Postingdate = new Date(+strPostingdate[2], strPostingdate[1] - 1, +strPostingdate[0]);
+            //            if (_Joiningdate > _Postingdate) {
+            //                ShowHideMsgNew(false, "Posting date Cannot Be Less Than Joining Date");
+            //                $("#Deputationtodate").focus();
+            //            }
+            //        }
+            //    }
+            //});
+
+            //$('#Ietenuretodate').datepicker({
+            //    onSelect: function (dateStr) {
+            //        var Joiningdate = $('#Ietenurefromdate').val();
+            //        var Postingdate = $('#Ietenuretodate').val();
+            //        if (Joiningdate != "" && Postingdate != "") {
+            //            var strJoiningdate = Joiningdate.split("/");
+            //            var _Joiningdate = new Date(+strJoiningdate[2], strJoiningdate[1] - 1, +strJoiningdate[0]);
+
+            //            var strPostingdate = Postingdate.split("/");
+            //            var _Postingdate = new Date(+strPostingdate[2], strPostingdate[1] - 1, +strPostingdate[0]);
+            //            if (_Joiningdate > _Postingdate) {
+            //                ShowHideMsgNew(false, "IE Tenure To Date Cannot Be Less Than IE Tenure From Date");
+            //                $("#Ietenuretodate").focus();
+            //            }
+            //        }
+            //    }
+            //});
         });
         function FillData() {
             var IeCd = $("#IeCd").val();

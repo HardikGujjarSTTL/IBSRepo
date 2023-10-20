@@ -116,7 +116,7 @@ namespace IBS.Repositories
                     CONSIGNEE_DESG = Convert.ToString(row["CONSIGNEE_DESG"])
                 }).FirstOrDefault();
             }
-            
+
 
             if (!string.IsNullOrEmpty(model.CONSIGNEE_DTL)) { model.CONSIGNEE_DESC = model.CONSIGNEE_DTL; }
             else { model.CONSIGNEE_DESC = model.CONSIGNEE_DESIG + "/" + model.CONSIGNEE_DEPT + "/" + model.CONSIGNEE_FIRM + "/" + model.CONSIGNEE_CITYNAME; }
@@ -225,7 +225,7 @@ namespace IBS.Repositories
                                    where a.CaseNo == Case_No
                                    select a.AmendmentDetail).FirstOrDefault();
 
-
+            
             if (AmendmentDetail != null)
             {
                 var arrAmd = AmendmentDetail.Split("#");
@@ -581,7 +581,7 @@ namespace IBS.Repositories
             return true;
         }
 
-        public int SaveAmendment(string CaseNo, string PO_NO, PO_Amendments model, List<PO_Amendments> lst)
+        public int SaveAmendment(string CaseNo, string PO_NO, PO_Amendments model, List<PO_Amendments> lst, string Type)
         {
             var strUpdateSet = "";
             using (var trans = context.Database.BeginTransaction())
@@ -597,7 +597,8 @@ namespace IBS.Repositories
                                 item.Amendments = model.Amendments;
                                 item.Date = model.Date;
                             }
-                            strUpdateSet = strUpdateSet + item.Amendments.Trim().PadRight(100, ' ') + ";" + item.Date.Trim().PadRight(10, ' ') + ";" + item.IECD + "#";                                                     
+                            strUpdateSet = strUpdateSet + item.Amendments.Trim().PadRight(100, ' ') + ";" + item.Date.Trim().PadRight(10, ' ') + ";" + item.IECD + "#";
+
                         }
                         if (!string.IsNullOrEmpty(model.Sno) && Convert.ToInt32(model.Sno) == -1)
                         {
@@ -615,9 +616,20 @@ namespace IBS.Repositories
                             context.SaveChanges();
                         }
                     }
+                    else if(Type == "Delete" && lst.Count() == 0)
+                    {
+                        var POAhmdetail = (from a in context.IcPoAmendments
+                                           where a.CaseNo == CaseNo
+                                           select a).FirstOrDefault();
+                        if(POAhmdetail!= null)
+                        {
+                            context.Remove(POAhmdetail);
+                            context.SaveChanges();
+                        }
+                    }
                     else
                     {
-                        strUpdateSet = strUpdateSet + model.Amendments.Trim().PadRight(100, ' ') + ";" + model.Date.Trim().PadRight(10, ' ') + ";" + model.IECD + "#";
+                        strUpdateSet = strUpdateSet + model.Amendments.Trim().PadRight(100, ' ') + ";" + model.Date.Trim().PadRight(10, ' ') + ";" + model.IECD;                        
                         IcPoAmendment obj = new IcPoAmendment();
                         obj.CaseNo = CaseNo;
                         obj.PoNo = PO_NO;

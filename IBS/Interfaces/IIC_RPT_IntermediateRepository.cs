@@ -17,7 +17,7 @@ namespace IBS.Interfaces
         List<SelectListItem> GetItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string CONSIGNEE_CD);
 
         bool SaveDetail(IC_RPT_IntermediateModel model, UserSessionModel user);
-        int SaveAmendment(string CaseNo, string PO_NO, PO_Amendments model, List<PO_Amendments> lst);
+        int SaveAmendment(string CaseNo, string PO_NO, PO_Amendments model, List<PO_Amendments> lst, string Type);
 
         string RefreshDetail(IC_RPT_IntermediateModel model, UserSessionModel user);
         void DeleteNotReq(IC_RPT_IntermediateModel model);

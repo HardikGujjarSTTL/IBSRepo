@@ -213,7 +213,7 @@
                             <span style="color:red;">(Current Date Will be the Case Status Date i.e Date of Cancellation/Acceptance..etc)</span>
                         </td>
                     </tr>
-                }                
+                }
             </table>
         </div>
         <div class="savenext-btn" id="savedetails">
@@ -492,8 +492,10 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#BkNo').val(data.BkNo);
-                        $('#SetNo').val(data.SetNo);
+                        //$('#BkNo').val(data.BkNo);
+                        //$('#SetNo').val(data.SetNo);
+                        $('#bknoaccpted').val(data.BkNo);
+                        $('#setnoaccpted').val(data.SetNo);
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
@@ -519,7 +521,7 @@
                     $('#AcceptReject').text('Accepted');
                     $('#rejvalue').hide();
                     $('#frmcancelled').hide();
-                    $("#linkICPhotoAR").css("display","");
+                    //$("#linkICPhotoAR").css("display","");
                 } else if (selectedValue == "R") {
                     $('#MatValue').show();
                     $('#accepteddrp').show();
@@ -530,7 +532,7 @@
                     $('#AcceptReject').text('Rejected');
                     $('#frmcancelled').hide();
                     $('#LocalOutstationdrp').show();
-                    $("#linkICPhotoAR").css("display", "");
+                    //$("#linkICPhotoAR").css("display", "");
                 } else if (selectedValue == "G") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
@@ -915,12 +917,18 @@
         }
 
         function SaveImages() {
+            debugger
             var formData = new FormData();
 
             SaveSingleDocuments("tab-1");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
+
+            if ($("#consigneeFirmDropdown").val() == '0') {
+                alert("Please select consignee !");
+                return;
+            }
 
             if (bknoaccpted != "" || setnoaccpted != "") {
                 var ajaxData = AjaxModel();
@@ -1035,8 +1043,8 @@
 
         function AjaxModel() {
             var CallStatus = $('#CallStatusdrp').val();
-            var BkNo = $('#BkNo').val();
-            var SetNo = $('#SetNo').val();
+            //var BkNo = $('#BkNo').val();
+            //var SetNo = $('#SetNo').val();
             var ConsigneeFirm = $('#consigneeFirmDropdown').val();
             var LocalOutstation = $('#LocalOutstationdrp').val();
             var BkNo = $('#bknoaccpted').val();
@@ -1047,6 +1055,7 @@
             var CallStatusDt = $('#calldtstatus').val();
             var CallCancelCharges = $('#CanCharges').val();
             var CancellationDescription = $('#Candesc').val();
+            var PoNo = $('#PoNo').val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1058,7 +1067,8 @@
                 CallRecvDt: CallRecvDt,
                 CallSno: CallSno,
                 CallStatusDt: CallStatusDt,
-                CancellationDescription: CancellationDescription
+                CancellationDescription: CancellationDescription,
+                PoNo: PoNo
             };
 
             return formData;

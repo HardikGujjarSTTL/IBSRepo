@@ -3012,7 +3012,7 @@ namespace IBS.Repositories.InspectionBilling
                 var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
                               Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
 
-                if (bsCheck != 0)
+                if (bsCheck != null)
                 {
                     if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
                     {
@@ -3093,6 +3093,55 @@ namespace IBS.Repositories.InspectionBilling
                         }
                     }
 
+                    DateTime CallRecvDate = DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                    var IcDetail = (from item in context.IcIntermediates
+                                    where item.CaseNo == model.CaseNo.Trim() &&
+                                          item.CallSno == model.CallSno &&
+                                          item.CallRecvDt == CallRecvDate &&
+                                          item.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                    select item).FirstOrDefault();
+
+                    if (IcDetail ==  null)
+                    {
+                        var CallDetails = (from c in context.T18CallDetails
+                                           where c.CaseNo == model.CaseNo && c.CallRecvDt == CallRecvDate
+                                           && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                           select c).ToList();
+                        if (CallDetails.Count() > 0)
+                        {
+                            foreach (var i in CallDetails)
+                            {
+                                IcIntermediate obj = new IcIntermediate();
+                                obj.CaseNo = model.CaseNo;
+                                obj.CallRecvDt = CallRecvDate;
+                                obj.CallSno = Convert.ToInt16(model.CallSno);
+                                obj.BkNo = model.BkNo;
+                                obj.SetNo = model.SetNo;
+                                obj.PoNo = model.PoNo;
+                                obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                                obj.UserId = model.UserId;
+                                obj.ItemSrnoPo = i.ItemSrnoPo;
+                                obj.ItemDescPo = i.ItemDescPo;
+                                obj.QtyPassed = i.QtyPassed;
+                                obj.QtyRejected = i.QtyRejected;
+                                obj.QtyDue = i.QtyDue;
+                                obj.IeCd = Convert.ToInt32(model.IeCd);
+                                obj.Datetime = DateTime.Now;
+                                context.IcIntermediates.Add(obj);
+                                context.SaveChanges();
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        IcDetail.BkNo = model.BkNo;
+                        IcDetail.SetNo = model.SetNo;
+                        context.SaveChanges();
+                    }
+                    // Execute the query                    
+
                     var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.BkNo && x.SetNo == model.SetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
 
                     if (recordExists == null)
@@ -3142,9 +3191,28 @@ namespace IBS.Repositories.InspectionBilling
                         recordExists.File10 = filesimg.File_10;
                         context.SaveChanges();
                     }
+
+                    var IcDetail1 = (from ic in context.IcIntermediates
+                                     where ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                     select ic).FirstOrDefault();
+
+                    if(IcDetail1 != null)
+                    {
+                        IcDetail1.File1 = filesimg.File_1;
+                        IcDetail1.File2 = filesimg.File_2;
+                        IcDetail1.File3 = filesimg.File_3;
+                        IcDetail1.File4 = filesimg.File_4;
+                        IcDetail1.File5 = filesimg.File_5;
+                        IcDetail1.File6 = filesimg.File_6;
+                        IcDetail1.File7 = filesimg.File_7;
+                        IcDetail1.File8 = filesimg.File_8;
+                        IcDetail1.File9 = filesimg.File_9;
+                        IcDetail1.File10 = filesimg.File_10;
+                        context.SaveChanges();
+                    }
                     model.AlertMsg = "Success";
                 }
-                else if (model.BkNo != "" && model.SetNo != "" && bsCheck == 0)
+                else if (model.BkNo != "" && model.SetNo != "" && (bsCheck == null || bsCheck == 0))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                     return model;

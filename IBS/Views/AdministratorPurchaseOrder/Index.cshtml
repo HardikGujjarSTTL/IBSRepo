@@ -201,7 +201,7 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var PO_DOC1 = data.PO_DOC1;
-                            var html = "<a target='_blank' class='aTag' href='../@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> "
+                            var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> "
                             html += '</div>';
                             return html;
                         }
