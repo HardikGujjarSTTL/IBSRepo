@@ -311,12 +311,9 @@ namespace IBS.Repositories.InspectionBilling
                                        //COUNT_DT = t17.CountDt ?? 0,
                                        IrfcFunded = t17.IrfcFunded,
                                        DepartmentCode = t17.DepartmentCode,
-                                       ClusterCode = t17.ClusterCode
+                                       ClusterCode = t17.ClusterCode,
+                                       Isfinalizedstatus = t17.Isfinalizedstatus
                                    }).FirstOrDefault();
-
-
-
-
                 if (CallDetails == null)
                     throw new Exception("Record Not found");
                 else
@@ -329,7 +326,11 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallSno = (short)CallDetails.CallSno;
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
-                    model.CallStatus = CallDetails.CallStatus;
+                    //model.CallStatus = CallDetails.CallStatus;
+                    if (CallDetails.CallStatus != null)
+                    {
+                        model.CallStatus = CallDetails.CallStatus.Equals("M") ? "Marked" : CallDetails.CallStatus.Equals("C") ? "Cancelled" : CallDetails.CallStatus.Equals("A") ? "Accepted" : CallDetails.CallStatus.Equals("R") ? "Rejected" : CallDetails.CallStatus.Equals("U") ? "Under Lab Testing" : CallDetails.CallStatus.Equals("S") ? "Still Under Inspection" : CallDetails.CallStatus.Equals("G") ? "Stage Inspection" : "";
+                    }
                     model.CallStatusDt = CallDetails.CallStatusDt;
                     model.CallRemarkStatus = CallDetails.CallRemarkStatus;
                     model.CallInstallNo = CallDetails.CallInstallNo;
@@ -345,6 +346,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.IrfcFunded = CallDetails.IrfcFunded;
                     model.DepartmentCode = CallDetails.DepartmentCode;
                     model.ClusterCode = CallDetails.ClusterCode;
+                    model.IsFinalizedStatus = CallDetails.Isfinalizedstatus == "F" ? true : false;
 
                     T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(CallDetails.MfgCd)).FirstOrDefault();
                     if (Vendor != null)
@@ -527,6 +529,7 @@ namespace IBS.Repositories.InspectionBilling
                         obj.IrfcFunded = w_irfc_funded;
                         obj.ClusterCode = model.ClusterCode;
                         obj.DepartmentCode = model.DepartmentCode;
+                        obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
                         obj.Createdby = model.Createdby;
                         obj.Createddate = DateTime.Now;
@@ -567,6 +570,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -593,6 +597,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -622,6 +627,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();
@@ -647,6 +653,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();

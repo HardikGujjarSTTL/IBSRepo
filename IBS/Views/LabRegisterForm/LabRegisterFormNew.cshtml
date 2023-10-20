@@ -179,7 +179,7 @@ input[type="date"] {
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">IE</label>
-                    <input type="text" id="lblCallDT" class="input" readonly="readonly" />
+                    <input type="text" id="lblIE" class="input" readonly="readonly" />
 
                 </div>
 
@@ -439,7 +439,7 @@ input[type="date"] {
         }
 
         function AddNewLabReg(){
-            debugger;
+            
             var CaseNo = '@ViewBag.CN';
             var CallDt = '@ViewBag.CDT';
             var CallSno = '@ViewBag.CSN';
@@ -470,7 +470,22 @@ input[type="date"] {
        
 
         function AddNewLabDetails(){
-           
+            
+            // var Testing = $("#testingfee").val();
+            // var hand = $("#handlingcharges").val();
+            // var tax = $("#sertax").val();
+            // var parsedTesting = parseFloat(Testing);
+            // var parsedHand = parseFloat(hand);
+            // var parsedTax = parseFloat(tax);
+            // if (!isNaN(parsedTesting) && !isNaN(parsedHand) && !isNaN(parsedTax)) {
+                
+            //     var TotalLab = parseInt(parsedTesting) + parseInt(parsedHand) + parseInt(parsedTax);
+            //     console.log("Total Lab Sum: " + TotalLab);
+            // } else {
+            //     // Handle the case where one or more values are not valid numbers
+            //     console.log("Error: One or more values are not valid numbers.");
+            // }
+            // var TotalLab = parseFloat(Testing) + parseFloat(hand) + parseFloat(tax);
             var LABREGISTERModel = {
                 SampleRegNo: $("#lblRNo").val(),
                 SampleRegDate: $("#dtregdt").val(),

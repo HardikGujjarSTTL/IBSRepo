@@ -10,7 +10,7 @@
     //    clsView = "Permission_View";
     //}
 }
-<style>
+@* <style>
     #showPayment1 {
         max-height: 300px; /* Set the maximum height for the scrolling area */
         overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
@@ -135,7 +135,7 @@
         .table-section::-webkit-scrollbar-thumb:hover {
             background-color: #555;
         }
-</style>
+</style> *@
 @*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
 
 <div class="list-inner">
@@ -156,17 +156,17 @@
 
 </div>
 <div class="savenext-btn" style="margin-left:40%;">
-    <button type="button" class="save-btn active" onclick="GetPayment();">Submit</button>
+    <button type="button" class="save-btn active" onclick="InitializeDatatableChild();">Submit</button>
 </div>
-    <br />
+<br />
 <div id="showPayment1" style="display:none;">
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dtPayment" class="table">
+                <table id="dtPaymentchild" class="table-responsive">
                     <thead>
                         <tr>
-                            <th style="width:4%;">SNo.</th>
+                            <th>SNo.</th>
                             <th>Sample Reg No</th>
                             <th>Case No</th>
                             <th>Total Lab Charges</th>
@@ -178,7 +178,7 @@
                             <th>Instrument Amt</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -197,12 +197,12 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="Reference">Payment No.</label>
-                <input type="text" class="input" id="lblpyno">
+                <input type="text" class="input" id="lblpyno" readonly="readonly">
                 <span class="text-danger field-validation-error" id="spnError1"></span>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="Reference">Payment Date</label>
-                <input type="text" class="input datepicker" id="dtpydt">
+                <input type="text" class="input" id="dtpydt" readonly="readonly">
 
             </div>
             <div class="col-md-4 mb-3">
@@ -212,7 +212,7 @@
             </div>
         </div>
         <div class="row my-0">
-            
+
             <div class="col-md-4 mb-3">
                 <label for="Reference">Instrument Date</label>
                 <input type="text" class="input datepicker" id="dtAdt">
@@ -229,7 +229,7 @@
             </div>
         </div>
         <div class="row my-0">
-            
+
             <div class="col-md-4 mb-3">
                 <label for="Reference">Remarks</label>
                 <textarea class="input" asp-for="Remarks" id="txtremk"> </textarea>
@@ -263,67 +263,145 @@
         function cancel() {
             window.location.href = "/LabPaymentsForm/LabPaymentForm";
         }
-        function GetPayment() {
+        // function GetPayment() {
 
 
+        //     var Lab = $("#ddlppylab").val();
+        //     $.ajax({
+        //         url: '/LabPaymentsForm/GetPayment', // Replace with your actual endpoint URL
+        //         type: 'POST',
+        //         dataType: 'json',
+        //         data: { Lab: Lab },
+        //         success: function (data) {
+
+        //             if (data.length == 0) {
+
+        //             }
+        //             else {
+
+        //                 $("#showPayment1").css("display", "block");
+        //                 $("#btnp").css("display", "block");
+
+        //                 // Once data is successfully received, populate the table
+        //                 var tableBody = $('#tableBody');
+        //                 tableBody.empty(); // Clear existing rows (if any)
+        //                 for (i = 0; i < data.length; i++) {
+
+        //                     var row = $('<tr>');
+        //                     //row.append($('<td>').text(data[i].SNO)); // SRNo.
+        //                     //var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
+        //                     var snoLink = $('<input>').attr({ 'type': 'checkbox', 'data-sno': data[i].SNO, 'data-regno': data[i].SAMPLE_REG_NO });
+
+        //                     var snoCell = $('<td>').append(snoLink);
+        //                     row.append(snoCell);
+        //                     row.append($('<td>').text(data[i].SAMPLE_REG_NO));
+        //                     row.append($('<td>').text(data[i].CASE_NO));
+        //                     row.append($('<td>').text(data[i].TOT_CHARGES));
+        //                     row.append($('<td>').text(data[i].TDS_AMT));
+        //                     row.append($('<td>').text(data[i].TESTING_FEE));
+        //                     row.append($('<td>').text(data[i].AMT_CLEARED));
+        //                     row.append($('<td>').text(data[i].CHQ_NO));
+        //                     row.append($('<td>').text(data[i].CHQ_DT));
+        //                     row.append($('<td>').text(data[i].IAMOUNT));
+
+
+        //                     tableBody.append(row);
+        //                     var sno = data[i].SNO;
+        //                 }
+
+        //                 //editButton.click(function(event) {
+        //                 snoLink.click(function (event) {
+        //                     //var regNo = regNo1;
+        //                     //var sno = sno1;
+        //                     //LabDtlModify(regNo, sno);
+        //                 });
+        //             }
+        //         },
+        //         error: function () {
+
+        //         }
+
+        //     });
+        // }
+        function InitializeDatatableChild() {
+           
             var Lab = $("#ddlppylab").val();
-            $.ajax({
-                url: '/LabPaymentsForm/GetPayment', // Replace with your actual endpoint URL
-                type: 'POST',
-                dataType: 'json',
-                data: { Lab: Lab },
-                success: function (data) {
-
-                    if (data.length == 0) {
-
-                    }
-                    else {
-
-                        $("#showPayment1").css("display", "block");
-                        $("#btnp").css("display", "block");
-
-                        // Once data is successfully received, populate the table
-                        var tableBody = $('#tableBody');
-                        tableBody.empty(); // Clear existing rows (if any)
-                        for (i = 0; i < data.length; i++) {
-
-                            var row = $('<tr>');
-                            //row.append($('<td>').text(data[i].SNO)); // SRNo.
-                            //var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
-                            var snoLink = $('<input>').attr({ 'type': 'checkbox', 'data-sno': data[i].SNO, 'data-regno': data[i].SAMPLE_REG_NO });
-
-                            var snoCell = $('<td>').append(snoLink);
-                            row.append(snoCell);
-                            row.append($('<td>').text(data[i].SAMPLE_REG_NO));
-                            row.append($('<td>').text(data[i].CASE_NO));
-                            row.append($('<td>').text(data[i].TOT_CHARGES));
-                            row.append($('<td>').text(data[i].TDS_AMT));
-                            row.append($('<td>').text(data[i].TESTING_FEE));
-                            row.append($('<td>').text(data[i].AMT_CLEARED));
-                            row.append($('<td>').text(data[i].CHQ_NO));
-                            row.append($('<td>').text(data[i].CHQ_DT));
-                            row.append($('<td>').text(data[i].IAMOUNT));
-
-
-                            tableBody.append(row);
-                            var sno = data[i].SNO;
-                        }
-
-                        //editButton.click(function(event) {
-                        snoLink.click(function (event) {
-                            //var regNo = regNo1;
-                            //var sno = sno1;
-                            //LabDtlModify(regNo, sno);
-                        });
+            $("#dtPaymentchild").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("GetPayment")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            Lab: Lab
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
                     }
                 },
-                error: function () {
 
-                }
+                columns: [
+                    // {
+                    //     targets: 0,
+                    //     orderable: false,
+                    //     className: 'dt-body-center',
+                    //     render: function (data, type, full, meta) {
+                    //         if (data.length == 0) {
 
+                    //         }
+                    //         else {
+
+                    //             $("#showPayment1").css("display", "block");
+                    //             $("#btnp").css("display", "block");
+                    //         }
+                    //         var sno = data.SNO;
+                    //         var regNo = data.SAMPLE_REG_NO;
+                    //         return '<input type="checkbox" data-sno="' + sno + '" data-regno="' + regNo + '">';
+                    //     },
+                    // },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            if (data.length == 0) {
+
+                            }
+                            else {
+
+                                $("#showPayment1").css("display", "block");
+                                $("#btnp").css("display", "block");
+                            }
+                            var sno = data.SNO;
+                            var regNo = data.SAMPLE_REG_NO;
+                            return '<input type="checkbox" data-sno="' + sno + '" data-regno="' + regNo + '">';
+                        }
+                    },
+                    { data: "SAMPLE_REG_NO" },
+                    { data: "CASE_NO" },
+                    { data: "TOT_CHARGES" },
+                    { data: "TDS_AMT" },
+                    { data: "TESTING_FEE" },
+                    { data: "AMT_CLEARED" },
+                    { data: "CHQ_NO" },
+                    { data: "CHQ_DT" },
+                    { data: "IAMOUNT" }
+
+                    
+
+                ],
+
+                "order": [[0, "asc"]],
             });
         }
-
         function Click() {
 
             var text = $("#ddlppylab option:selected").text();
@@ -331,6 +409,7 @@
             $("#txtremk").val(text);
         }
         function Save() {
+            debugger;
             $("#spnError1").html("");
             $("#spnError2").html("");
             $("#spnError3").html("");
@@ -425,7 +504,7 @@
         }
 
         $("#btnprint").click(function () {
-            
+
             var PaymentID = $("#lblpyno").val();
             var url = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
             printDirectly(url);

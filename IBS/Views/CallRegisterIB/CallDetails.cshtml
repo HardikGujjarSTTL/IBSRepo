@@ -172,7 +172,11 @@
                 $("#btnSave").show();
                 $("#btnDelete").show();
             }
-
+            var ItemSrNoPo = $("#ItemSrNoPo").val();
+            if(ItemSrNoPo == 0)
+            {
+                $("#btnDelete").hide();
+            }
         });
 
         $(function () {
