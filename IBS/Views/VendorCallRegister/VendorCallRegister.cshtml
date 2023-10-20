@@ -142,8 +142,7 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
-            //InitializeDatatable();
+            $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
         });
 
         function NewCall() {
@@ -164,14 +163,6 @@
 
         function Search() {
             InitializeDatatable();
-        }
-
-        function setDefaultDate() {
-            var fromdate = new Date();
-            var todate = new Date();
-            $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
-            $('#ToDate').text(moment(todate.setDate(todate.getDate() + 1)).format('@Common.CommonDateFormateForJS'));
-            $('#ReasonDt').text(moment(todate.setDate(todate.getDate())).format('@Common.CommonDateFormateForJS'));
         }
 
         function InitializeDatatable() {

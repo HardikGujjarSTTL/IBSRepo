@@ -1,11 +1,11 @@
 ﻿@model IBS.Models.VendorCallRegPrintReport
 @{
-    ViewData["Title"] = "INSPECTION CALL";
+    ViewData["Title"] = "Inspection Call";
     Layout = null;
 }
 <html>
 <head>
-    <title>Sector wise billing summary</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
     <p align="right">
@@ -53,27 +53,27 @@
                     <td colspan=2></td>
                 </tr>
                 <tr>
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "N")
+                    @if (Model.RegionCode == "N")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Northern Region <br> 12th Floor, Core-II, <br> Scope Minar, Laxmi Nagar, <br> Delhi-110092 </p></span> </Font></td>
                     }
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "E")
+                    @if (Model.RegionCode == "E")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Eastern Region <br> CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE, 3rd FLOOR, <br> KOLKATA-700 012 </p></span> </Font></td>
                     }
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "W")
+                    @if (Model.RegionCode == "W")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Western Region <br> 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT, MUMBAI-400021 </p></span> </Font></td>
                     }
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "S")
+                    @if (Model.RegionCode == "S")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Southern Region <br> CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD, <br> CHENNAI - 600 006 </p></span> </Font></td>
                     }
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "C")
+                    @if (Model.RegionCode == "C")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> Central Region <br> 50, EXPANSION BUIDING,BHILAI STEEL PLANT AREA <br> BHILAI -490001 </p></span> </Font></td>
                     }
-                    @if (Model.CaseNo.Substring(0, 1).ToString() == "Q")
+                    @if (Model.RegionCode == "Q")
                     {
                         <td align=left width="50%"><Font face="Verdana" size="1"><span style="font-size:medium;"><p> To <BR><BR> Group General Manager (Inspection) <br> RITES LTD.,<br> CO QA Division <br> RITES BHAWAN, 1, SECTOR-29, GURGAON <br> HARYANA -122001 </p></span> </Font></td>
                     }
