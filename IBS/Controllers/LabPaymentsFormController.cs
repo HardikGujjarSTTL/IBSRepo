@@ -64,13 +64,21 @@ namespace IBS.Controllers
             DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetLabPayments(dtParameters, Regin);
             return Json(dTResult);
         }
+
+        //public IActionResult GetPayment(LabPaymentFormModel paymentFormModel, string PaymentID, string Lab)
+        //{
+        //    paymentFormModel.PaymentID = PaymentID;
+        //    paymentFormModel.Lab = Lab;
+        //    paymentFormModel.Regin = GetRegionCode;
+        //    List<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPayments(paymentFormModel);
+        //    return Json(dTResult);
+        //}
         [HttpPost]
-        public IActionResult GetPayment(LabPaymentFormModel paymentFormModel, string PaymentID, string Lab)
+        public IActionResult GetPayment([FromBody] DTParameters dtParameters)
         {
-            paymentFormModel.PaymentID = PaymentID;
-            paymentFormModel.Lab = Lab;
-            paymentFormModel.Regin = GetRegionCode;
-            List<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPayments(paymentFormModel);
+            
+            string Regin = GetRegionCode;
+            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPayments(dtParameters, Regin);
             return Json(dTResult);
         }
         [HttpPost]
@@ -174,6 +182,15 @@ namespace IBS.Controllers
             await browser.CloseAsync();
 
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
+
+        [HttpPost]
+        public IActionResult PrintLoadTable([FromBody] DTParameters dtParameters)
+        {
+
+            string Regin = GetRegionCode;
+            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.PrintLoadTable(dtParameters, Regin);
+            return Json(dTResult);
         }
         #endregion
 

@@ -163,7 +163,7 @@ namespace IBS.Repositories
             {
                 T24Rv data = new T24Rv();
                 data.VchrNo = Convert.ToString(VCHR_NO);
-                data.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
+                data.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "dd/MM/yyyy", null).ToString("dd/MM/yyyy"));
                 data.BankCd = Convert.ToByte(model.BANK_CD);
                 data.VchrType = model.VCHR_TYPE;
                 context.T24Rvs.Add(data);

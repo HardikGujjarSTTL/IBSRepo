@@ -9,17 +9,17 @@
 }
 
 
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>LAB INVOICE</h2>
-        </div>
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>LAB INVOICE</h2>
+    </div>
     <div>
         <a asp-action="LabInvoiceRpt" asp-controller="LabInvoiceRpt" class="formBtn viewall-btn">View List</a>
     </div>
-    </div>
+</div>
 <section class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="LabInvoiceRpt" asp-action="LabInvoiceRpt" data-ajax-method="post" data-ajax-complete="completed" id="frmLabInvoice">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="LabInvoiceRpt" asp-action="Save" data-ajax-method="post" data-ajax-complete="completed" id="frmLabInvoice">
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -48,8 +48,8 @@
                         <input type="text" class="input" asp-for="ManufacturerNM" readonly="true">
                         <span asp-validation-for="ManufacturerNM" class="text-danger"></span>
                     </div>
-                    </div>
-                    <div class="row my-0">
+                </div>
+                <div class="row my-0">
                     <div class="col-md-2 mb-3">
                         <label for="Reference">BPO</label>
                         <input type="text" class="input" asp-for="BPOCD" readonly="true">
@@ -62,8 +62,62 @@
                     </div>
                     <input type="hidden" asp-for="InvoiceNo" id="hndInNo" />
                     <input type="hidden" asp-for="InvoiceDt" id="hndInDt" />
+                    <input type="hidden" asp-for="RegNo" id="hndregno" />
                 </div>
-                <h4>LAB INVOICE DETAILS</h4>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">GSTN NO.</label>
+                        <input type="text" class="input" asp-for="GSTINNO" readonly="true">
+                        <span asp-validation-for="GSTINNO" class="text-danger"></span>
+                        <input type="hidden" asp-for="State" id="hndstate" />
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">BPO</label>
+                        <input type="text" class="input" asp-for="BPONM" readonly="true">
+                        <span asp-validation-for="BPONM" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row my-0" id="hdn1">
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Item Description</label>
+                        <input type="text" class="input" asp-for="Item">
+                        <span asp-validation-for="Item" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Quantity</label>
+                        <input type="text" class="input" asp-for="Quantity">
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Testing Fee</label>
+                        <input type="text" class="input" asp-for="TestingCharges" id="txttestingfee">
+                        <span asp-validation-for="TestingCharges" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0" id="hdn2">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">IGST</label>
+                        <input type="text" class="input" asp-for="IGST" readonly="true">
+                        <span asp-validation-for="IGST" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">CGST</label>
+                        <input type="text" class="input" asp-for="CGST" readonly="true">
+                        <span asp-validation-for="CGST" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">SGST</label>
+                        <input type="text" class="input" asp-for="SGST" readonly="true">
+                        <span asp-validation-for="SGST" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();" style="margin-left:40%;display:none;" id="btnsaveAdd">Add New</button>
+                </div>
+               
+                <div id="invoicetable" style="display:none;">
+                    <h4>LAB INVOICE DETAILS</h4>
                 <section class="table-section">
                     <div class="task-listinput">
                         <div class="dash-table">
@@ -80,7 +134,7 @@
                                         <th>CGST</th>
                                         <th>SGST</th>
                                         <th>IGST</th>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,9 +143,12 @@
                         </div>
                     </div>
                 </section>
+                </div>
                 <div class="savenext-btn">
                     @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active Permission_Save" onclick="Download();" style="margin-left:40%;">Generate Invoice</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Download();" style="margin-left:40%;display:none;" id="btngenerate">Generate Invoice</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();" style="margin-left:40%;" id="btnsave">Save</button>
+                    @* <button type="button" class="save-btn active Permission_Save" onclick="Save();" style="margin-left:40%;display:none;" id="btnsaveAdd">Add New</button> *@
                 </div>
             </div>
         </form>
@@ -102,62 +159,91 @@
 
 @section scripts{
 
-        <partial name="_DataTablesScriptsPartial" />
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 
-        <script type="text/javascript">
-            
-            $(function () {
-                
+    <script type="text/javascript">
+       
+        $(function () {
+
             var RegNo = '@ViewBag.RegNo';
-            InitializeDatatable(RegNo);
-            });
+             InitializeDatatable(RegNo);
+        });
 
         function InitializeDatatable(RegNo) {
 
-                $("#dtinvoiced").DataTable({
-                    stateSave: false,// Design Assets
-                    autoWidth: true,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    processing: true, // ServerSide Setups
-                    serverSide: false,
-                    destroy: true,
+            $("#dtinvoiced").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: false,
+                destroy: true,
                 paging: false,// Paging Setups
                 searching: false,// Searching Setups
-                    ajax: {// Ajax Filter
+                ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: function (d) {
-                            var AdditionalValues = {
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
                             RegNo: RegNo
                         };
-                            d.AdditionalValues = AdditionalValues;
-                            return JSON.stringify(d);
-                        }
-                    },
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
 
-                    columns: [// Columns Setups
-                        {
-                            data: '', orderable: false, width: '5%',
-                            render: function (data, type, row, meta) {
-                            sessionStorage.setItem("InvoiceNo", row.InvoiceNo);
-                            sessionStorage.setItem("InvoiceDt", row.InvoiceDt);
-                            var InvoiceDt = '@ViewBag.InvoiceDt';
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                                    var currentDate = new Date();
+                            var day = String(currentDate.getDate()).padStart(2, '0');
+                            var month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                            var year = currentDate.getFullYear();
+
+                            var formattedDate = day + '/' + month + '/' + year;
+                            debugger;
+                            if (row == null) {
+
+                            }
+                            else
+                            {
+                                $("#btnsave").css("display", "none");
+                                $("#btngenerate").css("display", "");
+                                $("#invoicetable").css("display", "");
+                                if (formattedDate != row.InvoiceDt) {
+                                    $("#hdn1").css("display", "none");
+                                    $("#hdn2").css("display", "none");
+                                    $("#btnsaveAdd").css("display", "none");
+                                }
+                                else
+                                {
+                                    $("#hdn1").css("display", "");
+                                    $("#hdn2").css("display", "");
+                                    $("#btnsaveAdd").css("display", "");
+                                }
+                                
+                                sessionStorage.setItem("InvoiceNo", row.InvoiceNo);
+                                sessionStorage.setItem("InvoiceDt", row.InvoiceDt);
+                                var InvoiceDt = '@ViewBag.InvoiceDt';
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
-                        },
-                        //{
-                        //    render: function (data, type, row) {
-                        //        var Id = data.LabId;
-                        //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
-                        //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                        //        html += '</div>';
-                        //        return html;
-                        //    }
-                        //},
+                            
+                        }
+                    },
+                    //{
+                    //    render: function (data, type, row) {
+                    //        var Id = data.LabId;
+                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
+                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
                     { data: "InvoiceNo" },
                     { data: "InvoiceDt" },
                     { data: "Item" },
@@ -166,72 +252,117 @@
                     { data: "CGST" },
                     { data: "SGST" },
                     { data: "IGST" },
-                        
-                        //{
-                        //    data: null, orderable: false,
-                        //    render: function (data, type, row) {
 
-                        //        //var CASE_NO = data.CASE_NO;
-                        //        //var SAMPLE_REG_NO = data.SAMPLE_REG_NO;
-                        //        //var INVOICE_NO = data.INVOICE_NO;
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
 
-                        //        var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
-                        //        var linkText = 'Select';
-                        //        var editLink = '<a href="javascript:void(0);" ' +
-                        //            'onclick="editRow(' + escapedRow + ')" ' +
-                        //            'style="color: blue; text-decoration: underline;">' +
-                        //            linkText +
-                        //            '</a>';
+                    //        //var CASE_NO = data.CASE_NO;
+                    //        //var SAMPLE_REG_NO = data.SAMPLE_REG_NO;
+                    //        //var INVOICE_NO = data.INVOICE_NO;
 
-                        //        return editLink;
-                        //    }
-                        //},
+                    //        var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
+                    //        var linkText = 'Select';
+                    //        var editLink = '<a href="javascript:void(0);" ' +
+                    //            'onclick="editRow(' + escapedRow + ')" ' +
+                    //            'style="color: blue; text-decoration: underline;">' +
+                    //            linkText +
+                    //            '</a>';
 
-                    ],
+                    //        return editLink;
+                    //    }
+                    //},
 
-                    "order": [[0, "asc"]]
-                });
+                ],
 
-            }
-            
-            function Download() {
-               
+                "order": [[0, "asc"]]
+            });
+
+        }
+
+        function Download() {
+
             var InvoiceNo = sessionStorage.getItem("InvoiceNo");;
             var InvoiceDt = sessionStorage.getItem("InvoiceDt");;
             var QueryString = "RptFlag=2" +
-                    "&Invoice=" + encodeURIComponent(InvoiceNo)+
+                "&Invoice=" + encodeURIComponent(InvoiceNo) +
                 "&InvoiceDt=" + encodeURIComponent(InvoiceDt);
-                    //"&RegNo=" + encodeURIComponent(RegNo) +
-                    //"&TranNo=" + encodeURIComponent(TranNo);
+            //"&RegNo=" + encodeURIComponent(RegNo) +
+            //"&TranNo=" + encodeURIComponent(TranNo);
 
-                //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
 
-                var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-                if (oWin === null || typeof (oWin) === 'undefined') {
-                    alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
-                }
-                window.opener = 'x';
-                window.close();
-                //$.ajax({
-                //    url: '/LabInvoiceDownload/Download',
-                //    type: "POST",
-                //    dataType: "JSON",
-                //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
-
-                //    success: function (success) {
-
-
-
-                //    }
-
-                //});
-
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
-                    //function UserDelete(UserId) {
-                    //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-                    //    $("#btn-delete-yes").attr("href", url);
-                    //    $("#modal-delete-conf").modal("show");
-                    //}
+            window.opener = 'x';
+            window.close();
+            //$.ajax({
+            //    url: '/LabInvoiceDownload/Download',
+            //    type: "POST",
+            //    dataType: "JSON",
+            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
 
-        </script>
+            //    success: function (success) {
+
+
+
+            //    }
+
+            //});
+
+        }
+        //function UserDelete(UserId) {
+        //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+        //    $("#btn-delete-yes").attr("href", url);
+        //    $("#modal-delete-conf").modal("show");
+        //}
+        $("#txttestingfee").keyup(function () {
+         
+            var CGST = 0;
+            var IGST = 0;
+            var SGST = 0;
+            var AMT_TOT = 0;
+            var Net_AMT = 0;
+            var Net_TAX = 0;
+            debugger;
+            if ($("#txttestingfee").val() == "") {
+                $("#IGST").val("0");
+                alert("Kindly Fill the Amount");
+                return false;
+            } else {
+                AMT_TOT = parseFloat($("#txttestingfee").val());
+                Net_AMT = Number((AMT_TOT / 1.18).toFixed(2)); // Use parseFloat instead of Math.Round
+
+                Net_TAX = AMT_TOT - Net_AMT;
+
+                if ($("#hndstate").val() == "") {
+                    alert("Kindly Update the State in BPO !!");
+                    return false;
+                } else if ($("#hndstate").val() === "6") {
+                    CGST = parseFloat((Net_TAX / 2).toFixed(2));
+                    $("#CGST").val(CGST); // Set the value using .val() method
+                    SGST = parseFloat((Net_TAX / 2).toFixed(2));
+                    $("#SGST").val(SGST);
+                    $("#IGST").val(IGST); // Make sure to calculate IGST, even if it's zero.
+                } else {
+                    /* IGST = Net_TAX */;
+                    IGST = Number(Net_TAX.toFixed(2));
+                    $("#IGST").val(IGST);
+                    $("#CGST").val(CGST);
+                    $("#SGST").val(SGST);
+                }
+            }
+        });
+        function Save() {
+            $("#frmLabInvoice").submit();
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
+            window.location.href = '@Url.Action("LabInvoiceRpt", "LabInvoiceRpt")';
+        };
+    </script>
 }
