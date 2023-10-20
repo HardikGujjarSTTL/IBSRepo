@@ -21,6 +21,8 @@ namespace IBS.Models
 
         public string? CallStatus { get; set; }
 
+        [Display(Name = "Call Letter Number")]
+        [Required]
         public string? CallLetterNo { get; set; }
 
         public string? Remarks { get; set; }
@@ -220,6 +222,9 @@ namespace IBS.Models
 
         public string IsNewVender { get; set; }
         public string hdnIsNewVender { get; set; }
+
+        //public string IsFinalizedStatus { get; set; }
+        public bool IsFinalizedStatus { get; set; }
 
         public string? Createdby { get; set; }
 

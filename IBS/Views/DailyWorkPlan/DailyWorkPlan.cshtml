@@ -586,6 +586,10 @@
                         $("#NwpDt").val(response.NwpDt);
                         ReasonClear();
                         ShowHideMsgNew(response.status, response.responseText);
+                        if (response.NwpDt == NwpDt)
+                        {
+                            location.reload();
+                        }
                     }
                 }
                 else {

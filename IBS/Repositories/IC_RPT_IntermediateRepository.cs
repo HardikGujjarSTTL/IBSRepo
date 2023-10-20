@@ -178,7 +178,7 @@ namespace IBS.Repositories
                         model.SET_NO = row.SET_NO;
                         model.IE_STAMPS_DETAIL = row.IE_STAMPS_DETAIL;
                         model.IE_STAMPS_DETAIL2 = row.IE_STAMPS_DETAIL2;
-                        model.LAB_TST_RECT_DT = row.LAB_TST_RECT_DT == null ? "" : Convert.ToDateTime(row.LAB_TST_RECT_DT).ToString("dd/MM/yyyy");
+                        model.LAB_TST_RECT_DT = string.IsNullOrEmpty(row.LAB_TST_RECT_DT) ? "" : Convert.ToDateTime(row.LAB_TST_RECT_DT).ToString("dd/MM/yyyy");
                         model.PASSED_INST_NO = row.PASSED_INST_NO;
                     }
                 }
@@ -225,7 +225,7 @@ namespace IBS.Repositories
                                    where a.CaseNo == Case_No
                                    select a.AmendmentDetail).FirstOrDefault();
 
-            
+
             if (AmendmentDetail != null)
             {
                 var arrAmd = AmendmentDetail.Split("#");
@@ -616,12 +616,12 @@ namespace IBS.Repositories
                             context.SaveChanges();
                         }
                     }
-                    else if(Type == "Delete" && lst.Count() == 0)
+                    else if (Type == "Delete" && lst.Count() == 0)
                     {
                         var POAhmdetail = (from a in context.IcPoAmendments
                                            where a.CaseNo == CaseNo
                                            select a).FirstOrDefault();
-                        if(POAhmdetail!= null)
+                        if (POAhmdetail != null)
                         {
                             context.Remove(POAhmdetail);
                             context.SaveChanges();
@@ -629,7 +629,7 @@ namespace IBS.Repositories
                     }
                     else
                     {
-                        strUpdateSet = strUpdateSet + model.Amendments.Trim().PadRight(100, ' ') + ";" + model.Date.Trim().PadRight(10, ' ') + ";" + model.IECD;                        
+                        strUpdateSet = strUpdateSet + model.Amendments.Trim().PadRight(100, ' ') + ";" + model.Date.Trim().PadRight(10, ' ') + ";" + model.IECD;
                         IcPoAmendment obj = new IcPoAmendment();
                         obj.CaseNo = CaseNo;
                         obj.PoNo = PO_NO;

@@ -1,14 +1,15 @@
 ﻿@model IBS.Models.VenderCallRegisterModel
 
 @{
-    ViewData["Title"] = "VENDOR CALL REGISTRATION";
+    ViewData["Title"] = "Vendor Call Registration";
 }
 <div id="tab-1">
     <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
         <div class="list-inner">
             <div class="tast-list">
-                <h2>@ViewData["Title"] </h2>
+                @*<h2>@ViewData["Title"] </h2>*@
+                <h3 class="heading3">@ViewData["Title"] </h3>
             </div>
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="CallRecvDt" />
@@ -96,7 +97,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">Inspecting Engineer to whom Call is marked</label>
+                        <label for="Name">Inspecting Engineer to whom Call is marked <i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
                         <span asp-validation-for="IeCd" class="text-danger"></span>
                     </div>
@@ -111,7 +112,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No.</label>
+                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
                         <span asp-validation-for="CallLetterNo" class="text-danger"></span>
                     </div>
@@ -128,7 +129,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
+                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked) <i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
                     </div>
@@ -141,7 +142,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
+                    <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
                     <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                 </div>
@@ -176,6 +177,16 @@
                         @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus" value="F">
+                                Is Finalized or Not
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
@@ -188,24 +199,27 @@
                 </div>
             </div>
         </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="company-checkbox">
-                    <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
-                            Same As Vendor
+
+        @*<div class="col-md-3 mb-3">
+        <div class="reference">*@
+        @*<label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>*@
+        <h3 class="heading3">Manufacturer's Information </h3>
+        @*</div>
+        </div>*@
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
+                                Same As Vendor
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="accordion-body">
+
             <div class="row my-0">
                 <div class="col-md-2 mb-3">
                     <div class="reference">
@@ -227,7 +241,6 @@
                             @*<button type="button" class="search-btn" id="SearchDetailsM" onclick="location.href='@Url.Action("VendorCallRegisterDetail", "VendorCallRegister",new { Action = "M",CaseNo = @Model.CaseNo,CallRecvDt = Convert.ToDateTime(@Model.CallRecvDt).ToString("dd-MM-yyyy"), CallSno = @Model.CallSno })'">Select Manufacturer</button>*@
                             <button type="button" class="search-btn" id="SearchDetailsM">Select Manufacturer</button>
                         </div>
-                        <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -271,18 +284,36 @@
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                    @*<input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
                     <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
+                    *@
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                                Kindly Check this option, If You are a New Vendor!!!
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
+                    @*<input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
                     <label for="Name" style="color:orangered">Call for Billing of Cancellation/Rejection Charges!!!</label>
-                    <br />
+                    <br />*@
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
+                                Call for Billing of Cancellation/Rejection Charges!!!
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="savenext-btn center">
                     <button type="button" class="save-btn active" id="btnRegiserCallSave">Save</button>
                     <button type="button" class="save-btn" id="btnDelete">Delete</button>
@@ -501,6 +532,7 @@
             const actiontype = urlParams.get('ActionType');
             $("#ActionType").val(actiontype);
 
+
             if ($("#IeCd").val() == "") {
                 ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
@@ -511,6 +543,9 @@
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
             else if ($("#CallRemarkStatus").val() == "") {
+                ShowHideMsgNew(false, "Call Re-Mark Status.");
+            }
+            else if ($("#DepartmentCode").val() == "") {
                 ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }
             else if ($("#IrfcFunded").val() == "") {
@@ -529,21 +564,23 @@
                 var formData = $("#frmDetails").serialize();
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
+                    
                     if (response.status) {
-
                         $("#btnRegiserCallSave").hide();
+                        $("#btnDelete").hide();
                         $("#btnCDetails").show();
+                        
                     }
+                    //var UpdateAllowed = $("#UpdateAllowed").val();
+                    //    if (UpdateAllowed == "N") {
+                    //        $("#btnRegiserCallSave").hide();
+                    //        $("#btnDelete").hide();
+                    //    }
+                    //    else {
+                    //        $("#btnRegiserCallSave").show();
+                    //    }
                 });
-                var UpdateAllowed = $("#UpdateAllowed").val();
-                if (UpdateAllowed == "N") {
-                    $("#btnRegiserCallSave").hide();
-                    $("#btnDelete").hide();
-
-                }
-                else {
-                    $("#btnRegiserCallSave").show();
-                }
+                
             }
             return false;
         });
@@ -555,6 +592,10 @@
             $.post("@Url.Action("DetailsDelete", "CallRegisterIB")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                        }, 2000);
                 }
             });
             return false;
