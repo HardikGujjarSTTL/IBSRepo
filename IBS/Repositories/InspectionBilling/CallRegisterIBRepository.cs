@@ -326,7 +326,11 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallSno = (short)CallDetails.CallSno;
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
-                    model.CallStatus = CallDetails.CallStatus;
+                    //model.CallStatus = CallDetails.CallStatus;
+                    if (CallDetails.CallStatus != null)
+                    {
+                        model.CallStatus = CallDetails.CallStatus.Equals("M") ? "Marked" : CallDetails.CallStatus.Equals("C") ? "Cancelled" : CallDetails.CallStatus.Equals("A") ? "Accepted" : CallDetails.CallStatus.Equals("R") ? "Rejected" : CallDetails.CallStatus.Equals("U") ? "Under Lab Testing" : CallDetails.CallStatus.Equals("S") ? "Still Under Inspection" : CallDetails.CallStatus.Equals("G") ? "Stage Inspection" : "";
+                    }
                     model.CallStatusDt = CallDetails.CallStatusDt;
                     model.CallRemarkStatus = CallDetails.CallRemarkStatus;
                     model.CallInstallNo = CallDetails.CallInstallNo;

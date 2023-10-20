@@ -107,7 +107,7 @@ namespace IBS.Controllers
                 string mdtEx = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
                 string myFileEx = $"{LabSampleInfoModel.CaseNo.Trim()}_{LabSampleInfoModel.CallSNO.Trim()}_{mdtEx}";
 
-                string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
+                string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
                 using (var stream = new FileStream(fpath, FileMode.Create))
                 {
                     file.CopyTo(stream);
