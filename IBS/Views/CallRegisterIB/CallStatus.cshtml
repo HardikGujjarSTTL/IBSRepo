@@ -498,11 +498,13 @@
                     success: function (data) {
                         //$('#BkNo').val(data.BkNo);
                         //$('#SetNo').val(data.SetNo);
+                        debugger
                         $('#bknoaccpted').val(data.BkNo);
                         $('#setnoaccpted').val(data.SetNo);
-
-                        $('#ViewPrintIC').prop('disabled', false);
-                        $("#ViewPrintIC").css("cursor", "pointer");
+                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                            $('#ViewPrintIC').prop('disabled', false);
+                            $("#ViewPrintIC").css("cursor", "pointer");
+                        }
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
