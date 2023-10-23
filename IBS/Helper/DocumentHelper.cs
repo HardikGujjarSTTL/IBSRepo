@@ -166,6 +166,7 @@ namespace IBS.Helpers
                 item.Relativepath = FolderPath.Replace("~", "");
                 item.Extension = newfile.Extension;
                 item.FileDisplayName = item.FileName;
+                item.UniqueFileName = Filepath;
 
                 if (item.Documentid == null || item.Documentid == 0)
                 {

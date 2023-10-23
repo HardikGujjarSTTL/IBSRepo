@@ -3028,17 +3028,20 @@ namespace IBS.Models
         public static List<SelectListItem> GetBillPayingOfficerUsingSBPO(string SBPO)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-
-            var obj = (from of in context.V12BillPayingOfficers
-                       where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                       select of).ToList();
-            List<SelectListItem> objdata = (from a in obj
-                                            select
-                                       new SelectListItem
-                                       {
-                                           Text = a.BpoCd + "-" + a.Bpo,
-                                           Value = a.BpoCd
-                                       }).ToList();
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (SBPO != null && SBPO != "")
+            {
+                var obj = (from of in context.V12BillPayingOfficers
+                           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                           select of).ToList();
+                 objdata = (from a in obj
+                                                select
+                                           new SelectListItem
+                                           {
+                                               Text = a.BpoCd + "-" + a.Bpo,
+                                               Value = a.BpoCd
+                                           }).ToList();
+            }
             return objdata;
         }
 

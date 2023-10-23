@@ -368,6 +368,8 @@ namespace IBS.Models
 
         public string? VendPOEmail { get; set; }
 
+        public string RegionCode { get; set; }
+
         public List<PrintCallLetterModel> lstPrintCallLetter { get; set; }
     }
 

@@ -15,6 +15,7 @@
 </div>
 <div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
+        <input type="hidden" asp-for="Region">
         <div class="accordion-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -288,7 +289,7 @@
                 <button type="button" class="save-btn active" id="btnSave">Save</button>
                 <button type="button" class="save-btn" id="btnRefresh">Refresh</button>
                 <button type="button" class="save-btn" id="btnCancel">Cancel</button>
-                <button type="button" class="save-btn" id="btnReport">Show Report</button>
+                <button type="button" class="save-btn" id="btnReport" onclick="Download()">Show Report</button>
             </div>
             <h5 class="center">Refresh <span class="text-danger">* It will refresh the current records!</span></h5>
         </div>
@@ -300,6 +301,48 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+        function Download() {
+
+            var CaseNO = $("#lblCASE_NO").html();
+            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+            var CallSNo = $("#lblCall_SNO").html();
+            var Consignee_CD = $("#CONSIGNEE_CD").val();
+            var Region = $("#Region").val();
+            
+            var QueryString = "RptFlag=8" +
+                "&CaseNO=" + encodeURIComponent(CaseNO) +
+                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
+                "&CallSNo=" + encodeURIComponent(CallSNo) +
+                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
+                "&Region=" + encodeURIComponent(Region);
+            //"&RegNo=" + encodeURIComponent(RegNo) +
+            //"&TranNo=" + encodeURIComponent(TranNo);
+
+            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+
+            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
+            //$.ajax({
+            //    url: '/LabInvoiceDownload/Download',
+            //    type: "POST",
+            //    dataType: "JSON",
+            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
+
+            //    success: function (success) {
+
+
+
+            //    }
+
+            //});
+
+        }
+
+
         var Case_No = "@Model.CASE_NO";
         var Call_Recv_Dt = "@Model.Call_Recv_dt";
         var Call_SNo = "@Model.Call_SNO";
@@ -364,6 +407,9 @@
             SetAccepted();
             debugger
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
+
+            $("#btnCancel").css("cursor", "pointer");
+            $("#btnReport").css("cursor", "pointer");
         });
 
 
@@ -728,8 +774,8 @@
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
-                        $("#IE_STAMPS_DETAIL").val(response.IE_STAMPS_DETAIL == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL);
-                        $("#IE_STAMPS_DETAIL2").val(response.IE_STAMPS_DETAIL2 == "SELECT STAMP" ? 0 : response.IE_STAMPS_DETAIL2);
+                        $("#IE_STAMPS_DETAIL").val((response.IE_STAMPS_DETAIL == "SELECT STAMP" ||  response.IE_STAMPS_DETAIL == null) ? 0 : response.IE_STAMPS_DETAIL);
+                        $("#IE_STAMPS_DETAIL2").val((response.IE_STAMPS_DETAIL2 == "SELECT STAMP" || response.IE_STAMPS_DETAIL2 == null) ? 0 : response.IE_STAMPS_DETAIL2);
                         $("#LAB_TST_RECT_DT").val(response.LAB_TST_RECT_DT);
                         $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
                         $("#REMARK").val(response.REMARK);
@@ -812,7 +858,7 @@
 
             $("#btnSave").css("display", "");
             $("#btnRefresh").css("display", "");
-            $("#btnCancel").css("display", "");
+            $("#btnSavePOAmendment").css("display", "");
 
             $.ajax({
                 url: '@Url.Action("SetAccepted", "IC_RPT_Intermediate")?' + $.param(myObject),
@@ -823,14 +869,26 @@
                 success: function (response) {
                     debugger
                     if (parseInt(response) > 0) {
-                        $("#btnSave").css("display", "none");
-                        $("#btnRefresh").css("display", "none");
-                        $("#btnCancel").css("display", "none");
+                        //$("#btnSave").css("display", "none");
+                        //$("#btnRefresh").css("display", "none");
+                        //$("#btnSavePOAmendment").css("display", "none");
+
+                        $("#btnSave").prop('disabled', true);
+                        $("#btnRefresh").prop('disabled', true);
+                        $("#btnSavePOAmendment").prop('disabled', true);
+
+                        $("#btnSave").css("cursor", "auto");
+                        $("#btnRefresh").css("cursor", "auto");
+                        $("#btnSavePOAmendment").css("cursor", "auto");
 
                     } else {
-                        $("#btnSave").css("display", "");
-                        $("#btnRefresh").css("display", "");
-                        $("#btnCancel").css("display", "");
+                        $("#btnSave").prop('disabled', false);
+                        $("#btnRefresh").prop('disabled', false);
+                        $("#btnSavePOAmendment").prop('disabled', false);
+
+                        $("#btnSave").css("cursor", "pointer");
+                        $("#btnRefresh").css("cursor", "pointer");
+                        $("#btnSavePOAmendment").css("cursor", "pointer");
                     }
                 }
             });
