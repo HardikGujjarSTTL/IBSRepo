@@ -11,7 +11,7 @@ using Microsoft.VisualBasic;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NuGet.Protocol.Plugins;
+//using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
@@ -3059,39 +3059,39 @@ namespace IBS.Repositories.InspectionBilling
                         {
                             filesimg.File_1 = FileName + "1.JPG";
                         }
-                        else if(displayName == "IC Image 2")
+                        else if (displayName == "IC Image 2")
                         {
                             filesimg.File_2 = FileName + "2.JPG";
                         }
-                        else if(displayName == "IC Image 3")
+                        else if (displayName == "IC Image 3")
                         {
                             filesimg.File_3 = FileName + "3.JPG";
                         }
-                        else if(displayName == "IC Image 4")
+                        else if (displayName == "IC Image 4")
                         {
                             filesimg.File_4 = FileName + "4.JPG";
                         }
-                        else if(displayName == "IC Image 5")
+                        else if (displayName == "IC Image 5")
                         {
                             filesimg.File_5 = FileName + "5.JPG";
                         }
-                        else if(displayName == "IC Image 6")
+                        else if (displayName == "IC Image 6")
                         {
                             filesimg.File_6 = FileName + "6.JPG";
                         }
-                        else if(displayName == "IC Image 7")
+                        else if (displayName == "IC Image 7")
                         {
                             filesimg.File_7 = FileName + "7.JPG";
                         }
-                        else if(displayName == "IC Image 8")
+                        else if (displayName == "IC Image 8")
                         {
                             filesimg.File_8 = FileName + "8.JPG";
                         }
-                        else if(displayName == "IC Image 9")
+                        else if (displayName == "IC Image 9")
                         {
                             filesimg.File_9 = FileName + "9.JPG";
                         }
-                        else if(displayName == "IC Image 10")
+                        else if (displayName == "IC Image 10")
                         {
                             filesimg.File_10 = FileName + "10.JPG";
                         }
@@ -3233,11 +3233,11 @@ namespace IBS.Repositories.InspectionBilling
 
         public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model)
         {
-                var query = context.IcIntermediates
-            .Where(i => i.CaseNo == model.CaseNo &&
-                        i.CallRecvDt == model.CallRecvDt &&
-                        i.CallSno == model.CallSno &&
-                        (i.ConsgnCallStatus != "A" && i.ConsgnCallStatus != "R") || i.ConsgnCallStatus == null);
+            var query = context.IcIntermediates
+        .Where(i => i.CaseNo == model.CaseNo &&
+                    i.CallRecvDt == model.CallRecvDt &&
+                    i.CallSno == model.CallSno &&
+                    (i.ConsgnCallStatus != "A" && i.ConsgnCallStatus != "R") || i.ConsgnCallStatus == null);
 
             context.IcIntermediates.RemoveRange(query);
 
@@ -3748,7 +3748,7 @@ namespace IBS.Repositories.InspectionBilling
                                     }
                                 }
                             }
-                               
+
                             double wRejCharges = 0;
                             string wRejType = "";
                             if (callStatus == "R")
@@ -3800,7 +3800,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     trans.Rollback();
                 }
-            }            
+            }
             return model;
         }
 
@@ -4050,5 +4050,55 @@ namespace IBS.Repositories.InspectionBilling
         }
 
 
+        public bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD)
+        {
+            var flag = true;
+            CALL_RECV_DT = Convert.ToDateTime(CALL_RECV_DT).ToString("MM/dd/yyyy");
+            using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
+            using (var command = cont.Database.GetDbConnection().CreateCommand())
+            {
+                var trans = cont.Database.BeginTransaction();
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    //command.Transaction = trans;
+                    command.CommandText = "select COUNT(*) from RPT_PRM_Inspection_Certificate where CASE_NO= '" + CASE_NO + "' and  CALL_SNO= '" + CALL_SNO + "' and CALL_RECV_DT= to_date('" + CALL_RECV_DT + "','mm/dd/yyyy') and CONSIGNEE_CD = '" + CONSIGNEE_CD + "' ";
+                    var res = Convert.ToInt32(command.ExecuteScalar());
+
+                    var qry = "";
+                    if (res <= 0)
+                    {
+                        command.CommandText = "INSERT INTO RPT_PRM_Inspection_Certificate VALUES ('" + CASE_NO + "', to_date('" + CALL_RECV_DT + "','mm/dd/yyyy'), " + CALL_SNO + " , NULL, NULL , CURRENT_TIMESTAMP,'" + CONSIGNEE_CD + "')";
+                        res = command.ExecuteNonQuery();
+                    }
+
+                    qry = "MERGE INTO RPT_PRM_Inspection_Certificate RP USING ";
+                    qry += "( SELECT CASE_NO, CALL_SNO, CALL_RECV_DT, COUNT(*) as NUM_VISITS, LISTAGG(TO_CHAR(Visit_DT, 'DD.MM.YYYY'), ', ') within group (order by Visit_DT ) as VISIT_DATES ";
+                    qry += "    FROM T47_IE_WORK_PLAN ";
+                    qry += "   WHERE CASE_NO = '" + CASE_NO + "' and CALL_SNO = " + CALL_SNO + " and CALL_RECV_DT = to_date('" + CALL_RECV_DT + "','mm/dd/yyyy') ";
+                    qry += "  GROUP BY CASE_NO, CALL_SNO, CALL_RECV_DT) WP ";
+                    qry += "ON(RP.CASE_NO = WP.CASE_NO AND RP.CALL_SNO = WP.CALL_SNO AND RP.CALL_RECV_DT = WP.CALL_RECV_DT) ";
+                    qry += "WHEN MATCHED THEN UPDATE SET ";
+                    qry += "RP.NUM_VISITS = WP.NUM_VISITS, ";
+                    qry += "RP.VISIT_DATES = WP.VISIT_DATES";
+
+                    command.CommandText = qry;
+                    res = command.ExecuteNonQuery();
+                    trans.Commit();
+                    flag = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    flag = false;
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+            return flag;
+        }
     }
 }

@@ -962,7 +962,7 @@
 
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
 
-               
+
                 // Get the value of the hidden input (assuming it contains file information)
                 var uploadedDocuments = hiddenInput.val();
 
@@ -1132,12 +1132,34 @@
             var CONSIGNEE_CD = $('#consigneeFirmDropdown').val();
             var ACTIONAR = $("#ActionType").val();
 
-            let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
-            var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
-            window.location.href = url;
+            let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD };
+            $.ajax({
+                url: '@Url.Action("Save_RPT_PRM_Inspection_Certificate", "CallRegisterIB")?' + $.param(myObject),
+                type: 'POST',
+                //data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+
+                    if (response) {
+                        let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD, ACTIONAR };
+                        var url = '@Url.Action("Index", "IC_RPT_Intermediate")?' + $.param(myObject);
+                        window.location.href = url;
+                    }
+                    else {
+                        ShowHideMsgNew(false, "Opps Something went wrong !!");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error
+                    console.error('Error: ' + textStatus, errorThrown);
+                }
+            });
+
+
         }
 
-        function RefreshAll(){
+        function RefreshAll() {
             var formData = AjaxModel();
 
             $.ajax({
