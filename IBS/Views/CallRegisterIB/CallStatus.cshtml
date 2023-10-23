@@ -291,8 +291,6 @@
                     <div class="col-md-4 mb-3">
                         <div class="savenext-btn" style="margin-top:30px;">
                             <button type="button" class="save-btn active" id="savefiles" onclick="SaveImages();">Save Files</button>
-                            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
-                            <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                         </div>
                     </div>
 
@@ -341,15 +339,21 @@
                         <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                         <input type="text" asp-for="RejectionCharge" id="RejectionCharges" maxlength="100">
                     </div>
-                    <div class="col-md-4 mb-3" style="margin-top:30px;">
+                    <div class="col-md-5 mb-4" style="margin-top:30px;">
                         <div class="savenext-btn">
                             <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
-                            <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
-                            <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
                         </div>
                     </div>
                     <p style="color:red;"><b>RefreshAll:It will delete all the records which are not accepted or rejected!</b></p>
 
+                    <div class="col-md-5 mb-5" style="padding-left: 70%;">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
+                            <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
+                            <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
+                            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
+                        </div>
+                     </div>
                 </div>
             </div>
         </form>
@@ -868,6 +872,13 @@
                     formData.append("UploadeFile", file);
                 }
 
+                var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
+                var uploadedDocuments = hiddenInput.val();
+                if (uploadedDocuments == "" || uploadedDocuments == null) {
+                    alert('Please select all files!');
+                    return;
+                }
+
                 $.ajax({
                     url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
                     type: 'POST',
@@ -902,7 +913,7 @@
 
             if (bknoaccpted != "" || setnoaccpted != "") {
                 $.ajax({
-                    url: '@Url.Action("CallStatusUpload", "CallRegisterIB")',
+                    url: '@Url.Action("CallStatusAcceptRej", "CallRegisterIB")',
                     type: 'POST',
                     data: formData,
                     success: function (response) {
