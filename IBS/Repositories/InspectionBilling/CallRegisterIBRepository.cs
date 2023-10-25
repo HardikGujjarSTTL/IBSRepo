@@ -3676,7 +3676,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     trans.Rollback();
                 }
-            }            
+            }
             return model;
         }
 
@@ -3751,22 +3751,22 @@ namespace IBS.Repositories.InspectionBilling
                                 len_item = entity.ItemDescPo.Length;
                             }
 
-                                        formatedItem = entity.ItemDescPo.Substring(0, len_item);
-                                        var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
-                                        existingEntity.ItemDescPo = formatedItem;
-                                        existingEntity.QtyPassed = entity.QtyPassed;
-                                        existingEntity.QtyRejected = entity.QtyRejected;
-                                        existingEntity.QtyDue = entity.QtyDue;
-                                        context.SaveChanges();
-                                    }
-                                }
-                            }
+                            formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                            existingEntity.ItemDescPo = formatedItem;
+                            existingEntity.QtyPassed = entity.QtyPassed;
+                            existingEntity.QtyRejected = entity.QtyRejected;
+                            existingEntity.QtyDue = entity.QtyDue;
+                            context.SaveChanges();
+                        }
+                    }
+                }
 
-                            double wRejCharges = 0;
-                            string wRejType = "";
-                            if (callStatus == "R")
-                            {
-                                wRejCharges = Convert.ToDouble(model.RejectionCharge);
+                double wRejCharges = 0;
+                string wRejType = "";
+                if (callStatus == "R")
+                {
+                    wRejCharges = Convert.ToDouble(model.RejectionCharge);
 
                 }
                 if (model.LocalOutstation != "" && model.LocalOutstation != null)
@@ -3800,18 +3800,10 @@ namespace IBS.Repositories.InspectionBilling
 
                 var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
 
-                            if (existingRecord1 != null)
-                            {
-                                existingRecord1.ConsgnCallStatus = model.CallStatus;
-                                context.SaveChanges();
-                            }
-                        }
-                    }
-                    trans.Commit();
-                }
-                catch (Exception ex)
+                if (existingRecord1 != null)
                 {
-                    trans.Rollback();
+                    existingRecord1.ConsgnCallStatus = model.CallStatus;
+                    context.SaveChanges();
                 }
             }
             return model;
