@@ -190,18 +190,13 @@
                         <button type="button" id="btnBPO" class="btn btn-primary formSubBtn" onclick="SaveRemarks();" style="margin-top: 33px;">Save Remarks</button>
                     </div>
                 </div>
-                <div class="row my-0">
-                    <div class="col-md-2 mb-3">
-                        @{
-                            var link = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Convert.ToString(Model.PO_YR) + "/" + Model.IMMS_RLY_CD + "/" + Convert.ToString(Model.PO_NO) + ".pdf";
-                        }
-                        <a href="@link" target="_blank">Download PO</a>
-                    </div>
-                </div>
-
                 <div class="savenext-btn">
                     <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" id="btnSave" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    @{
+                        var link = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Convert.ToString(Model.PO_YR) + "/" + Model.IMMS_RLY_CD + "/" + Convert.ToString(Model.PO_NO) + ".pdf";
+                    }
+                    <a href="@link" target="_blank" class="button commonBtn active">Download PO</a>
                     <button type="button" id="btnAcceptPO" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
                 </div>
             </div>
