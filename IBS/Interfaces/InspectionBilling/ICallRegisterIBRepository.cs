@@ -58,7 +58,11 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
+        public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model);
+
         public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
+        public VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model);
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
@@ -69,5 +73,6 @@ namespace IBS.Interfaces.InspectionBilling
         public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue,string IeCd,string Region);
 
         public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
+        bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD);
     }
 }
