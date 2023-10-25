@@ -95,7 +95,7 @@
                     <label for="Reference">Upload Lab Report</label>
                     <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
                 </div>
-               
+                <a id="download" href="javascript:void(0);" style="display:none;">Download File</a>
             </div>
             <div class="savenext-btn"  style="margin-left:47%;">
                 <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
@@ -194,8 +194,8 @@
         });
         $(function () {
 
-            $("#lblpslip").val("Not Uploaded");
-            $("#lblps").val("Not Approved");
+            // $("#lblpslip").val("Not Uploaded");
+            // $("#lblps").val("Not Approved");
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
             });
@@ -290,7 +290,14 @@
                     $("#txttesfee").val(success.TotalTFee);
 
                     $("#txtremark").val(success.Remarks);
-
+                    $("#lblpslip").val(success.PaymentSlip);
+                    $("#lblps").val(success.PaymentStatus);
+                    
+                    //$("#download").attr('href',success.Hyperlink2);
+                    if (success.Hyperlink2 != "") {
+                        $("#download").css("display", "");
+                    }
+                    sessionStorage.setItem("lINK", success.Hyperlink2);
                     sessionStorage.setItem("IEcode", success.IE);
 
                 }
@@ -298,7 +305,20 @@
             });
         }
 
+        $('#download').on('click', function () {
+            var caseno = $("#lblcno").val();
+            var calldt = $("#lblCallDT").val();
+            var csno = $("#lblCallSno").val();
+            var filename = sessionStorage.getItem("lINK");
+            var fileUrl = '/LabSampleInfo/DownloadFile?caseno=' + caseno + '&calldt=' + calldt + '&csno=' + csno + '&filename=' + filename;
 
+            if (fileUrl) {
+                
+                $(this).attr('href', fileUrl);
+            } else {
+                alert("File not found."); 
+            }
+        });
         function SaveDetails() {
 
             if ($("#ddlstatus").val() == "U") {

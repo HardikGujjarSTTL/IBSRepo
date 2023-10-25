@@ -183,7 +183,8 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">IE</label>
-                    <input type="text" id="lblIE" class="input" readonly="readonly" />
+                    <input type="text" id="lblIE" class="input" readonly="readonly" /> 
+                    <input type="hidden" id="lblIECD" class="input" readonly="readonly" />
 
                 </div>
 
@@ -303,7 +304,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">No. Of Samples</label>
-                    <input type="text" id="txtnofsm" class="input" />
+                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
 
@@ -322,7 +323,7 @@
             <div class="row my-0">
                 
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
-                   
+                    <label for="Reference">Test to be Conducted</label>
                     @Html.DropDownListFor(model => model.TestTobeCon, new SelectList(IBS.Models.Common.TestToBeConducted() , "Value", "Text"),new { @id = "ddltesttobecon",style="display:none;" })
                     <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;"></textarea>
                 </div>
@@ -355,18 +356,18 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Testing Fee</label>
-                    <input type="text" id="testingfee" class="input" />
+                    <input type="text" id="testingfee" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Service Tax</label>
-                    <input type="text" id="sertax" class="input" />
+                    <input type="text" id="sertax" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
 
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Handling Charges</label>
-                    <input type="text" id="handlingcharges" class="input" />
+                    <input type="text" id="handlingcharges" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
             </div>
@@ -550,9 +551,9 @@
             });
         }
         function editRow(escapedRow) {
-
             var regNo = escapedRow.SampleRegNo;
             var sno = escapedRow.SNO;
+            $("#lblSno").val(sno);
             LabDtlModify(regNo, sno);
             sessionStorage.setItem("Flag", 1);
         }
@@ -626,7 +627,7 @@
                 dataType: 'json',
                 data: { CaseNo: CaseNo, VCode: VCode },
                 success: function (data) {
-                    debugger;
+                  
                     if(data.length == 0){
                         sessionStorage.setItem("count", 0);
                     }
@@ -681,13 +682,19 @@
 
 
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
             });
             var today = new Date();
             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-            $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
-            LoaddataModify();
+            // $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+            var today = new Date();
+            var dd = ('0' + today.getDate()).slice(-2);
+            var mm = ('0' + (today.getMonth() + 1)).slice(-2);
+            var yyyy = today.getFullYear();
 
+            $("#dtregdt").val(dd + '/' + mm + '/' + yyyy);
+            LoaddataModify();
+            $("#txttesttobeCon").css("display", "block");
             // grid();
             //$("#grid").load('/LabRegisterForm/LabRegDtl');
             //InitializeDatatable();
@@ -762,7 +769,7 @@
                         $("#gridh").css("display", "block");
                         $("#gridshow").css("display", "block");
                     }
-                    debugger;
+                   
                     if (parseInt(success.AmountRecieved) < parseInt(success.TotalLabCharges)) {
                        
                         sessionStorage.removeItem("count");
@@ -784,16 +791,17 @@
                 data: { RegNo: regNo, SNO: sno },
 
                 success: function (data) {
-
+                    
                     if (data.Test != "") {
-                        $("#txttesttobeCon").css("display", "none");
-                        $("#ddltesttobecon").css("display", "block");
-                        $("#ddltesttobecon").val(data.Test);
-                    }
-                    else {
                         $("#txttesttobeCon").css("display", "block");
                         $("#ddltesttobecon").css("display", "none");
                         $("#txttesttobeCon").val(data.Test);
+                    }
+                    else {
+                        $("#txttesttobeCon").css("display", "none");
+                        $("#ddltesttobecon").css("display", "block");
+                        $("#ddltesttobecon").val(data.Test);
+                        $("#ddltestto").val("D");
                     }
                     $("#txtitemnm").val(data.ItemDesc);
                     $("#txtnofsm").val(data.Qty);
@@ -815,14 +823,60 @@
         }
 
         function SaveDetails() {
-           
-            var parts1 = $("#dtofrr").val().split('/');
-            var wFrmDtO1 = parts1[0] + '/' + parts1[1] + '/' + parts1[2];
-            var parts2 = $("#dtoftestr").val().split('/');
-            var wFrmDtO2 = parts2[0] + '/' + parts2[1] + '/' + parts2[2];
-            var parts3 = $("#dtofdistolab").val().split('/');
-            var wFrmDtO3 = parts3[0] + '/' + parts3[1] + '/' + parts3[2];
-            
+         
+            // var parts1 = $("#dtofrr").val().split('/');
+            // var wFrmDtO1 = parts1[0] + '/' + parts1[1] + '/' + parts1[2];
+            // var parts2 = $("#dtoftestr").val().split('/');
+            // var wFrmDtO2 = parts2[0] + '/' + parts2[1] + '/' + parts2[2];
+            // var parts3 = $("#dtofdistolab").val().split('/');
+            // var wFrmDtO3 = parts3[0] + '/' + parts3[1] + '/' + parts3[2];
+            var dtofrrValue = $("#dtofrr").val();
+            var wFrmDtO1 = "";
+
+            if (dtofrrValue) {
+                var parts1 = dtofrrValue.split('/');
+                if (parts1.length === 3) {
+                    wFrmDtO1 = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+                }
+            }
+            else
+            {
+                var wFrmDtO1 = "";
+            }
+
+            var dtoftestrValue = $("#dtoftestr").val();
+            var wFrmDtO2 = "";
+
+            if (dtoftestrValue) {
+                var parts2 = dtoftestrValue.split('/');
+                if (parts2.length === 3) {
+                    wFrmDtO2 = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+                }
+            }
+            else {
+                var wFrmDtO2 = "";
+            }
+
+            var dtofdistolabValue = $("#dtofdistolab").val();
+            var wFrmDtO3 = "";
+
+            if (dtofdistolabValue) {
+                var parts3 = dtofdistolabValue.split('/');
+                if (parts3.length === 3) {
+                    wFrmDtO3 = parts3[1] + '/' + parts3[0] + '/' + parts3[2];
+                }
+            }
+            else {
+                var wFrmDtO3 = "";
+            }
+            var test = $("#txttesttobeCon").val();
+            if(test == ""){
+                test = $("#ddltesttobecon option:selected").text();
+            }
+            else
+            {
+                test = $("#txttesttobeCon").val();
+            }
             var LABREGISTERModel = {
                 SampleRegNo: $("#lblRNo").val(),
                 SNO: $("#lblSno").val(),
@@ -831,7 +885,7 @@
                 TestCategoryCode: $("#ddlcat").val(),
                 TestToBe: $("#ddltestto").val(),
                 TestTobeCon: $("#ddltesttobecon").val(),
-                Test: $("#txttesttobeCon").val(),
+                Test: test,
                 LabID: $("#ddllab").val(),
                 DTestingFee: $("#testingfee").val(),
                 DServiceTax: $("#sertax").val(),
