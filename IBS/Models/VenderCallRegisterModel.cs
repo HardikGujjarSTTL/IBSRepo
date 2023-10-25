@@ -220,7 +220,7 @@ namespace IBS.Models
 
         public string FOS { get; set; }
 
-        public string IsNewVender { get; set; }
+        public bool IsNewVender { get; set; }
         public string hdnIsNewVender { get; set; }
 
         //public string IsFinalizedStatus { get; set; }
