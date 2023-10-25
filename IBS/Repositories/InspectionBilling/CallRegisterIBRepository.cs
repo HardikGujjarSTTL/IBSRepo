@@ -239,6 +239,7 @@ namespace IBS.Repositories.InspectionBilling
 
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
 
+            
             if (ActionType == "A")
             {
                 model.CallRecvDt = CallRecvDt;
@@ -326,11 +327,11 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallSno = (short)CallDetails.CallSno;
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
-                    //model.CallStatus = CallDetails.CallStatus;
-                    if (CallDetails.CallStatus != null)
-                    {
-                        model.CallStatus = CallDetails.CallStatus.Equals("M") ? "Marked" : CallDetails.CallStatus.Equals("C") ? "Cancelled" : CallDetails.CallStatus.Equals("A") ? "Accepted" : CallDetails.CallStatus.Equals("R") ? "Rejected" : CallDetails.CallStatus.Equals("U") ? "Under Lab Testing" : CallDetails.CallStatus.Equals("S") ? "Still Under Inspection" : CallDetails.CallStatus.Equals("G") ? "Stage Inspection" : "";
-                    }
+                    model.CallStatus = CallDetails.CallStatus;
+                    //if (CallDetails.CallStatus != null)
+                    //{
+                    //    model.CallStatus = CallDetails.CallStatus.Equals("M") ? "Marked" : CallDetails.CallStatus.Equals("C") ? "Cancelled" : CallDetails.CallStatus.Equals("A") ? "Accepted" : CallDetails.CallStatus.Equals("R") ? "Rejected" : CallDetails.CallStatus.Equals("U") ? "Under Lab Testing" : CallDetails.CallStatus.Equals("S") ? "Still Under Inspection" : CallDetails.CallStatus.Equals("G") ? "Stage Inspection" : "";
+                    //}
                     model.CallStatusDt = CallDetails.CallStatusDt;
                     model.CallRemarkStatus = CallDetails.CallRemarkStatus;
                     model.CallInstallNo = CallDetails.CallInstallNo;
@@ -341,7 +342,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.Remarks = CallDetails.Remarks;
                     model.RejCanCall = CallDetails.RejCanCall;
                     model.FinalOrStage = CallDetails.FinalOrStage;
-                    model.NewVendor = CallDetails.NewVendor ?? "X";
+                    model.IsNewVender = CallDetails.NewVendor == "Y" ? true : false;
                     //model.CountDt = t17.CountDt ?? 0;
                     model.IrfcFunded = CallDetails.IrfcFunded;
                     model.DepartmentCode = CallDetails.DepartmentCode;
@@ -459,6 +460,29 @@ namespace IBS.Repositories.InspectionBilling
             string ID = "";
             int CD = 0;
             ie_cd = FindIeCODE(model);
+            string department1 = model.DepartmentCode;
+            if (department1 == "M")
+            {
+                department1 = "M";
+            }
+            else if (department1 == "E")
+            {
+                department1 = "E";
+            }
+            else if (department1 == "C")
+            {
+                department1 = "C";
+            }
+            else
+            {
+                department1 = "M";
+            }
+
+            var IeCd = context.T101IeClusters.Where(x => x.ClusterCode == model.ClusterCode && x.DepartmentCode == department1).Select(x=>x.IeCode).FirstOrDefault();
+            model.IeCd = Convert.ToInt32(IeCd);
+
+            var Co = context.T09Ies.Where(x => x.IeCd == Convert.ToInt32(IeCd)).Select(x => x.IeCoCd).FirstOrDefault();
+            model.CoCd = Convert.ToByte(Co);
 
             if (model.ActionType == "A")
             {
@@ -486,7 +510,7 @@ namespace IBS.Repositories.InspectionBilling
                         w_stage_or_final = "F";
                     }
                     var w_New_Vendor = "";
-                    if (model.IsNewVender == "true")
+                    if (model.IsNewVender == true)
                     {
                         w_New_Vendor = "Y";
                     }
@@ -511,7 +535,7 @@ namespace IBS.Repositories.InspectionBilling
                         obj.CallLetterDt = model.CallLetterDt;
                         obj.CallMarkDt = model.CallMarkDt;
                         obj.IeCd = model.IeCd;
-                        obj.CoCd = Convert.ToInt32(model.CoCd);
+                        obj.CoCd = Convert.ToInt32(Co);
                         obj.DtInspDesire = model.DtInspDesire;
                         obj.CallStatus = "M";
                         obj.CallStatusDt = model.CallStatusDt;
@@ -547,6 +571,11 @@ namespace IBS.Repositories.InspectionBilling
             }
             else if (model.ActionType == "M")
             {
+                var w_New_Vendor = "";
+                if (model.IsNewVender == true)
+                {
+                    w_New_Vendor = "Y";
+                }
                 var GetCall = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
 
                 if (model.MfgCd > 0)
@@ -569,7 +598,9 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
                             GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
@@ -596,7 +627,9 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
                             GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
@@ -626,7 +659,9 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
                             GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
@@ -652,7 +687,9 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.CountDt = Convert.ToBoolean(1);
                             GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
                             GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
