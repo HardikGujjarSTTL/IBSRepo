@@ -151,7 +151,7 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.VendorPO))/" + CaseNo.trim() + ".PDF' Id='DocUpload_" + CaseNo + "'>Download PO</a> "
+                            var html = "<a target='_blank' class='commonBtn gridBtn' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.VendorPO))/" + CaseNo.trim() + ".PDF' Id='DocUpload_" + CaseNo + "'>Download PO <span class='fa fa-download'></span></a> "
                             html += '</div>';
                             return html;
                         }
