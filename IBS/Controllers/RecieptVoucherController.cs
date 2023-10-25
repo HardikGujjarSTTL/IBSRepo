@@ -66,7 +66,7 @@ namespace IBS.Controllers
                 model.Createdby = UserId;
                 model.UserName = USER_ID.Substring(0, 8);
                 model.lstVoucherDetails = GetLstVoucherDetailsModel;
-
+                model.Region = GetRegionCode;
                 if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
                 {
                     foreach (var item in model.lstVoucherDetails)
