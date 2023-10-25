@@ -871,5 +871,11 @@ namespace IBS.Controllers.InspectionBilling
             return Json(model);
         }
 
+        [HttpPost]
+        public IActionResult Save_RPT_PRM_Inspection_Certificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD)
+        {
+            var res = callregisterRepository.SaveRPTPRMInspectionCertificate(CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD);           
+            return Json(res);
+        }
     }
 }
