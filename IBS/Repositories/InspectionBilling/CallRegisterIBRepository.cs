@@ -2621,6 +2621,17 @@ namespace IBS.Repositories.InspectionBilling
                 model.CallStatusDt = Status.CallStatusDt != null ? Status.CallStatusDt : CallStatusDt;
             }
 
+            if (Status.CallStatus == "M" || Status.CallStatus == "U" || Status.CallStatus == "S")
+            {
+                model.Remarks = "";
+                model.Remarkslbl = Convert.ToString(Status.Remarks);
+            }
+            else
+            {
+                model.Remarks = Convert.ToString(Status.Remarks);
+                model.Hologram = Convert.ToString(Status.Hologram);
+            }
+
             string formattedCallRecvDt = "";
             if (CallRecvDt != null && CallRecvDt != DateTime.MinValue)
             {

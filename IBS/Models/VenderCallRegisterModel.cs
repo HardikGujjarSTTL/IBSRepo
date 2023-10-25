@@ -609,6 +609,9 @@ namespace IBS.Models
         public string? Chk10 { get; set; }
         public string? Chk11 { get; set; }
         public string? Chk12 { get; set; }
+        public string Hologram { get; set; }
+        public string Remarks { get; set; }
+        public string Remarkslbl { get; set; }
 
 
         public string? Hologram { get; set; }
