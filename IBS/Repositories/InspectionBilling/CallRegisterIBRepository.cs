@@ -2916,7 +2916,7 @@ namespace IBS.Repositories.InspectionBilling
             }
             else if(model.CallStatus == "G" || model.CallStatus == "T")
             {
-
+                
             }
             else
             {
