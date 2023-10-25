@@ -2639,12 +2639,12 @@ namespace IBS.Repositories.InspectionBilling
 
                 formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
             }
-            var selectConsigneeFirmList = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "0", Text = "Select Consignee" }
-            };
+            //var selectConsigneeFirmList = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Value = "0", Text = "Select Consignee" }
+            //};
 
-            var firstQuery = selectConsigneeFirmList.AsQueryable();
+            //var firstQuery = selectConsigneeFirmList.AsQueryable();
 
             var secondQuery = (from cdt in context.T18CallDetails
                                join csn in context.V06Consignees
@@ -2659,7 +2659,27 @@ namespace IBS.Repositories.InspectionBilling
                                }).Distinct().ToList();
 
             // Set ConsigneeFirmList to the query result
-            model.ConsigneeFirmList = firstQuery.Union(secondQuery).ToList();
+            model.ConsigneeFirmList = secondQuery.ToList();
+
+            var queryResult = context.IcIntermediates
+                        .Where(ici => ici.CaseNo == CaseNo &&
+                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                      ici.CallSno == CallSno)
+                        .OrderByDescending(ici => ici.Datetime)
+                        .FirstOrDefault();
+
+            if (queryResult != null)
+            {
+                model.BkNo = queryResult.BkNo;
+                model.SetNo = queryResult.SetNo;
+
+            }
+            else
+            {
+                model.BkNo = "";
+                model.SetNo = "";
+
+            }
 
             var CancelData = (from l in context.T19CallCancels
                               join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }

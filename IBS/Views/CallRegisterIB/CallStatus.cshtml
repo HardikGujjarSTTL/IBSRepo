@@ -147,14 +147,14 @@
                         <label for="Reference">Case Status : </label>
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallStatusdrp"})
+                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @id="CallStatusdrp"})
                         <input type="hidden" asp-for="CallStatus1" />
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallCancelStatusdrp"})
+                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @id="CallCancelStatusdrp"})
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallListByRly,new SelectList(Model.CallRlyFirmList, "Value", "Text"),"--Select--",new { @class = "form-control", @id = "CallCancelChargesdrp" })
+                        @Html.DropDownListFor(model => model.CallListByRly,new SelectList(Model.CallRlyFirmList, "Value", "Text"),"--Select--",new { @id = "CallCancelChargesdrp" })
                     </td>
                 </tr>
                 <tr id="ReasonFIFOdv">
@@ -231,7 +231,7 @@
                         <div class="row my-0">
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Consignee : </label>
-                                @Html.DropDownListFor(model => model.ConsigneeFirm,new SelectList(Model.ConsigneeFirmList, "Value", "Text"),new { @class = "form-control" ,@id="consigneeFirmDropdown"})
+                                @Html.DropDownList("consigneeFirmDropdown",new SelectList(Model.ConsigneeFirmList, "Value", "Text"),new { @id="consigneeFirmDropdown"})
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
@@ -335,7 +335,7 @@
                             </div>
                             <div class="col-md-4 mb-3" id="localdrp">
                                 <label for="Reference">Local or Outstation : </label>
-                                @Html.DropDownListFor(model => model.LocalOutstation,new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new { @class = "form-control" ,@id="LocalOutstationdrp"})
+                                @Html.DropDownList("LocalOutstationdrp",new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new {@id="LocalOutstationdrp"})
                             </div>
                             <div class="col-md-4 mb-3" id="rejvalue">
                                 <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
@@ -463,9 +463,9 @@
             </div>
         </div>
 
-        <div class="savenext-btn">
-            <button type="button" class="save-btn active" id="savedetails" onclick="Save();">Save</button>
-            <a asp-controller="CallRegisterIB" asp-action="Index" id="finalcancel" class="reset-btn">Cancel</a>
+        <div class="savenext-btn" id="savedetails">
+            <button type="button" class="save-btn active"  onclick="Save();">Save</button>
+            <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
         </div>
     </form>
 
@@ -543,7 +543,7 @@
 
                 if (selectedValue == "A") {
                     $('#accepteddrp').show();
-                    $('#savedetails').prop('disabled', true);
+                    $('#savedetails').hide();
                     $('#bkset').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#accepteuploadddrp').show();
@@ -563,7 +563,7 @@
                     $('#accepteddrp').show();
                     $('#localdrp').show();
                     $('#rejvalue').show();
-                    $('#savedetails').prop('disabled', true);
+                    $('#savedetails').hide();
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
                     $('#AcceptReject').text('Rejected');
@@ -581,7 +581,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', true);
+                    $('#savedetails').show();
                     $('#ReasonFIFOdv').show();
                     $('#bkset').show();
                     $('#Remarksval').hide();
@@ -599,7 +599,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', true);
+                    $('#savedetails').show();
                     $('#bkset').show();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
@@ -615,7 +615,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', false);
+                    $('#savedetails').show();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#Remarksval').show();
@@ -647,7 +647,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', false);
+                    $('#savedetails').show();
                     $('#bkset').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
@@ -663,7 +663,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', false);
+                    $('#savedetails').show();
                     $('#bkset').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
@@ -679,7 +679,7 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').prop('disabled', false);
+                    $('#savedetails').show();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#Remarksval').hide();
@@ -696,7 +696,6 @@
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').hide();
-                    $('#finalcancel').hide();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#Remarksval').hide();
@@ -732,7 +731,6 @@
                 $('#canlsave').addClass('disabled-button');
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savedetails').hide();
-                $('#finalcancel').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
                 $('#uploadfile').hide();
@@ -746,7 +744,7 @@
                 $('#AcceptReject').prop('disabled', true);
 
                 $('#accepteddrp').show();
-                $('#savedetails').prop('disabled', true);
+                $('#savedetails').hide();
                 $('#bkset').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#accepteuploadddrp').show();
@@ -773,7 +771,7 @@
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
                 $('#accepteuploadddrp').show();
-                $('#savedetails').prop('disabled', true);
+                $('#savedetails').hide();
                 $('#ReasonFIFOdv').show();
                 $('#AcceptReject').text('Rejected');
                 $('#frmcancelled').hide();
@@ -787,7 +785,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', true);
+                $('#savedetails').show();
                 $('#ReasonFIFOdv').show();
                 $('#bkset').show();
                 $('#Remarksval').hide();
@@ -804,7 +802,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', true);
+                $('#savedetails').show();
                 $('#bkset').show();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
@@ -820,7 +818,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', false);
+                $('#savedetails').show();
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#Remarksval').show();
@@ -852,7 +850,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', false);
+                $('#savedetails').show();
                 $('#bkset').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
@@ -868,7 +866,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', false);
+                $('#savedetails').show();
                 $('#bkset').hide();
                 $('#Remarksval').show();
                 $('#Holograms').show();
@@ -884,7 +882,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', false);
+                $('#savedetails').show();
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#Remarksval').hide();
@@ -900,7 +898,7 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').prop('disabled', true);
+                $('#savedetails').hide();
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#frmcancelled').show();
