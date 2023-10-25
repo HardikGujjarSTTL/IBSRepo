@@ -702,6 +702,20 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpPost]
+        public IActionResult CallStatusAcceptRej(VenderCallStatusModel model)
+        {
+            model = callregisterRepository.CallStatusAcceptRej(model);
+            if (model.AlertMsg == "Success")
+            {
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+        }
+
+        [HttpPost]
         public IActionResult CallStatusUpload(VenderCallStatusModel model,IFormCollection FrmCollection)
         {
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();

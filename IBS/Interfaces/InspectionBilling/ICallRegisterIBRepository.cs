@@ -62,6 +62,8 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
+        public VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model);
+
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
         public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
