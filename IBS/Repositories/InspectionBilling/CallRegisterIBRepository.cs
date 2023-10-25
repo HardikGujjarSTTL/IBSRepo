@@ -2821,7 +2821,7 @@ namespace IBS.Repositories.InspectionBilling
                                 var T17Details = from x in context.T17CallRegisters
                                                  where x.CaseNo == model.CaseNo.Trim() && x.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && x.CallSno == model.CallSno
                                                  select x;
-                                if (T17Details != null)
+                                if (T17Details.Count() > 0) //!= null)
                                 {
                                     if (model.CallStatus == "A" || model.CallStatus == "R")
                                     {
@@ -2853,7 +2853,7 @@ namespace IBS.Repositories.InspectionBilling
                                     if (model.CallStatus == "R")
                                     {
                                         var recordToUpdate = context.T13PoMasters.Where(x => x.CaseNo == model.CaseNo);
-                                        if (recordToUpdate != null)
+                                        if (recordToUpdate.Count() > 0) //!= null)
                                         {
                                             foreach (var item in recordToUpdate)
                                             {
@@ -2905,25 +2905,69 @@ namespace IBS.Repositories.InspectionBilling
                         model.AlertMsg = "Photos against given Case No, Book No & Set No are not uploaded, So Upload Photos before changing the Call Status to [Aceepted OR Rejection]!!!";
                     }
                 }
-                else if(!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bscheck))
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bscheck))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
                 }
-                else if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && string.IsNullOrEmpty(TempFile1))
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && string.IsNullOrEmpty(TempFile1))
                 {
                     model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
                 }
             }
-            else if(model.CallStatus == "G" || model.CallStatus == "T")
+            else if (model.CallStatus == "G" || model.CallStatus == "T")
             {
+                string bsCheck = "";
+                string TempFile1 = "";
+                if (!string.IsNullOrEmpty(model.CallStatus) && !string.IsNullOrEmpty(model.SetNo))
+                {
+                    bsCheck = context.T10IcBooksets
+                                  .Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo
+                                  && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
+                                  && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                  .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+                }
 
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && !string.IsNullOrEmpty(TempFile1))
+                {
+                    var t17Detail = from a in context.T17CallRegisters
+                                    where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                                    select a;
+                    if (t17Detail.Count() > 0)
+                    {
+
+                    }
+                }
+                else if(!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                }
+                else if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(TempFile1))
+                {
+                    model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
+                }
             }
             else
             {
-
+                var detail = from a in context.T17CallRegisters
+                             where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                             select a;
+                if(detail.Count() > 0)
+                {
+                    foreach(var item in detail)
+                    {
+                        item.CallStatus = model.CallStatus;
+                        item.CallStatusDt = model.CallStatusDt;
+                        item.CallCancelStatus = w_call_cancel_status;
+                        item.UserId = model.UserId;
+                        item.Datetime = DateTime.Now;
+                        item.FifoVoilateReason = wFifoVoilateReason;
+                        context.SaveChanges();
+                    }
+                }
+                model.AlertMsg = "Your Record is Saved!!!";
             }
 
-            if(model.CallStatus == "C")
+            if (model.CallStatus == "C")
             {
 
             }
