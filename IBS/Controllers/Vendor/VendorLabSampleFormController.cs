@@ -48,16 +48,21 @@ namespace IBS.Controllers
         {
             string Regin = GetRegionCode;
             LabSampleInfoModel dTResult = VendorLabSampleInfoRepository.SampleDtlData(CaseNo, CallRdt, CallSno, Regin);
-            if(dTResult.File != "False")
+            if (dTResult.File != "False")
             {
-                string mdtEx = dateconcate1(CallRdt.Trim());
-                string myFileEx = $"{CaseNo.Trim()}_{CallSno.Trim()}_{mdtEx}";
+                //string mdtEx = dateconcate1(CallRdt.Trim());
+                //string myFileEx = $"{CaseNo.Trim()}_{CallSno.Trim()}_{mdtEx}";
 
-                string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
-                dTResult.FileNm = myFileEx;
-                dTResult.FileLink = fpath;
+                //string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
+                string fn = "", MyFile = "", fx = "", fl = "";
+                string mdt = dateconcate(CallRdt.Trim());
+                MyFile = CaseNo.Trim() + '_' + CallSno.Trim() + '_' + mdt;
+                String filePath = null;
+                filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
+                dTResult.FileNm = MyFile;
+                dTResult.FileLink = filePath;
             }
-            
+
             return Json(dTResult);
         }
         string dateconcate(string dt)
@@ -104,11 +109,21 @@ namespace IBS.Controllers
                 //{
                 //    file.CopyTo(stream);
                 //}
-                string mdtEx = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
-                string myFileEx = $"{LabSampleInfoModel.CaseNo.Trim()}_{LabSampleInfoModel.CallSNO.Trim()}_{mdtEx}";
+                //string mdtEx = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
+                //string myFileEx = $"{LabSampleInfoModel.CaseNo.Trim()}_{LabSampleInfoModel.CallSNO.Trim()}_{mdtEx}";
 
-                string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
-                using (var stream = new FileStream(fpath, FileMode.Create))
+                //string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
+                //using (var stream = new FileStream(fpath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+                string fn = "", MyFile = "", fx = "", fl = "";
+                string mdt = dateconcate1(LabSampleInfoModel.CallRecDt.Trim());
+                MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
+                fn = Path.GetFileName(file.FileName);
+                String SaveLocation = null;
+                SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
+                using (var stream = new FileStream(SaveLocation, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
@@ -145,11 +160,21 @@ namespace IBS.Controllers
                 // For example:
                 //var fileName = Path.GetFileName(file.FileName);
                 //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", fileName);
-                string mdtEx = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
-                string myFileEx = $"{LabSampleInfoModel.CaseNo.Trim()}_{LabSampleInfoModel.CallSNO.Trim()}_{mdtEx}";
+                //string mdtEx = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
+                //string myFileEx = $"{LabSampleInfoModel.CaseNo.Trim()}_{LabSampleInfoModel.CallSNO.Trim()}_{mdtEx}";
 
-                string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
-                using (var stream = new FileStream(fpath, FileMode.Create))
+                //string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
+                //using (var stream = new FileStream(fpath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+                string fn = "", MyFile = "", fx = "", fl = "";
+                string mdt = dateconcate1(LabSampleInfoModel.CallRecDt.Trim());
+                MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
+                fn = Path.GetFileName(file.FileName);
+                String SaveLocation = null;
+                SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
+                using (var stream = new FileStream(SaveLocation, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
@@ -172,6 +197,26 @@ namespace IBS.Controllers
             string Regin = GetRegionCode;
             string dTResult = VendorLabSampleInfoRepository.CheckExist(CaseNo, CallRdt, CallSno, Regin);
             return Json(dTResult);
+        }
+        public IActionResult DownloadFile(string caseno, string calldt, string csno, string filename)
+        {
+            string fn = "", MyFile = "", fx = "", fl = "";
+            string mdt = dateconcate(calldt.Trim());
+            MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
+            fn = Path.GetFileName(filename);
+            String filePath = null;
+            filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                return File(fileBytes, "application/pdf", fn);
+            }
+            else
+            {
+                return NotFound(); // Or return another result indicating the file does not exist
+            }
         }
         #endregion
 
