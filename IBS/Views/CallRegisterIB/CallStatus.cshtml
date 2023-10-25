@@ -135,9 +135,9 @@
 
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
-                            <label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
+                            @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
                             <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                            <br>
+                            <br>*@
                             <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
                         </td>
                     }
