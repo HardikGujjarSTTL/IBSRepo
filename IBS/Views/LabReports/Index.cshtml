@@ -201,35 +201,36 @@
                 </div>
             </div>
         </div>
-        <div class="task-inner row report6" style="display: none">
-            <div class="row mb-3">
+        <div class="task-inner report6" style="display: none">
+            <div class="row">
                 <div class="col-md-3">
                     <label for="PropertyId">Report Status</label>
                     @Html.DropDownList("ReportStatus", new SelectList(IBS.Models.Common.LabInfoReportStatus() , "Value", "Text"),new { @id = "ddlinfostatus", @class = "" })
                 </div>
-                <div class="col-md-3" style="margin-top:3%">
-                    <label for="rb1">
+                </div>
+                <div class="row my-0">
+                <div class="col-md-3">
+                <label for="inforb1">
                         <input type="radio" name="inforadioGroup" id="inforb1" />
                         Sample Receive Date Wise
 
                     </label>
                     <span class="text-danger"></span>
                 </div>
-                <div class="col-md-5" style="margin-top:3%">
-                    <label for="rb2">
+            <div class="col-md-5">
+                <label for="inforb2">
                         <input type="radio" name="inforadioGroup" id="inforb2" />
                         Sample Approved By Finance Date Wise
-
                     </label>
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-3">
+            
                 <div class="savenext-btn btnAlign">
                     <button type="button" class="save-btn active" onclick="ViewReport6();">Submit</button>
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
-            </div>
+            
         </div>
     </div>
 
