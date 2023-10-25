@@ -1393,3 +1393,5 @@ input[type="datetime-local"]{ height:43px;}
 table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .borderGrid label{ margin:0; padding:0;}
 .btnAlign{ padding-top:30px;}
+.ui-datepicker table{ margin-bottom:0;}
+.ui-datepicker.ui-widget-content{background:#f2f4ff;}
