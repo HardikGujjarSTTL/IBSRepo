@@ -612,9 +612,6 @@ namespace IBS.Models
         public string Hologram { get; set; }
         public string Remarks { get; set; }
         public string Remarkslbl { get; set; }
-
-
-        public string? Hologram { get; set; }
     }
 
     public class VendrorCallDetailsModel

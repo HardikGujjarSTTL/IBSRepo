@@ -2788,7 +2788,6 @@ namespace IBS.Repositories.InspectionBilling
                 w_call_cancel_status = "";
             }
 
-
             if (model.CallStatus == "A" || model.CallStatus == "R")
             {
                 string bscheck = null;
@@ -2802,8 +2801,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 string TempFile1 = "";
 
-                if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck)
-                    && !string.IsNullOrEmpty(model.Hologram) && !string.IsNullOrEmpty(TempFile1))
+                if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) && !string.IsNullOrEmpty(model.Hologram) && !string.IsNullOrEmpty(TempFile1))
                 {
                     var count = (from item in context.T49IcPhotoEncloseds
                                  where item.CaseNo == model.CaseNo && item.BkNo == model.BkNo && item.SetNo == model.SetNo
@@ -2811,43 +2809,90 @@ namespace IBS.Repositories.InspectionBilling
                     if (count > 0)
                     {
                         string updateQuery = "";
-                        using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
-                        using (var command = cont.Database.GetDbConnection().CreateCommand())
+                        //using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
+                        //using (var command = cont.Database.GetDbConnection().CreateCommand())
+                        using (var trans = context.Database.BeginTransaction())
                         {
-                            var trans = cont.Database.BeginTransaction();
-                            bool wasOpen = command.Connection.State == ConnectionState.Open;
-                            if (!wasOpen) command.Connection.Open();
+                            //var trans = cont.Database.BeginTransaction();
+                            //bool wasOpen = command.Connection.State == ConnectionState.Open;
+                            //if (!wasOpen) command.Connection.Open();
                             try
                             {
+                                var T17Details = from x in context.T17CallRegisters
+                                                 where x.CaseNo == model.CaseNo.Trim() && x.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && x.CallSno == model.CallSno
+                                                 select x;
+                                if (T17Details != null)
+                                {
+                                    if (model.CallStatus == "A" || model.CallStatus == "R")
+                                    {
+                                        foreach (var row in T17Details)
+                                        {
+                                            row.CallStatus = model.CallStatus;
+                                            row.CallStatusDt = DateTime.ParseExact(Convert.ToDateTime(model.CallStatusDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                            row.CallCancelStatus = null;
+                                            row.BkNo = model.BkNo;
+                                            row.SetNo = model.SetNo;
+                                            if (model.CallStatus == "R")
+                                            {
+                                                if (!string.IsNullOrEmpty(model.Remarkslbl))
+                                                {
+                                                    row.Remarks = model.Remarkslbl.Trim() + ", " + model.Remarks.Trim();
+                                                }
+                                                else
+                                                {
+                                                    row.Remarks = model.Remarks.Trim();
+                                                }
+                                            }
+                                            row.UserId = model.UserId;
+                                            row.Datetime = DateTime.Now;
+                                            row.Hologram = model.Hologram;
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    if (model.CallStatus == "R")
+                                    {
+                                        var recordToUpdate = context.T13PoMasters.Where(x => x.CaseNo == model.CaseNo);
+                                        if (recordToUpdate != null)
+                                        {
+                                            foreach (var item in recordToUpdate)
+                                            {
+                                                var pendingCharge = 0;
+                                                pendingCharge = item.PendingCharges == null ? 0 + 1 : Convert.ToInt16(item.PendingCharges) + 1;
+                                                item.PendingCharges = Convert.ToByte(pendingCharge);
+                                                context.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                    trans.Commit();
+                                }
+                                #region Comment Code
+                                //command.CommandText = "Select to_char(sysdate,'dd/mm/yyyy-HH24:MI:SS') from dual";
+                                //string ss = Convert.ToString(command.ExecuteScalar());
+
                                 //if (model.CallStatus == "A")
                                 //{
-                                //    updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + lstCallStatus.SelectedValue + "',CALL_STATUS_DT=to_date('" + txtSTDT.Text + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + txtBKNO.Text + "',SET_NO='" + txtSetNo.Text + "',USER_ID='" + Session["IE_EMP_NO"].ToString() + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + txtHologram.Text.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + lblCSNO.Text.Trim() + "' and CALL_RECV_DT=to_date('" + lblCallDT.Text.Trim() + "','dd/mm/yyyy') and CALL_SNO=" + lblSNO.Text + "";
+                                //    updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
                                 //}
                                 //else if (model.CallStatus == "R")
                                 //{
-                                //    if (model.lblRemarks.Trim() != "")
+                                //    if (model.Remarkslbl.Trim() != "")
                                 //    {
-                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + lstCallStatus.SelectedValue + "',CALL_STATUS_DT=to_date('" + txtSTDT.Text + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + txtBKNO.Text + "',SET_NO='" + txtSetNo.Text + "',REMARKS='" + lblRemarks.Text.Trim() + "'||', '||'" + txtRemarks.Text.Trim() + "',USER_ID='" + Session["IE_EMP_NO"].ToString() + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + txtHologram.Text.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + lblCSNO.Text.Trim() + "' and CALL_RECV_DT=to_date('" + lblCallDT.Text.Trim() + "','dd/mm/yyyy') and CALL_SNO=" + lblSNO.Text + "";
+                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',REMARKS='" + model.Remarkslbl.Trim() + "'||', '||'" + model.Remarks.Trim() + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
                                 //    }
                                 //    else
                                 //    {
-                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + lstCallStatus.SelectedValue + "',CALL_STATUS_DT=to_date('" + txtSTDT.Text + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + txtBKNO.Text + "',SET_NO='" + txtSetNo.Text + "',REMARKS='" + txtRemarks.Text.Trim() + "',USER_ID='" + Session["IE_EMP_NO"].ToString() + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + txtHologram.Text.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + lblCSNO.Text.Trim() + "' and CALL_RECV_DT=to_date('" + lblCallDT.Text.Trim() + "','dd/mm/yyyy') and CALL_SNO=" + lblSNO.Text + "";
+                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',REMARKS='" + model.Remarks.Trim() + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
                                 //    }
                                 //}
-                                //var qry = "";
-                                //if (res <= 0)
+                                //command.CommandText = updateQuery;
+                                //var res = command.ExecuteNonQuery();
+                                //if (model.CallStatus == "R")
                                 //{
-                                //    command.CommandText = "INSERT INTO RPT_PRM_Inspection_Certificate VALUES ('" + CASE_NO + "', to_date('" + CALL_RECV_DT + "','mm/dd/yyyy'), " + CALL_SNO + " , NULL, NULL , CURRENT_TIMESTAMP,'" + CONSIGNEE_CD + "')";
+                                //    command.CommandText = "Update T13_PO_MASTER set PENDING_CHARGES=NVL(PENDING_CHARGES,0)+1 where CASE_NO='" + model.CaseNo.Trim() + "'";
                                 //    res = command.ExecuteNonQuery();
                                 //}
-
-                                //qry = "MERGE INTO RPT_PRM_Inspection_Certificate RP USING ";
-
-                                //command.CommandText = qry;
-                                //res = command.ExecuteNonQuery();
-                                trans.Commit();
-                                //flag = true;
-
+                                #endregion
                             }
                             catch (Exception ex)
                             {
@@ -2855,9 +2900,33 @@ namespace IBS.Repositories.InspectionBilling
                             }
                         }
                     }
+                    else
+                    {
+                        model.AlertMsg = "Photos against given Case No, Book No & Set No are not uploaded, So Upload Photos before changing the Call Status to [Aceepted OR Rejection]!!!";
+                    }
+                }
+                else if(!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bscheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
+                }
+                else if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && string.IsNullOrEmpty(TempFile1))
+                {
+                    model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
                 }
             }
+            else if(model.CallStatus == "G" || model.CallStatus == "T")
+            {
 
+            }
+            else
+            {
+
+            }
+
+            if(model.CallStatus == "C")
+            {
+
+            }
             #region Comment Code
             //if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
             //{
@@ -2891,8 +2960,7 @@ namespace IBS.Repositories.InspectionBilling
             //    }
             //}
             #endregion
-
-            return str;
+            return model.AlertMsg;//str;
 
         }
 
