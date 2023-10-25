@@ -18,7 +18,7 @@
         <h2>@ReportTitle</h2>
     </div>
 </div>
-<div class="task-listinput">
+
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
@@ -32,124 +32,141 @@
                 <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
         </div>
-        <div class="task-inner row report1" style="display: none">
-            <div class="row my-0">
-
-                <div class="col-md-2 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">IE Wise</label>
-                    <input type="radio" name="radioGroup" id="rb1" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-2 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">Vendor Wise</label>
-                    <input type="radio" name="radioGroup" id="rb2" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-3 mb-3" style="margin-top:auto;">
-                    <label for="PropertyId">Lab Wise</label>
-                    <input type="radio" name="radioGroup" id="rb3" />
-                    <span class="text-danger"></span>
+        <div class="task-inner report1" style="display: none">
+            <div class="row my-0">                
+                <div class="col-lg-12">
+                    <ul class="radioListForm mb-0 pb-0 mb-0 pb-0">
+                        <li>
+                            <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> IE Wise</label>
+                            <span class="text-danger"></span>
+                        </li>
+                        <li>
+                            <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> Vendor Wise</label>
+                            <span class="text-danger"></span>
+                        </li>
+                        <li>
+                            <label for="rb3"><input type="radio" name="radioGroup" id="rb3" /> Lab Wise</label>                            
+                            <span class="text-danger"></span>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="row my-0">
+                <div class="col-lg-12">
+                    <ul class="radioListForm mb-0 pb-0">
+                        <li>
+                            <div style="display:none" id="ie1">
+                                    <label for="rbc1"><input type="radio" name="child1" id="rbc1" /> All IE</label>
+                                <span class="text-danger"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col" style="display:none" id="ie2">
+                                    <label for="rbc2"><input type="radio" name="child1" id="rbc2" /> Particular IE</label>
+                                <span class="text-danger"></span>
+                            </div>
+                        </li>
+                    </ul>               
+                </div>
+            </div>
 
-                <div class="col-md-3 mb-3" style="display:none" id="ie1">
-                    <label for="PropertyId">All IE</label>
-                    <input type="radio" name="child1" id="rbc1" />
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-3 mb-3" style="display:none" id="ie2">
-                    <label for="PropertyId">Particular IE</label>
-                    <input type="radio" name="child1" id="rbc2" />
-                    <span class="text-danger"></span>
-                </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3" style="display:none" id="dd1">
                         @Html.DropDownList("ieName", new SelectList(IBS.Models.Common.GetInspEngCd(@ViewBag.Region), "Value", "Text"), new { id = "ddl1p" })
                         <span class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3" style="display:none" id="ie3">
-                    <label for="PropertyId">All Vendors</label>
-                    <input type="radio" name="child2" id="rbc3" />
-                    <span class="text-danger"></span>
+            <div class="row my-0">
+                <div class="col-lg-12">
+                    <ul class="radioListForm mb-0 pb-0">
+                        <li>
+                           <div style="display:none" id="ie3">
+                                <label for="rbc3"><input type="radio" name="child2" id="rbc3" /> All Vendors</label>
+                               <span class="text-danger"></span>
+                           </div>
+                        </li>
+                        <li>
+                            <div style="display:none" id="ie4">
+                                <label for="rbc4"><input type="radio" name="child2" id="rbc4" /> Particular Vendor</label>
+                                <span class="text-danger"></span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-3 mb-3" style="display:none" id="ie4">
-                    <label for="PropertyId">Particular Vendor</label>
-                    <input type="radio" name="child2" id="rbc4" />
-                    <span class="text-danger"></span>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-8 mb-3" style="display:none" id="dd2">
+                    <div class="col-md-4 mb-3" style="display:none" id="dd2">
                         @Html.DropDownList("vendor", new SelectList(IBS.Models.Common.GetVendorLabRpt(), "Value", "Text"), new { id = "ddl2p" })
                         <span class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3" style="display:none" id="ie5">
-                    <label for="PropertyId">All Lab</label>
-                    <input type="radio" name="child3" id="rbc5" />
-                    <span class="text-danger"></span>
+            <div class="row my-0">
+                <div class="col-lg-12">
+                    <ul class="radioListForm mb-0 pb-0">
+                        <li>
+                            <div style="display:none" id="ie5">
+                                <label for="rbc5"><input type="radio" name="child3" id="rbc5" /> All Lab</label>                    
+                                <span class="text-danger"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div style="display:none" id="ie6">
+                                <label for="rbc6"><input type="radio" name="child3" id="rbc6" /> Particular Lab</label>
+                                <span class="text-danger"></span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-3 mb-3" style="display:none" id="ie6">
-                    <label for="PropertyId">Particular Lab</label>
-                    <input type="radio" name="child3" id="rbc6" />
-                    <span class="text-danger"></span>
                 </div>
+
                 <div class="row my-0">
                     <div class="col-md-4 mb-3" style="display:none" id="dd3">
                         @Html.DropDownList("LAB", new SelectList(IBS.Models.Common.GetLab(), "Value", "Text"), new { id = "ddl3p" })
                         <span class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+           
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-3">
                     <label for="PropertyId">Test Result</label>
                     @Html.DropDownList("TestStatus", new SelectList(IBS.Models.Common.GetStatusLabRpt(), "Value", "Text"), new { id = "ddlstatus" })
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <label>Report Type -></label>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="heading3">Report Type -></h3>
+                </div>
+            </div>
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">All Records</label>
-                    <input type="radio" name="Group" id="r1" />
+                <div class="col-md-12">
+                    <label for="PropertyId"><input type="radio" name="Group" id="r1" /> All Records</label>
+                    <span class="text-danger"></span>
+                </div>           
+                <div class="col-md-12">
+                    <label for="PropertyId"><input type="radio" name="Group" id="r2" /> Pending Records <span class="note">(Where Test Report Not Recieved)</span></label>
+                    <span class="text-danger"></span>
+                </div>            
+                <div class="col-md-12">
+                    <label for="PropertyId"><input type="radio" name="Group" id="r3" /> Paid Records <span class="note">(Where Full Payment Recieved from the Vendor)</span></label>
+                    <span class="text-danger"></span>
+                </div>           
+                <div class="col-md-12">
+                    <label for="PropertyId"><input type="radio" name="Group" id="r4" /> Due Records <span class="note">(Where Full Payment Not Recieved from the Vendor)</span></label>
+                    <span class="text-danger"></span>
+                </div>            
+                <div class="col-md-12">
+                    <label for="PropertyId"><input type="radio" name="Group" id="r5" /> Partly Paid Records <span class="note">(Where Part Payment not Recieved from the Vendor)</span></label>
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-7 mb-3">
-                    <label for="PropertyId">Pending Records (Where Test Report Not Recieved)</label>
-                    <input type="radio" name="Group" id="r2" />
-                    <span class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-7 mb-3">
-                    <label for="PropertyId">Paid Records (Where Full Payment Recieved from the Vendor)</label>
-                    <input type="radio" name="Group" id="r3" />
-                    <span class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-7 mb-3">
-                    <label for="PropertyId">Due Records (Where Full Payment Not Recieved from the Vendor)</label>
-                    <input type="radio" name="Group" id="r4" />
-                    <span class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-7 mb-3">
-                    <label for="PropertyId">Partly Paid Records (Where Part Payment not Recieved from the Vendor)</label>
-                    <input type="radio" name="Group" id="r5" />
-                    <span class="text-danger"></span>
-                </div>
-            </div>
             <div class="col-md-3">
                 <div class="savenext-btn btnAlign">
                     <button type="button" class="save-btn active" onclick="ViewReport1();">Submit</button>
                     <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
                 </div>
+            </div>
             </div>
         </div>
         <div class="task-inner row report2" style="display: none">
@@ -215,7 +232,7 @@
             </div>
         </div>
     </div>
-</div>
+
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
