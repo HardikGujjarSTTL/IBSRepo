@@ -309,9 +309,18 @@
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
                     <input type="hidden" asp-for="CallStatusDt" />
+                    <input type="hidden" asp-for="Remarkslbl" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
                     <div class="accordion-body" style="overflow-x: auto;">
                         <div class="row my-0">
+                             <div class="col-md-4 mb-3" id="Remarksval">
+                                <label for="Reference">Remarks : </label>
+                                <textarea rows="4" asp-for="Remarks" style="color:red;text-transform: uppercase;" id="Remarks"></textarea>
+                            </div>
+                            <div class="col-md-4 mb-3" id="Holograms">
+                                <label for="Reference">Holograms : </label>
+                                <textarea rows="4" asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram"></textarea>
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
                             </div>
@@ -489,6 +498,8 @@
             $('#LocalOutstationdrp').hide();
             $('#localdrp').hide();
             $('#rejvalue').hide();
+            $('#Remarksval').hide();
+            $('#Holograms').hide();
 
             $("#CallStatus1").val("@Model.CallStatus");
 
@@ -532,7 +543,8 @@
 
                 if (selectedValue == "A") {
                     $('#accepteddrp').show();
-                    $('#savedetails').hide();
+                    $('#savedetails').prop('disabled', true);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#accepteuploadddrp').show();
@@ -546,7 +558,8 @@
                     $('#accepteddrp').show();
                     $('#localdrp').show();
                     $('#rejvalue').show();
-                    $('#savedetails').hide();
+                    $('#savedetails').prop('disabled', true);
+                    $("#savedetails").css("cursor", "auto");
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
                     $('#AcceptReject').text('Rejected');
@@ -558,7 +571,8 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').hide();
+                    $('#savedetails').prop('disabled', true);
+                    $("#savedetails").css("cursor", "auto");
                     $('#ReasonFIFOdv').show();
                     $('#bkset').show();
                     $('#CallCancelStatusdrp').hide();
@@ -569,7 +583,8 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').hide();
+                    $('#savedetails').prop('disabled', true);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').show();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
@@ -579,9 +594,12 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').show();
+                    $('#savedetails').prop('disabled', false);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
+                    $('#Remarksval').show();
+                    $('#Holograms').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
                 } else if (selectedValue == "U") {
@@ -589,17 +607,21 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').show();
+                    $('#savedetails').prop('disabled', false);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
+                    $('#Remarksval').show();
+                    $('#Holograms').show();
                 } else if (selectedValue == "W") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').show();
+                    $('#savedetails').prop('disabled', false);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
@@ -609,17 +631,21 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').show();
+                    $('#savedetails').prop('disabled', false);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
+                    $('#Remarksval').show();
+                    $('#Holograms').show();
                     $('#frmcancelled').hide();
                 } else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').show();
+                    $('#savedetails').prop('disabled', false);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
@@ -629,7 +655,8 @@
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
-                    $('#savedetails').hide();
+                    $('#savedetails').prop('disabled', true);
+                    $("#savedetails").css("cursor", "auto");
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#frmcancelled').show();
@@ -658,7 +685,8 @@
                 $('#canlsave').prop('disabled', true);
                 $('#canlsave').addClass('disabled-button');
                 $('#CallStatusdrp').prop('disabled', true);
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
             } else if (CallStatusdrp == "A") {
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
@@ -666,7 +694,8 @@
                 $('#AcceptReject').prop('disabled', true);
                 $('#RefreshAll').prop('disabled', true);
                 $('#accepteddrp').show();
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#accepteuploadddrp').show();
@@ -685,7 +714,8 @@
                 $('#localdrp').show();
                 $('#rejvalue').show();
                 $('#accepteuploadddrp').show();
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
                 $('#ReasonFIFOdv').show();
                 $('#AcceptReject').text('Rejected');
                 $('#frmcancelled').hide();
@@ -695,7 +725,8 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
                 $('#ReasonFIFOdv').show();
                 $('#bkset').show();
                 $('#CallCancelStatusdrp').hide();
@@ -706,7 +737,8 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').show();
                 $('#ReasonFIFOdv').show();
                 $('#CallCancelStatusdrp').hide();
@@ -716,9 +748,12 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').show();
+                $('#savedetails').prop('disabled', false);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
+                $('#Remarksval').show();
+                $('#Holograms').show();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "U") {
@@ -726,9 +761,12 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').show();
+                $('#savedetails').prop('disabled', false);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
+                $('#Remarksval').show();
+                $('#Holograms').show();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "W") {
@@ -736,7 +774,8 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').show();
+                $('#savedetails').prop('disabled', false);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#CallCancelStatusdrp').hide();
@@ -746,8 +785,11 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').show();
+                $('#savedetails').prop('disabled', false);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
+                $('#Remarksval').show();
+                $('#Holograms').show();
                 $('#ReasonFIFOdv').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
@@ -756,7 +798,8 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').show();
+                $('#savedetails').prop('disabled', false);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#CallCancelStatusdrp').hide();
@@ -766,7 +809,8 @@
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
                 $('#accepteddrp').hide();
-                $('#savedetails').hide();
+                $('#savedetails').prop('disabled', true);
+                $("#savedetails").css("cursor", "auto");
                 $('#bkset').hide();
                 $('#ReasonFIFOdv').show();
                 $('#frmcancelled').show();
@@ -878,7 +922,7 @@
                     formData.append("UploadeFile", file);
                 }
 
-                var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
+                var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
                 var uploadedDocuments = hiddenInput.val();
                 if (uploadedDocuments == "" || uploadedDocuments == null) {
                     alert('Please select all files!');
@@ -951,14 +995,68 @@
         }
 
         function Save() {
-            if ($("#ActionType").val() == "C") {
-                $("#frmCallStatus").submit();
-            }
-            else {
-                if ($("#frmCallStatus").valid()) {
-                    $("#frmCallStatus").submit();
+
+            var formData = new FormData();
+
+            SaveSingleDocuments("tab-2");
+            var bknoaccpted = $('#BkNo').val();
+            var setnoaccpted = $('#SetNo').val();
+
+            if (bknoaccpted != "" && setnoaccpted != "") {
+                var ajaxData = AjaxModel();
+
+                if (ajaxData) {
+                    for (var key in ajaxData) {
+                        if (ajaxData.hasOwnProperty(key)) {
+                            formData.append(key, ajaxData[key]);
+                        }
+                    }
                 }
+                var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
+
+                if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
+                    var file = fileInput.defaultValue;
+                    formData.append("UploadeFile", file);
+                }
+
+                var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
+                var uploadedDocuments = hiddenInput.val();
+                if (uploadedDocuments == "" || uploadedDocuments == null) {
+                    alert('Please select all files!');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("CallStatus", "CallRegisterIB")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Id == 1) {
+                            ShowHideMsgNew(true, response.responseText);
+                        }
+                        else {
+                            ShowHideMsgNew(false, response.responseText);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle error
+                        console.error('Error: ' + textStatus, errorThrown);
+                    }
+                });
+            } else {
+                alert("BKNO & SetNo Is Required.");
+                return;
             }
+            //if ($("#ActionType").val() == "C") {
+            //    $("#frmCallStatus").submit();
+            //}
+            //else {
+            //    if ($("#frmCallStatus").valid()) {
+            //        $("#frmCallStatus").submit();
+            //    }
+            //}
         }
 
         function SaveImages() {
