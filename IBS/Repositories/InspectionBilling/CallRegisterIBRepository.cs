@@ -2752,8 +2752,8 @@ namespace IBS.Repositories.InspectionBilling
                                select Convert.ToString(x.IssueToIecd)).FirstOrDefault();
                 }
 
-                if(!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) 
-                    && !string.IsNullOrEmpty(model)
+                //if(!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) 
+                //    && !string.IsNullOrEmpty(model)
             }
 
             if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
