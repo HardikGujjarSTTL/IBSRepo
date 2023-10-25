@@ -610,6 +610,8 @@ namespace IBS.Models
         public string? Chk11 { get; set; }
         public string? Chk12 { get; set; }
 
+
+        public string? Hologram { get; set; }
     }
 
     public class VendrorCallDetailsModel
