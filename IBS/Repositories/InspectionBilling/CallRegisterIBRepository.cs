@@ -2711,6 +2711,51 @@ namespace IBS.Repositories.InspectionBilling
         public string Save(VenderCallStatusModel model)
         {
             string str = "";
+            string w_call_cancel_status = "";
+            var wFifoVoilateReason = model.ReasonFIFO;
+
+            if (model.CallStatus1 == "C" && model.CallStatus != "C")
+            {
+                var t19 = (from a in context.T19CallCancels
+                           where a.CaseNo == model.CaseNo && a.CallRecvDt == model.CallRecvDt && a.CallSno == model.CallSno
+                           select a).FirstOrDefault();
+                if (t19 != null)
+                {
+                    t19.Isdeleted = 1;
+                    t19.Updatedby = model.UserId;
+                    t19.Updateddate = DateTime.Now;
+                    context.SaveChanges();
+                }
+            }
+            else if (model.CallStatus == "C" && model.CallCancelStatus == "C")
+            {
+                w_call_cancel_status = "C";
+            }
+            else if (model.CallStatus == "C" && model.CallCancelStatus == "N")
+            {
+                w_call_cancel_status = "N";
+            }
+            else
+            {
+                w_call_cancel_status = "";
+            }
+
+
+            if (model.CallStatus == "A" || model.CallStatus == "R")
+            {
+                string bscheck = null;
+                if (model.BkNo != "" && model.SetNo != "")
+                {
+                    bscheck = (from x in context.T10IcBooksets
+                               where x.BkNo.Trim() == model.BkNo.ToUpper()
+                               && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SetNo) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SetNo)
+                               select Convert.ToString(x.IssueToIecd)).FirstOrDefault();
+                }
+
+                if(!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) 
+                    && !string.IsNullOrEmpty(model)
+            }
+
             if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
             {
                 T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();

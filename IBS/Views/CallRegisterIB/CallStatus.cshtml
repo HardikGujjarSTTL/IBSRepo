@@ -148,6 +148,7 @@
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallStatusdrp"})
+                        <input type="hidden" asp-for="CallStatus1" />
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallCancelStatusdrp"})
@@ -481,6 +482,8 @@
             $('#LocalOutstationdrp').hide();
             $('#localdrp').hide();
             $('#rejvalue').hide();
+
+            $("#CallStatus1").val("@Model.CallStatus");
 
 
             $('#consigneeFirmDropdown').change(function () {
