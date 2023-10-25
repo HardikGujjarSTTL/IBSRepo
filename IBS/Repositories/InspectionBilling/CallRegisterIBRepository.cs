@@ -460,6 +460,7 @@ namespace IBS.Repositories.InspectionBilling
             int CD = 0;
             ie_cd = FindIeCODE(model);
 
+
             if (model.ActionType == "A")
             {
                 int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallLetterNo == model.CallLetterNo && x.RegionCode == model.SetRegionCode).Count();
