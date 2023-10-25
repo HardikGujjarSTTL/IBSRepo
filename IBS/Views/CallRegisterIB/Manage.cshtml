@@ -19,6 +19,7 @@
             <input type="hidden" asp-for="RegionCode" />
             <input type="hidden" asp-for="UpdateAllowed" />
             <input type="hidden" asp-for="RlyNonrly" />
+            <input type="hidden" asp-for="IeCd" />
         </div>
         <div class="accordion-body">
             <div class="row my-0">
@@ -97,8 +98,8 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked <i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="IeCd" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -180,7 +181,7 @@
                     <div class="company-checkbox">
                         <div class="remember">
                             <div class="remecheckbox">
-                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus" value="F">
+                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus">
                                 Is Finalized or Not
                             </div>
                         </div>
@@ -532,7 +533,7 @@
             $("#ActionType").val(actiontype);
 
 
-            if ($("#IeCd").val() == "") {
+            if ($("#ClusterCode").val() == "") {
                 ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
             else if ($("#CallLetterNo").val() == "") {

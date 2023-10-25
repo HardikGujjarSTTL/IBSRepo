@@ -146,6 +146,10 @@ namespace IBS.Controllers.InspectionBilling
                 if (Region == "N")
                 {
                     string mess = "";
+                    if(model.CallDt == null)
+                    {
+                        model.CallDt = model.FirstInspDt;
+                    }
                     int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
                     int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
                     if (FinspCdtdiff == 1)

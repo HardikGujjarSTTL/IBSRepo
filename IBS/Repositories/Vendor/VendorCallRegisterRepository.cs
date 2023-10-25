@@ -175,8 +175,8 @@ namespace IBS.Repositories.Vendor
                     model.StaggeredDp = user.StaggeredDp;
                     model.LotDp1 = user.LotDp1;
                     model.LotDp2 = user.LotDp2;
-                    model.IsNewVender = user.NewVendor == "Y" ? "Y" : "N";
-                    model.hdnIsNewVender = user.NewVendor == "Y" ? "Y" : "N";
+                    model.IsNewVender = user.NewVendor == "Y" ? true : false;
+                    model.hdnIsNewVender = user.NewVendor == "Y" ? "Y" : "X";
                     model.IsFinalizedStatus = user.Isfinalizedstatus == "F" ? true : false;
                 }
 
@@ -605,7 +605,7 @@ namespace IBS.Repositories.Vendor
                         w_stage_or_final = "F";
                     }
                     var w_New_Vendor = "";
-                    if (model.IsNewVender == "true")
+                    if (model.IsNewVender == true)
                     {
                         w_New_Vendor = "Y";
                     }
@@ -748,6 +748,7 @@ namespace IBS.Repositories.Vendor
                     GetCall.CallRemarkStatus = model.CallRemarkStatus;
                     GetCall.DepartmentCode = model.DepartmentCode;
                     GetCall.CallInstallNo = model.CallInstallNo;
+                    GetCall.NewVendor = model.IsNewVender == true ? "Y" : "X";
                     GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
                     GetCall.Remarks = model.Remarks;
