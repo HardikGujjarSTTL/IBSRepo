@@ -71,20 +71,20 @@ namespace IBS.Helper
             CaseNo = 22,
             [Description("/ReadWriteData/LAB")]
             Lab = 23,
-            [Description("/ReadWriteData/IC_PHOTOS")]
-            ICPHOTOS = 24,
+            [Description("/ReadWriteData/DigiSignatureFiles")]
+            DigiSignatureFiles = 24,
             [Description("/ReadWriteData/BILL_IC")]
             BILLIC = 25,
             [Description("/ReadWriteData/TESTPLAN")]
             TESTPLAN = 26,
             [Description("/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")]
             CALLCANCELLATIONDOCUMENTS = 27,
-            [Description("/ReadWriteData/DigiSignatureFiles")]
-            DigiSignatureFiles = 24,
             [Description("/ReadWriteData/Files/CASE_NO")]
             AdministratorPurchaseOrderCASE_NO = 28,
             [Description("/ReadWriteData/Files/Vendor/PO")]
             VendorPO = 29,
+            [Description("/ReadWriteData/IC_PHOTOS")]
+            ICPHOTOS = 30,
         }
 
         public enum DocumentCategory : int

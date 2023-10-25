@@ -955,7 +955,7 @@ namespace IBS.Repositories.InspectionBilling
                 string w_irfc_bpo = "";
                 if (model.ActionType == "A")
                 {
-                    if (check1 == "")
+                    if (check1 == "" || check1 == null)
                     {
                         if (model.IrfcFunded == "Y")
                         {
