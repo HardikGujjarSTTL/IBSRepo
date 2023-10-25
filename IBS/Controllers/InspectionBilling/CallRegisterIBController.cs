@@ -702,6 +702,20 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpPost]
+        public IActionResult CallStatusAcceptRej(VenderCallStatusModel model)
+        {
+            model = callregisterRepository.CallStatusAcceptRej(model);
+            if (model.AlertMsg == "Success")
+            {
+                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+            }
+            else
+            {
+                return Json(new { status = false, responseText = model.AlertMsg });
+            }
+        }
+
+        [HttpPost]
         public IActionResult CallStatusUpload(VenderCallStatusModel model,IFormCollection FrmCollection)
         {
             List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
@@ -857,5 +871,11 @@ namespace IBS.Controllers.InspectionBilling
             return Json(model);
         }
 
+        [HttpPost]
+        public IActionResult Save_RPT_PRM_Inspection_Certificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD)
+        {
+            var res = callregisterRepository.SaveRPTPRMInspectionCertificate(CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD);           
+            return Json(res);
+        }
     }
 }
