@@ -353,7 +353,7 @@
                             <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                             <a asp-controller="CallRegisterIB" asp-action="Index" class="reset-btn">Cancel</a>
                         </div>
-                     </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -973,15 +973,9 @@
 
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-1");
 
-
-                // Get the value of the hidden input (assuming it contains file information)
                 var uploadedDocuments = hiddenInput.val();
 
-                if (uploadedDocuments == "" || uploadedDocuments == null) {
-                    alert('Please select the first five (5) Images!');
-                    return;
-                }
-                var uploadedDocumentsArray = JSON.parse(uploadedDocuments);
+                var uploadedDocumentsArray = (uploadedDocuments == "" || uploadedDocuments == null) ? [] : JSON.parse(uploadedDocuments);
 
                 if (uploadedDocumentsArray.length >= 5) {
 
