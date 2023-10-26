@@ -4145,3 +4145,26 @@ END SP_Get_DEOCRISPurchesOrderDetails;
 
 =====================
 
+
+CREATE TABLE Token(
+    TokenId NUMBER(6,0) NOT NULL,
+	User_Id CHAR(12 BYTE),
+    AuthToken VARCHAR2(200 BYTE),
+	IssueOn TIMESTAMP(6) WITH TIME ZONE,
+	ExpiresOn TIMESTAMP(6) WITH TIME ZONE
+)
+ALTER TABLE Token ADD (
+  CONSTRAINT Token_pk PRIMARY KEY (TokenId));
+  
+ CREATE SEQUENCE Token_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE Token
+    MODIFY TokenId NUMBER(6,0) DEFAULT Token_seq.nextval;
+
+
+ ===========================
