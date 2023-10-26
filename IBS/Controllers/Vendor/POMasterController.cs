@@ -373,7 +373,7 @@ namespace IBS.Controllers.Vendor
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("PODetails", new { CaseNo = CASE_NO });
         }
 
         public IActionResult PoDetailManage(string CASE_NO, string ITEM_SRNO)

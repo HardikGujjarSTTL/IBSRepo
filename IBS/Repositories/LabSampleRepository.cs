@@ -150,7 +150,22 @@ namespace IBS.Repositories
         }
         public LabSampleInfoModel SampleDtlData(string CaseNo, string CallRdt, string CallSno, string Regin)
         {
-
+            string PaymentSlip = "";
+            string PaymentStatus = "";
+            string Hlink = "";
+            string sqlQuery = "SELECT DECODE(DOC_STATUS_VEND,'Y','UPLOADED','NOT UPLOADED') FROM T110_LAB_DOC WHERE  case_no='" + CaseNo.Trim() + "' and to_char(call_recv_dt,'dd/mm/yyyy')='" + CallRdt.Trim() + "' and call_sno='" + CallSno.Trim() + "'";
+            PaymentSlip = GetDateString(sqlQuery);
+            if(PaymentSlip != null)
+            {
+                Hlink = Showfile(CaseNo, CallRdt, CallSno);
+                string sqlQuery1 = "SELECT DECODE(DOC_STATUS_FIN,'A','APPROVED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS'),'R','REJECTED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS')||DOC_REJ_REMARK,'PENDING') FROM T110_LAB_DOC WHERE  case_no='" + CaseNo.Trim() + "' and to_char(call_recv_dt,'dd/mm/yyyy')='" + CallRdt.Trim() + "' and call_sno='" + CallSno.Trim() + "'";
+                PaymentStatus = GetDateString(sqlQuery1);
+            }
+            else
+            {
+                PaymentSlip = "Not Uploaded";
+                    PaymentStatus = "Not Approved";
+            }
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[5];
@@ -181,13 +196,34 @@ namespace IBS.Repositories
                         TotalTFee = Convert.ToString(row["testing_charges"]),
                         Status = Convert.ToString(row["status"]),
                         Remarks = Convert.ToString(row["remarks"]),
+                        PaymentSlip = PaymentSlip,
+                        PaymentStatus = PaymentStatus,
+                        Hyperlink2  = Hlink,
                     };
                 }
                 
                 return model;
             }
         }
-        public static string GetDateString(string sqlQuery)
+        public string Showfile(string CaseNo, string CallRdt, string CallSno)
+        {
+            string link = "";
+            string MyFile_ex = "";
+            string mdt_ex = dateconcate2(CallRdt.Trim());
+            MyFile_ex = CaseNo.Trim() + '_' + CallSno.Trim() + '_' + mdt_ex;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB",  MyFile_ex + ".PDF");
+            if (File.Exists(filePath) == false)
+            {
+                link = "false";
+            }
+            else
+            {
+                link = filePath;
+               
+            }
+            return link;
+        }
+            public static string GetDateString(string sqlQuery)
         {
             ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
             string dateResult = null;
@@ -260,7 +296,17 @@ namespace IBS.Repositories
             string dt1 = myYear + myMonth + myDay;
             return (dt1);
         }
-        
+        string dateconcate2(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(6, 4);
+            myMonth = dt.Substring(3, 2);
+            myDay = dt.Substring(0, 2);
+            string dt1 = myYear + myDay + myMonth;
+            return (dt1);
+        }
+
         public bool UpdateDetails(LabSampleInfoModel LabSampleInfoModel)
         {
             

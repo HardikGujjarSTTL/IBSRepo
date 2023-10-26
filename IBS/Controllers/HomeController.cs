@@ -147,7 +147,7 @@ namespace IBS.Controllers
                     HttpContext.SignInAsync(userPrincipal);
 
                     SessionHelper.MenuModelDTO = userRepository.GenerateMenuListByRoleId(userMaster.RoleId);
-                    return Json(new { status = true, responseText = "" });
+                    return Json(new { status = true, responseText = "", RoleName = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.RoleName) });
                     //return RedirectToAction("Index", "Dashboard");
                 }
             }
