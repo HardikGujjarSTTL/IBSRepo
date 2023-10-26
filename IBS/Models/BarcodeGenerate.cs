@@ -4,7 +4,8 @@ namespace IBS.Models
 {
     public class BarcodeGenerate
     {
-       public string BARCODE{ get; set; }
+       public string BARCODE{ get; set; } 
+        public string ExistsField { get; set; }
        public string CASE_NO{ get; set; }
        public string CALL_RECV_DT{ get; set; }
        public Int32 CALL_SNO{ get; set; }
