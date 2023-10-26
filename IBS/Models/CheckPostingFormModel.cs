@@ -42,6 +42,8 @@ namespace IBS.Models
         public int ACC_CD { get; set; } 
 
         public DateTime DATETIME { get; set; }
+
+        public string rdoBill { get; set; }
     }
     public class CheckPostingHeader
     {

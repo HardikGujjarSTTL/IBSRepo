@@ -5,7 +5,8 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>@ViewData["Title"]</h2>
+        @*<h2>@ViewData["Title"]</h2>*@
+        <h3 class="heading3">@ViewData["Title"]</h3>
     </div>
 </div>
 
@@ -199,10 +200,45 @@
                             if (Callstatus == "A") {
                                 Callstatus = "Accepted";
                             }
-                            else {
+                            else if (Callstatus == "R") {
                                 Callstatus = "Rejected";
                             }
-
+                            else if (Callstatus == "C") {
+                                Callstatus = "Cancelled";
+                            }
+                            else if (Callstatus == "U") {
+                                Callstatus = "Under Lab Testing";
+                            }
+                            else if (Callstatus == "S") {
+                                Callstatus = "Still Under Inspection";
+                            }
+                            else if (Callstatus == "G") {
+                                Callstatus = "Stage Inspection Accepted";
+                            }
+                            else if (Callstatus == "W") {
+                                Callstatus = "Withheld";
+                            }
+                            else if (Callstatus == "B") {
+                                Callstatus = "Accepted and Billed";
+                            }
+                            else if (Callstatus == "T") {
+                                Callstatus = "Stage Rejection";
+                            }
+                            else if (Callstatus == "PR") {
+                                Callstatus = "Partially Passed and Rejected";
+                            }
+                            else if (Callstatus == "PRB") {
+                                Callstatus = "Partially Passed and Rejected and Billed";
+                            }
+                            else if (Callstatus == "CB") {
+                                Callstatus = "Cancelled and Billed";
+                            }
+                            else if (Callstatus == "RB") {
+                                Callstatus = "Rejected and Billed";
+                            }
+                            else {
+                                Callstatus = "Pending";
+                            }
                             return Callstatus;
                         }
                     },

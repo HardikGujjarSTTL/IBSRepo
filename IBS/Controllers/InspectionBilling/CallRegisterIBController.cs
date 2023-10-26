@@ -652,6 +652,7 @@ namespace IBS.Controllers.InspectionBilling
                 return Json(new { status = false, responseText = model.AlertMsg });
             }
         }
+
         public IActionResult RefreshAllDlt(VenderCallStatusModel model)
         {
             model = callregisterRepository.RefreshAllDlt(model);
