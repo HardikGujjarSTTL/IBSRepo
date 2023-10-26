@@ -38,44 +38,44 @@
             <input type="text" class="input datepicker" asp-for="@Model.TypeCb" style="display:none;">
             <div class="accordion-body">
                 <div class="row my-0">
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label for="VisitDt">Date Of Contract</label>
                         <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
                         <span asp-validation-for="VisitDt" class="text-danger"></span>
                     </div>
-
-                    <div class="col-md-4 mb-4">
+               
+                    <div class="col-md-3 mb-4">
                         <label for="ClientType">Client Type</label>
                         @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"),"--Select--", new { @onChange="FillClient()"})
                         <span asp-validation-for="ClientType" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label for="Client">Select Client</label>
                         @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
                         <span asp-validation-for="Client" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label for="Reference">Officer Name Contracted<span class="text-danger" style="font-size:smaller">*</span></label>
                         <input type="text" class="input" asp-for="ClientOfficerName" mode maxlength="500" />
                         <span asp-validation-for="ClientOfficerName" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label for="Designation">Designation<span class="text-danger" style="font-size:smaller">*</span></label>
                         <input type="text" class="input" asp-for="Designation" mode maxlength="500" />
                         <span asp-validation-for="Designation" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label for="RitesOfficerCd">Rites Controlling Officer</label>
                         @Html.DropDownListFor(model => model.RitesOfficerCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),Model.TypeCb.ToString()), "Value", "Text"),"--Select--")
                         <span asp-validation-for="RitesOfficerCd" class="text-danger"></span>
                     </div>
                     @if (Model.TypeCb == "D")
                     {
-                        <div class="col-md-4 mb-4">
+                        <div class="col-md-3 mb-4">
                             <label for="Designation">Outstanding Amount(In Rs.)<span class="text-danger" style="font-size:smaller">*</span></label>
                             <input type="text" class="input" asp-for="OutAmt" mode maxlength="500" />
                             <span asp-validation-for="OutAmt" class="text-danger"></span>
