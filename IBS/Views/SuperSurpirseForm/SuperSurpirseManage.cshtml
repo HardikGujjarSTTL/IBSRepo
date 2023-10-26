@@ -81,42 +81,42 @@
                         <input type="text" class="input datepicker" asp-for="SuperSurpriseDt" style="font-size:inherit;">
                         <span class="text-danger field-validation-error" id="spnError1"></span>
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Name of scope of sector where Item is covered.</label>
                         @Html.DropDownListFor(model => model.NameofScope, Common.ItemScope(),"", new { @id="ddlscope"})
                         <span class="text-danger field-validation-error" id="spnError2"></span>
                     </div>
                    
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Item</label>
                         @Html.DropDownListFor(model => model.Item, Common.GetItemSuperForm(Model.Case_No,Model.CallDt,Model.CallSNo),"", new { @id="ddlitem"})
                         <span class="text-danger field-validation-error" id="spnError3"></span>
                         @*<span asp-validation-for="course_name" class="text-danger"></span>*@
                         <input type="hidden" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Previous Internal/Consignee Rejection</label>
                         <textarea id="textAreaInput1" asp-for="PreviousInternal"></textarea>
                         <span class="text-danger field-validation-error" id="spnError4"></span>
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Discrepancy (If any)</label>
                         <textarea id="textAreaInput2" asp-for="Discrepancy"></textarea>
                         <span class="text-danger field-validation-error" id="spnError5"></span>
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Overall outcome of the visit</label>
                         <textarea id="textAreaInput3" asp-for="Overall"></textarea>
                         <span class="text-danger field-validation-error" id="spnError6"></span>
                     </div>
 
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">SBU HEAD REMARKS/RECOMMENDATION</label>
                         <textarea id="textAreaInput4" asp-for="SBUHead"></textarea>
                         <span class="text-danger field-validation-error" id="spnError7"></span>
                     </div>
                 </div>
-                <div class="savenext-btn" style="margin-left:40%">
+                <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>

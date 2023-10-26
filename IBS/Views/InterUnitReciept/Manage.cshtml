@@ -16,7 +16,7 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-        <div class="accordion-body">
+       
             <form data-ajax="true" asp-antiforgery="true" asp-controller="InterUnitReciept" asp-action="InterUnitRecieptSave" data-ajax-method="post" data-ajax-complete="completed" id="frmInterUnitReciept">
                 <div class="accordion-body">
                     <div class="row my-0">
@@ -66,27 +66,25 @@
 
                        
                         <div id="txtBPO" class="col-md-4 mb-3">
-                            <label for="Reference">BPO</label>
-                            <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
-                            <br></br>
-                            <button type="button" class="save-btn active" onclick="ButtonClick()">Select BPO</button>
-                            <input type="text" class="input" id="txtBPOtype" maxlength="10" readonly hidden>
-
+                            <div class="row">
+                                <div class="col-lg-7">
+                                <label for="Reference">BPO</label>
+                                <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
+                                </div>
+                            <div class="col-lg-5 btnAlign">
+                                <button type="button" class="commonBtn" onclick="ButtonClick()">Select BPO</button>
+                                <input type="text" class="input" id="txtBPOtype" maxlength="10" readonly hidden>
+                            </div>
+                            </div>
                         </div>
-
-                        <div id="lstBPO" class="col-md-4 mb-3" style="display:none">
-                           
+                        <div id="lstBPO" class="col-md-4 mb-3" style="display:none">                           
                             <label for="Reference">BPO</label>
-                            <select id="SelectedBPO" class="form-control">
-
-                                
+                            <select id="SelectedBPO" class="form-control">                                
                             </select>
                         </div>
-
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Narration</label>
                             <input type="text" class="input" id="txtNarrat" asp-for="NARRATION" maxlength="9">
-
                         </div>
                     </div>
 
@@ -125,7 +123,7 @@
 
                 </div>
             </form>
-        </div>
+      
     </div>
 </section>
 

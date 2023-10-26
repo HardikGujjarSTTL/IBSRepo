@@ -206,12 +206,13 @@
                     <span asp-validation-for="PayWindowId" class="text-danger"></span>
                 </div>
             </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+                <button type="button" class="save-btn" onclick="Delete();">Delete</button>
+                <a asp-controller="Bill_Paying_Officer_Form" asp-action="Index" class="reset-btn">Cancel</a>
+            </div>
         </div>
-        <div class="savenext-btn">
-            <button type="button" class="save-btn active" onclick="Save();">Save</button>
-            <button type="button" class="save-btn" onclick="Delete();">Delete</button>
-            <a asp-controller="Bill_Paying_Officer_Form" asp-action="Index" class="reset-btn">Cancel</a>
-        </div>
+       
     </form>
 
 </div>
