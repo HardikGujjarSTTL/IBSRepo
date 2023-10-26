@@ -81,7 +81,9 @@ namespace IBS.Repositories
                         {
                             VCHR_NO = t24.VchrNo,
                             VCHR_DT = t24.VchrDt,
+                            BANK_CD = t24.BankCd,
                             BANK_NAME = t94.FmisBankCd.ToString().PadLeft(4, '0') + "-" + t94.BankName,
+                            
                         }).ToList();
 
             query = lstQuery.AsQueryable();

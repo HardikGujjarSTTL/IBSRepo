@@ -123,6 +123,37 @@
                                     <div class="user">
                                         <h4>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Name) <i class="fa-solid fa-chevron-down"></i> </h4>
                                         <p>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.RoleName)</p>
+                                        @{
+                                            string Region = "";
+                                        }
+                                        @if (@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) != "" && (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) != null))
+                                        {
+                                            if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "N")
+                                            {
+                                                Region = "Northern";
+                                            }
+                                            else if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "S")
+                                            {
+                                                Region = "Southern";
+                                            }
+                                            else if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "E")
+                                            {
+                                                Region = "Eastern";
+                                            }
+                                            else if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "W")
+                                            {
+                                                Region = "Westrern";
+                                            }
+                                            else if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "C")
+                                            {
+                                                Region = "Central";
+                                            }
+                                            else if (Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region) == "Q")
+                                            {
+                                                Region = "QA";
+                                            }
+                                            <p>@Region</p>
+                                        }
                                     </div>
                                 }
                             </a>

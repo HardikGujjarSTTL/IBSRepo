@@ -9,8 +9,9 @@
         <h2>Generate Voucher</h2>
     </div>
 </div>
-<div class="task-listinput">
+
     <form role="form" asp-controller="RecieptVoucher" asp-action="Manage" id="frmRecieptVoucher">
+        <input type="hidden" asp-for="Region" />
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
@@ -26,7 +27,7 @@
                     @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankNameWithFMIS())
                 </div>
             </div>
-        </div>
+        
         <div id="dvVoucherDetails">
             <partial name="_VoucherDetails" model="Model.lstVoucherDetails" />
         </div>
@@ -34,8 +35,9 @@
             <a asp-controller="RecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" onclick="SubmitRecieptVoucherData();">Save</button>
         </div>
+        </div>
     </form>
-</div>
+
 
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
