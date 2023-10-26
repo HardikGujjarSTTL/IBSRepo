@@ -34,17 +34,17 @@
                 </div>
 
                 <div class="row my-0">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Client </label>
                         @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClient() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="Client" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Tax Amount No. Of IC Issued(Nos.)</label>
                         <input type="text" class="input" asp-for="NoOfIcIssued">
                         <span asp-validation-for="NoOfIcIssued" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-8 mb-3">
                         <label for="Reference">Tax Amount Total Quantity Dispatched in tonnes(IC Issued Quantity in MT)</label>
                         <input type="text" class="input" asp-for="TotalQtyDispatched">
                         <span asp-validation-for="TotalQtyDispatched" class="text-danger"></span>
