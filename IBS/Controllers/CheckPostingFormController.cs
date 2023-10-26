@@ -97,6 +97,13 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
+        //public IActionResult GetBillDetails(string rdoBill)
+        //{
+        //    CheckPostingbillInvoice model = new();
+
+        //    return View();
+        //}
+
         public IActionResult btnBillDetailsClick( string RadioBill ) 
         {
             var region = GetRegionCode;

@@ -100,7 +100,7 @@ namespace IBS.Repositories
         {
             CheckPostingbillInvoice query = null;
             var query1 = from bill in context.V22Bills
-                        select new CheckPostingbillInvoice
+                         select new CheckPostingbillInvoice
                         {
                            BILL_NO = bill.BillNo,
                            Invoice_NO =  bill.InvoiceNo,
