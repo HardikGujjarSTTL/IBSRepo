@@ -292,7 +292,7 @@
                 </form>
             </div>
         </div>
-
+       
         <div id="accepteuploadddrp">
             <div id="tab-2" class="task-listinput">
                 <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatusUpload" id="frmCallStatusAcceptupload">
@@ -309,17 +309,17 @@
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
                     <input type="hidden" asp-for="CallStatusDt" />
-                    <input type="hidden" asp-for="Remarkslbl" />
+                    <input type="hidden" asp-for="Remarkslbl" id="Remarkslbl" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
                     <div class="accordion-body" style="overflow-x: auto;">
                         <div class="row my-0">
                             <div class="col-md-4 mb-3" id="Remarksval">
                                 <label for="Reference">Remarks : </label>
-                                <textarea rows="4" asp-for="Remarks" style="color:red;text-transform: uppercase;" id="Remarks"></textarea>
+                                <input asp-for="Remarks" style="color:red;text-transform: uppercase;" id="Remarks">
                             </div>
                             <div class="col-md-4 mb-3" id="Holograms">
                                 <label for="Reference">Holograms : </label>
-                                <textarea rows="4" asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram"></textarea>
+                                <input asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
@@ -736,7 +736,13 @@
             } else if (CallStatusdrp == "A") {
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
+                $('#savefiles').addClass('disabled-button');
+                $('#AcceptReject').addClass('disabled-button');
                 $('#AcceptReject').prop('disabled', true);
+                $('#uploadfile').addClass('disabled-button');
+                $('#uploadfile').prop('disabled', true);
+                $('#RefreshAll').addClass('disabled-button');
+                $('#RefreshAll').prop('disabled', true);
                 $('#accepteddrp').show();
                 $('#savedetails').hide();
                 $('#bkset').hide();
@@ -747,7 +753,6 @@
                 $('#Holograms').hide();
                 $('#rejvalue').hide();
                 $('#uploadfile').show();
-                $('#RefreshAll').show();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
@@ -757,6 +762,7 @@
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
                 $('#AcceptReject').prop('disabled', true);
+                $('#AcceptReject').addClass('disabled-button');
                 $('#MatValue').show();
                 $('#accepteddrp').show();
                 $('#localdrp').show();
@@ -856,6 +862,7 @@
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
+                debugger
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
@@ -1055,21 +1062,23 @@
                     type: 'POST',
                     data: formData,
                     success: function (response) {
+                        debugger
                         if (response.Id == 1) {
                             var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                             ShowHideMsgNew(true, response.responseText);
-
+                            $('#uploadfile').prop('disabled', true);
+                            $('#AcceptReject').prop('disabled', true);
+                            $('#savefiles').prop('disabled', true);
+                            $('#AcceptReject').addClass('disabled-button');
                             setTimeout(function () {
                                 window.location.href = redirectUrl;
                             }, 1000);
 
                         }
                         else {
+                            
                             ShowHideMsgNew(false, response.responseText);
                         }
-                        $('#uploadfile').prop('disabled', true);
-                        $('#AcceptReject').prop('disabled', true);
-                        $('#savefiles').prop('disabled', true);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.error('Error: ' + textStatus, errorThrown);
@@ -1314,6 +1323,12 @@
             var CancellationDescription = $('#Candesc').val();
             var PoNo = $('#PoNo').val();
             var ReasonFIFO = $('#ReasonFIFO').val();
+            var Remarks = $('#Remarks').val();
+            var hologram = $('#hologram').val();
+            var Remarkslbl = $('#Remarkslbl').val();
+            var SetNo = $('#SetNo').val();
+            var BkNo = $('#BkNo').val();
+            var PoDt = $('#PoDt').val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1327,7 +1342,10 @@
                 CallStatusDt: CallStatusDt,
                 CancellationDescription: CancellationDescription,
                 PoNo: PoNo,
-                ReasonFIFO: ReasonFIFO
+                Remarks: Remarks,
+                hologram: hologram,
+                Remarkslbl: Remarkslbl,
+                PoDt: PoDt
             };
 
             return formData;
