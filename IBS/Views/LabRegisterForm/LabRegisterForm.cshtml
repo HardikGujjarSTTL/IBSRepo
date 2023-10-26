@@ -561,8 +561,10 @@
             
             var RegNo = '@ViewBag.RegNo';
             var SNO = SrNo;
+            var url = '@Url.Action("LoadTable", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LoadTable', // Replace with your actual endpoint URL
+                //url: '/LabRegisterForm/LoadTable', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { RegNo: RegNo, SNO: SNO },
@@ -620,9 +622,10 @@
 
         }
         function grid1(CaseNo, VCode) {
-
+            var url = '@Url.Action("LabPaymentModify", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LabPaymentModify', // Replace with your actual endpoint URL
+                //url: '/LabRegisterForm/LabPaymentModify', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { CaseNo: CaseNo, VCode: VCode },
@@ -715,8 +718,10 @@
 
             var RegNo = '@ViewBag.RegNo';
             $("#lblRNo").val(RegNo);
+            var url = '@Url.Action("LoaddataModify", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LoaddataModify',
+                //url: '/LabRegisterForm/LoaddataModify',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: RegNo },
@@ -783,9 +788,10 @@
             });
         }
         function LabDtlModify(regNo, sno) {
-
+            var url = '@Url.Action("LabDtlModify", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LabDtlModify',
+                //url: '/LabRegisterForm/LabDtlModify',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: regNo, SNO: sno },
@@ -902,12 +908,13 @@
                 Flag:sessionStorage.getItem("Flag"),
                 DISCIPLINE_ID: $("#ddldisc").val()
             };
-
+            var url = '@Url.Action("SaveDataDetails", "LabRegisterForm")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: "application/json",
-                url: "/LabRegisterForm/SaveDataDetails",
+                //: "/LabRegisterForm/SaveDataDetails",
+                url:url,
                 dataType: "json",
                 data: JSON.stringify(LABREGISTERModel),
                 success: function (res) {
@@ -951,8 +958,10 @@
         function PrintInvoice() {
 
             var RegNo = '@ViewBag.RegNo';
+            var url = '@Url.Action("PrintInvoice", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/PrintInvoice',
+                //url: '/LabRegisterForm/PrintInvoice',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: RegNo },
@@ -1005,10 +1014,12 @@
                 TotalTDS: $("#lbltotds").val()
 
             };
+            var url = '@Url.Action("PostAmount", "LabRegisterForm")';
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
-                url: '/LabRegisterForm/PostAmount',
+                //url: '/LabRegisterForm/PostAmount',
+                url:url,
                 dataType: "JSON",
                 data: JSON.stringify(LABREGISTERModel),
 
