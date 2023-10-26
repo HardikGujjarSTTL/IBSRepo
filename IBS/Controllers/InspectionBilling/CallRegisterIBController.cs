@@ -692,7 +692,7 @@ namespace IBS.Controllers.InspectionBilling
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document };
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CALLCANCELLATIONDOCUMENTS), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
-                model.AlertMsg = "Upload done Successfully!!!";
+                model.AlertMsg = "Record Cancellation Successfully !!";
                 return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
             }
             else
@@ -707,7 +707,7 @@ namespace IBS.Controllers.InspectionBilling
             model = callregisterRepository.CallStatusAcceptRej(model);
             if (model.AlertMsg == "Success")
             {
-                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+                return Json(new { status = true, responseText = "Record Accepted Successfully !!", Id = 1 });
             }
             else
             {
@@ -751,7 +751,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             if (model.AlertMsg == "Success")
             {
-                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+                return Json(new { status = true, responseText = "Upload Successfully !!", Id = 1 });
             }
             else
             {

@@ -510,15 +510,11 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#callRecdt').val();
                 $('#MatCanvalue').hide();
-
-
                 $.ajax({
                     url: '/CallRegisterIB/GetBkNoAndSetNo',
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        //$('#BkNo').val(data.BkNo);
-                        //$('#SetNo').val(data.SetNo);
                         debugger
                         $('#bknoaccpted').val(data.BkNo);
                         $('#setnoaccpted').val(data.SetNo);
@@ -557,7 +553,7 @@
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
                     $('#uploadcancel').show();
-                    //$("#linkICPhotoAR").css("display","");
+                    $('#consigneeFirmDropdown').trigger('change');
                 } else if (selectedValue == "R") {
                     $('#MatValue').show();
                     $('#accepteddrp').show();
@@ -575,7 +571,7 @@
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
                     $('#uploadcancel').show();
-                    //$("#linkICPhotoAR").css("display", "");
+                    $('#consigneeFirmDropdown').trigger('change');
                 } else if (selectedValue == "G") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
@@ -740,9 +736,7 @@
             } else if (CallStatusdrp == "A") {
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
-
                 $('#AcceptReject').prop('disabled', true);
-
                 $('#accepteddrp').show();
                 $('#savedetails').hide();
                 $('#bkset').hide();
@@ -758,12 +752,11 @@
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
+                $('#consigneeFirmDropdown').trigger('change');
             } else if (CallStatusdrp == "R") {
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
-
                 $('#AcceptReject').prop('disabled', true);
-
                 $('#MatValue').show();
                 $('#accepteddrp').show();
                 $('#localdrp').show();
@@ -780,6 +773,7 @@
                 $('#RefreshAll').show();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
+                $('#consigneeFirmDropdown').trigger('change');
             } else if (CallStatusdrp == "G") {
                 $('#accepteuploadddrp').show();
                 $('#localdrp').hide();
@@ -1095,6 +1089,7 @@
             SaveSingleDocuments("tab-2");
             var bknoaccpted = $('#BkNo').val();
             var setnoaccpted = $('#SetNo').val();
+            var CallStatus = $('#CallStatusdrp').val();
 
             if (bknoaccpted != "" && setnoaccpted != "") {
                 var ajaxData = AjaxModel();
@@ -1118,6 +1113,20 @@
                 if (uploadedDocuments == "" || uploadedDocuments == null) {
                     alert('Please select all files!');
                     return;
+                }
+
+                if(CallStatus == "C"){
+                    var atLeastOneChecked = $('input[name^="chkItems"]').is(':checked');
+
+                    if (!atLeastOneChecked) {
+                        alert('Please select at least one Cancellation Reason.');
+                        return;
+                    }
+
+                    $('input[name^="chkItems"]').each(function () {
+                        var index = $(this).attr('name').match(/\[([\d]+)\]/)[1];
+                        formData.append("chkItems[" + index + "]", $(this).is(':checked'));
+                    });
                 }
 
                 $.ajax({
@@ -1259,8 +1268,6 @@
                 return;
             }
 
-            console.log('FormData contents:', formData);
-
             $('input[name^="chkItems"]').each(function () {
                 var index = $(this).attr('name').match(/\[([\d]+)\]/)[1];
                 formData.append("chkItems[" + index + "]", $(this).is(':checked'));
@@ -1295,8 +1302,6 @@
 
         function AjaxModel() {
             var CallStatus = $('#CallStatusdrp').val();
-            //var BkNo = $('#BkNo').val();
-            //var SetNo = $('#SetNo').val();
             var ConsigneeFirm = $('#consigneeFirmDropdown').val();
             var LocalOutstation = $('#LocalOutstationdrp').val();
             var BkNo = $('#bknoaccpted').val();

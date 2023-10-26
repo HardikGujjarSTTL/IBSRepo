@@ -1487,7 +1487,7 @@ namespace IBS.Repositories.InspectionBilling
             return sms;
         }
 
-        public string send_Vendor_Email(VenderCallRegisterModel model)
+        public string send_Vendor_Email(VenderCallStatusModel model)
         {
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
@@ -1498,7 +1498,7 @@ namespace IBS.Repositories.InspectionBilling
             else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
             else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
             else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
-            else if (Case_Region == "C") { wRegion = "Central Region"; }
+            else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
 
             var query = from t13 in context.T13PoMasters
                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
@@ -1517,12 +1517,15 @@ namespace IBS.Repositories.InspectionBilling
             int vend_cd = 0;
             string vend_add = "";
             string vend_email = "";
+            string vend_name = "";
+            string vend_city = "";
 
             if (result != null)
             {
                 vend_cd = Convert.ToInt32(result.VEND_CD);
                 vend_add = result.VEND_ADDRESS;
                 vend_email = result.VEND_EMAIL;
+                vend_name = result.VEND_NAME;
             }
 
             var query1 = from t05 in context.T05Vendors
@@ -1554,7 +1557,7 @@ namespace IBS.Repositories.InspectionBilling
             var query2 = from t09 in context.T09Ies
                          join t08 in context.T08IeControllOfficers
                          on t09.IeCoCd equals t08.CoCd
-                         where t09.IeCd == model.IeCd
+                         where t09.IeCd == Convert.ToInt32(model.IeCd)
                          select new
                          {
                              IE_PHONE_NO = t09.IePhoneNo,
@@ -1571,6 +1574,8 @@ namespace IBS.Repositories.InspectionBilling
             string co_mobile = "";
             string ie_name = "";
             string ie_email = "";
+            string manu_city = "";
+            string rly_cd = "";
 
             if (result2 != null)
             {
@@ -1586,7 +1591,7 @@ namespace IBS.Repositories.InspectionBilling
             var subquery = from t17 in context.T17CallRegisters
                            where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MM-yyyy", null) &&
                                  (t17.CallStatus == "M" || t17.CallStatus == "S") &&
-                                 t17.IeCd == model.IeCd
+                                 t17.IeCd == Convert.ToInt32(model.IeCd)
                            select t17;
 
             var query3 = from t17 in context.T17CallRegisters
@@ -1635,6 +1640,19 @@ namespace IBS.Repositories.InspectionBilling
                 days_to_ic = Convert.ToInt32(result4[0].DaysToIc);
                 item_cd = result4[0].ItemCd;
             }
+            string can_reasons = "";
+            string manu_name = "", manu_add = "";
+            var manufacturerInfo = (from t17 in context.T17CallRegisters
+                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                                    where t17.CaseNo == model.CaseNo &&
+                                    t17.CallRecvDt == model.CallRecvDt &&
+                                    t17.CallSno == model.CallSno
+                                    select new
+                                    {
+                                        manu_name = t05.VendName,
+                                        manu_add = t03.City
+                                    }).FirstOrDefault();
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
             {
@@ -1644,45 +1662,61 @@ namespace IBS.Repositories.InspectionBilling
             {
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
+            string mail_body = "";
+            if (model.CallCancelStatus == "C")
+            {
+                mail_body= vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
 
-            string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
-            if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
-            {
-                mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
+
+                mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
             }
-            if (days_to_ic == 0)
+            else
             {
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
-            }
-            else if (days_to_ic > 0)
-            {
-                System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
-                System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
-                string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
-            }
-            mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
-            if (Case_Region == "N")
-            {
-                sender = "nrinspn@rites.com";
-            }
-            else if (Case_Region == "W")
-            {
-                sender = "wrinspn@rites.com";
-            }
-            else if (Case_Region == "E")
-            {
-                sender = "erinspn@rites.com";
-            }
-            else if (Case_Region == "S")
-            {
-                sender = "srinspn@rites.com";
-            }
-            else if (Case_Region == "C")
-            {
-                sender = "crinspn@rites.com";
+                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+                mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
             }
 
+            #region comment code
+            //string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
+            //if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
+            //{
+            //    mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+            //}
+            //if (days_to_ic == 0)
+            //{
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            //}
+            //else if (days_to_ic > 0)
+            //{
+            //    System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
+            //    System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
+            //    string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
+            //}
+            //mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+
+            //if (Case_Region == "N")
+            //{
+            //    sender = "nrinspn@rites.com";
+            //}
+            //else if (Case_Region == "W")
+            //{
+            //    sender = "wrinspn@rites.com";
+            //}
+            //else if (Case_Region == "E")
+            //{
+            //    sender = "erinspn@rites.com";
+            //}
+            //else if (Case_Region == "S")
+            //{
+            //    sender = "srinspn@rites.com";
+            //}
+            //else if (Case_Region == "C")
+            //{
+            //    sender = "crinspn@rites.com";
+            //}
+            #endregion
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 // Create a MailMessage object
@@ -1793,22 +1827,11 @@ namespace IBS.Repositories.InspectionBilling
 
             var controllingEmail = (from t08 in context.T08IeControllOfficers
                                     join t09 in context.T09Ies on t08.CoCd equals t09.IeCoCd
-                                    where t09.IeCd == model.IeCd
+                                    where t09.IeCd == Convert.ToInt32(model.IeCd)
                                     select t08.CoEmail
                                     ).FirstOrDefault();
 
-            string manu_name = "", manu_add = "";
-            var manufacturerInfo = (from t17 in context.T17CallRegisters
-                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
-                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                                    where t17.CaseNo == model.CaseNo &&
-                                    t17.CallRecvDt == model.CallRecvDt &&
-                                    t17.CallSno == model.CallSno
-                                    select new
-                                    {
-                                        manu_name = t05.VendName,
-                                        manu_add = t03.City
-                                    }).FirstOrDefault();
+           
             if (controllingEmail != "")
             {
                 MailMessage mail2 = new MailMessage();
@@ -4039,6 +4062,8 @@ namespace IBS.Repositories.InspectionBilling
                     existingRecord1.ConsgnCallStatus = model.CallStatus;
                     context.SaveChanges();
                 }
+                model.AlertMsg = "Success";
+
             }
             return model;
         }
