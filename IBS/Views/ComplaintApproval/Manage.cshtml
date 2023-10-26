@@ -10,7 +10,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h3>ONLINE REJECTIONS APPROVAL FORM</h3>
+        <h2>ONLINE REJECTIONS APPROVAL FORM</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="ComplaintApproval" class="formBtn viewall-btn">View List</a>
@@ -96,12 +96,12 @@
                         <span asp-validation-for="Item" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-1 mb-1">
+                    <div class="col-md-3 mb-1">
                         <label for="Reference">Qty. as per IC</label>
                         <input type="text" class="input" ASP-FOR="QtyperIC" id="QtyperIC" maxlength="300" readonly />
                         <span asp-validation-for="QtyperIC" class="text-danger"></span>
                     </div>
-                    <div class="col-md-1 mb-1">
+                    <div class="col-md-3 mb-1">
                         <label for="Reference">Qty. Rejected</label>
                         <input type="text" class="input" ASP-FOR="RejectionValue" maxlength="300" readonly />
                         <span asp-validation-for="RejectionValue" class="text-danger"></span>
@@ -121,35 +121,35 @@
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
                     </div>*@
                     
-                    <div class="col-md-2 mb-2" id="rejno">
+                    <div class="col-md-3 mb-2" id="rejno">
                         <label>Rejection Memo Id</label>
                         <input type="text" class="input" ASP-FOR="RejMemono" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly/>
                     </div>
-                    <div class="col-md-2 mb-2" id="rejdt">
+                    <div class="col-md-3 mb-2" id="rejdt">
                         <label>Rejection Memo Date </label>
                         <input type="text" class="input" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
                     </div>
-                    <div class="col-md-2 mb-2" id="inspreq">
+                    <div class="col-md-3 mb-2" id="inspreq">
                         <label>Joint Inspection Required</label>
                         @Html.DropDownListFor(model => model.AcceptRejornot, new SelectList(IBS.Models.Common.Inspectionrequired() , "Value", "Text"),"--Select--", new { id = "Inspectionrequired" })
                     </div>
-                    <div class="col-md-2 mb-2" id="inspregion">
+                    <div class="col-md-3 mb-2" id="inspregion">
                         <label> Region Doing Joint Inspection</label>
                         @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
                     </div>
-                    <div class="col-md-2 mb-2" id="JIDate">
+                    <div class="col-md-3 mb-2" id="JIDate">
                         <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
                         <input type="text" class="input datepicker" ASP-FOR="JIDate" maxlength="300" />
                     </div>
-                    <div class="col-md-2 mb-2" id="JointInspection">
+                    <div class="col-md-3 mb-2" id="JointInspection">
                         <label for="Jointisp">Joint Inspection Engineer</label>
                         <select id="Jointisp" asp-for="InspER" class="form-control" required></select>
                     </div>
-                    <div class="col-md-2 mb-2" id="NOJIReason">
+                    <div class="col-md-3 mb-2" id="NOJIReason">
                         <label>Joint Inspection Engineer</label>
                         @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-3 mb-2">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
 
                     </div>
@@ -157,9 +157,9 @@
                 <br/>
                 <br/>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active Permission_Save" id="acceptbtn" onclick="Accept();">Accept</button>
+                    <button type="button" class="save-btn Permission_Save" id="acceptbtn" onclick="Accept();">Accept</button>
                     <button type="button" class="save-btn active Permission_Save" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
-                    <button type="button" class="save-btn active" id="rejectbtn" onclick="Reject();">Reject</button>
+                    <button type="button" class="save-btn" id="rejectbtn" onclick="Reject();">Reject</button>
                     <button type="button" class="save-btn active Permission_Save" id="btnsubmit" onclick="Submit();">Submit</button>
                 </div>
                 
