@@ -2809,13 +2809,8 @@ namespace IBS.Repositories.InspectionBilling
                     if (count > 0)
                     {
                         string updateQuery = "";
-                        //using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
-                        //using (var command = cont.Database.GetDbConnection().CreateCommand())
                         using (var trans = context.Database.BeginTransaction())
                         {
-                            //var trans = cont.Database.BeginTransaction();
-                            //bool wasOpen = command.Connection.State == ConnectionState.Open;
-                            //if (!wasOpen) command.Connection.Open();
                             try
                             {
                                 var T17Details = from x in context.T17CallRegisters
@@ -2866,39 +2861,14 @@ namespace IBS.Repositories.InspectionBilling
                                     }
                                     trans.Commit();
                                 }
-                                #region Comment Code
-                                //command.CommandText = "Select to_char(sysdate,'dd/mm/yyyy-HH24:MI:SS') from dual";
-                                //string ss = Convert.ToString(command.ExecuteScalar());
-
-                                //if (model.CallStatus == "A")
-                                //{
-                                //    updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
-                                //}
-                                //else if (model.CallStatus == "R")
-                                //{
-                                //    if (model.Remarkslbl.Trim() != "")
-                                //    {
-                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',REMARKS='" + model.Remarkslbl.Trim() + "'||', '||'" + model.Remarks.Trim() + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
-                                //    }
-                                //    else
-                                //    {
-                                //        updateQuery = "Update T17_CALL_REGISTER set CALL_STATUS='" + model.CallStatus + "',CALL_STATUS_DT=to_date('" + model.CallStatusDt + "','dd/mm/yyyy'),CALL_CANCEL_STATUS=null,BK_NO='" + model.BkNo + "',SET_NO='" + model.SetNo + "',REMARKS='" + model.Remarks.Trim() + "',USER_ID='" + model.UserId + "',DATETIME=to_date('" + ss + "','dd/mm/yyyy-HH24:MI:SS'), HOLOGRAM='" + model.Hologram.Trim() + "', FIFO_VOILATE_REASON='" + wFifoVoilateReason + "' where CASE_NO='" + model.CaseNo.Trim() + "' and CALL_RECV_DT=to_date('" + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy").Trim() + "','dd/mm/yyyy') and CALL_SNO=" + model.CallSno + "";
-                                //    }
-                                //}
-                                //command.CommandText = updateQuery;
-                                //var res = command.ExecuteNonQuery();
-                                //if (model.CallStatus == "R")
-                                //{
-                                //    command.CommandText = "Update T13_PO_MASTER set PENDING_CHARGES=NVL(PENDING_CHARGES,0)+1 where CASE_NO='" + model.CaseNo.Trim() + "'";
-                                //    res = command.ExecuteNonQuery();
-                                //}
-                                #endregion
                             }
                             catch (Exception ex)
                             {
                                 trans.Rollback();
+                                model.AlertMsg = "Error";
                             }
                         }
+                        model.AlertMsg = "Success";
                     }
                     else
                     {
@@ -2937,11 +2907,11 @@ namespace IBS.Repositories.InspectionBilling
 
                     }
                 }
-                else if(!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                 }
-                else if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(TempFile1))
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(TempFile1))
                 {
                     model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
                 }
@@ -2951,9 +2921,9 @@ namespace IBS.Repositories.InspectionBilling
                 var detail = from a in context.T17CallRegisters
                              where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
                              select a;
-                if(detail.Count() > 0)
+                if (detail.Count() > 0)
                 {
-                    foreach(var item in detail)
+                    foreach (var item in detail)
                     {
                         item.CallStatus = model.CallStatus;
                         item.CallStatusDt = model.CallStatusDt;
@@ -2964,12 +2934,401 @@ namespace IBS.Repositories.InspectionBilling
                         context.SaveChanges();
                     }
                 }
-                model.AlertMsg = "Your Record is Saved!!!";
+                model.AlertMsg = "Success";
             }
 
             if (model.CallStatus == "C")
             {
+                if (string.IsNullOrEmpty(model.CallCancelStatus) || (model.CallCancelStatus == "C" && string.IsNullOrEmpty(model.CallCancelCharges)))
+                {
+                    model.AlertMsg = "Mention Call Chargeable/Call Non-Chargeable & Select One of the Given Call Cancellation Charges in Case the Call is Chargeable!!!";
+                }
+                else
+                {
+                    wFifoVoilateReason = "";
+                    if (!string.IsNullOrEmpty(model.ChkFIFO))
+                    {
+                        wFifoVoilateReason = model.ReasonFIFO;
+                    }
 
+                    var CCd = (from x in context.T20Ics
+                               where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                               select x.CaseNo).FirstOrDefault();
+
+                    var Action = (from x in context.T19CallCancels
+                                  where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                  select x.CaseNo).FirstOrDefault();
+
+                    var w_IE_EMPNO = (from x in context.T09Ies
+                                      where x.IeCd == Convert.ToInt32(model.IeCd) // Request Parameter
+                                      select x.IeEmpNo).FirstOrDefault();
+
+                    if (string.IsNullOrEmpty(CCd))
+                    {
+                        using (var trans = context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (string.IsNullOrEmpty(Action))
+                                {
+                                    T19CallCancel obj = new T19CallCancel();
+                                    obj.CaseNo = model.CaseNo;
+                                    obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                                    obj.CallSno = Convert.ToInt32(model.CallSno);
+                                    obj.CancelDesc = model.CancellationDescription;
+                                    obj.UserId = w_IE_EMPNO; //model.UserId;
+                                    obj.Datetime = DateTime.Now.Date;
+                                    obj.Createdby = model.UserId;
+                                    obj.Createddate = DateTime.Now.Date;
+                                    obj.CancelCd1 = 0;
+                                    obj.CancelCd2 = 0;
+                                    obj.CancelCd3 = 0;
+                                    obj.CancelCd4 = 0;
+                                    obj.CancelCd5 = 0;
+                                    obj.CancelCd6 = 0;
+                                    obj.CancelCd7 = 0;
+                                    obj.CancelCd8 = 0;
+                                    obj.CancelCd9 = 0;
+                                    obj.CancelCd10 = 0;
+                                    obj.CancelCd11 = 0;
+                                    obj.CancelCd12 = 0;
+
+                                    var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                                    int count = indexes.Count();
+
+                                    if (count == 1)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                    }
+                                    else if (count == 2)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                    }
+                                    else if (count == 3)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                    }
+                                    else if (count == 4)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                    }
+                                    else if (count == 5)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                    }
+                                    else if (count == 6)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                    }
+                                    else if (count == 7)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                    }
+                                    else if (count == 8)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                    }
+                                    else if (count == 9)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                    }
+                                    else if (count == 10)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                    }
+                                    else if (count == 11)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                    }
+                                    else if (count == 12)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                        obj.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                                    }
+                                    context.T19CallCancels.Add(obj);
+                                    context.SaveChanges();
+
+
+                                    var t17Detail = from x in context.T17CallRegisters
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t17Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t17Detail)
+                                        {
+                                            row.CallStatus = "C";
+                                            row.CallStatusDt = model.CallStatusDt;
+                                            row.CallCancelStatus = model.CallCancelStatus;
+                                            if (model.CallCancelStatus == "C")
+                                            {
+                                                row.CallCancelCharges = Convert.ToInt16(model.CallCancelCharges);
+                                            }
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+
+                                    var t13Detail = from x in context.T13PoMasters
+                                                    where x.CaseNo == model.CaseNo
+                                                    select x;
+                                    if (t13Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t13Detail)
+                                        {
+                                            var PendCharge = row.PendingCharges == null ? 0 + 1 : Convert.ToInt16(row.PendingCharges) + 1;
+                                            row.PendingCharges = Convert.ToByte(PendCharge);
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    model.AlertMsg = "Success";
+                                }
+                                else if (!string.IsNullOrEmpty(Action))
+                                {
+                                    var t19Detail = from x in context.T19CallCancels
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t19Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t19Detail)
+                                        {
+                                            row.CancelDate = model.CallStatusDt;
+                                            row.CancelDesc = model.CancellationDescription;
+                                            row.UserId = w_IE_EMPNO; //model.UserId;
+                                            row.Datetime = DateTime.Now.Date;
+                                            row.Updatedby = model.UserId;
+                                            row.Updateddate = DateTime.Now.Date;
+                                            row.CancelCd1 = 0;
+                                            row.CancelCd2 = 0;
+                                            row.CancelCd3 = 0;
+                                            row.CancelCd4 = 0;
+                                            row.CancelCd5 = 0;
+                                            row.CancelCd6 = 0;
+                                            row.CancelCd7 = 0;
+                                            row.CancelCd8 = 0;
+                                            row.CancelCd9 = 0;
+                                            row.CancelCd10 = 0;
+                                            row.CancelCd11 = 0;
+                                            row.CancelCd12 = 0;
+
+                                            var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                                            int count = indexes.Count();
+
+                                            if (count == 1)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                            }
+                                            else if (count == 2)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                            }
+                                            else if (count == 3)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                            }
+                                            else if (count == 4)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                            }
+                                            else if (count == 5)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                            }
+                                            else if (count == 6)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                            }
+                                            else if (count == 7)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                            }
+                                            else if (count == 8)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                            }
+                                            else if (count == 9)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                            }
+                                            else if (count == 10)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                            }
+                                            else if (count == 11)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                                row.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                            }
+                                            else if (count == 12)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                                row.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                                row.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                                            }
+                                            context.SaveChanges();
+                                        }
+                                    }
+
+                                    var t17Detail = from x in context.T17CallRegisters
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t17Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t17Detail)
+                                        {
+                                            row.CallStatus = "C";
+                                            row.CallStatusDt = model.CallStatusDt;
+                                            row.CallCancelStatus = model.CallCancelStatus;
+                                            if (model.CallCancelStatus == "C")
+                                            {
+                                                row.CallCancelCharges = Convert.ToInt16(model.CallListByRly);
+                                            }
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    model.AlertMsg = "Success";
+                                }
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
+                    }
+                }
             }
             #region Comment Code
             //if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
@@ -3005,7 +3364,6 @@ namespace IBS.Repositories.InspectionBilling
             //}
             #endregion
             return model.AlertMsg;//str;
-
         }
 
         public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo)
@@ -3535,7 +3893,7 @@ namespace IBS.Repositories.InspectionBilling
                         obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
                         obj.CallSno = (int)model.CallSno;
                         obj.CancelDesc = model.CancellationDescription;
-                        obj.UserId = model.Createdby;
+                        obj.UserId = model.UserId;
                         obj.Datetime = DateTime.Now.Date;
 
                         obj.Createdby = model.UserId;
