@@ -99,7 +99,7 @@
         $(document).ready(function () {
             if ('@ReportType' == 'ICStatus') {
                 $(".ICStatus").css("display", "");
-                $('input[type=radio][id=rdType]').change(function () {
+                $('input[type=radio][name=rdType]').change(function () {
                     var value = $(this).val();
                     if (value == "AllIES") {
                         $("#IEStatus").css("display", "none");
@@ -113,7 +113,7 @@
             }
             else if ('@ReportType' == 'ICSAccountal') {
                 $(".ICStatus").css("display", "");
-                $('input[type=radio][id=rdType]').change(function () {
+                $('input[type=radio][name=rdType]').change(function () {
                     var value = $(this).val();
                     if (value == "AllIES") {
                         $("#IEStatus").css("display", "none");
