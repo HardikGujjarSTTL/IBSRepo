@@ -193,7 +193,7 @@ namespace IBS.Repositories
         public T02User FindByUsernameOrEmail(string UserName)
         {
             //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == UserName.Trim() || p.Email.Trim() == UserName.Trim());
-            return context.T02Users.FirstOrDefault(p => p.UserName.Trim() == UserName.Trim());
+            return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == UserName.Trim());
             //return new T02User();
         }
         public void ChangePassword(ResetPasswordModel resetPassword)

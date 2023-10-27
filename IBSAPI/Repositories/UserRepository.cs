@@ -39,6 +39,18 @@ namespace IBSAPI.Repositories
 
         }
 
+        public UserModel FindByUsernameOrEmail(string UserName)
+        {
+            UserModel userModel = (from u in context.T02Users 
+                                   where u.UserId.Trim() == UserName.Trim()
+                                   select new UserModel
+                                   {
+                                       userName = Convert.ToString(u.UserName),
+                                       userId = Convert.ToString(u.UserId.Trim()),
+                                   }).FirstOrDefault();
+            return userModel;
+        }
+
         public static string GetRegion(string Region)
         {
             string RetRegion = "";

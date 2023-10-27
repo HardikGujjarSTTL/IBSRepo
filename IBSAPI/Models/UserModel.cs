@@ -8,5 +8,6 @@
         public string token { get; set; }
         public string userId { get; set; }
         public string Region { get; set; }
+        public string Email { get; set; }
     }
 }

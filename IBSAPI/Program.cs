@@ -18,6 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenServices, TokenServices>();
+builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

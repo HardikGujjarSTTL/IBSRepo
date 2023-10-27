@@ -238,7 +238,7 @@
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
 
                 success: function (success) {
-                    
+                    debugger;
                     if (success.DateofRecSample != null && success.LikelyDt != null && success.DateofRecSample != "" && success.LikelyDt != "") {
                         var originalDateStr = success.DateofRecSample;
                         
@@ -313,8 +313,8 @@
             var calldt = $("#lblCallDT").val();
             var csno = $("#lblCallSno").val();
             var filename = sessionStorage.getItem("lINK");
-            var fileUrl = '/LabSampleInfo/DownloadFile?caseno=' + caseno + '&calldt=' + calldt + '&csno=' + csno + '&filename=' + filename;
-
+            //var fileUrl = '/LabSampleInfo/DownloadFile?caseno=' + caseno + '&calldt=' + calldt + '&csno=' + csno + '&filename=' + filename;
+            var fileUrl = "@Url.Action("DownloadFile","LabSampleInfo")" + "?caseno=" + caseno + "&calldt=" + calldt + "&csno=" + csno + "&filename=" + filename;
             if (fileUrl) {
                 
                 $(this).attr('href', fileUrl);
@@ -440,7 +440,10 @@
             if (!IsValid) return;
             var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
-
+            var parts1 = $("#dtrecsam").val().split('/');
+            var convertedDate1 = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            var parts2 = $("#dtlike").val().split('/');
+            var convertedDate2 = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
             //var files = [];
             //files.push($('input[type=file]').val());
             var formData = new FormData();
@@ -449,9 +452,9 @@
             formData.append("CallRecDt", convertedDate);
             formData.append("CallSNO", $("#lblCallSno").val());
             formData.append("Status", $("#ddlstatus").val());
-            formData.append("DateofRecSample", $("#dtrecsam").val());
+            formData.append("DateofRecSample", convertedDate1);
             formData.append("TotalTFee", $("#txttesfee").val());
-            formData.append("LikelyDt", $("#dtlike").val());
+            formData.append("LikelyDt", convertedDate2);
             formData.append("Remarks", $("#txtremark").val());
             formData.append("Data", encode(fileByteArray));
             //var LabSampleInfoModel = {
