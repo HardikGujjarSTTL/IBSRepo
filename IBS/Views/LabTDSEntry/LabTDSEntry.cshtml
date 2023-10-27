@@ -90,8 +90,10 @@
             var RegNo = $("#txtSRNO").val();
             var TDSAmt = $("#lbltsdamt").val();
             var TDSDate = $("#lbltdsdate").val();
+            var url = '@Url.Action("SearchRegNo", "LabTDSEntry")';
             $.ajax({
-                url: '/LabTDSEntry/SearchRegNo',
+                //url: '/LabTDSEntry/SearchRegNo',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: RegNo },
@@ -141,8 +143,10 @@
             var TDSAmt = $("#lbltsdamt").val();
             var parts = $("#lbltdsdate").val().split('/');
             var TDSDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+            var url = '@Url.Action("SaveTDSEntry", "LabTDSEntry")';
             $.ajax({
-                url: '/LabTDSEntry/SaveTDSEntry',
+                //url: '/LabTDSEntry/SaveTDSEntry',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { RegNo: RegNo, TDSAmt: TDSAmt, TDSDate: TDSDate },

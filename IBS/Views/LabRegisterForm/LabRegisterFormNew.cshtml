@@ -450,8 +450,10 @@ input[type="date"] {
             var CallDt = '@ViewBag.CDT';
             var CallSno = '@ViewBag.CSN';
             //$("#lblRNo").text(RegNo).css("color", "red");
+            var url = '@Url.Action("FormNew", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/FormNew',
+                //url: '/LabRegisterForm/FormNew',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallDt: CallDt, CallSno: CallSno },
@@ -629,10 +631,12 @@ input[type="date"] {
                 TotalLabCharges: $("#lbltolc").val()
 
             };
+            var url = '@Url.Action("InsertLabReg", "LabRegisterForm")';
             $.ajax({
                 type: 'POST',
                 contentType: "application/json",
-                url: "/LabRegisterForm/InsertLabReg",
+                //url: "/LabRegisterForm/InsertLabReg",
+                url:url,
                 dataType: "json",
                 data: JSON.stringify(LABREGISTERModel),
                 success: function (res) {

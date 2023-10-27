@@ -228,8 +228,11 @@
             var CallRdt = '@ViewBag.CallRdt';
             var CallSno = '@ViewBag.Sno';
 
+            var url = '@Url.Action("SampleDtlData", "LabSampleInfo")';
+
             $.ajax({
-                url: '/LabSampleInfo/SampleDtlData',
+                // url: '/LabSampleInfo/SampleDtlData',
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
@@ -366,14 +369,15 @@
             formData.append("TotalTFee", $("#txttesfee").val());
             formData.append("LikelyDt", $("#dtlike").val());
             formData.append("Remarks", $("#txtremark").val());
-
+            var url = '@Url.Action("SaveDataDetails", "LabSampleInfo")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
                 //contentType: "application/json",
-                url: "/LabSampleInfo/SaveDataDetails",
+                //url: "/LabSampleInfo/SaveDataDetails",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -464,11 +468,13 @@
             //};
 
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            var url = '@Url.Action("UpdateDetails", "LabSampleInfo")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/LabSampleInfo/UpdateDetails",
+                url:url,
+                //url: "/LabSampleInfo/UpdateDetails",
                 dataType: "json",
                 data: formData,
                 success: function (res) {

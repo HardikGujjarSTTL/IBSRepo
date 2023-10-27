@@ -455,10 +455,12 @@
                     SNO: Srno,
                     SAMPLE_REG_NO: RegNo
                 };
+                var url = '@Url.Action("SavePayment", "LabPaymentsForm")';
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: "/LabPaymentsForm/SavePayment",
+                    //url: "/LabPaymentsForm/SavePayment",
+                    url:url,
                     dataType: "json",
                     data: JSON.stringify(LabPaymentFormModel),
                     success: function (result) {

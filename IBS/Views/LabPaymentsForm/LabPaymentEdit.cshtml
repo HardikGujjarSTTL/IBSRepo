@@ -284,8 +284,10 @@
 
 
             var PaymentID = '@ViewBag.PaymentID';
+            var url = '@Url.Action("LoadTableEdit", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/LoadTableEdit', // Replace with your actual endpoint URL
+                //url: '/LabPaymentsForm/LoadTableEdit', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { PaymentID: PaymentID },
@@ -357,10 +359,12 @@
                 CHQ_DT: $("#dtAdt").val(),
                 Remarks: $("#txtremk").val()
             };
+            var url = '@Url.Action("UpdatePayment", "LabPaymentsForm")';
             $.ajax({
                 type: 'POST',
                 contentType: "application/json",
-                url: "/LabPaymentsForm/UpdatePayment",
+                //url: "/LabPaymentsForm/UpdatePayment",
+                url:url,
                 dataType: "json",
                 data: JSON.stringify(LabPaymentFormModel),
                 success: function (result) {
@@ -434,8 +438,10 @@
         function Edit(PaymentID) {
 
             var PaymentID = PaymentID;
+            var url = '@Url.Action("Edit", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/Edit',
+                //url: '/LabPaymentsForm/Edit',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { PaymentID: PaymentID },

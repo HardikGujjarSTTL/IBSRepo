@@ -234,8 +234,10 @@
         $(document).ready(function () {
             $("#bpo").autocomplete({
                 source: function (request, response) {
+                    var url = '@Url.Action("GetBPOData", "Search")';
                     $.ajax({
-                        url: "/Search/GetBPOData",
+                        //url: "/Search/GetBPOData",
+                        url:url,
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
@@ -252,8 +254,10 @@
 
             $("#consignee").autocomplete({
                 source: function (request, response) {
+                    var url = '@Url.Action("GetConsigneeData", "Search")';
                     $.ajax({
-                        url: "/Search/GetConsigneeData",
+                        //url: "/Search/GetConsigneeData",
+                        url:url,
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
@@ -269,8 +273,10 @@
 
             $("#vendor").autocomplete({
                 source: function (request, response) {
+                    var url = '@Url.Action("GetVendorData", "Search")';
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        //url: "/Search/GetVendorData",
+                        url:url,
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
