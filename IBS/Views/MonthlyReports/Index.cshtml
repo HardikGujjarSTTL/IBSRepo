@@ -19,6 +19,7 @@
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row ICStatus" style="display: none">
+            <div class="row">
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDate">From</label>
@@ -33,15 +34,16 @@
                     <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                 </div>
             </div>
+            </div>
             <div class="row my-0">
                 <div class="col-lg-12">
                     <h3 class="heading3">Status of IE</h3>
                 </div>
-                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                <div class="col-md-4">
                     <div class="reference">
-                        <ul class="radioListForm">
-                            <li>@Html.RadioButton("rdType", "AllIES", new { @id="rdAllIES", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's</li>
-                            <li>@Html.RadioButton("rdType", "ParticularIE", new { @id="rdParticularIE", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE</li>
+                        <ul class="radioListForm mb-0">
+                            <li><label for="rdAllIES">@Html.RadioButton("rdType", "AllIES", new { @id="rdAllIES", @tabindex = "6", @checked = true }) All IE's</label></li>
+                            <li><label for="rdParticularIE">@Html.RadioButton("rdType", "ParticularIE", new { @id="rdParticularIE", @tabindex = "6" }) For Particular IE</label></li>
                         </ul>
                     </div>
                 </div>
