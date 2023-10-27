@@ -118,6 +118,7 @@
             var qty = $(this).closest('td').find('input[name="qty"]').val();
             var Id = $(this).attr('href').split('Barcode=')[1]; 
             var editUrl = getEditUrl(Id) + '&quantity=' + qty; 
+            debugger;
             //window.location.href = editUrl;
             printDirectly(editUrl);
         });

@@ -326,7 +326,8 @@
         function LabCalculation() {
             $("#popup2").fadeIn();
             $("#popup2").show();
-            $("#divGrid").load('/BarcodeGeneration/LabCalculation');
+           // $("#divGrid").load('/BarcodeGeneration/LabCalculation');
+            $("#divGrid").load("@Url.Action("LabCalculation")");
         }
         //Lab Calculation page data
         function Change() {
