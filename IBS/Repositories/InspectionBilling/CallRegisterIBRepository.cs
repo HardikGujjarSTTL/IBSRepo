@@ -4069,7 +4069,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     // Execute the query                    
 
-                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.SetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
 
                     if (recordExists == null)
                     {
@@ -4744,7 +4744,7 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public List<VenderCallStatusModel> GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
             string msg = "";
             string formattedCallRecvDt = "";
@@ -4756,15 +4756,13 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             var queryResult = context.IcIntermediates
-                                .Where(ici => ici.CaseNo == CaseNo &&
-                                              ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                              ici.CallSno == CallSno)
-                                .OrderByDescending(ici => ici.Datetime)
-                                .Select(ici => ici).ToList();
-            //.FirstOrDefault();
+                         .Where(ici => ici.CaseNo == CaseNo &&
+                                       ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                       ici.CallSno == CallSno)
+                         .OrderByDescending(ici => ici.Datetime)
+                         .FirstOrDefault();
 
-            List<VenderCallStatusModel> lst = new();            
-            if (queryResult.Count()  > 0) //!= null)
+            if (queryResult != null)
             {
                 model.DocBkNo = queryResult.BkNo;
                 model.DocSetNo = queryResult.SetNo;

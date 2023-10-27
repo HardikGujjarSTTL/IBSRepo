@@ -888,7 +888,7 @@ namespace IBS.Controllers.InspectionBilling
 
         public IActionResult GetBkNoAndSetNo(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
-            List<VenderCallStatusModel> lst = new();
+            VenderCallStatusModel lst = new();
             lst = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno, model, selectedConsigneeCd);
             return Json(lst);
         }
