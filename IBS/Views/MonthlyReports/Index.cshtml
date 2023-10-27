@@ -17,7 +17,7 @@
     </div>
 </div>
 <div class="task-listinput">
-    <div class="accordion-body">        
+    <div class="accordion-body">
         <div class="task-inner row ICStatus" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">
@@ -33,28 +33,27 @@
                     <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                 </div>
             </div>
-            </div>
             <div class="row my-0">
-                <div class="col-lg-12">    
+                <div class="col-lg-12">
                     <h3 class="heading3">Status of IE</h3>
                 </div>
-            <div class="col-md-4 mb-3" style="font-weight: bold;">
-                <div class="reference">
-                    <ul class="radioListForm">
-                        <li>@Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's</li>
-                        <li>@Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE</li>
-                    </ul>
+                <div class="col-md-4 mb-3" style="font-weight: bold;">
+                    <div class="reference">
+                        <ul class="radioListForm">
+                            <li>@Html.RadioButton("rdType", "AllIES", new { @id="rdAllIES", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's</li>
+                            <li>@Html.RadioButton("rdType", "ParticularIE", new { @id="rdParticularIE", @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            </div>
-        <div class="row">
-            <div class="col-md-4" id="IEStatus" style="display:none;">
-                <div class="reference">
-                    <label for="Name">IE</label>
-                    @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(ViewBag.Region) , "Value", "Text"),"--Select--")
+            <div class="row">
+                <div class="col-md-4" id="IEStatus" style="display:none;">
+                    <div class="reference">
+                        <label for="Name">IE</label>
+                        @Html.DropDownList("IE", new SelectList(IBS.Models.Common.GetIEName(ViewBag.Region) , "Value", "Text"),"--Select--")
+                    </div>
                 </div>
             </div>
-        </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-4">
                     <div class="savenext-btn">
@@ -63,7 +62,7 @@
                     </div>
                 </div>
             </div>
-        
+        </div>
         <div class="task-inner row ReInspectionICs" style="display: none">
             <div class="col-md-3">
                 <div class="input-search">
@@ -109,7 +108,7 @@
                     }
                 });
             }
-            else if ('@ReportType' == 'ReInspectionICs'){
+            else if ('@ReportType' == 'ReInspectionICs') {
                 $(".ReInspectionICs").css("display", "");
             }
             else if ('@ReportType' == 'ICSAccountal') {
@@ -126,13 +125,13 @@
         });
 
         //Clear Functions
-        function ClearControlsICStatus(){
+        function ClearControlsICStatus() {
             $("#FromDate").val("");
             $("#ToDate").val("");
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
         }
-        function ClearControlsReInspectionICs(){
+        function ClearControlsReInspectionICs() {
             $("#FromDate_ReInspectionICs").val("");
             $("#ToDate_ReInspectionICs").val("");
             $("#spnErrorFromDate_ReInspectionICs").html("");
@@ -166,8 +165,7 @@
                 window.opener = 'x';
                 window.close();
             }
-            else
-            {
+            else {
                 $("#spnErrorFromDate").html("");
                 $("#spnErrorToDate").html("");
 
@@ -193,7 +191,7 @@
                 var url = '@Url.Action("ManageICStatus", "MonthlyReports")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
-            
+
         }
 
         function ViewReportReInspectionICs() {
@@ -219,7 +217,7 @@
             window.open(url, '_blank');
         }
 
-       
+
 
         function FromToDateValidate(IsValid, FDateID, TDateID, EFDateID, ETDateID) {
             FDateID = "#" + FDateID;
