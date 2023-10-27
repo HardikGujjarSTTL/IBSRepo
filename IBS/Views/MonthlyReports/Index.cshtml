@@ -40,9 +40,10 @@
                 </div>
             <div class="col-md-4 mb-3" style="font-weight: bold;">
                 <div class="reference">
-                    @Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's
-                    &nbsp;&nbsp;
-                    @Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE
+                    <ul class="radioListForm">
+                        <li>@Html.RadioButton("rdType", "AllIES", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6", @checked = true }) All IE's</li>
+                        <li>@Html.RadioButton("rdType", "ParticularIE", new { @class = "text-darkblue font-bold font-size-8pt", @tabindex = "6" }) For Particular IE</li>
+                    </ul>
                 </div>
             </div>
             </div>

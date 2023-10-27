@@ -30,36 +30,34 @@
             </div>
             
             <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">CaseNo</label>
                     <input type="text" class="input" asp-for="CaseNo" id="lblCNo" readonly="readonly">
                 </div>
 
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Amount Received</label>
                     <input type="text" class="input" asp-for="AmountReceived" id="lblAmtRec" readonly="readonly">
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">TDS Amount</label>
                     <input type="text" class="input" asp-for="TDSAmount" id="lbltsdamt">
                     <span class="text-danger field-validation-error" id="spnErrorsTdsAmt"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">TDS Date</label>
                     <input class="input datepicker" asp-for="TDSDate" id="lbltdsdate">
                     <span class="text-danger field-validation-error" id="spnErrorsTdsDt"></span>
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Total Lab Charges</label>
                     <input type="text" class="input" asp-for="TotalLabCharges" id="lblTotLabCharges" readonly="readonly">
                 </div>
 
             </div>
-            <div class="savenext-btn" style="margin-left:47%;">
-                <button type="submit" class="save-btn active Permission_Save" style="width:auto;" onclick="Save();">Save</button>
-                <button type="button" class="save-btn active" style="width:auto;" onclick="resetFields()">Reset</button>
+            <div class="savenext-btn">
+                <button type="submit" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                <button type="button" class="reset-btn" onclick="resetFields()">Reset</button>
             </div>
         </div>
     </div>

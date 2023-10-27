@@ -236,13 +236,13 @@
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
                                 <input type="text" id="bknoaccpted" maxlength="100">
-                                <span asp-validation-for="BkNo" class="text-danger"></span>
+                                <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Set No : </label>
                                 <input type="text" id="setnoaccpted" maxlength="100">
-                                <span asp-validation-for="SetNo" class="text-danger"></span>
+                                <span asp-validation-for="DocSetNo" class="text-danger"></span>
 
                             </div>
                         </div>
@@ -516,17 +516,11 @@
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
                         debugger
-                        if (data.length != 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                if (selectedValue == data[i].ConsigneeFirm) {
-                                    $('#bknoaccpted').val(data[i].BkNo);
-                                    $('#setnoaccpted').val(data[i].SetNo);
-
-                                    $('#ViewPrintIC').prop('disabled', false);
-                                    $("#ViewPrintIC").css("cursor", "pointer");
-                                    break;
-                                }
-                            }
+                        $('#bknoaccpted').val(data.DocBkNo);
+                        $('#setnoaccpted').val(data.DocSetNo);
+                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                            $('#ViewPrintIC').prop('disabled', false);
+                            $("#ViewPrintIC").css("cursor", "pointer");
                         }
                     },
                     error: function () {
@@ -1106,9 +1100,24 @@
             var setnoaccpted = $('#SetNo').val();
             var CallStatus = $('#CallStatusdrp').val();
 
-            if (bknoaccpted != "" && setnoaccpted != "") {
+            //if (bknoaccpted != "" && setnoaccpted != "") {
                 var ajaxData = AjaxModel();
 
+                if(CallStatus == "G" && CallStatus == "T"){
+                    var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
+
+                    if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
+                        var file = fileInput.defaultValue;
+                        formData.append("UploadeFile", file);
+                    }
+
+                    var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
+                    var uploadedDocuments = hiddenInput.val();
+                    if (uploadedDocuments == "" || uploadedDocuments == null) {
+                        alert('Please select all files!');
+                        return;
+                    }
+                }
                 if (ajaxData) {
                     for (var key in ajaxData) {
                         if (ajaxData.hasOwnProperty(key)) {
@@ -1116,19 +1125,7 @@
                         }
                     }
                 }
-                var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
-
-                if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
-                    var file = fileInput.defaultValue;
-                    formData.append("UploadeFile", file);
-                }
-
-                var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
-                var uploadedDocuments = hiddenInput.val();
-                if (uploadedDocuments == "" || uploadedDocuments == null) {
-                    alert('Please select all files!');
-                    return;
-                }
+                
 
                 if(CallStatus == "C"){
                     var atLeastOneChecked = $('input[name^="chkItems"]').is(':checked');
@@ -1163,10 +1160,10 @@
                         console.error('Error: ' + textStatus, errorThrown);
                     }
                 });
-            } else {
-                alert("BKNO & SetNo Is Required.");
-                return;
-            }
+            //} else {
+            //    alert("BKNO & SetNo Is Required.");
+            //    return;
+            //}
             //if ($("#ActionType").val() == "C") {
             //    $("#frmCallStatus").submit();
             //}
@@ -1319,8 +1316,8 @@
             var CallStatus = $('#CallStatusdrp').val();
             var ConsigneeFirm = $('#consigneeFirmDropdown').val();
             var LocalOutstation = $('#LocalOutstationdrp').val();
-            var BkNo = $('#bknoaccpted').val();
-            var SetNo = $('#setnoaccpted').val();
+            var DocBkNo = $('#bknoaccpted').val();
+            var DocSetNo = $('#setnoaccpted').val();
             var CaseNo = $('#caseno').val();
             var CallRecvDt = $('#callRecdt').val();
             var CallSno = $('#callsnos').val();
@@ -1351,7 +1348,9 @@
                 Remarks: Remarks,
                 hologram: hologram,
                 Remarkslbl: Remarkslbl,
-                PoDt: PoDt
+                PoDt: PoDt,
+                DocBkNo: DocBkNo,
+                DocSetNo: DocSetNo
             };
 
             return formData;

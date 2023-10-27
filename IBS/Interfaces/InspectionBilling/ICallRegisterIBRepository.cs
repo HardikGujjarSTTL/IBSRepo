@@ -66,7 +66,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
-        public List<VenderCallStatusModel> GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
 
         public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
 
