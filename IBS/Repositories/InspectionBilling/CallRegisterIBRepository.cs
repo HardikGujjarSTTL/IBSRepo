@@ -4744,7 +4744,7 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        public List<VenderCallStatusModel> GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
             string msg = "";
             string formattedCallRecvDt = "";
@@ -4756,13 +4756,15 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             var queryResult = context.IcIntermediates
-                        .Where(ici => ici.CaseNo == CaseNo &&
-                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                      ici.CallSno == CallSno)
-                        .OrderByDescending(ici => ici.Datetime)
-                        .FirstOrDefault();
+                                .Where(ici => ici.CaseNo == CaseNo &&
+                                              ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                              ici.CallSno == CallSno)
+                                .OrderByDescending(ici => ici.Datetime)
+                                .Select(ici => ici).ToList();
+            //.FirstOrDefault();
 
-            if (queryResult != null)
+            List<VenderCallStatusModel> lst = new();            
+            if (queryResult.Count()  > 0) //!= null)
             {
                 model.DocBkNo = queryResult.BkNo;
                 model.DocSetNo = queryResult.SetNo;

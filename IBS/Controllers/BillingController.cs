@@ -21,15 +21,18 @@ namespace IBS.Controllers
         #region Variables
         private readonly IReceiptsRemitanceRepository ReceiptsRemitanceRepository;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
         #endregion
-        public BillingController(IReceiptsRemitanceRepository _ReceiptsRemitanceRepository, IWebHostEnvironment _env)
+        public BillingController(IReceiptsRemitanceRepository _ReceiptsRemitanceRepository, IWebHostEnvironment _env, IConfiguration _config)
         {
             ReceiptsRemitanceRepository = _ReceiptsRemitanceRepository;
             this.env = _env;
+            config = _config;
         }
 
         public IActionResult Index()
         {
+            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
             ViewBag.Region = Region;
             return View();
         }
