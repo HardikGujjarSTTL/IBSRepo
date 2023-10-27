@@ -1,10 +1,7 @@
 ﻿@{
     ViewData["Title"] = "DAILY IE WISE CALLS";
-   
-   
+    string ReportUrl = ViewBag.ReportUrl;   
 }
-
-
 <div class="list-inner">
     <div class="tast-list">
         <h2>Daily IE Wise Call</h2>
@@ -53,11 +50,11 @@
             if (!IsValid) return;
             var callDate = $("#callDate").val();
             var RegNo = '@ViewBag.Region';
-            var QueryString = "RptFlag=4" +
+            var QueryString = "?RptFlag=4" +
                 "&callDate=" + encodeURIComponent(callDate) +
                 "&RegNo=" + encodeURIComponent(RegNo);
 
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
 
             if (oWin === null || typeof oWin === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');

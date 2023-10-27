@@ -136,8 +136,8 @@
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
-                            <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                            <br>*@
+                        <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
+                        <br>*@
                             <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
                         </td>
                     }
@@ -313,7 +313,7 @@
                     <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
                     <div class="accordion-body" style="overflow-x: auto;">
                         <div class="row my-0">
-                             <div class="col-md-4 mb-3" id="Remarksval">
+                            <div class="col-md-4 mb-3" id="Remarksval">
                                 <label for="Reference">Remarks : </label>
                                 <textarea rows="4" asp-for="Remarks" style="color:red;text-transform: uppercase;" id="Remarks"></textarea>
                             </div>
@@ -346,7 +346,7 @@
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
                             </div>
-                            <p style="color:red;"><b>RefreshAll:It will delete all the records which are not accepted or rejected!</b></p>                            
+                            <p style="color:red;"><b>RefreshAll:It will delete all the records which are not accepted or rejected!</b></p>
                         </div>
                         <div class="row my-0">
                             <div class="col-md-12 mb-5" style="align-content:center;">
@@ -520,11 +520,17 @@
                         //$('#BkNo').val(data.BkNo);
                         //$('#SetNo').val(data.SetNo);
                         debugger
-                        $('#bknoaccpted').val(data.BkNo);
-                        $('#setnoaccpted').val(data.SetNo);
-                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
-                            $('#ViewPrintIC').prop('disabled', false);
-                            $("#ViewPrintIC").css("cursor", "pointer");
+                        if (data.length != 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (selectedValue == data[i].ConsigneeFirm) {
+                                    $('#bknoaccpted').val(data[i].BkNo);
+                                    $('#setnoaccpted').val(data[i].SetNo);
+
+                                    $('#ViewPrintIC').prop('disabled', false);
+                                    $("#ViewPrintIC").css("cursor", "pointer");
+                                    break;
+                                }
+                            }
                         }
                     },
                     error: function () {

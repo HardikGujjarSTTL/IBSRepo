@@ -6,6 +6,7 @@
     //{
     //    clsView = "Permission_View";
     //}
+    string ReportUrl = ViewBag.ReportUrl;
 }
 
 
@@ -284,34 +285,15 @@
 
             var InvoiceNo = sessionStorage.getItem("InvoiceNo");;
             var InvoiceDt = sessionStorage.getItem("InvoiceDt");;
-            var QueryString = "RptFlag=2" +
+            var QueryString = "?RptFlag=2" +
                 "&Invoice=" + encodeURIComponent(InvoiceNo) +
                 "&InvoiceDt=" + encodeURIComponent(InvoiceDt);
-            //"&RegNo=" + encodeURIComponent(RegNo) +
-            //"&TranNo=" + encodeURIComponent(TranNo);
-
-            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
             if (oWin === null || typeof (oWin) === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
             window.opener = 'x';
-            window.close();
-            //$.ajax({
-            //    url: '/LabInvoiceDownload/Download',
-            //    type: "POST",
-            //    dataType: "JSON",
-            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
-
-            //    success: function (success) {
-
-
-
-            //    }
-
-            //});
-
+            window.close();           
         }
         //function UserDelete(UserId) {
         //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
