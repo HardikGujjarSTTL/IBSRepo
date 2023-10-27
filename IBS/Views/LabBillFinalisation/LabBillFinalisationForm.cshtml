@@ -141,21 +141,22 @@
 </div>
 <div class="accordion-body">
     <div class="row my-0">
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="Reference">From</label>
             <input type="text" class="input datepicker" id="dtfrom" style="text-transform">
             <span class="text-danger field-validation-error" id="spnError1"></span>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="Reference">To</label>
             <input type="text" class="input datepicker" id="dtto" style="text-transform">
             <span class="text-danger field-validation-error" id="spnError2"></span>
         </div>
     </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
+    </div>
 </div>
-<div class="savenext-btn" style="margin-left:40%;">
-    <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
-</div>
+
 
 <div id="showPayment" style="display:none;">
     <section class="table-section">
