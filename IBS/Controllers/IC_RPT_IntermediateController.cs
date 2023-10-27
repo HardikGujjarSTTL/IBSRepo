@@ -15,23 +15,26 @@ namespace IBS.Controllers
         private readonly IIC_RPT_IntermediateRepository iC_RPT_IntermediateRepository;
         SessionHelper objSessionHelper = new SessionHelper();
         private readonly IWebHostEnvironment env;
-        public IC_RPT_IntermediateController(IIC_RPT_IntermediateRepository _iC_RPT_IntermediateRepository, IWebHostEnvironment _env)
+        private readonly IConfiguration config;
+        public IC_RPT_IntermediateController(IIC_RPT_IntermediateRepository _iC_RPT_IntermediateRepository, IWebHostEnvironment _env, IConfiguration _config)
         {
             iC_RPT_IntermediateRepository = _iC_RPT_IntermediateRepository;
             this.env = _env;
+            config = _config;
         }
         #endregion
 
         //[Authorization("IC_RPT_Intermediate", "Index", "view")]
         public IActionResult Index()
         {
+            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
             IC_RPT_IntermediateModel model = new();
             //var CASE_NO = "N21111089";
             //var Call_Recv_dt = Convert.ToString("13/08/2022");
             //var Call_SNO = "3";
             //var CONSIGNEE_CD = "39";
             //var ACTIONAR = "A";
-
+            
             var CASE_NO = "";
             var Call_Recv_dt = "";
             var Call_SNO = "";

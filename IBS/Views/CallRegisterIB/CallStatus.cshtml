@@ -136,8 +136,8 @@
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
-                            <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                            <br>*@
+                        <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
+                        <br>*@
                             <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
                         </td>
                     }
@@ -516,11 +516,17 @@
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
                         debugger
-                        $('#bknoaccpted').val(data.BkNo);
-                        $('#setnoaccpted').val(data.SetNo);
-                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
-                            $('#ViewPrintIC').prop('disabled', false);
-                            $("#ViewPrintIC").css("cursor", "pointer");
+                        if (data.length != 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (selectedValue == data[i].ConsigneeFirm) {
+                                    $('#bknoaccpted').val(data[i].BkNo);
+                                    $('#setnoaccpted').val(data[i].SetNo);
+
+                                    $('#ViewPrintIC').prop('disabled', false);
+                                    $("#ViewPrintIC").css("cursor", "pointer");
+                                    break;
+                                }
+                            }
                         }
                     },
                     error: function () {

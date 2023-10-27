@@ -1,6 +1,7 @@
 ﻿@model IBS.Models.DownloadInspectionFeeBillModel
 @{
     ViewData["Title"] = "INSPECTION FEE BILLDOWNLOAD FORM";
+    string ReportUrl = ViewBag.ReportUrl;
 }
 
 @*<form data-ajax="true" asp-antiforgery="true" asp-controller="DownloadInspectionFeeBill" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">*@
@@ -284,21 +285,17 @@
             var CaseNo = $("#CaseNo").val();
             var BkNo = $("#BkNo").val();
             var SetNo = $("#SetNo").val();
-            var QueryString = "RptFlag=3" +
+            var QueryString = "?RptFlag=3" +
                 "&CaseNo=" + encodeURIComponent(CaseNo) +
                 "&BkNo=" + encodeURIComponent(BkNo) +
                 "&SetNo=" + encodeURIComponent(SetNo);
-                
 
-            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
             if (oWin === null || typeof (oWin) === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
             window.opener = 'x';
-            window.close();
-            
+            window.close();            
         }
     </script>
     }

@@ -8,6 +8,7 @@
     else if (ReportType == "ReInspectionICs") ReportTitle = "RE-INSPECTION IC's";
     else if (ReportType == "ICSAccountal") ReportTitle = "IC ACCOUNTAL STATEMENT";
     ViewData["Title"] = ReportTitle;
+    string ReportUrl = ViewBag.ReportUrl;
 }
 
 <div class="list-inner">
@@ -146,7 +147,7 @@
                 var rdbGIE = $('input[name="rdType"]:checked').val();
                 var lstIE = $("#IE").val();
                 var rdbCancelYes = "true";
-                var QueryString = "RptFlag=7" +
+                var QueryString = "?RptFlag=7" +
                     "&FromDate=" + encodeURIComponent(FromDate) +
                     "&ToDate=" + encodeURIComponent(ToDate) +
                     "&Region=" + encodeURIComponent(Region) +
@@ -155,7 +156,7 @@
                     "&lstIE=" + encodeURIComponent(lstIE) +
                     "&rdbCancelYes=" + encodeURIComponent(rdbCancelYes);
 
-                var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+                var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
 
                 if (oWin === null || typeof oWin === 'undefined') {
                     alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
