@@ -130,16 +130,16 @@
                         <div class="col-md-12">
                             <h3 class="heading3">Particular BPO:</h3>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <input type="text" class="input" id="txtbpo">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-2 mb-3">
                             <div class="savenext-btn">
-                                <button type="button" class="save-btn active" onclick="loadbpo();" style="margin-top: 33px;" title="Enter the Particular BPO or 1st few letters of Particular BPO then click on select Particular BPO Button">Select BPO</button>
+                                <button type="button" class="save-btn active" onclick="loadbpo();" title="Enter the Particular BPO or 1st few letters of Particular BPO then click on select Particular BPO Button">Select BPO</button>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3" style="display:none;" id="dvVendCd">
-                            @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetVendCd("0") , "Value", "Text"),"--Select--", new{@style="margin-top: 33px;"})
+                        <div class="col-md-6 mb-3" style="display:none;" id="dvVendCd">
+                            <select id="bpoid"></select>
                         </div>
                     </div>
                     @* <div class="row">
@@ -150,6 +150,19 @@
                     <div class="col-md-3 mb-3">
                         @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetBillPayingOfficer() , "Value", "Text"),"--Select--")
                     </div> *@
+                </div>
+                <div class="col-md-12" id="particularclient" style="display:none;">
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3">Particular Client:</h3>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            @Html.DropDownList("ddlPClient", new SelectList(IBS.Models.Common.ClientWise() , "Value", "Text"),"--Select--")
+                        </div>
+                        <div class="col-md-6 mb-3" id="dvpclient">
+                            <select id="pclient"></select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -170,15 +183,18 @@
 
                     $("#allbpohide").css("display", "block");
                     $("#particularbpo").css("display", "none");
+                    $("#particularclient").css("display", "none");
                
                 } else if (selectedValue === "Report2") {
 
                     $("#allbpohide").css("display", "none");
                     $("#particularbpo").css("display", "block");
+                    $("#particularclient").css("display", "none");
                
                 } else if (selectedValue === "Report3") {
-               
-                    alert("Particular Client selected");
+                    $("#allbpohide").css("display", "none");
+                    $("#particularbpo").css("display", "none");
+                    $("#particularclient").css("display", "block");
                
                 } else if (selectedValue === "Report4") {
                
@@ -187,11 +203,11 @@
                 }
             });
         });
-        function loadbpo() {
+        function loadbpo(ids) {
             var BPO = $("#txtbpo").val();
             $("#dvVendCd").css("display", "block");
             $.ajax({
-                url: '@Url.Action("getBPO", "BPOWiseOutstandingBills")?BPO=' + BPO,
+                url: '@Url.Action("GetBPO", "BPOWiseOutstandingBills")?BPO=' + BPO,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -199,10 +215,54 @@
                 contentType: false
             }).done(function (response) {
                 if (response.status) {
-                    $("#dllRCode").html("");
+                    $("#bpoid").html("");
+                    // $("#bpoid").append("<option value=''>--Select--</option>");
+                    var id = 0;
                     $.each(response.list, function (index, value) {
-                        $("#dllRCode").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        $("#bpoid").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
                     });
+                    if (id > 0) {
+                        $("#bpoid").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#bpoid").val(ids);
+                    }
+                    
+                }
+            });
+        }
+        $("#ddlPClient").change(function () {
+            FillBPOCode();
+        })
+        function FillBPOCode(ids) {
+            var BpoType = $("#ddlPClient").val();
+            $.ajax({
+                url: '@Url.Action("GetRlyCode", "BPOWiseOutstandingBills")?BpoType=' + BpoType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#pclient").html("");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#pclient").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#pclient").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#pclient").val(ids);
+                    }
+                   
                 }
             });
         }

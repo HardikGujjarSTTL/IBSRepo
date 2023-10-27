@@ -50,10 +50,10 @@
                 return false;
             }
                                 var RegNo = $("#txtregno").val();
-                                        var newUrl = "/LabInvoiceRpt/ManageLabInvoiceRpt?RegNo="+RegNo; 
-
+                                        //var newUrl = "/LabInvoiceRpt/ManageLabInvoiceRpt?RegNo="+RegNo;
+            window.location.href = '@Url.Action("ManageLabInvoiceRpt", "LabInvoiceRpt")?RegNo=' + RegNo;
        
-                                        window.location.href = newUrl;
+                                        //window.location.href = newUrl;
                 }
                     $(function () {
                         
