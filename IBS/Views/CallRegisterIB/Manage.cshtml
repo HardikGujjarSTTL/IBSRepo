@@ -529,6 +529,9 @@
         $("#btnRegiserCallSave").click(function () {
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
+
+            alert(actiontype);
+
             $("#ActionType").val(actiontype);
 
 
@@ -547,10 +550,11 @@
             else if ($("#DepartmentCode").val() == "") {
                 ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }
-            else if ($("#IrfcFunded").val() == "") {
-                if ($("#RlyNonrly").val() == "R") {
-                    ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
-                }
+            else if ($("#IrfcFunded").val() == "" && $("#RlyNonrly").val() == "R") {
+                ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
+                // if ($("#RlyNonrly").val() == "R") {
+                //     ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
+                // }
             }
             else if ($("#MfgCd").val() == "") {
                 ShowHideMsgNew(false, "Please add Name of Manufacturer code.");

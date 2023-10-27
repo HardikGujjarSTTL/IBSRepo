@@ -147,7 +147,7 @@
                         <label for="Reference">Case Status : </label>
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallStatusdrp"})
+                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @id="CallStatusdrp"})
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @class = "form-control" ,@id="CallCancelStatusdrp"})
@@ -238,7 +238,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Consignee : </label>
-                        @Html.DropDownListFor(model => model.ConsigneeFirm,new SelectList(Model.ConsigneeFirmList, "Value", "Text"),new { @class = "form-control" ,@id="consigneeFirmDropdown"})
+                        @Html.DropDownListFor(model => model.ConsigneeFirm,new SelectList(Model.ConsigneeFirmList, "Value", "Text"),new { @id="consigneeFirmDropdown"})
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Book No : </label>
