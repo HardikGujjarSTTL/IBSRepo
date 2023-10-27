@@ -652,6 +652,7 @@ namespace IBS.Controllers.InspectionBilling
                 return Json(new { status = false, responseText = model.AlertMsg });
             }
         }
+
         public IActionResult RefreshAllDlt(VenderCallStatusModel model)
         {
             model = callregisterRepository.RefreshAllDlt(model);
@@ -692,7 +693,7 @@ namespace IBS.Controllers.InspectionBilling
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Cancellation_Document };
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CALLCANCELLATIONDOCUMENTS), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
-                model.AlertMsg = "Upload done Successfully!!!";
+                model.AlertMsg = "Record Cancellation Successfully !!";
                 return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
             }
             else
@@ -707,7 +708,7 @@ namespace IBS.Controllers.InspectionBilling
             model = callregisterRepository.CallStatusAcceptRej(model);
             if (model.AlertMsg == "Success")
             {
-                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+                return Json(new { status = true, responseText = "Record Accepted Successfully !!", Id = 1 });
             }
             else
             {
@@ -751,7 +752,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             if (model.AlertMsg == "Success")
             {
-                return Json(new { status = true, responseText = model.AlertMsg, Id = 1 });
+                return Json(new { status = true, responseText = "Upload Successfully !!", Id = 1 });
             }
             else
             {
@@ -760,16 +761,57 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpPost]
-        public IActionResult CallStatus(VenderCallStatusModel model)
+        public IActionResult CallStatus(VenderCallStatusModel model, IFormCollection FrmCollection)
         {
             try
             {
+                List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+                if (FrmCollection != null && FrmCollection["UploadeFile"].Count > 0)
+                {
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                }
                 if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
                 {
                     model.Updatedby = UserName.Substring(0, 8);
                     model.UserId = Convert.ToString(UserId);
-                    callregisterRepository.Save(model);
-                    AlertAddSuccess("Call Status and Call Update Status has Been Modified!!!");
+                    string msg = callregisterRepository.Save(model, DocumentsList);
+
+                    if(msg == "Success")
+                    {
+                        if (model.CallStatus == "G" || model.CallStatus == "T")
+                        {
+                            if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
+                            {
+                                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign };
+                                if (DocumentsList[0].DocName == "IC PhotoDigital Sign")
+                                {
+                                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + ".PDF";
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                }
+                                if (DocumentsList[1].DocName == "Upload TestPlan")
+                                {
+                                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + ".PDF";
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
+                                }
+                                if (DocumentsList[2].DocName == "Upload IC Annexue 1")
+                                {
+                                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + "-A1.PDF";
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                }
+                                if (DocumentsList[3].DocName == "Upload IC Annexue 2")
+                                {
+                                    var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + "-A2.PDF";
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                }
+                            }
+                        }
+                        //AlertAddSuccess("Call Status and Call Update Status has Been Modified!!!");
+                        return Json(new { status = true, responseText = "Call Status and Call Update Status has Been Modified!!!", Id = 1 });
+                    }
+                    else
+                    {
+                        return Json(new { status = false, responseText = msg });
+                    }
                 }
                 return RedirectToAction("Index");
             }

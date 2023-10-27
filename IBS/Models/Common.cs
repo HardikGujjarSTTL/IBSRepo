@@ -3044,6 +3044,24 @@ namespace IBS.Models
             }
             return objdata;
         }
+        public static List<SelectListItem> GetBillPayingOfficer()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+           
+                var obj = (from of in context.V12BillPayingOfficers
+                           //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                           select of).ToList();
+                objdata = (from a in obj
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.BpoCd + "-" + a.Bpo,
+                          Value = a.BpoCd
+                      }).ToList();
+           
+            return objdata;
+        }
 
         public static List<SelectListItem> GetEditBillPayingOfficer(string BpoCd)
         {

@@ -158,8 +158,10 @@
         function Print(pyid) {
 
             var VOUCHER_NO = pyid;
+            var url = '@Url.Action("PrintLapPayments", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/PrintLapPayments',
+                //url: '/LabPaymentsForm/PrintLapPayments',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { VOUCHER_NO: VOUCHER_NO },

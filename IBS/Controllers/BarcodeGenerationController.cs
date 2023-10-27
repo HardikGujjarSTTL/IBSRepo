@@ -155,6 +155,7 @@ namespace IBS.Controllers
                     barcode.SetMargins(10);
 
                     string path = Path.Combine(env.WebRootPath, "GeneratedBarcode");
+                    //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -162,9 +163,12 @@ namespace IBS.Controllers
 
                     string fileName = $"barcode_{i + 1}.png";
                     string filePath = Path.Combine(env.WebRootPath, "GeneratedBarcode", fileName);
+                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode", fileName);
                     barcode.SaveAsPng(filePath);
-
+                    //string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}{filePath}";
+                    //string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/wwwroot/ReadWriteData/GeneratedBarcode/{fileName}";
                     string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/GeneratedBarcode/" + fileName;
+                    //string imageUrl = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode" , fileName);
                     imageUrls.Add(imageUrl);
                 }
 

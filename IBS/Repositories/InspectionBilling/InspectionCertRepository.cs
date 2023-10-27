@@ -558,7 +558,8 @@ namespace IBS.Repositories.InspectionBilling
                     model.NoOfInsp = Convert.ToInt32(GetDetails.C.NoOfInsp);
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
-                    model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    model.OtherInspDt = GetDetails.C.OtherInspDt == null ? null : Convert.ToDateTime(GetDetails.C.OtherInspDt);
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -928,6 +929,18 @@ namespace IBS.Repositories.InspectionBilling
             var bscheck1 = (context.T16IcCancels.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
                         && x.SetNo.Trim() == model.Setno && x.Region == Region).Select(x => x.IssueToIecd)).FirstOrDefault();
             string bscheck2 = "";
+            //if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
+            //{
+            //    bscheck2 = "N";
+            //}
+            string State = model.State.Substring(0, 2);
+            string GstiNo = model.GstinNo.Substring(0, 2);
+            if (model.GstinNo.Substring(0, 1) == "0")
+            {
+                State = "0" + State;
+                model.State = "0" + model.State;
+            }
+
             if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
             {
                 bscheck2 = "N";
@@ -1180,6 +1193,14 @@ namespace IBS.Repositories.InspectionBilling
                         && x.SetNo.Trim() == model.Setno && x.Region == Region).Select(x => x.IssueToIecd)).FirstOrDefault();
 
             string bscheck2 = "";
+            string State = model.State.Substring(0, 2);
+            string GstiNo = model.GstinNo.Substring(0, 2);
+            if (model.GstinNo.Substring(0, 1) == "0")
+            {
+                State = "0" + State;
+                model.State = "0" + model.State;
+            }
+
             if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
             {
                 bscheck2 = "N";

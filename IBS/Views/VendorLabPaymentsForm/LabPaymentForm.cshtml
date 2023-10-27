@@ -200,8 +200,10 @@
            var PaymentID= $("#txtpyid").val();
             var PaymentDT = $("#txtpydt").val();
             var Lab = $("#ddlpylab").val();
+            var url = '@Url.Action("LoadTable", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
+                //url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
+               url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { PaymentID: PaymentID, PaymentDT: PaymentDT, Lab: Lab },

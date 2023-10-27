@@ -109,7 +109,7 @@
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Quantity</label>
-                        <input type="text" class="input" asp-for="Qty" onblur="QuantityChanged()">
+                        <input type="text" class="input" asp-for="Qty" onblur="QuantityChanged()" maxlength="10">
                         <span asp-validation-for="Qty" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -124,7 +124,7 @@
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Rate</label>
-                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()">
+                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()" maxlength="10">
                         <span asp-validation-for="Rate" class="text-danger" ></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -137,7 +137,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Discount Type</label>
                         @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="Rate" class="text-danger"></span>
+                        <span asp-validation-for="DiscountType" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Value</label>
@@ -202,8 +202,8 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="OtChargePer"  onblur="othercharges();">*@
-                            <input type="number" class="input" asp-for="OtChargePer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="othercharges();">
-                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                            <input type="number" class="input" asp-for="OtChargePer" min="0" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="othercharges();">
+                            <span asp-validation-for="OtChargePer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -379,11 +379,11 @@
             var delvDateInput = $("#DelvDt").val();
             var podtInput = $("#PoDt").val();
 
-            if (check_date(delvDateInput)) {
-                if (compareDates(podtInput, delvDateInput, 'Delivery Date Cannot Be Earlier Than PO Date')) {
-                    $("#DelvDt").val(delvDateInput);
-                }
-            }
+            //if (check_date(delvDateInput)) {
+            //    if (compareDates(podtInput, delvDateInput, 'Delivery Date Cannot Be Earlier Than PO Date')) {
+            //        $("#DelvDt").val(delvDateInput);
+            //    }
+            //}
         }
         function saletax() {
             var saleTaxPre = $.trim($("#SalesTaxPer").val());

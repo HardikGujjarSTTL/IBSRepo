@@ -24,7 +24,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
 
-        string send_Vendor_Email(VenderCallRegisterModel model);
+        string send_Vendor_Email(VenderCallStatusModel model);
 
         string RegiserCallDelete(VenderCallRegisterModel model);
 
@@ -46,7 +46,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno);
 
-        string Save(VenderCallStatusModel model);
+        string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
         public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo);
 

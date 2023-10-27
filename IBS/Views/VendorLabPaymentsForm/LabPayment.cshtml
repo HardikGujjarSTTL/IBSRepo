@@ -283,8 +283,10 @@
 
 
             var Lab = $("#ddlppylab").val();
+            var url = '@Url.Action("GetPayment", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/GetPayment', // Replace with your actual endpoint URL
+                //url: '/LabPaymentsForm/GetPayment', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { Lab: Lab },
@@ -371,10 +373,12 @@
                 SNO: Srno,
                 SAMPLE_REG_NO:RegNo
             };
+                var url = '@Url.Action("SavePayment", "LabPaymentsForm")';
             $.ajax({
                 type: 'POST',
                 contentType: "application/json",
-                url: "/LabPaymentsForm/SavePayment",
+                //url: "/LabPaymentsForm/SavePayment",
+                url:url,
                 dataType: "json",
                 data: JSON.stringify(LabPaymentFormModel),
                     success: function (result) {
