@@ -11,4 +11,10 @@ namespace IBSAPI.Models
         //[Required]
         //public string UniqueId { get; set; }
     }
+
+    public class ForgotPasswordModel
+    {
+        [Required(ErrorMessage = "Username or Email-Id is required.")]
+        public string UserName { get; set; }
+    }
 }
