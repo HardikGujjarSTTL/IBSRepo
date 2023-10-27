@@ -236,7 +236,7 @@ namespace IBS.Controllers
                 id = Common.DecryptQueryString(id.ToString());
             }
             UserModel user = userRepository.FindByID(id);
-            ResetPasswordModel resetPassword = new() { UserId = Convert.ToInt32(id) };
+            ResetPasswordModel resetPassword = new() { UserId = id };
             return View(resetPassword);
         }
 
@@ -251,12 +251,7 @@ namespace IBS.Controllers
 
                 UserModel user = userRepository.FindByID(Convert.ToString(resetPassword.UserId));
                 string UserId = formCollection["UserId"];
-                if (Convert.ToInt32(user.UserId) != Convert.ToInt32(UserId))
-                {
-                    AlertDanger("User Name does not match.");
-                    return View(user);
-                }
-                else if (user.UserName != resetPassword.UserName)
+                if (user.UserId.Trim() != resetPassword.UserName.Trim())
                 {
                     AlertDanger("User Name does not match.");
                     return View(resetPassword);
