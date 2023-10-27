@@ -146,11 +146,16 @@ namespace IBS.Controllers.InspectionBilling
                 if (Region == "N")
                 {
                     string mess = "";
+                    if(model.CallDt == null)
+                    {
+                        model.CallDt = model.Callrecvdt;
+                    }
                     int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
                     int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
                     if (FinspCdtdiff == 1)
                     {
                         mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
+                        AlertDanger(mess);
                     }
                     if (ICdtLinspdiff == 1)
                     {
@@ -162,8 +167,9 @@ namespace IBS.Controllers.InspectionBilling
                         {
                             mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
                         }
+                        AlertDanger(mess);
                     }
-                    AlertDanger(mess);
+                    
                 }
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {

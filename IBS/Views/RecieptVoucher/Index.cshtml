@@ -17,14 +17,9 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Cheque No.</th>
-                        <th>Cheque Date</th>
-                        <th>Amount</th>
+                        <th>Voucher No.</th>
+                        <th>Voucher Date</th>
                         <th>Bank Name</th>
-                        <th>BPO Name</th>
-                        <th>Account Description</th>
-                        <th>Case No.</th>
-                        <th>Narration</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -42,7 +37,7 @@
     <script type="text/javascript">
 
         $(function () {
-            //InitializeDatatable();
+            InitializeDatatable();
         });
 
         function InitializeDatatable() {
@@ -57,7 +52,7 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("VoucherList")",
+                    url: "@Url.Action("LoadTable")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -76,23 +71,27 @@
                             ;
                         }
                     },
-                    { data: "CHQ_NO" },
-                    { data: "CHQ_DT" },
-                    { data: "AMOUNT" },
-                    { data: "BANK_CD" },
-                    { data: "BPO_CD" },
-                    { data: "ACC_CD" },
-                    { data: "CASE_NO" },
-                    { data: "NARRATION" },
+                    { data: "VCHR_NO" },
+                    {
+                        data: "VCHR_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    //{ data: "BANK_CD" },
+                    { data: "BANK_NAME" },
+                    //{ data: "BPO_CD" },
+                    //{ data: "ACC_CD" },
+                    //{ data: "CASE_NO" },
+                    //{ data: "NARRATION" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var VCHR_NO = data.VCHR_NO;
-                            var BANK_CD = data.BANK_CD;
-                            var CHQ_NO = data.CHQ_NO;
-                            var CHQ_DT = data.CHQ_DT;
-
-                            var editUrl = '@Url.Action("RecieptVoucher", "RecieptVoucher")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT;
+                            var editUrl = '@Url.Action("Manage", "RecieptVoucher")?id=' + VCHR_NO;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';

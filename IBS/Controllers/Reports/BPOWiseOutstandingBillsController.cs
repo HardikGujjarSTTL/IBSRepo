@@ -8,5 +8,9 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
+        public IActionResult BPOWiseOutBills()
+        {
+            return View();
+        }
     }
 }

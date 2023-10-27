@@ -214,10 +214,16 @@
                 IsValid = false;
             }
             if (!IsValid) return;
-            var FromDate = $("#dtfrom").val();
-            var ToDate = $("#dtto").val();
+            var parts = $("#dtfrom").val().split('/');
+            var FromDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+            var parts1 = $("#dtto").val().split('/');
+            var ToDate = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            // var FromDate = $("#dtfrom").val();
+            // var ToDate = $("#dtto").val();
+            var url = '@Url.Action("LoadTable", "LabBillFinalisation")';
             $.ajax({
-                url: '/LabBillFinalisation/LoadTable', // Replace with your actual endpoint URL
+                //url: '/LabBillFinalisation/LoadTable', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { FromDate: FromDate, ToDate: ToDate },
@@ -288,10 +294,12 @@
                 var LabBillFinalisationModel = {
                     InvoiceNo: billno
                 };
+                var url = '@Url.Action("UpdateBill", "LabBillFinalisation")';
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: "/LabBillFinalisation/UpdateBill",
+                    //url: "/LabBillFinalisation/UpdateBill",
+                    url:url,
                     dataType: "json",
                     data: JSON.stringify(LabBillFinalisationModel),
                     success: function (result) {

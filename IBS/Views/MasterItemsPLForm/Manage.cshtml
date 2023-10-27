@@ -14,14 +14,12 @@
         <input type="hidden" asp-for="IsNew" />
         <div class="accordion-body">
             <div class="row my-0">
-                <div class="col-md-12 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="Reference">Select Item</label>
                     @Html.DropDownListFor(model => model.ItemCd, Common.GetItems(), "--Select--",  IsReadOnly ? (object)new { @class = "", @disabled = "disabled" } : new { @class = "" })
                     <span asp-validation-for="ItemCd" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-12 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="Reference">Item CD - Item Description</label>
                     <input type="text" class="input" asp-for="ItemDesc" />
                 </div>

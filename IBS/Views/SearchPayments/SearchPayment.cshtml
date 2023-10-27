@@ -138,8 +138,10 @@
             var ACC_CD = $('#ACC_CD').val();
             //var PaymentDT = $("#txtpydt").val();
             //var Lab = $("#ddlpylab").val();
+            var url = '@Url.Action("PaymentList", "SearchPayments")';
             $.ajax({
-                url: '/SearchPayments/PaymentList', // Replace with your actual endpoint URL
+                //url: '/SearchPayments/PaymentList', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BankNameDropdown: BankNameDropdown, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },

@@ -174,43 +174,76 @@
                     <input type="text" class="input" readonly="readonly" id="lblIE">
                 </div>
                 <div class="col-md-4 mb-3">
-                    
+
                     <input type="hidden" class="input" readonly="readonly" id="lblIECD">
 
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">Net Testing Charges Paid</label>
                     <input type="text" class="input" id="txttesfee">
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">TDS (If Any)</label>
                     <input type="text" class="input" id="txttdsany">
 
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">UTR NO</label>
                     <input type="text" class="input" id="txtutrno">
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">UTR Date</label>
                     <input type="text" class="input datepicker" id="dtutr">
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Upload Payment Report</label>
+            </div>
+            <div class="row my-0">
+
+                <div class="col-md-4 mb-3" id="lblfile">
+                    <label for="Reference">Upload Payment Report(In PDF Only)</label>
                     <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
 
                 </div>
-                <div class="col-md-1 mb-3">
-                    <a id="HyperLink1" href="" download></a>
+                <div class="col-md-4 mb-3">
+                    <a id="download" href="javascript:void(0);" style="display:none;"></a>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3" style="margin-left:auto">
                     <label for="Reference">Payment Status By Finance (RITES)</label>
                     <input type="text" class="input" id="lblpstatus" readonly="readonly">
 
+                </div>
+            </div>
+            <div id="approval" style="display:none">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Receipt of Sample</label>
+                        <input type="text" class="input" id="dtrecsample" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Total Testing Fee</label>
+                        <input type="text" class="input" id="txttfee" readonly="readonly">
+
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Likely Date of Test Report</label>
+                        <input type="text" class="input" id="dtltestreport" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Status</label>
+                        <select class="input" id="ddlstatus" disabled>
+                            <option value="S">Sample Received</option>
+                            <option value="C">Lab Report under Compilation</option>
+                            <option value="U">Lab Report Uploaded</option>
+                            <option value="O">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-8 mb-3">
+                        <label for="Reference">Remarks</label>
+                        <textarea id="txtremarks" rows="4" cols="50" readonly="readonly"></textarea>
+                    </div>
                 </div>
             </div>
             <div class="savenext-btn" style="margin-left:47%;">
@@ -219,7 +252,7 @@
             </div>
         </div>
     </div>
-    
+
     <br />
 </section>
 @*</form>*@
@@ -349,9 +382,10 @@
             var CaseNo = '@ViewBag.CaseNo';
             var CallRdt = '@ViewBag.CallRdt';
             var CallSno = '@ViewBag.Sno';
-
+            var url = '@Url.Action("SampleDtlData", "VendorLabSampleForm")';
             $.ajax({
-                url: '/VendorLabSampleForm/SampleDtlData',
+                //url: '/VendorLabSampleForm/SampleDtlData',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
@@ -359,7 +393,7 @@
                 success: function (success) {
 
                     if (success.UTRDT != null && success.UTRDT != "") {
-                        
+
                         var originalDateStr = success.UTRDT;
 
                         var dateParts = originalDateStr.split(' ');
@@ -377,11 +411,25 @@
                         $("#lblpstatus").val(success.PaymentStatus);
                         $("#btnsave").css("display", "none");
                         $("#btnupdate").css("display", "");
-
+                        var firstPart = success.PaymentStatus.substring(0, success.PaymentStatus.indexOf(" "));
+                        debugger;
                         if (success.File != "False") {
-                            $("#HyperLink1").val(success.FileNm);
+                            $("#download").text(success.FileNm);
+                            // $("#HyperLink1").val(success.FileNm);
                             var pdfUrl = success.FileLink;
                             sessionStorage.setItem("link", pdfUrl);
+                            $("#download").css("display", "");
+                        }
+                     
+                        if (firstPart == 'APPROVED') {
+                            $("#upload").css("display", "none");
+                            
+                            $("#btnupdate").css("display", "none");
+                            if (success.LabelExist != "S") {
+                               $("#lblfile").css("display", "none");
+                                $("#approval").css("display", "");
+                            }
+                            
 
                         }
 
@@ -398,6 +446,11 @@
                     $("#txttesfee").val(success.NetTesting);
                     $("#txttdsany").val(success.TDS);
                     $("#txtutrno").val(success.UTRNO);
+                    $("#dtrecsample").val(success.DateofRecSample);
+                    $("#txttfee").val(success.TotalTFee);
+                    $("#dtltestreport").val(success.LikelyDt);
+                    $("#ddlstatus").val(success.Status);
+                    $("#txtremarks").val(success.Remarks);
 
 
                     sessionStorage.setItem("IEcode", success.IE);
@@ -407,7 +460,20 @@
             });
         }
 
+        $('#download').on('click', function () {
+            var caseno = $("#lblcno").val();
+            var calldt = $("#lblCallDT").val();
+            var csno = $("#lblCallSno").val();
+            var filename = sessionStorage.getItem("link");
+            var fileUrl = '/VendorLabSampleForm/DownloadFile?caseno=' + caseno + '&calldt=' + calldt + '&csno=' + csno + '&filename=' + filename;
 
+            if (fileUrl) {
+
+                $(this).attr('href', fileUrl);
+            } else {
+                alert("File not found.");
+            }
+        });
         function SaveDetails() {
 
             if ($("#txttesfee").val() == '') {
@@ -450,14 +516,15 @@
             formData.append("TDS", $("#txttdsany").val());
             formData.append("UTRNO", $("#txtutrno").val());
             formData.append("UTRDT", $("#dtutr").val());
-
+            var url = '@Url.Action("SaveDataDetails", "VendorLabSampleForm")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
                 //contentType: "application/json",
-                url: "/VendorLabSampleForm/SaveDataDetails",
+                //url: "/VendorLabSampleForm/SaveDataDetails",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -529,12 +596,13 @@
             formData.append("TDS", $("#txttdsany").val());
             formData.append("UTRNO", $("#txtutrno").val());
             formData.append("UTRDT", $("#dtutr").val());
-
+            var url = '@Url.Action("UpdateDetails", "VendorLabSampleForm")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/VendorLabSampleForm/UpdateDetails",
+               // url: "/VendorLabSampleForm/UpdateDetails",
+               url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {

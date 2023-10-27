@@ -94,7 +94,7 @@
             </div>
 
             <div class="savenext-btn">
-                <button type="submit" class="save-btn active Permission_Save" style="width:auto;margin-left:48%;" onclick="SaveDetails()" id="btnsave">Save</button>
+                <button type="submit" class="save-btn active Permission_Save" onclick="SaveDetails()" id="btnsave">Save</button>
                 @*<button type="submit" onclick="find();">Search2</button>*@
             </div>
         </div>
@@ -132,9 +132,10 @@
         })
 
         function LoadPayment(CaseNo, CallSno, CallRecvDt) {
-
+            var url = '@Url.Action("LoadPayment", "LabPaymentList")';
             $.ajax({
-                url: '/LabPaymentList/LoadPayment',
+                //url: '/LabPaymentList/LoadPayment',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallSno: CallSno, CallRecvDt: CallRecvDt },
@@ -183,14 +184,15 @@
             formData.append("CallSno", $("#lblCallSno").val());
             formData.append("DocStatusFin", $("#ddlstatus").val());
             formData.append("Remarks", $("#txtremark").val());
-
+            var url = '@Url.Action("SaveData", "LabPaymentList")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
                 //contentType: "application/json",
-                url: "/LabPaymentList/SaveData",
+                //url: "/LabPaymentList/SaveData",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -269,11 +271,13 @@
             //};
 
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            var url = '@Url.Action("UpdateDetails", "LabSampleInfo")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/LabSampleInfo/UpdateDetails",
+                //url: "/LabSampleInfo/UpdateDetails",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {

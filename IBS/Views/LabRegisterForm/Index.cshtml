@@ -317,9 +317,10 @@
             window.location.href = "/LabRegisterForm/LabRegisterFormNew?CaseNo=" + CaseNo + '&CallDt=' + CallDt + '&CallSno=' + CallSno;
         }
         function grid(CaseNo, CallRdt, RegNo) {
-
+            var url = '@Url.Action("LapIndexData", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LapIndexData',
+                //url: '/LabRegisterForm/LapIndexData',
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, RegNo: RegNo },

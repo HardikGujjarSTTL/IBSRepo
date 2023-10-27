@@ -282,6 +282,16 @@ namespace IBS.Repositories
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
+            //var query1 = (from l in context.TestTables
+            //              where l.DisciplineId == Convert.ToInt32(DisID)
+            //              select new BarcodeGenerate
+            //              {
+            //                  LABRATEID = Convert.ToString(l.Labrateid),
+            //                  TEST_NAME = Convert.ToString(l.TestName),
+            //                  PRICE = Convert.ToString(l.Price),
+            //                  DISCIPLINE_ID = Convert.ToString(l.DisciplineId),
+            //                  QTY = "1"
+            //              }).ToList();
             var query1 = (from l in context.TestTables
                           where l.DisciplineId == Convert.ToInt32(DisID)
                           select new BarcodeGenerate
@@ -292,6 +302,26 @@ namespace IBS.Repositories
                               DISCIPLINE_ID = Convert.ToString(l.DisciplineId),
                               QTY = "1"
                           }).ToList();
+
+            //var query2 = (from b in query1
+            //              select new BarcodeGenerate
+            //              {
+            //                  LABRATEID = b.LABRATEID,
+            //                  TEST_NAME = b.TEST_NAME,
+            //                  PRICE = b.PRICE,
+            //                  DISCIPLINE_ID = b.DISCIPLINE_ID,
+            //                  QTY = b.QTY,
+            //                  ExistsField = (
+            //                      from lct in context.LabCalTranDetails
+            //                      join t1 in context.LabCalTranHeaders on lct.CalTranHeaderId equals t1.CalTranHeaderId
+            //                      where
+            //                          lct.DisciplineId == Convert.ToInt32(DisID) &&
+            //                          lct.Price.ToString() == b.PRICE &&
+            //                          t1.BarcodeId == "NR24120001" &&
+            //                          lct.CalTranHeaderId.ToString() == "43"
+            //                      select 1
+            //                  ).Any() ? "1" : "0"
+            //              }).ToList();
 
             var result = query1.ToList();
 

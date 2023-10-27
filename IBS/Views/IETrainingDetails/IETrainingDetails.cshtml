@@ -117,17 +117,17 @@
                             In-House
                         
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Course Name</label>
                         @Html.DropDownListFor(model => model.course_name, Common.CourseName(Model.Regin.ToString(),Model.TrainingType,Model.TrainingArea),"", new { @id="ddlcourse",onChange="TrainingDFetchData()"})
                         <span class="text-danger field-validation-error" id="spnError5"></span>
                     </div>
-                    <div class="col-md-8 mb-3">
-                        <label for="Reference"></label>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">&nbsp;</label>
                         <input type="text" class="input" asp-for="CourseNameOther" style="font-size:inherit;" id="txtcourseother">
                         @*<span asp-validation-for="Category" class="text-danger"></span>*@
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Institue</label>
                         <input type="text" class="input" asp-for="Institue" id="txtinst">
                         <span class="text-danger field-validation-error" id="spnError6"></span>
@@ -159,7 +159,7 @@
                         <span class="text-danger field-validation-error" id="spnError8"></span>
                     </div>
                 </div>
-                <div class="savenext-btn" style="margin-left:40%">
+                <div class="savenext-btn">
                     <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
                 </div>
             </div>
@@ -250,8 +250,10 @@
         function BindCourseName() {
             var TrainingType = $("#ddlTrType").val();
             var TrainingArea = $("#ddlTrArea").val();
+            var url = '@Url.Action("BindCourseName", "IETrainingDetails")';
             $.ajax({
-                url: '/IETrainingDetails/BindCourseName',
+                //url: '/IETrainingDetails/BindCourseName',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { TrainingType: TrainingType, TrainingArea: TrainingArea },
@@ -266,8 +268,10 @@
         }
         function IEFetchData() {
             var Name = $("#ddlname").val();
+            var url = '@Url.Action("IEFetchData", "IETrainingDetails")';
             $.ajax({
-                url: '/IETrainingDetails/IEFetchData',
+                //url: '/IETrainingDetails/IEFetchData',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { Name: Name },
@@ -295,8 +299,10 @@
 
         function TrainingDFetchData(){
             var Course = $("#ddlcourse").val();
+            var url = '@Url.Action("TrainingDFetchData", "IETrainingDetails")';
             $.ajax({
-                url: '/IETrainingDetails/TrainingDFetchData',
+                //url: '/IETrainingDetails/TrainingDFetchData',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { Course: Course },

@@ -1,0 +1,108 @@
+﻿@model IBS.Models.BillCheckPostingModel
+
+@{
+    ViewData["Title"] = "Cheque Posting";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="BillCheckPosting" asp-action="Index" id="frmBillDetails">
+        @*<input type="hidden" asp-for="BankCd" />*@
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Bank Name <i class="text-danger">*</i></label>
+                    @Html.DropDownListFor(model => model.BankName, new SelectList(IBS.Models.Common.GetBank(), "Value", "Text"),"--Select--")
+                    <span asp-validation-for="BankName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Cheque No <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="ChqNo">
+                    <span asp-validation-for="ChqNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Cheque Date <i class="text-danger">*</i></label>
+                    <input type="text" class="datepicker" asp-for="ChqDt" placeholder="DD/MM/YYYY">
+                    <span asp-validation-for="ChqDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference"><br /></label>
+                    <div class="savenext-btn">
+                        <a asp-controller="BillCheckPosting" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="save-btn active" onclick="Search();">Search</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="accordion-body SearchDetails" style="display:none;">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Voucher No. <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="VcharNo" />
+                    <span asp-validation-for="VcharNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Voucher Date <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="VcharDt">
+                    <span asp-validation-for="VcharDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Cheque Amount <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="ChqAmount">
+                    <span asp-validation-for="ChqAmount" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Posted Amount <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="PostedAmount">
+                    <span asp-validation-for="PostedAmount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Paying Authority <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="PayingAuthority" />
+                    <span asp-validation-for="PayingAuthority" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount Transferred to Other Regions <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="AmountTransferred">
+                    <span asp-validation-for="AmountTransferred" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Un-Adjusted Advance <i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="UnAdjustedAdvance">
+                    <span asp-validation-for="UnAdjustedAdvance" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function Search()
+        {
+            $(".SearchDetails").css("display", "");
+            var BankName = $("#BankName").val();
+            var ChqNo = $("#ChqNo").val();
+            var ChqDt = $("#ChqDt").val();
+
+            let myObject = { BankName, ChqNo, ChqDt };
+            $.get("@Url.Action("GetBankDetails", "BillCheckPosting")", $.param(myObject), function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+    </script>
+}

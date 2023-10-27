@@ -90,7 +90,7 @@
                     <br/>
                     <br/>
                     <p style="font-size:larger;"><u><b>Call Cancelation/Call Rejection</b></u></p>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-2">
                         <label for="Reference">Call Cancelation</label>
                         <input type="text" class="input" ASP-FOR="CALLCANCELATION" maxlength="300" required />
                         <span asp-validation-for="CALLCANCELATION" class="text-danger"></span>
@@ -99,7 +99,7 @@
                         <label for="Reference">Material Description</label>
                         <input type="text" class="input" ASP-FOR="Materialdescription" maxlength="300" />
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-2">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Contract_Doc" />
                     </div>
                 </div>

@@ -134,9 +134,10 @@
             var InspRegionDropdown = $(this).val();
             var bkno = $("#bkno").val();
             var setno = $("#setno").val();
-
+            var url = '@Url.Action("GetItems", "OnlineComplaints")';
             $.ajax({
-                url: '/OnlineComplaints/GetItems',
+                //url: '/OnlineComplaints/GetItems',
+                url:url,
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown, bkno: bkno, setno: setno },
                 success: function (data) {
@@ -152,14 +153,15 @@
         });
 
         $("#Item").change(function () {
-            debugger
+         
             var ItemSno = $(this).val();
             var InspRegionDropdown = $("#InspRegionDropdown").val();
             var bkno = $("#bkno").val();
             var setno = $("#setno").val();
-
+            var url = '@Url.Action("GetItems", "OnlineComplaints")';
             $.ajax({
-                url: '/OnlineComplaints/GetItems',
+               // url: '/OnlineComplaints/GetItems',
+               url:url,
                 type: 'GET',
                 data: { ItemSno: ItemSno, bkno: bkno, setno: setno, InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {

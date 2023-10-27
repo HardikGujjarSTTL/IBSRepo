@@ -99,7 +99,7 @@
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Case No</label>
                         <input type="text" class="input" asp-for="CASE_NO">
-
+                        <span class="text-danger field-validation-error" id="spnErrorcaseno"></span>
                     </div>
 
                     <div class="col-md-3 mb-3 savenext-btn" style="margin-top:auto;">
@@ -292,6 +292,13 @@
             $("#popup2").fadeOut();
         }
         function Show() {
+            $("#spnErrorcaseno").html("");
+            var IsValid = true;
+            if ($("#CASE_NO").val() == "") {
+                $("#spnErrorcaseno").html("Please Enter Case No");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             InitializeDatatableShow();
             $("#popup").fadeIn();
         }
@@ -319,7 +326,8 @@
         function LabCalculation() {
             $("#popup2").fadeIn();
             $("#popup2").show();
-            $("#divGrid").load('/BarcodeGeneration/LabCalculation');
+           // $("#divGrid").load('/BarcodeGeneration/LabCalculation');
+            $("#divGrid").load("@Url.Action("LabCalculation")");
         }
         //Lab Calculation page data
         function Change() {
@@ -414,8 +422,9 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-
-                            return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '">';
+                            //var checked = data.ExistsField === "1" ? 'checked' : '';
+                            //return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '" ' + checked + '>';
+                             return '<input type="checkbox" class="row-checkbox" name="RateID" id="' + data.DISCIPLINE_ID + '">';
                         }
                     },
 

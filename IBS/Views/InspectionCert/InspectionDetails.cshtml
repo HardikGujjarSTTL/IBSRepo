@@ -189,7 +189,7 @@
 
                 <div class="col-md-4">
                     <div class="reference">
-                        <label for="Reference">GSTIN No.</label>
+                        <label for="Reference">GSTIN No. <span class="text-danger">*</span></label>
                         <input type="text" class="input" asp-for="GstinNo" maxlength="30" readonly>
                     </div>
                 </div>
@@ -222,14 +222,15 @@
                         @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-1 mb-3">
                     <label for="Reference btnAlign">AU Code : </label>
-                    <label class="darkRedBoldText">@Model.Au</label>
+                    <input type="text" class="input" asp-for="Au" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
+                    @*<label class="darkRedBoldText">@Model.Au</label>*@
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-7 mb-3">
                     <label for="Reference btnAlign">Bill Paying Officer : </label>
-                    @*<input type="text" class="input" asp-for="Bpo" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>*@
-                    <label class="darkRedBoldText">@Model.BpoName</label>
+                    <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
+                    @*<label class="darkRedBoldText">@Model.BpoName</label>*@
                 </div>
             </div>
 
@@ -254,13 +255,13 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Book No.</label>
+                        <label for="Bkno">Book No. <span class="text-danger">*</span></label>
                         <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Set No.</label>
+                        <label for="Setno">Set No. <span class="text-danger">*</span></label>
                         <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
@@ -315,16 +316,18 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">First Insp Date(dd/mm/yyyy)</label>
+                        <label for="FirstInspDt">First Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
                         <input type="text" class="datepicker" asp-for="FirstInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        @*<span asp-validation-for="FirstInspDt" class="text-danger" id="spnFirstInspDt"></span>*@
                     </div>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Last Insp Date(dd/mm/yyyy)</label>
+                        <label for="LastInspDt">Last Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
                         <input type="text" class="datepicker" asp-for="LastInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        @*<span asp-validation-for="LastInspDt" class="text-danger" id="spnLastInspDt"></span>*@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -355,14 +358,19 @@
                     </div>
                 </div>
             </div>
-            <div class="row my-0">
-                <div class="col-md-8 mb-3">
-                    <div class="reference">
-                        <label for="Reference">Reasons for Rejection</label>
-                        <textarea class="input" asp-for="ReasonReject"></textarea>
+            
+            @if(Model.Callstatus == "R")
+            {
+                <div class="row my-0">
+                    <div class="col-md-8 mb-3">
+                        <div class="reference">
+                            <label for="Reference">Reasons for Rejection</label>
+                            <textarea class="input" asp-for="ReasonReject"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            
 
             <div class="savenext-btn center">
                 @if (@Model.STS != "X")
@@ -799,6 +807,7 @@
                             success: function (contacts) {
                                 if (contacts.data && contacts.data.length > 0) {
                                     if (contacts.data && contacts.data.length > 0) {
+                                        
                                         $("#lblCity").text("City : " + contacts.data[0].City);
                                         $("#lblState").text(",State : " + contacts.data[0].State);
                                         $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
@@ -945,8 +954,12 @@
                 ShowHideMsgNew(false, "Set No are required.");
                 return;
             }
-            if ($("#State").val() == "") {
-                ShowHideMsgNew(false, "Set No are required.");
+            if ($("#FirstInspDt").val() == "") {
+                ShowHideMsgNew(false, "First Insp Date required.");
+                return;
+            }
+            if ($("#LastInspDt").val() == "") {
+                ShowHideMsgNew(false, "Last Insp Date required.");
                 return;
             }
 
@@ -1162,9 +1175,6 @@
                 return;
             }
 
-
-
-
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
             $.post("@Url.Action("BillUpdate", "InspectionCert")", formData, function (response) {
@@ -1201,8 +1211,8 @@
         }
 
         function PopUpOk() {
-            //location.reload();
             $("#PopUp").modal('hide');
+            location.reload();
         }
 
         $("#btnBillDtUpdate").click(function () {

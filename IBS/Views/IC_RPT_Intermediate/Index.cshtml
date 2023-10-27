@@ -302,19 +302,23 @@
 
     <script type="text/javascript">
         function Download() {
-
+            $('#BK_NO').prop('disabled', true);
+            $('#SET_NO').prop('disabled', true);
             var CaseNO = $("#lblCASE_NO").html();
             var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
             var CallSNo = $("#lblCall_SNO").html();
             var Consignee_CD = $("#CONSIGNEE_CD").val();
             var Region = $("#Region").val();
-            
+            var BkNo = $('#BK_NO').val();
+            var SetNo = $('#SET_NO').val();
             var QueryString = "RptFlag=8" +
                 "&CaseNO=" + encodeURIComponent(CaseNO) +
                 "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
                 "&CallSNo=" + encodeURIComponent(CallSNo) +
                 "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-                "&Region=" + encodeURIComponent(Region);
+                "&Region=" + encodeURIComponent(Region) +
+                "&BkNo=" + encodeURIComponent(BkNo) +
+                "&SetNo=" + encodeURIComponent(SetNo);
             //"&RegNo=" + encodeURIComponent(RegNo) +
             //"&TranNo=" + encodeURIComponent(TranNo);
 

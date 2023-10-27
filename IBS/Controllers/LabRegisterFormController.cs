@@ -110,7 +110,27 @@ namespace IBS.Controllers
             var testing = LABREGISTERModel.DTestingFee;
             var tax = LABREGISTERModel.DServiceTax;
             var hand = LABREGISTERModel.DHandlingCharges;
-            var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            var defaultTesting = 0;
+            var defaultTax = 0;
+            var defaultHand = 0;
+
+            if (testing != null && int.TryParse(testing, out int testingValue))
+            {
+                defaultTesting = testingValue;
+            }
+
+            if (tax != null && int.TryParse(tax, out int taxValue))
+            {
+                defaultTax = taxValue;
+            }
+
+            if (hand != null && int.TryParse(hand, out int handValue))
+            {
+                defaultHand = handValue;
+            }
+
+            var total = defaultTesting + defaultTax + defaultHand;
+            //var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
             LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
             if (LABREGISTERModel.Flag == "1")
             {
@@ -138,7 +158,27 @@ namespace IBS.Controllers
             var testing = LABREGISTERModel.DTestingFee;
             var tax = LABREGISTERModel.DServiceTax;
             var hand = LABREGISTERModel.DHandlingCharges;
-            var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            //var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            var defaultTesting = 0;
+            var defaultTax = 0;
+            var defaultHand = 0;
+
+            if (testing != null && int.TryParse(testing, out int testingValue))
+            {
+                defaultTesting = testingValue;
+            }
+
+            if (tax != null && int.TryParse(tax, out int taxValue))
+            {
+                defaultTax = taxValue;
+            }
+
+            if (hand != null && int.TryParse(hand, out int handValue))
+            {
+                defaultHand = handValue;
+            }
+
+            var total = defaultTesting + defaultTax + defaultHand;
             LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
             
             LABREGISTERModel.UName = UserId.ToString();

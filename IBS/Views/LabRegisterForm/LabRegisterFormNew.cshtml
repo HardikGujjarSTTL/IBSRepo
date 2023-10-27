@@ -180,7 +180,7 @@ input[type="date"] {
                 <div class="col-md-4 mb-4">
                     <label for="Reference">IE</label>
                     <input type="text" id="lblIE" class="input" readonly="readonly" />
-
+                    <input type="hidden" id="lblIECD" class="input" readonly="readonly" />
                 </div>
 
                 <div class="col-md-4 mb-4">
@@ -301,7 +301,7 @@ input[type="date"] {
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">No. Of Samples</label>
-                    <input type="text" id="txtnofsm" class="input" />
+                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
 
@@ -353,18 +353,18 @@ input[type="date"] {
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Testing Fee</label>
-                    <input type="text" id="testingfee" class="input" />
+                    <input type="text" id="testingfee" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
 
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Service Tax</label>
-                    <input type="text" id="sertax" class="input" />
+                    <input type="text" id="sertax" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Handling Charges</label>
-                    <input type="text" id="handlingcharges" class="input" />
+                    <input type="text" id="handlingcharges" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
             </div>
@@ -414,16 +414,22 @@ input[type="date"] {
             $("#txttesttobeCon").css("display", "block");
             $('#N').prop('checked', true);
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd/mm/yy" 
             });
             var today = new Date();
-             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
-            $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
-            $("#spnregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+             
+            // $("#dtregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+            // $("#spnregdt").val(('0' + (today.getMonth() + 1)).slice(-2) + '/' + ('0' + today.getDate()).slice(-2) + '/' + (today.getFullYear()));
+            var today = new Date();
+            var dd = ('0' + today.getDate()).slice(-2);
+            var mm = ('0' + (today.getMonth() + 1)).slice(-2);
+            var yyyy = today.getFullYear();
+
+            $("#dtregdt").val(dd + '/' + mm + '/' + yyyy);
+            $("#spnregdt").val(dd + '/' + mm + '/' + yyyy);
+
              AddNewLabReg();
-             // grid();
-             //$("#grid").load('/LabRegisterForm/LabRegDtl');
-           //InitializeDatatable();
+             
         });
         $("#ddlitem").change(function(){
            
@@ -444,8 +450,10 @@ input[type="date"] {
             var CallDt = '@ViewBag.CDT';
             var CallSno = '@ViewBag.CSN';
             //$("#lblRNo").text(RegNo).css("color", "red");
+            var url = '@Url.Action("FormNew", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/FormNew',
+                //url: '/LabRegisterForm/FormNew',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallDt: CallDt, CallSno: CallSno },
@@ -454,7 +462,7 @@ input[type="date"] {
                     
                     var calldt = CallDt;
                     var parts = CallDt.split('/');
-                    var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+                    var convertedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
 
                     $("#lblCaseNo").val(CaseNo);
                     $("#lblCallDT").val(convertedDate);
@@ -470,36 +478,134 @@ input[type="date"] {
        
 
         function AddNewLabDetails(){
-            
-            // var Testing = $("#testingfee").val();
-            // var hand = $("#handlingcharges").val();
-            // var tax = $("#sertax").val();
-            // var parsedTesting = parseFloat(Testing);
-            // var parsedHand = parseFloat(hand);
-            // var parsedTax = parseFloat(tax);
-            // if (!isNaN(parsedTesting) && !isNaN(parsedHand) && !isNaN(parsedTax)) {
-                
-            //     var TotalLab = parseInt(parsedTesting) + parseInt(parsedHand) + parseInt(parsedTax);
-            //     console.log("Total Lab Sum: " + TotalLab);
-            // } else {
-            //     // Handle the case where one or more values are not valid numbers
-            //     console.log("Error: One or more values are not valid numbers.");
-            // }
-            // var TotalLab = parseFloat(Testing) + parseFloat(hand) + parseFloat(tax);
+
+            var dtofrrValue = $("#dtregdt").val();
+            var wFrmDtO1 = "";
+
+            if (dtofrrValue) {
+                var parts1 = dtofrrValue.split('/');
+                if (parts1.length === 3) {
+                    wFrmDtO1 = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+                }
+            }
+            else {
+                var wFrmDtO1 = "";
+            }
+
+            var dtoftestrValue = $("#dtdrawal").val();
+            var wFrmDtO2 = "";
+
+            if (dtoftestrValue) {
+                var parts2 = dtoftestrValue.split('/');
+                if (parts2.length === 3) {
+                    wFrmDtO2 = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+                }
+            }
+            else {
+                var wFrmDtO2 = "";
+            }
+
+            var dtofdistolabValue = $("#dtreceipt").val();
+            var wFrmDtO3 = "";
+
+            if (dtofdistolabValue) {
+                var parts3 = dtofdistolabValue.split('/');
+                if (parts3.length === 3) {
+                    wFrmDtO3 = parts3[1] + '/' + parts3[0] + '/' + parts3[2];
+                }
+            }
+            else {
+                var wFrmDtO3 = "";
+            }
+            var dtdispatch = $("#dtdispatch").val();
+            var wFrmDtO4 = "";
+
+            if (dtdispatch) {
+                var parts4 = dtdispatch.split('/');
+                if (parts4.length === 3) {
+                    wFrmDtO4 = parts4[1] + '/' + parts4[0] + '/' + parts4[2];
+                }
+            }
+            else {
+                var wFrmDtO4 = "";
+            }
+            var dtcode = $("#dtcode").val();
+            var wFrmDtO5 = "";
+
+            if (dtcode) {
+                var parts5 = dtcode.split('/');
+                if (parts5.length === 3) {
+                    wFrmDtO5 = parts5[1] + '/' + parts5[0] + '/' + parts5[2];
+                }
+            }
+            else {
+                var wFrmDtO5 = "";
+            }
+
+            var dtofrr = $("#dtofrr").val();
+            var wFrmDtO6 = "";
+
+            if (dtofrr) {
+                var parts6 = dtofrr.split('/');
+                if (parts6.length === 3) {
+                    wFrmDtO6 = parts6[1] + '/' + parts6[0] + '/' + parts6[2];
+                }
+            }
+            else {
+                var wFrmDtO6 = "";
+            }
+            var dtoftestr = $("#dtoftestr").val();
+            var wFrmDtO7 = "";
+
+            if (dtoftestr) {
+                var parts7 = dtoftestr.split('/');
+                if (parts7.length === 3) {
+                    wFrmDtO7 = parts7[1] + '/' + parts7[0] + '/' + parts7[2];
+                }
+            }
+            else {
+                var wFrmDtO7 = "";
+            }
+            var dtofdistolab = $("#dtofdistolab").val();
+            var wFrmDtO8 = "";
+
+            if (dtofdistolab) {
+                var parts8 = dtofdistolab.split('/');
+                if (parts8.length === 3) {
+                    wFrmDtO8 = parts8[1] + '/' + parts8[0] + '/' + parts8[2];
+                }
+            }
+            else {
+                var wFrmDtO8 = "";
+            }
+            var lblCallDT = $("#lblCallDT").val();
+            var wFrmDtO9 = "";
+
+            if (lblCallDT) {
+                var parts9 = lblCallDT.split('/');
+                if (parts9.length === 3) {
+                    wFrmDtO9 = parts9[1] + '/' + parts9[0] + '/' + parts9[2];
+                }
+            }
+            else {
+                var wFrmDtO9 = "";
+            }
+
+
             var LABREGISTERModel = {
                 SampleRegNo: $("#lblRNo").val(),
-                SampleRegDate: $("#dtregdt").val(),
-                SampleDrawalDate: $("#dtdrawal").val(),
-                SampleReceiptDate: $("#dtreceipt").val(),
-                SampleDispatchDate: $("#dtdispatch").val(),
+                SampleRegDate: wFrmDtO1,
+                SampleDrawalDate: wFrmDtO2,
+                SampleReceiptDate: wFrmDtO3,
+                SampleDispatchDate: wFrmDtO4,
                 IECode: $("#lblIECD").val(),
                 CaseNo: $("#lblCaseNo").val(),
-                CallRecDt: $("#lblCallDT").val(),
+                CallRecDt: wFrmDtO9,
                 CallSNO: $("#lblCallSno").val(),
                 VendorCode: $("#lblVENDCD").val(),
                 TestingType: sessionStorage.getItem('result'),
                 CodeNo: $("#txtcodeno").val(),
-                CodeDate: $("#dtcode").val(),
+                CodeDate: wFrmDtO5,
 
                 SNO: $("#lblSno").val(),
                 ItemDesc: $("#txtitemnm").val(),
@@ -512,11 +618,11 @@ input[type="date"] {
                 DTestingFee: $("#testingfee").val(),
                 DServiceTax: $("#sertax").val(),
                 DHandlingCharges: $("#handlingcharges").val(),
-                TestReportRequestDate: $("#dtofrr").val(),
-                TestReportReceiveDate: $("#dtoftestr").val(),
+                TestReportRequestDate: wFrmDtO6,
+                TestReportReceiveDate: wFrmDtO7,
                 TestStatus: $("#ddlstatus").val(),
                 DRemarks: $("#txtremarks").val(),
-                SampleDispatchLabDate: $("#dtofdistolab").val(),
+                SampleDispatchLabDate: wFrmDtO8,
                 DISCIPLINE_ID: $("#ddldisc").val(),
 
                 TotalTestingFee: $("#lbltotf").val(),
@@ -525,10 +631,12 @@ input[type="date"] {
                 TotalLabCharges: $("#lbltolc").val()
 
             };
+            var url = '@Url.Action("InsertLabReg", "LabRegisterForm")';
             $.ajax({
                 type: 'POST',
                 contentType: "application/json",
-                url: "/LabRegisterForm/InsertLabReg",
+                //url: "/LabRegisterForm/InsertLabReg",
+                url:url,
                 dataType: "json",
                 data: JSON.stringify(LABREGISTERModel),
                 success: function (res) {

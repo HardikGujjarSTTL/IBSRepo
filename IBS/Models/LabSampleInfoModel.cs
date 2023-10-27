@@ -32,6 +32,8 @@ namespace IBS.Models
         public string File { get; set; }
         public string FileNm { get; set; }
         public string FileLink { get; set; }
+        public string Hyperlink2 { get; set; }
+        public string LabelExist { get; set; }
 
 
     }

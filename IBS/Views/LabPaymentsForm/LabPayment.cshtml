@@ -409,16 +409,16 @@
             $("#txtremk").val(text);
         }
         function Save() {
-            debugger;
+            
             $("#spnError1").html("");
             $("#spnError2").html("");
             $("#spnError3").html("");
             $("#spnError4").html("");
             var IsValid = true;
-            if ($("#lblpyno").val() == "") {
-                $("#spnError1").html("Please Enter Payment No");
-                IsValid = false;
-            }
+            // if ($("#lblpyno").val() == "") {
+            //     $("#spnError1").html("Please Enter Payment No");
+            //     IsValid = false;
+            // }
             if ($("#txtAno").val() == "") {
                 $("#spnError2").html("Please Enter Instrument No");
                 IsValid = false;
@@ -455,10 +455,12 @@
                     SNO: Srno,
                     SAMPLE_REG_NO: RegNo
                 };
+                var url = '@Url.Action("SavePayment", "LabPaymentsForm")';
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: "/LabPaymentsForm/SavePayment",
+                    //url: "/LabPaymentsForm/SavePayment",
+                    url:url,
                     dataType: "json",
                     data: JSON.stringify(LabPaymentFormModel),
                     success: function (result) {
@@ -470,7 +472,7 @@
                             $("#lblpyno").val(result.message);
                             $("#btnsave").css("display", "none");
                             $("#btnprint").css("display", "block");
-                            //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentsForm")";
                         }
                         else {
 
@@ -488,7 +490,7 @@
                             $("#lblpyno").val(result.message);
                             $("#btnsave").css("display", "none");
                             $("#btnprint").css("display", "block");
-                            //window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentsForm")";
                         }
                         else {
                             alert('Error Occurred. Contact Your admin!');
