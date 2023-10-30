@@ -36,19 +36,38 @@ namespace IBS.Controllers
         {
             try
             {
-                if (formCollection.Keys.Contains("checkedWork"))
+                if (model.IsUrgencyUpdate == "True")
                 {
-                    model.checkedWork = formCollection["checkedWork"];
+                    if (formCollection.Keys.Contains("Urgency"))
+                    {
+                        model.Urgency = formCollection["Urgency"];
+                        int i = 0;
+                        model.Createdby = Convert.ToString(UserName.Trim());
+                        model.UserId = Convert.ToString(UserName.Trim());
+                        model.RegionCode = Region;
+                        i = dailyRepository.UpdateUrgency(model, Region);
+                        if (i != 0)
+                        {
+                            AlertAddSuccess("Updated Successfully.");
+                        }
+                    }
                 }
-                int i = 0;
-                model.Createdby = Convert.ToString(UserName.Trim());
-                model.UserId = Convert.ToString(UserName.Trim());
-                model.RegionCode = Region;
-
-                i = dailyRepository.SaveApproval(model, Region);
-                if (i != 0)
+                else
                 {
-                    AlertAddSuccess("Record Added Successfully.");
+                    if (formCollection.Keys.Contains("checkedWork"))
+                    {
+                        model.checkedWork = formCollection["checkedWork"];
+                    }
+                    int i = 0;
+                    model.Createdby = Convert.ToString(UserName.Trim());
+                    model.UserId = Convert.ToString(UserName.Trim());
+                    model.RegionCode = Region;
+
+                    i = dailyRepository.SaveApproval(model, Region);
+                    if (i != 0)
+                    {
+                        AlertAddSuccess("Record Added Successfully.");
+                    }
                 }
                 return RedirectToAction("Index");
             }
