@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IBS", "IBS.csproj", "{DCBC997E-856A-4DCC-AA92-D447C9B892E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBSAPI", "..\IBSAPI\IBSAPI.csproj", "{1E937314-1D1A-4567-A28D-0129ED2556EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IBSAPI", "..\IBSAPI\IBSAPI.csproj", "{1E937314-1D1A-4567-A28D-0129ED2556EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBSReports", "..\IBSReport\IBSReports.csproj", "{CE065484-D42C-4C07-A2F9-545312C8CB5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1E937314-1D1A-4567-A28D-0129ED2556EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E937314-1D1A-4567-A28D-0129ED2556EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E937314-1D1A-4567-A28D-0129ED2556EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

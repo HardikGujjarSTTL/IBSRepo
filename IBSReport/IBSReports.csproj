@@ -12,8 +12,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CrystalReportProject</RootNamespace>
-    <AssemblyName>CrystalReportProject</AssemblyName>
+    <RootNamespace>IBSReports</RootNamespace>
+    <AssemblyName>IBSReports</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -48,18 +48,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\CrystalDecisions.CrystalReports.Design\v4.0_13.0.4000.0__692fbea5521e1304\CrystalDecisions.CrystalReports.Design.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\CrystalDecisions.CrystalReports.Engine\v4.0_13.0.4000.0__692fbea5521e1304\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+      <HintPath>bin\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\CrystalDecisions.Shared\v4.0_13.0.4000.0__692fbea5521e1304\CrystalDecisions.Shared.dll</HintPath>
+      <HintPath>bin\CrystalDecisions.ReportSource.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.Web, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\CrystalDecisions.Web\v4.0_13.0.4000.0__692fbea5521e1304\CrystalDecisions.Web.dll</HintPath>
+      <HintPath>bin\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\CrystalDecisions.Web.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -187,9 +190,6 @@
     <Content Include="Reports\LAB_INVOICE_GEN.rpt" />
     <Content Include="Reports\LAB_INVOICE_GEN_HR.rpt" />
     <Content Include="Reports\LAB_INVOICE_GEN_NEW.rpt" />
-    <Content Include="Reports\LAB_INVOICE.xsc">
-      <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
-    </Content>
     <Content Include="Reports\rptDailyIEWiseCall.rpt" />
     <Content Include="Reports\DsInspectionCertificate.xsc">
       <DependentUpon>DsInspectionCertificate.xsd</DependentUpon>
@@ -215,18 +215,21 @@
     <Content Include="Reports\DsInspectionCertificateCR.xsx">
       <DependentUpon>DsInspectionCertificateCR.xsd</DependentUpon>
     </Content>
-    <None Include="Reports\LAB_INVOICE.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>LAB_INVOICE.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Reports\NR_Bill_GST.rpt" />
+    <Content Include="Reports\LAB_INVOICE.xsc">
+      <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
+    </Content>
     <Content Include="Reports\LAB_INVOICE.xss">
       <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
     </Content>
     <Content Include="Reports\LAB_INVOICE.xsx">
       <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\NR_Bill_GST.rpt" />
+    <None Include="Reports\LAB_INVOICE.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>LAB_INVOICE.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -309,11 +312,6 @@
     <Compile Include="Reports\DsInspectionCertificate.designer.cs">
       <DependentUpon>DsInspectionCertificate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reports\DsInspectionCertificateCR.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DsInspectionCertificateCR.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Reports\InspectionCertificateNew.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -333,6 +331,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\LAB_INVOICE.cs">
+      <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\LAB_INVOICE.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>LAB_INVOICE.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reports\nr_rptICAccountal.cs">
