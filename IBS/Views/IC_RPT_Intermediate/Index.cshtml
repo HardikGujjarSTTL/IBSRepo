@@ -6,6 +6,13 @@
     string ReportUrl = ViewBag.ReportUrl;
 }
 
+<style>
+    .disabled-button {
+        cursor: not-allowed; /* Change cursor to not-allowed */
+        opacity: 0.6; /* Reduce opacity for a disabled look */
+    }
+</style>
+
 <div class="list-inner">
     <div class="tast-list">
         <h2>IC REPORT EDIT FORM</h2>
@@ -339,7 +346,7 @@
             }
 
             $("#CONSIGNEE_CD").change(function () {
-                debugger;
+                
                 $("#BK_NO").val("");
                 $("#SET_NO").val("");
                 Reset();
@@ -390,7 +397,7 @@
 
             InitializationPOAmendment();
             SetAccepted();
-            debugger
+            
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
 
             $("#btnCancel").css("cursor", "pointer");
@@ -756,7 +763,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
+                    
                     if (response != null) {
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
@@ -786,7 +793,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
+                    
                     if (response != null) {
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
@@ -858,7 +865,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
+                    
                     if (parseInt(response) > 0) {
                         //$("#btnSave").css("display", "none");
                         //$("#btnRefresh").css("display", "none");
@@ -868,12 +875,14 @@
                         $("#btnRefresh").prop('disabled', true);
                         $("#btnSavePOAmendment").prop('disabled', true);
 
-                        $("#btnSave").css("cursor", "auto");
-                        $("#btnRefresh").css("cursor", "auto");
-                        $("#btnSavePOAmendment").css("cursor", "auto");
+                        $('#btnSave').addClass('disabled-button'); //$("#btnSave").css("cursor", "auto");
+                        $('#btnRefresh').addClass('disabled-button'); //$("#btnRefresh").css("cursor", "auto");
+                        $('#btnSavePOAmendment').addClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "auto");
 
                         $(".edit").css("display", "none");
                         $(".delete").css("display", "none");
+
+                                               
 
                     } else {
                         $("#btnSave").prop('disabled', false);
@@ -938,7 +947,7 @@
         }
 
         function RemoveSpecialChar(id) {
-            debugger
+            
             var Name = "#" + id;
             var value = $(Name).val();
             var desired = value.replace(/[ ](?=[ ])|[^-~`!#$%^&*()=+:/\\;<,>.?_A-Za-z0-9 ]+/g, ' ');
@@ -948,7 +957,7 @@
         }
 
         function checkTextAreaMaxLength(textBox, e, length) {
-            debugger
+            
             var mLen = textBox["MaxLength"];
             if (null == mLen)
                 mLen = length;
