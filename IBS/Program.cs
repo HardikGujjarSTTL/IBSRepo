@@ -244,6 +244,7 @@ builder.Services.AddScoped<IMonthlyReportsRepository, MonthlyReportsRepository>(
 builder.Services.AddScoped<IIC_RPT_IntermediateRepository, IC_RPT_IntermediateRepository>();
 builder.Services.AddScoped<IBarcodeGeneration, BarcodeGenerationRepository>();
 builder.Services.AddScoped<ILabSearchPaymentRepository, LabSearchPaymentsRepository>();
+builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRRepository>();
 
 var app = builder.Build();
 
