@@ -6,6 +6,7 @@
     //{
     //    clsView = "Permission_View";
     //}
+    string ReportUrl = ViewBag.ReportUrl;
 }
 
 
@@ -206,7 +207,7 @@
                             var year = currentDate.getFullYear();
 
                             var formattedDate = day + '/' + month + '/' + year;
-                            debugger;
+                           
                             if (row == null) {
 
                             }
@@ -282,36 +283,17 @@
 
         function Download() {
 
-            var InvoiceNo = sessionStorage.getItem("InvoiceNo");;
-            var InvoiceDt = sessionStorage.getItem("InvoiceDt");;
-            var QueryString = "RptFlag=2" +
+            var InvoiceNo = sessionStorage.getItem("InvoiceNo");
+            var InvoiceDt = sessionStorage.getItem("InvoiceDt");
+            var QueryString = "?RptFlag=2" +
                 "&Invoice=" + encodeURIComponent(InvoiceNo) +
                 "&InvoiceDt=" + encodeURIComponent(InvoiceDt);
-            //"&RegNo=" + encodeURIComponent(RegNo) +
-            //"&TranNo=" + encodeURIComponent(TranNo);
-
-            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
             if (oWin === null || typeof (oWin) === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
             window.opener = 'x';
-            window.close();
-            //$.ajax({
-            //    url: '/LabInvoiceDownload/Download',
-            //    type: "POST",
-            //    dataType: "JSON",
-            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
-
-            //    success: function (success) {
-
-
-
-            //    }
-
-            //});
-
+            window.close();           
         }
         //function UserDelete(UserId) {
         //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
@@ -326,7 +308,7 @@
             var AMT_TOT = 0;
             var Net_AMT = 0;
             var Net_TAX = 0;
-            debugger;
+           
             if ($("#txttestingfee").val() == "") {
                 $("#IGST").val("0");
                 alert("Kindly Fill the Amount");

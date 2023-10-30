@@ -148,17 +148,17 @@
 </div>
 <div class="accordion-body">
 
-    <div class="col-md-8 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="PropertyId">Lab</label>
         @Html.DropDownListFor(model => model.LabCd, Common.GetLab(), new { @id="ddlppylab"})
         <span asp-validation-for="LabCd" class="text-danger"></span>
     </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="InitializeDatatableChild();">Submit</button>
+    </div>
 
 </div>
-<div class="savenext-btn" style="margin-left:40%;">
-    <button type="button" class="save-btn active" onclick="InitializeDatatableChild();">Submit</button>
-</div>
-<br />
+
 <div id="showPayment1" style="display:none;">
     <section class="table-section">
         <div class="task-listinput">
