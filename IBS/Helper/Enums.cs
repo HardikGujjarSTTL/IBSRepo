@@ -2,7 +2,6 @@
 using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Reflection;
 
 namespace IBS.Helper

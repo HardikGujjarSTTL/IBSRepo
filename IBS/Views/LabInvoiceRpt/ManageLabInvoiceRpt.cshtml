@@ -207,7 +207,7 @@
                             var year = currentDate.getFullYear();
 
                             var formattedDate = day + '/' + month + '/' + year;
-                            debugger;
+                           
                             if (row == null) {
 
                             }
@@ -283,8 +283,8 @@
 
         function Download() {
 
-            var InvoiceNo = sessionStorage.getItem("InvoiceNo");;
-            var InvoiceDt = sessionStorage.getItem("InvoiceDt");;
+            var InvoiceNo = sessionStorage.getItem("InvoiceNo");
+            var InvoiceDt = sessionStorage.getItem("InvoiceDt");
             var QueryString = "?RptFlag=2" +
                 "&Invoice=" + encodeURIComponent(InvoiceNo) +
                 "&InvoiceDt=" + encodeURIComponent(InvoiceDt);
@@ -308,7 +308,7 @@
             var AMT_TOT = 0;
             var Net_AMT = 0;
             var Net_TAX = 0;
-            debugger;
+           
             if ($("#txttestingfee").val() == "") {
                 $("#IGST").val("0");
                 alert("Kindly Fill the Amount");
