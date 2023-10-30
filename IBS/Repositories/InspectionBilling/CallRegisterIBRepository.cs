@@ -3089,12 +3089,26 @@ namespace IBS.Repositories.InspectionBilling
             if (model.CallStatus == "A" || model.CallStatus == "R")
             {
                 string bscheck = null;
+                string formattedCallRecvDt = "";
+
+                if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
+                {
+                    DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+                }
                 if (model.BkNo != "" && model.SetNo != "")
                 {
-                    bscheck = (from x in context.T10IcBooksets
-                               where x.BkNo.Trim() == model.BkNo.ToUpper()
-                               && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SetNo) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SetNo)
-                               select Convert.ToString(x.IssueToIecd)).FirstOrDefault();
+                    var FinalOrStage = context.T17CallRegisters
+                                       .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                                       .Select(cr => cr.FinalOrStage)
+                                       .FirstOrDefault() ?? "F";
+
+                    var docSetNo = Convert.ToInt32(model.DocSetNo);
+
+                    var bsCheck = (from a in context.T10IcBooksets where a.BkNo.Trim() == model.DocBkNo.Trim() && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                                   && docSetNo <= Convert.ToInt32(model.DocSetNo) && a.IssueToIecd == Convert.ToInt32(model.IeCd)&& a.Ictype == FinalOrStage
+                                   select a.IssueToIecd).FirstOrDefault();
                 }
 
                 if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) && !string.IsNullOrEmpty(model.Hologram) && document == "IC Image 1")
@@ -3934,20 +3948,35 @@ namespace IBS.Repositories.InspectionBilling
             ImageFiles filesimg = new ImageFiles();
             string formattedCallRecvDt = "";
 
+            if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
             if (model.DocBkNo != null && model.DocSetNo != null)
             {
-                var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.DocBkNo && Convert.ToInt32(model.DocSetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
-                              Convert.ToInt32(model.DocSetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
+                var FinalOrStage = context.T17CallRegisters
+                    .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                    .Select(cr => cr.FinalOrStage)
+                    .FirstOrDefault() ?? "F";
+
+                //var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.DocBkNo && Convert.ToInt32(model.DocSetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
+                //              Convert.ToInt32(model.DocSetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
+
+                var docSetNo = Convert.ToInt32(model.DocSetNo);
+
+                var bsCheck = (from a in context.T10IcBooksets
+                                   where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                   && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                                   && docSetNo <= Convert.ToInt32(model.DocSetNo)
+                                   && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                                   && a.Ictype == FinalOrStage
+                                   select a.IssueToIecd).FirstOrDefault();
 
                 if (bsCheck != null)
                 {
-                    if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
-                    {
-                        DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                        formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
-                    }
-
                     var query = context.IcIntermediates
                             .Where(ici => ici.CaseNo == model.CaseNo &&
                                           ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
