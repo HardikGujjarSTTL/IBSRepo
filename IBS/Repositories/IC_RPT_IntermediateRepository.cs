@@ -719,8 +719,7 @@ namespace IBS.Repositories
 
         private string GetFormatedAmend(string amend)
         {
-            string formatedamend = "";
-            string[] arrformatamenddt = null;
+            string formatedamend = "";            
             if (amend != null && amend.Trim() != "")
             {
                 string[] arrAmend = amend.Split(';');
@@ -739,7 +738,6 @@ namespace IBS.Repositories
 
         public string RefreshDetail(IC_RPT_IntermediateModel model, UserSessionModel user)
         {
-            var flag = true;
             var caseNo = model.CASE_NO.Trim();
             var callRecvDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var callSno = model.Call_SNO;
