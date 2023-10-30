@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -68,6 +64,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<GeneralFile> GeneralFiles { get; set; }
 
     public virtual DbSet<Generatevoucher> Generatevouchers { get; set; }
+
+    public virtual DbSet<GetBankdetail> GetBankdetails { get; set; }
 
     public virtual DbSet<Gf> Gfs { get; set; }
 
@@ -541,6 +539,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TestTable> TestTables { get; set; }
 
+    public virtual DbSet<Token> Tokens { get; set; }
+
     public virtual DbSet<TraineeEmployeeMaster> TraineeEmployeeMasters { get; set; }
 
     public virtual DbSet<TrainingCourseMaster> TrainingCourseMasters { get; set; }
@@ -656,10 +656,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1950,6 +1946,50 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.VchrNo)
                 .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
+        });
+
+        modelBuilder.Entity<GetBankdetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("GET_BANKDETAILS");
+
+            entity.Property(e => e.AccCd)
+                .HasPrecision(6)
+                .HasColumnName("ACC_CD");
+            entity.Property(e => e.Amount)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT");
+            entity.Property(e => e.AmountAdjusted)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT_ADJUSTED");
+            entity.Property(e => e.AmtTransferred)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMT_TRANSFERRED");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.Bpo)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.SuspenseAmt)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SUSPENSE_AMT");
+            entity.Property(e => e.VchrDt)
+                .HasColumnType("DATE")
+                .HasColumnName("VCHR_DT");
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(8)
                 .IsUnicode(false)
                 .HasColumnName("VCHR_NO");
         });
@@ -3681,7 +3721,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(2)
                 .HasColumnName("STATUS");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -8314,7 +8354,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T02_USERS");
 
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -8533,7 +8573,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -20537,6 +20577,33 @@ public partial class ModelContext : DbContext
                 .HasColumnName("TEST_NAME");
         });
 
+        modelBuilder.Entity<Token>(entity =>
+        {
+            entity.HasKey(e => e.Tokenid).HasName("TOKEN_PK");
+
+            entity.ToTable("TOKEN");
+
+            entity.Property(e => e.Tokenid)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"TOKEN_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("TOKENID");
+            entity.Property(e => e.Authtoken)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("AUTHTOKEN");
+            entity.Property(e => e.Expireson)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("EXPIRESON");
+            entity.Property(e => e.Issueon)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("ISSUEON");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
         modelBuilder.Entity<TraineeEmployeeMaster>(entity =>
         {
             entity.HasKey(e => e.IeCd).HasName("SYS_C009210");
@@ -20758,7 +20825,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -20810,7 +20877,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -24463,6 +24530,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("TBLEXCEPTION_SEQ");
         modelBuilder.HasSequence("TDS_HISTORY_SEQ");
         modelBuilder.HasSequence("TESTCAL");
+        modelBuilder.HasSequence("TOKEN_SEQ");
         modelBuilder.HasSequence("TRANSACTION_NUMBER_SEQ");
         modelBuilder.HasSequence("USERROLES_HISTORY_SEQ");
         modelBuilder.HasSequence("USERROLESSEQ");
