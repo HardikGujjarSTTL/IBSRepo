@@ -122,7 +122,7 @@
                                 {
                                     <div class="user">
                                         <h4>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Name) <i class="fa-solid fa-chevron-down"></i> </h4>
-                                        <p>@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.RoleName)</p>
+                                        <p class="userRole">@Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.RoleName)</p>
                                         @{
                                             string Region = "";
                                         }
@@ -152,7 +152,7 @@
                                             {
                                                 Region = "QA";
                                             }
-                                            <p>@Region</p>
+                                            <p class="regionName">(@Region)</p>
                                         }
                                     </div>
                                 }
