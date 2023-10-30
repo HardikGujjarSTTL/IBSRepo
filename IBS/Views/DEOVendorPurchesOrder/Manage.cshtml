@@ -69,8 +69,9 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
-                                <input type="text" class="input" id="txtBPO_RLY">
-                                <span asp-validation-for="RlyCd" class="text-danger"></span>
+                                @*<input type="text" class="input" id="txtBPO_RLY">*@
+                                <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
+                                @*<span asp-validation-for="RlyCd" class="text-danger"></span>*@
                             </div>
                         </div>
                     </div>
