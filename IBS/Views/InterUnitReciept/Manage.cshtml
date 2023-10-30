@@ -24,7 +24,10 @@
                             <label for="Reference">Voucher No</label>
                             <input type="text" asp-for="VCHR_NO" id="Vchr_no" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" />
                         </div>
-
+                        <div class="col-md-4 mb-4" hidden>
+                            <label for="Reference">Action</label>
+                            <input type="text" asp-for="Action" id="Action" readonly="true" maxlength="300" />
+                        </div>
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Voucher Date</label>
                             <input type="text" id="vchr_dt" class="input datepicker" asp-for="VCHR_DT" maxlength="500" />
@@ -36,6 +39,7 @@
                         <div class="col-md-4 mb-4">
                             <label for="Reference">IU Advice No/Ref No.</label>
                             <input type="text" class="input" asp-for="CHQ_NO" maxlength="500" />
+                            <span asp-validation-for="CHQ_NO" class="text-danger"></span>
 
                         </div>
 
@@ -92,8 +96,8 @@
 
                     <div class="savenext-btn">
                   <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                  <button type="button" class="save-btn active Permission_Save"  onclick="Print();">Print</button>
-                  <button type="button" class="save-btn active Permission_Save"  onclick="AddNew();">Add New</button>
+                  <button type="button" id="Btnprint" class="save-btn active Permission_Save"  onclick="Print();">Print</button>
+                  <button type="button" id="BtnAddnew" class="save-btn active Permission_Save"  onclick="AddNew();">Add New</button>
 
                     </div>
 
@@ -136,6 +140,8 @@
         $(document).ready(function () {
             debugger;
             $("#dtInterUnitReciept").css("display", "none");
+            $("#Btnprint").css("display", "none");
+            $("#BtnAddnew").css("display", "none");
             var currentDate = new Date();
 
 
@@ -156,8 +162,12 @@
            
             var VCHR_NO = $("#Vchr_no").val();
             //InitializeDatatable(VCHR_NO);
-           
 
+            if ($("#Action").val() == "")
+            {
+                $("#Btnprint").css("display", "block");
+                $("#BtnAddnew").css("display", "block");
+            }
         });
         function Save() {
             debugger;
@@ -172,8 +182,7 @@
             var res = response.responseJSON;
            
             $("#Vchr_no").val(res.vchrNo);
-            alert("updated");
-    
+           
             ShowHideMsgNew(res.status, res.responseText);
             $("#dtInterUnitReciept").css("display", "block");
 
@@ -256,33 +265,40 @@
 
             var bpoCD = $("#bpoCD").val();
 
-            $.ajax({
-                url: '/InterUnitReciept/ButtonClick',
-                type: "POST",
-                dataType: "JSON",
-                data: { bpoCD: bpoCD },
+            if(bpoCD != "" && bpoCD != null)
+            {
 
-                success: function (success) {
-                    debugger;
-                    //alert("buttonclicked");
-                    // console.log(success);
+                $.ajax({
+                    url: '/InterUnitReciept/ButtonClick',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { bpoCD: bpoCD },
 
-                    $("#lstBPO").css("display", "block");
+                    success: function (success) {
+                        debugger;
+                        //alert("buttonclicked");
+                        // console.log(success);
 
-                    for (i = 0; i < success.BPOList.length; i++) {
+                        $("#lstBPO").css("display", "block");
 
-                        // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
-                        var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
-                        $("#SelectedBPO").append(data);
+                        for (i = 0; i < success.BPOList.length; i++) {
+
+                            // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
+                            var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+                            $("#SelectedBPO").append(data);
+
+                        }
+
+
 
                     }
 
-
-
-                }
-
-            });
-
+                });
+            }
+            else
+            {
+                alert("Please Enter BPO");
+            }
         }
 
         function Print(){
@@ -293,8 +309,8 @@
             var redirectUrl = '/Print_Bank_Statement_Voucher/Index?VCHR_NO=' + encodeURIComponent(VCHR_NO) + '&VCHR_DT=' + encodeURIComponent(VCHR_DT);
             window.location.href = redirectUrl;
         }
-        function AddNew(){
-            window.location.href = '/InterUnitReciept/Manage';
-        }
+        //function AddNew(){
+        //    window.location.href = '/InterUnitReciept/Manage';
+        //}
     </script>
 }

@@ -28,7 +28,7 @@ namespace IBS.Controllers
         }
 
 
-        [Authorization("IEClaimForm", "Insert_IE", "edit")]
+       // [Authorization("IEClaimForm", "Insert_IE", "edit")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,7 +64,7 @@ namespace IBS.Controllers
             return Json(new { status = false, result = result, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        [Authorization("IEClaimForm", "Index", "view")]
+       // [Authorization("IEClaimForm", "Index", "view")]
 
         [HttpPost]
         public IActionResult IEList([FromBody] DTParameters dtParameters)

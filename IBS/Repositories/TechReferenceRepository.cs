@@ -68,7 +68,7 @@ namespace IBS.Repositories
                 {
                     orderCriteria = "TechId";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {

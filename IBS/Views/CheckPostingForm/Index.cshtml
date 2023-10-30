@@ -62,6 +62,7 @@
                             <label for="Reference">Voucher No.</label>
                             <input type="text" id="vchr_no" class="input"  readonly />
 
+
                         </div>
 
 
@@ -120,6 +121,7 @@
                                     <th>Amount Cleared By above Cheque</th>
                                     <th>Posting Date</th>
                                     <th>Action</th>
+                                    <th>Action2</th>
 
                                    
                           
@@ -431,26 +433,7 @@
                     { data: "BILL_AMOUNT_CLEARED" },
                     { data: "AMOUNT_CLEARED" },
                     { data: "POSTING_DATE" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var CHQ_NO = data.CHQ_NO;
-                    //        var CHQ_DT = data.CHQ_DATE;
-                    //        var BANK_CD = data.BANK_CD;
-                    //        var BILL_NO = data.BILL_NO;
-                    //        var AMOUNT_CLEARED = data.AMOUNT_CLEARED;
-
-                    //        var editUrl = '@Url.Action("FindByID", "CheckPostingForm")?CHQ_NO=' + encodeURIComponent(CHQ_NO) + '&CHQ_DT=' + encodeURIComponent(CHQ_DT) + '&BANK_CD=' + encodeURIComponent(BANK_CD) + '&BILL_NO=' + encodeURIComponent(BILL_NO) + '&AMOUNT_CLEARED=' + encodeURIComponent(BILL_NO);
-                        
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                    //        //// html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
-                    //        html += '</div>';
-                    //        return html;
-
-                    //        //var html = '<div align="center" class="reportIcon"> <a href="javascript:void(0);" class="edit" onclick="showEditFields(\'' + CHQ_NO + '\', \'' + CHQ_DT + '\', \'' + BANK_CD + '\', \'' + BILL_NO + '\', \'' + AMOUNT_CLEARED + '\')"><i class="fa fa-pencil" title="Edit"></i></a></div>';
-                    //        //return html;
-                    //    }
-                    //},
+                   
 
                     {
                         data: null, orderable: false,
@@ -459,6 +442,18 @@
 
                             var editButtonHtml = '<button class="custom-edit-button btn-sm btn-primary"><i class="fa fa-pencil" title="Edit"></i></button>';
                             return editButtonHtml;
+                        }
+                    },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.BankCd;
+                            var editUrl = '@Url.Action("Manage", "CheckPostingForm")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
                         }
                     },
                 ],
