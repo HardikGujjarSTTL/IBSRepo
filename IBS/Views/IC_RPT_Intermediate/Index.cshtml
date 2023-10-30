@@ -866,11 +866,7 @@
                 contentType: false,
                 success: function (response) {
                     
-                    if (parseInt(response) > 0) {
-                        //$("#btnSave").css("display", "none");
-                        //$("#btnRefresh").css("display", "none");
-                        //$("#btnSavePOAmendment").css("display", "none");
-
+                    if (parseInt(response) > 0) {                        
                         $("#btnSave").prop('disabled', true);
                         $("#btnRefresh").prop('disabled', true);
                         $("#btnSavePOAmendment").prop('disabled', true);
@@ -880,18 +876,15 @@
                         $('#btnSavePOAmendment').addClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "auto");
 
                         $(".edit").css("display", "none");
-                        $(".delete").css("display", "none");
-
-                                               
-
+                        $(".delete").css("display", "none");                                               
                     } else {
                         $("#btnSave").prop('disabled', false);
                         $("#btnRefresh").prop('disabled', false);
                         $("#btnSavePOAmendment").prop('disabled', false);
 
-                        $("#btnSave").css("cursor", "pointer");
-                        $("#btnRefresh").css("cursor", "pointer");
-                        $("#btnSavePOAmendment").css("cursor", "pointer");
+                        $('#btnSave').removeClass('disabled-button'); //$("#btnSave").css("cursor", "pointer");
+                        $('#btnRefresh').removeClass('disabled-button'); //$("#btnRefresh").css("cursor", "pointer");
+                        $('#btnSavePOAmendment').removeClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "pointer");
 
                         $(".edit").css("display", "");
                         $(".delete").css("display", "");
