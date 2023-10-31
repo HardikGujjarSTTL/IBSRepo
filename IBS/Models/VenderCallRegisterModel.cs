@@ -612,6 +612,11 @@ namespace IBS.Models
         public string Hologram { get; set; }
         public string Remarks { get; set; }
         public string Remarkslbl { get; set; }
+        public DateTime CallLetterDt { get; set; }
+        [Required(ErrorMessage = "Please Enter Book No.")]
+        public string? DocBkNo { get; set; }
+        [Required(ErrorMessage = "Please Enter Set No.")]
+        public string? DocSetNo { get; set; }
     }
 
     public class VendrorCallDetailsModel

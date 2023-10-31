@@ -113,7 +113,8 @@ namespace IBS.Repositories
                     NAME_OF_IE = Convert.ToString(row["NAME_OF_IE"]),
                     GOV_BILL_AUTH = Convert.ToString(row["GOV_BILL_AUTH"]),
                     MAN_TYPE = Convert.ToString(row["MAN_TYPE"]),
-                    CONSIGNEE_DESG = Convert.ToString(row["CONSIGNEE_DESG"])
+                    CONSIGNEE_DESG = Convert.ToString(row["CONSIGNEE_DESG"]),
+                    CONSGN_CALL_STATUS = Convert.ToString(row["CONSGN_CALL_STATUS"])
                 }).FirstOrDefault();
             }
 
@@ -437,95 +438,7 @@ namespace IBS.Repositories
 
         public bool SaveDetail(IC_RPT_IntermediateModel model, UserSessionModel user)
         {
-            DateTime callRecDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            #region Code Comment
-            //using (var trans = context.Database.BeginTransaction())
-            //{                
-            //    try
-            //    {
-            //        if (user.Region != "C")
-            //        {
-            //            model.MAN_TYPE = "";
-            //        }
-            //        var _data = (from x in context.IcIntermediates
-            //                     where x.ItemSrnoPo == Convert.ToByte(model.ITEM_SRNO_PO)
-            //                     && x.CaseNo == model.CASE_NO
-            //                     && x.BkNo == model.BK_NO
-            //                     && x.SetNo == model.SET_NO
-            //                     && x.CallRecvDt == callRecDt
-            //                     && x.CallSno == Convert.ToInt16(model.Call_SNO)
-            //                     && x.ConsigneeCd == Convert.ToInt32(model.DP_CONSIGNEE_CD)
-            //                     select x).FirstOrDefault();                                        
-            //        if (_data != null)
-            //        {
-            //            _data.ConsgnCallStatus = "Z";
-            //            _data.ItemSrnoPo = Convert.ToByte(model.ITEM_SRNO_PO);
-            //            _data.ItemDescPo = model.ITEM_DESC_PO;
-            //            _data.ItemRemark = model.ITEM_REMARK;
-            //            _data.QtyOrdered = Convert.ToDecimal(model.QTY_ORDERED);
-            //            _data.CumQtyPrevOffered = Convert.ToDecimal(model.CUM_QTY_PREV_OFFERED);
-            //            _data.CumQtyPrevPassed = Convert.ToDecimal(model.CUM_QTY_PREV_PASSED);
-            //            _data.QtyToInsp = Convert.ToDecimal(model.QTY_TO_INSP);
-            //            _data.QtyPassed = Convert.ToDecimal(model.QTY_PASSED);
-            //            _data.QtyRejected = Convert.ToDecimal(model.QTY_REJECTED);
-            //            _data.QtyDue = Convert.ToDecimal(model.QTY_DUE);
-            //            _data.PoNo = model.PO_NO;
-            //            _data.UnitDtl = model.UNIT_DTL;
-            //            context.SaveChanges();
-            //        }
-            //        var _data1 = context.IcIntermediates
-            //                    .Where(x => x.IeCd == Convert.ToInt32(user.IeCd))
-            //                    .Select(x => x);
-            //        if (_data1 != null)
-            //        {
-            //            foreach (var row in _data1)
-            //            {
-            //                row.IeStamp = "";
-            //                row.IeStamp2 = "";
-            //                row.IeStampsDetail = model.IE_STAMPS_DETAIL;
-            //                row.IeStampsDetail2 = model.IE_STAMPS_DETAIL2;
-            //                context.SaveChanges();
-            //            }
-            //        }
-
-            //        var query = context.IcIntermediates
-            //                    .Where(x => x.CaseNo == model.CASE_NO && x.BkNo == model.BK_NO && x.SetNo == model.SET_NO
-            //                    && x.CallRecvDt == callRecDt && x.CallSno == Convert.ToInt32(model.Call_SNO))
-            //                    .Select(x => x);
-            //        if (query != null)
-            //        {
-            //            foreach (var row in query)
-            //            {
-            //                row.ReasonOfRejection = model.REMARK;
-            //                row.PassedInstNo = model.PASSED_INST_NO;
-            //                row.LabTstRectDt = string.IsNullOrEmpty(model.LAB_TST_RECT_DT) ? null : DateTime.ParseExact(model.LAB_TST_RECT_DT, "dd/MM/yyyy", null);
-            //                row.Hologram = model.HOLOGRAM;
-            //                row.Remark = model.REMARK;
-            //                row.ManType = model.MAN_TYPE;
-            //                row.DispatchPackingNo = model.DISPATCH_PACKING_NO;
-            //                row.InvoiceNo = model.INVOICE_NO;
-            //                row.NameOfIe = model.NAME_OF_IE;
-            //                row.ConsigneeDesg = model.CONSIGNEE_DESG;
-
-            //                row.ConsigneeDtl = model.CONSIGNEE_DTL;
-            //                row.BpoDtl = model.BPO_DTL;
-            //                row.GovBillAuth = model.GOV_BILL_AUTH;
-            //                row.PurDtl = model.PUR_DTL;
-            //                row.PurAutDtl = model.PUR_AUT_DTL;
-            //                row.OffInstNoDtl = model.OFF_INST_NO_DTL;
-            //                context.SaveChanges();
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        trans.Rollback();
-            //        return false;
-            //    }
-            //    trans.Commit();
-            //}
-            #endregion
-
+            DateTime callRecDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);            
             if (user.Region != "C")
             {
                 model.MAN_TYPE = "";
@@ -806,8 +719,7 @@ namespace IBS.Repositories
 
         private string GetFormatedAmend(string amend)
         {
-            string formatedamend = "";
-            string[] arrformatamenddt = null;
+            string formatedamend = "";            
             if (amend != null && amend.Trim() != "")
             {
                 string[] arrAmend = amend.Split(';');
@@ -826,7 +738,6 @@ namespace IBS.Repositories
 
         public string RefreshDetail(IC_RPT_IntermediateModel model, UserSessionModel user)
         {
-            var flag = true;
             var caseNo = model.CASE_NO.Trim();
             var callRecvDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var callSno = model.Call_SNO;

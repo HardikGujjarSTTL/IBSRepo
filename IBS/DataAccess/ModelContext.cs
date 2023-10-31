@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -664,10 +660,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

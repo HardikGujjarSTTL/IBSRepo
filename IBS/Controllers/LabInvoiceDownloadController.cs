@@ -16,16 +16,19 @@ namespace IBS.Controllers
         #region Variables
         private readonly ILabInvoiceDownloadRepository LabInvoiceDownloadRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration config;
+
         #endregion
-        public LabInvoiceDownloadController(ILabInvoiceDownloadRepository _LabInvoiceDownloadRepository, IWebHostEnvironment webHostEnvironment)
+        public LabInvoiceDownloadController(ILabInvoiceDownloadRepository _LabInvoiceDownloadRepository, IWebHostEnvironment webHostEnvironment, IConfiguration _config)
         {
             LabInvoiceDownloadRepository = _LabInvoiceDownloadRepository;
             _webHostEnvironment = webHostEnvironment;
+            config = _config;
         }
 
         public IActionResult LabInvoiceDownload()
         {
-
+            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
             return View();
         }
         [HttpPost]

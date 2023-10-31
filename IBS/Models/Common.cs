@@ -391,6 +391,31 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> BPORegion()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Northern Region";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Eastern Region";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Western Region";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Southern Region";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Bhilai Region";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> FeedBackRegion()
         {
@@ -1110,6 +1135,24 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "All";
             single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        public static List<SelectListItem> TypeOutStandingBills()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All Bills";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Full Outstanding Bills";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Partly Outstanding Bills";
+            single.Value = "P";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -3042,6 +3085,24 @@ namespace IBS.Models
                                                Value = a.BpoCd
                                            }).ToList();
             }
+            return objdata;
+        }
+        public static List<SelectListItem> GetBillPayingOfficer()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+           
+                var obj = (from of in context.V12BillPayingOfficers
+                           //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                           select of).ToList();
+                objdata = (from a in obj
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.BpoCd + "-" + a.Bpo,
+                          Value = a.BpoCd
+                      }).ToList();
+           
             return objdata;
         }
 

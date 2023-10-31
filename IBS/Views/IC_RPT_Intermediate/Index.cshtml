@@ -1,12 +1,17 @@
 ﻿@model IBS.Models.IC_RPT_IntermediateModel;
 @{
     ViewData["Title"] = "IC REPORT EDIT FORM";
-    string clsView = "";
-    //if (Model.ErrorMsg != null)
-    //{
-    clsView = "Permission_View";
-    //}
+    string clsView = "";    
+    clsView = "Permission_View";    
+    string ReportUrl = ViewBag.ReportUrl;
 }
+
+<style>
+    .disabled-button {
+        cursor: not-allowed; /* Change cursor to not-allowed */
+        opacity: 0.6; /* Reduce opacity for a disabled look */
+    }
+</style>
 
 <div class="list-inner">
     <div class="tast-list">
@@ -69,7 +74,7 @@
                 <input type="hidden" id="hdnSNo" />
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Amendments</label>
-                    <input type="text" class="input" id="TxtAmnds" /> @*asp-for="test"*@
+                    <input type="text" class="input" id="TxtAmnds" />
                     @*<span asp-validation-for="test" class="text-danger"></span>*@
                 </div>
                 <div class="col-md-3 mb-3">
@@ -301,60 +306,20 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        function Download() {
-
-            var CaseNO = $("#lblCASE_NO").html();
-            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
-            var CallSNo = $("#lblCall_SNO").html();
-            var Consignee_CD = $("#CONSIGNEE_CD").val();
-            var Region = $("#Region").val();
-            
-            var QueryString = "RptFlag=8" +
-                "&CaseNO=" + encodeURIComponent(CaseNO) +
-                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
-                "&CallSNo=" + encodeURIComponent(CallSNo) +
-                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-                "&Region=" + encodeURIComponent(Region);
-            //"&RegNo=" + encodeURIComponent(RegNo) +
-            //"&TranNo=" + encodeURIComponent(TranNo);
-
-            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-            if (oWin === null || typeof (oWin) === 'undefined') {
-                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
-            }
-            window.opener = 'x';
-            window.close();
-            //$.ajax({
-            //    url: '/LabInvoiceDownload/Download',
-            //    type: "POST",
-            //    dataType: "JSON",
-            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
-
-            //    success: function (success) {
-
-
-
-            //    }
-
-            //});
-
-        }
-
 
         var Case_No = "@Model.CASE_NO";
         var Call_Recv_Dt = "@Model.Call_Recv_dt";
         var Call_SNo = "@Model.Call_SNO";
         var Consignee_Cd = "@Model.CONSIGNEE_CD";
         var ActionAR = "@Model.ACTIONAR";
+
         $(document).ready(function () {
             if ("@Model.ACTIONAR" == "R") {
                 $(".clsRemark").css("display", "");
             }
 
             $("#CONSIGNEE_CD").change(function () {
-                debugger;
+                
                 $("#BK_NO").val("");
                 $("#SET_NO").val("");
                 Reset();
@@ -405,14 +370,34 @@
 
             InitializationPOAmendment();
             SetAccepted();
-            debugger
+            
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
 
             $("#btnCancel").css("cursor", "pointer");
             $("#btnReport").css("cursor", "pointer");
         });
 
-
+        function Download() {
+            $('#BK_NO').prop('disabled', true);
+            $('#SET_NO').prop('disabled', true);
+            var CaseNO = $("#lblCASE_NO").html();
+            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+            var CallSNo = $("#lblCall_SNO").html();
+            var Consignee_CD = $("#CONSIGNEE_CD").val();
+            var Region = $("#Region").val();
+            var BkNo = $('#BK_NO').val();
+            var SetNo = $('#SET_NO').val();
+            var QueryString = "?RptFlag=8" +
+                "&CaseNO=" + encodeURIComponent(CaseNO) +
+                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
+                "&CallSNo=" + encodeURIComponent(CallSNo) +
+                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
+                "&Region=" + encodeURIComponent(Region) +
+                "&BkNo=" + encodeURIComponent(BkNo) +
+                "&SetNo=" + encodeURIComponent(SetNo);
+                
+            window.open('@ReportUrl' + QueryString, '_blank');
+        }
 
         function lstman() {
             if ($("#MAN_TYPE").val() == "B") {
@@ -507,11 +492,12 @@
             $.post("@Url.Action("SaveDetails", "IC_RPT_Intermediate")", { model: formData }, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
-                    $("#btnCancel").trigger("click");
+                    setTimeout(function () {
+                        $("#btnCancel").trigger("click");
+                    }, 1000);
                 }
             });
         });
-
 
         $("#btnRefresh").click(function () {
 
@@ -601,7 +587,6 @@
             }
             return true;
         }
-
 
         function InitializationPOAmendment() {
 
@@ -759,7 +744,6 @@
             });
         }
 
-
         function FillItems() {
             let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
             $.ajax({
@@ -769,12 +753,12 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
+                    
                     if (response != null) {
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
-                        $("#IE_STAMPS_DETAIL").val((response.IE_STAMPS_DETAIL == "SELECT STAMP" ||  response.IE_STAMPS_DETAIL == null) ? 0 : response.IE_STAMPS_DETAIL);
+                        $("#IE_STAMPS_DETAIL").val((response.IE_STAMPS_DETAIL == "SELECT STAMP" || response.IE_STAMPS_DETAIL == null) ? 0 : response.IE_STAMPS_DETAIL);
                         $("#IE_STAMPS_DETAIL2").val((response.IE_STAMPS_DETAIL2 == "SELECT STAMP" || response.IE_STAMPS_DETAIL2 == null) ? 0 : response.IE_STAMPS_DETAIL2);
                         $("#LAB_TST_RECT_DT").val(response.LAB_TST_RECT_DT);
                         $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
@@ -799,7 +783,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
+                    
                     if (response != null) {
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
@@ -831,6 +815,10 @@
                         $("#PUR_AUTH_DESC").val(response.PUR_AUTH_DESC);
                         $("#OFF_INST_NO").val(response.OFF_INST_NO);
                         $("#ITEM_UNIT").val(response.ITEM_UNIT);
+                        if (response.CONSGN_CALL_STATUS == "A" || response.CONSGN_CALL_STATUS == "R") {
+                            $(".edit").css("display", "none");
+                            $(".delete").css("display", "none");
+                        }
                     }
                 }
             });
@@ -867,28 +855,29 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
-                    if (parseInt(response) > 0) {
-                        //$("#btnSave").css("display", "none");
-                        //$("#btnRefresh").css("display", "none");
-                        //$("#btnSavePOAmendment").css("display", "none");
-
+                    
+                    if (parseInt(response) > 0) {                        
                         $("#btnSave").prop('disabled', true);
                         $("#btnRefresh").prop('disabled', true);
                         $("#btnSavePOAmendment").prop('disabled', true);
 
-                        $("#btnSave").css("cursor", "auto");
-                        $("#btnRefresh").css("cursor", "auto");
-                        $("#btnSavePOAmendment").css("cursor", "auto");
+                        $('#btnSave').addClass('disabled-button'); //$("#btnSave").css("cursor", "auto");
+                        $('#btnRefresh').addClass('disabled-button'); //$("#btnRefresh").css("cursor", "auto");
+                        $('#btnSavePOAmendment').addClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "auto");
 
+                        $(".edit").css("display", "none");
+                        $(".delete").css("display", "none");                                               
                     } else {
                         $("#btnSave").prop('disabled', false);
                         $("#btnRefresh").prop('disabled', false);
                         $("#btnSavePOAmendment").prop('disabled', false);
 
-                        $("#btnSave").css("cursor", "pointer");
-                        $("#btnRefresh").css("cursor", "pointer");
-                        $("#btnSavePOAmendment").css("cursor", "pointer");
+                        $('#btnSave').removeClass('disabled-button'); //$("#btnSave").css("cursor", "pointer");
+                        $('#btnRefresh').removeClass('disabled-button'); //$("#btnRefresh").css("cursor", "pointer");
+                        $('#btnSavePOAmendment').removeClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "pointer");
+
+                        $(".edit").css("display", "");
+                        $(".delete").css("display", "");
                     }
                 }
             });
@@ -941,7 +930,7 @@
         }
 
         function RemoveSpecialChar(id) {
-            debugger
+            
             var Name = "#" + id;
             var value = $(Name).val();
             var desired = value.replace(/[ ](?=[ ])|[^-~`!#$%^&*()=+:/\\;<,>.?_A-Za-z0-9 ]+/g, ' ');
@@ -951,7 +940,7 @@
         }
 
         function checkTextAreaMaxLength(textBox, e, length) {
-            debugger
+            
             var mLen = textBox["MaxLength"];
             if (null == mLen)
                 mLen = length;
@@ -966,6 +955,7 @@
                 }
             }
         }
+
         function checkSpecialKeys(e) {
             if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40)
                 return false;
@@ -989,5 +979,6 @@
             }
             return false;
         }
+
     </script>
 }

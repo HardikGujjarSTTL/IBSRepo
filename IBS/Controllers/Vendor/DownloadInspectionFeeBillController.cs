@@ -10,14 +10,17 @@ namespace IBS.Controllers.Vendor
     {
         #region Variables
         private readonly IDownloadInspFeeBillRepository downloadRepository;
+        private readonly IConfiguration config;
         #endregion
-        public DownloadInspectionFeeBillController(IDownloadInspFeeBillRepository _downloadRepository)
+        public DownloadInspectionFeeBillController(IDownloadInspFeeBillRepository _downloadRepository, IConfiguration _config)
         {
             downloadRepository = _downloadRepository;
+            config = _config;
         }
 
         public IActionResult Index(string CaseNo, string BkNo, string SetNo)
         {
+            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
             DownloadInspectionFeeBillModel model = new();
             if (CaseNo != null && BkNo != null && SetNo != null)
             {

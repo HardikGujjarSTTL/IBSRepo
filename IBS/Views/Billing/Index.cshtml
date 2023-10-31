@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    string ReportUrl = ViewBag.ReportUrl;
+}
 <div class="list-inner">
     <div class="tast-list">
         <h2>BPO WISE BILL DETAILS</h2>
@@ -245,7 +247,7 @@
             var Rb3 = sessionStorage.getItem("rb4");
             var Rb4 = sessionStorage.getItem("rb5");
 
-            var QueryString = "RptFlag=5" +
+            var QueryString = "?RptFlag=5" +
                 "&Month=" + encodeURIComponent(Month) +
                 "&Year=" + encodeURIComponent(Year) +
                 "&Region=" + encodeURIComponent(Region) +
@@ -260,15 +262,12 @@
                 "&Rb3=" + encodeURIComponent(Rb3) +
                 "&Rb4=" + encodeURIComponent(Rb4);
 
-
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
             if (oWin === null || typeof (oWin) === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
             window.opener = 'x';
             window.close();
-
         }
     </script>
 }

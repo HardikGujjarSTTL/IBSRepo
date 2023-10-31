@@ -307,8 +307,10 @@
     function onclickUploadAndProcess() {
         var formData = new FormData();
         formData.append('file', $('#VoucherDetailsFile')[0].files[0]);
+        var url = '@Url.Action("UploadExcelFile", "RecieptVoucher")';
         $.ajax({
-            url: '/RecieptVoucher/UploadExcelFile',
+            //url: '/RecieptVoucher/UploadExcelFile',
+            url:url,
             type: "POST",
             processData: false,
             data: formData,

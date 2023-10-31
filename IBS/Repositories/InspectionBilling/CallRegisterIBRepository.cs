@@ -528,39 +528,46 @@ namespace IBS.Repositories.InspectionBilling
                     model.e_status = 1;
                     if (ie_cd > 0)
                     {
-                        T17CallRegister obj = new T17CallRegister();
-                        obj.CaseNo = model.CaseNo;
-                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = Convert.ToInt32(model.CallSno);
-                        obj.CallLetterNo = model.CallLetterNo;
-                        obj.CallLetterDt = model.CallLetterDt;
-                        obj.CallMarkDt = model.CallMarkDt;
-                        obj.IeCd = model.IeCd;
-                        obj.CoCd = Convert.ToInt32(Co);
-                        obj.DtInspDesire = model.DtInspDesire;
-                        obj.CallStatus = "M";
-                        obj.CallStatusDt = model.CallStatusDt;
-                        obj.CallRemarkStatus = model.CallRemarkStatus;
-                        obj.CallInstallNo = model.CallInstallNo;
-                        obj.RegionCode = model.SetRegionCode;
-                        obj.MfgCd = model.MfgCd;
-                        obj.UserId = model.UserId;
-                        obj.Datetime = DateTime.Now;
-                        obj.MfgPlace = model.VendAdd1;
-                        obj.Remarks = model.Remarks;
-                        obj.RejCanCall = rej_can_call;
-                        obj.FinalOrStage = w_stage_or_final;
-                        obj.NewVendor = w_New_Vendor;
-                        obj.IrfcFunded = w_irfc_funded;
-                        obj.ClusterCode = model.ClusterCode;
-                        obj.DepartmentCode = model.DepartmentCode;
-                        obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
+                        try
+                        {
+                            T17CallRegister obj = new T17CallRegister();
+                            obj.CaseNo = model.CaseNo;
+                            obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                            obj.CallSno = Convert.ToInt32(model.CallSno);
+                            obj.CallLetterNo = model.CallLetterNo;
+                            obj.CallLetterDt = model.CallLetterDt;
+                            obj.CallMarkDt = model.CallMarkDt;
+                            obj.IeCd = model.IeCd;
+                            obj.CoCd = Convert.ToInt32(Co);
+                            obj.DtInspDesire = model.DtInspDesire;
+                            obj.CallStatus = "M";
+                            obj.CallStatusDt = model.CallStatusDt;
+                            obj.CallRemarkStatus = model.CallRemarkStatus;
+                            obj.CallInstallNo = model.CallInstallNo;
+                            obj.RegionCode = model.SetRegionCode;
+                            obj.MfgCd = model.MfgCd;
+                            obj.UserId = model.UserId;
+                            obj.Datetime = DateTime.Now;
+                            obj.MfgPlace = model.VendAdd1;
+                            obj.Remarks = model.Remarks;
+                            obj.RejCanCall = rej_can_call;
+                            obj.FinalOrStage = w_stage_or_final;
+                            obj.NewVendor = w_New_Vendor;
+                            obj.IrfcFunded = w_irfc_funded;
+                            obj.ClusterCode = model.ClusterCode;
+                            obj.DepartmentCode = model.DepartmentCode;
+                            obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
-                        obj.Createdby = model.Createdby;
-                        obj.Createddate = DateTime.Now;
-                        context.T17CallRegisters.Add(obj);
-                        context.SaveChanges();
-                        ID = obj.CaseNo;
+                            obj.Createdby = model.Createdby;
+                            obj.Createddate = DateTime.Now;
+                            context.T17CallRegisters.Add(obj);
+                            context.SaveChanges();
+                            ID = obj.CaseNo;
+                        }
+                        catch (Exception ex)
+                        {
+                            var msg = ex.Message;
+                        }
                     }
                     //GetDtList(model);
                 }
@@ -1488,7 +1495,249 @@ namespace IBS.Repositories.InspectionBilling
             return sms;
         }
 
-        public string send_Vendor_Email(VenderCallRegisterModel model)
+        public void Vendor_Rej_Email(VenderCallStatusModel model)
+        {
+            string email = "";
+            string Case_Region = model.CaseNo.ToString().Substring(0, 1);
+            string wRegion = "";
+            string sender = "";
+            string wPCity = "";
+            string manu_mail = "", mfg_cd = "", manu_name = "", manu_city = "";
+            string ie_phone = "", ie_name = "", ie_email = "", ie_co_email = "";
+            string vend_cd = "", vend_name = "", vend_email = "", rly_cd = "", vend_city = "";
+
+            var querys = from t13 in context.T13PoMasters
+                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+                         join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                         where t13.CaseNo == model.CaseNo.Trim()
+                         select new
+                         {
+                             t13.VendCd,
+                             t05.VendName,
+                             VEND_ADDRESS = t05.VendAdd2 != null ? t05.VendAdd1 + "/" + t05.VendAdd2 : t05.VendAdd1,
+                             t03.City,
+                             t05.VendEmail,
+                             t13.RegionCode,
+                             t13.RlyCd
+                         };
+
+            var results = querys.ToList();
+
+            foreach (var item in results)
+            {
+                vend_cd = item.VendCd.ToString();
+                vend_name = item.VendName;
+                vend_city = item.City;
+                vend_email = item.VendEmail;
+                rly_cd = item.RlyCd;
+
+                if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; wPCity = "New Delhi"; }
+                else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; wPCity = "Chennai"; }
+                else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; wPCity = "Kolkata"; wPCity = "Kolkata"; }
+                else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; wPCity = "Mumbai"; }
+                else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
+            }
+
+            var query = from t05 in context.T05Vendors
+                        join t17 in context.T17CallRegisters on t05.VendCd equals t17.MfgCd
+                        join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                        where t17.CaseNo == model.CaseNo.Trim() &&
+                              t17.CallRecvDt == model.CallRecvDt &&
+                              t17.CallSno == model.CallSno
+                        select new
+                        {
+                            MFG_NAME = t05.VendName,
+                            MFG_CITY = t03.City,
+                            t05.VendEmail,
+                            t17.MfgCd
+                        };
+            var result = query.FirstOrDefault();
+
+            manu_mail = result.VendEmail;
+            mfg_cd = result.MfgCd.ToString();
+            manu_name = result.MFG_NAME;
+            manu_city = result.MFG_CITY;
+
+            var query2 = from t09 in context.T09Ies
+                         join t08 in context.T08IeControllOfficers
+                         on t09.IeCoCd equals t08.CoCd
+                         where t09.IeCd == Convert.ToInt32(model.IeCd)
+                         select new
+                         {
+                             IE_PHONE_NO = t09.IePhoneNo,
+                             CO_NAME = t08.CoName,
+                             CO_PHONE_NO = t08.CoPhoneNo,
+                             IE_NAME = t09.IeName,
+                             IE_EMAIL = t09.IeEmail,
+                             CO_Email = t08.CoEmail,
+                         };
+
+            var result2 = query2.FirstOrDefault();
+
+            ie_phone = result2.IE_PHONE_NO;
+            ie_name = result2.IE_NAME;
+            ie_email = result2.IE_EMAIL;
+            ie_co_email = result2.CO_Email;
+
+            string call_letter_dt = "";
+            if (Convert.ToString(model.CallLetterDt) == "")
+            {
+                call_letter_dt = "NIL";
+            }
+            else
+            {
+                call_letter_dt = Convert.ToString(model.CallLetterDt);
+            }
+            string mail_body = "";
+
+            mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallStatusDt + ", at SNo. " + model.CallSno + ". is Rejected on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+
+            mail_body = mail_body + "You are requested to submit Rejection charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + wPCity + " along with next call.<br><b><u>Please note that call letter without Call Rejection charges will not be accepted.</u></b><br>";
+
+            mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+
+            if (vend_cd == mfg_cd && manu_mail != "")
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+                mail.To.Add(manu_mail);
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                // Create a SmtpClient
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                                                                                                                   // Send the email
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception (log, display error message, etc.)
+                }
+                finally
+                {
+                    // Dispose of resources
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+            else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+                mail.To.Add(vend_email);
+                mail.To.Add(manu_mail);
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                // Create a SmtpClient
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+
+                // Send the email
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception (log, display error message, etc.)
+                }
+                finally
+                {
+                    // Dispose of resources
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+            else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+
+                if (string.IsNullOrEmpty(vend_email))
+                {
+                    mail.To.Add(manu_mail);
+                }
+                else if (string.IsNullOrEmpty(manu_mail))
+                {
+                    mail.To.Add(vend_email);
+                }
+                else
+                {
+                    mail.To.Add(vend_email);
+                    mail.To.Add(manu_mail);
+                }
+
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+
+            if (vend_email == "" && manu_mail == "")
+            {
+                MailMessage mail = new MailMessage();
+                mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+
+                mail.To.Add(ie_co_email);
+                if (Case_Region == "N")
+                {
+                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
+                }
+                else
+                {
+                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
+                }
+                mail.From = new MailAddress(sender);
+                mail.Subject = "Your Call for Inspection By RITES has Rejected.";
+                mail.Body = mail_body;
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                try
+                {
+                    smtpClient.Send(mail);
+                    email = "success";
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+
+            // return email;
+        }
+
+        public string send_Vendor_Email(VenderCallStatusModel model)
         {
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
@@ -1499,7 +1748,7 @@ namespace IBS.Repositories.InspectionBilling
             else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
             else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
             else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
-            else if (Case_Region == "C") { wRegion = "Central Region"; }
+            else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
 
             var query = from t13 in context.T13PoMasters
                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
@@ -1518,12 +1767,15 @@ namespace IBS.Repositories.InspectionBilling
             int vend_cd = 0;
             string vend_add = "";
             string vend_email = "";
+            string vend_name = "";
+            string vend_city = "";
 
             if (result != null)
             {
                 vend_cd = Convert.ToInt32(result.VEND_CD);
                 vend_add = result.VEND_ADDRESS;
                 vend_email = result.VEND_EMAIL;
+                vend_name = result.VEND_NAME;
             }
 
             var query1 = from t05 in context.T05Vendors
@@ -1555,7 +1807,7 @@ namespace IBS.Repositories.InspectionBilling
             var query2 = from t09 in context.T09Ies
                          join t08 in context.T08IeControllOfficers
                          on t09.IeCoCd equals t08.CoCd
-                         where t09.IeCd == model.IeCd
+                         where t09.IeCd == Convert.ToInt32(model.IeCd)
                          select new
                          {
                              IE_PHONE_NO = t09.IePhoneNo,
@@ -1572,6 +1824,8 @@ namespace IBS.Repositories.InspectionBilling
             string co_mobile = "";
             string ie_name = "";
             string ie_email = "";
+            string manu_city = "";
+            string rly_cd = "";
 
             if (result2 != null)
             {
@@ -1587,7 +1841,7 @@ namespace IBS.Repositories.InspectionBilling
             var subquery = from t17 in context.T17CallRegisters
                            where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MM-yyyy", null) &&
                                  (t17.CallStatus == "M" || t17.CallStatus == "S") &&
-                                 t17.IeCd == model.IeCd
+                                 t17.IeCd == Convert.ToInt32(model.IeCd)
                            select t17;
 
             var query3 = from t17 in context.T17CallRegisters
@@ -1636,6 +1890,19 @@ namespace IBS.Repositories.InspectionBilling
                 days_to_ic = Convert.ToInt32(result4[0].DaysToIc);
                 item_cd = result4[0].ItemCd;
             }
+            string can_reasons = "";
+            string manu_name = "", manu_add = "";
+            var manufacturerInfo = (from t17 in context.T17CallRegisters
+                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                                    where t17.CaseNo == model.CaseNo &&
+                                    t17.CallRecvDt == model.CallRecvDt &&
+                                    t17.CallSno == model.CallSno
+                                    select new
+                                    {
+                                        manu_name = t05.VendName,
+                                        manu_add = t03.City
+                                    }).FirstOrDefault();
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
             {
@@ -1645,45 +1912,61 @@ namespace IBS.Repositories.InspectionBilling
             {
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
+            string mail_body = "";
+            if (model.CallCancelStatus == "C")
+            {
+                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
 
-            string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
-            if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
-            {
-                mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
+
+                mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
             }
-            if (days_to_ic == 0)
+            else
             {
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
-            }
-            else if (days_to_ic > 0)
-            {
-                System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
-                System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
-                string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
-            }
-            mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
-            if (Case_Region == "N")
-            {
-                sender = "nrinspn@rites.com";
-            }
-            else if (Case_Region == "W")
-            {
-                sender = "wrinspn@rites.com";
-            }
-            else if (Case_Region == "E")
-            {
-                sender = "erinspn@rites.com";
-            }
-            else if (Case_Region == "S")
-            {
-                sender = "srinspn@rites.com";
-            }
-            else if (Case_Region == "C")
-            {
-                sender = "crinspn@rites.com";
+                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+                mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
             }
 
+            #region comment code
+            //string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
+            //if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
+            //{
+            //    mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+            //}
+            //if (days_to_ic == 0)
+            //{
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            //}
+            //else if (days_to_ic > 0)
+            //{
+            //    System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
+            //    System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
+            //    string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
+            //}
+            //mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+
+            //if (Case_Region == "N")
+            //{
+            //    sender = "nrinspn@rites.com";
+            //}
+            //else if (Case_Region == "W")
+            //{
+            //    sender = "wrinspn@rites.com";
+            //}
+            //else if (Case_Region == "E")
+            //{
+            //    sender = "erinspn@rites.com";
+            //}
+            //else if (Case_Region == "S")
+            //{
+            //    sender = "srinspn@rites.com";
+            //}
+            //else if (Case_Region == "C")
+            //{
+            //    sender = "crinspn@rites.com";
+            //}
+            #endregion
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 // Create a MailMessage object
@@ -1794,22 +2077,11 @@ namespace IBS.Repositories.InspectionBilling
 
             var controllingEmail = (from t08 in context.T08IeControllOfficers
                                     join t09 in context.T09Ies on t08.CoCd equals t09.IeCoCd
-                                    where t09.IeCd == model.IeCd
+                                    where t09.IeCd == Convert.ToInt32(model.IeCd)
                                     select t08.CoEmail
                                     ).FirstOrDefault();
 
-            string manu_name = "", manu_add = "";
-            var manufacturerInfo = (from t17 in context.T17CallRegisters
-                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
-                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                                    where t17.CaseNo == model.CaseNo &&
-                                    t17.CallRecvDt == model.CallRecvDt &&
-                                    t17.CallSno == model.CallSno
-                                    select new
-                                    {
-                                        manu_name = t05.VendName,
-                                        manu_add = t03.City
-                                    }).FirstOrDefault();
+
             if (controllingEmail != "")
             {
                 MailMessage mail2 = new MailMessage();
@@ -2640,12 +2912,12 @@ namespace IBS.Repositories.InspectionBilling
 
                 formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
             }
-            var selectConsigneeFirmList = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "0", Text = "Select Consignee" }
-            };
+            //var selectConsigneeFirmList = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Value = "0", Text = "Select Consignee" }
+            //};
 
-            var firstQuery = selectConsigneeFirmList.AsQueryable();
+            //var firstQuery = selectConsigneeFirmList.AsQueryable();
 
             var secondQuery = (from cdt in context.T18CallDetails
                                join csn in context.V06Consignees
@@ -2660,7 +2932,27 @@ namespace IBS.Repositories.InspectionBilling
                                }).Distinct().ToList();
 
             // Set ConsigneeFirmList to the query result
-            model.ConsigneeFirmList = firstQuery.Union(secondQuery).ToList();
+            model.ConsigneeFirmList = secondQuery.ToList();
+
+            var queryResult = context.IcIntermediates
+                        .Where(ici => ici.CaseNo == CaseNo &&
+                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                      ici.CallSno == CallSno)
+                        .OrderByDescending(ici => ici.Datetime)
+                        .FirstOrDefault();
+
+            if (queryResult != null)
+            {
+                model.DocBkNo = queryResult.BkNo;
+                model.DocSetNo = queryResult.SetNo;
+
+            }
+            else
+            {
+                model.DocBkNo = "";
+                model.DocSetNo = "";
+
+            }
 
             var CancelData = (from l in context.T19CallCancels
                               join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
@@ -2757,11 +3049,16 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public string Save(VenderCallStatusModel model)
+        public string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
             string str = "";
             string w_call_cancel_status = "";
             var wFifoVoilateReason = model.ReasonFIFO;
+            var document = "";
+            if (DocumentsList != null && DocumentsList.Count > 0)
+            {
+                 document = DocumentsList[0].DocName;
+            }
 
             if (model.CallStatus1 == "C" && model.CallStatus != "C")
             {
@@ -2792,17 +3089,29 @@ namespace IBS.Repositories.InspectionBilling
             if (model.CallStatus == "A" || model.CallStatus == "R")
             {
                 string bscheck = null;
+                string formattedCallRecvDt = "";
+
+                if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
+                {
+                    DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                    formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+                }
                 if (model.BkNo != "" && model.SetNo != "")
                 {
-                    bscheck = (from x in context.T10IcBooksets
-                               where x.BkNo.Trim() == model.BkNo.ToUpper()
-                               && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SetNo) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SetNo)
-                               select Convert.ToString(x.IssueToIecd)).FirstOrDefault();
+                    var FinalOrStage = context.T17CallRegisters
+                                       .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                                       .Select(cr => cr.FinalOrStage)
+                                       .FirstOrDefault() ?? "F";
+
+                    var docSetNo = Convert.ToInt32(model.DocSetNo);
+
+                    var bsCheck = (from a in context.T10IcBooksets where a.BkNo.Trim() == model.DocBkNo.Trim() && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                                   && docSetNo <= Convert.ToInt32(model.DocSetNo) && a.IssueToIecd == Convert.ToInt32(model.IeCd)&& a.Ictype == FinalOrStage
+                                   select a.IssueToIecd).FirstOrDefault();
                 }
 
-                string TempFile1 = "";
-
-                if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) && !string.IsNullOrEmpty(model.Hologram) && !string.IsNullOrEmpty(TempFile1))
+                if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) && !string.IsNullOrEmpty(model.Hologram) && document == "IC Image 1")
                 {
                     var count = (from item in context.T49IcPhotoEncloseds
                                  where item.CaseNo == model.CaseNo && item.BkNo == model.BkNo && item.SetNo == model.SetNo
@@ -2880,7 +3189,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && string.IsNullOrEmpty(TempFile1))
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document != "IC Image 1")
                 {
                     model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
                 }
@@ -2888,7 +3197,6 @@ namespace IBS.Repositories.InspectionBilling
             else if (model.CallStatus == "G" || model.CallStatus == "T")
             {
                 string bsCheck = "";
-                string TempFile1 = "";
                 if (!string.IsNullOrEmpty(model.CallStatus) && !string.IsNullOrEmpty(model.SetNo))
                 {
                     bsCheck = context.T10IcBooksets
@@ -2898,21 +3206,32 @@ namespace IBS.Repositories.InspectionBilling
                                   .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
                 }
 
-                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && !string.IsNullOrEmpty(TempFile1))
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document == "IC Image 1")
                 {
                     var t17Detail = from a in context.T17CallRegisters
                                     where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
                                     select a;
                     if (t17Detail.Count() > 0)
                     {
-
+                        foreach (var row in t17Detail)
+                        {
+                            row.CallStatus = model.CallStatus;
+                            row.CallStatusDt = model.CallStatusDt;
+                            row.CallCancelStatus = null;
+                            row.BkNo = model.BkNo;
+                            row.SetNo = model.SetNo;
+                            row.UserId = model.UserId;
+                            row.Datetime = DateTime.Now;
+                            row.FifoVoilateReason = wFifoVoilateReason;
+                            context.SaveChanges();
+                        }
                     }
                 }
                 else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(TempFile1))
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && document != "IC Image 1")
                 {
                     model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
                 }
@@ -3329,6 +3648,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
                     }
+                    send_Vendor_Email(model);
                 }
             }
             #region Comment Code
@@ -3628,26 +3948,41 @@ namespace IBS.Repositories.InspectionBilling
             ImageFiles filesimg = new ImageFiles();
             string formattedCallRecvDt = "";
 
-            if (model.BkNo != null && model.SetNo != null)
+            if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
             {
-                var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
-                              Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
+                DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
+            if (model.DocBkNo != null && model.DocSetNo != null)
+            {
+                var FinalOrStage = context.T17CallRegisters
+                    .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                    .Select(cr => cr.FinalOrStage)
+                    .FirstOrDefault() ?? "F";
+
+                //var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.DocBkNo && Convert.ToInt32(model.DocSetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
+                //              Convert.ToInt32(model.DocSetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
+
+                var docSetNo = Convert.ToInt32(model.DocSetNo);
+
+                var bsCheck = (from a in context.T10IcBooksets
+                                   where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                   && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                                   && docSetNo <= Convert.ToInt32(model.DocSetNo)
+                                   && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                                   && a.Ictype == FinalOrStage
+                                   select a.IssueToIecd).FirstOrDefault();
 
                 if (bsCheck != null)
                 {
-                    if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
-                    {
-                        DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                        formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
-                    }
-
                     var query = context.IcIntermediates
                             .Where(ici => ici.CaseNo == model.CaseNo &&
                                           ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
                                           ici.CallSno == model.CallSno &&
-                                          ici.BkNo == model.BkNo &&
-                                          ici.SetNo == model.SetNo)
+                                          ici.BkNo == model.DocBkNo &&
+                                          ici.SetNo == model.DocSetNo)
                             .OrderBy(ici => ici.Datetime)
                             .Select(ici => ici.ConsigneeCd)
                             .FirstOrDefault();
@@ -3663,7 +3998,7 @@ namespace IBS.Repositories.InspectionBilling
                         }
                     }
 
-                    string FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + "_0";
+                    string FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "_0";
 
                     ImageFiles imageFiles = new ImageFiles();
 
@@ -3737,8 +4072,8 @@ namespace IBS.Repositories.InspectionBilling
                                 obj.CaseNo = model.CaseNo;
                                 obj.CallRecvDt = CallRecvDate;
                                 obj.CallSno = Convert.ToInt16(model.CallSno);
-                                obj.BkNo = model.BkNo;
-                                obj.SetNo = model.SetNo;
+                                obj.BkNo = model.DocBkNo;
+                                obj.SetNo = model.DocSetNo;
                                 obj.PoNo = model.PoNo;
                                 obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
                                 obj.UserId = model.UserId;
@@ -3757,13 +4092,13 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     else
                     {
-                        IcDetail.BkNo = model.BkNo;
-                        IcDetail.SetNo = model.SetNo;
+                        IcDetail.BkNo = model.DocBkNo;
+                        IcDetail.SetNo = model.DocSetNo;
                         context.SaveChanges();
                     }
                     // Execute the query                    
 
-                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.BkNo && x.SetNo == model.SetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
 
                     if (recordExists == null)
                     {
@@ -3772,8 +4107,8 @@ namespace IBS.Repositories.InspectionBilling
                         obj.CaseNo = model.CaseNo;
                         obj.CallRecvDt = model.CallRecvDt;
                         obj.CallSno = (short?)model.CallSno;
-                        obj.BkNo = model.BkNo;
-                        obj.SetNo = model.SetNo;
+                        obj.BkNo = model.DocBkNo;
+                        obj.SetNo = model.DocSetNo;
                         obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
                         obj.Datetime = DateTime.Now;
                         obj.UserId = model.UserId;
@@ -3795,8 +4130,8 @@ namespace IBS.Repositories.InspectionBilling
                         recordExists.CaseNo = model.CaseNo;
                         recordExists.CallRecvDt = model.CallRecvDt;
                         recordExists.CallSno = (short?)model.CallSno;
-                        recordExists.BkNo = model.BkNo;
-                        recordExists.SetNo = model.SetNo;
+                        recordExists.BkNo = model.DocBkNo;
+                        recordExists.SetNo = model.DocSetNo;
                         recordExists.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
                         recordExists.Datetime = DateTime.Now;
                         recordExists.UserId = model.UserId;
@@ -3814,7 +4149,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
 
                     var IcDetail1 = (from ic in context.IcIntermediates
-                                     where ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                     where ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
                                      select ic).FirstOrDefault();
 
                     if (IcDetail1 != null)
@@ -3833,7 +4168,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     model.AlertMsg = "Success";
                 }
-                else if (model.BkNo != "" && model.SetNo != "" && (bsCheck == null || bsCheck == 0))
+                else if (model.DocBkNo != "" && model.DocSetNo != "" && (bsCheck == null || bsCheck == 0))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                     return model;
@@ -4254,6 +4589,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
                     return model;
                 }
+                send_Vendor_Email(model);
             }
             return model;
         }
@@ -4266,11 +4602,11 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     if (model.CallStatus == "A" || model.CallStatus == "R")
                     {
-                        var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.BkNo && t.SetNo == model.SetNo).Count();
+                        var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.DocBkNo && t.SetNo == model.DocSetNo).Count();
                         if (count > 0)
                         {
-                            string FileName = model.CaseNo.Trim() + "-" + model.BkNo + "-" + model.SetNo;
-                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.BkNo && x.SetNo == model.SetNo).FirstOrDefault();
+                            string FileName = model.CaseNo.Trim() + "-" + model.DocBkNo + "-" + model.DocSetNo;
+                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo).FirstOrDefault();
                             if (recordExists != null)
                             {
                                 recordExists.IcPhoto = FileName + ".pdf";
@@ -4404,8 +4740,8 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     existingRecord.CallStatus = model.CallStatus;
                     existingRecord.CallStatusDt = model.CallStatusDt;
-                    existingRecord.BkNo = model.BkNo;
-                    existingRecord.SetNo = model.SetNo;
+                    existingRecord.BkNo = model.DocBkNo;
+                    existingRecord.SetNo = model.DocSetNo;
                     existingRecord.UserId = model.UserId;
                     existingRecord.Datetime = DateTime.Now;
                     existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
@@ -4415,13 +4751,24 @@ namespace IBS.Repositories.InspectionBilling
                     context.SaveChanges();
                 }
 
-                var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.BkNo && ic.SetNo == model.SetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
+                var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
 
                 if (existingRecord1 != null)
                 {
                     existingRecord1.ConsgnCallStatus = model.CallStatus;
                     context.SaveChanges();
                 }
+                if (model.CallStatus == "R")
+                {
+                    Vendor_Rej_Email(model);
+                }
+                model.AlertMsg = "Success";
+
+            }
+            else
+            {
+                model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                return model;
             }
             return model;
         }
@@ -4438,22 +4785,22 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             var queryResult = context.IcIntermediates
-                        .Where(ici => ici.CaseNo == CaseNo &&
-                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                      ici.CallSno == CallSno)
-                        .OrderByDescending(ici => ici.Datetime)
-                        .FirstOrDefault();
+                         .Where(ici => ici.CaseNo == CaseNo &&
+                                       ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                       ici.CallSno == CallSno)
+                         .OrderByDescending(ici => ici.Datetime)
+                         .FirstOrDefault();
 
             if (queryResult != null)
             {
-                model.BkNo = queryResult.BkNo;
-                model.SetNo = queryResult.SetNo;
+                model.DocBkNo = queryResult.BkNo;
+                model.DocSetNo = queryResult.SetNo;
 
             }
             else
             {
-                model.BkNo = "";
-                model.SetNo = "";
+                model.DocBkNo = "";
+                model.DocSetNo = "";
 
             }
             return model;

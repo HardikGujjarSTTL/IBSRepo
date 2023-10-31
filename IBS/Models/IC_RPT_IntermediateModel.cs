@@ -106,6 +106,7 @@ namespace IBS.Models
         public virtual string IESTAMP2_PATH { get; set; }
 
         public string Region { get; set; }
+        public string CONSGN_CALL_STATUS { get; set; }
         List<PO_Amendments> lstAmendment { get; set; }
     }
 

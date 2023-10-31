@@ -148,17 +148,17 @@
 </div>
 <div class="accordion-body">
 
-    <div class="col-md-8 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="PropertyId">Lab</label>
         @Html.DropDownListFor(model => model.LabCd, Common.GetLab(), new { @id="ddlppylab"})
         <span asp-validation-for="LabCd" class="text-danger"></span>
     </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="InitializeDatatableChild();">Submit</button>
+    </div>
 
 </div>
-<div class="savenext-btn" style="margin-left:40%;">
-    <button type="button" class="save-btn active" onclick="InitializeDatatableChild();">Submit</button>
-</div>
-<br />
+
 <div id="showPayment1" style="display:none;">
     <section class="table-section">
         <div class="task-listinput">
@@ -455,10 +455,12 @@
                     SNO: Srno,
                     SAMPLE_REG_NO: RegNo
                 };
+                var url = '@Url.Action("SavePayment", "LabPaymentsForm")';
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: "/LabPaymentsForm/SavePayment",
+                    //url: "/LabPaymentsForm/SavePayment",
+                    url:url,
                     dataType: "json",
                     data: JSON.stringify(LabPaymentFormModel),
                     success: function (result) {
@@ -470,7 +472,7 @@
                             $("#lblpyno").val(result.message);
                             $("#btnsave").css("display", "none");
                             $("#btnprint").css("display", "block");
-                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentForm")";
+                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentsForm")";
                         }
                         else {
 
@@ -488,7 +490,7 @@
                             $("#lblpyno").val(result.message);
                             $("#btnsave").css("display", "none");
                             $("#btnprint").css("display", "block");
-                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentForm")";
+                            window.location.href = "@Url.Action("LabPaymentForm", "LabPaymentsForm")";
                         }
                         else {
                             alert('Error Occurred. Contact Your admin!');

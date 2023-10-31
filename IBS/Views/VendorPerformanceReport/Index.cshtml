@@ -82,8 +82,10 @@
 
             $("#vendor").autocomplete({
                 source: function (request, response) {
+                    var url = '@Url.Action("GetVendorData", "Search")';
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        //url: "/Search/GetVendorData",
+                        url:url,
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },

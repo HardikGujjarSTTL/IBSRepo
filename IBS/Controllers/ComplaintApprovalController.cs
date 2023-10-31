@@ -1,10 +1,12 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
+using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {
@@ -63,6 +65,8 @@ namespace IBS.Controllers
         [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult RejectComplaint(OnlineComplaints model)
         {
+            model.createdBy = UserId;
+            model.UserId = UserName.Substring(0, 8);
             string msg = "";
             try
             {
@@ -84,9 +88,18 @@ namespace IBS.Controllers
 
         [HttpPost]
         [Authorization("ComplaintApproval", "Index", "edit")]
-        public ActionResult AcceptComplaint(OnlineComplaints model)
+        public ActionResult AcceptComplaint(OnlineComplaints model, IFormCollection FrmCollection)
         {
+            model.createdBy = UserId;
+            model.UserId = UserName.Substring(0, 8);
             string msg = complaintApprovalRepository.AcceptComplaint(model);
+            if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+            {
+                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
+                List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                DocumentHelper.SaveFiles(Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
+                msg = "Complaint Register";
+            }
             return Json(new { status = true, responseText = msg });
         }
 
@@ -94,6 +107,8 @@ namespace IBS.Controllers
         [Authorization("ComplaintApproval", "Index", "edit")]
         public ActionResult Submit(OnlineComplaints model)
         {
+            model.createdBy = UserId;
+            model.UserId = UserName.Substring(0, 8);
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }

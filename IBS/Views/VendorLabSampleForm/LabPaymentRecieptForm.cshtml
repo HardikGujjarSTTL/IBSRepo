@@ -382,9 +382,10 @@
             var CaseNo = '@ViewBag.CaseNo';
             var CallRdt = '@ViewBag.CallRdt';
             var CallSno = '@ViewBag.Sno';
-
+            var url = '@Url.Action("SampleDtlData", "VendorLabSampleForm")';
             $.ajax({
-                url: '/VendorLabSampleForm/SampleDtlData',
+                //url: '/VendorLabSampleForm/SampleDtlData',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
@@ -515,14 +516,15 @@
             formData.append("TDS", $("#txttdsany").val());
             formData.append("UTRNO", $("#txtutrno").val());
             formData.append("UTRDT", $("#dtutr").val());
-
+            var url = '@Url.Action("SaveDataDetails", "VendorLabSampleForm")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
                 //contentType: "application/json",
-                url: "/VendorLabSampleForm/SaveDataDetails",
+                //url: "/VendorLabSampleForm/SaveDataDetails",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -594,12 +596,13 @@
             formData.append("TDS", $("#txttdsany").val());
             formData.append("UTRNO", $("#txtutrno").val());
             formData.append("UTRDT", $("#dtutr").val());
-
+            var url = '@Url.Action("UpdateDetails", "VendorLabSampleForm")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/VendorLabSampleForm/UpdateDetails",
+               // url: "/VendorLabSampleForm/UpdateDetails",
+               url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
