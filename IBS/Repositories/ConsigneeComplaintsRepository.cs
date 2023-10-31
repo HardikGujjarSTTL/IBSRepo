@@ -146,7 +146,8 @@ namespace IBS.Repositories
                 //model.ie_name = dt.Rows[0]["IE_NAME"].ToString();
                 model.Consignee = dt.Rows[0]["CONSIGNEE"].ToString();
                 model.FormattedIC_DATE = dt.Rows[0]["IC_DT"].ToString();
-                model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DT"]);
+                model.RejMemoDt = dt.Rows[0]["REJ_MEMO_DT"] is DBNull ? default(DateTime) : Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DT"]);
+                //model.RejMemoDt = Convert.ToDateTime(dt.Rows[0]["REJ_MEMO_DT"]);
                 model.RejMemoNo = dt.Rows[0]["REJ_MEMO_NO"].ToString();
                 model.Railway = dt.Rows[0]["rly_cd"].ToString();
                 model.ItemDesc = dt.Rows[0]["ITEM_DESC"].ToString();
@@ -160,8 +161,8 @@ namespace IBS.Repositories
                 model.ITEM_SRNO_PO = dt.Rows[0]["ITEM_SRNO_PO"].ToString();
                 model.VendCd = Convert.ToInt32(dt.Rows[0]["vend_cd"]);
                 model.ConsigneeCd = Convert.ToInt32(dt.Rows[0]["consignee_cd"]);
-                model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"]);
-                model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"]);
+                model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"] is DBNull ? 0 : dt.Rows[0]["ie_cd"]);
+                model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"] is DBNull ? 0 : dt.Rows[0]["ie_co_cd"]);
                 model.UserId = dt.Rows[0]["user_id"].ToString();
                 model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
                 model.uom_cd = dt.Rows[0]["uom_cd"].ToString();

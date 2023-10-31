@@ -212,7 +212,10 @@ namespace IBS.Controllers
                     {
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Report };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), env, iDocument, FileName, string.Empty, DocumentIds);
+                        if (DocumentsList[2].DocName == "Upload JI Report")
+                        {
+                            DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), env, iDocument, FileName, string.Empty, DocumentIds);
+                        }
                     }
                     return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
                 }
@@ -245,7 +248,10 @@ namespace IBS.Controllers
                         var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref1 };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, FileName, string.Empty, DocumentIds);
+                        if (DocumentsList[0].DocName == "Upload Tech Ref")
+                        {
+                            DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, FileName, string.Empty, DocumentIds);
+                        }
                     }
                     return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
                 }
@@ -262,17 +268,25 @@ namespace IBS.Controllers
         [Authorization("ConsigneeComplaints", "Index", "edit")]
         public IActionResult UploadPDF(ConsigneeComplaints model, IFormCollection FrmCollection)
         {
+            List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+            if (FrmCollection != null && FrmCollection["hdnUploadedDocumentList_tab-1"].Count > 0)
+            {
+                DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+            }
             var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
             string msg = "Upload Successfully.";
             if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
             {
-                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo};
-                List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), env, iDocument, FileName, string.Empty, DocumentIds);
-
-                int[] DocumentIds1 = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Case};
-                List<APPDocumentDTO> DocumentsList1 = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList1, Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), env, iDocument, FileName, string.Empty, DocumentIds1);
+                if (DocumentsList[0].DocName == "Upload JI Case")
+                {
+                    int[] DocumentIds1 = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Case };
+                    DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), env, iDocument, FileName, string.Empty, DocumentIds1);
+                }
+                if (DocumentsList[1].DocName == "Upload Rejection Memo")
+                {
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
+                    DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), env, iDocument, FileName, string.Empty, DocumentIds);
+                }
             }
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }

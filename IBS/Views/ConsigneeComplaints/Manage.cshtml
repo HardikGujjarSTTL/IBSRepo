@@ -46,19 +46,16 @@
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Case No.</label>
                         <input type="text" class="input" asp-for="CASE_NO" readonly="true">
-                        <span asp-validation-for="CASE_NO" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">	Book No.<span class="text-danger" style="font-size:smaller"></span></label>
                         <input type="text" class="input" asp-for="BK_NO" readonly="true" mode maxlength="300" />
-                        <span asp-validation-for="BK_NO" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Set No.</label>
                         <input type="text" class="input" asp-for="SET_NO" readonly="true" maxlength="300" />
-                        <span asp-validation-for="SET_NO" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
@@ -158,7 +155,7 @@
             </div>
 
             
-            <div class="accordion-body">
+            <div class="accordion-body" id="JIChoice">
                 <div class="row my-0">
                     @if (ViewBag.Showcomplaint)
                     {
@@ -341,6 +338,13 @@
             $("#btnCancelJI").hide();
             $("#typenalty").hide();
             $("#dtpenalty").hide();
+
+            var compid = $("#ComplaintId").val();
+            if(compid == ""){
+                $("#JIChoice").hide();
+            }else{
+                $("#JIChoice").show();
+            }
         });
 
         $("#InspRegionDropdown").change(function () {
@@ -558,12 +562,12 @@
                 success: function (response) {
                     if (response.redirectToIndex === true) {
                         alert(response.alertMessage);
-                        $("#btnsave").hide();
-                        $("#btnsavechoice").hide();
-                        $("#btnCancelJI").hide();
-                        $("#JIoutcome").hide();
-                        $("#btnfinaldisposal").hide();
-                        $("#btnupload").hide();
+                        //$("#btnsave").hide();
+                        //$("#btnsavechoice").hide();
+                        //$("#btnCancelJI").hide();
+                        //$("#JIoutcome").hide();
+                        //$("#btnfinaldisposal").hide();
+                        //$("#btnupload").hide();
                     } else {
                         alert(response.alertMessage);
                     }
