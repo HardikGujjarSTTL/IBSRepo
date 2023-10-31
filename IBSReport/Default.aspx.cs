@@ -4,6 +4,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Configuration;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace IBSReports
 {
@@ -41,34 +42,17 @@ namespace IBSReports
             conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
             try
             {
+                ReportDocument rd = new ReportDocument();
+
                 if (RptFlag == "1") // This flag is for Lab Invoice Report
                 {
                     string InvoiceNo = Request.QueryString["Invoice"].ToString();
                     string Caseno = Request.QueryString["CaseNo"].ToString();
                     string RegNo = Request.QueryString["RegNo"].ToString();
                     string TranNo = Request.QueryString["TranNo"].ToString();
-                    cristalview.ReportSource = LabInvoice.LabInvoiceReport(InvoiceNo, Caseno, RegNo, TranNo, out dsCustom);
-                }
-                else if (RptFlag == "2") // This flag is for Lab Invoice Download Report
-                {
-                    //string InvoiceNo = "R0608L22/00182";
-                    //string InvoiceDT = "29-07-2022";
-                    string InvoiceNo = Request.QueryString["Invoice"].ToString();
-                    string InvoiceDT = Request.QueryString["InvoiceDt"].ToString();
-                    cristalview.ReportSource = LabLABInvoice.LabInvoiceReport(InvoiceNo, InvoiceDT, out dsCustom);
-                }
-                else if (RptFlag == "3") // This flag is for Inspection Bill Report
-                {
-                    //string CaseNo = "E11100692";
-                    //string BkNo = "2842";
-                    //string SetNo = "051";
-                    string CaseNo = Request.QueryString["CaseNo"].ToString();
-                    string BkNo = Request.QueryString["BkNo"].ToString();
-                    string SetNo = Request.QueryString["SetNo"].ToString();
 
-                    //cristalview.ReportSource = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
-
-                    ReportDocument rd = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
+                    //cristalview.ReportSource = LabInvoice.LabInvoiceReport(InvoiceNo, Caseno, RegNo, TranNo, out dsCustom);
+                    rd = LabInvoice.LabInvoiceReport(InvoiceNo, Caseno, RegNo, TranNo, out dsCustom);
                     System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     System.IO.MemoryStream s = new System.IO.MemoryStream();
                     CopyStream(st, s);
@@ -80,11 +64,48 @@ namespace IBSReports
                     Response.End();
                     s.Close();
                     s = null;
+                }
+                else if (RptFlag == "2") // This flag is for Lab Invoice Download Report
+                {
+                    //string InvoiceNo = "R0608L22/00182";
+                    //string InvoiceDT = "29-07-2022";
+                    string InvoiceNo = Request.QueryString["Invoice"].ToString();
+                    string InvoiceDT = Request.QueryString["InvoiceDt"].ToString();
 
-                    rd.Close();
-                    rd.Dispose();
-                    GC.Collect();
+                    rd = LabLABInvoice.LabInvoiceReport(InvoiceNo, InvoiceDT, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
+                }
+                else if (RptFlag == "3") // This flag is for Inspection Bill Report
+                {
+                    //string CaseNo = "E11100692";
+                    //string BkNo = "2842";
+                    //string SetNo = "051";
+                    string CaseNo = Request.QueryString["CaseNo"].ToString();
+                    string BkNo = Request.QueryString["BkNo"].ToString();
+                    string SetNo = Request.QueryString["SetNo"].ToString();
 
+                    rd = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
                 }
                 else if (RptFlag == "4") // This flag is for DailyIEWiseCall Report
                 {
@@ -92,7 +113,19 @@ namespace IBSReports
                     //string CaseNo = "N";
                     string callDate = Request.QueryString["callDate"].ToString();
                     string CaseNo = Request.QueryString["RegNo"].ToString();
-                    cristalview.ReportSource = DailyIEWiseCall.IEWiseCall(callDate, CaseNo, out dsCustom);
+
+                    rd = DailyIEWiseCall.IEWiseCall(callDate, CaseNo, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
                 }
                 else if (RptFlag == "5") // This flag is for BPO Wise Report
                 {
@@ -109,7 +142,19 @@ namespace IBSReports
                     string ClientType = Request.QueryString["ClientType"].ToString();
                     string Rb3 = Request.QueryString["Rb3"].ToString();
                     string Rb4 = Request.QueryString["Rb4"].ToString();
-                    cristalview.ReportSource = BPOBills.BPOBill(Month, Year, Region, ReportType, FromDate, ToDate, Rb1, Rb2, Rb5, lstBpo, ClientType, Rb3, Rb4, out dsCustom);
+
+                    rd = BPOBills.BPOBill(Month, Year, Region, ReportType, FromDate, ToDate, Rb1, Rb2, Rb5, lstBpo, ClientType, Rb3, Rb4, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
                 }
                 else if (RptFlag == "6") // This flag is for Client Wise Report
                 {
@@ -124,8 +169,7 @@ namespace IBSReports
                     string ToDate = Request.QueryString["ToDate"].ToString();
                     string Region = Request.QueryString["Region"].ToString();
                     
-                    //cristalview.ReportSource = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
-                    ReportDocument rd = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
+                    rd = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
                     System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     System.IO.MemoryStream s = new System.IO.MemoryStream();
                     CopyStream(st, s);
@@ -137,10 +181,6 @@ namespace IBSReports
                     Response.End();
                     s.Close();
                     s = null;
-
-                    rd.Close();
-                    rd.Dispose();
-                    GC.Collect();
                 }
                 else if (RptFlag == "7") // This flag is for IC Accountal Report
                 {
@@ -159,7 +199,19 @@ namespace IBSReports
                     string rdbGIE = Request.QueryString["rdbGIE"].ToString();
                     string lstIE = Request.QueryString["lstIE"].ToString();
                     string rdbCancelYes = Request.QueryString["rdbCancelYes"].ToString();
-                    cristalview.ReportSource = ICAccountal.ICAccount(FromDate, ToDate, Region, lstYesNo, rdbGIE, lstIE, rdbCancelYes, out dsCustom);
+
+                    rd = ICAccountal.ICAccount(FromDate, ToDate, Region, lstYesNo, rdbGIE, lstIE, rdbCancelYes, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
                 }
                 else if (RptFlag == "8") // This flag is for IC Accountal Report
                 {
@@ -177,8 +229,7 @@ namespace IBSReports
                     string BkNo = Request.QueryString["BkNo"].ToString();
                     string SetNo = Request.QueryString["SetNo"].ToString();
 
-                    ReportDocument rd = IC_RPT.IC_Report(CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo, out dsCustom);
-
+                    rd = IC_RPT.IC_Report(CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo, out dsCustom);
                     System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     System.IO.MemoryStream s = new System.IO.MemoryStream();
                     CopyStream(st, s);
@@ -190,11 +241,11 @@ namespace IBSReports
                     Response.End();
                     s.Close();
                     s = null;
-
-                    rd.Close();
-                    rd.Dispose();
-                    GC.Collect();
                 }
+
+                rd.Close();
+                rd.Dispose();
+                GC.Collect();
             }
             catch 
             {
