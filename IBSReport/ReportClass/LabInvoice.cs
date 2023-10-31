@@ -39,7 +39,6 @@ namespace IBSReports.ReportClass
             conn1.Close();
             ReportDocument rd = new ReportDocument();
 
-
             dsCustom = new DataSet();
             if (Item_Sno > 3)
             {
@@ -56,7 +55,6 @@ namespace IBSReports.ReportClass
                 rd.Load(HttpContext.Current.Server.MapPath("~/Reports/LAB_INVOICE_GEN.rpt"));
                 dsCustom = funlabbill(InvoiceNo, Caseno, RegNo, TranNo);
             }
-
             rd.SetDataSource(dsCustom);
             return rd;
         }
