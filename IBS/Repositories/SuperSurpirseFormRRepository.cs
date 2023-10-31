@@ -260,7 +260,7 @@ namespace IBS.Repositories
                 par[1] = new OracleParameter("IN_SUPER_SURPRISE_DT", OracleDbType.Date, SuperDt, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
                 
-                var ds = DataAccessDB.GetDataSet("GENERATE_SUPER_SURPRISE_NO1", par, 2);
+                var ds = DataAccessDB.GetDataSet("GENERATE_SUPER_SURPRISE_NO3", par, 2);
 
                 SuperSurpirseFormModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)

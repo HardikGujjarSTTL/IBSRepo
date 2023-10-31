@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IBS.Models.BPOWiseOutstandingBillsModel
+@{
     ViewData["Title"] = "OUTSTANDING BILLS";
 }
 <div class="list-inner">
@@ -8,6 +9,7 @@
 </div>
 <section>
     <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="BPOWiseOutstandingBills" asp-action="GenerateReport" data-ajax-method="post" data-ajax-complete="completed" id="generate">
         <div class="accordion-body">
             <div class="row">
                 <div class="col-md-12">
@@ -17,12 +19,12 @@
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">From Date</label>
-                    <input type="text" id="fdt" class="input datepicker">
+                    <input type="text" id="fdt" asp-for="FromDt" class="input datepicker">
                     <span class="text-danger field-validation-error" id="spnError1"></span>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">To Date</label>
-                    <input type="text" id="tdt" class="input datepicker">
+                    <input type="text" id="tdt" asp-for="ToDt" class="input datepicker">
                     <span class="text-danger field-validation-error" id="spnError2"></span>
                 </div>
             </div>
@@ -176,6 +178,7 @@
                 </div>
             </div>
         </div>
+        </form>
     </div>
 </section>
 @section scripts{
@@ -192,7 +195,7 @@
             $("#chk5").prop("checked", true);
             var checkedValues = [];
             $("input[type='checkbox']").each(function () {
-                debugger;
+               
                 var checkboxId = $(this).attr("id");
                 if ($(this).is(":checked")) {
                     checkedValues.push(checkboxId); // Store the value of the checked checkbox
@@ -201,7 +204,7 @@
 
            
             $(":checkbox").click(function () {
-                debugger;
+               
                 var checkboxId = $(this).attr("id");
                 var isChecked = $(this).is(":checked");
                 localStorage.setItem(checkboxId, isChecked);
@@ -305,99 +308,109 @@
             });
         }
         
-        
-        function Generate() {
-            $("#spnError1").html("");
-            $("#spnError2").html("");
-            var IsValid = true;
-            if ($("#fdt").val() == "") {
-                $("#spnError1").html("The From Date field is required.");
-                IsValid = false;
-            }
-            if ($("#tdt").val() == "") {
-                $("#spnError2").html("The To Date field is required.");
-                IsValid = false;
-            }
-
-            if ($("#fdt").val() != "" && IsValidDate($("#fdt").val()) == false) {
-                $("#spnError1").html("Invalid date format.");
-                IsValid = false;
-            }
-            if ($("#tdt").val() != "" && IsValidDate($("#tdt").val()) == false) {
-                $("#spnError2").html("Invalid date format.");
-                IsValid = false;
-            }
-            
-            if (!IsValid) return;
-            // var FromDt = $("#fdt").val();
-            // var ToDt = $("#tdt").val();
-            // var BpoCd = $("#txtbpo").val();
-            // var BpoType = $("#ddlPClient").val();
-            // var BpoRly = $("#pclient").val();
-            var BpoRegion = null;
-            if (sessionStorage.getItem("region") == 'true'){
-                 BpoRegion = $("#ddlregion").val();
-            }
-            debugger;
-            //var Checkbox = localStorage.getItem(checkboxId);
-            // var Railway = $("#chk1").val();
-            // var PSU = $("#chk2").val();
-            // var StateGovt = $("#chk3").val();
-            // var ForeignRailways = $("#chk4").val();
-            // var PrivateSector = $("#chk5").val();
-            // var TypeofOutStandingBills = $("#ddlTypeOutStandingBills").val();
-
-            var BPOWiseOutstandingBillsModel = {
-                FromDt: $("#fdt").val(),
-                ToDt: $("#tdt").val(),
-                BpoCd: $("#txtbpo").val(),
-                BpoType: $("#ddlPClient").val(),
-                BpoRly: $("#pclient").val(),
-                BpoRegion: BpoRegion,
-                Railway: $("#chk1").val(),
-                PSU: $("#chk2").val(),
-                StateGovt: $("#chk3").val(),
-                ForeignRailways: $("#chk4").val(),
-                PrivateSector: $("#chk5").val(),
-                TypeofOutStandingBills: $("#ddlTypeOutStandingBills").val()
-            };
-            var url = '@Url.Action("GenerateReport", "BPOWiseOutstandingBills")';
-            $.ajax({
-                type: 'POST',
-                contentType: "application/json",
-                //: "/LabRegisterForm/SaveDataDetails",
-                url: url,
-                dataType: "json",
-                data: JSON.stringify(BPOWiseOutstandingBillsModel),
-                success: function (res) {
-
-                //     if (res == true) {
-
-                //         alert('Data Saved Successfully!');
-
-                //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";                       
-                //     }
-                //     else {
-
-                //         alert('Error Occurred. Contact Your admin!');                        
-                //     }
-
-                // },
-                // error: function (res) {
-
-
-                //     if (res == true) {
-
-                //         alert('Data Saved Successfully!');
-
-                //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";
-                //     }
-                //     else {
-                //         alert('Error Occurred. Contact Your admin!');                      
-                //     }
-
-                 }
-            });
+        function Generate(){
+            $("#generate").submit();
         }
+        completed = function (response) {
+            debugger;
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("BPOWiseOutBills", "BPOWiseOutstandingBills")';
+            }
+        };
+        // function Generate() {
+        //     $("#spnError1").html("");
+        //     $("#spnError2").html("");
+        //     var IsValid = true;
+        //     if ($("#fdt").val() == "") {
+        //         $("#spnError1").html("The From Date field is required.");
+        //         IsValid = false;
+        //     }
+        //     if ($("#tdt").val() == "") {
+        //         $("#spnError2").html("The To Date field is required.");
+        //         IsValid = false;
+        //     }
+
+        //     if ($("#fdt").val() != "" && IsValidDate($("#fdt").val()) == false) {
+        //         $("#spnError1").html("Invalid date format.");
+        //         IsValid = false;
+        //     }
+        //     if ($("#tdt").val() != "" && IsValidDate($("#tdt").val()) == false) {
+        //         $("#spnError2").html("Invalid date format.");
+        //         IsValid = false;
+        //     }
+            
+        //     if (!IsValid) return;
+        //     // var FromDt = $("#fdt").val();
+        //     // var ToDt = $("#tdt").val();
+        //     // var BpoCd = $("#txtbpo").val();
+        //     // var BpoType = $("#ddlPClient").val();
+        //     // var BpoRly = $("#pclient").val();
+        //     var BpoRegion = null;
+        //     if (sessionStorage.getItem("region") == 'true'){
+        //          BpoRegion = $("#ddlregion").val();
+        //     }
+        //     debugger;
+        //     //var Checkbox = localStorage.getItem(checkboxId);
+        //     // var Railway = $("#chk1").val();
+        //     // var PSU = $("#chk2").val();
+        //     // var StateGovt = $("#chk3").val();
+        //     // var ForeignRailways = $("#chk4").val();
+        //     // var PrivateSector = $("#chk5").val();
+        //     // var TypeofOutStandingBills = $("#ddlTypeOutStandingBills").val();
+
+        //     var BPOWiseOutstandingBillsModel = {
+        //         FromDt: $("#fdt").val(),
+        //         ToDt: $("#tdt").val(),
+        //         BpoCd: $("#txtbpo").val(),
+        //         BpoType: $("#ddlPClient").val(),
+        //         BpoRly: $("#pclient").val(),
+        //         BpoRegion: BpoRegion,
+        //         // Railway: $("#chk1").val(),
+        //         // PSU: $("#chk2").val(),
+        //         // StateGovt: $("#chk3").val(),
+        //         // ForeignRailways: $("#chk4").val(),
+        //         // PrivateSector: $("#chk5").val(),
+        //         TypeofOutStandingBills: $("#ddlTypeOutStandingBills").val()
+        //     };
+        //     var url = '@Url.Action("GenerateReport", "BPOWiseOutstandingBills")';
+        //     $.ajax({
+        //         type: 'POST',
+        //         contentType: "application/json",
+        //         //: "/LabRegisterForm/SaveDataDetails",
+        //         url: url,
+        //         dataType: "json",
+        //         data: JSON.stringify(BPOWiseOutstandingBillsModel),
+        //         success: function (res) {
+                    
+        //         //     if (res == true) {
+
+        //         //         alert('Data Saved Successfully!');
+
+        //         //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";                       
+        //         //     }
+        //         //     else {
+
+        //         //         alert('Error Occurred. Contact Your admin!');                        
+        //         //     }
+
+        //         // },
+        //         // error: function (res) {
+
+
+        //         //     if (res == true) {
+
+        //         //         alert('Data Saved Successfully!');
+
+        //         //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+        //         //     }
+        //         //     else {
+        //         //         alert('Error Occurred. Contact Your admin!');                      
+        //         //     }
+
+        //          }
+        //     });
+        // }
     </script>
 }
