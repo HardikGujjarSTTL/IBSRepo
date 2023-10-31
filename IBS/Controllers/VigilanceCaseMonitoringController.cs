@@ -76,7 +76,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "BankMaster", "Manage", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VigilanceCaseMonitoring", "Manage", 1, GetIPAddress());
             }
             return View(model);
         }
