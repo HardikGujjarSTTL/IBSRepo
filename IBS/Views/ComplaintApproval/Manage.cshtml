@@ -18,10 +18,11 @@
 </div>
 
 <section class="@clsView">
-    <div class="task-listinput">
+    <div class="task-listinput" id="tab-1">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ComplaintApproval" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
                 <div class="row my-0">
+                    <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo" id="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="UomCd" id="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="Rate" id="Rate" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -127,7 +128,7 @@
                     </div>
                     <div class="col-md-3 mb-2" id="rejdt">
                         <label>Rejection Memo Date </label>
-                        <input type="text" class="input" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
+                        <input type="text" class="input datepicker" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
                     </div>
                     <div class="col-md-3 mb-2" id="inspreq">
                         <label>Joint Inspection Required</label>
@@ -151,7 +152,6 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
-
                     </div>
                 </div>
                 <br/>
@@ -237,7 +237,7 @@
         function Accept(){
            
             var formData = $("#frmComplaints").serialize();
-
+            SaveSingleDocuments("tab-1");
             $.ajax({
                 url: '/ComplaintApproval/AcceptComplaint',
                 type: 'POST',

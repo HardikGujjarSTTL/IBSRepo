@@ -306,40 +306,13 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        function Download() {
-            $('#BK_NO').prop('disabled', true);
-            $('#SET_NO').prop('disabled', true);
-            var CaseNO = $("#lblCASE_NO").html();
-            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
-            var CallSNo = $("#lblCall_SNO").html();
-            var Consignee_CD = $("#CONSIGNEE_CD").val();
-            var Region = $("#Region").val();
-            var BkNo = $('#BK_NO').val();
-            var SetNo = $('#SET_NO').val();
-            var QueryString = "?RptFlag=8" +
-                "&CaseNO=" + encodeURIComponent(CaseNO) +
-                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
-                "&CallSNo=" + encodeURIComponent(CallSNo) +
-                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-                "&Region=" + encodeURIComponent(Region) +
-                "&BkNo=" + encodeURIComponent(BkNo) +
-                "&SetNo=" + encodeURIComponent(SetNo);
-                
-            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-            //var oWin = window.open('http://localhost:59575/Default' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-            if (oWin === null || typeof (oWin) === 'undefined') {
-                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
-            }
-            window.opener = 'x';
-            window.close();            
-        }
-
 
         var Case_No = "@Model.CASE_NO";
         var Call_Recv_Dt = "@Model.Call_Recv_dt";
         var Call_SNo = "@Model.Call_SNO";
         var Consignee_Cd = "@Model.CONSIGNEE_CD";
         var ActionAR = "@Model.ACTIONAR";
+
         $(document).ready(function () {
             if ("@Model.ACTIONAR" == "R") {
                 $(".clsRemark").css("display", "");
@@ -404,7 +377,27 @@
             $("#btnReport").css("cursor", "pointer");
         });
 
-
+        function Download() {
+            $('#BK_NO').prop('disabled', true);
+            $('#SET_NO').prop('disabled', true);
+            var CaseNO = $("#lblCASE_NO").html();
+            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+            var CallSNo = $("#lblCall_SNO").html();
+            var Consignee_CD = $("#CONSIGNEE_CD").val();
+            var Region = $("#Region").val();
+            var BkNo = $('#BK_NO').val();
+            var SetNo = $('#SET_NO').val();
+            var QueryString = "?RptFlag=8" +
+                "&CaseNO=" + encodeURIComponent(CaseNO) +
+                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
+                "&CallSNo=" + encodeURIComponent(CallSNo) +
+                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
+                "&Region=" + encodeURIComponent(Region) +
+                "&BkNo=" + encodeURIComponent(BkNo) +
+                "&SetNo=" + encodeURIComponent(SetNo);
+                
+            window.open('@ReportUrl' + QueryString, '_blank');
+        }
 
         function lstman() {
             if ($("#MAN_TYPE").val() == "B") {
@@ -506,7 +499,6 @@
             });
         });
 
-
         $("#btnRefresh").click(function () {
 
             var formData = {
@@ -595,7 +587,6 @@
             }
             return true;
         }
-
 
         function InitializationPOAmendment() {
 
@@ -753,7 +744,6 @@
             });
         }
 
-
         function FillItems() {
             let myObject = { Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd };
             $.ajax({
@@ -866,11 +856,7 @@
                 contentType: false,
                 success: function (response) {
                     
-                    if (parseInt(response) > 0) {
-                        //$("#btnSave").css("display", "none");
-                        //$("#btnRefresh").css("display", "none");
-                        //$("#btnSavePOAmendment").css("display", "none");
-
+                    if (parseInt(response) > 0) {                        
                         $("#btnSave").prop('disabled', true);
                         $("#btnRefresh").prop('disabled', true);
                         $("#btnSavePOAmendment").prop('disabled', true);
@@ -880,18 +866,15 @@
                         $('#btnSavePOAmendment').addClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "auto");
 
                         $(".edit").css("display", "none");
-                        $(".delete").css("display", "none");
-
-                                               
-
+                        $(".delete").css("display", "none");                                               
                     } else {
                         $("#btnSave").prop('disabled', false);
                         $("#btnRefresh").prop('disabled', false);
                         $("#btnSavePOAmendment").prop('disabled', false);
 
-                        $("#btnSave").css("cursor", "pointer");
-                        $("#btnRefresh").css("cursor", "pointer");
-                        $("#btnSavePOAmendment").css("cursor", "pointer");
+                        $('#btnSave').removeClass('disabled-button'); //$("#btnSave").css("cursor", "pointer");
+                        $('#btnRefresh').removeClass('disabled-button'); //$("#btnRefresh").css("cursor", "pointer");
+                        $('#btnSavePOAmendment').removeClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "pointer");
 
                         $(".edit").css("display", "");
                         $(".delete").css("display", "");
@@ -972,6 +955,7 @@
                 }
             }
         }
+
         function checkSpecialKeys(e) {
             if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40)
                 return false;
@@ -995,5 +979,6 @@
             }
             return false;
         }
+
     </script>
 }

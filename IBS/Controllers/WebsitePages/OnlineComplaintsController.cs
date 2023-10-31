@@ -65,7 +65,7 @@ namespace IBS.Controllers.WebsitePages
             string msg = "";
             try
             {
-              string Compid = _onlineComplaintsRepository.SaveComplaints(onlineComplaints);
+                string Compid = _onlineComplaintsRepository.SaveComplaints(onlineComplaints);
                 if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                 {
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
@@ -73,12 +73,13 @@ namespace IBS.Controllers.WebsitePages
                     DocumentHelper.SaveFiles(Convert.ToString(Compid), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
                     msg = "Complaint Register";
                 }
+                return Json(new { status = true, responseText = msg });
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlineComplaints", "ComplaintsSave", 1, GetIPAddress());
             }
-            return Json(new { status = true, responseText = msg });
+            return Json(new { status = false, responseText = msg });
         }
     }
 }

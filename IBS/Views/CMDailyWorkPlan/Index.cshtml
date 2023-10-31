@@ -11,6 +11,8 @@
     </div>
     <div class="accordion-body">
         <input type="hidden" id="checkedWork" name="checkedWork" />
+        <input type="hidden" id="IsUrgencyUpdate" name="IsUrgencyUpdate" />
+        <input type="hidden" id="Urgency" name="Urgency" />
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="PlanDt">Work Plan Dated : </label>
@@ -62,6 +64,7 @@
                     <thead>
                         <tr>
                             <th>Approval</th>
+                            <th>Urgency</th>
                             <th>IE Name</th>
                             <th>Visit Date</th>
                             <th>Case No.</th>
@@ -77,9 +80,10 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <div class="savenext-btn btnAlign">
-                <button type="button" class="save-btn active" onclick="ApprovalSave();">Submit</button>
+                <button type="button" class="save-btn active" onclick="ApprovalSave();">Approve</button>
+                <button type="button" class="save-btn active" onclick="UpdateUrgency();">Update Urgency</button>
                 <button type="button" class="reset-btn" onclick="ReasonClear();">Clear</button>
             </div>
         </div>
@@ -134,7 +138,6 @@
                 },
 
                 columns: [// Columns Setups
-
                     {
                         data: null, width: "5%", className: "dt-align-center",
                         render: function (data, type, row, meta) {
@@ -147,6 +150,37 @@
                                 return '<input type="checkbox" name="chkDWplan" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
                             }
 
+                        }
+                    },
+                    {
+                        data: null, width: "5%", className: "dt-align-center",
+                        render: function (data, type, row, meta) {
+                            if (data.IsUrgency != null && data.IsUrgency != "" && data.IsUrgency != "N") {
+                                var html = '<select id="Urgency" data-CaseNo="' + data.CaseNo + '" data-CallRecvDt="' + data.CallRecvDt + '" data-CallSno="' + data.CallSno + '">';
+                                if (data.IsUrgency == "P") {
+                                    html += '<option value="P" selected>Pending</option>';
+                                }
+                                else {
+                                    html += '<option value="P">Pending</option>';
+                                }
+                                if (data.IsUrgency == "A") {
+                                    html += '<option value="A" selected>Approved</option>';
+                                }
+                                else {
+                                    html += '<option value="A">Approved</option>';
+                                }
+                                if (data.IsUrgency == "R") {
+                                    html += '<option value="R" selected>Rejected</option>';
+                                }
+                                else {
+                                    html += '<option value="R">Rejected</option>';
+                                }
+                                html += '</select>';
+                                return html;
+                            }
+                            else {
+                                return "";
+                            }
                         }
                     },
                     { data: "IeName" },
@@ -199,9 +233,36 @@
             $("#PlanDt").val(PlanDt);
             $("#InspWorkType").val(InspWorkType);
             $("#checkedWork").val(JSON.stringify(checkedWork));
+            $("#IsUrgencyUpdate").val("False");
             if ($("#frmDetails").valid()) {
                 $("#frmDetails").submit();
             }
+        }
+
+        function UpdateUrgency() {
+            Urgency = [];
+            $('#dtList tbody tr').each(function () {
+                var selectedValue = $(this).find('#Urgency');
+                if (selectedValue.length != 0) {
+                    var CaseNo = selectedValue.data('caseno');
+                    var CallRecvDt = selectedValue.data('callrecvdt');
+                    var CallSno = selectedValue.data('callsno');
+                    Urgency.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno, IsUrgency: selectedValue.val() });
+                }
+            });
+            if (Urgency.length > 0) {
+                $("#IsUrgencyUpdate").val("True");
+                $("#Urgency").val(JSON.stringify(Urgency));
+                if ($("#frmDetails").valid()) {
+                    $("#frmDetails").submit();
+                }
+            }
+            else
+            {
+
+            }
+
+
         }
     </script>
     }

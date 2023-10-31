@@ -95,5 +95,6 @@ namespace IBS.Models
         public DateTime CallRecvDt { get; set; }
 
         public int CallSno { get; set; }
+        public string IsUrgency { get; set; }
     }
 }

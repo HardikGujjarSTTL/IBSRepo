@@ -89,5 +89,9 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string CmApproval { get; set; }
+
+        public string IsUrgency { get; set; }
+        public string Urgency { get; set; }
+        public string IsUrgencyUpdate { get; set; }
     }
 }
