@@ -3,35 +3,27 @@ using CrystalDecisions.Shared;
 using Net.Codecrete.QrCodeGenerator;
 using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Xml;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public class IC_RPT : Page
     {
         private static readonly QrCode.Ecc[] errorCorrectionLevels = { QrCode.Ecc.Low, QrCode.Ecc.Medium, QrCode.Ecc.Quartile, QrCode.Ecc.High };
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
-        public ReportDocument IC_Report(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo, out DataSet dsCustom)
+
+        public static ReportDocument IC_Report(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo, out DataSet dsCustom)
         {
             ReportDocument rd = new ReportDocument();
             dsCustom = new DataSet();
             try
             {
-                //conn1.Close();
-
                 string str1 = "SELECT man_type FROM IC_INTERMEDIATE WHERE CONSIGNEE_CD='" + Convert.ToString(Consignee_CD) + "' AND CASE_NO='" + CaseNO.Trim() + "' AND CALL_RECV_DT= TO_date('" + Call_Recv_Dt + "', 'dd/mm/yyyy') AND CALL_SNO='" + CallSNo + "' ORDER BY DATETIME DESC";
                 OracleCommand cmd31 = new OracleCommand(str1, conn1);
-                //conn1.Open();
-                System.Data.DataSet ds = new DataSet();
+                DataSet ds = new DataSet();
                 OracleDataAdapter adapter = new OracleDataAdapter(cmd31);
                 adapter.Fill(ds);
                 string Manu_Type = "";
@@ -45,7 +37,6 @@ namespace CrystalReportProject.ReportClass
                 myDay = Call_Recv_Dt.Substring(0, 2);
                 string recvDtRpt = myMonth + "/" + myDay + "/" + myYear;
 
-
                 if (Region == "C")
                 {
                     if (Manu_Type == "B")
@@ -57,13 +48,11 @@ namespace CrystalReportProject.ReportClass
                     {
                         rd.Load(HttpContext.Current.Server.MapPath("~/Reports/InspectionCertificateNew_CR_R.rpt"));
                         dsCustom = funInspectionCertificate_cr_r(caseNo, callSNo, recvDtRpt, Consignee_CD, Region);
-
                     }
                     else if (Manu_Type == "O")
                     {
                         rd.Load(HttpContext.Current.Server.MapPath("~/Reports/InspectionCertificateNew.rpt"));
                         dsCustom = funInspectionCertificate(caseNo, callSNo, recvDtRpt, Consignee_CD, Region);
-
                     }
                 }
                 else
@@ -72,212 +61,172 @@ namespace CrystalReportProject.ReportClass
                     dsCustom = funInspectionCertificate(caseNo, callSNo, recvDtRpt, Consignee_CD, Region);
                 }
 
-
                 rd.SetDataSource(dsCustom);
                 rd.ExportToDisk(ExportFormatType.PortableDocFormat, "ICReport.pdf");
-                ExportOptions exportOptions = new ExportOptions();
-                ExcelFormatOptions excelFormatOptions = new ExcelFormatOptions();
-                exportOptions.ExportFormatType = ExportFormatType.Excel;
-                exportOptions.ExportFormatOptions = excelFormatOptions;
 
-                // Create a MemoryStream and export the report to it
-
-                Stream oStream = rd.ExportToStream(ExportFormatType.Excel);
-                //				Response.Clear();
-                //				Response.Buffer = true;
-                //				Response.ContentType = "application/pdf";
-                //
-                //				Response.BinaryWrite(oStream.ToArray());
-                //
-                //				Response.End();
-                //String file = Convert.ToBase64String(oStream.ToArray());
-                byte[] data = new byte[oStream.Length];
-                oStream.Read(data, 0, (int)oStream.Length);
-
-                // Close the stream
-                oStream.Close();
-
-                // Convert the byte array to a base64 string
-                string file = Convert.ToBase64String(data);
-                XmlDocument doc = new XmlDocument();
-                XmlNode docNode = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-                doc.AppendChild(docNode);
-
-                XmlNode requestNode = doc.CreateElement("request");
-                doc.AppendChild(requestNode);
-
-
-
-                XmlNode commandNode = doc.CreateElement("command");
-                commandNode.AppendChild(doc.CreateTextNode("pkiNetworkSign"));
-                requestNode.AppendChild(commandNode);
-
-                XmlNode tsNode = doc.CreateElement("ts");
-                //tsNode.AppendChild(doc.CreateTextNode("2019-03-25T12:23:11.3820412+05:30"));
-                string tym = DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
-                tsNode.AppendChild(doc.CreateTextNode(tym));
-                requestNode.AppendChild(tsNode);
-                Random random = new Random();
-                string otp = Convert.ToString(random.Next(1000, 9999));
-
-                XmlNode txnNode = doc.CreateElement("txn");
-                txnNode.AppendChild(doc.CreateTextNode(otp));
-                requestNode.AppendChild(txnNode);
-
-                XmlNode certNode = doc.CreateElement("certificate");
-                requestNode.AppendChild(certNode);
-
-
-                XmlNode nameNode1 = doc.CreateElement("attribute");
-                XmlAttribute nameNode1Attr = doc.CreateAttribute("name");
-                nameNode1Attr.Value = "CN";
-                nameNode1.Attributes.Append(nameNode1Attr);
-                //nameNode1.AppendChild(doc.CreateTextNode("IC"));
-                certNode.AppendChild(nameNode1);
-
-                XmlNode nameNode2 = doc.CreateElement("attribute");
-                XmlAttribute nameNode2Attr = doc.CreateAttribute("name");
-                nameNode2Attr.Value = "O";
-                nameNode2.Attributes.Append(nameNode2Attr);
-                //nameNode2.AppendChild(doc.CreateTextNode("RITES LTD"));
-                certNode.AppendChild(nameNode2);
-
-                XmlNode nameNode3 = doc.CreateElement("attribute");
-                XmlAttribute nameNode3Attr = doc.CreateAttribute("name");
-                nameNode3Attr.Value = "OU";
-                nameNode3.Attributes.Append(nameNode3Attr);
-                //nameNode3.AppendChild(doc.CreateTextNode("QA DIVISION"));
-                certNode.AppendChild(nameNode3);
-
-                XmlNode nameNode4 = doc.CreateElement("attribute");
-                XmlAttribute nameNode4Attr = doc.CreateAttribute("name");
-                nameNode4Attr.Value = "T";
-                nameNode4.Attributes.Append(nameNode4Attr);
-                //nameNode4.AppendChild(doc.CreateTextNode("IE"));
-                certNode.AppendChild(nameNode4);
-
-                XmlNode nameNode5 = doc.CreateElement("attribute");
-                XmlAttribute nameNode5Attr = doc.CreateAttribute("name");
-                nameNode5Attr.Value = "E";
-                nameNode5.Attributes.Append(nameNode5Attr);
-                //nameNode5.AppendChild(doc.CreateTextNode("IC"));
-                certNode.AppendChild(nameNode5);
-
-                XmlNode nameNode6 = doc.CreateElement("attribute");
-                XmlAttribute nameNode6Attr = doc.CreateAttribute("name");
-                nameNode6Attr.Value = "SN";
-                nameNode6.Attributes.Append(nameNode6Attr);
-                //nameNode6.AppendChild(doc.CreateTextNode("IC"));
-                certNode.AppendChild(nameNode6);
-
-                XmlNode nameNode7 = doc.CreateElement("attribute");
-                XmlAttribute nameNode7Attr = doc.CreateAttribute("name");
-                nameNode7Attr.Value = "CA";
-                nameNode7.Attributes.Append(nameNode7Attr);
-                //nameNode7.AppendChild(doc.CreateTextNode("IC"));
-                certNode.AppendChild(nameNode7);
-
-                XmlNode nameNode8 = doc.CreateElement("attribute");
-                XmlAttribute nameNode8Attr = doc.CreateAttribute("name");
-                nameNode8Attr.Value = "TC";
-                nameNode8.Attributes.Append(nameNode8Attr);
-                nameNode8.AppendChild(doc.CreateTextNode("SG"));
-                certNode.AppendChild(nameNode8);
-
-                XmlNode nameNode9 = doc.CreateElement("attribute");
-                XmlAttribute nameNode9Attr = doc.CreateAttribute("name");
-                nameNode9Attr.Value = "AP";
-                nameNode9.Attributes.Append(nameNode9Attr);
-                nameNode9.AppendChild(doc.CreateTextNode("1"));
-                certNode.AppendChild(nameNode9);
-
-                XmlNode nameNode10 = doc.CreateElement("attribute");
-                XmlAttribute nameNode10Attr = doc.CreateAttribute("name");
-                nameNode10Attr.Value = "VD";
-                nameNode10.Attributes.Append(nameNode10Attr);
-                //nameNode10.AppendChild(doc.CreateTextNode("IC"));
-                certNode.AppendChild(nameNode10);
-
-                XmlNode fileNode = doc.CreateElement("file");
-                requestNode.AppendChild(fileNode);
-
-                XmlNode nameNode11 = doc.CreateElement("attribute");
-                XmlAttribute nameNode11Attr = doc.CreateAttribute("name");
-                nameNode11Attr.Value = "type";
-                nameNode11.Attributes.Append(nameNode11Attr);
-                nameNode11.AppendChild(doc.CreateTextNode("pdf"));
-                fileNode.AppendChild(nameNode11);
-
-                XmlNode pdfNode = doc.CreateElement("pdf");
-                requestNode.AppendChild(pdfNode);
-
-
-                XmlNode pageNode = doc.CreateElement("page");
-                pageNode.AppendChild(doc.CreateTextNode("1"));
-                pdfNode.AppendChild(pageNode);
-
-                XmlNode coodNode = doc.CreateElement("cood");
-                if (Region == "C")
-                {
-                    coodNode.AppendChild(doc.CreateTextNode("450,40"));
-                }
-                else
-                {
-                    coodNode.AppendChild(doc.CreateTextNode("400,45"));
-                }
-                pdfNode.AppendChild(coodNode);
-
-
-                XmlNode sizeNode = doc.CreateElement("size");
-                if (Region == "C")
-                {
-                    sizeNode.AppendChild(doc.CreateTextNode("120,60"));
-                }
-                else
-                {
-                    sizeNode.AppendChild(doc.CreateTextNode("165,60"));
-                }
-
-
-                pdfNode.AppendChild(sizeNode);
-
-                XmlNode dataNode = doc.CreateElement("data");
-                dataNode.AppendChild(doc.CreateTextNode(file));
-                requestNode.AppendChild(dataNode);
-
-                StringWriter sw = new StringWriter();
-                XmlTextWriter tx = new XmlTextWriter(sw);
-                doc.WriteTo(tx);
-
-                string aa = sw.ToString();// 
-                                          //string aa="<request><command>pkiNetworkSign</command> <ts>2019-03-25T12:23:11.3820412+05:30</ts> <txn>unique id</txn> ";
-                                          //				doc.Save(Server.MapPath("filedddddddde.xml"));	
-                                          //				
-                                          //				RegisterStartupScript("abc","<script language=JavaScript> abc('"+aa+"'); </script>");   
-
-
-                string fname = callSNo.Trim() + "-" + BkNo.Trim() + "-" + SetNo.Trim();
-                doc.Save(HttpContext.Current.Server.MapPath("IC_XML/" + fname + ".xml"));
-                RegisterStartupScript("abc", "<script language=JavaScript> abc('" + aa + "','" + fname + "'); </script>");
                 //ExportOptions exportOptions = new ExportOptions();
                 //ExcelFormatOptions excelFormatOptions = new ExcelFormatOptions();
                 //exportOptions.ExportFormatType = ExportFormatType.Excel;
                 //exportOptions.ExportFormatOptions = excelFormatOptions;
-                //string directoryPath = HttpContext.Current.Server.MapPath("~/IC_XML/");
-                //string filename = "IC_XML.xls";
-                //string exportFilePath = Path.Combine(directoryPath, filename);
-                //rd.ExportToDisk(ExportFormatType.Excel, exportFilePath); // Export to Excel
 
-                //return rd;
+                //// Create a MemoryStream and export the report to it
+
+                //Stream oStream = rd.ExportToStream(ExportFormatType.Excel);
+                //byte[] data = new byte[oStream.Length];
+                //oStream.Read(data, 0, (int)oStream.Length);
+                //oStream.Close();
+
+                //// Convert the byte array to a base64 string
+                //string file = Convert.ToBase64String(data);
+                //XmlDocument doc = new XmlDocument();
+                //XmlNode docNode = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                //doc.AppendChild(docNode);
+
+                //XmlNode requestNode = doc.CreateElement("request");
+                //doc.AppendChild(requestNode);
+
+                //XmlNode commandNode = doc.CreateElement("command");
+                //commandNode.AppendChild(doc.CreateTextNode("pkiNetworkSign"));
+                //requestNode.AppendChild(commandNode);
+
+                //XmlNode tsNode = doc.CreateElement("ts");
+                //string tym = DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
+                //tsNode.AppendChild(doc.CreateTextNode(tym));
+                //requestNode.AppendChild(tsNode);
+                //Random random = new Random();
+                //string otp = Convert.ToString(random.Next(1000, 9999));
+
+                //XmlNode txnNode = doc.CreateElement("txn");
+                //txnNode.AppendChild(doc.CreateTextNode(otp));
+                //requestNode.AppendChild(txnNode);
+
+                //XmlNode certNode = doc.CreateElement("certificate");
+                //requestNode.AppendChild(certNode);
+
+                //XmlNode nameNode1 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode1Attr = doc.CreateAttribute("name");
+                //nameNode1Attr.Value = "CN";
+                //nameNode1.Attributes.Append(nameNode1Attr);
+                //certNode.AppendChild(nameNode1);
+
+                //XmlNode nameNode2 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode2Attr = doc.CreateAttribute("name");
+                //nameNode2Attr.Value = "O";
+                //nameNode2.Attributes.Append(nameNode2Attr);
+                //certNode.AppendChild(nameNode2);
+
+                //XmlNode nameNode3 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode3Attr = doc.CreateAttribute("name");
+                //nameNode3Attr.Value = "OU";
+                //nameNode3.Attributes.Append(nameNode3Attr);
+                //certNode.AppendChild(nameNode3);
+
+                //XmlNode nameNode4 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode4Attr = doc.CreateAttribute("name");
+                //nameNode4Attr.Value = "T";
+                //nameNode4.Attributes.Append(nameNode4Attr);
+                //certNode.AppendChild(nameNode4);
+
+                //XmlNode nameNode5 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode5Attr = doc.CreateAttribute("name");
+                //nameNode5Attr.Value = "E";
+                //nameNode5.Attributes.Append(nameNode5Attr);
+                //certNode.AppendChild(nameNode5);
+
+                //XmlNode nameNode6 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode6Attr = doc.CreateAttribute("name");
+                //nameNode6Attr.Value = "SN";
+                //nameNode6.Attributes.Append(nameNode6Attr);
+                //certNode.AppendChild(nameNode6);
+
+                //XmlNode nameNode7 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode7Attr = doc.CreateAttribute("name");
+                //nameNode7Attr.Value = "CA";
+                //nameNode7.Attributes.Append(nameNode7Attr);
+                //certNode.AppendChild(nameNode7);
+
+                //XmlNode nameNode8 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode8Attr = doc.CreateAttribute("name");
+                //nameNode8Attr.Value = "TC";
+                //nameNode8.Attributes.Append(nameNode8Attr);
+                //nameNode8.AppendChild(doc.CreateTextNode("SG"));
+                //certNode.AppendChild(nameNode8);
+
+                //XmlNode nameNode9 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode9Attr = doc.CreateAttribute("name");
+                //nameNode9Attr.Value = "AP";
+                //nameNode9.Attributes.Append(nameNode9Attr);
+                //nameNode9.AppendChild(doc.CreateTextNode("1"));
+                //certNode.AppendChild(nameNode9);
+
+                //XmlNode nameNode10 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode10Attr = doc.CreateAttribute("name");
+                //nameNode10Attr.Value = "VD";
+                //nameNode10.Attributes.Append(nameNode10Attr);
+                //certNode.AppendChild(nameNode10);
+
+                //XmlNode fileNode = doc.CreateElement("file");
+                //requestNode.AppendChild(fileNode);
+
+                //XmlNode nameNode11 = doc.CreateElement("attribute");
+                //XmlAttribute nameNode11Attr = doc.CreateAttribute("name");
+                //nameNode11Attr.Value = "type";
+                //nameNode11.Attributes.Append(nameNode11Attr);
+                //nameNode11.AppendChild(doc.CreateTextNode("pdf"));
+                //fileNode.AppendChild(nameNode11);
+
+                //XmlNode pdfNode = doc.CreateElement("pdf");
+                //requestNode.AppendChild(pdfNode);
+
+                //XmlNode pageNode = doc.CreateElement("page");
+                //pageNode.AppendChild(doc.CreateTextNode("1"));
+                //pdfNode.AppendChild(pageNode);
+
+                //XmlNode coodNode = doc.CreateElement("cood");
+                //if (Region == "C")
+                //{
+                //    coodNode.AppendChild(doc.CreateTextNode("450,40"));
+                //}
+                //else
+                //{
+                //    coodNode.AppendChild(doc.CreateTextNode("400,45"));
+                //}
+                //pdfNode.AppendChild(coodNode);
+
+                //XmlNode sizeNode = doc.CreateElement("size");
+                //if (Region == "C")
+                //{
+                //    sizeNode.AppendChild(doc.CreateTextNode("120,60"));
+                //}
+                //else
+                //{
+                //    sizeNode.AppendChild(doc.CreateTextNode("165,60"));
+                //}
+
+                //pdfNode.AppendChild(sizeNode);
+
+                //XmlNode dataNode = doc.CreateElement("data");
+                //dataNode.AppendChild(doc.CreateTextNode(file));
+                //requestNode.AppendChild(dataNode);
+
+                //StringWriter sw = new StringWriter();
+                //XmlTextWriter tx = new XmlTextWriter(sw);
+                //doc.WriteTo(tx);
+
+                //string aa = sw.ToString();
+
+                //string fname = callSNo.Trim() + "-" + BkNo.Trim() + "-" + SetNo.Trim();
+                //doc.Save(HttpContext.Current.Server.MapPath("IC_XML/" + fname + ".xml"));
+                //RegisterStartupScript("abc", "<script language=JavaScript> abc('" + aa + "','" + fname + "'); </script>");
             }
-            catch (Exception ex)
+            catch
             {
 
             }
+            
             return rd;
-            //rd.VerifyDatabase();
-
         }
+
         private static DataSet funInspectionCertificate_cr(string pcaseno_cr, string pcsno_cr, string recvdt_cr, string pconsidecd_cr, string pregion_cr)
         {
             DataSet dsReports = new DataSet();
@@ -466,6 +415,7 @@ namespace CrystalReportProject.ReportClass
             return dsReports;
 
         }
+
         private static DataSet funInspectionCertificate(string pcaseno, string pcsno, string recvdt, string pconsidecd, string pregion)
         {
             DataSet dsReports = new DataSet();
@@ -659,6 +609,7 @@ namespace CrystalReportProject.ReportClass
             dsReports.Tables.Add(dt);
             return dsReports;
         }
+
         private static DataSet funInspectionCertificate_cr_r(string pcaseno_cr_r, string pcsno_cr_r, string recvdt_cr_r, string pconsidecd_cr_r, string pregion_cr_r)
         {
             DataSet dsReports = new DataSet();

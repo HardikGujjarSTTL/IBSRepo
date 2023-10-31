@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CrystalReportProject
+namespace IBSReports
 {
 
 
