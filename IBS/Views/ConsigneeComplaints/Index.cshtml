@@ -220,6 +220,7 @@
                               data: "ComplaintId",
                               className: "complaint-id-link",
                               render: function (data, type, row, meta) {
+                                  debugger
                                   var complaintId = data;
                                   var rowIndex = meta.row;
                             return '<a href="/ConsigneeComplaints/Manage?ComplaintId=' + complaintId + '&index=' + rowIndex + '" class="edit-link Permission_EditView">' + data + '</a>';

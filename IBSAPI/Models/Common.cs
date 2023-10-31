@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using IBSAPI.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace IBSAPI.Models
 {
@@ -26,6 +28,33 @@ namespace IBSAPI.Models
             }
             else
                 return string.Empty;
+        }
+
+        public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+
+            Tblexception objexception = new Tblexception();
+            objexception.Controllername = ControllerName;
+            objexception.Actionname = ActionName;
+            objexception.Exceptionmessage = exception;
+            objexception.Exception = exceptionmsg;
+            objexception.Createdby = CreatedBy;
+            objexception.Createip = CreatedIP;
+            objexception.Createddate = DateTime.Now;
+            context.Tblexceptions.Add(objexception);
+            context.SaveChanges();
+        }
+    }
+    public static class DbContextHelper
+    {
+        public static DbContextOptions<ModelContext> GetDbContextOptions()
+        {
+            IConfiguration Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+
+            return new DbContextOptionsBuilder<ModelContext>()
+                             .UseOracle(Configuration.GetConnectionString("DefaultConnection"))
+                             .Options;
         }
 
     }

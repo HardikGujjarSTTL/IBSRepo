@@ -185,12 +185,23 @@ namespace IBS.Repositories
             }
             else if(model.Regioncode == "N")
             {
+                string no_ji_other = "";
+
+                if (model.NoJIReason == "K")
+                {
+                    no_ji_other = model.NoJiOther;
+                }
+                else
+                {
+                    no_ji_other = "";
+                }
                 var existingComplaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == ComplaintID);
 
                 if (existingComplaint != null)
                 {
                     existingComplaint.JiRequired = model.AcceptRejornot;
                     existingComplaint.NoJiReason = model.NoJIReason;
+                    existingComplaint.NoJiOther = no_ji_other;
                     existingComplaint.UserId = model.UserId;
                     existingComplaint.Datetime = DateTime.Now;
                     existingComplaint.Updateddate = DateTime.Now;
