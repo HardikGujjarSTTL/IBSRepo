@@ -515,7 +515,6 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        debugger
                         $('#bknoaccpted').val(data.DocBkNo);
                         $('#setnoaccpted').val(data.DocSetNo);
                         if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
@@ -722,6 +721,7 @@
                 });
             });
             var CallStatusdrp = $('#CallStatusdrp').val();
+
             if (CallStatusdrp == "C") {
                 $('#canlsave').prop('disabled', true);
                 $('#canlsave').addClass('disabled-button');
@@ -862,7 +862,6 @@
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
-                debugger
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('#rejvalue').hide();
@@ -995,7 +994,6 @@
             var formData = new FormData();
 
             SaveSingleDocuments("tab-2");
-            debugger
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
@@ -1062,7 +1060,6 @@
                     type: 'POST',
                     data: formData,
                     success: function (response) {
-                        debugger
                         if (response.Id == 1) {
                             var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                             ShowHideMsgNew(true, response.responseText);
@@ -1177,7 +1174,6 @@
         function SaveImages() {
 
             var formData = new FormData();
-            debugger
             SaveSingleDocuments("tab-1");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();

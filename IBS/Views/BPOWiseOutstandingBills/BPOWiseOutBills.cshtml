@@ -190,12 +190,12 @@
             $("#chk3").prop("checked", true);
             $("#chk4").prop("checked", true);
             $("#chk5").prop("checked", true);
+            var checkedValues = [];
             $("input[type='checkbox']").each(function () {
                 debugger;
                 var checkboxId = $(this).attr("id");
-                var isChecked = localStorage.getItem(checkboxId);
-                if (isChecked === "true") {
-                    $(this).prop("checked", true);
+                if ($(this).is(":checked")) {
+                    checkedValues.push(checkboxId); // Store the value of the checked checkbox
                 }
             });
 
@@ -329,18 +329,75 @@
             }
             
             if (!IsValid) return;
-            var FromDt = $("#fdt").val();
-            var ToDt = $("#tdt").val();
-            var BpoCd = $("#txtbpo").val();
-            var BpoType = $("#ddlPClient").val();
-            var BpoRly = $("#pclient").val();
+            // var FromDt = $("#fdt").val();
+            // var ToDt = $("#tdt").val();
+            // var BpoCd = $("#txtbpo").val();
+            // var BpoType = $("#ddlPClient").val();
+            // var BpoRly = $("#pclient").val();
             var BpoRegion = null;
             if (sessionStorage.getItem("region") == 'true'){
                  BpoRegion = $("#ddlregion").val();
             }
             debugger;
-            var Checkbox = localStorage.getItem(checkboxId);
-            var Railway = $("#chk1").val();
+            //var Checkbox = localStorage.getItem(checkboxId);
+            // var Railway = $("#chk1").val();
+            // var PSU = $("#chk2").val();
+            // var StateGovt = $("#chk3").val();
+            // var ForeignRailways = $("#chk4").val();
+            // var PrivateSector = $("#chk5").val();
+            // var TypeofOutStandingBills = $("#ddlTypeOutStandingBills").val();
+
+            var BPOWiseOutstandingBillsModel = {
+                FromDt: $("#fdt").val(),
+                ToDt: $("#tdt").val(),
+                BpoCd: $("#txtbpo").val(),
+                BpoType: $("#ddlPClient").val(),
+                BpoRly: $("#pclient").val(),
+                BpoRegion: BpoRegion,
+                Railway: $("#chk1").val(),
+                PSU: $("#chk2").val(),
+                StateGovt: $("#chk3").val(),
+                ForeignRailways: $("#chk4").val(),
+                PrivateSector: $("#chk5").val(),
+                TypeofOutStandingBills: $("#ddlTypeOutStandingBills").val()
+            };
+            var url = '@Url.Action("GenerateReport", "BPOWiseOutstandingBills")';
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                //: "/LabRegisterForm/SaveDataDetails",
+                url: url,
+                dataType: "json",
+                data: JSON.stringify(BPOWiseOutstandingBillsModel),
+                success: function (res) {
+
+                //     if (res == true) {
+
+                //         alert('Data Saved Successfully!');
+
+                //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";                       
+                //     }
+                //     else {
+
+                //         alert('Error Occurred. Contact Your admin!');                        
+                //     }
+
+                // },
+                // error: function (res) {
+
+
+                //     if (res == true) {
+
+                //         alert('Data Saved Successfully!');
+
+                //         window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+                //     }
+                //     else {
+                //         alert('Error Occurred. Contact Your admin!');                      
+                //     }
+
+                 }
+            });
         }
     </script>
 }
