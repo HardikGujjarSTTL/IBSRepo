@@ -47,7 +47,8 @@ namespace IBS.Repositories
                         MfgPlace = t47.MfgPlace,
                         MFGCity = t03.City,
                         IeName = t09.IeName,
-                        CmApproval = t17.CmApproval
+                        CmApproval = t17.CmApproval,
+                        IsUrgency = t17.Isfinalizedstatus
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -79,6 +80,27 @@ namespace IBS.Repositories
                     T17.CmApproval = "A";
                     T17.CmApprovalDt = DateTime.Now.Date;
 
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(T17.CallSno);
+                }
+            }
+            return ID;
+        }
+
+        public int UpdateUrgency(CMDailyWorkPlanModel model, string Region)
+        {
+            int ID = 0;
+            List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.Urgency);
+            foreach (var details in deserializedData)
+            {
+                model.CaseNo = details.CaseNo;
+                model.CallRecvDt = details.CallRecvDt;
+                model.CallSno = details.CallSno;
+
+                var T17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+                if (T17 != null)
+                {
+                    T17.Isfinalizedstatus = details.IsUrgency;
                     context.SaveChanges();
                     ID = Convert.ToInt32(T17.CallSno);
                 }
