@@ -12,6 +12,8 @@ namespace IBSReports.ReportClass
     public static class ICAccountal
     {
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+        public static string Oracle_UserID = System.Configuration.ConfigurationManager.AppSettings["Oracle_UserID"].ToString();
+        public static string Oracle_Password = System.Configuration.ConfigurationManager.AppSettings["Oracle_Password"].ToString();
 
         public static ReportDocument ICAccount(string FromDate, string ToDate, string Region, string lstYesNo, string rdbGIE, string lstIE, string rdbCancelYes,out DataSet dsCustom)
         {
@@ -44,8 +46,7 @@ namespace IBSReports.ReportClass
                     rd.SetParameterValue(rd.ParameterFields[2].Name, ToDate);
 
                     rd.RecordSelectionFormula = wRecordSelectionFormula;
-                    rd.SetDatabaseLogon("QA", "QA");
-
+                    rd.SetDatabaseLogon(Oracle_UserID, Oracle_Password);
                 }
             }
             catch

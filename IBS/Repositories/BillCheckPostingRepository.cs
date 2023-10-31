@@ -230,6 +230,8 @@ namespace IBS.Repositories
                     T26.BpoCd = model.BpoCd;
                     T26.UserId = UserName;
                     T26.Datetime = DateTime.Now.Date;
+                    T26.Createdby = UserName;
+                    T26.Createddate = DateTime.Now.Date;
                     context.T26ChequePostings.Add(T26);
                     context.SaveChanges();
                     #endregion
@@ -248,6 +250,9 @@ namespace IBS.Repositories
                     {
                         RvDetails.AmountAdjusted = Convert.ToDecimal(amtadj);
                         RvDetails.SuspenseAmt = model.SuspenseAmt;
+
+                        RvDetails.Updatedby = UserName;
+                        RvDetails.Updateddate = DateTime.Now.Date;
                         context.SaveChanges();
                     }
                     var BillDetails = context.T22Bills.Where(x => x.BillNo == model.BillNo).FirstOrDefault();
@@ -256,6 +261,8 @@ namespace IBS.Repositories
                         BillDetails.AmountReceived = Convert.ToDecimal(BAmtRec);
                         BillDetails.WriteOffAmt = model.WriteOffAmt;
                         BillDetails.BillAmtCleared = Convert.ToDecimal(BAmtRec) + Convert.ToDecimal(model.TDS) + Convert.ToDecimal(model.RetentionMoney) + Convert.ToDecimal(model.WriteOffAmt) + Convert.ToDecimal(model.CNoteAmt);
+                        BillDetails.Updatedby = UserName;
+                        BillDetails.Updateddate = DateTime.Now.Date;
                         context.SaveChanges();
                     }
                     Id = 1;
@@ -279,6 +286,8 @@ namespace IBS.Repositories
                         ChqPosting.PostingDt = model.PostingDt;
                         ChqPosting.UserId = UserName;
                         ChqPosting.Datetime = DateTime.Now.Date;
+                        ChqPosting.Updatedby = UserName;
+                        ChqPosting.Updateddate = DateTime.Now.Date;
                         context.SaveChanges();
                     }
                     double amtadj = Convert.ToDouble(model.AmountAdjusted);
@@ -298,6 +307,9 @@ namespace IBS.Repositories
                     {
                         RvDetails.AmountAdjusted = Convert.ToDecimal(amtadj);
                         RvDetails.SuspenseAmt = model.SuspenseAmt;
+
+                        RvDetails.Updatedby = UserName;
+                        RvDetails.Updateddate = DateTime.Now.Date;
                         context.SaveChanges();
                     }
                     var BillDetails = context.T22Bills.Where(x => x.BillNo == model.BillNo).FirstOrDefault();
@@ -306,6 +318,9 @@ namespace IBS.Repositories
                         BillDetails.AmountReceived = Convert.ToDecimal(model.BillAmount);
                         BillDetails.WriteOffAmt = model.WriteOffAmt;
                         BillDetails.BillAmtCleared = Convert.ToDecimal(model.BillAmount) + Convert.ToDecimal(model.TDS) + Convert.ToDecimal(model.RetentionMoney) + Convert.ToDecimal(model.WriteOffAmt) + Convert.ToDecimal(model.CNoteAmt);
+
+                        BillDetails.Updatedby = UserName;
+                        BillDetails.Updateddate = DateTime.Now.Date;
                         context.SaveChanges();
                     }
                     Id = 1;

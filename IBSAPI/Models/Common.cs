@@ -1,4 +1,5 @@
 ﻿using IBSAPI.DataAccess;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -44,6 +45,50 @@ namespace IBSAPI.Models
             objexception.Createddate = DateTime.Now;
             context.Tblexceptions.Add(objexception);
             context.SaveChanges();
+        }
+        public static List<ManufacturerModel> GetVendorDigit(int VendCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<ManufacturerModel> manufacturerModels = new List<ManufacturerModel>();
+            manufacturerModels = (from v in ModelContext.T05Vendors
+                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                        where v.VendCityCd == c.CityCd && v.VendName != null && v.VendCd == VendCd
+                        select
+                   new ManufacturerModel
+                   {
+                       ManufacturerEmail=v.VendEmail,
+                       ManufacturerName=v.VendName,
+                       PhoneNumber = v.VendContactTel1,
+                       ContactPersonName = v.VendContactPer1,
+                       PlaceofInspection = v.VendAdd1,
+                       ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                       ManufacturerID = v.VendCd,
+                   }).ToList();
+            
+            return manufacturerModels;
+        }
+
+        public static List<ManufacturerModel> GetVendorUsingTextAndValues(string VENDOR)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<ManufacturerModel> manufacturerModels = new List<ManufacturerModel>();
+            manufacturerModels = (from v in ModelContext.T05Vendors
+                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                        where v.VendCityCd == c.CityCd && v.VendName != null
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                        orderby v.VendName
+                        select
+                   new ManufacturerModel
+                   {
+                       ManufacturerEmail = v.VendEmail,
+                       ManufacturerName = v.VendName,
+                       PhoneNumber = v.VendContactTel1,
+                       ContactPersonName = v.VendContactPer1,
+                       PlaceofInspection = v.VendAdd1,
+                       ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                       ManufacturerID = v.VendCd,
+                   }).ToList();
+            return manufacturerModels;
         }
     }
     public static class DbContextHelper

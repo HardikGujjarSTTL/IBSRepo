@@ -296,7 +296,7 @@
             if (!IsValid) return;
 
             $.ajax({
-                url: '/BillCheckPosting/GetBankDetails',
+                url: "@Url.Action("GetBankDetails","BillCheckPosting")",
                 type: "POST",
                 dataType: "JSON",
                 data: { BankCd: BankCd, ChqNo: ChqNo, ChqDt: ChqDt },
@@ -348,7 +348,7 @@
             if (!IsValid) return;
 
             $.ajax({
-                url: '/BillCheckPosting/GetBillDetails',
+                url: "@Url.Action("GetBillDetails","BillCheckPosting")",
                 type: "POST",
                 dataType: "JSON",
                 data: { BillInvoiceNo: BillInvoiceNo, BillTypes: BillTypes },
