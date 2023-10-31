@@ -4,7 +4,9 @@ using IBS.Interfaces.Reports;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using Oracle.ManagedDataAccess.Client;
+using PuppeteerSharp;
 using System.Data;
 using System.Drawing;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -37,12 +39,13 @@ namespace IBS.Repositories.Reports
                 par[9] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 9);
-                var columns = new string[]
-        {
-            "BILL_NO", "BILL_DT", "BILL_AMOUNT", "BK_NO", "SET_NO", "TOTAL_TDS",
-            "RETENTION_MONEY", "CNOTE_AMOUNT", "WRITE_OFF_AMT", "AMOUNT_POSTED", "AMOUNT_REALISED", "AMOUNT_OUTSTADING",
-            "CASE_NO", "PO_NO", "PO_DT", "CONSIGNEE", "BPO", "SAP_CUST_CD_BPO", "VENDOR", "IE", "INVOICE_NO", "LO_REMARKS"
-        };
+                
+        //            var columns = new string[]
+        //{
+        //    "BILL_NO", "BILL_DT", "BILL_AMOUNT", "BK_NO", "SET_NO", "TOTAL_TDS",
+        //    "RETENTION_MONEY", "CNOTE_AMOUNT", "WRITE_OFF_AMT", "AMOUNT_POSTED", "AMOUNT_REALISED", "AMOUNT_OUTSTADING",
+        //    "CASE_NO", "PO_NO", "PO_DT", "CONSIGNEE", "BPO", "SAP_CUST_CD_BPO", "VENDOR", "IE", "INVOICE_NO", "LO_REMARKS"
+        //};
                 //byte[] fileContents;
                 //return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Outstanding.xlsx");
                 //List<LABREGISTERModel> modelList = new List<LABREGISTERModel>();

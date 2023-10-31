@@ -251,7 +251,7 @@ namespace IBS.Repositories
                             CaseNo = item.CASE_NO,
                             AmtTransferred = 0,
                             UserId = model.UserName,
-                            Createdby = model.Createdby,
+                            Createdby = Convert.ToString(model.Createdby),
                             Createddate = DateTime.Now,
                         };
                         context.T25RvDetails.Add(rvDetails);
@@ -339,7 +339,7 @@ namespace IBS.Repositories
                                 CaseNo = item.CASE_NO,
                                 AmtTransferred = 0,
                                 UserId = model.UserName,
-                                Createdby = model.Createdby,
+                                Createdby = Convert.ToString(model.Createdby),
                                 Createddate = DateTime.Now,
                             };
                             context.T25RvDetails.Add(rvDetails);
@@ -386,7 +386,7 @@ namespace IBS.Repositories
                                 rvDetails.CaseNo = item.CASE_NO;
                                 rvDetails.AmtTransferred = 0;
                                 rvDetails.UserId = model.UserName;
-                                rvDetails.Updatedby = model.Updatedby;
+                                rvDetails.Updatedby = Convert.ToString(model.Updatedby);
                                 rvDetails.Updateddate = DateTime.Now;
                             }
 

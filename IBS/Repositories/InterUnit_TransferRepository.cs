@@ -195,7 +195,7 @@ namespace IBS.Repositories
                         {
                             _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
                             _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
-                            _data.Updatedby = user.UserID;
+                            _data.Updatedby = Convert.ToString(user.UserID);
                             _data.Updateddate = DateTime.Now;
                             context.SaveChanges();
                         }
@@ -222,7 +222,7 @@ namespace IBS.Repositories
                             {
                                 _data.AmtTransferred = query.amtadj + Convert.ToDecimal(item.AMOUNT);
                                 _data.SuspenseAmt = query.susamt - Convert.ToDecimal(item.AMOUNT);
-                                _data.Updatedby = user.UserID;
+                                _data.Updatedby = Convert.ToString(user.UserID);
                                 _data.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
@@ -246,7 +246,7 @@ namespace IBS.Repositories
                             {
                                 _data.AmtTransferred = query.amtadj - Convert.ToDecimal(item.lblIUAMT) + Convert.ToDecimal(item.AMOUNT);
                                 _data.SuspenseAmt = query.susamt + Convert.ToDecimal(item.lblIUAMT) - Convert.ToDecimal(item.AMOUNT);
-                                _data.Updatedby = user.UserID;
+                                _data.Updatedby = Convert.ToString(user.UserID);
                                 _data.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
@@ -304,7 +304,7 @@ namespace IBS.Repositories
                     {
                         _data.AmtTransferred = query.amtadj - Convert.ToDecimal(model.AMOUNT);
                         _data.SuspenseAmt = query.susamt + Convert.ToDecimal(model.AMOUNT);
-                        _data.Updatedby = user.UserID;
+                        _data.Updatedby = Convert.ToString(user.UserID);
                         _data.Updateddate = DateTime.Now;
                         context.SaveChanges();
                     }

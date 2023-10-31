@@ -19,6 +19,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenServices, TokenServices>();
 builder.Services.AddScoped<ISendMailRepository, SendMailRepository>();
+builder.Services.AddScoped<ICallListRepository, CallListRepository>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

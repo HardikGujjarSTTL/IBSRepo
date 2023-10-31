@@ -6,6 +6,10 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
+    public ModelContext()
+    {
+    }
+
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -601,6 +605,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewCalldetailsforspecificpoReport> ViewCalldetailsforspecificpoReports { get; set; }
 
+    public virtual DbSet<ViewChequePostingDetail> ViewChequePostingDetails { get; set; }
+
+    public virtual DbSet<ViewChequePostingEditDetail> ViewChequePostingEditDetails { get; set; }
+
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
@@ -656,6 +664,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -8333,6 +8345,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("IFSC_CODE");
+            entity.Property(e => e.MobileNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE_NO");
             entity.Property(e => e.PartyName)
                 .HasMaxLength(40)
                 .IsUnicode(false)
@@ -14261,7 +14277,8 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14309,7 +14326,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14408,7 +14426,8 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
@@ -14452,7 +14471,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14474,12 +14494,16 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T26ChequePosting>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T26_CHEQUE_POSTING");
+            entity.HasKey(e => e.Id).HasName("T26_CHEQUE_POSTING_PK");
+
+            entity.ToTable("T26_CHEQUE_POSTING");
 
             entity.HasIndex(e => new { e.BankCd, e.ChqNo, e.ChqDt, e.BillNo }, "UQ26_CHEQUE_POSTING").IsUnique();
 
+            entity.Property(e => e.Id)
+                .HasPrecision(9)
+                .HasDefaultValueSql("\"IBSDEV\".\"T26_CHEQUE_POSTING_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AmountCleared)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
@@ -14515,7 +14539,8 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14537,7 +14562,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
@@ -14552,7 +14578,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
 
-            entity.HasOne(d => d.T25RvDetail).WithMany()
+            entity.HasOne(d => d.T25RvDetail).WithMany(p => p.T26ChequePostings)
                 .HasForeignKey(d => new { d.BankCd, d.ChqNo, d.ChqDt })
                 .HasConstraintName("FK26_CHEQUE_POSTING");
         });
@@ -14564,7 +14590,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T26_CHEQUE_POSTING_HISTORY");
 
             entity.Property(e => e.Id)
-                .HasPrecision(6)
+                .HasPrecision(9)
                 .HasDefaultValueSql("\"IBSDEV\".\"T26_CHEQUE_POSTING_HISTORY_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Actiondate)
@@ -14603,7 +14629,8 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -14618,7 +14645,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -22789,6 +22817,91 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VENDOR");
         });
 
+        modelBuilder.Entity<ViewChequePostingDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_CHEQUE_POSTING_DETAILS");
+
+            entity.Property(e => e.AmountCleared)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("AMOUNT_CLEARED");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.BillAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMOUNT");
+            entity.Property(e => e.BillAmtCleared)
+                .HasColumnType("NUMBER")
+                .HasColumnName("BILL_AMT_CLEARED");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.BpoName)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO_NAME");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.PostingDt)
+                .HasColumnType("DATE")
+                .HasColumnName("POSTING_DT");
+        });
+
+        modelBuilder.Entity<ViewChequePostingEditDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_CHEQUE_POSTING_EDIT_DETAILS");
+
+            entity.Property(e => e.AccCd)
+                .HasPrecision(6)
+                .HasColumnName("ACC_CD");
+            entity.Property(e => e.Amount)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT");
+            entity.Property(e => e.AmountAdjusted)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT_ADJUSTED");
+            entity.Property(e => e.AmtTransferred)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMT_TRANSFERRED");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.Bpo)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.SuspenseAmt)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SUSPENSE_AMT");
+            entity.Property(e => e.VchrDt)
+                .HasColumnType("DATE")
+                .HasColumnName("VCHR_DT");
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
+        });
+
         modelBuilder.Entity<ViewConsigneeDetail>(entity =>
         {
             entity
@@ -24494,6 +24607,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T24_RV_HISTORY_SEQ");
         modelBuilder.HasSequence("T25_RV_DETAILS_HISTORY_SEQ");
         modelBuilder.HasSequence("T26_CHEQUE_POSTING_HISTORY_SEQ");
+        modelBuilder.HasSequence("T26_CHEQUE_POSTING_SEQ");
         modelBuilder.HasSequence("T27_JV_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_SEQ");
