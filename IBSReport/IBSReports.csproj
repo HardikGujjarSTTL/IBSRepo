@@ -278,7 +278,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QrCodeBitmapExtensions.cs" />
-    <Compile Include="Common.cs" />
     <Compile Include="QRHelper.cs" />
     <Compile Include="ReportClass\BPO_Wise_Outstading_Bills.cs" />
     <Compile Include="ReportClass\ICAccountal.cs" />
