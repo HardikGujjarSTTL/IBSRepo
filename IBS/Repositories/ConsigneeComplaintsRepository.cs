@@ -384,6 +384,8 @@ namespace IBS.Repositories
                 obj.ComplaintDt = DateTime.Now;
                 obj.RejMemoDt = DateTime.Now;
                 obj.Datetime = DateTime.Now;
+                obj.Createdby = Convert.ToInt32(model.UserId);
+                obj.Createddate = DateTime.Now;
                 context.T40ConsigneeComplaints.Add(obj);
                 context.SaveChanges();
                 Complaintid = obj.ComplaintId;
@@ -414,6 +416,8 @@ namespace IBS.Repositories
                     Complaint.ComplaintDt = DateTime.Now;
                     Complaint.RejMemoDt = DateTime.Now;
                     Complaint.Datetime = DateTime.Now;
+                    Complaint.Updatedby = Convert.ToInt32(model.UserId);
+                    Complaint.Updateddate = DateTime.Now;
                     context.SaveChanges();
                     Complaintid = Complaint.ComplaintId;
                 }
@@ -442,6 +446,8 @@ namespace IBS.Repositories
                         complaint.Remarks = model.Remarks;
                         complaint.UserId = model.UserId;
                         complaint.Datetime = DateTime.Now;
+                        complaint.Updatedby = Convert.ToInt32(model.UserId);
+                        complaint.Updateddate = DateTime.Now;
                         context.SaveChanges();
                     }
                 }
@@ -470,6 +476,8 @@ namespace IBS.Repositories
                     existingRecord.Action = model.FinalRemarks;
                     existingRecord.UserId = model.UserId;
                     existingRecord.Datetime = DateTime.Now;
+                    existingRecord.Updatedby = Convert.ToInt32(model.UserId);
+                    existingRecord.Updateddate = DateTime.Now;
                     context.SaveChanges();
                 }
             }
@@ -490,6 +498,8 @@ namespace IBS.Repositories
                     existingRecord.Action = model.FinalRemarks;
                     existingRecord.UserId = model.UserId;
                     existingRecord.Datetime = DateTime.Now;
+                    existingRecord.Updatedby = Convert.ToInt32(model.UserId);
+                    existingRecord.Updateddate = DateTime.Now;
                     context.SaveChanges();
                 }
             }
@@ -516,6 +526,8 @@ namespace IBS.Repositories
                     complaint.ConclusionDt = model.JIDateConclusion;
                     complaint.UserId = model.UserId;
                     complaint.Datetime = DateTime.Now;
+                    complaint.Updatedby = Convert.ToInt32(model.UserId);
+                    complaint.Updateddate = DateTime.Now;
                     context.SaveChanges();
                 }
                 send_Conclusion_Email(model);
@@ -570,7 +582,9 @@ namespace IBS.Repositories
                             complaint.JiDt = model.JIDate;
                             complaint.JiFixDt = model.JiFixDt;
                             complaint.UserId = model.UserId; 
-                            complaint.Datetime = DateTime.Now; 
+                            complaint.Datetime = DateTime.Now;
+                            complaint.Updatedby = Convert.ToInt32(model.UserId);
+                            complaint.Updateddate = DateTime.Now;
                             context.SaveChanges(); 
                         }
                     }
@@ -594,6 +608,8 @@ namespace IBS.Repositories
                             complaint.JiStatusCd = 0;
                             complaint.UserId = model.UserId;
                             complaint.Datetime = DateTime.Now;
+                            complaint.Updatedby = Convert.ToInt32(model.UserId);
+                            complaint.Updateddate = DateTime.Now;
                             context.SaveChanges();
                         }
                     }
@@ -614,6 +630,8 @@ namespace IBS.Repositories
                         complaint.JiFixDt = DateTime.Now;
                         complaint.UserId = model.UserId;
                         complaint.Datetime = DateTime.Now;
+                        complaint.Updatedby = Convert.ToInt32(model.UserId);
+                        complaint.Updateddate = DateTime.Now;
                         context.SaveChanges();
                     }
                 }

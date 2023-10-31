@@ -116,6 +116,7 @@ namespace IBS.Controllers
         {
             try
             {
+                model.UserId = Convert.ToString(UserId);
                 string msg = "Complaints Inserted Successfully.";
 
                 if (model.ComplaintId != null && model.ComplaintId != "")
@@ -143,7 +144,7 @@ namespace IBS.Controllers
             try
             {
                 string msg = "";
-
+                model.UserId = Convert.ToString(UserId);
                 if (model.ComplaintId != null && model.ComplaintId != "")
                 {
                     msg = "Data Updated Successfully.";
@@ -173,7 +174,7 @@ namespace IBS.Controllers
             try
             {
                 string msg = "";
-
+                model.UserId = Convert.ToString(UserId);
                 if (model.ComplaintId != null && model.ComplaintId != "")
                 {
                     msg = "JI Cancel Successfully.";
@@ -198,6 +199,7 @@ namespace IBS.Controllers
         {
             try
             {
+                model.UserId = Convert.ToString(UserId);
                 string msg = "";
 
                 if (model.ComplaintId != null && model.ComplaintId != "")
@@ -235,7 +237,7 @@ namespace IBS.Controllers
             try
             {
                 string msg = "";
-
+                model.UserId = Convert.ToString(UserId);
                 if (model.ComplaintId != null && model.ComplaintId != "")
                 {
                     msg = "Data Save Successfully.";
