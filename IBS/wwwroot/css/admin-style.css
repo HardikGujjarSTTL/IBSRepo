@@ -988,15 +988,31 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das3:hover { box-shadow: #11BB8D 0px 2px 12px 2px; }
 .das4:hover { box-shadow: #3F95E1 0px 2px 12px 2px; }
 	
-.das1Client, .das2Client, .das3Client, .das4Client{transition:all 0.5s ease;}
+.das1Client, .das2Client, .das3Client, .das4Client, .das5Client, .das6Client, .das7Client, .das8Client, .das9Client, .das10Client, .das11Client, .das12Client{transition:all 0.5s ease;}
 .das1Client{ background: rgb(164,125,225); background: linear-gradient(90deg, rgba(164,125,225,1) 0%, rgba(150,110,213,1) 100%);}
 .das2Client{ background: rgb(43,111,200); background: linear-gradient(90deg, rgba(43,111,200,1) 0%, rgba(25,98,193,1) 100%);}
 .das3Client{ background: rgb(25,171,108); background: linear-gradient(90deg, rgba(25,171,108,1) 0%, rgba(0,139,101,1) 100%);}
 .das4Client{ background: rgb(243,124,160); background: linear-gradient(90deg, rgba(243,124,160,1) 0%, rgba(216,99,150,1) 100%);}
+.das5Client{ background: background: rgb(255,102,0); background: linear-gradient(90deg, rgba(255,102,0,1) 0%, rgba(154,53,1,1) 100%);}
+.das6Client{ background: rgb(0,153,0); background: linear-gradient(90deg, rgba(0,153,0,1) 0%, rgba(0,102,0,1) 100%);}
+.das7Client{ background: rgb(204,0,152); background: linear-gradient(90deg, rgba(204,0,152,1) 0%, rgba(102,0,50,1) 100%);}
+.das8Client{ background: rgb(0,81,214); background: linear-gradient(90deg, rgba(0,81,214,1) 0%, rgba(0,51,153,1) 100%);}
+.das9Client{ background: rgb(255,204,0); background: linear-gradient(90deg, rgba(255,204,0,1) 0%, rgba(207,152,0,1) 100%);}
+.das10Client{ background: rgb(10,180,195); background: linear-gradient(90deg, rgba(10,180,195,1) 0%, rgba(0,103,102,1) 100%);}
+.das11Client{ background: rgb(254,0,0); background: linear-gradient(90deg, rgba(254,0,0,1) 0%, rgba(155,3,0,1) 100%);}
+.das12Client{ background: rgb(102,204,0); background: linear-gradient(90deg, rgba(102,204,0,1) 0%, rgba(103,152,1,1) 100%);}
 .das1Client:hover { box-shadow: rgb(164,125,225) 0px 2px 12px 2px; }
 .das2Client:hover { box-shadow: rgb(43,111,200) 0px 2px 12px 2px; }
 .das3Client:hover { box-shadow: rgb(25,171,108) 0px 2px 12px 2px; }
 .das4Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das5Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das6Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das7Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das8Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das9Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das10Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das11Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das12Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
 	
 .dashboard-box .dash-total .total-inner { font-size: 16px; line-height: 20px; color:#fff; }
 .dash-count .total-amount { font-size: 30px; font-weight: 600; color: #fff; }
@@ -1399,3 +1415,8 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .gridBtn:hover{background:#008B29; color:#fff;}
 .userRole{ font-weight:400; color:#000!important; background:#f1f1f1; border-radius:4px; display:inline-block; padding:0px 2px!important;}
 .regionName{ font-style:italic;}
+.iePieGraphGrid table{ margin-bottom:0;}
+.iePieGraphGrid table th, .iePieGraphGrid table td{ padding:5px;}
+.iePieGraphGrid table th{ background:#dcefff; font-size:14px;}
+.iePieGraphGrid table td{ font-size:13px;}
+.iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
