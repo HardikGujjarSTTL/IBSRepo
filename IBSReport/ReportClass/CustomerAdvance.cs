@@ -8,6 +8,9 @@ namespace IBSReports.ReportClass
 {
     public static class CustomerAdvance
     {
+        public static string Oracle_UserID = System.Configuration.ConfigurationManager.AppSettings["Oracle_UserID"].ToString();
+        public static string Oracle_Password = System.Configuration.ConfigurationManager.AppSettings["Oracle_Password"].ToString();
+
         public static ReportDocument CustomerAdv(string BPOType, string AccCD, string FromDate, string ToDate, string Region, out DataSet dsCustom)
         {
             String wRegion = "";
@@ -47,7 +50,6 @@ namespace IBSReports.ReportClass
                         formula = formula + " and ({T12_BILL_PAYING_OFFICER.BPO_TYPE}='R') and ({T25_RV_DETAILS.SUSPENSE_AMT}<>0) and Left ({T25_RV_DETAILS.VCHR_NO},1)='" + Region + "'";
                         wHdr = wHdr + " - Railways";
                     }
-
                 }
                 else
                 {
@@ -74,21 +76,9 @@ namespace IBSReports.ReportClass
                 }
 
                 rd.Load(HttpContext.Current.Server.MapPath("~/Reports/rptChequeStatus.rpt"));
+                rd.SetDatabaseLogon(Oracle_UserID, Oracle_Password);
                 rd.RecordSelectionFormula = formula;
-                rd.SetDatabaseLogon("IBSDev", "IBSDev");
-
                 // rd.SetParameterValue(0, wHdr);
-
-                //ConnectionInfo coninfo = Common.GetReportConn();
-                //TableLogOnInfo tabloginfo = null;
-
-                //foreach (CrystalDecisions.CrystalReports.Engine.Table tbl in rd.Database.Tables)
-                //{
-                //    tabloginfo = tbl.LogOnInfo;
-                //    tabloginfo.ConnectionInfo = coninfo;
-                //    tbl.ApplyLogOnInfo(tabloginfo);
-                //}
-
             }
             catch
             {
