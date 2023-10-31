@@ -251,7 +251,7 @@
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
                         alert(data.alertMessage);
-                        window.location.href = '/NCRRegister/Index';
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
                 } else {
                     // Handle error case if needed
@@ -276,7 +276,7 @@
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
                         alert(data.alertMessage);
-                        window.location.href = '/NCRRegister/Index';
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
                 } else {
                 }
@@ -368,7 +368,7 @@
             success: function (result) {
                 if (result.redirectToIndex === true) {
                     alert(result.alertMessage);
-                    window.location.href = '/NCRRegister/Index';
+                    window.location.href = '@Url.Action("Index", "NCRRegister")';
                 }
 
             },
@@ -462,7 +462,7 @@
     completed = function (response) {
         var res = response.responseJSON;
         ShowHideMsgNew(res.status, res.responseText);
-        window.location.href = "/NCRRegister/Index";
+        window.location.href = '@Url.Action("Index", "NCRRegister")';
     };
 
 </script>
