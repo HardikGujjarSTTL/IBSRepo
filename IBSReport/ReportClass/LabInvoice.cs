@@ -2,21 +2,18 @@
 using Net.Codecrete.QrCodeGenerator;
 using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.IO;
-using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public static class LabInvoice
     {
         private static readonly QrCode.Ecc[] errorCorrectionLevels = { QrCode.Ecc.Low, QrCode.Ecc.Medium, QrCode.Ecc.Quartile, QrCode.Ecc.High };
+
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+
         public static ReportDocument LabInvoiceReport(string InvoiceNo, string Caseno, string RegNo, string TranNo, out DataSet dsCustom)
         {
             string str_Sno = "Select max(ITEM_SRNO) from T86_LAB_INVOICE_DETAILS where INVOICE_NO='"+ InvoiceNo + "'";
@@ -59,7 +56,6 @@ namespace CrystalReportProject.ReportClass
                 rd.Load(HttpContext.Current.Server.MapPath("~/Reports/LAB_INVOICE_GEN.rpt"));
                 dsCustom = funlabbill(InvoiceNo, Caseno, RegNo, TranNo);
             }
-
 
             rd.SetDataSource(dsCustom);
             return rd;
@@ -169,6 +165,5 @@ namespace CrystalReportProject.ReportClass
             dsReports.Tables.Add(dt);
             return dsReports;
         }
-
     }
 }
