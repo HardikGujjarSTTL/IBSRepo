@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="CrystalReportProject.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="IBSReports.Global" Language="C#" %>

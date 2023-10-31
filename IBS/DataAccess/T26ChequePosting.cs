@@ -35,5 +35,7 @@ public partial class T26ChequePosting
 
     public byte? Isdeleted { get; set; }
 
+    public int Id { get; set; }
+
     public virtual T25RvDetail? T25RvDetail { get; set; }
 }

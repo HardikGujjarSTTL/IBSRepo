@@ -96,10 +96,11 @@ namespace IBS.Repositories
             return query;
         }
 
-        public CheckPostingbillInvoice ChkBillNo(string RadioBill , string Region)
+        public CheckPostingbillInvoice ChkBillNo(string RadioBill,string BillInvoiceNo, string Region)
         {
             CheckPostingbillInvoice query = null;
             var query1 = from bill in context.V22Bills
+                         where bill.BillNo == BillInvoiceNo
                          select new CheckPostingbillInvoice
                         {
                            BILL_NO = bill.BillNo,

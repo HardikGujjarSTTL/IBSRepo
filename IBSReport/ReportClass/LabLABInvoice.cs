@@ -2,32 +2,27 @@
 using Net.Codecrete.QrCodeGenerator;
 using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public static class LabLABInvoice
     {
         private static readonly QrCode.Ecc[] errorCorrectionLevels = { QrCode.Ecc.Low, QrCode.Ecc.Medium, QrCode.Ecc.Quartile, QrCode.Ecc.High };
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+
         static string dateconcate(string dt3)
         {
-            string myYear, myMonth, myDay;
+            string myYear, myMonth;
 
-            //myDay=dt3.Substring(0,2);
             myMonth = dt3.Substring(3, 2);
             myYear = dt3.Substring(6, 4);
             string dt4 = myYear + myMonth;
             return (dt4);
         }
+
         public static ReportDocument LabInvoiceReport(string InvoiceNo, string InvoiceDT, out DataSet dsCustom)
         {
             ReportDocument rd = new ReportDocument();
@@ -67,15 +62,12 @@ namespace CrystalReportProject.ReportClass
                 }
 
                 rd.SetDataSource(dsCustom);
-                //return rd;
             }
-            catch (Exception ex)
+            catch 
             {
 
             }
             return rd;
-            //rd.VerifyDatabase();
-            
         }
 
         private static DataSet funlabbill(string InvoiceNo)
@@ -157,16 +149,11 @@ namespace CrystalReportProject.ReportClass
                 dr["customer_ref_no"] = Convert.ToString(readerB["customer_ref_no"]);
                 dr["Region_code"] = Convert.ToString(readerB["Region_code"]);
                 dr["ie_name"] = Convert.ToString(readerB["ie_name"]);
-                //dr["QR_CODE"] = Convert.ToString(readerB["QR_CODE"]);
-
-                //dr["QR_CODE"] = QRHelper.GenerateSvg(readerB["QR_CODE"].ToString());
                 dr["QR_CODE"] = QRHelper.GeneratePng(readerB["QR_CODE"].ToString());
                 dr["IRN_NO"] = Convert.ToString(readerB["IRN_NO"]);
                 dr["SAMPLE_REG_NO"] = Convert.ToString(readerB["SAMPLE_REG_NO"]);
                 dr["ACK_NO"] = Convert.ToString(readerB["ACK_NO"]);
                 dr["ACK_DT"] = Convert.ToString(readerB["ACK_DT"]);
-
-
                 dt.Rows.Add(dr);
             }
             dsReports.Tables.Add(dt);

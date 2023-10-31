@@ -1,11 +1,8 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Web;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public class InspectionFeeBill
     {
@@ -18,15 +15,11 @@ namespace CrystalReportProject.ReportClass
 
             try
             {
-                
-                
                 rd.Load(HttpContext.Current.Server.MapPath("~/Reports/NR_Bill_GST.rpt"));
                 rd.RecordSelectionFormula = formula;
-                //rd.SetDataSource("IBSQc");
                 rd.SetDatabaseLogon("QA", "QA");
-                
             }
-            catch(Exception ex)
+            catch
             {
 
             }

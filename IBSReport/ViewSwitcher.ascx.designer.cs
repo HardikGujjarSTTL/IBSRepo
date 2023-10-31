@@ -7,9 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CrystalReportProject {
-    
-    
-    public partial class ViewSwitcher {
+namespace IBSReports
+{
+
+
+    public partial class ViewSwitcher
+    {
     }
 }

@@ -3721,7 +3721,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(2)
                 .HasColumnName("STATUS");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -8333,6 +8333,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("IFSC_CODE");
+            entity.Property(e => e.MobileNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE_NO");
             entity.Property(e => e.PartyName)
                 .HasMaxLength(40)
                 .IsUnicode(false)
@@ -8354,7 +8358,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T02_USERS");
 
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -8573,7 +8577,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -14474,12 +14478,16 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T26ChequePosting>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T26_CHEQUE_POSTING");
+            entity.HasKey(e => e.Id).HasName("T26_CHEQUE_POSTING_PK");
+
+            entity.ToTable("T26_CHEQUE_POSTING");
 
             entity.HasIndex(e => new { e.BankCd, e.ChqNo, e.ChqDt, e.BillNo }, "UQ26_CHEQUE_POSTING").IsUnique();
 
+            entity.Property(e => e.Id)
+                .HasPrecision(9)
+                .HasDefaultValueSql("\"IBSDEV\".\"T26_CHEQUE_POSTING_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.AmountCleared)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
@@ -14552,7 +14560,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
 
-            entity.HasOne(d => d.T25RvDetail).WithMany()
+            entity.HasOne(d => d.T25RvDetail).WithMany(p => p.T26ChequePostings)
                 .HasForeignKey(d => new { d.BankCd, d.ChqNo, d.ChqDt })
                 .HasConstraintName("FK26_CHEQUE_POSTING");
         });
@@ -14564,7 +14572,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T26_CHEQUE_POSTING_HISTORY");
 
             entity.Property(e => e.Id)
-                .HasPrecision(6)
+                .HasPrecision(9)
                 .HasDefaultValueSql("\"IBSDEV\".\"T26_CHEQUE_POSTING_HISTORY_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Actiondate)
@@ -20825,7 +20833,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -20877,7 +20885,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -24494,6 +24502,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T24_RV_HISTORY_SEQ");
         modelBuilder.HasSequence("T25_RV_DETAILS_HISTORY_SEQ");
         modelBuilder.HasSequence("T26_CHEQUE_POSTING_HISTORY_SEQ");
+        modelBuilder.HasSequence("T26_CHEQUE_POSTING_SEQ");
         modelBuilder.HasSequence("T27_JV_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_HISTORY_SEQ");
         modelBuilder.HasSequence("T29_JV_DETAILS_SEQ");
