@@ -1,11 +1,10 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Web;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public static class CustomerAdvance
     {
@@ -26,8 +25,6 @@ namespace CrystalReportProject.ReportClass
             dsCustom = new DataSet();
             try
             {
-
-
                 if (BPOType == "R")
                 {
                     if (AccCD == "O")
@@ -75,20 +72,32 @@ namespace CrystalReportProject.ReportClass
                         wHdr = wHdr + " - Non-Railways";
                     }
                 }
-                
 
                 rd.Load(HttpContext.Current.Server.MapPath("~/Reports/rptChequeStatus.rpt"));
                 rd.RecordSelectionFormula = formula;
-                rd.SetDatabaseLogon("QA", "QA");
+                rd.SetDatabaseLogon("IBSDev", "IBSDev");
+
                 // rd.SetParameterValue(0, wHdr);
+
+                //ConnectionInfo coninfo = Common.GetReportConn();
+                //TableLogOnInfo tabloginfo = null;
+
+                //foreach (CrystalDecisions.CrystalReports.Engine.Table tbl in rd.Database.Tables)
+                //{
+                //    tabloginfo = tbl.LogOnInfo;
+                //    tabloginfo.ConnectionInfo = coninfo;
+                //    tbl.ApplyLogOnInfo(tabloginfo);
+                //}
+
             }
-            catch (Exception ex)
+            catch
             {
 
             }
             return rd;
         }
-        static string dateconcate(string dt)
+
+        public static string dateconcate(string dt)
         {
             string myYear, myMonth, myDay;
             myYear = dt.Substring(6, 4);

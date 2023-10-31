@@ -1,15 +1,12 @@
 ﻿using Net.Codecrete.QrCodeGenerator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Web;
 
-namespace CrystalReportProject
+namespace IBSReports
 {
     public static class QRHelper
     {
         private static readonly QrCode.Ecc[] errorCorrectionLevels = { QrCode.Ecc.Low, QrCode.Ecc.Medium, QrCode.Ecc.Quartile, QrCode.Ecc.High };
+
         public static byte[] GenerateSvg(string text)
         {
             int? ecc = 1, borderWidth = 3;
@@ -23,6 +20,7 @@ namespace CrystalReportProject
             //byte[] svg = Encoding.UTF8.GetBytes(str);
             return svg;
         }
+
         public static byte[] GeneratePng(string text)
         {
             //ecc = Math.Clamp(ecc ?? 1, 0, 3);

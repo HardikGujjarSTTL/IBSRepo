@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Optimization;
-using System.Web.UI;
+﻿using System.Web.Optimization;
 
-namespace CrystalReportProject
+namespace IBSReports
 {
     public class BundleConfig
     {

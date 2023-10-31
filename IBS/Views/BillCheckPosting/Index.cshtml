@@ -9,78 +9,238 @@
     </div>
 </div>
 <div class="task-listinput">
-    <form role="form" asp-controller="BillCheckPosting" asp-action="Index" id="frmBillDetails">
-        @*<input type="hidden" asp-for="BankCd" />*@
+    <form role="form" asp-controller="BillCheckPosting" asp-action="Index" id="frmDetails">
+        <input type="hidden" asp-for="BpoCd" />
+        <input type="hidden" asp-for="ActionType" />
+
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Bank Name <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.BankName, new SelectList(IBS.Models.Common.GetBank(), "Value", "Text"),"--Select--")
-                    <span asp-validation-for="BankName" class="text-danger"></span>
+                    <span class="text-danger" id="spnBankName"></span>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Cheque No <i class="text-danger">*</i></label>
                     <input type="text" class="input" asp-for="ChqNo">
-                    <span asp-validation-for="ChqNo" class="text-danger"></span>
+                    <span class="text-danger" id="spnChqNo"></span>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Cheque Date <i class="text-danger">*</i></label>
                     <input type="text" class="datepicker" asp-for="ChqDt" placeholder="DD/MM/YYYY">
-                    <span asp-validation-for="ChqDt" class="text-danger"></span>
+                    <span class="text-danger" id="spnChqDt"></span>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference"><br /></label>
                     <div class="savenext-btn">
                         <a asp-controller="BillCheckPosting" asp-action="Index" class="reset-btn">Cancel</a>
-                        <button type="button" class="save-btn active" onclick="Search();">Search</button>
+                        <button type="button" class="save-btn active" onclick="Search();"> Search</button>
                     </div>
                 </div>
             </div>
-            
         </div>
 
         <div class="accordion-body SearchDetails" style="display:none;">
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Voucher No. <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="VcharNo" />
+                    <label for="Reference">Voucher No. </label>
+                    <input type="text" class="input" asp-for="VcharNo" readonly />
                     <span asp-validation-for="VcharNo" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Voucher Date <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="VcharDt">
+                    <label for="Reference">Voucher Date </label>
+                    <input type="text" class="datepicker" asp-for="VcharDt" readonly>
                     <span asp-validation-for="VcharDt" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Cheque Amount <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="ChqAmount">
+                    <label for="Reference">Cheque Amount </label>
+                    <input type="text" class="input" asp-for="ChqAmount" readonly>
                     <span asp-validation-for="ChqAmount" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Posted Amount <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="PostedAmount">
-                    <span asp-validation-for="PostedAmount" class="text-danger"></span>
+                    <label for="Reference">Posted Amount </label>
+                    <input type="text" class="input" asp-for="AmountAdjusted" readonly>
+                    <span asp-validation-for="AmountAdjusted" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">Paying Authority </label>
+                    <input type="text" class="input" asp-for="Bpo" readonly>
+                    <span asp-validation-for="Bpo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount Transferred to Other Regions </label>
+                    <input type="text" class="input" asp-for="AmtTransferred" readonly>
+                    <span asp-validation-for="AmtTransferred" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Un-Adjusted Advance </label>
+                    <input type="text" class="input" asp-for="SuspenseAmt" readonly>
+                    <span asp-validation-for="SuspenseAmt" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="accordion-body SearchDetailsBillInvoice" style="display:none;">
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <div class="reference">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="radioBill" name="Bill" value="B" checked>
+                                    <label for="radioBill">Bill No.</label>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <input type="radio" id="radioInvoice" name="Bill" value="I">
+                                    <label for="radioInvoice">Invoice No.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <input type="text" class="input" asp-for="BillInvoiceNo" maxlength="20" />
+                    <span class="text-danger" id="spnErrorBillInvoiceNo"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" id="btnBDetails">Bill Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-body SearchDetails" style="display:none;">
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtList" class="table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Bill No.</th>
+                                    <th>BPO</th>
+                                    <th>Bill Amount</th>
+                                    <th>Bill Amount Cleared</th>
+                                    <th>Amt Cleared By above Cheque</th>
+                                    <th>Posting Date</th>
+                                    @*<th>Action</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="accordion-body BillDetails" style="display:none;">
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Bill No. </label>
+                    <input type="text" class="input" asp-for="BillNo" readonly>
+                    <span asp-validation-for="BillNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Bill Date</label>
+                    <input type="text" class="datepicker" asp-for="BillDt" placeholder="DD/MM/YYYY" readonly>
+                    <span asp-validation-for="BillDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Bill Amount (A)</label>
+                    <input type="text" class="input" asp-for="BillAmount" readonly>
+                    <span asp-validation-for="BillAmount" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
+                    <input type="text" class="input" asp-for="AmtRecieved" readonly>
+                    <span asp-validation-for="AmtRecieved" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Paying Authority <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="PayingAuthority" />
-                    <span asp-validation-for="PayingAuthority" class="text-danger"></span>
+                    <label for="Reference">Total Amount Cleared (B) </label>
+                    <input type="text" class="input" asp-for="BillAmtCleared" readonly>
+                    <span asp-validation-for="BillAmtCleared" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Amount Transferred to Other Regions <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="AmountTransferred">
-                    <span asp-validation-for="AmountTransferred" class="text-danger"></span>
+                    <label for="Reference">Amount To Recover (A-B)</label>
+                    <input type="text" class="input" asp-for="AmtToRec" readonly>
+                    <span asp-validation-for="AmtToRec" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Un-Adjusted Advance <i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="UnAdjustedAdvance">
-                    <span asp-validation-for="UnAdjustedAdvance" class="text-danger"></span>
+                    <label for="Reference">Total TDS</label>
+                    <input type="text" class="input" asp-for="TDS" readonly>
+                    <span asp-validation-for="TDS" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Retention Money</label>
+                    <input type="text" class="input" asp-for="RetentionMoney" readonly>
+                    <span asp-validation-for="RetentionMoney" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount To Thru Credit Note</label>
+                    <input type="text" class="input" asp-for="CNoteAmt" readonly>
+                    <span asp-validation-for="CNoteAmt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Write off Amt / Amt Adjusted </label>
+                    <input type="text" class="input" asp-for="WriteOffAmt">
+                    <span asp-validation-for="WriteOffAmt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Posting Date</label>
+                    <input type="text" class="datepicker" asp-for="PostingDt" placeholder="DD/MM/YYYY">
+                    <span asp-validation-for="PostingDt" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Amount To be Cleared by this Cheque</label>
+                    <input type="text" class="input" asp-for="AmtTOClear">
+                    <span asp-validation-for="AmtTOClear" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Case No.</label>
+                    <input type="text" class="input" asp-for="CaseNo" readonly>
+                    <span asp-validation-for="CaseNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">BK No. </label>
+                    <input type="text" class="input" asp-for="BkNo" readonly>
+                    <span asp-validation-for="BkNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="Reference">Set No.</label>
+                    <input type="text" class="input" asp-for="SetNo" readonly>
+                    <span asp-validation-for="SetNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Reference">BPO</label>
+                    <input type="text" class="input" asp-for="BpoName" readonly>
+                    <span asp-validation-for="BpoName" class="text-danger"></span>
                 </div>
             </div>
 
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="savenext-btn btnAlign">
+                        <button type="button" class="save-btn active" onclick="BillSave();">Save</button>
+                        <a asp-controller="BillCheckPosting" asp-action="Index" class="reset-btn">Cancel</a>
+                        <button type="button" class="reset-btn active" onclick="BillTDS();">TDS Entry</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>
@@ -90,19 +250,273 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        function Search()
-        {
-            $(".SearchDetails").css("display", "");
+        $(document).ready(function () {
+            $("#VcharDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#BillDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const actiontype = urlParams.get('ActionType');
+            if(actiontype == "M")
+            {
+                $(".SearchDetails").css("display", "block");
+                $(".BillDetails").css("display", "block");
+                $(".SearchDetailsBillInvoice").css("display", "none");
+                InitializeDatatable();
+            }
+            else
+            {
+                $(".SearchDetailsBillInvoice").css("display", "none");
+            }
+        });
+
+        function Search() {
+            var BankCd = $("#BankName").val();
+            var ChqNo = $("#ChqNo").val();
+            var ChqDt = moment($('#ChqDt').datepicker('getDate')).format("YYYY-MM-DD");
+
+            $("#spnBankName").html("");
+            $("#spnChqNo").html("");
+            $("#spnChqDt").html("");
+
+            var IsValid = true;
+
+            if ($("#BankName").val() == "") {
+                $("#spnBankName").html("Please select bank name.");
+                IsValid = false;
+            }
+            if ($("#ChqNo").val() == "") {
+                $("#spnChqNo").html("Please add cheque no.");
+                IsValid = false;
+            }
+            if ($("#ChqDt").val() == "") {
+                $("#spnChqDt").html("Please add cheque date.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            $.ajax({
+                url: '/BillCheckPosting/GetBankDetails',
+                type: "POST",
+                dataType: "JSON",
+                data: { BankCd: BankCd, ChqNo: ChqNo, ChqDt: ChqDt },
+                success: function (success) {
+                    if (success != null) {
+                        InitializeDatatable();
+                        $(".SearchDetails").css("display", "block");
+                        $(".SearchDetailsBillInvoice").css("display", "block");
+                        $(".BillDetails").css("display", "none");
+                        
+                        $("#VcharNo").val(success.VcharNo)
+                        $("#VcharDt").val(moment(success.VcharDt).format("DD/MM/YYYY"))
+                        $("#ChqAmount").val(success.ChqAmount)
+                        $("#AmountAdjusted").val(success.AmountAdjusted)
+                        $("#Bpo").val(success.Bpo)
+                        $("#AmtTransferred").val(success.AmtTransferred)
+                        $("#SuspenseAmt").val(success.SuspenseAmt)
+                        
+                    }
+                    else {
+                        $(".SearchDetails").css("display", "none");
+                        $(".SearchDetailsBillInvoice").css("display", "none");
+                        $(".BillDetails").css("display", "none");
+                        ShowHideMsgNew(false, "No records found!!!");
+                    }
+                }
+            });
+        }
+
+        $("#btnBDetails").click(function () {
+            var BillInvoiceNo = $("#BillInvoiceNo").val();
+            var BillTypes = $("input[name=Bill]:checked").val();
+
+            var errormsg = "";
+            if (BillTypes == "B") {
+                errormsg = "Please enter Bill No.";
+            }
+            else {
+                errormsg = "Please enter Invoice No.";
+            }
+
+            $("#spnErrorBillInvoiceNo").html("");
+
+            var IsValid = true;
+            if ($("#BillInvoiceNo").val() == "") {
+                $("#spnErrorBillInvoiceNo").html(errormsg);
+                IsValid = false;
+            }
+            if (!IsValid) return;
+
+            $.ajax({
+                url: '/BillCheckPosting/GetBillDetails',
+                type: "POST",
+                dataType: "JSON",
+                data: { BillInvoiceNo: BillInvoiceNo, BillTypes: BillTypes },
+                success: function (success) {
+                    if (success != null) {
+                        if (success.BillAmount == (success.AmtRecieved + success.TDS + success.WriteOffAmt + success.RetentionMoney + success.CNoteAmt)) {
+                            $(".BillDetails").css("display", "none");
+                            ShowHideMsgNew(false, "This Bill has already been cleared!!!");
+                        }
+                        else {
+                            $(".SearchDetails").css("display", "block");
+                            $(".BillDetails").css("display", "block");
+                            $(".SearchDetailsBillInvoice").css("display", "block");
+                            
+                            $("#BillNo").val(success.BillNo)
+                            $("#BillDt").val(moment(success.BillDt).format("DD/MM/YYYY"))
+                            $("#BillAmount").val(success.BillAmount)
+                            $("#AmtRecieved").val(success.AmtRecieved)
+                            $("#BillAmtCleared").val(success.BillAmtCleared)
+                            $("#AmtToRec").val(success.AmtToRec)
+                            $("#TDS").val(success.TDS)
+                            $("#RetentionMoney").val(success.RetentionMoney)
+                            $("#CNoteAmt").val(success.CNoteAmt)
+                            $("#WriteOffAmt").val(success.WriteOffAmt)
+                            $("#PostingDt").val(moment(success.PostingDt).format("DD/MM/YYYY"))
+                            $("#AmtTOClear").val(success.AmtTOClear)
+                            $("#CaseNo").val(success.CaseNo)
+                            $("#BkNo").val(success.BkNo)
+                            $("#SetNo").val(success.SetNo)
+                            $("#BpoName").val(success.BpoName)
+                            $("#BpoCd").val(success.BpoCd)
+
+                            if ($("#SuspenseAmt").val() >= $("#AmtToRec").val()) {
+                                $("#AmtTOClear").val($("#AmtToRec").val());
+                            }
+                            else {
+                                $("#AmtTOClear").val($("#SuspenseAmt").val());
+                            }
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "InValid Bill No.");
+                    }
+                    //else {
+                    //    $(".BillDetails").css("display", "none");
+                    //}
+                }
+            });
+        });
+
+        function BillSave() {
+            //event.preventDefault();
+            var formData = $("#frmDetails").serialize();
+
+            $.post("@Url.Action("BillDetailSave", "BillCheckPosting")", formData, function (response) {
+                if (response != null) {
+                    //ShowHideMsgNew(response.success, response.responseText);
+                    alert(response.responseText);
+                    window.location.href = '@Url.Action("Index", "BillCheckPosting")';
+                }
+                else {
+                    ShowHideMsgNew(response.success, response.responseText);
+                }
+            });
+        }
+
+        function InitializeDatatable() {
+            
             var BankName = $("#BankName").val();
             var ChqNo = $("#ChqNo").val();
             var ChqDt = $("#ChqDt").val();
 
-            let myObject = { BankName, ChqNo, ChqDt };
-            $.get("@Url.Action("GetBankDetails", "BillCheckPosting")", $.param(myObject), function (response) {
-                if (response.status) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                }
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            BankName, ChqNo, ChqDt
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+
+                        }
+                    },
+                    //{ data: "BillNo" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var ChqNo = data.ChqNo;
+                            var ChqDt = moment(data.ChqDt).format("DD/MM/YYYY");
+                            var BankName = data.BankName;
+                            var BillNo = data.BillNo;
+                            var AmountCleared = data.AmountCleared;
+
+                            var editUrl = '@Url.Action("Index", "BillCheckPosting")?ChqNo=' + ChqNo + "&ChqDt=" + ChqDt + "&BankName=" + BankName + "&BillNo=" + BillNo + "&AmountCleared=" + AmountCleared + "&ActionType=M";
+                            var html = "<td width='10%' valign='top' align='center'>";
+                            html += "<a href='" + editUrl + "' Font-Names='Verdana' Font-Size='8pt'>" + BillNo +"</a><br/>";
+                            html += "</td>";
+                            return html;
+                        }
+                    },
+                    { data: "BpoName" },
+                    { data: "BillAmount" },
+                    { data: "AmountCleared" },
+                    { data: "BillAmtCleared" },
+                    {
+                        data: "PostingDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    //{
+                    //    data: null, orderable: false,
+                    //    render: function (data, type, row) {
+                    //        var ChqNo = data.ChqNo;
+                    //        //var ChqDt = data.ChqDt;
+                    //        var ChqDt = moment(data.ChqDt).format("DD/MM/YYYY");
+                    //        var BankName = data.BankName;
+                    //        var BillNo = data.BillNo;
+                    //        var AmountCleared = data.AmountCleared;
+
+                    //        var editUrl = '@Url.Action("Index", "BillCheckPosting")?ChqNo=' + ChqNo + "&ChqDt=" + ChqDt + "&BankName=" + BankName + "&BillNo=" + BillNo + "&AmountCleared=" + AmountCleared + "&ActionType=M";
+                    //        var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                    //        //html += '<a onclick="Delete(this.ChqNo); return false;" href="javascript:void(\'0\');" ChqNo=\"' + ChqNo + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                    //        html += '</div>';
+                    //        return html;
+                    //    }
+                    //},
+                ],
+                "order": [[0, "asc"]]
             });
+        }
+
+        function BillTDS()
+        {
+            var ChqNo = $("#ChqNo").val();
+            var ChqDt = $("#ChqDt").val();
+            if ($("#ChqNo").val() != null && $("#ChqDt").val() != null)
+            {
+                window.location.href = '@Url.Action("Index", "TDSEntry")' + '?CHQ_NO=' + ChqNo + "&CHQ_DATE=" + ChqDt;
+            }
+            else
+            {
+                ShowHideMsgNew(false, "Please add Cheque No. & Cheque Date.");
+            }
         }
     </script>
 }

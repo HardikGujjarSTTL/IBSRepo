@@ -2,18 +2,17 @@
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public static class ICAccountal
     {
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+
         public static ReportDocument ICAccount(string FromDate, string ToDate, string Region, string lstYesNo, string rdbGIE, string lstIE, string rdbCancelYes,out DataSet dsCustom)
         {
             int wError = 0;
@@ -49,7 +48,7 @@ namespace CrystalReportProject.ReportClass
 
                 }
             }
-            catch (Exception err)
+            catch
             {
 
             }
@@ -111,6 +110,7 @@ namespace CrystalReportProject.ReportClass
 			}
 			//wError=Convert.ToInt16(cmd.Parameters["OUT_ERR_CD"].Value);
 		}
+
         private static void DisplayAlert(string msg)
         {
             Page page = HttpContext.Current.CurrentHandler as Page;
