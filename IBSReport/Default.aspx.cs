@@ -65,7 +65,26 @@ namespace IBSReports
                     string CaseNo = Request.QueryString["CaseNo"].ToString();
                     string BkNo = Request.QueryString["BkNo"].ToString();
                     string SetNo = Request.QueryString["SetNo"].ToString();
-                    cristalview.ReportSource = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
+
+                    //cristalview.ReportSource = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
+
+                    ReportDocument rd = InspectionFeeBill.NRBillGST(CaseNo, BkNo, SetNo, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
+
+                    rd.Close();
+                    rd.Dispose();
+                    GC.Collect();
+
                 }
                 else if (RptFlag == "4") // This flag is for DailyIEWiseCall Report
                 {
@@ -104,7 +123,24 @@ namespace IBSReports
                     string FromDate = Request.QueryString["FromDate"].ToString();
                     string ToDate = Request.QueryString["ToDate"].ToString();
                     string Region = Request.QueryString["Region"].ToString();
-                    cristalview.ReportSource = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
+                    
+                    //cristalview.ReportSource = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
+                    ReportDocument rd = CustomerAdvance.CustomerAdv(BPOType, AccCD, FromDate, ToDate, Region, out dsCustom);
+                    System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    System.IO.MemoryStream s = new System.IO.MemoryStream();
+                    CopyStream(st, s);
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
+                    Response.ContentType = "application/pdf";
+                    Response.BinaryWrite(s.ToArray());
+                    Response.End();
+                    s.Close();
+                    s = null;
+
+                    rd.Close();
+                    rd.Dispose();
+                    GC.Collect();
                 }
                 else if (RptFlag == "7") // This flag is for IC Accountal Report
                 {

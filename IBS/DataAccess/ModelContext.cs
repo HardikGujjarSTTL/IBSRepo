@@ -6,6 +6,10 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
+    public ModelContext()
+    {
+    }
+
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -660,6 +664,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -14269,7 +14277,8 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14317,7 +14326,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14416,7 +14426,8 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
@@ -14460,7 +14471,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14527,7 +14539,8 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14549,7 +14562,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
@@ -14615,7 +14629,8 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -14630,7 +14645,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")

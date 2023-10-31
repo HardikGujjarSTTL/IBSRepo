@@ -16,7 +16,6 @@ using IBS.Interfaces.Reports;
 using System.Data;
 using OfficeOpenXml;
 using System.IO;
-using ClosedXML.Excel;
 
 namespace IBS.Controllers.Reports
 {
