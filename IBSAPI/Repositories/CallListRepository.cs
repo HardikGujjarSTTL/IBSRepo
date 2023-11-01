@@ -30,10 +30,11 @@ namespace IBSAPI.Repositories
         public int SheduleInspection(SheduleInspectionRequestModel sheduleInspectionRequestModel)
         {
             int ID = 0;
+            string CallRecvDt = sheduleInspectionRequestModel.CallRecvDt.ToString("dd-MM-yy");
             var query = (from t17 in context.T17CallRegisters
                          join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
                          join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                         where t17.CaseNo == sheduleInspectionRequestModel.CaseNo && t17.CallRecvDt == sheduleInspectionRequestModel.CallRecvDt 
+                         where t17.CaseNo == sheduleInspectionRequestModel.CaseNo && t17.CallRecvDt == Convert.ToDateTime(CallRecvDt)
                          && t17.CallSno == sheduleInspectionRequestModel.CallSno
                          select new
                          {
