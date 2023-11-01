@@ -50,28 +50,28 @@
 
 
                 <div class="col-md-4 mb-4">
-                    <label for="Reference">Net Testing Charges Paid by Vendor.*</label>
+                    <label for="Reference">Net Testing Charges Paid by Vendor.</label>
                     <input type="text" id="lblnettcv" class="input" readonly="readonly" />
                     @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">TDS Deducted by Vendor. (If Any)*</label>
+                    <label for="Reference">TDS Deducted by Vendor. (If Any)</label>
                     <input type="text" id="lbltds" class="input" readonly="readonly" />
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Gross Testing Charges Submitted by Vendor*</label>
-                    <input type="text" id="lblgrosstcv" class="input" readonly="readonly" />
+                    <label for="Reference">Gross Testing Charges Submitted by Vendor</label>
+                    <input type="text" id="lblgrosstc" class="input" readonly="readonly" />
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">UTR No.*</label>
+                    <label for="Reference">UTR No.</label>
                     <input type="text" id="lblutrno" class="input" readonly="readonly" />
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">UTR Date.*</label>
+                    <label for="Reference">UTR Date.</label>
                     <input type="text" id="lblutrdt" class="input" readonly="readonly" />
                 </div>
 
@@ -81,13 +81,13 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Status</label>
+                    <label for="Reference">Status <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.DocStatusFin, new SelectList(IBS.Models.Common.PaymentStatus() , "Value", "Text"),new { @id = "ddlstatus", @class = "form-control" })
                 </div>
 
 
                 <div class="col-md-4 mb-3" style="display:none;" id="remark">
-                    <label for="Reference">Remarks</label>
+                    <label for="Reference">Remarks <i class="text-danger">*</i></label>
                     <textarea class="form-control custom-textarea" id="txtremark"></textarea>
                 </div>
 
@@ -141,14 +141,14 @@
                 data: { CaseNo: CaseNo, CallSno: CallSno, CallRecvDt: CallRecvDt },
 
                 success: function (success) {
-
+                   
                     $("#lblcno").val(CaseNo);
                     $("#lblCallDT").val(CallRecvDt);
                     $("#lblCallSno").val(CallSno);
-                    $("#lblgrosstc").val(success.GrossTestingChargesLab);
+                    $("#lblgrosstc").val(success.GrossVendor);
                     $("#lblnettcv").val(success.NetTestingChargesVend);
                     $("#lbltds").val(success.TDS);
-                    $("#lblgrosstcv").val(success.GrossVendor);
+                    $("#lblgrosstcv").val(success.GrossTestingChargesLab);
                     $("#lblutrno").val(success.UTRNO);
                     $("#lblutrdt").val(success.UTRDT);
                     $("#lbllabspr").val(success.PaymentRecUpload);

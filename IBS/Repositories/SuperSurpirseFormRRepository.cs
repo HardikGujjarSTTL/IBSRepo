@@ -27,7 +27,18 @@ namespace IBS.Repositories
         }
         public DTResult<SuperSurpirseFormModel> GetSuperFormData(DTParameters dtParameters, string Regin)
         {
+            var Caseno = dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo");
+            var CallDt = DateTime.Parse(dtParameters.AdditionalValues?.GetValueOrDefault("CallDate"));
+            var CallSNo = int.Parse(dtParameters.AdditionalValues?.GetValueOrDefault("CallSNo"));
 
+            // Assuming context is a database context for Entity Framework
+            var exists = context.T44SuperSurprises
+                .FirstOrDefault(s => s.CaseNo == Caseno && s.CallRecvDt == CallDt && s.CallSno == CallSNo);
+            int count = 0;
+            if(exists != null)
+            {
+                count = 1;
+            }
 
             DTResult<SuperSurpirseFormModel> dTResult = new() { draw = 0 };
             IQueryable<SuperSurpirseFormModel>? query = null;
@@ -54,11 +65,11 @@ namespace IBS.Repositories
                 orderCriteria = "PO_NO";
                 orderAscendingDirection = true;
             }
-
-
+            var dt = dtParameters.AdditionalValues?.GetValueOrDefault("CallDate");
+            var calldt = Convert.ToDateTime(dt).ToString("MM/dd/yyyy");
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("CASE_NO_PARAM", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo"), ParameterDirection.Input);
-            par[1] = new OracleParameter("CALL_DT_PARAM", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CallDate"), ParameterDirection.Input);
+            par[1] = new OracleParameter("CALL_DT_PARAM", OracleDbType.Date, calldt, ParameterDirection.Input);
             par[2] = new OracleParameter("CALL_SNO_PARAM", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("CallSNo"), ParameterDirection.Input);
             par[3] = new OracleParameter("REGION_PARAM", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[4] = new OracleParameter("CUR_OUT", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -84,6 +95,7 @@ namespace IBS.Repositories
                         CO_CD = Convert.ToString(row["CO_CD"]),
                         CallDt = Convert.ToString(row["call_recv_dt"]),
                         CallSNo = Convert.ToString(row["call_sno"]),
+                        Count = count,
                     };
 
                     modelList.Add(model);
@@ -164,16 +176,17 @@ namespace IBS.Repositories
         }
         public SuperSurpirseFormModel LoadSuperData(SuperSurpirseFormModel SuperSurpirseFormModel, string Case_No, string CallDt, string CallSNo)
         {
+            var calldt = Convert.ToDateTime(CallDt).ToString("MM/dd/yyyy");
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[5];
                 par[0] = new OracleParameter("CASE_NO_PARAM", OracleDbType.NVarchar2, Case_No, ParameterDirection.Input);
-                par[1] = new OracleParameter("CALL_DT_PARAM", OracleDbType.Date, CallDt, ParameterDirection.Input);
+                par[1] = new OracleParameter("CALL_DT_PARAM", OracleDbType.Date, calldt, ParameterDirection.Input);
                 par[2] = new OracleParameter("CALL_SNO_PARAM", OracleDbType.NVarchar2, CallSNo, ParameterDirection.Input);
                 par[3] = new OracleParameter("REGION_PARAM", OracleDbType.NVarchar2, SuperSurpirseFormModel.Regin, ParameterDirection.Input);
                 par[4] = new OracleParameter("CUR_OUT", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("Get_Super_FormData", par, 4);
+                var ds = DataAccessDB.GetDataSet("Load_Super_FormData", par, 4);
 
                 SuperSurpirseFormModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -196,6 +209,13 @@ namespace IBS.Repositories
                         VenderNm = Convert.ToString(row["VEND_CD"]),
                         Vcode = Convert.ToString(row["vcode"]),
                         CallDtAndSrno = Convert.ToString(row["calldtandsrno"]),
+                        SuperSurpriseDt = Convert.ToString(row["super_surprise_dt"]),
+                        NameofScope = Convert.ToString(row["name_scope_item"]),
+                        ItemDesc = Convert.ToString(row["item_desc"]),
+                        PreviousInternal = Convert.ToString(row["pre_int_rej"]),
+                        Discrepancy = Convert.ToString(row["discrepancy"]),
+                        Overall = Convert.ToString(row["outcome"]),
+                        SBUHead = Convert.ToString(row["sbu_head_remarks"]),
                     };
                 }
 

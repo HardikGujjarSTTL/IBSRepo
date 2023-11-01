@@ -32,6 +32,7 @@ namespace IBS.Models
         public string Vcode { get; set; }
         public string ItemDesc { get; set; }
         public string UserName { get; set; }
+        public int Count { get; set; }
 
 
     }
