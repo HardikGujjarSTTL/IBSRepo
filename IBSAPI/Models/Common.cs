@@ -7,6 +7,11 @@ namespace IBSAPI.Models
 {
     public static class Common
     {
+        public const string CommonDateFormate = "{0:MM/dd/yyyy}";
+        public const string CommonDateFormateForJS = "DD-MM-YYYY";
+        public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
+        public const string CommonDateFormate1 = "dd/MM/yyyy";
+
         public static string EncryptQueryString(this String strToEncrypt)
         {
             if (!string.IsNullOrEmpty(strToEncrypt))
@@ -89,6 +94,11 @@ namespace IBSAPI.Models
                        ManufacturerID = v.VendCd,
                    }).ToList();
             return manufacturerModels;
+        }
+
+        public static string ConvertDateFormat(this DateTime dt)
+        {
+            return dt.ToString(Common.CommonDateFormate1);
         }
     }
     public static class DbContextHelper

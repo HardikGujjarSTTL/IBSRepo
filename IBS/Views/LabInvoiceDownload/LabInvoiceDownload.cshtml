@@ -222,12 +222,8 @@
                 "&RegNo=" + encodeURIComponent(RegNo) +
                 "&TranNo=" + encodeURIComponent(TranNo);
 
-            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-            if (oWin === null || typeof (oWin) === 'undefined') {
-                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
-            }
-            window.opener = 'x';
-            window.close();            
+            window.open('@ReportUrl' + QueryString);
+            
         }
         //function UserDelete(UserId) {
         //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;

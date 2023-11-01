@@ -12,7 +12,7 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h3>NON CONFORMITY FORM</h3>
+        <h2>NON CONFORMITY FORM</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="NCRRegister" class="formBtn viewall-btn">View List</a>
@@ -22,7 +22,7 @@
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
             <div class="accordion-body">
-                <div class="row my-0">
+                <div class="row">
                     <input type="text" asp-for="SetRegionCode" id="SetRegionCode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="VEND_CD" id="vendcd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CALLRECVDT" id="CALLRECVDT" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -31,7 +31,7 @@
                     <input type="text" asp-for="Ie_Cd" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CALLSNO" id="CALLSNO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="UserID" id="UserID" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">IC NO.</label>
                             <input type="text" asp-for="IC_NO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
@@ -43,67 +43,67 @@
                             <input type="text" class="input" asp-for="ICDate" readonly="true" id="fromdate" asp-format="{0:dd-MM-yyyy}" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">BK NO.</label>
                             <input type="text" asp-for="BKNo" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Set No.</label>
                             <input type="text" asp-for="SetNo" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Case No.</label>
                             <input type="text" asp-for="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">	Call Date - SNo.</label>
                             <input type="text" asp-for="CALL_SNO" maxlength="100" readonly="true" style="text-transform: uppercase;" asp-format="{0:dd-MM-yyyy}" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Contract No.</label>
                             <input type="text" asp-for="PO_NO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Date</label>
                             <input type="text" asp-for="PO_DT" class="input" readonly="true" maxlength="100" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Vendor</label>
                             <input type="text" asp-for="Vendor" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Inspecting Er.</label>
                             <input type="text" asp-for="IE_SNAME" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Consignee</label>
                             <input type="text" asp-for="CONSIGNEE" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Item</label>
                             <input type="text" asp-for="Item" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Qty Passed</label>
                             <input type="text" asp-for="QtyPassed" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
@@ -111,26 +111,41 @@
                     </div>
                     @if (ViewBag.ShowNCRNO)
                     {
-                        <div class="col-md-2 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="reference">
                                 <label for="Reference">NCR No.</label>
                                 <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" readonly="true" style="text-transform: uppercase;" required>
                             </div>
                         </div>
                     }
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">NCR Date</label>
                             <input type="text" asp-for="NCRDate" id="NCRDate" maxlength="100" class="input" readonly="true" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                         </div>
                     </div>
+                </div>
                     @if (ViewBag.ShowNCRButton)
                     {
-                        <div class="row mt-0">
-                            <div class="col-md-2 mb-3" id="ncrclass">
+                    <div class="row">
+                        <div class="col-lg-12">
+                        <ul class="radioListForm mb-0">
+                        <li>
+                                <input type="radio" id="rdononc" name="drone">
+                                <label for="rdononc" id="rdononc" name="rdononc" runat="server">No NC</label>
+                        </li>
+                        <li>
+                                <input type="radio" id="rdoaddnc" name="drone" checked>
+                                <label for="rdoaddnc" id="rdoaddnc" name="rdononc" runat="server">Add NC</label>
+                        </li>
+                    </ul>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3" id="ncrclass">
                                 <div class="reference">
-                                    <label for="Reference">	NCR Class</label>
-                                    <select asp-for="NCRClass" id="NCRClass" class="form-control" required>
+                                <label for="NCRClass">	NCR Class</label>
+                                    <select asp-for="NCRClass" id="NCRClass" required>
                                         <option value="minor">Minor</option>
                                         <option value="major">Major</option>
                                         <option value="cast">Critical</option>
@@ -138,28 +153,22 @@
                                     <span asp-validation-for="NCRClass" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-5 mb-3" id="ncrcodes">
+                            <div class="col-md-3 mb-3" id="ncrcodes">
                                 <div class="reference">
                                     <label for="Reference">	NCR Code</label>
                                     @Html.DropDownListFor(model => model.NcCdSno, new SelectList(IBS.Models.Common.GetNCCode(), "Value", "Text"), "--Select--", new { id = "NCcode" })
                                     <span asp-validation-for="NCRCode" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-2 mb-3">
-                                <input type="radio" id="rdononc" name="drone">
-                                <label for="rdononc" id="rdononc" name="rdononc" runat="server">No NC</label>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <input type="radio" id="rdoaddnc" name="drone" checked>
-                                <label for="rdoaddnc" id="rdoaddnc" name="rdononc" runat="server">Add NC</label>
-                            </div>
-                            <div class="col-md-5 mb-3">
-                                <div class="reference">
-                                    <input name="ncdesc" id="nccodeother" class="form-control" placeholder="NCR Desc in Case of Others" />
-                                    <span class="text-danger"></span>
-                                </div>
+                            <div class="col-md-3 mb-3">
+                        <div class="reference">
+                                <label for="nccodeother">&nbsp;</label>
+                            <input type="text" name="ncdesc" id="nccodeother" class="form-control" placeholder="NCR Desc in Case of Others" />
+                            <span class="text-danger"></span>
+                        </div>
                             </div>
                         </div>
+                    
 
                     }
 
@@ -174,7 +183,7 @@
                         }
                         <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
                     </div>
-                </div>
+                
                 <section class="table-section" id="tableNCR">
                     <div class="task-listinput">
                         <div class="dash-table">
@@ -251,7 +260,7 @@
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
                         alert(data.alertMessage);
-                        window.location.href = '/NCRRegister/Index';
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
                 } else {
                     // Handle error case if needed
@@ -276,7 +285,7 @@
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
                         alert(data.alertMessage);
-                        window.location.href = '/NCRRegister/Index';
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
                 } else {
                 }
@@ -368,7 +377,7 @@
             success: function (result) {
                 if (result.redirectToIndex === true) {
                     alert(result.alertMessage);
-                    window.location.href = '/NCRRegister/Index';
+                    window.location.href = '@Url.Action("Index", "NCRRegister")';
                 }
 
             },
@@ -462,7 +471,7 @@
     completed = function (response) {
         var res = response.responseJSON;
         ShowHideMsgNew(res.status, res.responseText);
-        window.location.href = "/NCRRegister/Index";
+        window.location.href = '@Url.Action("Index", "NCRRegister")';
     };
 
 </script>
