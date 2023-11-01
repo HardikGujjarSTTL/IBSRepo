@@ -1175,7 +1175,9 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .left-side-collapsed .navBtn{left:70px;}
 .adminInnerContent{ padding:20px 20px 50px 20px;}
 .das1:hover .total-icons, .das2:hover .total-icons, .das3:hover .total-icons, .das4:hover .total-icons,
-.das1Client:hover .total-icons, .das2Client:hover .total-icons, .das3Client:hover .total-icons, .das4Client:hover .total-icons
+.das1Client:hover .total-icons, .das2Client:hover .total-icons, .das3Client:hover .total-icons, .das4Client:hover .total-icons,
+.das5Client:hover .total-icons, .das6Client:hover .total-icons, .das7Client:hover .total-icons, .das8Client:hover .total-icons,
+.das9Client:hover .total-icons, .das10Client:hover .total-icons, .das11Client:hover .total-icons, .das12Client:hover .total-icons
 {-webkit-animation-duration:1s;animation-duration:1s; animation-name:tada; transition: all 0.5s ease;}
 .left-side-collapsed #footer{padding:20px 0 20px 20px;}
 
@@ -1293,7 +1295,6 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .dateSelect{ padding-left:30px; height:35px; background:url(../images/calender-icon-admin.png) no-repeat 10px center;}
 .blueBtn { display: inline-block; vertical-align: top; height: 49px; padding: 0px 20px; text-decoration: none; background: #7194E8; color: #fff; font-size: 15px; border-radius:6px; line-height:49px; }
 .blueBtn:hover { background: #F66A2F; color: #fff; }
-.vendor-dashboard .dashboard-box{ min-height:155px;}
 .fileUploadWrap input[type="file"] { position: absolute; opacity: 0; visibility: hidden; }
 .fileUploadWrap { position: relative; padding-right: 110px; width: 100%; }
 .fileUploadWrap .button { position: absolute; right: 0; top: 0; padding:11px; }
