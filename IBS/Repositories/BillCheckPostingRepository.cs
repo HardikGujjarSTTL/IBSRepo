@@ -200,11 +200,7 @@ namespace IBS.Repositories
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
 
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-            //dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            var result = query.ToList();
-            dTResult.data = result;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
