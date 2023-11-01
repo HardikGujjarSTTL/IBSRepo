@@ -127,13 +127,13 @@
                     @if (ViewBag.ShowNCRButton)
                     {
                         <div class="row mt-0">
-                            <div class="col-md-2 mb-3" id="ncrclass">
+                            <div class="col-md-2 mb-3" id="ncrsclass">
                                 <div class="reference">
                                     <label for="Reference">	NCR Class</label>
                                     <select asp-for="NCRClass" id="NCRClass" class="form-control" required>
-                                        <option value="minor">Minor</option>
-                                        <option value="major">Major</option>
-                                        <option value="cast">Critical</option>
+                                        <option value="A">Minor</option>
+                                        <option value="B">Major</option>
+                                        <option value="C">Critical</option>
                                     </select>
                                     <span asp-validation-for="NCRClass" class="text-danger"></span>
                                 </div>
@@ -163,17 +163,7 @@
 
                     }
 
-                    <div class="savenext-btn">
-                        @if (ViewBag.ShowSaveButton)
-                        {
-                            <button type="button" class="save-btn active btncls Permission_Save" id="btnsave" onclick="Save()">Save</button>
-                        }
-                        @if (ViewBag.ShowRemarksButton)
-                        {
-                            <button type="button" class="save-btn active btncls Permission_Save" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
-                        }
-                        <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
-                    </div>
+                   
                 </div>
                 <section class="table-section" id="tableNCR">
                     <div class="task-listinput">
@@ -195,7 +185,18 @@
                     </div>
 
                 </section>
-
+                <div class="savenext-btn">
+                    @if (ViewBag.ShowSaveButton)
+                    {
+                        <button type="button" class="save-btn active btncls Permission_Save" id="btnsave" onclick="Save()">Save</button>
+                    }
+                    @if (ViewBag.ShowRemarksButton)
+                    {
+                        <button type="button" class="save-btn active btncls Permission_Save" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
+                    }
+                    <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
+                    <button type="button" class="save-btn active btncls" id="btnSaveMoreNC" onclick="SendMoreNC();">Save More NC's</button>
+                </div>
             </div>
 
         </form>
@@ -206,7 +207,7 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
-
+        $("#btnSaveMoreNC").hide();
         var msg = '@Html.Raw(ViewBag.JsonData1)';
         if (msg != '') {
             alert(msg);
@@ -261,6 +262,32 @@
             }
         });
     }
+
+    $('#NCRClass').change(function () {
+
+        var url = '@Url.Action("GetNCRCode", "NCRRegister")';
+
+        var NCRClass = $("#NCRClass").find("option:selected").val();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: NCRClass,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status === true) {
+                    if (data.redirectToIndex === true) {
+                        alert(data.alertMessage);
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
+                    }
+                } else {
+                    // Handle error case if needed
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    });
 
     function SendEmail() {
         var formData = new FormData($("#frmNCRDetails")[0]);
@@ -336,7 +363,7 @@
             if (input1Index !== -1) {
                 modifiedItem.IeAction1 = inputValues1[input1Index].value;
             }
-            else{
+            else {
                 modifiedItem.IeAction1 = "";
             }
 
@@ -344,7 +371,7 @@
             if (input2Index !== -1) {
                 modifiedItem.CoFinalRemarks1 = inputValues2[input2Index].value;
             }
-            else{
+            else {
                 modifiedItem.CoFinalRemarks1 = "";
             }
 
@@ -386,23 +413,27 @@
         $("input[name='drone']").change(function () {
             var selectedValue = $("input[name='drone']:checked").attr("id");
             if (selectedValue === "rdononc") {
-                $("#ncrclass").hide();
+                $("#ncrsclass").hide();
                 $("#ncrcodes").hide();
                 $("#btnsendIE").hide();
                 $("#tableNCR").hide();
+                $("#btnSaveMoreNC").hide();
+                $("#nccodeother").hide();
                 $("#rdononc").prop("checked", true);
             } else if (selectedValue === "rdoaddnc") {
-                $("#ncrclass").show();
+                $("#ncrsclass").show();
                 $("#ncrcodes").show();
                 $("#btnsendIE").show();
                 $("#tableNCR").hide();
+                $("#btnSaveMoreNC").show();
+                $("#nccodeother").show();
                 $("#rdoaddnc").prop("checked", true);
             }
         });
     });
 
     function InitializeDatatable() {
-
+        $("#btnSaveMoreNC").hide();
         var jsonData = '@Html.Raw(ViewBag.JsonData)';
         var data = JSON.parse(jsonData);
 
