@@ -1,4 +1,5 @@
 ﻿using IBSAPI.Interfaces;
+using IBSAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,26 +20,39 @@ namespace IBSAPI.Controllers
         [HttpGet("GetDeparmentList", Name = "GetDeparmentList")]
         public IActionResult GetDeparmentList()
         {
-            var deptList = departmentRepository.GetDepartmentList();
-            if (deptList.Count() > 0)
+            try
             {
-                var response = new
+                var deptList = departmentRepository.GetDepartmentList();
+                if (deptList.Count() > 0)
                 {
-                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                    message = "Data get successfully",
-                    data = deptList
-                };
-                return Ok(response);
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = deptList
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Date Found",
+                    };
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetDeparmentList", "Department", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = "No Date Found",
+                    message = ex.Message.ToString(),
                 };
                 return Ok(response);
-            }
+            }            
         }
     }
 }

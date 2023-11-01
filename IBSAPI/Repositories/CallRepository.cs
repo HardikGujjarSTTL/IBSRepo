@@ -4,11 +4,11 @@ using IBSAPI.Models;
 
 namespace IBSAPI.Repositories
 {
-    public class CallListRepository : ICallListRepository
+    public class CallRepository : ICallRepository
     {
 
         private readonly ModelContext context;
-        public CallListRepository(ModelContext context)
+        public CallRepository(ModelContext context)
         {
             this.context = context;
         }
