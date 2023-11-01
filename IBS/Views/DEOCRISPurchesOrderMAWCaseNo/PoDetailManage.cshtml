@@ -127,7 +127,7 @@
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Value</label>
                         @*<input type="text" class="input" asp-for="DiscountPer" onblur="discountype();" disabled>*@
-                        <input type="number" class="input" asp-for="DiscountPer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="discountype();" disabled>
+                        <input type="number" class="input" asp-for="DiscountPer" min="1" oninput="this.value = Math.min(this.value)" onblur="discountype();" disabled>
                         <span asp-validation-for="DiscountPer" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -148,7 +148,7 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="ExcisePer" onblur="excise();" disabled>*@
-                            <input type="number" class="input" asp-for="ExcisePer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="excise();" disabled>
+                            <input type="number" class="input" asp-for="ExcisePer" min="1" oninput="this.value = Math.min(this.value)" onblur="excise();" disabled>
                             <span asp-validation-for="ExcisePer" class="text-danger"></span>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                         <div class="reference">
                             <label for="Name">GST/Sale Tax(%)</label>
                             @*<input type="text" class="input" asp-for="SalesTaxPer" onblur="saletax();" disabled>*@
-                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="saletax();" disabled>
+                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" oninput="this.value = Math.min(this.value)" onblur="saletax();" disabled>
                             <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="OtChargePer" onblur="othercharges();" disabled>*@
-                            <input type="number" class="input" asp-for="OtChargePer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="othercharges();" disabled>
+                            <input type="number" class="input" asp-for="OtChargePer" min="1" oninput="this.value = Math.min(this.value)" onblur="othercharges();" disabled>
                             <span asp-validation-for="OtChargeType" class="text-danger"></span>
                         </div>
                     </div>
@@ -581,7 +581,7 @@
 
         function total() {
             var txtBaseValue = $.trim($("#BasicValue").val());
-            var txtSaleTaxAmt = $.trim($("#SalesTaxPer").val());
+            var txtSaleTaxAmt = $.trim($("#SalesTax").val());
             var txtExciseAmt = $.trim($("#Excise").val());
             var txtDiscountAmt = $.trim($("#Discount").val());
             var txtOtherChargesAmt = $.trim($("#OtherCharges").val());
