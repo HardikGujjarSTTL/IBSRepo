@@ -1,4 +1,5 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -19,6 +20,8 @@ namespace IBS.Controllers
         [Authorization("NCRRegister", "Index", "view")]
         public IActionResult Index()
         {
+            string Region = SessionHelper.UserModelDTO.Region;
+            ViewBag.Regions = Region;
             return View();
         }
 

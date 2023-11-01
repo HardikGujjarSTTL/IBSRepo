@@ -19,6 +19,7 @@ namespace IBS.Models
         public string? InspRegion { get; set; }
         public string? JiRequired { get; set; }
         public string? NoJIReason { get; set; }
+        public string? NoJiOther { get; set; }
         public byte? JiIeCd { get; set; }
         public string Item { get; set; }
         public string UserId { get; set; }

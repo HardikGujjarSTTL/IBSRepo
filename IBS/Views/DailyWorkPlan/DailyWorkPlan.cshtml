@@ -585,9 +585,9 @@
                         $("#spnNwpDt").html(response.NwpDt);
                         $("#NwpDt").val(response.NwpDt);
                         ReasonClear();
+                        var PlanDt = $('input[name="PlanDt"]:checked').val();
                         ShowHideMsgNew(response.status, response.responseText);
-                        if (response.NwpDt == NwpDt)
-                        {
+                        if (response.NwpDt == PlanDt) {
                             location.reload();
                         }
                     }
