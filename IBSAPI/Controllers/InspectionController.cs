@@ -2,11 +2,12 @@
 using IBSAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Dynamic;
 
 namespace IBSAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]    
+    [Route("[controller]")]
     public class InspectionController : ControllerBase
     {
         #region Varible
@@ -45,14 +46,14 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetTodayInspection", "Inspection", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetTodayInspection", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                     message = ex.Message.ToString(),
                 };
                 return Ok(response);
-            }            
+            }
         }
 
         [HttpGet("GetTomorrowInspection", Name = "GetTomorrowInspection")]
@@ -83,7 +84,45 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetTomorrowInspection", "Inspection", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetTomorrowInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+
+        [HttpGet("GetCaseDetailForIE", Name = "GetCaseDetailForIE")]
+        public IActionResult GetCaseDetailForIE(string Case_No, string CallRecvDt, int CallSNo, int IeCd)
+        {
+            try
+            {
+                var result = inspectionRepository.GetCaseDetailForIE(Case_No, CallRecvDt, CallSNo, IeCd);
+                if(result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetCaseDetailForIE", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,

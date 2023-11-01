@@ -48,7 +48,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetCallList", "Call", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "GetCallList", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
@@ -85,7 +85,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "SheduleInspection", "Call", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "SheduleInspection", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,

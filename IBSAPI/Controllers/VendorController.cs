@@ -47,7 +47,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallList", "GetCaseDetailsforvendor", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Vendor_API", "GetCaseDetailsforvendor", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
@@ -104,7 +104,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallList", "GetCaseDetailsforvendor", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Vendor_API", "GetManufacturerList", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
