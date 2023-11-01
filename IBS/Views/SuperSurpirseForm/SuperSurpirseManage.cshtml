@@ -86,14 +86,24 @@
                         @Html.DropDownListFor(model => model.NameofScope, Common.ItemScope(),"", new { @id="ddlscope"})
                         <span class="text-danger field-validation-error" id="spnError2"></span>
                     </div>
-                   
-                    <div class="col-md-6 mb-3">
-                        <label for="Reference">Item</label>
-                        @Html.DropDownListFor(model => model.Item, Common.GetItemSuperForm(Model.Case_No,Model.CallDt,Model.CallSNo),"", new { @id="ddlitem"})
-                        <span class="text-danger field-validation-error" id="spnError3"></span>
-                        @*<span asp-validation-for="course_name" class="text-danger"></span>*@
-                        <input type="hidden" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
-                    </div>
+                    @if (ViewBag.Count == 0)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <label for="Reference">Item</label>
+                            @Html.DropDownListFor(model => model.Item, Common.GetItemSuperForm(Model.Case_No,Model.CallDt,Model.CallSNo),"", new { @id="ddlitem"})
+                            <span class="text-danger field-validation-error" id="spnError3"></span>
+                            @*<span asp-validation-for="course_name" class="text-danger"></span>*@
+                            <input type="hidden" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 mb-3">
+                            <label for="Reference">Item</label>                           
+                            <input type="text" class="input" asp-for="ItemDesc" readonly="true" id="txtitemdesc">
+                        </div>
+                    }
+                    
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Previous Internal/Consignee Rejection</label>
                         <textarea id="textAreaInput1" asp-for="PreviousInternal"></textarea>
@@ -116,9 +126,13 @@
                         <span class="text-danger field-validation-error" id="spnError7"></span>
                     </div>
                 </div>
-                <div class="savenext-btn">
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                </div>
+                @if (ViewBag.Count == 0)
+                {
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    </div>
+                }
+               
             </div>
         </form>
     </div>
@@ -129,7 +143,16 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(function () {
-
+            var count = '@ViewBag.Count';
+            if(count == 1){
+                $("#ddlsupercm").attr("disabled", true);
+                $("#SuperSurpriseDt").attr("disabled", true);
+                $("#ddlscope").attr("disabled", true);
+                $("#textAreaInput1").attr("disabled", true);
+                $("#textAreaInput2").attr("disabled", true);
+                $("#textAreaInput3").attr("disabled", true);
+                $("#textAreaInput4").attr("disabled", true);
+            }
             $("#ContractNo").val("0");
             $(".datepicker").datepicker({
                 dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"

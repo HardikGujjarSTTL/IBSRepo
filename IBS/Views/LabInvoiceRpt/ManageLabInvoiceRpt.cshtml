@@ -166,7 +166,9 @@
     <script type="text/javascript">
        
         $(function () {
-
+            $("#IGST").val(0);
+            $("#CGST").val(0);
+            $("#SGST").val(0);
             var RegNo = '@ViewBag.RegNo';
              InitializeDatatable(RegNo);
         });
@@ -311,7 +313,7 @@
            
             if ($("#txttestingfee").val() == "") {
                 $("#IGST").val("0");
-                alert("Kindly Fill the Amount");
+                //alert("Kindly Fill the Amount");
                 return false;
             } else {
                 AMT_TOT = parseFloat($("#txttestingfee").val());

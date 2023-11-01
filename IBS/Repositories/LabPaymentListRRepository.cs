@@ -141,7 +141,7 @@ namespace IBS.Repositories
                     DataRow row = ds.Tables[0].Rows[0];
                     model = new LabPaymentListModel
                     {
-                        GrossTestingChargesLab = row["testing_charges_lab"] as string, // Replace "Property1" with the actual column name in the table
+                        GrossTestingChargesLab = Convert.ToString(row["testing_charges_lab"]), // Replace "Property1" with the actual column name in the table
                         NetTestingChargesVend = Convert.ToString(row["testing_charges_vend"]),
                         TDS = Convert.ToString(row["TDS"]),
                         CaseNo = CaseNo,
