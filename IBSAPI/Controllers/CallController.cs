@@ -58,7 +58,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("SheduleInspection", Name = "SheduleInspection")]
+        [HttpPost("SheduleInspection", Name = "SheduleInspection")]
         public IActionResult SheduleInspection([FromBody] SheduleInspectionRequestModel sheduleInspectionRequestModel)
         {
             try
