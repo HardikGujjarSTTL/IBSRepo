@@ -87,7 +87,7 @@ ul.bulletText { list-style: none; padding: 0; }
 ul.bulletText li { padding: 2px 0 2px 15px; }
 ul.bulletText li:before{font-family: "FontAwesome"; content:"\f105";}
 p, h1, h2, h3, h4, h5, h6, ul, ol, dd, table, fieldset, address { margin: 0 0 25px; }
-input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], select, textarea { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding: 3px 10px; width: 100%; color: #838d94; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], select, textarea { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding: 3px 10px; width: 100%; color: #222; }
 input[type="submit"], input[type="button"], input[type="reset"], button, .button { background-color: #F66A2F; color: #fff; border: 1px solid #F66A2F; border-radius: 0; }
 input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, button:hover, .button:hover { color: #fff; background-color: #008B29; border-color: #008B29; }
 input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="reset"].cancelBtn { background-color: #888; border-color: #444; }
@@ -1069,7 +1069,7 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .custom-tab .nav-tabs .nav-link:hover:first-child { border-radius: 0; }
 .custom-tab .tab-pane { border: none; }
 .company .customSelectOuter { width: 100%; }
-.reference label { color: #555555; }
+.reference label { color: #222; }
 .company-checkbox { display: flex; align-items: center; height: 100%; margin-top: 10px; }
 .company-checkbox .remecheckbox { font-weight: 400; color: #555555; }
 .company .customSelectOuter { width: 100%; overflow: hidden; position: relative; }
