@@ -45,19 +45,18 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetCaseDetailsforvendor", Name = "GetCaseDetailsforvendor")]
-        public IActionResult GetCaseDetailsforvendor(int UserID)
+        [HttpGet("SheduleInspection", Name = "SheduleInspection")]
+        public IActionResult SheduleInspection([FromBody] SheduleInspectionRequestModel sheduleInspectionRequestModel)
         {
             try
             {
-                List<CallRegiModel> callRegiModels = callListRepository.GetCaseDetailsforvendor(UserID);
-                if (callRegiModels.Count() > 0)
+                int id = callListRepository.SheduleInspection(sheduleInspectionRequestModel);
+                if (id > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                        message = "Successfully",
-                        data = callRegiModels
+                        message = "Successfully"
                     };
                     return Ok(response);
                 }
@@ -73,7 +72,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallList", "GetCaseDetailsforvendor", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SheduleInspection", "CallList", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
@@ -82,5 +81,6 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+
     }
 }

@@ -78,6 +78,7 @@ namespace IBS.Controllers
         {
             model.Region = GetRegionCode;
             model.UserId = UserId.ToString();
+            string Msg1 = "Add Successfully.";
             try
             {
                 string msg = "Generate Lab Invoice Successfully.";
@@ -87,6 +88,10 @@ namespace IBS.Controllers
                 if (i != "0")
                 {
                     return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    return Json(new { status = true, responseText = Msg1, Id = i });
                 }
             }
             catch (Exception ex)

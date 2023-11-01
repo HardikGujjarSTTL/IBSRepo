@@ -27,34 +27,59 @@ namespace IBSAPI.Repositories
             return lst;
         }
 
-        public List<CallRegiModel> GetCaseDetailsforvendor(int UserID)
+        public int SheduleInspection(SheduleInspectionRequestModel sheduleInspectionRequestModel)
         {
-            List<CallRegiModel> lst = new();
-
-            lst = (from x in context.T17CallRegisters
-                  join y in context.T13PoMasters on x.CaseNo equals y.CaseNo
-                  join p in context.V06Consignees on y.PurchaserCd equals p.ConsigneeCd
-                   join v in context.T05Vendors on y.VendCd equals v.VendCd
-                   join cs in context.T21CallStatusCodes on x.CallStatus equals cs.CallStatusCd
-                   join ie in context.T09Ies on x.IeCd equals ie.IeCd
-                   where x.MfgCd == UserID
-                   select new CallRegiModel
-                   {
-                       CaseNo = x.CaseNo,
-                       CallDate = x.Datetime,
-                       CallSNo = x.CallSno,
-                       Purchaser = p.Consignee,
-                       Vendor = v.VendName,
-                       PurchaseOrderDate=y.PoDt,
-                       PurchaseOrderNo = y.PoNo,
-                       CallStatus = cs.CallStatusDesc,
-                       Region = x.RegionCode,
-                       PlaceofInspection = x.MfgPlace,
-                       ContactPersonName = ie.IeName,
-                       ManufacturerEmail = ie.IeEmail,
-                       PhoneNumber = ie.IePhoneNo,
-                   }).ToList();
-            return lst;
+            int ID = 0;
+            var query = (from t17 in context.T17CallRegisters
+                         join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                         join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                         where t17.CaseNo == sheduleInspectionRequestModel.CaseNo && t17.CallRecvDt == sheduleInspectionRequestModel.CallRecvDt 
+                         && t17.CallSno == sheduleInspectionRequestModel.CallSno
+                         select new
+                         {
+                             t17.CaseNo,
+                             t17.CallRecvDt,
+                             t17.CallSno,
+                             t17.CallStatus,
+                             t17.MfgCd,
+                             t17.MfgPlace,
+                             t17.IeCd,
+                             t17.CoCd,
+                             t03.CityCd,
+                             t03.City,
+                             t17.DtInspDesire
+                         }).FirstOrDefault();
+            if (query != null)
+            {
+                if (sheduleInspectionRequestModel.CaseNo != null && sheduleInspectionRequestModel.CallRecvDt != null && sheduleInspectionRequestModel.CallSno > 0)
+                {
+                    
+                    T47IeWorkPlan obj = new T47IeWorkPlan();
+                    obj.IeCd = query.IeCd;
+                    obj.CoCd = Convert.ToByte(query.CoCd);
+                    if (sheduleInspectionRequestModel.InspectionDay == "TD")
+                    {
+                        obj.VisitDt = Convert.ToDateTime(DateTime.Now);
+                    }
+                    else if(sheduleInspectionRequestModel.InspectionDay == "TM")
+                    {
+                        obj.VisitDt = Convert.ToDateTime(DateTime.Now.AddDays(1));
+                    }
+                    obj.CaseNo = query.CaseNo;
+                    obj.CallRecvDt = query.CallRecvDt;
+                    obj.CallSno = query.CallSno;
+                    obj.MfgCd = query.MfgCd;
+                    obj.MfgPlace = query.MfgPlace;
+                    obj.RegionCode = sheduleInspectionRequestModel.RegionCode;
+                    obj.UserId = sheduleInspectionRequestModel.UserId;
+                    obj.Datetime = DateTime.Now;
+                    context.T47IeWorkPlans.Add(obj);
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(obj.CallSno);
+                }
+            }
+            return ID;
         }
+
     }
 }
