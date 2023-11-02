@@ -7,6 +7,6 @@ namespace IBSAPI.Interfaces
         List<TodayInspectionModel> GetToDayInspection(int IeCd);
         List<TomorrowInspectionModel> GetTomorrowInspection(int IeCd);
         List<PendingInspectionModel> GetPendingInspection(int IeCd, string Region, string CurrDate);
-        CaseDetailIEModel GetCaseDetailForIE(string Case_No, string CallRecvDt, int CallSNo, int IeCd);
+        CaseDetailIEModel GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd);
     }
 }

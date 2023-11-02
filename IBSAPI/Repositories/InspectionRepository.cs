@@ -4,6 +4,10 @@ using IBSAPI.Models;
 using System.Globalization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Numerics;
+using Oracle.ManagedDataAccess.Client;
+using IBSAPI.Helper;
+using Newtonsoft.Json;
+using System.Data;
 
 namespace IBSAPI.Repositories
 {
@@ -114,67 +118,24 @@ namespace IBSAPI.Repositories
                    }).ToList();
             return lst;
         }
-        public CaseDetailIEModel GetCaseDetailForIE(string Case_No, string CallRecvDt, int CallSNo, int IeCd)
+        public CaseDetailIEModel GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd)
         {
-            var query = (from x in context.T17CallRegisters
-                         join t18 in context.T18CallDetails
-                              on new { x.CaseNo, x.CallRecvDt, x.CallSno }
-                              equals new { t18.CaseNo, t18.CallRecvDt, t18.CallSno }
-                         join y in context.T13PoMasters on x.CaseNo equals y.CaseNo
-                         join p in context.V06Consignees on y.PurchaserCd equals p.ConsigneeCd
-                         join v in context.T05Vendors on y.VendCd equals v.VendCd
-                         join cs in context.T21CallStatusCodes on x.CallStatus equals cs.CallStatusCd
-                         join ie in context.T09Ies on x.IeCd equals ie.IeCd
-                         join ct in context.T03Cities on v.VendCityCd equals ct.CityCd
-                         where x.IeCd == IeCd//670
-                             && x.CaseNo == Case_No//"N21080776"
-                             && x.CallRecvDt == DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null)  //"20-08-22"
-                             && x.CallSno == CallSNo //13
-                         group new
-                         {
-                             x.CaseNo,
-                             x.CallRecvDt,
-                             x.CallSno,
-                             //t18.QtyToInsp,
-                             v.VendName,
-                             v.VendCd,
-                             ct.City,
-                             y.PoDt,
-                             y.PoNo,
-                             cs.CallStatusDesc,
-                             ie.IeEmail,
-                             ie.IePhoneNo
-                         } by new
-                         {
-                             x.CaseNo,
-                             x.CallRecvDt,
-                             x.CallSno,
-                             //t18.QtyToInsp,
-                             v.VendName,
-                             v.VendCd,
-                             ct.City,
-                             y.PoDt,
-                             y.PoNo,
-                             cs.CallStatusDesc,
-                             ie.IeEmail,
-                             ie.IePhoneNo
-                         } into grouped
-                         select new CaseDetailIEModel
-                         {
-                             Case_No = grouped.Key.CaseNo,
-                             Call_Recv_DT = grouped.Key.CallRecvDt,
-                             Call_SNo = grouped.Key.CallSno,
-                             //Qty = grouped.Sum(item => item.QtyToInsp),
-                             Vendor = grouped.Key.VendName,
-                             Vendor_Code = Convert.ToString(grouped.Key.VendCd),
-                             Vendor_City = grouped.Key.City,
-                             PO_DT = grouped.Key.PoDt,
-                             PO_No = grouped.Key.PoNo,
-                             Status = grouped.Key.CallStatusDesc,
-                             EMail = grouped.Key.IeEmail,
-                             MobileNo = grouped.Key.IePhoneNo
-                         }).FirstOrDefault();
-            return query;
+            CaseDetailIEModel caseDetailIEModel= new CaseDetailIEModel();
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_IeCd", OracleDbType.Int32, IeCd, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Case_No", OracleDbType.Varchar2, Case_No, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CALL_RECV_DT", OracleDbType.Date, CallRecvDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_CALL_SNO", OracleDbType.Int32, CallSNo, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GetCaseDetailForIE_API", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                caseDetailIEModel = JsonConvert.DeserializeObject<List<CaseDetailIEModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
+            }
+            return caseDetailIEModel;
         }
     }
 }

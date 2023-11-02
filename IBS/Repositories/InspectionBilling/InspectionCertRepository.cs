@@ -277,23 +277,26 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.FirstInspDt = Convert.ToDateTime(WorkPlans.FIRST_INSP_DT);
                         model.LastInspDt = Convert.ToDateTime(WorkPlans.LAST_INSP_DT);
-                        if (GetIC.ic.LabTstRectDt != null && model.LastInspDt != null)
+                        if (GetIC != null)
                         {
-                            string myYear, myMonth, myDay;
-                            myYear = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(6, 4);
-                            myMonth = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(3, 2);
-                            myDay = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(0, 2);
-                            string dt = myYear + myMonth + myDay;
-
-                            string myYear1, myMonth1, myDay1;
-                            myYear1 = Convert.ToString(model.LastInspDt).Substring(6, 4);
-                            myMonth1 = Convert.ToString(model.LastInspDt).Substring(3, 2);
-                            myDay1 = Convert.ToString(model.LastInspDt).Substring(0, 2);
-                            string dt1 = myYear1 + myMonth1 + myDay1;
-                            int i = dt.CompareTo(dt1);
-                            if (i > 0)
+                            if (GetIC.ic.LabTstRectDt != null && model.LastInspDt != null)
                             {
-                                model.LastInspDt = Convert.ToDateTime(GetIC.ic.LabTstRectDt);
+                                string myYear, myMonth, myDay;
+                                myYear = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(6, 4);
+                                myMonth = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(3, 2);
+                                myDay = Convert.ToString(GetIC.ic.LabTstRectDt).Substring(0, 2);
+                                string dt = myYear + myMonth + myDay;
+
+                                string myYear1, myMonth1, myDay1;
+                                myYear1 = Convert.ToString(model.LastInspDt).Substring(6, 4);
+                                myMonth1 = Convert.ToString(model.LastInspDt).Substring(3, 2);
+                                myDay1 = Convert.ToString(model.LastInspDt).Substring(0, 2);
+                                string dt1 = myYear1 + myMonth1 + myDay1;
+                                int i = dt.CompareTo(dt1);
+                                if (i > 0)
+                                {
+                                    model.LastInspDt = Convert.ToDateTime(GetIC.ic.LabTstRectDt);
+                                }
                             }
                         }
                     }
@@ -494,8 +497,8 @@ namespace IBS.Repositories.InspectionBilling
             var MaxVal = context.T14aPoNonrlies.Where(x => x.CaseNo == model.Caseno).FirstOrDefault();
             if (MaxVal != null)
             {
-                model.MaxFee = Convert.ToInt16(MaxVal.MaxFee);
-                model.MinFee = Convert.ToInt16(MaxVal.MinFee);
+                model.MaxFee = Convert.ToInt32(MaxVal.MaxFee);
+                model.MinFee = Convert.ToInt32(MaxVal.MinFee);
             }
         }
 
@@ -711,8 +714,8 @@ namespace IBS.Repositories.InspectionBilling
                             model.TMValue = query3.MaterialValue;
                             model.TIFee = query3.InspFee;
                             model.NetFee = query3.BillAmount;
-                            model.MaxFee = Convert.ToInt16(query3.MaxFee);
-                            model.MinFee = Convert.ToInt16(query3.MinFee);
+                            model.MaxFee = Convert.ToInt32(query3.MaxFee);
+                            model.MinFee = Convert.ToInt32(query3.MinFee);
                             model.BillDt = query3.BillDt;
                             model.Remarks = query3.Remarks;
                             model.InvoiceNo = query3.InvoiceNo;
