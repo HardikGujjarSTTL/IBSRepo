@@ -79,7 +79,7 @@
                         string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", CallStausF = "";
                         @foreach (var item in Model.ReportLstNew)
                         {
-                            wSelect = Url.Action("CallsMarkedToIE", "CallsMarkedToIE") + "?CaseNo=" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&IeCd=" + @item.IE_CD + "&ActionType=C&type=C";
+                            wSelect = Url.Action("CallStatus", "CallRegisterIB") + "?CaseNo=" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&IeCd=" + @item.IE_CD + "&ActionType=C&type=C";
 
                             wPrint = Url.Action("PrintCallletter", "VendorCallRegister") + "?CaseNo=" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&type=C";
 
