@@ -112,7 +112,7 @@ namespace IBS.Repositories.Reports
                     model.BILL_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
                     model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
                     model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
-                    model.TOTAL_TDS = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_TDS"]);
+                    //model.TOTAL_TDS = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_TDS"]);
                     model.RETENTION_MONEY = Convert.ToString(ds.Tables[0].Rows[0]["RETENTION_MONEY"]);
                     model.WRITE_OFF_AMT = Convert.ToString(ds.Tables[0].Rows[0]["WRITE_OFF_AMT"]);
                     model.AMOUNT_POSTED = Convert.ToString(ds.Tables[0].Rows[0]["AMOUNT_POSTED"]);
@@ -127,7 +127,18 @@ namespace IBS.Repositories.Reports
                     model.VENDOR = Convert.ToString(ds.Tables[0].Rows[0]["VENDOR"]);
                     model.IE = Convert.ToString(ds.Tables[0].Rows[0]["IE"]);
                     model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
-                    model.LO_REMARKS = Convert.ToString(ds.Tables[0].Rows[0]["LO_REMARKS"]);                   
+                    model.LO_REMARKS = Convert.ToString(ds.Tables[0].Rows[0]["LO_REMARKS"]);
+                    model.I_TAX_TDS = Convert.ToString(ds.Tables[0].Rows[0]["I_TAX_TDS"]);
+                    model.GST_TDS = Convert.ToString(ds.Tables[0].Rows[0]["GST_TDS"]);
+                    model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
+                    model.IC_NO = Convert.ToString(ds.Tables[0].Rows[0]["IC_NO"]);
+                    model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
+                    model.RECIPIENT_GSTIN_NO = Convert.ToString(ds.Tables[0].Rows[0]["RECIPIENT_GSTIN_NO"]);
+                    model.CHQ_DT = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_DT"]);
+                    model.NARRATION = Convert.ToString(ds.Tables[0].Rows[0]["NARRATION"]);
+                    model.Amount = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_AMT"]);
+                    model.CNOTE_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_AMOUNT"]);
+                    model.CNOTE_NUMBER = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_BILL_NO"]);
                 }
                 model.lstBPOReport = lstlab;
             }
