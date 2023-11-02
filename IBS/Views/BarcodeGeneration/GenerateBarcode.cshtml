@@ -1,20 +1,20 @@
 ﻿<div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6" id="barcode">
-       
         @foreach (var imageUrl in ViewBag.QrCodeUris)
         {
             <img src="@imageUrl" alt="Generated Barcode" />
         }
-       
     </div>
-</div> 
+</div>
+
 @section scripts{
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
         $(document).ajaxSend(function () {
             $(".overlayLoader").show();
         });
@@ -22,9 +22,11 @@
         $(document).ajaxComplete(function () {
             $(".overlayLoader").hide();
         });
+
         $(function () {
             generatePdf(true);
         });
+
         function generatePdf(isPrint) {
             var HTML = $('#barcode').html();
 
