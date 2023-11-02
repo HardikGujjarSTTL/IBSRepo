@@ -12,6 +12,7 @@
     <form role="form" asp-controller="BillCheckPosting" asp-action="Index" id="frmDetails">
         <input type="hidden" asp-for="BpoCd" />
         <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="AccCd" />
 
         <div class="accordion-body">
             <div class="row my-0">
@@ -76,7 +77,7 @@
                     <span asp-validation-for="AmtTransferred" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Un-Adjusted Advance </label>
+                    <label for="Reference" id="lblSuspenseAmt"></label>
                     <input type="text" class="input" asp-for="SuspenseAmt" readonly>
                     <span asp-validation-for="SuspenseAmt" class="text-danger"></span>
                 </div>
@@ -254,22 +255,23 @@
             $("#VcharDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#BillDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
 
+
+
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
-            if(actiontype == "M")
-            {
+            if (actiontype == "M") {
                 $(".SearchDetails").css("display", "block");
                 $(".BillDetails").css("display", "block");
                 $(".SearchDetailsBillInvoice").css("display", "none");
                 InitializeDatatable();
             }
-            else
-            {
+            else {
                 $(".SearchDetailsBillInvoice").css("display", "none");
             }
         });
 
         function Search() {
+
             var BankCd = $("#BankName").val();
             var ChqNo = $("#ChqNo").val();
             var ChqDt = moment($('#ChqDt').datepicker('getDate')).format("YYYY-MM-DD");
@@ -306,7 +308,7 @@
                         $(".SearchDetails").css("display", "block");
                         $(".SearchDetailsBillInvoice").css("display", "block");
                         $(".BillDetails").css("display", "none");
-                        
+
                         $("#VcharNo").val(success.VcharNo)
                         $("#VcharDt").val(moment(success.VcharDt).format("DD/MM/YYYY"))
                         $("#ChqAmount").val(success.ChqAmount)
@@ -314,7 +316,14 @@
                         $("#Bpo").val(success.Bpo)
                         $("#AmtTransferred").val(success.AmtTransferred)
                         $("#SuspenseAmt").val(success.SuspenseAmt)
-                        
+                        $("#AccCd").val(success.AccCd)
+                        if (success.AccCd == "2709") {
+                            $("#lblSuspenseAmt").html("Un-Adjusted Advance");
+                        }
+                        else
+                        {
+                            $("#lblSuspenseAmt").html("Suspense Amount");
+                        }
                     }
                     else {
                         $(".SearchDetails").css("display", "none");
@@ -362,7 +371,7 @@
                             $(".SearchDetails").css("display", "block");
                             $(".BillDetails").css("display", "block");
                             $(".SearchDetailsBillInvoice").css("display", "block");
-                            
+
                             $("#BillNo").val(success.BillNo)
                             $("#BillDt").val(moment(success.BillDt).format("DD/MM/YYYY"))
                             $("#BillAmount").val(success.BillAmount)
@@ -416,7 +425,7 @@
         }
 
         function InitializeDatatable() {
-            
+
             var BankName = $("#BankName").val();
             var ChqNo = $("#ChqNo").val();
             var ChqDt = $("#ChqDt").val();
@@ -465,7 +474,7 @@
 
                             var editUrl = '@Url.Action("Index", "BillCheckPosting")?ChqNo=' + ChqNo + "&ChqDt=" + ChqDt + "&BankName=" + BankName + "&BillNo=" + BillNo + "&AmountCleared=" + AmountCleared + "&ActionType=M";
                             var html = "<td width='10%' valign='top' align='center'>";
-                            html += "<a href='" + editUrl + "' Font-Names='Verdana' Font-Size='8pt'>" + BillNo +"</a><br/>";
+                            html += "<a href='" + editUrl + "' Font-Names='Verdana' Font-Size='8pt'>" + BillNo + "</a><br/>";
                             html += "</td>";
                             return html;
                         }
@@ -505,16 +514,13 @@
             });
         }
 
-        function BillTDS()
-        {
+        function BillTDS() {
             var ChqNo = $("#ChqNo").val();
             var ChqDt = $("#ChqDt").val();
-            if ($("#ChqNo").val() != null && $("#ChqDt").val() != null)
-            {
+            if ($("#ChqNo").val() != null && $("#ChqDt").val() != null) {
                 window.location.href = '@Url.Action("Index", "TDSEntry")' + '?CHQ_NO=' + ChqNo + "&CHQ_DATE=" + ChqDt;
             }
-            else
-            {
+            else {
                 ShowHideMsgNew(false, "Please add Cheque No. & Cheque Date.");
             }
         }

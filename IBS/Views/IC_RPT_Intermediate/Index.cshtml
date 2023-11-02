@@ -1,8 +1,8 @@
 ﻿@model IBS.Models.IC_RPT_IntermediateModel;
 @{
     ViewData["Title"] = "IC REPORT EDIT FORM";
-    string clsView = "";    
-    clsView = "Permission_View";    
+    string clsView = "";
+    clsView = "Permission_View";
     string ReportUrl = ViewBag.ReportUrl;
 }
 
@@ -319,7 +319,7 @@
             }
 
             $("#CONSIGNEE_CD").change(function () {
-                
+
                 $("#BK_NO").val("");
                 $("#SET_NO").val("");
                 Reset();
@@ -370,7 +370,7 @@
 
             InitializationPOAmendment();
             SetAccepted();
-            
+
             if ("@Model.CONSIGNEE_CD" != "" || "@Model.CONSIGNEE_CD" != null) { $("#CONSIGNEE_CD").val("@Model.CONSIGNEE_CD"); }
 
             $("#btnCancel").css("cursor", "pointer");
@@ -395,8 +395,8 @@
                 "&Region=" + encodeURIComponent(Region) +
                 "&BkNo=" + encodeURIComponent(BkNo) +
                 "&SetNo=" + encodeURIComponent(SetNo);
-                
-            window.open('@ReportUrl' + QueryString, '_blank');
+
+            window.open('@ReportUrl' + QueryString);            
         }
 
         function lstman() {
@@ -753,7 +753,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    
+
                     if (response != null) {
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
@@ -783,7 +783,7 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    
+
                     if (response != null) {
                         $("#ITEM_DESC_PO").val(response.ITEM_DESC_PO);
                         $("#ITEM_REMARK").val(response.ITEM_REMARK);
@@ -855,8 +855,8 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    
-                    if (parseInt(response) > 0) {                        
+
+                    if (parseInt(response) > 0) {
                         $("#btnSave").prop('disabled', true);
                         $("#btnRefresh").prop('disabled', true);
                         $("#btnSavePOAmendment").prop('disabled', true);
@@ -866,7 +866,7 @@
                         $('#btnSavePOAmendment').addClass('disabled-button'); //$("#btnSavePOAmendment").css("cursor", "auto");
 
                         $(".edit").css("display", "none");
-                        $(".delete").css("display", "none");                                               
+                        $(".delete").css("display", "none");
                     } else {
                         $("#btnSave").prop('disabled', false);
                         $("#btnRefresh").prop('disabled', false);
@@ -930,7 +930,7 @@
         }
 
         function RemoveSpecialChar(id) {
-            
+
             var Name = "#" + id;
             var value = $(Name).val();
             var desired = value.replace(/[ ](?=[ ])|[^-~`!#$%^&*()=+:/\\;<,>.?_A-Za-z0-9 ]+/g, ' ');
@@ -940,7 +940,7 @@
         }
 
         function checkTextAreaMaxLength(textBox, e, length) {
-            
+
             var mLen = textBox["MaxLength"];
             if (null == mLen)
                 mLen = length;

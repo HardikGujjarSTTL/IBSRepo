@@ -9,48 +9,61 @@ namespace IBSAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class CallListController : ControllerBase
+    public class CallController : ControllerBase
     {
         #region Variable
-        private readonly ICallListRepository callListRepository;
+        private readonly ICallRepository callRepository;
         #endregion
 
-        public CallListController(ICallListRepository _callListRepository)
+        public CallController(ICallRepository _callRepository)
         {
-            callListRepository = _callListRepository;
+            callRepository = _callRepository;
         }
 
         [HttpGet("GetCallList", Name = "GetCallList")]
         public IActionResult GetCallList()
         {
-            List<CallListModel> callList = callListRepository.GetCallList();
-            if (callList.Count() > 0)
+            try
             {
-                var response = new
+                List<CallListModel> callList = callRepository.GetCallList();
+                if (callList.Count() > 0)
                 {
-                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                    message = "Data get successfully",
-                    data = callList
-                };
-                return Ok(response);
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = callList
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                    };
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetCallList", "Call", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = "No Data Found",
+                    message = ex.Message.ToString(),
                 };
                 return Ok(response);
             }
         }
 
-        [HttpGet("SheduleInspection", Name = "SheduleInspection")]
+        [HttpPost("SheduleInspection", Name = "SheduleInspection")]
         public IActionResult SheduleInspection([FromBody] SheduleInspectionRequestModel sheduleInspectionRequestModel)
         {
             try
             {
-                int id = callListRepository.SheduleInspection(sheduleInspectionRequestModel);
+                int id = callRepository.SheduleInspection(sheduleInspectionRequestModel);
                 if (id > 0)
                 {
                     var response = new
@@ -72,7 +85,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "SheduleInspection", "CallList", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SheduleInspection", "Call", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
@@ -81,6 +94,5 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
-
     }
 }

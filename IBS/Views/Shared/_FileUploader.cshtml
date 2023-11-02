@@ -500,7 +500,7 @@ else
                             $('#ValidationMSG_' + ControlID).html(result.MessageText);
                             $('#Brw_' + ControlID).val('');
                             $('#Loader_' + ControlID).hide();
-
+                            $('.overlayLoader').hide();
                             return LoadNotificationJson(result.AlterStyle, result.MessageText);
                         }
                         else if (result != null) {
