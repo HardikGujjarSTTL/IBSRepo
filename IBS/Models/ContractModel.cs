@@ -1,13 +1,14 @@
-﻿using System.Composition;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Composition;
 
 namespace IBS.Models
 {
     public class ContractModel
     {
         public int ContractId { get; set; }
-
+        [Required(ErrorMessage = "Name of Client No is required")]
         public string? ClientName { get; set; }
-
+        
         public string? ContractNo { get; set; }
 
         public DateTime? ContPerFrom { get; set; }

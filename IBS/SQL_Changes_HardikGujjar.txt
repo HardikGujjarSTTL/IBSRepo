@@ -1061,7 +1061,6 @@ ADD CONSTRAINT T66_TECH_REF_pk PRIMARY KEY (ID);
 ) AS
     w_YY VARCHAR2(500);
     w_ctr VARCHAR2(500);
-    w_sno VARCHAR2(500) := null;
     my_exception exception;
 
 BEGIN
