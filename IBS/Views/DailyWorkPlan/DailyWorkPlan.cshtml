@@ -12,6 +12,7 @@
     <div class="accordion-body">
         <input type="hidden" asp-for="ReasonDt" />
         <input type="hidden" asp-for="NwpDt" />
+        <input type="hidden" asp-for="errcode" />
         <input type="hidden" asp-for="Display_NwpDt" />
         <input type="hidden" id="checkedWork" name="checkedWork" />
         <input type="hidden" id="ActionType" asp-for="ActionType" />
@@ -216,6 +217,15 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#FromDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
+            if($("#errcode").val() != 1)
+            {
+                $("#InspWorkType_Y").attr('checked', 'checked');
+                $(".secInspectionWork").show();
+                $(".secNonInspectionWork").hide();
+                InitializeDatatable();
+                InitializeDatatableCurrentDay();
+            }
 
             $('input[name="InspWorkType"]').on('change', function () {
                 var InspWorkType = $(this).val();
