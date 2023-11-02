@@ -94,6 +94,7 @@ namespace IBS.Controllers
 
                 model.Createdby = UserId;
                 model.UserId = Convert.ToString(UserId);
+                model.IeRegion = Region;
                 string i = inspectionEngineers.DetailsInsertUpdate(model);
                 if (i != "Exists")
                 {
@@ -236,7 +237,7 @@ namespace IBS.Controllers
         {
             try
             {
-                string MCode = inspectionEngineers.GetMatch(IeCd, GetRegionCode);
+                string MCode = inspectionEngineers.GetMatch(IeCd, Region);
                 return Json(new { status = true, MCode = MCode });
             }
             catch (Exception ex)
@@ -270,6 +271,28 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "VenderCallRegisterModel", "DetailsDelete", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetUserID(string IeEmpNo)
+        {
+            try
+            {
+                string UserId = inspectionEngineers.GetUserID(IeEmpNo);
+                if(UserId == "1")
+                {
+                    return Json(new { status = true, responseText = "Already Existing!!!." });
+                }
+                else
+                {
+                    return Json(new { status = false, responseText = "" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "GetUserID", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" id="frmNCRDetails">
     
     <div class="accordion-body" id="BYIE">
         <div class="row my-0">
@@ -109,12 +109,6 @@
             validationSpan.hide();
             ieCdValidationSpan.hide();
         }
-
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/NCRRegister/Index";
-        };
 
 
          function InitializeDatatable() {

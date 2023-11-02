@@ -23,14 +23,14 @@
         <form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
             <div class="accordion-body">
                 <div class="row">
-                    <input type="text" asp-for="SetRegionCode" id="SetRegionCode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="VEND_CD" id="vendcd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CALLRECVDT" id="CALLRECVDT" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CONSIGNEECD" id="CONSIGNEECD" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="Item_Srno_no" id="Item_Srno_no" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="Ie_Cd" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CALLSNO" id="CALLSNO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="UserID" id="UserID" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="SetRegionCode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="VEND_CD" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CALLRECVDT"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CONSIGNEECD"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Item_Srno_no"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Ie_Cd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CALLSNO"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="UserID" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">IC NO.</label>
@@ -40,7 +40,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">IC Date</label>
-                            <input type="text" class="input" asp-for="ICDate" readonly="true" id="fromdate" asp-format="{0:dd-MM-yyyy}" required>
+                            <input type="text" class="input" asp-for="ICDate" readonly="true" asp-format="{0:dd-MM-yyyy}" required>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -121,7 +121,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">NCR Date</label>
-                            <input type="text" asp-for="NCRDate" id="NCRDate" maxlength="100" class="input" readonly="true" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
+                            <input type="text" asp-for="NCRDate"  maxlength="100" class="input" readonly="true" asp-format="{0:dd-MM-yyyy}" style="text-transform: uppercase;" required>
                         </div>
                     </div>
                 </div>
@@ -132,11 +132,11 @@
                         <ul class="radioListForm mb-0">
                         <li>
                                 <input type="radio" id="rdononc" name="drone">
-                                <label for="rdononc" id="rdononc" name="rdononc" runat="server">No NC</label>
+                                <label for="rdononc" name="rdononc" runat="server">No NC</label>
                         </li>
                         <li>
                                 <input type="radio" id="rdoaddnc" name="drone" checked>
-                                <label for="rdoaddnc" id="rdoaddnc" name="rdononc" runat="server">Add NC</label>
+                                <label for="rdoaddnc" name="rdononc" runat="server">Add NC</label>
                         </li>
                     </ul>
                         </div>
@@ -146,9 +146,9 @@
                                 <div class="reference">
                                 <label for="NCRClass">	NCR Class</label>
                                     <select asp-for="NCRClass" id="NCRClass" required>
-                                        <option value="minor">Minor</option>
-                                        <option value="major">Major</option>
-                                        <option value="cast">Critical</option>
+                                        <option value="A">Minor</option>
+                                        <option value="B">Major</option>
+                                        <option value="C">Critical</option>
                                     </select>
                                     <span asp-validation-for="NCRClass" class="text-danger"></span>
                                 </div>
@@ -156,8 +156,9 @@
                             <div class="col-md-3 mb-3" id="ncrcodes">
                                 <div class="reference">
                                     <label for="Reference">	NCR Code</label>
-                                    @Html.DropDownListFor(model => model.NcCdSno, new SelectList(IBS.Models.Common.GetNCCode(), "Value", "Text"), "--Select--", new { id = "NCcode" })
-                                    <span asp-validation-for="NCRCode" class="text-danger"></span>
+                                    <select asp-for="NcCdSno" class="form-control" required></select>
+                                    @*                                  @Html.DropDownListFor(model => model.NcCdSno, new SelectList(IBS.Models.Common.GetNCCode(), "Value", "Text"), "--Select--", new { id = "NCcode" })
+                                *@  <span asp-validation-for="NCRCode" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
@@ -172,18 +173,6 @@
 
                     }
 
-                    <div class="savenext-btn">
-                        @if (ViewBag.ShowSaveButton)
-                        {
-                            <button type="button" class="save-btn active btncls Permission_Save" id="btnsave" onclick="Save()">Save</button>
-                        }
-                        @if (ViewBag.ShowRemarksButton)
-                        {
-                            <button type="button" class="save-btn active btncls Permission_Save" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
-                        }
-                        <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
-                    </div>
-                
                 <section class="table-section" id="tableNCR">
                     <div class="task-listinput">
                         <div class="dash-table">
@@ -204,7 +193,18 @@
                     </div>
 
                 </section>
-
+                <div class="savenext-btn">
+                    @if (ViewBag.ShowSaveButton)
+                    {
+                        <button type="button" class="save-btn active btncls Permission_Save" id="btnsave" onclick="Save()">Save</button>
+                    }
+                    @if (ViewBag.ShowRemarksButton)
+                    {
+                        <button type="button" class="save-btn active btncls Permission_Save" id="btnremarks" onclick="BtnSaveRemarks();">Save Remarks</button>
+                    }
+                    <button type="button" class="save-btn active btncls" id="btnsendIE" onclick="SendEmail();">Send To IE</button>
+                    <button type="button" class="save-btn active btncls" id="btnSaveMoreNC" onclick="SendMoreNC();">Save More NC's</button>
+                </div>
             </div>
 
         </form>
@@ -215,16 +215,23 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
-
+        $("#btnSaveMoreNC").hide();
+        $("#nccodeother").hide();
         var msg = '@Html.Raw(ViewBag.JsonData1)';
         if (msg != '') {
             alert(msg);
         }
+
+        var NCR = $("#NCRClass").val();
+        if(NCR != ""){
+            $('#NCRClass').trigger('change');
+        }
+
         InitializeDatatable();
     });
 
-    $('#NCcode').change(function () {
-        var selectedText = $("#NCcode").find("option:selected").text();
+    $('#NcCdSno').change(function () {
+        var selectedText = $("#NcCdSno").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
         var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
         if (extractedText == "Others") {
@@ -240,7 +247,7 @@
         var isRadioChecked = $("#rdononc").is(":checked");
         var selectedText = $("#NCcode").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
-
+        
         var otherdesc = $("#nccodeother").val();
         if (otherdesc != "") {
             var extractedText = otherdesc;
@@ -259,8 +266,18 @@
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        alert(data.alertMessage);
-                        window.location.href = '@Url.Action("Index", "NCRRegister")';
+                        debugger
+                        //alert(data.alertMessage);
+                        //window.location.href = '@Url.Action("Index", "NCRRegister")';
+                        var NCNO = data.responseText;
+                        $("#btnsave").hide();
+                        $("#rdnonc").hide();
+                        $("#rdnc").hide();
+                        $("#btnremarks").show();
+                        $("#btnSaveMoreNC").show();
+                        var ncNoValue = NCNO;
+                        var actionUrl = '@Url.Action("Manage", "NCRRegister", new { Actions = "M", NC_NO = "ncNoValue" })'.replace("ncNoValue", ncNoValue);
+                        window.location.href = actionUrl;
                     }
                 } else {
                     // Handle error case if needed
@@ -270,6 +287,63 @@
             }
         });
     }
+
+    function SendMoreNC(){
+        var formData = new FormData($("#frmNCRDetails")[0]);
+        var url = '@Url.Action("SaveMoreNC", "NCRRegister")';
+         var selectedText = $("#NCcode").find("option:selected").text();
+        var indexOfHyphen = selectedText.indexOf("-");
+
+        var otherdesc = $("#nccodeother").val();
+        if (otherdesc != "") {
+            var extractedText = otherdesc;
+        } else {
+            var extractedText = selectedText.substr(indexOfHyphen + 1).trim();
+        }
+        formData.append("extractedText", extractedText);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status === true) {
+                    if (data.redirectToIndex === true) {
+                        alert(data.alertMessage);
+                        window.location.href = '@Url.Action("Index", "NCRRegister")';
+                    }
+                } 
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    }
+
+
+    $('#NCRClass').change(function () {
+        debugger
+        var NCR = $("#NCRClass").val();
+        var url = '@Url.Action("GetNCRCode", "NCRRegister")?NCRClass=' + NCR;
+        $.ajax({
+            url: url,
+            type: 'POST',
+            success: function (data) {
+                debugger
+                var Item = $("#NcCdSno");
+                Item.empty();
+                Item.append($('<option>').text('--Select--').val(''));
+
+                var items =  data;
+
+                $.each(items, function (index, item) {
+                    Item.append($('<option>').text(item.Text).val(item.Value));
+                });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    });
 
     function SendEmail() {
         var formData = new FormData($("#frmNCRDetails")[0]);
@@ -345,7 +419,7 @@
             if (input1Index !== -1) {
                 modifiedItem.IeAction1 = inputValues1[input1Index].value;
             }
-            else{
+            else {
                 modifiedItem.IeAction1 = "";
             }
 
@@ -353,7 +427,7 @@
             if (input2Index !== -1) {
                 modifiedItem.CoFinalRemarks1 = inputValues2[input2Index].value;
             }
-            else{
+            else {
                 modifiedItem.CoFinalRemarks1 = "";
             }
 
@@ -395,23 +469,28 @@
         $("input[name='drone']").change(function () {
             var selectedValue = $("input[name='drone']:checked").attr("id");
             if (selectedValue === "rdononc") {
-                $("#ncrclass").hide();
+                $("#ncrsclass").hide();
                 $("#ncrcodes").hide();
                 $("#btnsendIE").hide();
                 $("#tableNCR").hide();
+                $("#btnSaveMoreNC").hide();
+                $("#nccodeother").hide();
                 $("#rdononc").prop("checked", true);
             } else if (selectedValue === "rdoaddnc") {
-                $("#ncrclass").show();
+                $("#ncrsclass").show();
                 $("#ncrcodes").show();
                 $("#btnsendIE").show();
                 $("#tableNCR").hide();
+                $("#btnSaveMoreNC").show();
+               // $("#nccodeother").hide();
                 $("#rdoaddnc").prop("checked", true);
+                $('#NcCdSno').trigger('change');
             }
         });
     });
 
     function InitializeDatatable() {
-
+        $("#btnSaveMoreNC").hide();
         var jsonData = '@Html.Raw(ViewBag.JsonData)';
         var data = JSON.parse(jsonData);
 

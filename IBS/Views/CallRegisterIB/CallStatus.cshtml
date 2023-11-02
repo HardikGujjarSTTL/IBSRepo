@@ -27,7 +27,8 @@
                     </td>
 
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="VendName" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.VendName</span>
+                        <input type="text" class="input" asp-for="VendName" maxlength="100" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -35,7 +36,8 @@
                         <label for="Reference">Purchaser : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="Consignee" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.Consignee</span>
+                        <input type="text" class="input" asp-for="Consignee" maxlength="100" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -43,27 +45,26 @@
                         <label for="Reference">Item : </label>
                     </td>
                     <td colspan="4">
-                        <textarea rows="4" asp-for="ItemDescPo" style="color:red;text-transform: uppercase;" readonly="readonly"></textarea>
+                        <span style="color:red;text-transform: uppercase;">@Model.ItemDescPo</span>
+                        <textarea rows="4" asp-for="ItemDescPo" style="color:red;text-transform: uppercase; display:none;" readonly="readonly"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Call Date : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" id="callRecdt" asp-for="CallRecvDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
-                    </td>
-                    <td colspan="2">
+                    <td colspan="4">
+                        <span style="color:red;text-transform: uppercase;">@Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy")</span>
+                        <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:red;text-transform: uppercase; display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Reference">Inpection Desire Date : </label>
                     </td>
-                    <td>
-                        <input type="text" class="input" asp-for="DesireDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
-                    </td>
-                    <td colspan="2">
+                    <td colspan="4">
+                        <span style="color:red;text-transform: uppercase;">@Convert.ToDateTime(@Model.DesireDt).ToString("dd/MM/yyyy")</span>
+                        <input type="text" class="input" asp-for="DesireDt" maxlength="30" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -71,7 +72,8 @@
                         <label for="Reference">Engineer Name : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="IeName" maxlength="100" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.IeName</span>
+                        <input type="text" class="input" asp-for="IeName" maxlength="100" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -79,7 +81,8 @@
                         <label for="Reference">Engineer Contact No. : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="IePhoneNo" maxlength="12" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.IePhoneNo</span>
+                        <input type="text" class="input" asp-for="IePhoneNo" maxlength="12" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -87,7 +90,8 @@
                         <label for="Reference">PO No. : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="PoNo" maxlength="50" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.PoNo</span>
+                        <input type="text" class="input" asp-for="PoNo" maxlength="50" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -95,7 +99,8 @@
                         <label for="Reference">PO Date : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="PoDt" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy")</span>
+                        <input type="text" class="input" asp-for="PoDt" maxlength="30" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -103,7 +108,8 @@
                         <label for="Reference">Case No. : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" id="caseno" asp-for="CaseNo" maxlength="30" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.CaseNo</span>
+                        <input type="text" class="input" id="caseno" asp-for="CaseNo" maxlength="30" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -111,7 +117,8 @@
                         <label for="Reference">Contact Person : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="MfgPers" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.MfgPers</span>
+                        <input type="text" class="input" asp-for="MfgPers" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -119,7 +126,8 @@
                         <label for="Reference">Contact Person Tel No. : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" asp-for="MfgPhone" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.MfgPhone</span>
+                        <input type="text" class="input" asp-for="MfgPhone" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -127,12 +135,12 @@
                         <label for="Reference">Call Serial No. : </label>
                     </td>
                     <td colspan="4">
-                        <input type="text" class="input" id="callsnos" asp-for="CallSno" style="color:red;text-transform: uppercase;" readonly="readonly">
+                        <span style="color:red;text-transform: uppercase;">@Model.CallSno</span>
+                        <input type="text" class="input" id="callsnos" asp-for="CallSno" style="color:red;text-transform: uppercase;display:none;" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
                     @{
-
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
@@ -508,10 +516,10 @@
                 var selectedValue = $('#consigneeFirmDropdown').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
-                var DesireDt = $('#callRecdt').val();
+                var DesireDt = $('#CallRecvDt').val();
                 $('#MatCanvalue').hide();
                 $.ajax({
-                    url: '/CallRegisterIB/GetBkNoAndSetNo',
+                    url: '@Url.Action("GetBkNoAndSetNo", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -534,7 +542,7 @@
                 var selectedValue = $('#CallStatusdrp').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
-                var DesireDt = $('#callRecdt').val();
+                var DesireDt = $('#CallRecvDt').val();
 
                 if (selectedValue == "A") {
                     $('#accepteddrp').show();
@@ -705,7 +713,7 @@
                 }
 
                 $.ajax({
-                    url: '/CallRegisterIB/GetRlyDrp',
+                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -915,9 +923,9 @@
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
-                var DesireDt = $('#callRecdt').val();
+                var DesireDt = $('#CallRecvDt').val();
                 $.ajax({
-                    url: '/CallRegisterIB/LocalOutstation',
+                    url: '@Url.Action("LocalOutstation", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -936,7 +944,7 @@
                 var selectedValue = $('#CallStatusdrp').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
-                var DesireDt = $('#callRecdt').val();
+                var DesireDt = $('#CallRecvDt').val();
 
                 if (selectedValue1 == "C") {
                     $('#CallCancelChargesdrp').show();
@@ -945,7 +953,7 @@
                 }
 
                 $.ajax({
-                    url: '/CallRegisterIB/GetRlyDrp',
+                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -972,9 +980,9 @@
                 var selectedValue = $('#CallCancelChargesdrp').val();
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
-                var DesireDt = $('#callRecdt').val();
+                var DesireDt = $('#CallRecvDt').val();
                 $.ajax({
-                    url: '/CallRegisterIB/CancelChargeByStatus',
+                    url: '@Url.Action("CancelChargeByStatus", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -1315,7 +1323,7 @@
             var DocBkNo = $('#bknoaccpted').val();
             var DocSetNo = $('#setnoaccpted').val();
             var CaseNo = $('#caseno').val();
-            var CallRecvDt = $('#callRecdt').val();
+            var CallRecvDt = $('#CallRecvDt').val();
             var CallSno = $('#callsnos').val();
             var CallStatusDt = $('#calldtstatus').val();
             var CallCancelCharges = $('#CanCharges').val();
@@ -1354,7 +1362,7 @@
 
         function RedirectViewPrintIC() {
             var CASE_NO = $('#caseno').val();
-            var CALL_RECV_DT = $('#callRecdt').val();
+            var CALL_RECV_DT = $('#CallRecvDt').val();
             var CALL_SNO = $('#callsnos').val();
             var CONSIGNEE_CD = $('#consigneeFirmDropdown').val();
             var ACTIONAR = $("#ActionType").val();
