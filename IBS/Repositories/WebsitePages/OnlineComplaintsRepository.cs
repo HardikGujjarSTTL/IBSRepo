@@ -80,7 +80,7 @@ namespace IBS.Repositories.WebsitePages
                 {
                     TempComplaintId = Compid,
                     TempComplaintDt = DateTime.Now,
-                    RejMemoDt = onlineComplaints.RejMemodate,
+                    //RejMemoDt = onlineComplaints.RejMemodate,
                     ConsigneeName = onlineComplaints.Name,
                     ConsigneeDesig = onlineComplaints.Designation,
                     ConsigneeEmail = onlineComplaints.Email,
@@ -105,7 +105,7 @@ namespace IBS.Repositories.WebsitePages
                     IeCd = onlineComplaints.IE_CD,
                     CoCd = onlineComplaints.CoCd,
                 };
-                //SendEmail(onlineComplaints);
+                SendEmail(onlineComplaints);
 
             //}
             //else
@@ -169,15 +169,21 @@ namespace IBS.Repositories.WebsitePages
                 sender = "srinspn@rites.com";
                 cc = "srinspn@rites.com;ravis@rites.com;kbjayan@rites.com";
             }
-
+            sender = "hardiksilvertouch007@outlook.com";
             SendMailModel SendMailModel = new SendMailModel();
             SendMailModel.To = cc;
             SendMailModel.CC = onlineComplaints.Email;
             SendMailModel.From = sender;
             SendMailModel.Subject = "Online Rejection Advice Has Been Registered";
             SendMailModel.Message = mail_body;
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            try
+            {
+                bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, display error message, etc.)
+            }
         }
     }
 }

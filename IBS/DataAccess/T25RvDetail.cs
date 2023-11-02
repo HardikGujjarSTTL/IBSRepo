@@ -43,17 +43,19 @@ public partial class T25RvDetail
 
     public DateTime? Datetime { get; set; }
 
-    public int? Createdby { get; set; }
+    public string? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public int? Updatedby { get; set; }
+    public string? Updatedby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
 
     public virtual T13PoMaster? CaseNoNavigation { get; set; }
+
+    public virtual ICollection<T26ChequePosting> T26ChequePostings { get; set; } = new List<T26ChequePosting>();
 
     public virtual T24Rv? VchrNoNavigation { get; set; }
 }

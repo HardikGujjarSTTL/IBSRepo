@@ -26,29 +26,51 @@ namespace IBS.Controllers
         }
 
         public IActionResult LabInvoiceRpt()
-        {            
+        {
             return View();
         }
         public IActionResult ManageLabInvoiceRpt(string RegNo)
         {
-            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
-            ViewBag.RegNo = RegNo;
-            var Region = GetRegionCode;
-            var User = UserId.ToString();
-            LabInvoiceModel dTResult = LabInvoiceRptRepository.Getdtreg(RegNo, GetRegionCode, User);
+            LabInvoiceModel dTResult = new LabInvoiceModel();
+            try
+            {
+                ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
+                ViewBag.RegNo = RegNo;
+                var Region = GetRegionCode;
+                var User = UserId.ToString();
+                dTResult = LabInvoiceRptRepository.Getdtreg(RegNo, GetRegionCode, User);
+                
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "LabInvoiceRpt", 1, GetIPAddress());
+                AlertDanger(ex.Message);
+                //return RedirectToAction("LabInvoiceRpt");
+            }
             return View(dTResult);
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string Regin = GetRegionCode;
-            DTResult<LabInvoiceModel> dTResult = LabInvoiceRptRepository.GetLapInvoice(dtParameters, Regin);
-            if (dTResult.data != null && dTResult.data.Any())
+            DTResult<LabInvoiceModel> dTResult = new DTResult<LabInvoiceModel>();
+            try
             {
-                ViewBag.InvoiceNo = dTResult.data.ToList()[0].InvoiceNo.ToString();
-                ViewBag.InvoiceDt = dTResult.data.ToList()[0].InvoiceDt.ToString();
+                string Regin = GetRegionCode;
+                dTResult = LabInvoiceRptRepository.GetLapInvoice(dtParameters, Regin);
+                if (dTResult.data != null && dTResult.data.Any())
+                {
+                    ViewBag.InvoiceNo = dTResult.data.ToList()[0].InvoiceNo.ToString();
+                    ViewBag.InvoiceDt = dTResult.data.ToList()[0].InvoiceDt.ToString();
 
+                }
             }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "LabInvoiceRpt", 1, GetIPAddress());
+                AlertDanger(ex.Message);
+                //return RedirectToAction("LabInvoiceRpt");
+            }
+
             return Json(dTResult);
         }
         [HttpPost]
@@ -56,6 +78,7 @@ namespace IBS.Controllers
         {
             model.Region = GetRegionCode;
             model.UserId = UserId.ToString();
+            string Msg1 = "Add Successfully.";
             try
             {
                 string msg = "Generate Lab Invoice Successfully.";
@@ -65,6 +88,10 @@ namespace IBS.Controllers
                 if (i != "0")
                 {
                     return Json(new { status = true, responseText = msg, Id = i });
+                }
+                else
+                {
+                    return Json(new { status = true, responseText = Msg1, Id = i });
                 }
             }
             catch (Exception ex)

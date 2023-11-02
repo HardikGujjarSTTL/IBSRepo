@@ -99,5 +99,10 @@ namespace IBS.Models
         [RegularExpression(@"[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}", ErrorMessage = "Invalid PAN number.")]
         [Required]
         public string? PANNO { get; set; }
+
+        public string Region { get; set; }
+
+        public string UserStatus { get; set; }
+        
     }
 }

@@ -1,17 +1,18 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
 using System.Web;
 
-namespace CrystalReportProject.ReportClass
+namespace IBSReports.ReportClass
 {
     public static class BPOBills
     {
         public static OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
+        public static string Oracle_UserID = System.Configuration.ConfigurationManager.AppSettings["Oracle_UserID"].ToString();
+        public static string Oracle_Password = System.Configuration.ConfigurationManager.AppSettings["Oracle_Password"].ToString();
+
         public static ReportDocument BPOBill(string Month, string Year, string Region, string ReportType, string FromDate, string ToDate,string Rb1,string Rb2,string Rb5 ,string lstBpo,string ClientType,string Rb3,string Rb4,out DataSet dsCustom)
         {
             string wHdr_YrMth = Month + ", " + Year;
@@ -34,8 +35,6 @@ namespace CrystalReportProject.ReportClass
 
                 if (ReportType == "P")
                 {
-                    
-
                     if (Rb1 == "true")
                     { wRecordSelectionFormula = "{V22_BILL.BPO_CD}='" + lstBpo + "' and "; }
                     else if (Rb2 == "true")
@@ -68,18 +67,17 @@ namespace CrystalReportProject.ReportClass
                     //MemoryStream oStream=my_rbs.showrep(rpt);
                     rd.Load(HttpContext.Current.Server.MapPath("~/Reports/repBPO_Bills.rpt"));
                     rd.RecordSelectionFormula = wRecordSelectionFormula;
-                    rd.SetDatabaseLogon("QA", "QA");
-
+                    rd.SetDatabaseLogon(Oracle_UserID, Oracle_Password);
                 }
             }
-            catch (Exception err)
+            catch
             {
 
             }
             return rd;
         }
 
-        static string dateconcate(string dt)
+        public static string dateconcate(string dt)
         {
             string myYear, myMonth, myDay;
             myYear = dt.Substring(6, 4);

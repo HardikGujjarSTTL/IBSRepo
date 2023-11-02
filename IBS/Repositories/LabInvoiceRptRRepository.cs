@@ -399,6 +399,7 @@ namespace IBS.Repositories
             }
             else
             {
+                string Testingfee = model.TestingCharges;
                 decimal totalCgst = 0;
                 decimal totalSgst = 0;
                 decimal totalIgst = 0;
@@ -409,7 +410,7 @@ namespace IBS.Repositories
                 decimal AMT_RATE_N = Math.Round((Testing_Charges_N / Convert.ToDecimal(model.Quantity.Trim())), 2);
                 model.TestingCharges = Convert.ToString(Testing_Charges_N);
                 //insert lab invoice detail
-                LabInvoiceDetailsNew(model, InvoiceNo, SrNo, AMT_RATE_N);
+                LabInvoiceDetailsNew(model, InvoiceNo, SrNo, AMT_RATE_N, Testingfee);
                
                 //select lab invoice
                 var result = context.T55LabInvoices
@@ -475,7 +476,7 @@ namespace IBS.Repositories
             }
             return true;
         }
-        public bool LabInvoiceDetailsNew(LabInvoiceModel model, string InvoiceNo, int SrNo, decimal AMT_RATE_N)
+        public bool LabInvoiceDetailsNew(LabInvoiceModel model, string InvoiceNo, int SrNo, decimal AMT_RATE_N,string Testingfee)
         {
             try
             {
@@ -486,7 +487,7 @@ namespace IBS.Repositories
                 par[2] = new OracleParameter("p_ItemDesc", OracleDbType.Varchar2, model.Item, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_Qty", OracleDbType.Varchar2, model.Quantity, ParameterDirection.Input);
                 par[4] = new OracleParameter("p_Rate", OracleDbType.Varchar2, AMT_RATE_N, ParameterDirection.Input);
-                par[5] = new OracleParameter("p_TestingCharges", OracleDbType.Varchar2, model.TestingCharges, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_TestingCharges", OracleDbType.Varchar2, Testingfee, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_Cgst", OracleDbType.Varchar2, model.CGST, ParameterDirection.Input);
                 par[7] = new OracleParameter("p_Sgst", OracleDbType.Varchar2, model.SGST, ParameterDirection.Input);
                 par[8] = new OracleParameter("p_Igst", OracleDbType.Varchar2, model.IGST, ParameterDirection.Input);

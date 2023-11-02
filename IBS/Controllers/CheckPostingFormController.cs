@@ -15,35 +15,35 @@ namespace IBS.Controllers
     public class CheckPostingFormController : BaseController
     {
         private readonly ICheckPostingFormRepository checkpostingrepository;
-        public CheckPostingFormController(ICheckPostingFormRepository _checkpostingrepository )
+        public CheckPostingFormController(ICheckPostingFormRepository _checkpostingrepository)
         {
             checkpostingrepository = _checkpostingrepository;
         }
-       
+
 
         [HttpPost]
         [Authorization("CheckPostingForm", "Index", "view")]
         public IActionResult ChequePost([FromBody] DTParameters dtParameters)
         {
             DTResult<CheckPostingFormModel> dTResult = checkpostingrepository.BillList(dtParameters);
-            
+
             return Json(dTResult);
 
-           
+
         }
 
         public IActionResult GetValue(string BankNameDropdown, string CHQ_NO, string CHQ_DATE)
         {
             string region = GetRegionCode;
-            CheckPostingHeader dTResult = checkpostingrepository.GetTextboxValues(BankNameDropdown, CHQ_NO, CHQ_DATE , region);
+            CheckPostingHeader dTResult = checkpostingrepository.GetTextboxValues(BankNameDropdown, CHQ_NO, CHQ_DATE, region);
             return Json(dTResult);
-                
+
         }
 
         [Authorization("CheckPostingForm", "Index", "view")]
-        public IActionResult Index(string BankNameDropdown="", string CHQ_NO = "", string CHQ_DATE = "") 
+        public IActionResult Index(string BankNameDropdown = "", string CHQ_NO = "", string CHQ_DATE = "")
         {
-      
+
             ViewBag.BankNameDropdown = BankNameDropdown;
             ViewBag.CHQ_NO = CHQ_NO;
             ViewBag.CHQ_DATE = CHQ_DATE;
@@ -52,7 +52,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         public IActionResult FindByID(string BILL_NO)
-            {
+        {
             CheckPostingFormModel model = new CheckPostingFormModel();
             if (BILL_NO != "" && BILL_NO != null)
             {
@@ -64,15 +64,16 @@ namespace IBS.Controllers
 
 
 
-            
+
         }
 
         [HttpPost]
         [Authorization("CheckPostingForm", "Index", "view")]
-        public JsonResult UpdateInfo(CheckPostingFormModel model) {
+        public JsonResult UpdateInfo(CheckPostingFormModel model)
+        {
             try
             {
-                
+
                 model.BANK_CD = Convert.ToInt32(Request.Form["BANK_CD"]);
                 model.CHQ_DATE = Convert.ToDateTime(Request.Form["CHQ_DATE"]);
                 model.CHQ_NO = Convert.ToString(Request.Form["CHQ_NO"]);
@@ -82,10 +83,10 @@ namespace IBS.Controllers
                 if (model.BILL_NO != "")
                 {
                     msg = "Data Updated Successfully.";
-                    
+
                 }
                 string i = checkpostingrepository.UpdateData(model);
-                if (i != null || i != "" )
+                if (i != null || i != "")
                 {
                     return Json(new { status = true, responseText = msg });
                 }
@@ -104,13 +105,13 @@ namespace IBS.Controllers
         //    return View();
         //}
 
-        public IActionResult btnBillDetailsClick( string RadioBill ) 
+        public IActionResult btnBillDetailsClick(string RadioBill, string BillInvoiceNo)
         {
             var region = GetRegionCode;
-            var result = checkpostingrepository.ChkBillNo(RadioBill, region);
+            var result = checkpostingrepository.ChkBillNo(RadioBill, BillInvoiceNo, region);
             var Amount_Recieved = (result.AMOUNT_RECIEVED) + (result.TDS) + (result.WRITE_OFF_AMT) + (result.RETENTION_MONEY) + (result.CNOTE_AMT);
             var alert = "";
-            if(result == null)
+            if (result == null)
             {
                 ViewBag.AlertMessage = "InValid Bill No..!!!";
 
@@ -118,7 +119,7 @@ namespace IBS.Controllers
             else
             {
 
-                if(result.BILL_AMOUNT == Amount_Recieved)
+                if (result.BILL_AMOUNT == Amount_Recieved)
                 {
                     ViewBag.AlertMessage = "This Bill has already been cleared!!!";
                     alert = " This Bill has already been cleared!!!";
@@ -131,9 +132,9 @@ namespace IBS.Controllers
                 }
             }
 
-            return Json(new { status = false, alert = alert ,  responseText = "Oops Somthing Went Wrong !!" }); 
+            return Json(new { status = false, alert = alert, responseText = "Oops Somthing Went Wrong !!" });
         }
-            
+
         public IActionResult btnInvoiceClick(string RadioInvoice)
         {
             var region = GetRegionCode;

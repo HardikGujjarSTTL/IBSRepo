@@ -16,6 +16,8 @@ using System.Net.Mail;
 using System.Net;
 using System.Numerics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -84,14 +86,18 @@ namespace IBS.Repositories
                 List<NCRRegister> modelList = new List<NCRRegister>();
 
                 DataSet ds;
-                DateTime parsedDate = DateTime.ParseExact(FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime parsedDat1e = DateTime.ParseExact(ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime parsedDate = DateTime.ParseExact(FromDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
+                DateTime parsedDat1e = DateTime.ParseExact(ToDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
+
+                string formattedDate = parsedDate.ToString("dd/mm/yyyy");
+                string formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
+
                 try
                 {
                     OracleParameter[] par = new OracleParameter[4];
-                    par[0] = new OracleParameter("lstIE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-                    par[1] = new OracleParameter("frmDt", OracleDbType.Date, parsedDate, ParameterDirection.Input);
-                    par[2] = new OracleParameter("toDt", OracleDbType.Date, parsedDat1e, ParameterDirection.Input);
+                    par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+                    par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
+                    par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
                     par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
                     ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
                 }
@@ -144,7 +150,7 @@ namespace IBS.Repositories
             {
                 ex.Message.ToString();
             }
-           
+
             return dTResult;
         }
 
@@ -171,16 +177,16 @@ namespace IBS.Repositories
                 var ds = DataAccessDB.GetDataSet("GetForAction_A_NCR", par, 1);
                 dt = ds.Tables[0];
 
-               
+
             }
 
-            
+
             if (dt != null)
             {
 
                 if (dt.Rows.Count > 0)
                 {
-                DataRow firstRow = dt.Rows[0];
+                    DataRow firstRow = dt.Rows[0];
 
                     DateTime callRecvDate;
 
@@ -278,8 +284,7 @@ namespace IBS.Repositories
 
             var query = from t69 in context.T69NcCodes
                         join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
-                        join t41 in context.T41NcMasters on t42.NcNo equals t41.NcNo
-                        where t41.NcNo == NCNO
+                        where t42.NcNo == NCNO
                         orderby t42.NcCdSno ascending
                         select new
                         {
@@ -305,41 +310,38 @@ namespace IBS.Repositories
             };
         }
 
-        public string SaveRemarks(string NCNO,string UserID, List<Remarks> model)
+        public string SaveRemarks(string NCNO, string UserID, List<Remarks> model)
         {
             string msg = "";
-            
+
             foreach (var item in model)
             {
-                var Action = item.CoFinalRemarks1;
-                var Remarks = item.IeAction1;
-                
-                    var existingRecord = context.T42NcDetails.FirstOrDefault(record => record.NcNo == NCNO && record.NcCd == item.NcCd && record.NcCdSno == item.NcCdSno);
-                
-                    if (existingRecord != null)
-                    {
-                        if(Remarks != null)
-                        {
-                            existingRecord.CoFinalRemarks1 = item.CoFinalRemarks1;
-                        }
-                        existingRecord.CoFinalRemarks1Dt = DateTime.Now;
-                        existingRecord.UserId = UserID;
-                        if(Action != null)
-                        {
-                            existingRecord.IeAction1 = item.IeAction1;
-                        }
-                        existingRecord.IeAction1Dt = DateTime.Now;
-                        existingRecord.Datetime = DateTime.Now;
+                var existingRecord = context.T42NcDetails.FirstOrDefault(record => record.NcNo == NCNO && record.NcCd == item.NcCd && record.NcCdSno == item.NcCdSno);
 
-                        context.SaveChanges();
+                if (existingRecord != null)
+                {
+                    if (!string.IsNullOrEmpty(item.CoFinalRemarks1))
+                    {
+                        existingRecord.CoFinalRemarks1 = item.CoFinalRemarks1;
                     }
-                    msg = "Remarks Save Successfully";
-                
+                    existingRecord.CoFinalRemarks1Dt = DateTime.Now;
+                    existingRecord.UserId = UserID;
+                    if (!string.IsNullOrEmpty(item.IeAction1))
+                    {
+                        existingRecord.IeAction1 = item.IeAction1;
+                    }
+                    existingRecord.IeAction1Dt = DateTime.Now;
+                    existingRecord.Datetime = DateTime.Now;
+
+                    context.SaveChanges();
+                }
+                msg = "Remarks Save Successfully";
+
             }
 
             return msg;
         }
-        public string Saveupdate(NCRRegister model,bool isRadioChecked,string extractedText)
+        public string Saveupdate(NCRRegister model, bool isRadioChecked, string extractedText)
         {
             string msg = "";
 
@@ -355,9 +357,10 @@ namespace IBS.Repositories
             DataRow firstRow = dt.Rows[0];
             string ErrCD = firstRow["W_ERR_CD"].ToString();
             string genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
+            model.NC_NO = genrate_NCNO;
 
-            var NCRMaster = context.T41NcMasters.FirstOrDefault(r =>r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
-           
+            var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
+
             if (ErrCD == "-1")
             {
                 msg = "NC Details not available";
@@ -390,46 +393,66 @@ namespace IBS.Repositories
                     context.T41NcMasters.Add(obj);
                     context.SaveChanges();
                     msg = "Record Saved Successfully";
-
-                    if (extractedText != "-Select--")
-                    {
-                        if (isRadioChecked == true)
-                        {
-
-                            T42NcDetail obj1 = new T42NcDetail();
-                            obj1.NcNo = genrate_NCNO;
-                            obj1.NcCd = "X01";
-                            obj1.NcCdSno = 1;
-                            obj1.NcDescOthers = "";
-                            obj1.UserId = model.UserID;
-                            obj1.Datetime = DateTime.Now;
-                            context.T42NcDetails.Add(obj1);
-                            context.SaveChanges();
-                            msg = "Save Successfull";
-                        }
-                        else
-                        {
-
-                            T42NcDetail obj1 = new T42NcDetail();
-                            obj1.NcNo = genrate_NCNO;
-                            obj1.NcCd = model.NcCdSno;
-                            obj1.NcCdSno = 1;
-                            obj1.NcDescOthers = extractedText;
-                            obj1.UserId = model.UserID;
-                            obj1.Datetime = DateTime.Now;
-                            context.T42NcDetails.Add(obj1);
-                            context.SaveChanges();
-                            msg = "Save Successfull";
-                        }
-                    }
                 }
                 else
                 {
-                    msg = "Already Exist";
+                    NCRMaster.NcDt = model.NCRDate;
+                    NCRMaster.CallRecvDt = model.CALLRECVDT;
+                    NCRMaster.ItemDescPo = model.Item;
+                    NCRMaster.CallSno = model.CALLSNO;
+                    NCRMaster.BkNo = model.BKNo;
+                    NCRMaster.SetNo = model.SetNo;
+                    NCRMaster.VendCd = model.VEND_CD;
+                    NCRMaster.CoCd = model.CONSIGNEECD;
+                    NCRMaster.QtyPassed = model.QtyPassed;
+                    NCRMaster.PoNo = model.PO_NO;
+                    NCRMaster.PoDt = model.PO_DT;
+                    NCRMaster.IcNo = model.IC_NO;
+                    NCRMaster.IcDt = model.ICDate;
+                    NCRMaster.IeCd = model.Ie_Cd;
+                    NCRMaster.Datetime = DateTime.Now;
+                    NCRMaster.ItemSrnoPo = model.Item_Srno_no;
+                    NCRMaster.UserId = model.UserID;
+                    NCRMaster.RegionCode = model.SetRegionCode;
+                    context.SaveChanges();
+                    msg = "Record Update Successfully";
                 }
-               
-            }      
-           
+                if (extractedText != "-Select--")
+                {
+                    if (isRadioChecked == true)
+                    {
+
+                        T42NcDetail obj1 = new T42NcDetail();
+                        obj1.NcNo = genrate_NCNO;
+                        obj1.NcCd = "X01";
+                        obj1.NcCdSno = 1;
+                        obj1.NcDescOthers = "";
+                        obj1.UserId = model.UserID;
+                        obj1.Datetime = DateTime.Now;
+                        context.T42NcDetails.Add(obj1);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        T42NcDetail obj1 = new T42NcDetail();
+                        obj1.NcNo = genrate_NCNO;
+                        obj1.NcCd = model.NcCdSno;
+                        obj1.NcCdSno = 1;
+                        obj1.NcDescOthers = extractedText;
+                        obj1.UserId = model.UserID;
+                        obj1.Datetime = DateTime.Now;
+                        context.T42NcDetails.Add(obj1);
+                        context.SaveChanges();
+                    }
+                }
+            }
+
+            return model.NC_NO;
+        }
+
+        public string SaveMoreNC(NCRRegister model, string extractedText)
+        {
+            string msg = "";
             return msg;
         }
 
@@ -437,7 +460,7 @@ namespace IBS.Repositories
         {
             //string msg = "";
 
-            string region = nCRRegister.SetRegionCode; 
+            string region = nCRRegister.SetRegionCode;
             string wRegion = GetRegionDetails(region);
             string rsender = GetSenderEmail(region);
 
@@ -568,5 +591,17 @@ namespace IBS.Repositories
             return 0;
         }
 
+        public List<SelectListItem> GetNcrCd(string NCRClass)
+        {
+            List<SelectListItem> NCCODE = (from a in context.T69NcCodes
+                                           where a.NcClass == NCRClass
+                                           select
+                                          new SelectListItem
+                                          {
+                                              Text = a.NcCd + " - " + a.NcDesc,
+                                              Value = a.NcCd
+                                          }).ToList();
+            return NCCODE;
+        }
     }
 }

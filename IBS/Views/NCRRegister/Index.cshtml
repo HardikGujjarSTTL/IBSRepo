@@ -19,23 +19,23 @@
     </div>
 </div>
 
-<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
+<form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" id="frmNCRDetails">
     
     <div class="accordion-body" id="BYIE">
         <div class="row my-0">
     <div class="col-md-3 mb-3">
         <label for="PropertyId">IE</label>
-        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIENameWithoutCode(), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
         <span asp-validation-for="IeCd" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">Date From.</label>
-                <input type="text" class="input datepicker" asp-for="FromDate" readonly="true" id="FromDate" required>
+                <input type="text" class="input datepicker" asp-for="FromDate"  id="FromDate" required>
                 <span asp-validation-for="FromDate" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">To</label>
-                <input type="text" class="input datepicker" asp-for="ToDate" readonly="true" id="ToDate" required>
+                <input type="text" class="input datepicker" asp-for="ToDate" id="ToDate" required>
         <span asp-validation-for="ToDate" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
@@ -110,12 +110,6 @@
             ieCdValidationSpan.hide();
         }
 
-        completed = function (response) {
-            var res = response.responseJSON;
-            ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = "/NCRRegister/Index";
-        };
-
 
          function InitializeDatatable() {
             var selectedValue = $("#IENAME").val();
@@ -158,7 +152,15 @@
                 columns: [
                     { data: "NC_NO", width: "10%" },
                     { data: "CaseNo", width: "10%" },
-                    { data: "CALL_RECV_DT", width: "10%" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "CALL_SNO", width: "10%" },
                     { data: "IE_SNAME", width: "10%" },
                     { data: "BKNo", width: "10%" },

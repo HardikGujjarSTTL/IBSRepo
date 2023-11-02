@@ -50,7 +50,7 @@
                     <input type="text" class="input" readonly="readonly" style="display:none;" id="lblIECD">
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Date of Receipt of Sample</label>
+                    <label for="Reference">Date of Receipt of Sample <i class="text-danger">*</i></label>
                     <input type="text" class="input datepicker" id="dtrecsam">
                     <span class="text-danger field-validation-error" id="spnError1"></span>
                 </div>
@@ -63,7 +63,7 @@
                    
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Likely Date of Test Report</label>
+                    <label for="Reference">Likely Date of Test Report <i class="text-danger">*</i></label>
                     <input type="text" class="input datepicker" id="dtlike">
                     <span class="text-danger field-validation-error" id="spnError2"></span>
                 </div>
@@ -111,6 +111,7 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
+        
         function InitializeDatatable() {
 
             $("#dtlabregdtl").DataTable({
@@ -179,7 +180,21 @@
         var encode = function (d, a, e, b, c, f) { c = ""; for (a = e = b = 0; a < 4 * d.length / 3; f = b >> 2 * (++a & 3) & 63, c += String.fromCharCode(f + 71 - (f < 26 ? 6 : f < 52 ? 0 : f < 62 ? 75 : f ^ 63 ? 90 : 87)) + (75 == (a - 1) % 76 ? "\r\n" : ""))a & 3 ^ 3 && (b = b << 8 ^ d[e++]); for (; a++ & 3;)c += "="; return c };
 
         $('#upload').change(function (e) {
-            //var tmppath = URL.createObjectURL(e.target.files[0]);
+            var file = this.files[0];
+            var maxSize = 1024 * 1024;
+            var allowedExtensions = /(\.pdf)$/i;
+
+            if (!allowedExtensions.test(file.name)) {
+                alert('Only PDF files are allowed.');
+                this.value = '';
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                alert('File size exceeds 1MB limit.');
+                this.value = '';
+                return false;
+            }
             reader.readAsArrayBuffer(e.target.files[0]);
             reader.onloadend = (evt) => {
                 if (evt.target.readyState === FileReader.DONE) {
@@ -238,7 +253,7 @@
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
 
                 success: function (success) {
-                    debugger;
+                   
                     if (success.DateofRecSample != null && success.LikelyDt != null && success.DateofRecSample != "" && success.LikelyDt != "") {
                         var originalDateStr = success.DateofRecSample;
                         
@@ -297,8 +312,9 @@
                     $("#lblps").val(success.PaymentStatus);
                     
                     //$("#download").attr('href',success.Hyperlink2);
-                    if (success.Hyperlink2 != "") {
+                    if (success.Hyperlink2 != "false") {
                         $("#download").css("display", "");
+                        $("#upload").css("display", "none");
                     }
                     sessionStorage.setItem("lINK", success.Hyperlink2);
                     sessionStorage.setItem("IEcode", success.IE);

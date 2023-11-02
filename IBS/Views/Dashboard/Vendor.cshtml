@@ -4,382 +4,400 @@
 @{
 }
 <div class="dashHeader justify-content-between">
-    <h2 class="alignLeft">Client Dashboard</h2>
-    <div><a href="#" class="blueBtn">Register Inspection Call</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New Purchase Order</a></div>
+  <h2 class="alignLeft">Vendor Dashboard</h2>
+  <div><a href="#" class="blueBtn">Call Registration</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New PO</a></div>
 </div>
 <div class="row">
-    <div class="col-lg-6">
-        <div class="admindashboard-section">
-            <div class="admindashboard-wrap">
-                <div class="vendor-dashboard">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="dashboard-box das1Client">
-                                <div class="dash-total">
-                                    <div class="dash-count">
-                                        <div class="total-amount">35</div>
-                                        <div class="total-inner">
-                                            Number of <br>
-                                            Inspection Request
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="dashboard-box das2Client">
-                                <div class="dash-total">
-                                    <div class="dash-count">
-                                        <div class="total-amount">15</div>
-                                    </div>
-                                    <div class="total-inner">
-                                        Inspection<br>
-                                        Ongoing
-                                    </div>
-                                </div>
-                                <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="dashboard-box das3Client">
-                                <div class="dash-total">
-                                    <div class="dash-count">
-                                        <div class="total-amount">12</div>
-                                    </div>
-                                    <div class="total-inner">
-                                        Inspection <br>
-                                        Completed
-                                    </div>
-                                </div>
-                                <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="dashboard-box das4Client">
-                                <div class="dash-total">
-                                    <div class="dash-count">
-                                        <div class="total-amount">07</div>
-                                    </div>
-                                    <div class="total-inner">
-                                        Inspection<br>
-                                        Pending
-                                    </div>
-                                </div>
-                                <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="col-lg-12">
+    <div class="admindashboard-section">
+      <div class="admindashboard-wrap">
+        <div class="row ie-dashboard">
+          <div class="col-lg-3">
+            <div class="dashboard-box das1Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">35</div>
+                  <div class="total-inner"> Total<br />
+                    Calls </div>
                 </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
             </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="boxRadius">
-            <div class="table-title">
-                <h3 class="headingh3">Inspection Request</h3>
-                <div class="datefrom">
-                    <select class="dateSelect">
-                        <option>Date</option>
-                    </select>
+          </div>
+          <div class="col-lg-3">
+            <div class="dashboard-box das2Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">18</div>
                 </div>
+                <div class="total-inner"> Pending<br />
+                  Calls </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
             </div>
-            <div id="region-wise-pie"></div>
+          </div>
+          <div class="col-lg-3">
+            <div class="dashboard-box das3Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">15</div>
+                </div>
+                <div class="total-inner"> Accepted <br />
+                  Calls </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="dashboard-box das4Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">02</div>
+                </div>
+                <div class="total-inner"> Cancelled<br />
+                  Calls </div>
+              </div>
+              <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
+            </div>
+          </div>
         </div>
+        <div class="row ie-dashboard">
+          <div class="col-lg-3">
+            <div class="dashboard-box das5Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">35</div>
+                  <div class="total-inner"> Under Lab<br />
+                    Testing </div>
+                </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="dashboard-box das6Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">15</div>
+                </div>
+                <div class="total-inner"> Still Under<br />
+                  Inspection </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="dashboard-box das7Client">
+              <div class="dash-total">
+                <div class="dash-count">
+                  <div class="total-amount">12</div>
+                </div>
+                <div class="total-inner"> Stage<br />
+                  Rejection </div>
+              </div>
+              <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-<section class="table-section">
-    <div class="table-title">
-        <h3 class="headingh3">Recent request status of inspection call</h3>
-    </div>
-    <div class="task-inner row">
-        <div class="col-md-4">
-            <div class="input-search">
-                <label for="Search" class="d-none">Search</label>
-                <input type="text" id="Search" placeholder="Search">
-            </div>
+<section>
+  <div class="graph-section iePieGraphGrid">
+    <div class="row my-0">
+      <div class="col-lg-6">
+        <div class="invoice">
+          <h3 class="headingh3">Complaint</h3>
         </div>
-        <div class="col-md-4 p-0">
-            <div class="task-select">
-                <div class="customSelectOuter">
-                    <label for="Status" class="d-none">Select Client</label>
-                    <select id="Status" name="selectcorporation" class="">
-                        <option>Select Client</option>
-                        <option>Option 1</option>
-                    </select>
-                </div>
-                <div class="customSelectOuter">
-                    <label for="ongoing" class="d-none">Select Status</label>
-                    <select id="ongoing" name="selectcorporation" class="">
-                        <option>Ongoing</option>
-                        <option>Option 1</option>
-                    </select>
-                </div>
-            </div>
+        <div class="graph">
+          <div id="region-wise-pie"></div>
         </div>
-        <div class="col-md-4">
-            <div class="tast-date">
-                <div class="datefrom">
-                    <div class="from-celender">
-                        <label for="From" class="d-none">From</label>
-                        <input id="From" placeholder="From" type="text" class="datepicker">
-                    </div>
-                    <div class="colwithbtn">
-                        <label for="To" class="d-none">To</label>
-                        <input id="To" placeholder="To" type="text" class="datepicker">
-                    </div>
-                    <button class="search-btn"><span class="fa fa-search"></span></button>
-                </div>
-            </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="invoice">
+          <h3 class="headingh3">Complaint Status</h3>
         </div>
-    </div>
-    <div class="dash-table">
-        <table class="table-responsive">
-            <thead>
-                <tr>
-                    <th scope="col">Sr. No</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Req. No.</th>
-                    <th scope="col">Vendor</th>
-                    <th scope="col">Details</th>
-                    <th scope="col">Inspection Engineers</th>
-                    <th scope="col">Status</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
-                    <td>Freight Forwarding activities for handling export & import...</td>
-                    <td>Mr. Manoj Vajpay</td>
-                    <td class="oranges">Rejected</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Becton Dickinson India Private Limited.</td>
-                    <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
-                    <td>Smt. Smita Patil</td>
-                    <td class="green-color">Approved</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>03</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
-                    <td>Construction of RCC Boundary wall with Precast Panel &...</td>
-                    <td>Mr. Gaurang Dholera</td>
-                    <td class="blue-color">On Hold</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>04</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Micron Pharmaceuticals Ltd.</td>
-                    <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
-                    <td>Mr. Ajay Tomer</td>
-                    <td class="green-color">Approved</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>05</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Verve Human Care Laboratories, Dehradun</td>
-                    <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
-                    <td>Mr. Mayank Malegauker</td>
-                    <td class="oranges">Rejected</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-            </tbody>
+        <table class="borderGrid">
+          <tr>
+            <th class="textLeft">Status</th>
+            <th class="text-center">Complaints</th>
+          </tr>
+          <tr>
+            <td class="textLeft">Deleted</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr>
+            <td class ="textLeft">Pending</td>
+            <td class="text-center">12</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Accepted</td>
+            <td class="text-center">25</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Upheld</td>
+            <td class="text-center">5</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Sorting</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Rectification</td>
+            <td class="text-center">4</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Price Reduction</td>
+            <td class="text-center">8</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Lifted Before JI</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Transit Damange</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Unstamped</td>
+            <td class="text-center">1</td>
+          </tr>
+          <tr>
+            <td class="textLeft">Not on Rites A/C</td>
+            <td class="text-center">3</td>
+          </tr>
         </table>
+      </div>
     </div>
-    <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
-        <a class="viewall" href="#">View All</a>
-    </div>
+  </div>
 </section>
 <section class="table-section">
-    <div class="table-title">
-        <h3 class="headingh3">Recent purchase order</h3>
-    </div>
-    <div class="task-inner row">
-        <div class="col-md-4">
-            <div class="input-search">
-                <label for="Search2" class="d-none">Search</label>
-                <input type="text" id="Search2" placeholder="Search">
-            </div>
-        </div>
-        <div class="col-md-4 p-0">
-            <div class="task-select">
-                <div class="customSelectOuter">
-                    <label for="Vendor2" class="d-none">Select Vendor</label>
-                    <select id="Vendor2" name="selectcorporation" class="">
-                        <option>Select Vendor</option>
-                        <option>Option 1</option>
-                    </select>
-                </div>
-                <div class="customSelectOuter">
-                    <label for="ongoing" class="d-none">Select Status</label>
-                    <select id="ongoing" name="selectcorporation" class="">
-                        <option>Select Status</option>
-                        <option>Option 1</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="tast-date">
-                <div class="datefrom">
-                    <div class="from-celender">
-                        <label for="From" class="d-none">From</label>
-                        <input id="From" placeholder="From" type="text" class="datepicker hasDatepicker">
-                    </div>
-                    <div class="colwithbtn">
-                        <label for="To" class="d-none">To</label>
-                        <input id="To" placeholder="To" type="text" class="datepicker hasDatepicker">
-                    </div>
-                    <button class="search-btn"><span class="fa fa-search"></span></button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="dash-table">
-        <table class="table-responsive">
-            <thead>
-                <tr>
-                    <th scope="col">Sr. No</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Req. No.</th>
-                    <th scope="col">Vendor</th>
-                    <th scope="col">Details</th>
-                    <th scope="col">Purchase Order</th>
-                    <th scope="col">Status</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Express Global Logistics Pvt. Ltd, Mumbai</td>
-                    <td>Freight Forwarding activities for handling export & import...</td>
-                    <td>₹1,61,39,424.00</td>
-                    <td class="oranges">Rejected</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Becton Dickinson India Private Limited.</td>
-                    <td>CD4 Machine Reagents Kits for FACS Count Machines...</td>
-                    <td>₹1,61,39,424.00</td>
-                    <td class="green-color">Issued</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>03</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Myrtle Project &amp; Consultancy Pvt. Ltd.</td>
-                    <td>Construction of RCC Boundary wall with Precast Panel &...</td>
-                    <td>₹1,523,544.13</td>
-                    <td class="blue-color">On Hold</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>04</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Micron Pharmaceuticals Ltd.</td>
-                    <td>Procurement of Nevirapine Oral Suspension & Syrup...</td>
-                    <td>₹391,096,944.00</td>
-                    <td class="green-color">Issued</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-                <tr>
-                    <td>05</td>
-                    <td>20-07-2023</td>
-                    <td>RITES/01/0203</td>
-                    <td>M/s Verve Human Care Laboratories, Dehradun</td>
-                    <td>Tablet Buprenorphine 0.4 mg Tablets QTY. 1,97,40,000</td>
-                    <td>₹53,82,69,239.50</td>
-                    <td class="oranges">Rejected</td>
-                    <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
-        <a class="viewall" href="#">View All</a>
-    </div>
+  <div class="table-title">
+    <h3 class="headingh3">Recent Calls Status</h3>
+    <div class="gridNote">(<strong>Note:</strong> Top 5 recent calls)</div>
+  </div>
+  <div class="iePieGraphGrid">
+    <table class="borderGrid">
+      <tr>
+        <th>Sr. No.</th>
+        <th>Call S.No</th>
+        <th>Case no</th>
+        <th>Call Date</th>
+        <th>Details </th>
+        <th>Client </th>
+        <th>IE </th>
+        <th>IE contact No.</th>
+        <th>CM</th>
+        <th>CM Contact no.</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>NR23101890</td>
+        <td>09-01-2023</td>
+        <td>compressor</td>
+        <td>M/S Ajay kumar </td>
+        <td>Ajay kumar </td>
+        <td>9411908242</td>
+        <td>Arun kumar </td>
+        <td>7017187517</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>6</td>
+        <td>NR23101894</td>
+        <td>09-01-2023</td>
+        <td>compressor</td>
+        <td>M/S Vijaykumar </td>
+        <td>Ajay kumar </td>
+        <td>9411908242</td>
+        <td>Arun kumar </td>
+        <td>7017187517</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>9</td>
+        <td>NR23101896</td>
+        <td>09-06-2023</td>
+        <td>compressor</td>
+        <td>M/S Rohan kumar </td>
+        <td>Ajay kumar </td>
+        <td>9411908242</td>
+        <td>Arun kumar </td>
+        <td>7017187517</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>11</td>
+        <td>NR23101897</td>
+        <td>09-07-2023</td>
+        <td>compressor</td>
+        <td>M/S Arun kumar </td>
+        <td>Ajay kumar </td>
+        <td>9411908242</td>
+        <td>Arun kumar </td>
+        <td>7017187517</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>15</td>
+        <td>NR23101898</td>
+        <td>10-01-2023</td>
+        <td>compressor</td>
+        <td>M/S Sumit kumar </td>
+        <td>Ajay kumar </td>
+        <td>9411908242</td>
+        <td>Arun kumar </td>
+        <td>7017187517</td>
+      </tr>
+    </table>
+  </div>
+  <div class="tableBottomLink">
+    <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+    <a class="viewall" href="#">View All</a> </div>
+</section>
+<section class="table-section">
+  <div class="table-title">
+    <h3 class="headingh3">Recent Purchase  Order</h3>
+    <div class="gridNote">(<strong>Note:</strong> Top 5 recent PO)</div>
+  </div>
+  <div class="iePieGraphGrid">
+    <table class="borderGrid">
+      <tr>
+        <th>S. No.</th>
+        <th>PO No.</th>
+        <th>Client</th>
+        <th>Details</th>
+        <th>Purchase Order</th>
+        <th>Status</th>
+        <th class="action center">Action</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+      </tr>
+    </table>
+  </div>
+  <div class="tableBottomLink">
+    <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+    <a class="viewall" href="#">View All</a> </div>
 </section>
 @section scripts{
-    <script>
+<script>
         // Pie Chart
-
-        Highcharts.chart('region-wise-pie', {
-            colors: ['#1e66c3', '#0d9c68', '#e06b99', '#a885e0'],
+         Highcharts.chart('region-wise-pie', {
             chart: {
-                type: 'pie',
-                height: '250',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
             },
             title: {
-                text: ''
+                text: '',
+                align: 'left'
             },
             tooltip: {
-                valueSuffix: '%'
+                pointFormat: '{name}'
             },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                itemMarginTop: 10,
-                itemMarginBottom: 10
+            tooltip: {
+                valueSuffix: ''
+            },
+            filter: {
+                operator: '>',
+                property: 'percentage',
+                value: 10
             },
             plotOptions: {
                 pie: {
-                    allowPointSelect: true,
+                    allowPointSelect: false,
                     cursor: 'pointer',
-
                     dataLabels: {
-                        distance: -20,
-                        enabled: true,
-                        //format: '{point.name}: {y} %'
-                        format: '{y} %'
+                        enabled: false
                     },
                     showInLegend: true
                 }
             },
             series: [{
-                name: 'Percentage',
+                //name: 'Brands',
                 colorByPoint: true,
-                innerSize: '45%',
                 data: [{
-                    name: 'New Request',
-                    y: 38
+                    name: 'Deleted',
+                    y: 2.0,
+                    sliced: false,
+                    selected: false
                 }, {
-                    name: 'Inspection Ongoing',
-                    y: 28
+                    name: 'Pending',
+                    y: 12.0
                 }, {
-                    name: 'Inspection Completed',
-                    y: 22
+                    name: 'Accepted',
+                    y: 25.0
                 }, {
-                    name: 'Inspection Pending',
-                    y: 12
-                }]
+                    name: 'Upheld',
+                    y: 5.0
+                }, {
+                    name: 'Sorting',
+                    y: 2.0
+                }, {
+                    name: 'Rectification',
+                    y: 4.0
+                }, {
+                    name: 'Price Reduction',
+                    y: 8.0
+                }, {
+                    name: 'Lifted Before JI',
+                    y: 3.0
+                }, {
+                    name: 'Transit Damange',
+                    y: 2.0
+                }, {
+                    name: 'Unstamped',
+                    y: 1.0
+                }, {
+                    name: 'Not on Rites A/C',
+                    y: 3.0
+                }]                                      
             }]
         });
     </script>

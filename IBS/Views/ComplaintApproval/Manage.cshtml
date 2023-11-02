@@ -18,22 +18,23 @@
 </div>
 
 <section class="@clsView">
-    <div class="task-listinput">
+    <div class="task-listinput" id="tab-1">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ComplaintApproval" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
                 <div class="row my-0">
-                    <input type="text" asp-for="ItemSrnoPo" id="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="UomCd" id="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="Rate" id="Rate" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="RejectionValue" id="RejectionValue" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="VendCd" id="VendCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="ConsigneeCd" id="ConsigneeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="IE_CD" id="IeCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CoCd" id="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="ITEM_DESC_PO" id="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="Regioncode" id="Regioncode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <input type="text" asp-for="CaseNo" id="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+                    <input type="text" asp-for="ItemSrnoPo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="UomCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Rate"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="RejectionValue" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="VendCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="ConsigneeCd"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="IE_CD" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CoCd" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="ITEM_DESC_PO" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="Regioncode" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
+                    <input type="text" asp-for="CaseNo" maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Temp Rejection ID</label>
                         <input type="text" class="input" ASP-FOR="TEMP_COMPLAINT_ID" id="TEMP_COMPLAINT_ID" maxlength="300" readonly />
@@ -120,14 +121,18 @@
                         <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
                         <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" required>
                     </div>*@
-                    
+                    <div class="col-md-4 mb-4" id="nojiotherfield">
+                        <label for="Reference">Reason for NO JI Others</label>
+                        <input type="text" class="input" ASP-FOR="NoJiOther" maxlength="300" readonly />
+                        <span asp-validation-for="NoJiOther" class="text-danger"></span>
+                    </div>
                     <div class="col-md-3 mb-2" id="rejno">
                         <label>Rejection Memo Id</label>
                         <input type="text" class="input" ASP-FOR="RejMemono" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly/>
                     </div>
                     <div class="col-md-3 mb-2" id="rejdt">
                         <label>Rejection Memo Date </label>
-                        <input type="text" class="input" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
+                        <input type="text" class="input datepicker" ASP-FOR="RejMemodate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
                     </div>
                     <div class="col-md-3 mb-2" id="inspreq">
                         <label>Joint Inspection Required</label>
@@ -139,7 +144,7 @@
                     </div>
                     <div class="col-md-3 mb-2" id="JIDate">
                         <label for="Reference">JI Date (Date on Which IE Will Attend JI)</label>
-                        <input type="text" class="input datepicker" ASP-FOR="JIDate" maxlength="300" />
+                        <input type="text" class="input datepicker" ASP-FOR="JIDate" asp-format="{0:dd-MM-yyyy}" maxlength="300" readonly />
                     </div>
                     <div class="col-md-3 mb-2" id="JointInspection">
                         <label for="Jointisp">Joint Inspection Engineer</label>
@@ -151,7 +156,6 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
-
                     </div>
                 </div>
                 <br/>
@@ -173,7 +177,6 @@
     <partial name="_ValidationScriptsPartial" />
        
     <script type="text/javascript">
-
         $(document).ready(function () {
             $("#rejectvalue").hide();
             $("#sendemailbtn").hide();
@@ -185,6 +188,13 @@
             $("#JointInspection").hide();
             $("#NOJIReason").hide();
         });
+
+        var nojiother = $("#Jointisp").val();
+        if (nojiother == "K") {
+            $("#nojiotherfield").show();
+        }else{
+            $("#nojiotherfield").hide();
+        }
 
         $("#Inspectionrequired").change(function () {
             var selectedValue = $(this).val();
@@ -237,7 +247,7 @@
         function Accept(){
            
             var formData = $("#frmComplaints").serialize();
-
+            SaveSingleDocuments("tab-1");
             $.ajax({
                 url: '/ComplaintApproval/AcceptComplaint',
                 type: 'POST',

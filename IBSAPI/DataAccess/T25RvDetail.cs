@@ -55,5 +55,7 @@ public partial class T25RvDetail
 
     public virtual T13PoMaster? CaseNoNavigation { get; set; }
 
+    public virtual ICollection<T26ChequePosting> T26ChequePostings { get; set; } = new List<T26ChequePosting>();
+
     public virtual T24Rv? VchrNoNavigation { get; set; }
 }

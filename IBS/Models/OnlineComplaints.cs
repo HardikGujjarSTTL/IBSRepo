@@ -7,6 +7,7 @@ namespace IBS.Models
         public string? Name { get; set; }
         public string? Designation { get; set; }
         public string? TEMP_COMPLAINT_ID { get; set; }
+        [EmailAddress]
         public string? Email { get; set; }
         public string? MobileNO { get; set; }
         public string? BKNo { get; set; }
@@ -18,6 +19,7 @@ namespace IBS.Models
         public string? InspRegion { get; set; }
         public string? JiRequired { get; set; }
         public string? NoJIReason { get; set; }
+        public string? NoJiOther { get; set; }
         public byte? JiIeCd { get; set; }
         public string Item { get; set; }
         public string UserId { get; set; }
@@ -46,7 +48,16 @@ namespace IBS.Models
         public DateTime? Date { get; set; }
         public DateTime? JIDate { get; set; }
         public DateTime? Registrationdt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? RejMemodate { get; set; }
+
+        public DateTime? CreatedDate { get; set; }  
+        public int createdBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public int UpdatedBy { get; set; }
+
         public IFormFile ComplaintFile { get; set; }
         public string ComplaintID { get; set; }
     }

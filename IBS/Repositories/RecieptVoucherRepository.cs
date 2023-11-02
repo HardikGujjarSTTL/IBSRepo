@@ -210,22 +210,28 @@ namespace IBS.Repositories
 
             if (model.IsNew)
             {
-                model.VCHR_NO = GenerateVoucherNo(model.Region, model.VCHR_DT ?? DateTime.Now.Date);
-
-                T24Rv rv = new()
+                var count = context.T24Rvs
+                            .Where(item =>
+                                item.VchrNo == model.VCHR_NO)
+                            .Count();
+                if (count == 0)
                 {
-                    VchrNo = model.VCHR_NO,
-                    VchrDt = model.VCHR_DT,
-                    BankCd = model.BANK_CD,
-                    VchrType = model.VCHR_TYPE,
-                    Createdby = model.Createdby,
-                    Createddate = DateTime.Now,
-                    Isdeleted = 0
-                };
+                    model.VCHR_NO = GenerateVoucherNo(model.Region, model.VCHR_DT ?? DateTime.Now.Date);
 
-                context.T24Rvs.Add(rv);
-                context.SaveChanges();
+                    T24Rv rv = new()
+                    {
+                        VchrNo = model.VCHR_NO,
+                        VchrDt = model.VCHR_DT,
+                        BankCd = model.BANK_CD,
+                        VchrType = model.VCHR_TYPE,
+                        Createdby = model.Createdby,
+                        Createddate = DateTime.Now,
+                        Isdeleted = 0
+                    };
 
+                    context.T24Rvs.Add(rv);
+                    context.SaveChanges();
+                }
                 if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
                 {
                     int index = 0;
@@ -233,29 +239,32 @@ namespace IBS.Repositories
 
                     foreach (var item in model.lstVoucherDetails)
                     {
-                        T25RvDetail rvDetails = new()
+                        if (item.IsNew == true)
                         {
-                            VchrNo = model.VCHR_NO,
-                            Sno = item.ID,
-                            BankCd = item.BANK_CD,
-                            ChqNo = item.CHQ_NO,
-                            ChqDt = item.CHQ_DT,
-                            Amount = item.AMOUNT,
-                            AccCd = item.ACC_CD,
-                            AmountAdjusted = 0,
-                            SuspenseAmt = item.AMOUNT,
-                            Narration = item.NARRATION,
-                            SampleNo = item.SAMPLE_NO,
-                            BpoCd = item.BPO_CD,
-                            BpoType = item.BPO_TYPE,
-                            CaseNo = item.CASE_NO,
-                            AmtTransferred = 0,
-                            UserId = model.UserName,
-                            Createdby = model.Createdby,
-                            Createddate = DateTime.Now,
-                        };
-                        context.T25RvDetails.Add(rvDetails);
+                            T25RvDetail rvDetails = new()
+                            {
+                                VchrNo = model.VCHR_NO,
+                                Sno = item.ID,
+                                BankCd = item.BANK_CD,
+                                ChqNo = item.CHQ_NO,
+                                ChqDt = item.CHQ_DT,
+                                Amount = item.AMOUNT,
+                                AccCd = item.ACC_CD,
+                                AmountAdjusted = 0,
+                                SuspenseAmt = item.AMOUNT,
+                                Narration = item.NARRATION,
+                                SampleNo = item.SAMPLE_NO,
+                                BpoCd = item.BPO_CD,
+                                BpoType = item.BPO_TYPE,
+                                CaseNo = item.CASE_NO,
+                                AmtTransferred = 0,
+                                UserId = model.UserName,
+                                Createdby = Convert.ToString(model.Createdby),
+                                Createddate = DateTime.Now,
+                            };
 
+                            context.T25RvDetails.Add(rvDetails);
+                        }
                         string wAcc_Cd = "", wProject_Cd = "", wSub_Cd = "";
 
                         if (item.ACC_CD == 2709) { wAcc_Cd = "2709"; wProject_Cd = "2203"; wSub_Cd = "1"; }
@@ -339,7 +348,7 @@ namespace IBS.Repositories
                                 CaseNo = item.CASE_NO,
                                 AmtTransferred = 0,
                                 UserId = model.UserName,
-                                Createdby = model.Createdby,
+                                Createdby = Convert.ToString(model.Createdby),
                                 Createddate = DateTime.Now,
                             };
                             context.T25RvDetails.Add(rvDetails);
@@ -386,7 +395,7 @@ namespace IBS.Repositories
                                 rvDetails.CaseNo = item.CASE_NO;
                                 rvDetails.AmtTransferred = 0;
                                 rvDetails.UserId = model.UserName;
-                                rvDetails.Updatedby = model.Updatedby;
+                                rvDetails.Updatedby = Convert.ToString(model.Updatedby);
                                 rvDetails.Updateddate = DateTime.Now;
                             }
 

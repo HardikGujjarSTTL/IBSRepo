@@ -125,6 +125,9 @@ namespace IBS.Models
 
         public string? ItemCd { get; set; }
 
+        [Display(Name = "GSTIN No")]
+        [RegularExpression(@"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$", ErrorMessage = "Invalid GSTIN No.")]
+        [Required]
         public string? RecipientGstinNo { get; set; }
 
         public string? NewVendor { get; set; }
@@ -561,6 +564,8 @@ namespace IBS.Models
 
         public string? CallCancelCharges { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? CallStatusDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]

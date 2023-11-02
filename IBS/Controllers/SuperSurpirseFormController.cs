@@ -20,11 +20,13 @@ namespace IBS.Controllers
         #region Variables
         private readonly ISuperSurpirseFormRepository SuperSurpirseFormRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ModelContext context;
         #endregion
-        public SuperSurpirseFormController(ISuperSurpirseFormRepository _SuperSurpirseFormRepository, IWebHostEnvironment webHostEnvironment)
+        public SuperSurpirseFormController(ISuperSurpirseFormRepository _SuperSurpirseFormRepository, IWebHostEnvironment webHostEnvironment, ModelContext context)
         {
             SuperSurpirseFormRepository = _SuperSurpirseFormRepository;
             _webHostEnvironment = webHostEnvironment;
+            this.context = context;
         }
 
         [Authorization("SuperSurpirseForm", "Index", "view")]
@@ -34,19 +36,53 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("SuperSurpirseForm", "Index", "view")]
-        public IActionResult SuperSurpirseManage(string CaseNo,string CallDt,string CallSNo)
+        public IActionResult SuperSurpirseManage(string CaseNo,string CallDt,string CallSNo,int Count)
         {
             SuperSurpirseFormModel SuperSurpirseFormModel = new SuperSurpirseFormModel();
-            SuperSurpirseFormModel.Regin = GetRegionCode;
-            SuperSurpirseFormModel = SuperSurpirseFormRepository.LoadSuperData(SuperSurpirseFormModel, CaseNo, CallDt, CallSNo);
-            SuperSurpirseFormModel.Regin = GetRegionCode;
+            try
+            {   
+                SuperSurpirseFormModel.Regin = GetRegionCode;
+                SuperSurpirseFormModel = SuperSurpirseFormRepository.LoadSuperData(SuperSurpirseFormModel, CaseNo, CallDt, CallSNo);
+                SuperSurpirseFormModel.Regin = GetRegionCode;
+                if(Count == 1)
+                {
+                    ViewBag.Count = 1;
+                }
+                else
+                {
+                    ViewBag.Count = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions or errors here
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseManage", "SuperSurpirseForm", 1, GetIPAddress());
+            }
             return View(SuperSurpirseFormModel);
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string Regin = GetRegionCode;
-            DTResult<SuperSurpirseFormModel> dTResult = SuperSurpirseFormRepository.GetSuperFormData(dtParameters, Regin);
+            DTResult<SuperSurpirseFormModel> dTResult = new DTResult<SuperSurpirseFormModel>();
+            try
+            {
+                string Regin = GetRegionCode;
+                 dTResult = SuperSurpirseFormRepository.GetSuperFormData(dtParameters, Regin);
+                var Caseno = dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo");
+                var CallDt = dtParameters.AdditionalValues?.GetValueOrDefault("CallDate");
+                var CallSNo = dtParameters.AdditionalValues?.GetValueOrDefault("CallSNo");
+                //var Exists = context.T44SuperSurprises.Find(Convert.ToString(Caseno), Convert.ToDateTime(CallDt), Convert.ToInt32(CallSNo));
+                //var result = new
+                //{
+                //    Data = dTResult,
+                //    Count = (Exists == null) ? 0 : 1
+                //};
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions or errors here
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Index", "SuperSurpirseForm", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }       
         [HttpPost]

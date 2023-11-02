@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                     <td align="left"><Font face="Verdana" size="1"><span style="font-size:medium;">6. Person to be contacted, Phone No. with E-mail id </span></Font></td>
-                    <td align="right"><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactPer1, @Model.VendContactTel1, @Model.VendEmail </span></Font></td>
+                    <td align="left"><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactPer1, @Model.VendContactTel1, @Model.VendEmail </span></Font></td>
                 </tr>
                 <tr>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">7. Description of Stores </span></Font></td>
@@ -146,7 +146,7 @@
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">As Per Annexure-1 </span></Font></td>
                 </tr>
                 <tr>
-                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">12. Installmant Number </span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">12. Installment Number </span></Font></td>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.CallInstallNo </span></Font></td>
                 </tr>
                 <tr>
@@ -229,7 +229,7 @@
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendContactTelPO1 </span></Font></td>
                 </tr>
                 <tr>
-                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Vend Email <br></span></Font></td>
+                    <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;">Vendor Email <br></span></Font></td>
                     <td align=left><Font face="Verdana" size="1"><span style="font-size:medium;"> @Model.VendPOEmail </span></Font></td>
                 </tr>
                 <tr>
@@ -253,14 +253,14 @@
             <tbody>
                 <tr>
                     <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Sr. No.</font></b></th>
-                    <th width="25%" valign="top" align="left"><b><font size="1" face="Verdana">Consignee</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Description of Stores</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity on Order</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity Now Offered</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Quantity already inspected and passed</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Delivery period as per P.O./Amendment</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Bill Paying authority</font></b></th>
-                    <th width="10%" valign="top" align="right"><b><font size="1" face="Verdana">Master Item Checksheet</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Description of Stores</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity on Order</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity Now Offered</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity already inspected and passed</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Delivery period as per P.O./Amendment</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Paying authority</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Master Item Checksheet</font></b></th>
                 </tr>
                 @if (Model != null && Model.lstPrintCallLetter.Count > 0)
                 {
@@ -270,13 +270,13 @@
                             <tr>
                             <td align="center"><font size="1" face="Verdana">@SrNo</font></td>
                             <td align="left"><font size="1" face="Verdana">@item.Consignee</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.ItemDescPo</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.ItemDescPo</font></td>
                             <td align="right"><font size="1" face="Verdana">@item.QtyOrdered</font></td>
                             <td align="right"><font size="1" face="Verdana">@item.QtyToInsp</font></td>
                             <td align="right"><font size="1" face="Verdana">@item.CumQtyPrevOffered</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.DelvDt</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.Bpo</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.ItemCd</font></td>
+                            <td align="right"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DelvDt).ToString("dd/MM/yyyy")</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.Bpo</font></td>
+                            <td align="left"><font size="1" face="Verdana">@item.ItemCd</font></td>
                         </tr>
                         SrNo++;
                         }

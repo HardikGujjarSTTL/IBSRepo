@@ -98,7 +98,7 @@ namespace IBS.Repositories
                         SetNo = t.SetNo,
                         InspRegion = t.InspRegion,
                         RejMemono = t.RejMemoNo,
-                        RejMemodate = t.RejMemoDt,
+                        //RejMemodate = t.RejMemoDt,
                         RejectionValue = t.RejectionValue,
                         RejectionReason = t.RejectionReason,
                         Remarks = t.Remarks,
@@ -162,6 +162,8 @@ namespace IBS.Repositories
                        existingComplaint.JiStatusCd = 0;
                        existingComplaint.UserId = model.UserId;
                        existingComplaint.Datetime = DateTime.Now;
+                       existingComplaint.Updateddate= DateTime.Now;
+                       existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
                    }
                    else
                    {
@@ -172,7 +174,9 @@ namespace IBS.Repositories
                        existingComplaint.JiStatusCd = 0;
                        existingComplaint.UserId = model.UserId;
                        existingComplaint.Datetime = DateTime.Now;
-                   }
+                       existingComplaint.Updateddate = DateTime.Now;
+                       existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
+                    }
                     msg = "Data Saved.";
                    context.SaveChanges();
                }
@@ -181,14 +185,27 @@ namespace IBS.Repositories
             }
             else if(model.Regioncode == "N")
             {
+                string no_ji_other = "";
+
+                if (model.NoJIReason == "K")
+                {
+                    no_ji_other = model.NoJiOther;
+                }
+                else
+                {
+                    no_ji_other = "";
+                }
                 var existingComplaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == ComplaintID);
 
                 if (existingComplaint != null)
                 {
                     existingComplaint.JiRequired = model.AcceptRejornot;
                     existingComplaint.NoJiReason = model.NoJIReason;
+                    existingComplaint.NoJiOther = no_ji_other;
                     existingComplaint.UserId = model.UserId;
                     existingComplaint.Datetime = DateTime.Now;
+                    existingComplaint.Updateddate = DateTime.Now;
+                    existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
                     context.SaveChanges();
                     msg = "Data Saved.";
                 }
@@ -250,6 +267,8 @@ namespace IBS.Repositories
                     RejectionValue = firstOnlineComplaint.RejectionValue,
                     RejectionReason = firstOnlineComplaint.RejectionReason,
                     Datetime = DateTime.Now,
+                    Createdby = Convert.ToInt32(model.UserId),
+                    Createddate = DateTime.Now,
                 };
 
                 context.T40ConsigneeComplaints.Add(complaint);
@@ -341,7 +360,7 @@ namespace IBS.Repositories
 
                     if (DateTime.TryParse(dt.Rows[0]["rej_memo_dt"].ToString(), out DateTime memodt))
                     {
-                        model.RejMemodate = memodt;
+                       // model.RejMemodate = memodt;
                     }
                     model.RejMemono = dt.Rows[0]["rej_memo_no"].ToString();
 

@@ -8,7 +8,7 @@ namespace IBS.Interfaces
         CheckPostingFormModel FindByID( string billNo);
         CheckPostingHeader GetTextboxValues(string BankNameDropdown, string CHQ_NO, string CHQ_DATE, string region);
 
-        public CheckPostingbillInvoice ChkBillNo(string RadioBill , string Region);
+        public CheckPostingbillInvoice ChkBillNo(string RadioBill,string BillInvoiceNo, string Region);
         public CheckPostingbillInvoice ChkInvoiceNo(string InvoiceBill, string Region);
         public string UpdateData(CheckPostingFormModel model);
     }

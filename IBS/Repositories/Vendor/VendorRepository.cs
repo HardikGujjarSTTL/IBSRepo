@@ -155,7 +155,6 @@ namespace IBS.Repositories.Vendor
                     Createddate = DateTime.Now,
                     Isdeleted = model.Isdeleted,
                 };
-
                 context.T05Vendors.Add(vendor);
                 context.SaveChanges();
             }
@@ -194,9 +193,63 @@ namespace IBS.Repositories.Vendor
 
                     context.SaveChanges();
                 }
-            }
 
+            }
+            UserUpdate(model);
             return model.VendCd;
+        }
+
+        public string GetUserID(string VendCd)
+        {
+            string ID = "";
+            var UserId = context.T02Users.Where(x => x.UserId == VendCd).FirstOrDefault();
+            if (UserId != null)
+            {
+                ID = "1";
+            }
+            else
+            {
+                ID = "0";
+            }
+            return ID;
+        }
+
+        public void UserUpdate(VendorMasterModel model)
+        {
+            var UserDetails = context.T02Users.Where(x => x.UserId == Convert.ToString(model.VendCd)).FirstOrDefault();
+            if (UserDetails == null)
+            {
+                T02User User = new();
+                User.UserId = Convert.ToString(model.VendCd);
+                User.UserName = model.VendName;
+                User.RitesEmp = "Y";
+                User.EmpNo = Convert.ToString(model.VendCd);
+                User.Region = model.Region;
+                User.Password = Convert.ToString(model.VendCd);
+                User.Createdby = model.UserId;
+                User.Createddate = DateTime.Now.Date;
+                User.Isdeleted = 0;
+                User.Migtype = "V";
+                User.Mobile = model.VendContactTel1;
+
+                context.T02Users.Add(User);
+                context.SaveChanges();
+            }
+            else
+            {
+                UserDetails.UserName = model.VendName;
+                UserDetails.RitesEmp = "Y";
+                UserDetails.EmpNo = Convert.ToString(model.VendCd);
+                UserDetails.Region = model.Region;
+                UserDetails.Password = Convert.ToString(model.VendCd);
+                UserDetails.Updatedby = model.UserId;
+                UserDetails.Updateddate = DateTime.Now.Date;
+                UserDetails.Isdeleted = 0;
+                UserDetails.Migtype = "V";
+                UserDetails.Mobile = model.VendContactTel1;
+
+                context.SaveChanges();
+            }
         }
 
         public int GetMaxVend_CD()

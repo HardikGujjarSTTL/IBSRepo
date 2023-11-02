@@ -65,7 +65,7 @@
     <script type="text/javascript">
 
         $(function () {
-            InitializeDatatable();
+            //InitializeDatatable();
         });
         function show() {
             var CaseNo = $("#txtcno").val();
@@ -80,7 +80,7 @@
                 autoWidth: true,
                 scrollX: true,
                 scrollCollapse: true,
-                processing: true, // ServerSide Setups
+                processing: false, // ServerSide Setups
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
@@ -120,13 +120,23 @@
                             var CaseNo = data.Case_No;
                             var CallDt = data.CallDt;
                             var CallSNo = data.CallSNo;
-                            var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpirseForm")?CaseNo=' + CaseNo;
+                            var count = data.Count;
+                            var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpirseForm")' +
+                                '?CaseNo=' + CaseNo +
+                                '&CallDt=' + CallDt +
+                                '&CallSNo=' + CallSNo +
+                                '&Count=' + count;
+                            if (data.Count == 0) {
+                                
+                                var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Add"></i></a>';
+                            }
+                            else
+                            {
+                                var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
+                            }
+                            //var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpirseForm")?CaseNo=' + CaseNo;
                             //var editUrl = '@Url.Action("SuperSurpirseManage", "SuperSurpriseForm")';
-                            //var editUrl = '@Url.Action("SuperSurpriseForm", "SuperSurpriseForm")' +
-                            //    '?Case_No=' + encodeURIComponent(Case_No) +
-                            //    '&CallDt=' + encodeURIComponent(CallDt) +
-                            //    '&CallSNo=' + encodeURIComponent(CallSNo);
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            
                             html += '</div>';
                             return html;
                         }

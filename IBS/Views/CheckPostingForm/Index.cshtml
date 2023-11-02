@@ -318,18 +318,16 @@
         function btnBillDetailsClick() {
             if ($('#radioBill').is(':checked') && $('#BillInvoiceNo').val() != null) {
                 RadioBill = $("#radioBill").val();
+                var BillInvoiceNo = $("#BillInvoiceNo").val();
+                alert(BillInvoiceNo);
                 $.ajax({
                     url: '/CheckPostingForm/btnBillDetailsClick',
                     type: "POST",
                     dataType: "JSON",
-                    data: { RadioBill: RadioBill },
-
+                    data: { "RadioBill": RadioBill, "BillInvoiceNo": BillInvoiceNo },
                     success: function (success) {
-
                         alert(success.alert);
-
                     }
-
                 });
             }
             else if ($('#radioInvoice').is(':checked') && $('#BillInvoiceNo').val() != null) {
@@ -363,7 +361,7 @@
                 var CHQ_DATE = $("#CHQ_DATE").val();
 
                 $(".billInvoiceClass").css("display", "block");
-                //InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
+                InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
                 GetValue(BankNameDropdown, CHQ_NO, CHQ_DATE);
             }
         }
