@@ -84,12 +84,31 @@
                 <div class="col-md-12 mb-3">
                     <section class="table-section">
                         <div class="dash-table">
-                            <table id="dtVigilanceList" class="table-responsive">
+                            <table id="dtVigilanceList1" class="table-responsive">
                                 <thead>
                                     <tr>
                                         <th style="text-align:center">
                                             <input type="checkbox" id="selectallCaseNos" name="selectallCaseNos" style="margin-left: 18px;" checked />
                                         </th>
+                                        <th>Case No</th>
+                                        <th>BK No</th>
+                                        <th>Set No</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row my-0" id="dvVigilanceList2" style="display: none;">
+                <div class="col-md-12 mb-3">
+                    <section class="table-section">
+                        <div class="dash-table">
+                            <table id="dtVigilanceList2" class="table-responsive">
+                                <thead>
+                                    <tr>
                                         <th>Case No</th>
                                         <th>BK No</th>
                                         <th>Set No</th>
@@ -119,14 +138,13 @@
         var dt;
 
         $(function () {
-            dt = $("#dtVigilanceList").DataTable();
+            dt = $("#dtVigilanceList1").DataTable();
         });
         
         $(document).ready(function () {
             if ('@Model.Id' > 0) {
                 $("#RefDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
-                BindVigilanceList("", '@Model.RefRegNo');
-                checkedcaseNos();
+                BindVigilanceList2('@Model.RefRegNo');
             }
         });
 
@@ -141,12 +159,12 @@
                 return;
             }
 
-            BindVigilanceList(CaseNo, "");
+            BindVigilanceList1(CaseNo);
         });
 
-        function BindVigilanceList(_CaseNo, _RefRegNo) {
+        function BindVigilanceList1(_CaseNo) {
 
-            dt = $("#dtVigilanceList").DataTable({
+            dt = $("#dtVigilanceList1").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -160,14 +178,13 @@
                 ordering: false,
                 dom: '<"toolbar">rtip',
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTableVigilanceList")",
+                    url: "@Url.Action("LoadTableVigilanceList1")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
                             "CaseNo": _CaseNo,
-                            "RefRegNo": _RefRegNo,
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -205,11 +222,7 @@
             }
         });
 
-        $("#dtVigilanceList").on('change', "input[type='checkbox']", function (e) {
-            checkedcaseNos();
-        });
-
-        function checkedcaseNos() {
+        $("#dtVigilanceList1").on('change', "input[type='checkbox']", function (e) {
             var totalCount = dt.rows().count();
             var checkedCount = dt.$(".select-caseNos:checked").length;
 
@@ -219,10 +232,48 @@
             else {
                 $("#selectallCaseNos").prop("checked", false);
             }
+        });
+
+        function BindVigilanceList2(_RefRegNo) {
+
+            dt = $("#dtVigilanceList2").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollY: "500px",
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: false,// Paging Setups
+                searching: false,// Searching Setups
+                ordering: false,
+                dom: '<"toolbar">rtip',
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableVigilanceList2")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "RefRegNo": _RefRegNo,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    { data: "CaseNo" },
+                    { data: "BkNo" },
+                    { data: "SetNo" },
+                ]
+            });
+
+            document.querySelector('div.toolbar').innerHTML = "<b>List of Cases</b>";
+            $("#dvVigilanceList2").css("display", "");
         }
 
         function SubmitVigilanceCasesData() {
-
             if ($("#frmVigilanceCasesMaster").valid()) {
 
                 var checkedCaseNos = [];
