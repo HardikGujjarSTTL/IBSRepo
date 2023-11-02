@@ -82,9 +82,16 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadTableVigilanceList([FromBody] DTParameters dtParameters)
+        public IActionResult LoadTableVigilanceList1([FromBody] DTParameters dtParameters)
         {
-            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList(dtParameters);
+            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList1(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableVigilanceList2([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList2(dtParameters);
             return Json(dTResult);
         }
 
