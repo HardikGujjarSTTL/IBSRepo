@@ -494,8 +494,8 @@ namespace IBS.Repositories.InspectionBilling
             var MaxVal = context.T14aPoNonrlies.Where(x => x.CaseNo == model.Caseno).FirstOrDefault();
             if (MaxVal != null)
             {
-                model.MaxFee = Convert.ToInt16(MaxVal.MaxFee);
-                model.MinFee = Convert.ToInt16(MaxVal.MinFee);
+                model.MaxFee = Convert.ToInt32(MaxVal.MaxFee);
+                model.MinFee = Convert.ToInt32(MaxVal.MinFee);
             }
         }
 
@@ -711,8 +711,8 @@ namespace IBS.Repositories.InspectionBilling
                             model.TMValue = query3.MaterialValue;
                             model.TIFee = query3.InspFee;
                             model.NetFee = query3.BillAmount;
-                            model.MaxFee = Convert.ToInt16(query3.MaxFee);
-                            model.MinFee = Convert.ToInt16(query3.MinFee);
+                            model.MaxFee = Convert.ToInt32(query3.MaxFee);
+                            model.MinFee = Convert.ToInt32(query3.MinFee);
                             model.BillDt = query3.BillDt;
                             model.Remarks = query3.Remarks;
                             model.InvoiceNo = query3.InvoiceNo;
