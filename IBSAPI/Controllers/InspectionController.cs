@@ -95,7 +95,7 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("GetCaseDetailForIE", Name = "GetCaseDetailForIE")]
-        public IActionResult GetCaseDetailForIE(string Case_No, string CallRecvDt, int CallSNo, int IeCd)
+        public IActionResult GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd)
         {
             try
             {
