@@ -131,13 +131,13 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Discount Type</label>
-                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'DiscountPer');"})
                         <span asp-validation-for="Rate" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Value</label>
                         @*<input type="text" class="input" asp-for="DiscountPer" onblur="discountype();">*@
-                        <input type="number" class="input" asp-for="DiscountPer" min="1" oninput="this.value = Math.min(this.value)" onblur="discountype();">
+                        <input type="number" class="input" asp-for="DiscountPer" onblur="discountype();">
                         <span asp-validation-for="DiscountPer" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -150,7 +150,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Excise Type</label>
-                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'ExcisePer');"})
                             <span asp-validation-for="ExciseType" class="text-danger"></span>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="ExcisePer" onblur="excise();">*@
-                            <input type="number" class="input" asp-for="ExcisePer" min="1" oninput="this.value = Math.min(this.value)" onblur="excise();">
+                            <input type="number" class="input" asp-for="ExcisePer" onblur="excise();">
                             <span asp-validation-for="ExcisePer" class="text-danger"></span>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                         <div class="reference">
                             <label for="Name">GST/Sale Tax(%)</label>
                             @*<input type="text" class="input" asp-for="SalesTaxPer" onblur="saletax();">*@
-                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" oninput="this.value = Math.min(this.value)" onblur="saletax();">
+                            <input type="number" class="input" asp-for="SalesTaxPer" min="0" max="100" oninput="this.value = Math.min(this.value)" onblur="saletax();">
                             <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Other Charges Type</label>
-                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'OtChargePer');"})
                             <span asp-validation-for="OtChargeType" class="text-danger"></span>
                         </div>
                     </div>
@@ -197,8 +197,8 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="OtChargePer" onblur="othercharges();">*@
-                            <input type="number" class="input" asp-for="OtChargePer" min="1" oninput="this.value = Math.min(this.value)" onblur="othercharges();">
-                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                            <input type="number" class="input" asp-for="OtChargePer" onblur="othercharges();">
+                            <span asp-validation-for="OtChargePer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -262,10 +262,57 @@
             });
             $("#UomCd").val(3);
             GetUOMChanged();
+            AddRemoveValidation($("#DiscountType").val(), 'DiscountPer');
+            AddRemoveValidation($("#ExciseType").val(), 'ExcisePer');
+            AddRemoveValidation($("#OtChargeType").val(), 'OtChargePer');
         });
 
-        $(document).ready(function () {
-            
+        function AddRemoveValidation(selectedValue, fieldName) {
+            $("#" + fieldName).rules("remove", "required range");
+            if (selectedValue == "P") {
+                $("#" + fieldName).rules("add", {
+                    required: true,
+                    range: [0, 100],
+                    messages: {
+                        required: "Field is required.",
+                        range: "Please enter a value between 0 and 100."
+                    },
+                });
+            }
+            else if (selectedValue == "L" || selectedValue == "N") {
+                $("#" + fieldName).rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Field is required.",
+                    },
+                });
+            }
+        }
+
+        $('#ExcisePer, #DiscountPer , #OtChargePer, #SalesTaxPer').on('input propertychange', function () {
+            var idName = $(this).attr('id');
+            var typeVal = "";
+            if (idName == "ExcisePer") {
+                typeVal = $("#ExciseType").val();
+            }
+            else if (idName == "DiscountPer") {
+                typeVal = $("#DiscountType").val();
+            }
+            else if (idName == "OtChargePer") {
+                typeVal = $("#OtChargeType").val();
+            }
+            else if (idName == "SalesTaxPer") {
+                var currentValue = $(this).val();
+                if (parseInt(currentValue) > 100) {
+                    $(this).val("0");
+                }
+            }
+            if (typeVal == "P") {
+                var currentValue = $(this).val();
+                if (parseInt(currentValue) > 100) {
+                    $(this).val("0");
+                }
+            }
         });
 
         function GetUOMChanged() {

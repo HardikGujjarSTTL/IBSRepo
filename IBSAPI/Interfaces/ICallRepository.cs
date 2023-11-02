@@ -2,7 +2,7 @@
 
 namespace IBSAPI.Interfaces
 {
-    public interface ICallListRepository
+    public interface ICallRepository
     {
         List<CallListModel> GetCallList();
 

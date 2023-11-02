@@ -5,6 +5,6 @@ namespace IBS.Interfaces.Reports
 {
     public interface IBPOWiseOutstandingBillsRepository
     {
-        DataSet GenerateReport(BPOWiseOutstandingBillsModel BPOWiseOutstandingBillsModel);
+        BPOWiseOutstandingBillsModel GenerateReport(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, string Checkbox, string Railway, string PSU, string StateGovt, string ForeignRailways, string PrivateSector, string TypeofOutStandingBills,string Region);
     }
 }
