@@ -1606,16 +1606,17 @@ namespace IBS.Models
 
         }
 
-        public static List<SelectListItem> GetNCCode()
+        public static List<SelectListItem> GetNCCode(string NCRClass)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> NCCODE = ModelContext.T69NcCodes
-                                          .Select(a => new SelectListItem
+            List<SelectListItem> NCCODE = (from a in ModelContext.T69NcCodes
+                                           where a.NcClass == NCRClass
+                                           select
+                                          new SelectListItem
                                           {
                                               Text = a.NcCd + " - " + a.NcDesc,
                                               Value = a.NcCd
-                                          })
-                                          .ToList();
+                                          }).ToList();
             return NCCODE;
         }
 
