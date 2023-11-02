@@ -45,7 +45,28 @@
         completed = function (response) {
             var res = response.responseJSON;
             if (res.status) {
-                window.location.href = '@Url.Action("Index", "Dashboard")';
+                if (res.RoleName.toLowerCase() == "admin") {
+                    window.location.href = '@Url.Action("Index", "Dashboard")';
+                }
+                else if (res.RoleName.toLowerCase() == "inspection engineer (ie)") {
+                    window.location.href = '@Url.Action("IE", "Dashboard")';
+                }
+                else if (res.RoleName.toLowerCase() == "vendor") {
+                    window.location.href = '@Url.Action("Vendor", "Dashboard")';
+                }
+                else if (res.RoleName.toLowerCase() == "client") {
+                    window.location.href = '@Url.Action("Client", "Dashboard")';
+                }
+                else if (res.RoleName.toLowerCase() == "liasioning officer (lo)") {
+                    window.location.href = '@Url.Action("Index", "Dashboard")';
+                }
+                else if (res.RoleName.toLowerCase() == "lab user") {
+                    window.location.href = '@Url.Action("Index", "Dashboard")';
+                }
+                else
+                {
+                    window.location.href = '@Url.Action("Index", "Dashboard")';
+                }
             }
             else {
                 ShowHideMsgNew(res.status, res.responseText);

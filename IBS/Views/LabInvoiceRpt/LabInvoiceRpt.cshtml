@@ -9,31 +9,30 @@
 }
 
 
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>LAB INVOICE</h2>
-        </div>
-
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>LAB INVOICE</h2>
     </div>
+
+</div>
 <section class="@clsView">
     <div class="task-listinput">
 
-            <div class="accordion-body">
-                <div class="row my-0">
-                    <div class="col-md-4 mb-3">
-                        <label for="Reference">Sample Registration No.</label>
-                        <input type="text" class="input" asp-for="RegNo" id="txtregno">
-                        <span asp-validation-for="RegNo" class="text-danger"></span>
-                    </div>
-
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Sample Registration No.</label>
+                    <input type="text" class="input" asp-for="RegNo" id="txtregno">
+                    <span asp-validation-for="RegNo" class="text-danger"></span>
                 </div>
-
-                <div class="savenext-btn">
-                @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
-                    <button type="button" class="save-btn active" style="margin-left:40%;" onclick="search();">Search</button>
+                <div class="col-md-4 mb-3">
+                    <div class="savenext-btn btnAlign">
+                        @*<a asp-controller="LaboratoryMaster" asp-action="LaboratoryMaster" class="reset-btn">Cancel</a>*@
+                        <button type="button" class="save-btn active" onclick="search();">Search</button>
+                    </div>
                 </div>
             </div>
-
+        </div>
     </div>
 </section>
 
@@ -41,31 +40,31 @@
 
 @section scripts{
 
-                <partial name="_DataTablesScriptsPartial" />
-                <partial name="_ValidationScriptsPartial" />
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 
-                <script type="text/javascript">
-                        function search() {
-            if ($("#txtregno").val() == ''){
+    <script type="text/javascript">
+        function search() {
+            if ($("#txtregno").val() == '') {
                 alert("Please Enter Register No.");
                 return false;
             }
-                                var RegNo = $("#txtregno").val();
-                                        var newUrl = "/LabInvoiceRpt/ManageLabInvoiceRpt?RegNo="+RegNo; 
+            var RegNo = $("#txtregno").val();
+            //var newUrl = "/LabInvoiceRpt/ManageLabInvoiceRpt?RegNo="+RegNo;
+            window.location.href = '@Url.Action("ManageLabInvoiceRpt", "LabInvoiceRpt")?RegNo=' + RegNo;
 
-       
-                                        window.location.href = newUrl;
-                }
-                    $(function () {
-                        
-                    });
+            //window.location.href = newUrl;
+        }
+        $(function () {
+
+        });
 
 
-                            //function UserDelete(UserId) {
-                            //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-                            //    $("#btn-delete-yes").attr("href", url);
-                            //    $("#modal-delete-conf").modal("show");
-                            //}
+                                    //function UserDelete(UserId) {
+                                    //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
+                                    //    $("#btn-delete-yes").attr("href", url);
+                                    //    $("#modal-delete-conf").modal("show");
+                                    //}
 
-                </script>
+    </script>
 }

@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Barcode Generation";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Barcode Generation List</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-area="" asp-controller="BarcodeGeneration" asp-action="AddBarcode" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Barcode</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtbarcode" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Barcode</th>
+                            <th>Case No</th>
+                            <th>System Date</th>
+                            <th>Inspector Name</th>
+                            <th>Description</th>
+                            <th>Sealing Type</th>
+                            <th>Rates</th>
+                            <th>Targated Date</th>
+                            <th>RTax</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+
+            $("#dtbarcode").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, 
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [
+
+                { data: "BARCODE" },
+                { data: "CASE_NO" },
+                { data: "CURRENT_DATE" },
+                { data: "INSPECTOR_CUSTOMER" },
+                { data: "DESCRIPTION" },
+                { data: "SEALING_TYPE" },
+                    { data: "TotalRate" },
+                { data: "TARGETED_DATE" },
+                    { data: "GSTAmount" },
+
+                    
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                        var Id = data.BARCODE;
+                            //var qty = 1;
+                            var qtyInput = '<input type="number" class="text-filter" name="qty" style="height:auto;" id="' + data.QTY + '" value="1" min="1" step="1" oninput="validity.valid||(value=\'1\');" onchange="validateQty(this);"';
+
+                            var printImage = '<img src="../images/print.png" alt="Print" />';
+                            var printLink = '<a href="' + getEditUrl(Id) + '" class="btnicons" style="margin-left:40%;vertical-align:sub;">' + printImage + '</a>';
+                            var html = '<div align="center" class="btnicons">' + printLink + '</div>';
+
+                            return qtyInput + html;
+                        }
+                    }
+                   
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+        function getEditUrl(Id) {
+         
+            return '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id;
+
+        }
+
+        
+        $('#dtbarcode').on('click', 'td a', function (e) {
+           
+            e.preventDefault(); 
+            var qty = $(this).closest('td').find('input[name="qty"]').val();
+            var Id = $(this).attr('href').split('Barcode=')[1]; 
+            var editUrl = getEditUrl(Id) + '&quantity=' + qty; 
+            
+            //window.location.href = editUrl;
+            printDirectly(editUrl);
+        });
+        function printDirectly(url) {
+            
+            var iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.display = 'none';
+
+            
+            document.body.appendChild(iframe);
+
+           
+            setTimeout(function () {
+                iframe.contentWindow.print();
+            }, 1000);
+
+            
+            setTimeout(function () {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }
+        function validateQty(inputElement) {
+            if (inputElement.value === '' || parseInt(inputElement.value) < 1) {
+                inputElement.value = '1';
+            }
+        }
+               
+
+    </script>
+}

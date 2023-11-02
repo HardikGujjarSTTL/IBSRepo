@@ -1,13 +1,7 @@
 ﻿using IBS.DataAccess;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.DirectoryServices.Protocols;
 using System.Globalization;
 
 namespace IBS.Repositories
@@ -15,6 +9,7 @@ namespace IBS.Repositories
     public class CallsReportRepository : ICallsReportRepository
     {
         private readonly ModelContext context;
+
         public CallsReportRepository(ModelContext context)
         {
             this.context = context;
@@ -22,7 +17,6 @@ namespace IBS.Repositories
 
         public List<railway_dropdown1> GetValue(string selectedValue)
         {
-            Calls_Marked_For_Specific_POModel result = null;
             var query = from railway in context.T91Railways
                         where railway.RlyCd != "CORE"
                         orderby railway.RlyCd
@@ -38,7 +32,6 @@ namespace IBS.Repositories
 
         public List<railway_dropdown1> GetValue2(string selectedValue)
         {
-            Calls_Marked_For_Specific_POModel result = null;
             var query = context.T12BillPayingOfficers
              .Where(bpo => bpo.BpoType == selectedValue)
              .Select(bpo => new railway_dropdown1
@@ -50,11 +43,8 @@ namespace IBS.Repositories
              .OrderBy(item => item.RLY_CD)
              .ToList();
 
-
-
             return query.ToList();
         }
-
 
         public DTResult<Statement_IeVendorWiseModel> gridData(DTParameters dtParameters)
         {
@@ -98,7 +88,6 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-
 
         public Statement_IeVendorWiseModel Statement_IeVendorWise(string ReportType, string frmDate, string toDate , string Region)
         {
@@ -432,7 +421,6 @@ namespace IBS.Repositories
             model.statement_IeVendorWiseModels = result;
             return model;
         }
-
 
     }
 }

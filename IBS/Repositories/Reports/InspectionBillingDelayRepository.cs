@@ -23,13 +23,7 @@ namespace IBS.Repositories.Reports
         public List<InspectionBillingDelayModel> Get_Inspection_Billing_Delay(InspectionBillingDelayReportModel obj, UserSessionModel model)
         {
             DTResult<InspectionBillingDelayModel> dTResult = new() { draw = 0 };
-            IQueryable<InspectionBillingDelayModel> query = null;
 
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = true;
-
-            string wYrMth = "";
 
             bool IsBillDt = false, IsIEName = false, IsIcDt = false, IsFInspDt = false, IsLFnspDt = false, IsAllIE = false, IsPartiIE = false;
             int MonthWise = 0, DateWise = 0;

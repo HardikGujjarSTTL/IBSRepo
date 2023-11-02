@@ -1,66 +1,34 @@
 ﻿@model IBS.Models.CheckPostingFormModel
 
 @{
-    ViewData["Title"] = "Cheaque Posting";
-    string clsView = "";
-    //if (Model.CHQ_NO != "0")
-    //{
-    //    clsView = "Permission_View";
-    //}
+    ViewData["Title"] = "Cheque Posting";
 }
-
-@*<style>
-    .billInvoiceClass{
-
-    }
-
-    .btn-group .btn {
-        flex: 1;
-        min-width: 100px;
-    }
-
-    .modal-footer {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-</style>*@
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Cheaque Posting</h2>
+        <h2>@ViewData["Title"]</h2>
     </div>
-  @*  <div class="list-btn">
-        <a asp-area="" asp-controller="AddRecieptVoucher" asp-action="AddRecieptVoucher" class="formBtn Permission_Add">Add New Voucher</a>
-    </div>*@
 </div>
-<section class="@clsView">
-    <div class="task-listinput">
-          <form data-ajax="true" asp-antiforgery="true" asp-controller="CheckPostingForm" asp-action="search" data-ajax-method="post" data-ajax-complete="completed" id="frmchqposting">
-                <div class="accordion-body">
-                    <div class="row my-0">
-                       
+<form role="form" asp-controller="CheckPostingForm" asp-action="Index" id="frmchqposting">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-4">
+                <label for="Reference">Bank</label>
+                @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
+                <span asp-validation-for="BANK_NAME" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="Reference">Cheque No.</label>
+                <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
 
-                        <div  class="col-md-4 mb-4">
-                            <label for="Reference">Bank</label>
-                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
-                            <span asp-validation-for="BANK_NAME" class="text-danger"></span>
-                        </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="Reference">Cheque Date</label>
+                <input type="text" id="CHQ_DATE" class="input datepicker" asp-for="CHQ_DATE" />
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Cheque No.</label>
-                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
-                           
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Cheque Date</label>
-                            <input type="text" id="CHQ_DATE" class="input datepicker" asp-for="CHQ_DATE" />
-                          
-                        </div>
-
-                        <div class="hide1 col-md-4 mb-4"  >
-                            <label for="Reference">Voucher No.</label>
-                            <input type="text" id="vchr_no" class="input"  readonly />
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Voucher No.</label>
+                <input type="text" id="vchr_no" class="input" readonly />
 
 
                         </div>
@@ -70,211 +38,241 @@
                             <label for="Reference">Dated</label>
                             <input type="text" id="vchr_dt" class="input" maxlength="300" readonly />
 
-                        </div>
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Cheque Amount </label>
+                <input type="text" id="chqAmt" class="input" maxlength="300" readonly />
 
-                        <div class="hide1 col-md-4 mb-4" >
-                            <label for="Reference">Cheque Amount </label>
-                            <input type="text" id="chqAmt" class="input" maxlength="300" readonly />
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Paying Authority </label>
+                <input type="text" id="payAuth" class="input" maxlength="300" readonly />
 
-                        </div>
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Posted Amount </label>
+                <input type="text" id="pstAmt" class="input" maxlength="300" readonly />
 
-                        <div class="hide1 col-md-4 mb-4" >
-                            <label for="Reference">Paying Authority </label>
-                            <input type="text" id="payAuth" class="input" maxlength="300" readonly />
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Amount Transferred to other Region </label>
+                <input type="text" id="Amttrnsfered" class="input" maxlength="300" readonly />
 
-                        </div>
+            </div>
+            <div class="hide1 col-md-4 mb-4">
+                <label for="Reference">Un-Adjusted Advance </label>
+                <input type="text" id="unAdjstedAdvance" class="input" maxlength="300" readonly />
 
-                        <div class="hide1 col-md-4 mb-4" >
-                            <label for="Reference">Posted Amount </label>
-                            <input type="text" id="pstAmt" class="input" maxlength="300" readonly />
-
-                        </div>
-
-                        <div class="hide1 col-md-4 mb-4" >
-                            <label for="Reference">Amount Transferred to other Region </label>
-                            <input type="text" id="Amttrnsfered" class="input" maxlength="300" readonly />
-
-                        </div>
-
-                        <div class="hide1 col-md-4 mb-4" >
-                            <label for="Reference">Un-Adjusted Advance </label>
-                            <input type="text" id="unAdjstedAdvance" class="input" maxlength="300" readonly />
-
-                        </div>
-
-                        <div class="savenext-btn"> 
-                            <button type="button" class="save-btn active" onclick="search();">Search</button>
-                        </div>
-
-
-                        <table id="dtchequepost" class="table-responsive">
-                            <thead>
-                                <tr>
-                                    
-                                    @*<th>S NO</th>*@
-
-                                     <th>#</th>
-                                    <th>Bill No.</th>
-                                    <th>BPO</th>
-                                    <th>Bill Amount</th>
-                                    <th>Bill Amount Cleared</th>
-                                    <th>Amount Cleared By above Cheque</th>
-                                    <th>Posting Date</th>
-                                    <th>Action</th>
-                                    <th>Action2</th>
-
-                                   
-                          
-                               
-                            
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                            </tbody>
-                        </table>
-
-                        <div class="hide1 col-md-4 mb-4">
-                              <input type="radio" class="billInvoiceClass" id="radioBill" name="Bill" value="Bill_No">
-                            <label for="Reference" class="billInvoiceClass">Bill No.</label><br>
-
-                            <input type="radio" class="billInvoiceClass" id="radioInvoice" name="Bill" value="Invoice_No">
-                            <label for="Reference" class="billInvoiceClass">Invoice No.</label><br>
-
-                             <input type="text" class="billInvoiceClass" id="BillInvoiceNo" class="input" asp-for="BILL_NO" maxlength="300" />
-                             <br></br>
-                           
-                        </div>
-
-                   </div>
-
-
-                <button class="billInvoiceClass save-btn active" id="btnBillDetails" onclick="btnBillDetailsClick();">Bill Details</button>
-
-                </div>
-          </form>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="search();">Search</button>
+            </div>
+        </div>
     </div>
+
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <div class="reference">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                @*<input type="radio" asp-for="rdoBill" name="rdoBill" value="B" id="rdoBill_B" class="billInvoiceClass" checked />
+                                <label for="rdoBill_B" class="billInvoiceClass">Bill No.</label>
+                                &nbsp;&nbsp;&nbsp;
+                                <input type="radio" asp-for="rdoBill" name="rdoBill" value="I" id="rdoBill_I" class="billInvoiceClass" />
+                                <label for="rdoBill_I" class="billInvoiceClass">Invoice No.</label>*@
+
+
+                                <input type="radio" class="billInvoiceClass" id="radioBill" name="Bill" value="B" checked>
+                                <label for="radioBill" class="billInvoiceClass">Bill No.</label>
+                                &nbsp;&nbsp;&nbsp;
+                                <input type="radio" class="billInvoiceClass" id="radioInvoice" name="Bill" value="I">
+                                <label for="radioInvoice" class="billInvoiceClass">Invoice No.</label>
+                            </div>
+                        </div>
+                    </div>
+                    @*<label for="Name" style="color:DarkMagenta">* Select Stage in case of Stage Inspection Call.</label>*@
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <input type="text" class="billInvoiceClass" id="BillInvoiceNo" class="input" asp-for="BILL_NO" maxlength="300" />
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn billInvoiceClass">
+                    @*<button class="save-btn active" id="btnBDetails" onclick="btnBDetails();">Bill Details</button>*@
+                    <button class="billInvoiceClass save-btn active" id="btnBillDetails" onclick="btnBillDetailsClick();">Bill Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtchequepost" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bill No.</th>
+                            <th>BPO</th>
+                            <th>Bill Amount</th>
+                            <th>Bill Amount Cleared</th>
+                            <th>Amount Cleared By above Cheque</th>
+                            <th>Posting Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    @*<section class="table-section">
+    <div class="task-listinput">
+    <div class="dash-table">
+    <table id="dtchequepost1" class="table-responsive">
+    <thead>
+    <tr>
+    <th>#</th>
+    <th>Bill No.</th>
+    <th>BPO</th>
+    <th>Bill Amount</th>
+    <th>Bill Amount Cleared</th>
+    <th>Amount Cleared By above Cheque</th>
+    <th>Posting Date</th>
+    <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </section>*@
+
     <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Cheque Information</h5>
-                       
-                    </div>
+                </div>
+                <div class="modal-body">
                     <div class="modal-body">
-                        <div class="modal-body">
-                            <form id="editForm">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="Reference">Bill/Invoice No.</label>
-                                        <input type="text" id="billNo" class="form-control"  readonly>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="Reference">Bill Date</label>
-                                        <input type="text" id="billDate" class="form-control"  readonly>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="Reference">Bill Amount</label>
-                                        <input type="text" id="BillAmount" class="form-control"  readonly>
-                                    </div>
+                        <form id="editForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Reference">Bill/Invoice No.</label>
+                                    <input type="text" id="billNo" class="form-control" readonly>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
-                                        <input type="text" id="AmountRecieved" class="form-control"  readonly>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="Reference">Total Amount Cleared (B)	</label>
-                                        <input type="text" id="totalAmount" class="form-control"  readonly>
-                                    </div>
+                                <div class="col-md-6">
+                                    <label for="Reference">Bill Date</label>
+                                    <input type="text" id="billDate" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Reference">Bill Amount</label>
+                                    <input type="text" id="BillAmount" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label for="Reference">Amount Already Recieved Thru Cheque/EFT</label>
+                                    <input type="text" id="AmountRecieved" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Reference">Total Amount Cleared (B)	</label>
+                                    <input type="text" id="totalAmount" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Amount To Recover (A-B)</label>
+                                    <input type="text" id="AmountRecover" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Total TDS</label>
+                                    <input type="text" id="totalTDS" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Retention Money</label>
+                                    <input type="text" id="RetentionMoney" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Amount To Thru Credit Note</label>
+                                    <input type="number" id="AmountCreditNote" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Write off Amt / Amt Adjusted	</label>
+                                    <input type="text" id="AmountAdjusted" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Posting Date	</label>
+                                    <input type="text" id="PostingDate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Amount To be Cleared by this Cheque</label>
+                                    <input type="text" id="AmountClearedByCheque" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">Case No</label>
+                                    <input type="text" id="caseNo" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">BK NO</label>
+                                    <input type="text" id="BKNO" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="Reference">SET NO</label>
+                                    <input type="text" id="SetNo" class="form-control" readonly>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <label for="Reference">Amount To Recover (A-B)</label>
-                                        <input type="text" id="AmountRecover" class="form-control"  readonly>
+                                        <label for="Reference">BPO</label>
+                                        <input type="text" id="BPO" class="form-control" readonly>
                                     </div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Total TDS</label>
-                                        <input type="text" id="totalTDS" class="form-control"  readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Retention Money</label>
-                                        <input type="text" id="RetentionMoney" class="form-control"  readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Amount To Thru Credit Note</label>
-                                        <input type="number" id="AmountCreditNote" class="form-control"  readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Write off Amt / Amt Adjusted	</label>
-                                        <input type="text" id="AmountAdjusted" class="form-control" >
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Posting Date	</label>
-                                        <input type="text" id="PostingDate" class="form-control" >
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Amount To be Cleared by this Cheque</label>
-                                        <input type="text" id="AmountClearedByCheque" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">Case No</label>
-                                        <input type="text" id="caseNo" class="form-control"  readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">BK NO</label>
-                                        <input type="text" id="BKNO" class="form-control"  readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <label for="Reference">SET NO</label>
-                                        <input type="text" id="SetNo" class="form-control"  readonly>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="col-md-12">
-                                            <label for="Reference">BPO</label>
-                                            <input type="text" id="BPO" class="form-control"  readonly>
-                                        </div>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <div>
-                            <button type="button" id="cancelChanges" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" id="saveChanges" class="btn btn-primary Permission_Save" onclick="savedata();">Save</button>
-                            <button type="button" id="TDSentry" class="btn btn-primary" onclick="Tds();" >TDS</button>
-                        </div>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="button" id="cancelChanges" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="saveChanges" class="btn btn-primary Permission_Save" onclick="savedata();">Save</button>
+                        <button type="button" id="TDSentry" class="btn btn-primary" onclick="Tds();">TDS</button>
                     </div>
                 </div>
             </div>
-       
+        </div>
     </div>
-</section>
+</form>
+
 
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $(".hide1").css("display", "none");
             $("#dtchequepost").css("display", "none");
             $(".billInvoiceClass").css("display", "none");
@@ -286,29 +284,49 @@
             var CHQ_NO = '@ViewBag.CHQ_NO';
             var BankNameDropdown = '@ViewBag.BankNameDropdown';
 
-            if (Date != "" && CHQ_NO != "" && BankNameDropdown!=""){
+            if (Date != "" && CHQ_NO != "" && BankNameDropdown != "") {
                 $("#CHQ_DATE").val(Date);
                 $("#BankNameDropdown").val(BankNameDropdown);
                 $("#CHQ_NO").val(CHQ_NO);
                 //search();
             }
-            //InitializeDatatable();
         });
 
-        function btnBillDetailsClick(){
-            debugger;
+        function btnBDetails() {
+            alert(1);
+            debugger
+            var BankNameDropdown = $("#BankNameDropdown").val();
+            var CHQ_NO = $("#CHQ_NO").val();
+            var CHQ_DATE = $("#CHQ_DATE").val();
+
+            //InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
+
+            //var rdoBill = $('input[name="rdoBill"]:checked').val();
+            //$.ajax({
+            //    url: '@Url.Action("GetBillDetails", "CheckPostingForm")?SBPO=' + SBPO,
+            //    type: 'GET',
+            //    cache: false,
+            //    processData: false,
+            //    contentType: false
+            //}).done(function (response) {
+            //    if (response.status) {
+            //    }
+            //});
+        }
+
+
+        function btnBillDetailsClick() {
             if ($('#radioBill').is(':checked') && $('#BillInvoiceNo').val() != null) {
-               RadioBill =  $("#radioBill").val();
+                RadioBill = $("#radioBill").val();
                 $.ajax({
                     url: '/CheckPostingForm/btnBillDetailsClick',
                     type: "POST",
                     dataType: "JSON",
                     data: { RadioBill: RadioBill },
 
-                    success: function (success)
-                    {
+                    success: function (success) {
 
-                      alert(success.alert);
+                        alert(success.alert);
 
                     }
 
@@ -334,21 +352,18 @@
 
         }
 
-        function search()
-        {
-            if ($("#CHQ_DATE").val() == null || $("#CHQ_DATE").val() == "")
-            {
+        function search() {
+            if ($("#CHQ_DATE").val() == null || $("#CHQ_DATE").val() == "") {
                 alert('all fields are mandatory');
-             
+
             }
-            else
-            {
+            else {
                 var BankNameDropdown = $("#BankNameDropdown").val();
                 var CHQ_NO = $("#CHQ_NO").val();
                 var CHQ_DATE = $("#CHQ_DATE").val();
-              
+
                 $(".billInvoiceClass").css("display", "block");
-                InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
+                //InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE);
                 GetValue(BankNameDropdown, CHQ_NO, CHQ_DATE);
             }
         }
@@ -364,11 +379,9 @@
                 dataType: "JSON",
                 data: { BankNameDropdown: BankNameDropdown, CHQ_NO: CHQ_NO, CHQ_DATE: CHQ_DATE },
 
-                success: function (success) 
-                {
+                success: function (success) {
 
-                      if(success != null)
-                      {
+                    if (success != null) {
                         $(".hide1").css("display", "block");
                         $("#vchr_no").val(success.VCHR_NO)
                         $("#vchr_dt").val(success.VCHR_DT)
@@ -379,16 +392,14 @@
                         $("#unAdjstedAdvance").val(success.un_adjusted_advance)
 
                         sessionStorage.setItem("IEcode", success.IE);
-                      }
-                      else{
+                    }
+                    else {
                         $(".hide1").css("display", "none");
-                      }
+                    }
                 }
 
             });
         }
-
-
 
         function InitializeDatatable(BankNameDropdown, CHQ_NO, CHQ_DATE) {
             $("#dtchequepost").css("display", "block");
@@ -415,7 +426,7 @@
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
-                        
+
                     }
                 },
                 columns: [// Columns Setups
@@ -423,7 +434,7 @@
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
-                          
+
                         }
                     },
                     //{ data: "SNO" },
@@ -460,9 +471,8 @@
                 "order": [[0, "asc"]]
             });
 
-       
-        }
 
+        }
 
         $("#dtchequepost").on("click", ".custom-edit-button", function () {
             debugger;
@@ -504,86 +514,81 @@
             });
         });
 
-
-        // Handle save changes button click
-
-
         $("#cancelChanges").click(function () {
             // Close the modal without saving
             $("#editModal").modal("hide");
         });
 
-        function savedata(){
-           
-                debugger;
-                //var CheckPostingFormModel = {
-                //    BANK_CD: $("#BankNameDropdown").val(),
-                //    CHQ_DATE: $("#CHQ_DATE").val(),
-                //    CHQ_NO: $("#CHQ_NO").val(),
-                //    BILL_DATE: $("#billDate").val(),
-                //    BILL_AMOUNT_CLEARED: $("#BillAmount").val(),
-                //    AMOUNT_RECIEVED: $("#AmountRecieved").val(),
-                //    TDS: $("#totalTDS").val(),
-                //    Retention_Money: $("#RetentionMoney").val(),
-                //    Cnote: $("#AmountCreditNote").val(),
-                //    WriteOffAmount: $("#AmountAdjusted").val(),
-                //    POSTING_DATE: $("#PostingDate").val(),
-                //    CASE_NO: $("#caseNo").val(),
-                //    BK_NO: $("#BKNO").val(),
-                //    SET_NO: $("#SetNo").val(),
-                //    BPO_NAME: $("#BPO").val(),
-                //};
-                var formData = new FormData();
-                formData.append("BANK_CD", $("#BankNameDropdown").val());
-                formData.append("CHQ_DATE", $("#CHQ_DATE").val());
-                formData.append("CHQ_NO", $("#CHQ_NO").val());
-                formData.append("BILL_DATE", $("#billDate").val());
-                formData.append("BILL_AMOUNT_CLEARED", $("#BillAmount").val());
-                formData.append("AMOUNT_RECIEVED", $("#AmountRecieved").val());
-                formData.append("TDS", $("#totalTDS").val());
-                formData.append("Retention_Money", $("#RetentionMoney").val());
-                formData.append("Cnote", $("#AmountCreditNote").val());
-                formData.append("WriteOffAmount", $("#AmountAdjusted").val());
-                formData.append("POSTING_DATE", $("#PostingDate").val());
-                formData.append("CASE_NO", $("#caseNo").val());
-                formData.append("BK_NO", $("#BKNO").val());
-                formData.append("SET_NO", $("#SetNo").val());
-                formData.append("BPO_NAME", $("#BPO").val());
+        function savedata() {
 
-                $.ajax({
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    url: '/CheckPostingForm/UpdateInfo', // Replace with your actual controller and action URL
-                    dataType: "json",
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        debugger;
-                        // Assuming data is an object returned from the controller
+            debugger;
+            //var CheckPostingFormModel = {
+            //    BANK_CD: $("#BankNameDropdown").val(),
+            //    CHQ_DATE: $("#CHQ_DATE").val(),
+            //    CHQ_NO: $("#CHQ_NO").val(),
+            //    BILL_DATE: $("#billDate").val(),
+            //    BILL_AMOUNT_CLEARED: $("#BillAmount").val(),
+            //    AMOUNT_RECIEVED: $("#AmountRecieved").val(),
+            //    TDS: $("#totalTDS").val(),
+            //    Retention_Money: $("#RetentionMoney").val(),
+            //    Cnote: $("#AmountCreditNote").val(),
+            //    WriteOffAmount: $("#AmountAdjusted").val(),
+            //    POSTING_DATE: $("#PostingDate").val(),
+            //    CASE_NO: $("#caseNo").val(),
+            //    BK_NO: $("#BKNO").val(),
+            //    SET_NO: $("#SetNo").val(),
+            //    BPO_NAME: $("#BPO").val(),
+            //};
+            var formData = new FormData();
+            formData.append("BANK_CD", $("#BankNameDropdown").val());
+            formData.append("CHQ_DATE", $("#CHQ_DATE").val());
+            formData.append("CHQ_NO", $("#CHQ_NO").val());
+            formData.append("BILL_DATE", $("#billDate").val());
+            formData.append("BILL_AMOUNT_CLEARED", $("#BillAmount").val());
+            formData.append("AMOUNT_RECIEVED", $("#AmountRecieved").val());
+            formData.append("TDS", $("#totalTDS").val());
+            formData.append("Retention_Money", $("#RetentionMoney").val());
+            formData.append("Cnote", $("#AmountCreditNote").val());
+            formData.append("WriteOffAmount", $("#AmountAdjusted").val());
+            formData.append("POSTING_DATE", $("#PostingDate").val());
+            formData.append("CASE_NO", $("#caseNo").val());
+            formData.append("BK_NO", $("#BKNO").val());
+            formData.append("SET_NO", $("#SetNo").val());
+            formData.append("BPO_NAME", $("#BPO").val());
 
-
-                        // Open the modal
-                        $("#editModal").modal("show");
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
+            $.ajax({
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: '/CheckPostingForm/UpdateInfo', // Replace with your actual controller and action URL
+                dataType: "json",
+                data: formData,
+                success: function (data) {
+                    console.log(data);
+                    debugger;
+                    // Assuming data is an object returned from the controller
 
 
-                // Perform any necessary actions with the edited data here
+                    // Open the modal
+                    $("#editModal").modal("show");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
 
-                // Close the modal
-                $("#editModal").modal("hide");
-           
+
+            // Perform any necessary actions with the edited data here
+
+            // Close the modal
+            $("#editModal").modal("hide");
+
         }
 
-        function Tds()
-        {
+        function Tds() {
             var newURL = "/TDSEntry/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DATE;
             window.location.href = newURL;
         }
 
     </script>
-}
+    }

@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "";
-    string clsSave = "Permission_Save";
+    //string clsSave = "Permission_Save";
     string clsView = "";
     //if (Model.CaseNo != "0")
     //{
@@ -325,9 +325,10 @@
         function CheckExist(CaseNo, CallDt, CallSNo) {
 
 
-
+            var url = '@Url.Action("CheckExist", "LabSampleInfo")';
             $.ajax({
-                url: '/LabSampleInfo/CheckExist',
+                //url: '/LabSampleInfo/CheckExist',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallDt, CallSno: CallSNo },

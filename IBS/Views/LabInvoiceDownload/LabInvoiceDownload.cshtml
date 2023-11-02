@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "DOWNLOAD LAB INVOICE";
+    string ReportUrl = ViewBag.ReportUrl;
 }
 
 <div>
@@ -48,13 +49,13 @@
         <input type="radio" name="radioGroup" id="rb3"/>
         <span  class="text-danger"></span>
     </div>
-    
-    </div>
-</div>
-<div class="savenext-btn" style="margin-right:50%;">
+    <div class="savenext-btn" style="margin-right:50%;">
     <button type="button" class="save-btn active" onclick="show();">Search</button>
     <button type="button" class="save-btn active" onclick="Download();">Download Lab Invoice</button>
 </div>
+    </div>
+</div>
+
     </div>
     <div id="hide" style="display:none">
     <section class="table-section">
@@ -215,34 +216,18 @@
             var InvoiceNo = $("#txtinno").val();
             var TranNo = $("#txttrno").val();
             //var QueryString="RptFlag=1&Invoice="+InvoiceNo;
-            var QueryString = "RptFlag=1" +
+            var QueryString = "?RptFlag=1" +
                 "&Invoice=" + encodeURIComponent(InvoiceNo) +
                 "&CaseNo=" + encodeURIComponent(CaseNo) +
                 "&RegNo=" + encodeURIComponent(RegNo) +
                 "&TranNo=" + encodeURIComponent(TranNo);
 
-            //var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-
-            var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
             if (oWin === null || typeof (oWin) === 'undefined') {
                 alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
             }
             window.opener = 'x';
-            window.close();
-            //$.ajax({
-            //    url: '/LabInvoiceDownload/Download',
-            //    type: "POST",
-            //    dataType: "JSON",
-            //    data: { CaseNo: CaseNo, RegNo: RegNo, InvoiceNo: InvoiceNo, TranNo: TranNo },
-
-            //    success: function (success) {
-
-                    
-
-            //    }
-
-            //});
-       
+            window.close();            
         }
         //function UserDelete(UserId) {
         //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;

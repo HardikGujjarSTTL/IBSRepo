@@ -391,7 +391,7 @@ namespace IBS.Repositories.Inspection_Billing
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
                     join t91 in context.T91Railways on t13.RlyCd equals t91.RlyCd into railways
                     from t91 in railways.DefaultIfEmpty()
-                    where t13.CaseNo == "N19101278" && t13.RegionCode == "N"
+                    where t13.CaseNo == Case_No && t13.RegionCode == Region
                     select new CaseHistoryModel
                     {
                         CASE_NO = t13.CaseNo,
@@ -412,7 +412,6 @@ namespace IBS.Repositories.Inspection_Billing
         public List<CaseHistoryItemModel> Get_Case_History_Item(DTParameters dtParameters, string Case_NO, string Region)
         {
             DTResult<CaseHistoryItemModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryItemModel> query = null;
             //var Case_NO = "";
             //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
             //{
@@ -451,7 +450,6 @@ namespace IBS.Repositories.Inspection_Billing
             //string PO_NO = "", PO_DT = "";
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
 
             //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PO_NO"]))
             //{
@@ -463,7 +461,6 @@ namespace IBS.Repositories.Inspection_Billing
             //}
 
             DTResult<CaseHistoryPoIREPSModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryPoIREPSModel> query = null;
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_PO_NO", OracleDbType.Varchar2, PO_NO, ParameterDirection.Input);
             par[1] = new OracleParameter("P_PO_DT", OracleDbType.Varchar2, PO_DT, ParameterDirection.Input);
@@ -499,7 +496,6 @@ namespace IBS.Repositories.Inspection_Billing
         public List<CaseHistoryPoVendorModel> Get_Case_History_PO_Vendor(DTParameters dtParameters, string CASE_NO)//, string PO_DT
         {
             DTResult<CaseHistoryPoVendorModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryPoVendorModel> query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -558,7 +554,6 @@ namespace IBS.Repositories.Inspection_Billing
         public List<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters,string CASE_NO)
         {
             DTResult<CaseHistoryPreviousCallModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryPreviousCallModel> query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -616,7 +611,6 @@ namespace IBS.Repositories.Inspection_Billing
         public List<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters,string VEND_CD)
         {
             DTResult<CaseHistoryConsigneeComplaintModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryConsigneeComplaintModel> query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -673,11 +667,9 @@ namespace IBS.Repositories.Inspection_Billing
         public List<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters,string CASE_NO, string VEND_CD, string region)
         {
             DTResult<CaseHistoryRejectionVendorPlaceModel> dTResult = new() { draw = 0 };
-            IQueryable<CaseHistoryRejectionVendorPlaceModel> query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
             //string CASE_NO = "", VEND_CD = "";
             //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASE_NO"]))
             //{
@@ -702,7 +694,6 @@ namespace IBS.Repositories.Inspection_Billing
             else
             {
                 orderCriteria = "BILL_NO";
-                orderAscendingDirection = true;
             }
 
             OracleParameter[] par = new OracleParameter[4];
@@ -978,7 +969,7 @@ namespace IBS.Repositories.Inspection_Billing
 
         public int Delete_Incomplete_Call(CallMarkedOnlineFilter obj, UserSessionModel model)
         {
-            string msg = "Error";
+            //string msg = "Error";
             int res = 0;
             var caseNo = obj.CASE_NO.Trim();
             var callRecvDate = DateTime.ParseExact(obj.Date.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -1029,13 +1020,13 @@ namespace IBS.Repositories.Inspection_Billing
                             context.SaveChanges();
                         }
                         res = 1;
-                        msg = "This Call Has Been Deleted!!!";
+                        //msg = "This Call Has Been Deleted!!!";
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
                         res = 0;
-                        msg = "Error";
+                        //msg = "Error";
                         transaction.Rollback();
                     }
                 }
@@ -1043,7 +1034,7 @@ namespace IBS.Repositories.Inspection_Billing
             else
             {
                 res = 2;
-                msg = "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!";
+                //msg = "This Call cannot be Deleted,Whether Item is their in the Call or The Call is Marked to IE or The Call Status is Other then Pending!!!";
             }
             return res;
         }

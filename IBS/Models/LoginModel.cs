@@ -47,7 +47,7 @@ namespace IBS.Models
     public class ResetPasswordModel
     {
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }

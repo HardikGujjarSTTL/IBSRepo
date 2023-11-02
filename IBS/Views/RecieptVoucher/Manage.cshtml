@@ -9,28 +9,25 @@
         <h2>Generate Voucher</h2>
     </div>
 </div>
-<div class="task-listinput">
+
     <form role="form" asp-controller="RecieptVoucher" asp-action="Manage" id="frmRecieptVoucher">
         <input type="hidden" asp-for="Region" />
-        <input type="hidden" asp-for="IsNew" />
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="VCHR_NO">Voucher No <i class="text-danger">*</i></label>
+                    <label for="VCHR_NO">Voucher No</label>
                     <input type="text" class="input" asp-for="VCHR_NO" readonly />
-                    <span class="text-danger" asp-validation-for="VCHR_NO"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="VCHR_DT">Voucher Date <i class="text-danger">*</i></label>
-                    <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" readonly />
-                    <span class="text-danger" asp-validation-for="VCHR_DT"></span>
+                    <label for="VCHR_DT">Voucher Date</label>
+                    <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="BANK_CD">Bank/Cash</label>
                     @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankNameWithFMIS())
                 </div>
             </div>
-        </div>
+        
         <div id="dvVoucherDetails">
             <partial name="_VoucherDetails" model="Model.lstVoucherDetails" />
         </div>
@@ -38,19 +35,23 @@
             <a asp-controller="RecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
             <button type="button" class="save-btn active" onclick="SubmitRecieptVoucherData();">Save</button>
         </div>
+        </div>
     </form>
-</div>
+
 
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            
-        });
-
         function SubmitRecieptVoucherData() {
+            var rowCount = $("#dtVoucherDetails tr").length;
+
+            if (rowCount <= 1) {
+                ShowHideMsg("warning", "Please insert atleast Voucher Details.");
+                return false;
+            }
+
             if ($("#frmRecieptVoucher").valid()) {
                 $("#frmRecieptVoucher").submit();
             }

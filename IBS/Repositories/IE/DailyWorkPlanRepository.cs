@@ -45,8 +45,8 @@ namespace IBS.Repositories.IE
             DateTime toDtValue = DateTime.Now;
 
             //comment remove testing purpose only
-            model.FromDt = Convert.ToDateTime("22/04/2019");
-            model.ToDt = Convert.ToDateTime("23/04/2019");
+            //model.FromDt = Convert.ToDateTime("22/04/2019");
+            //model.ToDt = Convert.ToDateTime("23/04/2019");
 
             DateTime tdt = Convert.ToDateTime(model.FromDt);
 
@@ -95,10 +95,6 @@ namespace IBS.Repositories.IE
                 }
             }
             model.errcode = err;
-
-
-
-
 
             return model;
         }
@@ -212,55 +208,96 @@ namespace IBS.Repositories.IE
         public int DetailsInsertUpdate(DailyWorkPlanModel model, string Region, int GetIeCd)
         {
             int ID = 0;
+            int vend_count = 0, count = 0;
             List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.checkedWork);
-            foreach (var details in deserializedData)
+            var qryList = (from T47 in context.T47IeWorkPlans
+                           where T47.IeCd == GetIeCd && T47.VisitDt == Convert.ToDateTime(model.PlanDt)
+                           group T47 by T47.MfgCd into grouped
+                           select new
+                           {
+                               MfgCd = grouped.Key,
+                               Count = grouped.Count()
+                           }).ToList();
+
+
+            foreach (var dt1 in deserializedData)
             {
-                model.CaseNo = details.CaseNo;
-                model.CallRecvDt = details.CallRecvDt;
-                model.CallSno = details.CallSno;
-
-                var query = (from t17 in context.T17CallRegisters
-                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
-                             join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                             where t17.CaseNo.StartsWith(Region) && t17.IeCd == GetIeCd
-                             && t17.CaseNo == details.CaseNo && t17.CallRecvDt == details.CallRecvDt && t17.CallSno == details.CallSno
-                             select new
-                             {
-                                 t17.CaseNo,
-                                 t17.CallRecvDt,
-                                 t17.CallSno,
-                                 t17.CallStatus,
-                                 t17.MfgCd,
-                                 t17.MfgPlace,
-                                 t17.IeCd,
-                                 t17.CoCd,
-                                 t03.CityCd,
-                                 t03.City,
-                                 t17.DtInspDesire
-                             }).FirstOrDefault();
-                if (query != null)
+                var InsertRcrd = (from t17 in context.T17CallRegisters
+                                  where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
+                                  group t17 by t17.MfgCd into grouped
+                                  select new
+                                  {
+                                      MfgCd = grouped.Key,
+                                      Count = grouped.Count()
+                                  }).FirstOrDefault();
+                foreach (var dtl in qryList)
                 {
-                    if (details.CaseNo != null && details.CallRecvDt != null && details.CallSno > 0)
+                    if (InsertRcrd.MfgCd == dtl.MfgCd)
                     {
-                        T47IeWorkPlan obj = new T47IeWorkPlan();
-                        obj.IeCd = query.IeCd;
-                        obj.CoCd = Convert.ToByte(query.CoCd);
-                        obj.VisitDt = Convert.ToDateTime(model.PlanDt);
-                        obj.CaseNo = query.CaseNo;
-                        obj.CallRecvDt = query.CallRecvDt;
-                        obj.CallSno = query.CallSno;
-                        obj.MfgCd = query.MfgCd;
-                        obj.MfgPlace = query.MfgPlace;
-                        obj.RegionCode = Region;
-
-                        obj.UserId = model.Createdby;
-                        obj.Datetime = DateTime.Now;
-                        context.T47IeWorkPlans.Add(obj);
-                        context.SaveChanges();
-                        ID = Convert.ToInt32(obj.CallSno);
+                        vend_count = vend_count + 1;
                     }
                 }
             }
+            vend_count = vend_count + deserializedData.Count;
+            count = count + deserializedData.Count + qryList.Count;
+
+            if (vend_count > 3 || count > 5)
+            {
+                ID = 0;
+            }
+            else
+            {
+                foreach (var details in deserializedData)
+                {
+                    model.CaseNo = details.CaseNo;
+                    model.CallRecvDt = details.CallRecvDt;
+                    model.CallSno = details.CallSno;
+
+                    var query = (from t17 in context.T17CallRegisters
+                                 join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                                 join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                                 where t17.CaseNo.StartsWith(Region) && t17.IeCd == GetIeCd
+                                 && t17.CaseNo == details.CaseNo && t17.CallRecvDt == details.CallRecvDt && t17.CallSno == details.CallSno
+                                 select new
+                                 {
+                                     t17.CaseNo,
+                                     t17.CallRecvDt,
+                                     t17.CallSno,
+                                     t17.CallStatus,
+                                     t17.MfgCd,
+                                     t17.MfgPlace,
+                                     t17.IeCd,
+                                     t17.CoCd,
+                                     t03.CityCd,
+                                     t03.City,
+                                     t17.DtInspDesire
+                                 }).FirstOrDefault();
+                    if (query != null)
+                    {
+                        if (details.CaseNo != null && details.CallRecvDt != null && details.CallSno > 0)
+                        {
+                            T47IeWorkPlan obj = new T47IeWorkPlan();
+                            obj.IeCd = query.IeCd;
+                            obj.CoCd = Convert.ToByte(query.CoCd);
+                            obj.VisitDt = Convert.ToDateTime(model.PlanDt);
+                            obj.CaseNo = query.CaseNo;
+                            obj.CallRecvDt = query.CallRecvDt;
+                            obj.CallSno = query.CallSno;
+                            obj.MfgCd = query.MfgCd;
+                            obj.MfgPlace = query.MfgPlace;
+                            obj.RegionCode = Region;
+                            obj.UserId = model.Createdby;
+                            obj.Datetime = DateTime.Now;
+
+                            context.T47IeWorkPlans.Add(obj);
+                            context.SaveChanges();
+                            ID = Convert.ToInt32(obj.CallSno);
+                        }
+                    }
+                }
+            }
+
+
             return ID;
         }
 
@@ -283,6 +320,113 @@ namespace IBS.Repositories.IE
                 }
             }
             return ID;
+        }
+
+        public int NonInspectionSave(DailyWorkPlanModel model, string Region, int GetIeCd)
+        {
+            int ID = 0;
+            int co_cd = 0;
+            var T09 = context.T09Ies.Where(x => x.IeCd == GetIeCd).FirstOrDefault();
+            if (T09 != null)
+            {
+                co_cd = Convert.ToInt32(T09.IeCoCd);
+            }
+
+            DateTime startDate = Convert.ToDateTime(model.FromDt);
+            DateTime endDate = Convert.ToDateTime(model.ToDt);
+            int daysDifference = (int)(endDate - startDate).TotalDays;
+            var result = Enumerable.Range(0, daysDifference + 1)
+                .Select(offset => startDate.AddDays(offset))
+                .Select(date => date.ToString("dd/MM/yyyy"));
+
+            foreach (var wkDt in result)
+            {
+                var Exist = context.T48NiIeWorkPlans.Where(x => x.IeCd == GetIeCd && x.CoCd == Convert.ToByte(co_cd) && x.NiWorkCd == model.NIWorkType && x.NiWorkDt == Convert.ToDateTime(wkDt)).FirstOrDefault();
+                if (Exist == null)
+                {
+                    T48NiIeWorkPlan T48 = new();
+                    T48.IeCd = GetIeCd;
+                    T48.CoCd = Convert.ToByte(co_cd) == 0 ? null : Convert.ToByte(co_cd);
+                    T48.NiWorkCd = model.NIWorkType;
+                    T48.NiOtherDesc = model.OtherDesc;
+                    T48.NiWorkDt = Convert.ToDateTime(wkDt);
+                    T48.RegionCode = Region;
+                    T48.UserId = model.UserId;
+                    T48.Datetime = DateTime.Now.Date;
+
+                    context.T48NiIeWorkPlans.Add(T48);
+                    context.SaveChanges();
+                    ID = Convert.ToInt32(T48.IeCd);
+                }
+            }
+            return ID;
+        }
+
+        public DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd)
+        {
+
+            DTResult<DailyWorkPlanModel> dTResult = new() { draw = 0 };
+            IQueryable<DailyWorkPlanModel>? query = null;
+
+            string PlanDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PlanDt"]))
+            {
+                PlanDt = Convert.ToString(dtParameters.AdditionalValues["PlanDt"]);
+            }
+
+            query = from T48 in context.T48NiIeWorkPlans
+                    where T48.IeCd == GetIeCd && T48.NiWorkDt == Convert.ToDateTime(PlanDt)
+                    orderby T48.NiWorkDt
+                    select new DailyWorkPlanModel
+                    {
+                        NIWorkType = T48.NiWorkCd == "T" ? "Training" :
+                                          T48.NiWorkCd == "L" ? "Leave" :
+                                          T48.NiWorkCd == "O" ? "Office" :
+                                          T48.NiWorkCd == "J" ? "JI" :
+                                          T48.NiWorkCd == "F" ? "Firm Visit" :
+                                          "Others - " + T48.NiOtherDesc,
+                        FromDt = T48.NiWorkDt
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region,string UserName)
+        {
+            string Dtl = "";
+            int co_cd = 0;
+            var T09 = context.T09Ies.Where(x => x.IeCd == GetIeCd).FirstOrDefault();
+            if (T09 != null)
+            {
+                co_cd = Convert.ToInt32(T09.IeCoCd);
+            }
+            if(co_cd > 0)
+            {
+                NoIeWorkPlan plan = new NoIeWorkPlan();
+                plan.IeCd = GetIeCd;
+                plan.CoCd = Convert.ToByte(co_cd);
+                plan.Reason = Reason;
+                plan.NwpDt = Convert.ToDateTime(NwpDt);
+                plan.RegionCode = Region;
+                plan.UserId = UserName;
+                plan.Datetime = DateTime.Now.Date;
+
+                context.NoIeWorkPlans.Add(plan);
+                context.SaveChanges();
+                //Dtl = Convert.ToString(Convert.ToDateTime(NwpDt).AddDays());
+                Dtl = Convert.ToDateTime(NwpDt).AddDays(1).ToString("dd/MM/yyyy");
+            }
+            return Dtl;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol.Plugins;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,6 +21,8 @@ namespace IBS.Models
 
         public string? CallStatus { get; set; }
 
+        [Display(Name = "Call Letter Number")]
+        [Required]
         public string? CallLetterNo { get; set; }
 
         public string? Remarks { get; set; }
@@ -136,7 +139,7 @@ namespace IBS.Models
 
         public string? LocalOrOuts { get; set; }
 
-        public byte? ClusterCode { get; set; }
+        public int? ClusterCode { get; set; }
 
         public virtual T09Ie? IeCdNavigation { get; set; }
 
@@ -217,7 +220,11 @@ namespace IBS.Models
 
         public string FOS { get; set; }
 
-        public string IsNewVender { get; set; }
+        public bool IsNewVender { get; set; }
+        public string hdnIsNewVender { get; set; }
+
+        //public string IsFinalizedStatus { get; set; }
+        public bool IsFinalizedStatus { get; set; }
 
         public string? Createdby { get; set; }
 
@@ -260,6 +267,8 @@ namespace IBS.Models
         public string Region { get; set; }
 
         public string MsgStatus { get; set; }
+
+        public string CHKRejCan { get; set; }
 
         public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
 
@@ -359,7 +368,47 @@ namespace IBS.Models
 
         public string? VendPOEmail { get; set; }
 
+        public string RegionCode { get; set; }
 
+        public List<PrintCallLetterModel> lstPrintCallLetter { get; set; }
+    }
+
+
+    public class PrintCallLetterModel
+    {
+        public string CaseNo { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallRecvDt { get; set; }
+
+        public int? CallSno { get; set; }
+
+        public string? Consignee { get; set; }
+
+        public string? ItemDescPo { get; set; }
+
+        public decimal? QtyOrdered { get; set; }
+
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? QtyPassed { get; set; }
+
+        public decimal? QtyRejected { get; set; }
+
+        public decimal? QtyDue { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? DelvDt { get; set; }
+
+        public string? Bpo { get; set; }
+
+        public string? ItemCd { get; set; }
     }
 
     public class VenderCallCancellationModel
@@ -466,9 +515,24 @@ namespace IBS.Models
 
         public string? VendName { get; set; }
 
+        public bool[] chkItems { get; set; }
+
         public string? Consignee { get; set; }
 
+        public string ConsigneeFirm { get; set; }
+
+        public string RejectionCharge { get; set; }
+
+        public string LocalOutstation { get; set; }
+
+        public List<SelectListItem> ConsigneeFirmList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> CallRlyFirmList { get; set; } = new List<SelectListItem>();
+
         public string? ItemDescPo { get; set; }
+
+        public string? CancellationDescription { get; set; }
+
+        public string? ReasonFIFO { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -484,8 +548,9 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? PoDt { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Book No.")]
         public string? BkNo { get; set; }
-
+        [Required(ErrorMessage = "Please Enter Set No.")]
         public string? SetNo { get; set; }
 
         public string? CallStatus1 { get; set; }
@@ -493,6 +558,8 @@ namespace IBS.Models
         public string? CallStatus { get; set; }
 
         public string? CallCancelStatus { get; set; }
+
+        public string? CallCancelCharges { get; set; }
 
         public DateTime? CallStatusDt { get; set; }
 
@@ -521,9 +588,35 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string? IeCd { get; set; }
+        public int? IssueToIecd { get; set; }
 
         public string UserId { get; set; }
 
+        public string? MaterialValue { get; set; }
+
+        public string? CallListByRly { get; set; }
+        public string? ChkFIFO { get; set; }
+        public string? AlertMsg { get; set; }
+        public string? Chk1 { get; set; }
+        public string? Chk2 { get; set; }
+        public string? Chk3 { get; set; }
+        public string? Chk4 { get; set; }
+        public string? Chk5 { get; set; }
+        public string? Chk6 { get; set; }
+        public string? Chk7 { get; set; }
+        public string? Chk8 { get; set; }
+        public string? Chk9 { get; set; }
+        public string? Chk10 { get; set; }
+        public string? Chk11 { get; set; }
+        public string? Chk12 { get; set; }
+        public string Hologram { get; set; }
+        public string Remarks { get; set; }
+        public string Remarkslbl { get; set; }
+        public DateTime CallLetterDt { get; set; }
+        [Required(ErrorMessage = "Please Enter Book No.")]
+        public string? DocBkNo { get; set; }
+        [Required(ErrorMessage = "Please Enter Set No.")]
+        public string? DocSetNo { get; set; }
     }
 
     public class VendrorCallDetailsModel
@@ -606,7 +699,7 @@ namespace IBS.Models
 
         public string ITEM_SRNO { get; set; }
 
-        public string ITEM_DESC { get;set; }
+        public string ITEM_DESC { get; set; }
 
         public decimal QTY { get; set; }
 
@@ -617,5 +710,19 @@ namespace IBS.Models
         public decimal? REJECTED { get; set; }
 
 
+    }
+
+    public class ImageFiles
+    {
+        public string File_1 { get; set; }
+        public string File_2 { get; set; }
+        public string File_3 { get; set; }
+        public string File_4 { get; set; }
+        public string File_5 { get; set; }
+        public string File_6 { get; set; }
+        public string File_7 { get; set; }
+        public string File_8 { get; set; }
+        public string File_9 { get; set; }
+        public string File_10 { get; set; }
     }
 }

@@ -95,9 +95,9 @@
                     <label for="Reference">Upload Lab Report</label>
                     <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
                 </div>
-               
+                <a id="download" href="javascript:void(0);" style="display:none;">Download File</a>
             </div>
-            <div class="savenext-btn"  style="margin-left:47%;">
+            <div class="savenext-btn">
                 <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
                 <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
             </div>
@@ -194,8 +194,8 @@
         });
         $(function () {
 
-            $("#lblpslip").val("Not Uploaded");
-            $("#lblps").val("Not Approved");
+            // $("#lblpslip").val("Not Uploaded");
+            // $("#lblps").val("Not Approved");
             $(".datepicker").datepicker({
                 dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
             });
@@ -228,14 +228,17 @@
             var CallRdt = '@ViewBag.CallRdt';
             var CallSno = '@ViewBag.Sno';
 
+            var url = '@Url.Action("SampleDtlData", "LabSampleInfo")';
+
             $.ajax({
-                url: '/LabSampleInfo/SampleDtlData',
+                // url: '/LabSampleInfo/SampleDtlData',
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
 
                 success: function (success) {
-                    
+                    debugger;
                     if (success.DateofRecSample != null && success.LikelyDt != null && success.DateofRecSample != "" && success.LikelyDt != "") {
                         var originalDateStr = success.DateofRecSample;
                         
@@ -290,7 +293,14 @@
                     $("#txttesfee").val(success.TotalTFee);
 
                     $("#txtremark").val(success.Remarks);
-
+                    $("#lblpslip").val(success.PaymentSlip);
+                    $("#lblps").val(success.PaymentStatus);
+                    
+                    //$("#download").attr('href',success.Hyperlink2);
+                    if (success.Hyperlink2 != "") {
+                        $("#download").css("display", "");
+                    }
+                    sessionStorage.setItem("lINK", success.Hyperlink2);
                     sessionStorage.setItem("IEcode", success.IE);
 
                 }
@@ -298,7 +308,20 @@
             });
         }
 
-
+        $('#download').on('click', function () {
+            var caseno = $("#lblcno").val();
+            var calldt = $("#lblCallDT").val();
+            var csno = $("#lblCallSno").val();
+            var filename = sessionStorage.getItem("lINK");
+            //var fileUrl = '/LabSampleInfo/DownloadFile?caseno=' + caseno + '&calldt=' + calldt + '&csno=' + csno + '&filename=' + filename;
+            var fileUrl = "@Url.Action("DownloadFile","LabSampleInfo")" + "?caseno=" + caseno + "&calldt=" + calldt + "&csno=" + csno + "&filename=" + filename;
+            if (fileUrl) {
+                
+                $(this).attr('href', fileUrl);
+            } else {
+                alert("File not found."); 
+            }
+        });
         function SaveDetails() {
 
             if ($("#ddlstatus").val() == "U") {
@@ -346,14 +369,15 @@
             formData.append("TotalTFee", $("#txttesfee").val());
             formData.append("LikelyDt", $("#dtlike").val());
             formData.append("Remarks", $("#txtremark").val());
-
+            var url = '@Url.Action("SaveDataDetails", "LabSampleInfo")';
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
                 //contentType: "application/json",
-                url: "/LabSampleInfo/SaveDataDetails",
+                //url: "/LabSampleInfo/SaveDataDetails",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -416,7 +440,10 @@
             if (!IsValid) return;
             var parts = $("#lblCallDT").val().split('/');
             var convertedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
-
+            var parts1 = $("#dtrecsam").val().split('/');
+            var convertedDate1 = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            var parts2 = $("#dtlike").val().split('/');
+            var convertedDate2 = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
             //var files = [];
             //files.push($('input[type=file]').val());
             var formData = new FormData();
@@ -425,9 +452,9 @@
             formData.append("CallRecDt", convertedDate);
             formData.append("CallSNO", $("#lblCallSno").val());
             formData.append("Status", $("#ddlstatus").val());
-            formData.append("DateofRecSample", $("#dtrecsam").val());
+            formData.append("DateofRecSample", convertedDate1);
             formData.append("TotalTFee", $("#txttesfee").val());
-            formData.append("LikelyDt", $("#dtlike").val());
+            formData.append("LikelyDt", convertedDate2);
             formData.append("Remarks", $("#txtremark").val());
             formData.append("Data", encode(fileByteArray));
             //var LabSampleInfoModel = {
@@ -444,11 +471,13 @@
             //};
 
             //LABREGISTERModel = JSON.stringify(LABREGISTERModel);
+            var url = '@Url.Action("UpdateDetails", "LabSampleInfo")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/LabSampleInfo/UpdateDetails",
+                url:url,
+                //url: "/LabSampleInfo/UpdateDetails",
                 dataType: "json",
                 data: formData,
                 success: function (res) {

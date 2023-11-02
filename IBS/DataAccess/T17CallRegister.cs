@@ -97,7 +97,7 @@ public partial class T17CallRegister
 
     public string? LocalOrOuts { get; set; }
 
-    public byte? ClusterCode { get; set; }
+    public int? ClusterCode { get; set; }
 
     public string? Createdby { get; set; }
 
@@ -108,6 +108,12 @@ public partial class T17CallRegister
     public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? CmApproval { get; set; }
+
+    public DateTime? CmApprovalDt { get; set; }
+
+    public string? Isfinalizedstatus { get; set; }
 
     public virtual T09Ie? IeCdNavigation { get; set; }
 

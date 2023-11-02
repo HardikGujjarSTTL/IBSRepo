@@ -1,193 +1,79 @@
-﻿@model IBS.Models.LabPaymentFormModel
-
-@{
-    ViewData["Title"] = "LAB PAYMENT VOUCHER(" + Model.Regin + ")";
-    string clsView = "";
-}
-<style>
-    #showPayment {
-        max-height: 400px; /* Set the maximum height for the scrolling area */
-        overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
-    }
-
-    tr:nth-child(even) {
-        background-color: #f0f8ff; /* Light Blue */
-    }
-
-    /* Style for table cells */
-    td {
-        height: 50px;
-        padding: 10px;
-        border: 1px solid #b0c4de;
-        vertical-align: top;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        border-top: 2px solid #b0c4de; /* Add top border */
-        background-color: #f0f8ff;
-        margin-bottom: 20px; /* Add margin at the bottom for spacing */
-    }
-
-    /* Style for table cells */
-    td {
-        height: 50px; /* Adjust the height of table cells */
-        padding: 5px;
-        vertical-align: top;
-    }
-
-    /* Style for labels */
-    label {
-        display: block; /* Make labels block-level to occupy the whole cell width */
-        font-weight: bold;
-    }
-
-    /* Style for input fields */
-    input[type="text"],
-    input[type="date"] {
-        width: 100%;
-        height: 42px;
-        border: 1px solid #cccccc;
-        border-radius: 6px;
-        padding: 5px;
-        box-sizing: border-box; /* Ensure the padding is included in the width */
-    }
-
-    /* Style for error message */
-    .text-danger {
-        color: red;
-        margin-left: 6%;
-    }
-
-    /* Style for left-aligned button */
-    .left-button {
-        float: left;
-        margin-right: 10px;
-    }
-
-    /* Style for right-aligned button */
-    .right-button {
-        float: right;
-        margin-left: 10px;
-    }
-
-    /* Clear floating elements */
-    .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-        height: 190px;
-    }
-
-    .custom-textarea {
-        width: 400px;
-        height: auto;
-    }
-
-    .table-section {
-        width: 100%;
-        /*height: 400px;*/ /* Set the desired height */
-        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
-    }
-
-    /* Set table width to 100% and disable horizontal scrollbar */
-    #dtPayment {
-        width: 100%;
-        table-layout: fixed;
-    }
-
-        /* Style table header cells */
-        #dtPayment th {
-            background-color: #f2f2f2;
-            border: 1px solid #dddddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        /* Style table body cells */
-        #dtPayment td {
-            border: 1px solid #dddddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-    /* Add custom scrollbar style for the table section */
-    .table-section::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .table-section::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 4px;
-    }
-
-        .table-section::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
-        }
-</style>
+﻿
 @*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
 
-<div class="list-inner">
-    <div class="tast-list">
-        <h2>@ViewData["Title"] </h2>
-    </div>
 
-</div>
-<section class="@clsView">
+    <div id="print">
     <div class="task-listinput">
         <div class="accordion-body">
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">Voucher No.</label>
                     <input type="text" class="input" id="lblvno" readonly="readonly">
 
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">Dated:</label>
                     <input type="text" class="input" id="dtdt" readonly="readonly">
 
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">CHQ No.</label>
                     <input type="text" class="input" id="lblcno" readonly="readonly">
 
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="Reference">Dated:</label>
                     <input type="text" class="input" id="lbldt" readonly="readonly">
 
                 </div>
+            </div>
+            <div class="row my-0">
+                
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Bank:</label>
                     <input type="text" class="input" id="lblbnk" readonly="readonly">
 
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-3">
                     <label for="Reference">Amount:</label>
                     <input type="text" class="input" id="lblamt" readonly="readonly">
 
                 </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="Reference">Laboratory:</label>
                     <input type="text" class="input" id="lbllab" readonly="readonly">
 
                 </div>
+            </div>
+            <div class="row my-0">
+               
                 
             </div>
 
         </div>
     </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="printlab" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Account Code</th>
+                        <th>Sub Code</th>
+                        <th>SBU Code</th>
+                        <th>Project Code</th>
+                        <th>Sample Reg No</th>
+                        <th>Amount</th>                       
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
-<table border="1" width="100%">
+</div>
+@* <table border="1" width="100%">
     <tbody>
         <tr>
             <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Account Code</font></td>
@@ -208,12 +94,12 @@
 
 
     </tbody>
-</table>
-<div class="savenext-btn" style="margin-left:40%;">
+</table> *@
+@* <div class="savenext-btn" style="margin-left:40%;">
     <button type="button" class="save-btn active" onclick="printPage();">Print</button>
     <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>
 
-</div>
+</div> *@
 
 @*</form>*@
 @section scripts{
@@ -228,87 +114,61 @@
             var pyid = '@ViewBag.PaymentID';
 
             Print(pyid);
+            InitializeDatatable(pyid);
         });
-        function printPage() {
-            // Use the print() function of the window object to initiate printing
-            window.print();
-        }
-        function cancel() {
-            window.location.href = "/LabPaymentsForm/LabPaymentForm";
-        }
-        function SearchPayment() {
-            $("#showPayment").css("display", "block");
-            var PaymentID = $("#lblpyno").val();
-            var PaymentDT = $("#dtpydt").val();
-            var Lab = $("#ddlpylab").val();
-            $.ajax({
-                url: '/LabPaymentsForm/LoadTable', // Replace with your actual endpoint URL
-                type: 'POST',
-                dataType: 'json',
-                data: { PaymentID: PaymentID, PaymentDT: PaymentDT, Lab: Lab },
-                success: function (data) {
+        function InitializeDatatable(pyid) {
 
-                    // Once data is successfully received, populate the table
-                    var tableBody = $('#tableBody');
-                    tableBody.empty(); // Clear existing rows (if any)
-                    for (i = 0; i < data.length; i++) {
-
-                        var row = $('<tr>');
-                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
-                        var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
-                        snoLink.hover(
-                            function () {
-                                $(this).css('text-decoration', 'underline'); // Add underline on hover
-                            },
-                            function () {
-                                $(this).css('text-decoration', 'none');      // Remove underline on hover out
-                            }
-                        );
-                        var snoCell = $('<td>').append(snoLink);
-                        row.append(snoCell);
-                        row.append($('<td>').text(data[i].PaymentID));
-                        row.append($('<td>').text(data[i].PaymentDt));
-                        row.append($('<td>').text(data[i].Lab));
-                        row.append($('<td>').text(data[i].Amount));
-
-
-                        // Add the action column (if needed)
-                        //var actionColumn = $('<td>');
-                        //var editButton = $('<a>').text('Select').attr('id',"editButton");
-                        //actionColumn.append(editButton);
-                        //row.append(actionColumn);
-                        tableBody.append(row);
-
+            $("#printlab").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: false,
+                destroy: false,
+                paging: false,
+                searching: false,
+                ajax: {
+                    url: "@Url.Action("PrintLoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            pyid: pyid
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
                     }
-                    //editButton.click(function(event) {
-                    snoLink.click(function (event) {
-                        //var regNo = regNo1;
-                        //var sno = sno1;
-                        //LabDtlModify(regNo, sno);
-                    });
-
                 },
-                error: function () {
 
-                }
+                columns: [
+
+                    { data: "AccountCd" },
+                    { data: "SubCd" },
+                    { data: "SBUCd" },
+                    { data: "ProjectCd" },
+                    { data: "SAMPLE_REG_NO" },
+                    { data: "Amount" }
+
+                ],
+                "order": [[0, "asc"]]
             });
-        }
-
-        function Add() {
-            window.location.href = '@Url.Action("LabPayment", "LabPaymentsForm")';
         }
         function Print(pyid) {
 
             var VOUCHER_NO = pyid;
+            var url = '@Url.Action("PrintLapPayments", "LabPaymentsForm")';
             $.ajax({
-                url: '/LabPaymentsForm/PrintLapPayments',
+                //url: '/LabPaymentsForm/PrintLapPayments',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { VOUCHER_NO: VOUCHER_NO },
 
                 success: function (success) {
 
-                    debugger;
+                 
                     //$("#dtregdt").val(success.SampleRegDate);
                     $("#lblvno").val(success.PaymentID);
                     $("#dtdt").val(success.PaymentDt);
@@ -317,8 +177,8 @@
                     $("#lblbnk").val(success.Bank);
                     $("#lblamt").val(success.Amount);
                     $("#lbllab").val(success.Lab);
-                    $("#lblregno").text(success.SAMPLE_REG_NO);
-                    $("#lbliamt").text(success.IAMOUNT);
+                    // $("#lblregno").text(success.SAMPLE_REG_NO);
+                    // $("#lbliamt").text(success.IAMOUNT);
 
                 }
 
@@ -329,5 +189,56 @@
                         //    ShowHideMsgNew(res.status, res.responseText);
                         //    window.location.href = "/LaboratoryMaster/LaboratoryMaster";
                         //};
+        // $(document).ajaxSend(function () {
+        //     $(".overlayLoader").show();
+        // });
+
+        // $(document).ajaxComplete(function () {
+        //     $(".overlayLoader").hide();
+        // });
+        // $(function () {
+        //     generatePdf(true);
+        // });
+        // function generatePdf(isPrint) {
+        //     var HTML = $('#print').html();
+
+        //     $.ajax({
+        //         url: "@Url.Action("GeneratePDF", "LabPaymentsForm")",
+        //         type: "POST",
+        //         contentType: "application/x-www-form-urlencoded",
+        //         data: { htmlContent: HTML },
+        //         xhrFields: {
+        //             responseType: 'blob'
+        //         },
+        //         success: function (result) {
+        //             var url = window.URL.createObjectURL(result);
+        //             if (isPrint) {
+        //                 iframe = document.createElement('iframe');
+        //                 document.body.appendChild(iframe);
+
+        //                 iframe.style.display = 'none';
+        //                 iframe.src = url;
+        //                 iframe.onload = function () {
+        //                     setTimeout(function () {
+        //                         iframe.focus();
+        //                         iframe.contentWindow.print();
+        //                     }, 1);
+        //                 };
+        //             }
+        //             else {
+        //                 var a = document.createElement('a');
+        //                 a.href = url;
+        //                 a.download = getExportFileName(fileName) + '.pdf';
+        //                 document.body.append(a);
+        //                 a.click();
+        //                 a.remove();
+        //                 window.URL.revokeObjectURL(url);
+        //             }
+        //         },
+        //         error: function (error) {
+        //             console.error(error);
+        //         }
+        //     });
+        // }
     </script>
 }

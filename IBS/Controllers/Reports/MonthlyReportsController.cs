@@ -14,14 +14,17 @@ namespace IBS.Controllers.Reports
     {
         private readonly IMonthlyReportsRepository monthlyReportsRepository;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
 
-        public MonthlyReportsController(IMonthlyReportsRepository _monthlyReportsRepository, IWebHostEnvironment _env)
+        public MonthlyReportsController(IMonthlyReportsRepository _monthlyReportsRepository, IWebHostEnvironment _env, IConfiguration _config)
         {
             monthlyReportsRepository = _monthlyReportsRepository;
             this.env = _env;
+            config = _config;
         }
         public IActionResult Index()
         {
+            ViewBag.ReportUrl = config.GetSection("AppSettings")["ReportUrl"];
             ViewBag.Region = GetUserInfo.Region;
             return View();
         }

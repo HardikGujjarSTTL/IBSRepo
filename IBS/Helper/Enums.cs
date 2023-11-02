@@ -2,7 +2,6 @@
 using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Reflection;
 
 namespace IBS.Helper
@@ -71,6 +70,20 @@ namespace IBS.Helper
             CaseNo = 22,
             [Description("/ReadWriteData/LAB")]
             Lab = 23,
+            [Description("/ReadWriteData/DigiSignatureFiles")]
+            DigiSignatureFiles = 24,
+            [Description("/ReadWriteData/BILL_IC")]
+            BILLIC = 25,
+            [Description("/ReadWriteData/TESTPLAN")]
+            TESTPLAN = 26,
+            [Description("/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")]
+            CALLCANCELLATIONDOCUMENTS = 27,
+            [Description("/ReadWriteData/Files/CASE_NO")]
+            AdministratorPurchaseOrderCASE_NO = 28,
+            [Description("/ReadWriteData/Files/Vendor/PO")]
+            VendorPO = 29,
+            [Description("/ReadWriteData/IC_PHOTOS")]
+            ICPHOTOS = 30,
         }
 
         public enum DocumentCategory : int
@@ -93,6 +106,14 @@ namespace IBS.Helper
             ICCancellation = 17,
             PurchaseOrderForm = 18,
             ICDocument = 21,
+            ICPHOTOS = 22,
+            ICPhotoDigSign = 23,
+            UploadTestPlan = 24,
+            UploadICAnnexue1 = 25,
+            UploadICAnnexue2 = 26,
+            CancellationDocument = 27,
+            PurchaseOrderFormCase = 28,
+            VendorPO = 29,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -112,6 +133,21 @@ namespace IBS.Helper
             Upload_JI_Report = 52,
             Upload_Tech_Ref1 = 53,
             Upload_Contract_Doc = 16,
+            IC_Photos_Upload1 = 22,
+            IC_Photos_Upload2 = 24,
+            IC_Photos_Upload3 = 25,
+            IC_Photos_Upload4 = 26,
+            IC_Photos_Upload5 = 27,
+            IC_Photos_Upload6 = 28,
+            IC_Photos_Upload7 = 29,
+            IC_Photos_Upload8 = 30,
+            IC_Photos_Upload9 = 31,
+            IC_Photos_Upload10 = 32,
+            ICPhoto_Dig_Sign = 33,
+            Upload_Test_Plan = 34,
+            Upload_IC_Annexue1 = 35,
+            Upload_IC_Annexue2 = 36,
+            Cancellation_Document = 37,
         }
 
         public enum DocumentICCancellation : int
@@ -125,6 +161,7 @@ namespace IBS.Helper
             DrawingSpecification = 56,
             Amendment = 57,
             ParentLOA = 58,
+            CopyOfPurchaseOrder = 3,
         }
 
         public enum DocumentCategory_AdminUserUploadDoc : int
@@ -282,7 +319,6 @@ namespace IBS.Helper
             [Description("No Advance bill")]
             X,
         }
-
 
         public enum ActiveInActive
         {
@@ -590,8 +626,6 @@ namespace IBS.Helper
             R,
         }
 
-        
-
         public enum ManagementReportsTitle
         {
             [Description("IE Performance")] IE_X,
@@ -814,14 +848,23 @@ namespace IBS.Helper
         public static CallDetailsDashboradModel CallDetailsDashborad { get; set; }
 
         public static AllICStatusModel AllICStatus { get; set; }
+
         public static ReInspectionICsModel ReInspectionICs { get; set; }
+
         public static IEICPhotoEnclosedModelReport IEICPhotoEnclosedModel { get; set; }
+
         public static ICUnbilledModel ICUnbilled { get; set; }
+
         public static IE7thCopyListModel IE7thCopyList { get; set; }
+
         public static ICIssuedNotReceivedReportModel ICIssuedNotReceivedReport{ get; set; }
+
         public static ICStatusModel ICStatus { get; set; }
+
         public static PendingJICasesReportModel PendingJICasesReport { get; set; }
+
         public static IEDairyModel IEDairy { get;set; }
+
         public static IEWorkPlanModel IEWorkPlan { get; set; }
     }
 }

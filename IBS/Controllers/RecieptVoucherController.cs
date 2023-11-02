@@ -66,6 +66,19 @@ namespace IBS.Controllers
                 model.Createdby = UserId;
                 model.UserName = USER_ID.Substring(0, 8);
                 model.lstVoucherDetails = GetLstVoucherDetailsModel;
+                model.Region = GetRegionCode;
+                if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
+                {
+                    foreach (var item in model.lstVoucherDetails)
+                    {
+                        if (item.BANK_CD == 0)
+                        {
+                            AlertAlreadyExist("Case No./ BPO is must. (By Order)");
+                            return View(model);
+                        }
+                    }
+                }
+
                 recieptVoucherRepository.SaveDetails(model);
                 AlertAddSuccess();
             }
@@ -74,6 +87,19 @@ namespace IBS.Controllers
                 model.Updatedby = UserId;
                 model.UserName = USER_ID.Substring(0, 8);
                 model.lstVoucherDetails = GetLstVoucherDetailsModel;
+
+                if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)
+                {
+                    foreach (var item in model.lstVoucherDetails)
+                    {
+                        if (item.BANK_CD == 0)
+                        {
+                            AlertAlreadyExist("Case No./ BPO is must. (By Order)");
+                            return View(model);
+                        }
+                    }
+                }
+
                 recieptVoucherRepository.SaveDetails(model);
                 AlertUpdateSuccess();
             }
@@ -97,7 +123,7 @@ namespace IBS.Controllers
 
             if (IsAdd)
             {
-                if(lst.Count == 0) obj.ID = 1;
+                if (lst.Count == 0) obj.ID = 1;
                 else obj.ID = lst.Max(x => x.ID) + 1;
                 obj.CHQ_NO = ChequeNo;
                 obj.CHQ_DT = ChequeDate;
@@ -205,12 +231,15 @@ namespace IBS.Controllers
                             {
                                 int rowCount = worksheet.Dimension.Rows;
                                 int colCount = worksheet.Dimension.Columns;
+                                int ID = 1;
 
                                 for (int row = 2; row <= rowCount; row++) // Assuming the data starts from the 2nd row (skip header row)
                                 {
+                                    if (lst.Count > 0) ID = lst.Max(x => x.ID) + 1;
+
                                     VoucherDetailsModel data = new VoucherDetailsModel
                                     {
-                                        ID = lst.Max(x => x.ID) + 1,
+                                        ID = ID,
                                         CHQ_NO = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 1].Value.ToString() : "",
                                         CHQ_DT = worksheet.Cells[row, 1].Value != null ? DateTime.FromOADate(long.Parse(worksheet.Cells[row, 2].Value.ToString())) : DateTime.Now.Date,
                                         AMOUNT = worksheet.Cells[row, 1].Value != null ? Convert.ToDecimal(worksheet.Cells[row, 3].Value) : null

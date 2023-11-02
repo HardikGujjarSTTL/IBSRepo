@@ -52,7 +52,7 @@ namespace IBS.Repositories
         //                    CallRecDt = Convert.ToString(row["call_recv_dt"]),
         //                    CallSNO = Convert.ToString(row["call_sno"]),
         //                    IEName = Convert.ToString(row["ie_name"]),
-                            
+
         //                };
 
         //                modelList.Add(model);
@@ -149,17 +149,44 @@ namespace IBS.Repositories
         }
         public LabSampleInfoModel SampleDtlData(string CaseNo, string CallRdt, string CallSno, string Regin)
         {
-           var file = ShowFile(CallRdt, CaseNo, CallSno);
-           
+            string Doc_Stu = "";
+            string Doc_Ext = "";
+            string labelexist = "";
+            string sqlQuery = "select count(*) from t110_Lab_Doc T110 where to_char(T110.CALL_RECV_DT, 'dd/mm/yyyy')='" + CallRdt.Trim() + "' and T110.case_no='" + CaseNo.Trim() + "' and T110.call_sno='" + CallSno.Trim() + "'";
+            Doc_Ext = GetDateString(sqlQuery);
+            if (Convert.ToInt16(Doc_Ext) > 0)
+            {
+                string sqlQuery1 = "select DOC_STATUS_FIN from t110_Lab_Doc T110 where to_char(T110.CALL_RECV_DT, 'dd/mm/yyyy')='" + CallRdt.Trim() + "' and T110.case_no='" + CaseNo.Trim() + "' and T110.call_sno='" + CallSno.Trim() + "'";
+                Doc_Stu = GetDateString(sqlQuery1);
+                if (Doc_Stu == "A")
+                {
+                    labelexist = "Y";
+                }
+                else
+                {
+                    labelexist = "N";
+                }
+            }
+            else
+            {
+                labelexist = "B";
+            }
+            if(labelexist == "Y")
+            {
+                labelexist = "S";
+            }
+            var file = ShowFile(CallRdt, CaseNo, CallSno);
+
             using (var dbContext = context.Database.GetDbConnection())
             {
-                OracleParameter[] par = new OracleParameter[4];
+                OracleParameter[] par = new OracleParameter[5];
                 par[0] = new OracleParameter("p_Case_No", OracleDbType.NVarchar2, CaseNo, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_Call_Recv_DT", OracleDbType.NVarchar2, CallRdt, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_Call_SNO", OracleDbType.NVarchar2, CallSno, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[4] = new OracleParameter("p_CURSOR1", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("Vendor_GetLabSampleDtl", par, 3);
+                var ds = DataAccessDB.GetDataSet("Vendor_GetLabSampleDtl", par, 4);
 
                 LabSampleInfoModel model = new();
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -181,21 +208,52 @@ namespace IBS.Repositories
                         UTRDT = Convert.ToString(row["utr_dt"]),
                         PaymentStatus = Convert.ToString(row["status"]),
                         File = Convert.ToString(file),
+                        //DateofRecSample = Convert.ToString(row["sample_recv_dt"]),
+                        //TotalTFee = Convert.ToString(row["testing_charges"]),
+                        //LikelyDt = Convert.ToString(row["likely_dt_report"]),
+                        //Status = Convert.ToString(row["status1"]),
+                        //Remarks = Convert.ToString(row["remarks"]),
                     };
                 }
-                
+                LabSampleInfoModel sampleDetail = new();
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+
+                    DataRow row = ds.Tables[1].Rows[0];
+                    sampleDetail = new LabSampleInfoModel
+                    {
+                        DateofRecSample = Convert.ToString(row["sample_recv_dt"]),
+                        TotalTFee = Convert.ToString(row["techarge"]),
+                        LikelyDt = Convert.ToString(row["likely_dt_report"]),
+                        Status = Convert.ToString(row["status1"]),
+                        Remarks = Convert.ToString(row["remarks"]),
+                    };
+                }
+                else
+                {
+                    model.LabelExist = labelexist;
+                }
+                model.DateofRecSample = sampleDetail.DateofRecSample;
+                model.TotalTFee = sampleDetail.TotalTFee;
+                model.LikelyDt = sampleDetail.LikelyDt;
+                model.Status = sampleDetail.Status;
+                model.Remarks = sampleDetail.Remarks;
                 return model;
             }
         }
         public bool ShowFile(string lblCallDT, string lblCaseNo, string lblCSNO)
         {
-            
-            string mdtEx = dateconcate(lblCallDT.Trim());
-            string myFileEx = $"{lblCaseNo.Trim()}_{lblCSNO.Trim()}_{mdtEx}";
 
-            string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
-            
-            return File.Exists(fpath);
+            //string mdtEx = dateconcate(lblCallDT.Trim());
+            //string myFileEx = $"{lblCaseNo.Trim()}_{lblCSNO.Trim()}_{mdtEx}";
+
+            //string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "Payment", $"{myFileEx}.PDF");
+            string MyFile_ex = "";
+            string mdt_ex = dateconcate1(lblCallDT.Trim());
+            MyFile_ex = lblCaseNo.Trim() + '_' + lblCSNO.Trim() + '_' + mdt_ex;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile_ex + ".PDF");
+
+            return File.Exists(filePath);
         }
         public static string GetDateString(string sqlQuery)
         {
@@ -230,7 +288,7 @@ namespace IBS.Repositories
         }
         public bool SaveDataDetails(LabSampleInfoModel LabSampleInfoModel)
         {
-            
+
             string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
 
@@ -246,11 +304,11 @@ namespace IBS.Repositories
                 par[4] = new OracleParameter("p_DocInitDateTime", OracleDbType.Date, ss, ParameterDirection.Input);
                 par[5] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LabSampleInfoModel.TDS, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_UTRNo", OracleDbType.Varchar2, LabSampleInfoModel.UTRNO, ParameterDirection.Input);
-                par[7] = new OracleParameter("p_UTRDate", OracleDbType.Date, LabSampleInfoModel.UTRDT, ParameterDirection.Input);               
+                par[7] = new OracleParameter("p_UTRDate", OracleDbType.Date, LabSampleInfoModel.UTRDT, ParameterDirection.Input);
                 par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName.Trim(), ParameterDirection.Input);
 
                 var ds = DataAccessDB.ExecuteNonQuery("Vendor_InsertLabSampleInfo", par, 1);
-               
+
             }
             catch (Exception ex)
             {
@@ -268,13 +326,22 @@ namespace IBS.Repositories
             string dt1 = myYear + myMonth + myDay;
             return (dt1);
         }
-        
+        string dateconcate1(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(6, 4);
+            myMonth = dt.Substring(3, 2);
+            myDay = dt.Substring(0, 2);
+            string dt1 = myYear + myDay + myMonth;
+            return (dt1);
+        }
         public bool UpdateDetails(LabSampleInfoModel LabSampleInfoModel)
         {
-            
+
             //if (LabSampleInfoModel.UploadLab != null && LabSampleInfoModel.UploadLab.Length > 0)
             //{
-                
+
             //    List<string> savedFilePaths = new List<string>();
             //    string fn = "", MyFile = "", fx = "", fl = "";
             //    string mdt = dateconcate(LabSampleInfoModel.CallRecDt);
@@ -291,9 +358,9 @@ namespace IBS.Repositories
             //        }
             //        savedFilePaths.Add(saveLocation);
             //    }
-                
+
             //}
-                string ss;
+            string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
 
             ss = GetDateString(sqlQuery);
@@ -310,7 +377,7 @@ namespace IBS.Repositories
                 par[6] = new OracleParameter("p_CallRecvDT", OracleDbType.Date, LabSampleInfoModel.CallRecDt, ParameterDirection.Input);
                 par[7] = new OracleParameter("p_CallSno", OracleDbType.Varchar2, LabSampleInfoModel.CallSNO, ParameterDirection.Input);
                 par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName, ParameterDirection.Input);
-                
+
 
                 var ds = DataAccessDB.ExecuteNonQuery("Vendor_UPDATE_SAMPLE_INFO", par, 1);
             }
@@ -321,17 +388,17 @@ namespace IBS.Repositories
             return true;
         }
 
-        public string CheckExist(string CaseNo, string CallRdt, string CallSno,string Regin)
+        public string CheckExist(string CaseNo, string CallRdt, string CallSno, string Regin)
         {
 
             string query = "SELECT COUNT(*) FROM T110_LAB_DOC T110 " +
-                  "WHERE TO_CHAR(T110.CALL_RECV_DT, 'dd/mm/yyyy') = '"+CallRdt+"' " +
-                  "AND T110.case_no = '"+CaseNo+"' AND T110.call_sno = '"+CallSno+"'";
+                  "WHERE TO_CHAR(T110.CALL_RECV_DT, 'dd/mm/yyyy') = '" + CallRdt + "' " +
+                  "AND T110.case_no = '" + CaseNo + "' AND T110.call_sno = '" + CallSno + "'";
 
 
             string count = GetDateString(query);
 
-            
+
             //string nextSerialNumber = (count + 1).ToString();
 
             return count;

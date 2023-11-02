@@ -18,6 +18,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th class="padR10 center">Action</th>
+                            <th class="padR10 center">View PO Details</th>
                             <th>Ref No.</th>
                             <th>Purchase Order Number</th>
                             <th>Purchase Order Date</th>
@@ -26,8 +28,6 @@
                             <th>Purchaser Name</th>
                             <th>Remarks</th>
                             <th>Case No.</th>
-                            <th class="padR10 center">View PO Details</th>
-                            <th class="padR10 center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,27 +77,6 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CaseNo" },
-                    { data: "PoNo" },
-                    { data: "PoDtDate" },
-                    { data: "RlyCd" },
-                    { data: "VendorName" },
-                    { data: "ConsigneeSName" },
-                    { data: "Remarks" },
-                    { data: "RealCaseNo" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var id = data.CaseNo;
-                            var RlyCd = data.MainrlyCd;
-                            var RlyNonrly = data.RlyNonrly;
-                            var PoDtDate = data.PoDtDate;
-                            var poDetsilsUrl = '@Url.Action("PODetails", "POMaster")?CaseNo=' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -112,6 +91,28 @@
 
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.CaseNo;
+                            var RlyCd = data.MainrlyCd;
+                            var RlyNonrly = data.RlyNonrly;
+                            var PoDtDate = data.PoDtDate;
+                            var poDetsilsUrl = '@Url.Action("PODetails", "POMaster")?CaseNo=' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View PO Details"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "PoNo" },
+                    { data: "PoDtDate" },
+                    { data: "RlyCd" },
+                    { data: "VendorName" },
+                    { data: "ConsigneeSName" },
+                    { data: "Remarks" },
+                    { data: "RealCaseNo" },
+                    
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {

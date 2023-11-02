@@ -11,7 +11,7 @@
     }
 }
 
-<
+
 <div class="list-inner">
     <div class="tast-list">
         <h2>Generate Voucher</h2>
@@ -223,14 +223,16 @@ function validation(){
 }
 
         function ButtonClick() {
-            debugger;
+            
             var AccCD = $("#AccCD").val();
             var txtBPO = $("#txtBPO").val();
             var lstBPO = $("#lstBPO").val();
             var listBPO = $("#listBPO").val();
             var txtCSNO = $("#CSNO").val();
+            var url = '@Url.Action("ButtonClick", "LabRecieptVoucher")';
             $.ajax({
-                url: '/LabRecieptVoucher/ButtonClick',
+                //url: '/LabRecieptVoucher/ButtonClick',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },

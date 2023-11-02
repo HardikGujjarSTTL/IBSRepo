@@ -115,9 +115,7 @@ namespace IBS.Repositories
         public string VoucherDetailsSave(LabRecieptVoucherModel model, string Region)
         {
             DTResult<LabRecieptVoucherModel> dTResult = new() { draw = 0 };
-            IQueryable<LabRecieptVoucherModel>? query = null;
             string VCHR_NO = "";
-            string CASE_NO = "";
             if (model.VCHR_NO == null)
             {
                 string vchr_dt = model.VCHR_DT.ToString() ?? string.Empty;
@@ -146,7 +144,7 @@ namespace IBS.Repositories
                   .DefaultIfEmpty(0)
                   .Max() + 1;
 
-                if (voucher1 != null)
+                if (voucher1 > 0)
                 {
                     VCHR_NO = ss + 00 + voucher1.ToString();// ss + (Convert.ToInt32(voucher1) + 1);
                 }
@@ -165,7 +163,7 @@ namespace IBS.Repositories
             {
                 T24Rv data = new T24Rv();
                 data.VchrNo = Convert.ToString(VCHR_NO);
-                data.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
+                data.VchrDt = Convert.ToDateTime(DateTime.ParseExact(model.VCHR_DT, "dd/MM/yyyy", null).ToString("dd/MM/yyyy"));
                 data.BankCd = Convert.ToByte(model.BANK_CD);
                 data.VchrType = model.VCHR_TYPE;
                 context.T24Rvs.Add(data);

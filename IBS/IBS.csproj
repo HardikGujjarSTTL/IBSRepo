@@ -3,13 +3,21 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625</NoWarn>
+		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625, CS8629</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Controllers\IE Reports\**" />
+	  <Compile Remove="wwwroot\GeneratedBarcode\**" />
+	  <Compile Remove="wwwroot\ReadWriteData\Payment\**" />
 	  <Content Remove="Controllers\IE Reports\**" />
+	  <Content Remove="wwwroot\GeneratedBarcode\**" />
+	  <Content Remove="wwwroot\ReadWriteData\Payment\**" />
 	  <EmbeddedResource Remove="Controllers\IE Reports\**" />
+	  <EmbeddedResource Remove="wwwroot\GeneratedBarcode\**" />
+	  <EmbeddedResource Remove="wwwroot\ReadWriteData\Payment\**" />
 	  <None Remove="Controllers\IE Reports\**" />
+	  <None Remove="wwwroot\GeneratedBarcode\**" />
+	  <None Remove="wwwroot\ReadWriteData\Payment\**" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="Repositories\AccountCodesDirectoryRepository.cs~RF1034cdb0.TMP" />
@@ -108,7 +116,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BarCode" Version="2023.8.4" />
 		<PackageReference Include="EPPlus" Version="6.2.10" />
+		<PackageReference Include="iTextSharp" Version="5.5.13.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.19" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
 			<PrivateAssets>all</PrivateAssets>
@@ -133,6 +143,10 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\ReadWriteData\LAB\" />
 	</ItemGroup>
 
 </Project>

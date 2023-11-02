@@ -146,11 +146,16 @@ namespace IBS.Controllers.InspectionBilling
                 if (Region == "N")
                 {
                     string mess = "";
+                    if(model.CallDt == null)
+                    {
+                        model.CallDt = model.Callrecvdt;
+                    }
                     int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
                     int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
                     if (FinspCdtdiff == 1)
                     {
                         mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
+                        AlertDanger(mess);
                     }
                     if (ICdtLinspdiff == 1)
                     {
@@ -162,8 +167,9 @@ namespace IBS.Controllers.InspectionBilling
                         {
                             mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
                         }
+                        AlertDanger(mess);
                     }
-                    AlertDanger(mess);
+                    
                 }
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
@@ -406,7 +412,7 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 InspectionCertModel model = new InspectionCertModel();
-                if (CaseNo != null && CallRecvDt != null && CallSno > 0 && ItemSrnoPo > 0)
+                if (CaseNo != null && CallSno > 0 && ItemSrnoPo > 0)
                 {
                     model = inpsRepository.FindByItemID(CaseNo, CallRecvDt, CallSno, ItemSrnoPo, Region);
                 }
@@ -426,7 +432,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 string id = "";
                 string msg = "Item Description Updated Successfully.";
-                if (ItemSrnoPo > 0 && CaseNo != null && CallRecvDt != null && CallSno > 0)
+                if (ItemSrnoPo > 0 && CaseNo != null && CallSno > 0)
                 {
                     id = inpsRepository.UpdateCallDetails(model, ItemSrnoPo, CaseNo, CallRecvDt, CallSno);
                 }
@@ -496,7 +502,7 @@ namespace IBS.Controllers.InspectionBilling
             InspectionCertModel model = new();
             try
             {
-                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
+                if (CaseNo != null && CallSno > 0)
                 {
                     model = inpsRepository.FindByCallMaterialReadiness(CaseNo, CallRecvDt, CallSno, Region);
                     if (model.DtInspDesire == null)

@@ -29,6 +29,10 @@ namespace IBS.Models
         public string BankCD { get; set; }
         public string Remarks { get; set; }
         public string UserId { get; set; }
+        public string AccountCd { get; set; }
+        public string SubCd { get; set; }
+        public string SBUCd { get; set; }
+        public string ProjectCd { get; set; }
 
 
     }

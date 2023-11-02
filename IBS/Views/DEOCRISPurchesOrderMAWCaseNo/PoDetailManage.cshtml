@@ -1,0 +1,616 @@
+﻿@model IBS.Models.DEO_CRIS_PO_MasterDetailsModel
+
+@{
+    ViewData["Title"] = "VENDOR PURCHASE ORDER DETAILS";
+    string clsView = "";
+    if (Model.ITEM_SRNO == null)
+    {
+        clsView = "Permission_View";
+    }
+}
+@{
+    var IMMS_POKEY = Model.IMMS_POKEY;
+    var IMMS_RLY_CD = Model.IMMS_RLY_CD;
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>VENDOR PURCHASE ORDER DETAILS</h2>
+    </div>
+    <div>
+        <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="PODetails" asp-route-IMMS_POKEY="@IMMS_POKEY" asp-route-IMMS_RLY_CD="@IMMS_RLY_CD" class="reset-btn">View List</a>
+    </div>
+</div>
+<section class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="POMasterDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmPOMasterDetails">
+            <input type="text" class="input" asp-for="IMMS_CONSIGNEE_CD" style="display:none;">
+            <input type="text" class="input" asp-for="IMMS_RLY_CD" style="display:none;">
+            <input type="text" class="input" asp-for="ItemCd" style="display:none;">
+            <input type="text" class="input" asp-for="UomCd" style="display:none;">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">IMMS PO KEY.</label>
+                        <input type="text" class="input" asp-for="IMMS_POKEY" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">RLY CD.</label>
+                        <input type="text" class="input" asp-for="RlyCd" readonly="readonly">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Item Serial No.</label>
+                        <input type="text" class="input" asp-for="ITEM_SRNO" readonly="readonly">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">PL NO.</label>
+                        <input type="text" class="input" asp-for="PlNo">
+                        <span asp-validation-for="PlNo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3" id="dvSBPO">
+                        <label for="Reference">BPO</label>
+                        <input type="text" class="input" asp-for="SBPO">
+                    </div>
+                    <div class="col-md-2 mb-3" id="dvSearchBPO">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchBPO();" style="margin-top: 30px;">Search BPO</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))
+                    </div>
+                    <div class="col-md-3 mb-3" id="dvBpo">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="Bpo">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3" id="dvConsigneeSearch">
+                        <label for="Reference" style="width: 100%;">Consignee</label>
+                        <input type="text" class="input" asp-for="ConsigneeSearch">
+                    </div>
+                    <div class="col-md-2 mb-3" id="dvbtnSearchConsignee">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchConsignee();" style="margin-top: 30px;font-size: 10px;">Search Consignee</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference"></label>
+                        @*@Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))*@
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"))
+
+                        <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3" id="dvConsignee">
+                        <label for="Reference"></label>
+                        <input type="text" class="input" asp-for="Consignee">
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Quantity</label>
+                        <input type="text" class="input" asp-for="Qty" onblur="QuantityChanged()" disabled>
+                        <span asp-validation-for="Qty" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Unit Of Measurment</label>
+                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment() , "Value", "Text"),"--Select--",new { @onchange="GetUOMChanged()" ,@disabled="disabled"})
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="reference">Value</label>
+                        <input type="text" class="input" asp-for="UOMFactor" disabled>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Rate</label>
+                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()" disabled>
+                        <span asp-validation-for="Rate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Base Value</label>
+                        <input type="text" class="input" asp-for="BasicValue" disabled>
+                        <span asp-validation-for="BasicValue" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Discount Type</label>
+                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--" ,new{@disabled="disabled"})
+                        <span asp-validation-for="Rate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Value</label>
+                        @*<input type="text" class="input" asp-for="DiscountPer" onblur="discountype();" disabled>*@
+                        <input type="number" class="input" asp-for="DiscountPer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="discountype();" disabled>
+                        <span asp-validation-for="DiscountPer" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Discount</label>
+                        <input type="text" class="input" asp-for="Discount" onblur="discountype();" disabled>
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Name">Excise Type</label>
+                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--",new{@disabled="disabled"})
+                            <span asp-validation-for="ExciseType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="reference">
+                            <label for="Name">Value</label>
+                            @*<input type="text" class="input" asp-for="ExcisePer" onblur="excise();" disabled>*@
+                            <input type="number" class="input" asp-for="ExcisePer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="excise();" disabled>
+                            <span asp-validation-for="ExcisePer" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">Excise</label>
+                            <input type="text" class="input" asp-for="Excise" onblur="excise();" disabled>
+                            <span asp-validation-for="Excise" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">GST/Sale Tax(%)</label>
+                            @*<input type="text" class="input" asp-for="SalesTaxPer" onblur="saletax();" disabled>*@
+                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="saletax();" disabled>
+                            <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Sale Tax</label>
+                        <input type="text" class="input" asp-for="SalesTax" onblur="saletax();" disabled>
+                        <span asp-validation-for="SalesTax" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Name">Other Charges Type</label>
+                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--",new{@disabled="disabled"})
+                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="reference">
+                            <label for="Name">Value</label>
+                            @*<input type="text" class="input" asp-for="OtChargePer" onblur="othercharges();" disabled>*@
+                            <input type="number" class="input" asp-for="OtChargePer" min="1" max="100" oninput="this.value = Math.min(this.value, 100)" onblur="othercharges();" disabled>
+                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Other Charges (AMT)</label>
+                        <input type="text" class="input" asp-for="OtherCharges" disabled>
+                        <span asp-validation-for="OtherCharges" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Total Value</label>
+                        <input type="text" class="input" asp-for="Value" onfocus="total();" disabled>
+                        <span asp-validation-for="Value" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <div class="reference">
+                            <label for="Name">Last Date of Supply</label>
+                            <input type="text" class="datetime" asp-for="DelvDt" onblur="cpy();" disabled>
+                            <span asp-validation-for="DelvDt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Delivery Deadline Date</label>
+                        <input type="text" class="datetime" asp-for="ExtDelvDt" disabled>
+                        <span asp-validation-for="ExtDelvDt" class="text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="row my-0">
+                <div class="col-md-6 mb-3">
+                <label for="Reference">Item Description</label>
+                <textarea rows="4" asp-for="ItemDesc"></textarea>
+                <span asp-validation-for="ItemDesc" class="text-danger"></span>
+                </div>
+                </div>*@
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    @*<a asp-controller="POMaster" asp-action="PODetails" asp-route-CaseNo="@CaseNo" class="reset-btn">Cancel</a>*@
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $('#DelvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            $('#ExtDelvDt').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+            });
+            fill_Consignee_BPO();
+            if ('@Model.BpoCd' != "0" && '@Model.BpoCd' != "") {
+                BindBPOEdit('@Model.BpoCd');
+                setTimeout(function () {
+                    $("#BpoCd").val('@Model.BpoCd');
+                }, 2000);
+                $("#dvSBPO").css("display", "none");
+                $("#dvSearchBPO").css("display", "none");
+                $("#dvBpo").css("display", "none");
+            }
+            else
+            {
+                $("#Bpo").val('@Model.Bpo');
+            }
+            if ('@Model.ConsigneeCd' != "0") {
+                BindConsigneeEdit('@Model.ConsigneeCd');
+                $("#dvConsigneeSearch").css("display", "none");
+                $("#dvbtnSearchConsignee").css("display", "none");
+                setTimeout(function () {
+                    $("#ConsigneeCd").val('@Model.ConsigneeCd');
+                }, 2000);
+            }
+            else {
+                getConsigneeCd('@Model.IMMS_CONSIGNEE_CD', '@Model.IMMS_RLY_CD')
+            }
+            GetUOMChanged();
+        });
+
+        function fill_Consignee_BPO()
+        {
+            var IMMS_RLY_CD = '@Model.IMMS_RLY_CD';
+            $.ajax({
+                url: '@Url.Action("GetBillPayingOfficerBeforEdit", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_RLY_CD=' + IMMS_RLY_CD,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#BpoCd").append("<option value=''>Other</option>");
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetConsigneeUsingConsigneeBeforEdit", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_RLY_CD=' + IMMS_RLY_CD,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#ConsigneeCd").append("<option value=''>Other</option>");
+                }
+            });
+        }
+
+        function getConsigneeCd(ConsigneeCd, IMMS_RLY_CD) {
+            $.ajax({
+                url: '@Url.Action("getConsigneeCd", "DEOCRISPurchesOrderMAWCaseNo")?ConsigneeCd=' + ConsigneeCd + "&IMMS_RLY_CD=" + IMMS_RLY_CD,
+                type: "GET",
+                dataType: "JSON",
+                data: '{}',
+                success: function (response) {
+                    if (response.status) {
+                        if (response.ConsigneeCd != null) {
+                            BindConsigneeEdit(response.ConsigneeCd);
+                            setTimeout(function () {
+                                $("#ConsigneeCd").val(response.ConsigneeCd);
+                            }, 2000);
+                            $("#dvConsigneeSearch").css("display", "none");
+                            $("#dvbtnSearchConsignee").css("display", "none");
+                            $("#dvConsignee").css("display", "none");
+                        }
+                        else {
+                            $("#Consignee").val('@Model.Consignee');
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetUOMChanged() {
+            var UomCd = $('#UomCd').val();
+            $.ajax({
+                url: '@Url.Action("GetUOMChanged", "POMaster")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: UomCd },
+                success: function (contacts) {
+                    if (contacts.data && contacts.data.length > 0) {
+                        $("#UOMFactor").val(contacts.data[0].UOMFactor);
+                    }
+                }
+            });
+        }
+
+        function SearchBPO() {
+            var SBPO = $("#SBPO").val();
+            $.ajax({
+                url: '@Url.Action("GetBillPayingOfficer", "POMaster")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#BpoCd").append("<option value=''>Other</option>");
+                }
+            });
+        }
+        function SearchConsignee() {
+            var ConsigneeSearch = $("#ConsigneeSearch").val();
+            $.ajax({
+                url: '@Url.Action("GetConsigneeUsingConsignee", "POMaster")?ConsigneeSearch=' + ConsigneeSearch,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#ConsigneeCd").append("<option value=''>Other</option>");
+                }
+            });
+        }
+
+        function BindBPOEdit(BpoCd) {
+            $.ajax({
+                url: '@Url.Action("GetEditBillPayingOfficer", "DEOCRISPurchesOrderMAWCaseNo")?BpoCd=' + BpoCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BpoCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                    $("#BpoCd").append("<option value=''>Other</option>");
+                }
+            });
+        }
+        function BindConsigneeEdit(ConsigneeCd) {
+            $.ajax({
+                url: '@Url.Action("GetEditConsigneeUsingConsignee", "DEOCRISPurchesOrderMAWCaseNo")?ConsigneeCd=' + ConsigneeCd,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ConsigneeCd").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
+        }
+
+        function QuantityChanged() {
+            basevalueOnQuantityChanged();
+            discountype();
+            excise();
+            saletax();
+            othercharges();
+            total();
+        }
+        function basevalueOnQuantityChanged() {
+            var qty;
+            var rate;
+            if ($.trim($('#Qty').val()) === "") {
+                qty = 0;
+            } else {
+                qty = parseFloat($.trim($('#Qty').val()));
+            }
+
+            if ($.trim($('#Rate').val()) === "") {
+                rate = 0;
+            } else {
+                rate = parseFloat($.trim($('#Rate').val()));
+            }
+
+            var uom = parseFloat($.trim($('#UOMFactor').val()));
+            var basevalue = ((qty * rate) / uom);
+            $('#BasicValue').val(Math.round(basevalue * 100) / 100);
+        }
+
+        function basevalue() {
+            var qty;
+            var rate;
+            if ($.trim($('#Qty').val()) === "") {
+                qty = 0;
+            } else {
+                qty = parseFloat($.trim($('#Qty').val()));
+            }
+
+            if ($.trim($('#Rate').val()) === "") {
+                rate = 0;
+            } else {
+                rate = parseFloat($.trim($('#Rate').val()));
+            }
+
+            var uom = parseFloat($.trim($('#UOMFactor').val()));
+            var basevalue = ((qty * rate) / uom);
+            $('#BasicValue').val(Math.round(basevalue * 100) / 100);
+            QuantityChanged();
+        }
+
+        function cpy() {
+            debugger
+            var delvDateInput = $("#DelvDt").val();
+            var podtInput = $("#PoDt").val();
+
+            if (check_date(delvDateInput)) {
+                if (compareDates(podtInput, delvDateInput, 'Delivery Date Cannot Be Earlier Than PO Date')) {
+                    $("#DelvDt").val(delvDateInput);
+                }
+            }
+        }
+        function saletax() {
+            var saleTaxPre = $.trim($("#SalesTaxPer").val());
+            var discountAmt = $.trim($("#Discount").val());
+            var exciseAmt = $.trim($("#Excise").val());
+
+            if (saleTaxPre !== "") {
+                var discountypeper = parseFloat(discountAmt !== "" ? discountAmt : 0);
+                var excise = parseFloat(exciseAmt !== "" ? exciseAmt : 0);
+                var stper = parseFloat(saleTaxPre);
+                var basevalue = parseFloat($.trim($("#BasicValue").val()));
+                var stamount = ((basevalue - discountypeper) + excise) * stper / 100;
+                $("#SalesTax").val(Math.round(stamount * 100) / 100);
+            } else {
+                $("#SalesTax").val(0);
+            }
+            total();
+        }
+
+        function excise() {
+            var ddlExciseType = $.trim($("#ExciseType").val());
+            var discountAmt = $.trim($("#Discount").val());
+            var ExcisePer = $.trim($("#ExcisePer").val());
+
+            if (ddlExciseType === "P") {
+                var discountypeper = parseFloat(discountAmt !== "" ? discountAmt : 0);
+                var exciseper = parseFloat(ExcisePer);
+                var basevalue = parseFloat($.trim($("#BasicValue").val()));
+                var exciseamount = ((basevalue - discountypeper) * exciseper) / 100;
+                $("#Excise").val(Math.round(exciseamount * 100) / 100);
+            } else if (ddlExciseType === "L") {
+                $("#Excise").val(ExcisePer);
+            } else {
+                $("#ExcisePer").val(0);
+                $("#Excise").val(0);
+            }
+            total();
+        }
+
+        function discountype() {
+            var ddlDiscountType = $.trim($("#DiscountType").val());
+            var txtDiscountPer = $.trim($("#DiscountPer").val());
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtQty = $.trim($("#Qty").val());
+
+            if (ddlDiscountType === "P") {
+                var discountypeper = parseFloat(txtDiscountPer);
+                var basevalue = parseFloat(txtBaseValue);
+                var discountamount = (basevalue * discountypeper) / 100;
+                $("#Discount").val(Math.round(discountamount * 100) / 100);
+            } else if (ddlDiscountType === "L") {
+                $("#Discount").val(txtDiscountPer);
+            } else if (ddlDiscountType === "N") {
+                var discountperno = parseFloat(txtDiscountPer);
+                var qty = parseFloat(txtQty);
+                $("#Discount").val(discountperno * qty);
+            } else {
+                $("#Discount").val(0);
+                $("#DiscountPer").val(0);
+            }
+            total();
+        }
+
+        function othercharges() {
+            var ddlOCType = $.trim($("#OtChargeType").val());
+            var txtOtherCharges = $.trim($("#OtChargePer").val());
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtQty = $.trim($("#Qty").val());
+
+            if (ddlOCType === "P") {
+                var otherper = parseFloat(txtOtherCharges);
+                var basevalue = parseFloat(txtBaseValue);
+                var otheramount = (basevalue * otherper) / 100;
+                $("#OtherCharges").val(Math.round(otheramount * 100) / 100);
+            } else if (ddlOCType === "L") {
+                $("#OtherCharges").val(txtOtherCharges);
+            } else if (ddlOCType === "N") {
+                var otherperno = parseFloat(txtOtherCharges);
+                var qty = parseFloat(txtQty);
+                $("#OtherCharges").val(otherperno * qty);
+            } else {
+                $("#OtherCharges").val(0);
+                $("#OtChargePer").val(0);
+            }
+            saletax();
+            total();
+        }
+
+        function total() {
+            var txtBaseValue = $.trim($("#BasicValue").val());
+            var txtSaleTaxAmt = $.trim($("#SalesTaxPer").val());
+            var txtExciseAmt = $.trim($("#Excise").val());
+            var txtDiscountAmt = $.trim($("#Discount").val());
+            var txtOtherChargesAmt = $.trim($("#OtherCharges").val());
+
+            var basevalue = parseFloat(txtBaseValue);
+            var saletaxamt = (txtSaleTaxAmt === "") ? 0 : parseFloat(txtSaleTaxAmt);
+            var exciseamt = (txtExciseAmt === "") ? 0 : parseFloat(txtExciseAmt);
+            var discountamt = (txtDiscountAmt === "") ? 0 : parseFloat(txtDiscountAmt);
+            var othercharges = (txtOtherChargesAmt === "") ? 0 : parseFloat(txtOtherChargesAmt);
+
+            var totalvalue1 = basevalue - discountamt;
+            var totalvalue2 = totalvalue1 + exciseamt;
+            var totalvalue3 = totalvalue2 + saletaxamt;
+            var totalvalue = totalvalue3 + othercharges;
+
+            $("#Value").val(Math.round(totalvalue * 100) / 100);
+        }
+
+        function Save() {
+            if ($("#frmPOMasterDetails").valid()) {
+                $("#frmPOMasterDetails").submit();
+            }
+        }
+
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            window.location.href = '@Url.Action("PODetails", "DEOCRISPurchesOrderMAWCaseNo")?IMMS_POKEY=' + '@Model.IMMS_POKEY' + "&IMMS_RLY_CD=" + '@Model.IMMS_RLY_CD';
+        };
+
+    </script>
+}

@@ -16,10 +16,11 @@
             <table id="dtListVoucher" class="table-responsive">
                 <thead>
                     <tr>
-                        <th>Voucher No</th>
+                        <th>#</th>
+                        <th>Voucher No.</th>
                         <th>Voucher Date</th>
-                        <th>Bank</th>
-                        <th style="text-align:center">Action</th>
+                        <th>Bank Name</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,9 +64,16 @@
                     }
                 },
                 columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                            ;
+                        }
+                    },
                     { data: "VCHR_NO" },
                     {
-                        data: "VCHR_DT", ordering: false,
+                        data: "VCHR_DT",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
                                 return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
@@ -73,20 +81,25 @@
                             return data;
                         }
                     },
+                    //{ data: "BANK_CD" },
                     { data: "BANK_NAME" },
+                    //{ data: "BPO_CD" },
+                    //{ data: "ACC_CD" },
+                    //{ data: "CASE_NO" },
+                    //{ data: "NARRATION" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.VCHR_NO;
-                            var editUrl = '@Url.Action("Manage", "RecieptVoucher")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var VCHR_NO = data.VCHR_NO;
+                            var editUrl = '@Url.Action("Manage", "RecieptVoucher")?id=' + VCHR_NO;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            // html += '<a onclick="ContractDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
                     },
                 ],
-                "order": [[1, "desc"]]
+                "order": [[0, "asc"]]
             });
         }
 

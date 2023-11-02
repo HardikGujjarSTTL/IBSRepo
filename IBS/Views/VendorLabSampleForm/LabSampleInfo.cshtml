@@ -244,9 +244,10 @@
             window.location.href = "/VendorLabSampleForm/LabPaymentRecieptForm?CaseNo=" + CaseNo + '&CallRdt=' + CallRdt + '&CallSno=' + CallSno + '&Flag=' + Flag;
         }
         function grid(CaseNo, CallRdt, CallSno) {
-
+            var url = '@Url.Action("LapSampleIndex", "VendorLabSampleForm")';
             $.ajax({
-                url: '/VendorLabSampleForm/LapSampleIndex',
+                //url: '/VendorLabSampleForm/LapSampleIndex',
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
@@ -322,9 +323,10 @@
         function CheckExist(CaseNo, CallDt, CallSNo) {
 
 
-
+            var url = '@Url.Action("CheckExist", "VendorLabSampleForm")';
             $.ajax({
-                url: '/VendorLabSampleForm/CheckExist',
+                //url: '/VendorLabSampleForm/CheckExist',
+                url:url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallDt, CallSno: CallSNo },

@@ -153,21 +153,21 @@
             <span asp-validation-for="PaymentDt" class="text-danger"></span>
         </div>
             
-            <div class="col-md-8 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="PropertyId">Lab</label>
             @Html.DropDownListFor(model => model.LabCd, Common.GetLab(), "",new { @id="ddlpylab"})
             <span asp-validation-for="LabCd" class="text-danger"></span>
             </div>                       
 
         </div>
-        <div class="savenext-btn" style="margin-right:36%;">
+        <div class="savenext-btn">
             @*button type="button" class="save-btn active Permission_Save" onclick="Add();">Add</button>
             <button type="button" class="save-btn active Permission_Save" onclick="Save();">Modify</button>*@
-        <button type="button" class="save-btn active" onclick="SearchPayment();" style="margin-left:68%;">Search Payment</button>
+        <button type="button" class="save-btn active" onclick="SearchPayment();">Search Payment</button>
         </div>
     </div>
-    <div class="list-btn">
-        <a asp-area="" asp-controller="LabPaymentsForm" asp-action="LabPayment" class="formBtn Permission_Add" style="margin-left:90%;"><span class="fa fa-plus"></span> Add</a>
+    <div class="list-btn mb-2 d-flex justify-content-end">
+        <a asp-area="" asp-controller="LabPaymentsForm" asp-action="LabPayment" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add</a>
     </div>
 <div id="showPayment">
     <section class="table-section">
@@ -322,7 +322,6 @@
                                 'onclick="editRow(' + escapedRow + ')" ' +
                                 'style="color: blue; text-decoration: underline;" ' +
                                 'class="fa fa-pencil Permission_EditView">' +
-                                linkText +
                                 '</a>';
 
                             return editLink;

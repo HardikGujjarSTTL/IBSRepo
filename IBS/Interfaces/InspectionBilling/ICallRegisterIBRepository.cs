@@ -16,7 +16,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetRegionValue(string CaseNo, string CallRecvDt, string CallSno);
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string GetRegionCode);
+        public VenderCallRegisterModel FindByManageID(string CaseNo, DateTime? CallRecvDt, int CallSno, string ActionType, string Region);
 
         DTResult<VenderCallRegisterModel> FindByVenderDetail1(int MfgCd, string CaseNo);
 
@@ -24,7 +24,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
 
-        string send_Vendor_Email(VenderCallRegisterModel model);
+        string send_Vendor_Email(VenderCallStatusModel model);
 
         string RegiserCallDelete(VenderCallRegisterModel model);
 
@@ -32,7 +32,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public string GetMatch(string CaseNo, string GetRegionCode);
 
-        public int show2(string CaseNo, string CallRecvDt, int CallSno);
+        public int show2(string CaseNo);
 
         public string GetCaseNoFind(string CaseNo, string CallRecvDt, int CallSno);
 
@@ -46,7 +46,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno);
 
-        string Save(VenderCallStatusModel model);
+        string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
         public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo);
 
@@ -54,8 +54,25 @@ namespace IBS.Interfaces.InspectionBilling
 
         int CallDetailsSave(VendrorCallDetailsModel model, string UserName);
 
+        public VenderCallStatusModel CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
+        public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
+        public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model);
+
+        public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
+
+        public VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model);
+
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
-        
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
+
+        public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
+
+        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue,string IeCd,string Region);
+
+        public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
+        bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD);
     }
 }

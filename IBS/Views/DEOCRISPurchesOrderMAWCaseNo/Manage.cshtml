@@ -32,7 +32,7 @@
                         <label for="Reference" id="lblRealCaseNO1"></label>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Railway/Non-Railway</label>
+                        <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
                         <input type="text" class="input" value="Railways" readonly>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -79,7 +79,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Purchase Order No./ LOA No.</label>
-                        <input type="text" class="input" asp-for="PO_NO">
+                        <input type="text" class="input" asp-for="PO_NO" maxlength="50">
                         <span asp-validation-for="PO_NO" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -103,7 +103,7 @@
                         <span asp-validation-for="PURCHASER_CD" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <input type="text" class="input" id="txtPurchaser" style="margin-top: 30px;">
+                        <input type="text" class="input btnAlign" id="txtPurchaser">
                     </div>
                 </div>
                 <div class="row my-0">
@@ -119,7 +119,7 @@
                         @Html.DropDownListFor(model => model.BPO_CD, new SelectList(IBS.Models.Common.GetBPOList(Model.BPO_CD) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();"})
                     </div>
                     <div class="col-md-4 mb-3" id="dvtxtBPO">
-                        <input type="text" class="input" id="txtBPO" style="margin-top: 30px;">
+                        <input type="text" class="input btnAlign" id="txtBPO">
                     </div>
                 </div>
                 <div class="row my-0">
@@ -183,25 +183,20 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Remarks</label>
-                        <textarea class="input" asp-for="REMARKS"> </textarea>
+                        <textarea class="input" asp-for="REMARKS" maxlength="500"> </textarea>
                         <span asp-validation-for="REMARKS" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <button type="button" id="btnBPO" class="btn btn-primary formSubBtn" onclick="SaveRemarks();" style="margin-top: 33px;">Save Remarks</button>
                     </div>
                 </div>
-                <div class="row my-0">
-                    <div class="col-md-2 mb-3">
-                        @{
-                            var link = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Convert.ToString(Model.PO_YR) + "/" + Model.IMMS_RLY_CD + "/" + Convert.ToString(Model.PO_NO) + ".pdf";
-                        }
-                        <a href="@link" target="_blank">Download PO</a>
-                    </div>
-                </div>
-
                 <div class="savenext-btn">
                     <a asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="Index" class="reset-btn">Cancel</a>
                     <button type="button" id="btnSave" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    @{
+                        var link = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Convert.ToString(Model.PO_YR) + "/" + Model.IMMS_RLY_CD + "/" + Convert.ToString(Model.PO_NO) + ".pdf";
+                    }
+                    <a href="@link" target="_blank" class="button commonBtn active">Download PO</a>
                     <button type="button" id="btnAcceptPO" class="save-btn active Permission_Save" onclick="AcceptPO();">Accept PO</button>
                 </div>
             </div>
@@ -256,6 +251,10 @@
             var VEND_CD = '@Model.VEND_CD';
             if (i == 1) {
                 VEND_CD = $("#txtVend").val();
+                if (i == 1 && (VEND_CD == "" || VEND_CD == null)) {
+                    ShowHideMsgNew(false, "ENTER VENDOR CODE OR 1ST Few CHARACTERS OF VENDOR NAME AND THEN CLICK ON SELECT VENDOR BUTTON");
+                    return;
+                }
             }
             var IMMS_VENDOR_CD = ('@Model.IMMS_VENDOR_CD').replace(':', '');
             var VENDOR = ('@Model.VENDOR');
@@ -610,7 +609,7 @@
                         $("#lblRealCaseNO1").text(" Case No. --> " + response.OUT_CASE_NO);
                         $("#btnSave").attr("disabled", "disabled");
                         $("#btnAcceptPO").attr("disabled", "disabled");
-                        //window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
+                        window.location.href = '@Url.Action("Index", "DEOCRISPurchesOrderMAWCaseNo")';
                     }
                     else {
                         ShowHideMsgNew(response.status, response.responseText);

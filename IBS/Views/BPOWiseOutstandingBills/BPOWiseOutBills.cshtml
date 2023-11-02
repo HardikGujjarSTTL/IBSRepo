@@ -1,0 +1,346 @@
+﻿@{
+    ViewData["Title"] = "OUTSTANDING BILLS";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>OUTSTANDING BILLS</h2>
+    </div>
+</div>
+<section>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="heading3">Generate Report of Outstanding Bills For The Period</h3>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">From Date</label>
+                    <input type="text" id="fdt" class="input datepicker">
+                    <span class="text-danger field-validation-error" id="spnError1"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">To Date</label>
+                    <input type="text" id="tdt" class="input datepicker">
+                    <span class="text-danger field-validation-error" id="spnError2"></span>
+                </div>
+            </div>
+
+           
+        </div>
+        <div class="accordion-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="heading3">Report To Be Generated For:</h3>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-6">
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div class="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report1" name="RReport" value="Report1" checked>
+                                    <label for="Report1">All BPOs</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report2" name="RReport" value="Report2">
+                                    <label for="Report2">Particular BPO</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report3" name="RReport" value="Report3">
+                                    <label for="Report3">Particular Client</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-readio">
+                        <div class="company-checkbox">
+                            <div c lass="remember">
+                                <div class="remecheckbox">
+                                    <input type="radio" id="Report4" name="RReport" value="Report4">
+                                    <label for="Report4">Outstanding of Northern Region on Other Regions</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12" id="allbpohide">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="heading3">All BPOs:</h3>
+                        </div>
+                    </div>
+                    <ul class="radioListForm">
+                        <li>
+                            <label class="form-check-label" for="nsicCalls">
+                                <input class="form-check-input" type="checkbox" id="chk1" >
+                                Railways
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label" for="pendingCalls">
+                                <input class="form-check-input" type="checkbox" id="chk2" >
+                                PSU
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label" for="nsicCalls">
+                                <input class="form-check-input" type="checkbox" id="chk3" >
+                                State Govt.
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label" for="pendingCalls">
+                                <input class="form-check-input" type="checkbox" id="chk4" >
+                                Foreign Railways
+                            </label>
+                        </li>
+                        <li>
+                            <label class="form-check-label" for="pendingCalls">
+                                <input class="form-check-input" type="checkbox" id="chk5" >
+                                Private Sector   (Select One or Multiple Sectors)
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12" id="particularbpo" style="display:none;">
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3">Particular BPO:</h3>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <input type="text" class="input" id="txtbpo">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="savenext-btn">
+                                <button type="button" class="save-btn active" onclick="loadbpo();" title="Enter the Particular BPO or 1st few letters of Particular BPO then click on select Particular BPO Button">Select BPO</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3" style="display:none;" id="dvVendCd">
+                            <select id="bpoid"></select>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="col-md-12" id="particularclient" style="display:none;">
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3">Particular Client:</h3>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            @Html.DropDownList("ddlPClient", new SelectList(IBS.Models.Common.ClientWise() , "Value", "Text"),"--Select--")
+                        </div>
+                        <div class="col-md-6 mb-3" id="dvpclient">
+                            <select id="pclient"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" id="outregion" style="display:none;">
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3">Outstanding of Northern Region on Other Regions:</h3>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            @Html.DropDownList("ddlregion", new SelectList(IBS.Models.Common.BPORegion() , "Value", "Text"))
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <label for="Report3">Type Of Outstanding Bills</label>
+                    <div class="col-md-3 mb-3">
+                        @Html.DropDownList("ddlTypeOutStandingBills", new SelectList(IBS.Models.Common.TypeOutStandingBills() , "Value", "Text"))
+                    </div>
+                </div>
+                <div class="savenext-btn" style="margin-left:40%;">
+                <button type="button" class="save-btn" onclick="Generate()">Generate Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            sessionStorage.removeItem("region");
+            $("#chk1").prop("checked", true);
+            $("#chk2").prop("checked", true);
+            $("#chk3").prop("checked", true);
+            $("#chk4").prop("checked", true);
+            $("#chk5").prop("checked", true);
+            $("input[type='checkbox']").each(function () {
+                debugger;
+                var checkboxId = $(this).attr("id");
+                var isChecked = localStorage.getItem(checkboxId);
+                if (isChecked === "true") {
+                    $(this).prop("checked", true);
+                }
+            });
+
+           
+            $(":checkbox").click(function () {
+                debugger;
+                var checkboxId = $(this).attr("id");
+                var isChecked = $(this).is(":checked");
+                localStorage.setItem(checkboxId, isChecked);
+            });
+            $("input[type='radio'][name='RReport']").on('click', function () {
+                
+                var selectedValue = $(this).val(); 
+
+               
+                if (selectedValue === "Report1") {
+
+                    $("#allbpohide").css("display", "block");
+                    $("#particularbpo").css("display", "none");
+                    $("#particularclient").css("display", "none");
+                    $("#outregion").css("display", "none");
+                    sessionStorage.removeItem("region");
+                } else if (selectedValue === "Report2") {
+
+                    $("#allbpohide").css("display", "none");
+                    $("#particularbpo").css("display", "block");
+                    $("#particularclient").css("display", "none");
+                    $("#outregion").css("display", "none");
+                    sessionStorage.removeItem("region");
+                } else if (selectedValue === "Report3") {
+                    $("#allbpohide").css("display", "none");
+                    $("#particularbpo").css("display", "none");
+                    $("#particularclient").css("display", "block");
+                    $("#outregion").css("display", "none");
+                    sessionStorage.removeItem("region");
+                } else if (selectedValue === "Report4") {
+
+                    $("#allbpohide").css("display", "none");
+                    $("#particularbpo").css("display", "none");
+                    $("#particularclient").css("display", "none");
+                    $("#outregion").css("display", "block");
+                    sessionStorage.setItem("region", true);
+                }
+            });
+        });
+        function loadbpo(ids) {
+            var BPO = $("#txtbpo").val();
+            $("#dvVendCd").css("display", "block");
+            $.ajax({
+                url: '@Url.Action("GetBPO", "BPOWiseOutstandingBills")?BPO=' + BPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#bpoid").html("");
+                    // $("#bpoid").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#bpoid").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#bpoid").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#bpoid").val(ids);
+                    }
+                    
+                }
+            });
+        }
+        $("#ddlPClient").change(function () {
+            FillBPOCode();
+        })
+        function FillBPOCode(ids) {
+            var BpoType = $("#ddlPClient").val();
+            $.ajax({
+                url: '@Url.Action("GetRlyCode", "BPOWiseOutstandingBills")?BpoType=' + BpoType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#pclient").html("");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#pclient").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#pclient").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#pclient").val(ids);
+                    }
+                   
+                }
+            });
+        }
+        
+        
+        function Generate() {
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            var IsValid = true;
+            if ($("#fdt").val() == "") {
+                $("#spnError1").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#tdt").val() == "") {
+                $("#spnError2").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#fdt").val() != "" && IsValidDate($("#fdt").val()) == false) {
+                $("#spnError1").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#tdt").val() != "" && IsValidDate($("#tdt").val()) == false) {
+                $("#spnError2").html("Invalid date format.");
+                IsValid = false;
+            }
+            
+            if (!IsValid) return;
+            var FromDt = $("#fdt").val();
+            var ToDt = $("#tdt").val();
+            var BpoCd = $("#txtbpo").val();
+            var BpoType = $("#ddlPClient").val();
+            var BpoRly = $("#pclient").val();
+            var BpoRegion = null;
+            if (sessionStorage.getItem("region") == 'true'){
+                 BpoRegion = $("#ddlregion").val();
+            }
+            debugger;
+            var Checkbox = localStorage.getItem(checkboxId);
+            var Railway = $("#chk1").val();
+        }
+    </script>
+}

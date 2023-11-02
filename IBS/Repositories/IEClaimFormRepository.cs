@@ -19,9 +19,6 @@ namespace IBS.Repositories
         {
 
             DTResult<IECliamFormModel> dTResult = new() { draw = 0 };
-            IQueryable<IECliamFormModel>? query = null;
-
-
 
             string CLAIM_NO = (dtParameters.AdditionalValues?.GetValueOrDefault("CLAIM_NO"));
             string CLAIM_DT = dtParameters.AdditionalValues?.GetValueOrDefault("CLAIM_DT");
@@ -57,7 +54,6 @@ namespace IBS.Repositories
         {
 
             DTResult<IECliamFormModel> dTResult = new() { draw = 0 };
-            IQueryable<IECliamFormModel>? query = null;
             string PAYMENT_VOUCHER_NUMBER = (dtParameters.AdditionalValues?.GetValueOrDefault("CLAIM_NO"));
 
 
@@ -208,11 +204,11 @@ namespace IBS.Repositories
 
             string OUT_CLAIM_NO = $"{w_ctr}/{w_sno:D3}";
 
-            int OUT_ERR_CD = -1;
+            //int OUT_ERR_CD = -1;
 
             if (OUT_CLAIM_NO.Length != 11)
             {
-                OUT_ERR_CD = -2;
+                //OUT_ERR_CD = -2;
                 // Handle the error condition
             }
             else
@@ -233,7 +229,7 @@ namespace IBS.Repositories
                     }
                 }
 
-                OUT_ERR_CD = 0;
+                //OUT_ERR_CD = 0;
             }
 
             return OUT_CLAIM_NO;

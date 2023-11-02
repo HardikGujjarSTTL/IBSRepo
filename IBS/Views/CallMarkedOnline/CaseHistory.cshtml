@@ -61,7 +61,7 @@
             else
             {
                 @*var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
-                var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
+            var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
                 var tifpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".tif");
                 var pdfpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".pdf");
                 if (System.IO.File.Exists(tifpath) == true)
@@ -95,7 +95,7 @@
                         @{
                             foreach (var item in Model.poIrepsList)
                             {
-                                var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.RLY_CD + "/" + Model.PO_NO + "_" + item.MA_NO + ".pdf";
+                                var urlireps = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + Model.PO_YR + "/" + Model.IMMS_RLY_CD + "/" + Model.PO_NO + "_" + item.MA_NO + ".pdf";
                                 <tr>
                                     <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.SLNO</font></td>
                                     <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.MA_NO</font></td>
@@ -367,7 +367,15 @@
     });
 
     $("#btnBack").click(function () {
-        var url = '@Url.Action("Index", "Dashboard")';
+        const urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var url;
+        if (type == "C") {
+            url = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=' + type;
+        }
+        else {
+            var url = '@Url.Action("Index", "Dashboard")';
+        }
         window.location.href = url;
     });
 

@@ -44,8 +44,9 @@
                     <span asp-validation-for="IePhoneNo" class="text-danger" id="spnIePhoneNo"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">IE Controlling Officer</label>
+                    <label for="Reference">IE Controlling Officer<i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.IeCoCd, new SelectList(IBS.Models.Common.GetControllingOfficer(Model.IeRegion) , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="IeCoCd" class="text-danger" id="spnIeCoCd"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -83,7 +84,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">IE Joining Date</label>
-                    <input type="text" class="datepicker" asp-for="IeJoinDt" placeholder="DD/MM/YYYY" maxlength="30" readonly>
+                    <input type="text" class="datepicker" asp-for="IeJoinDt" placeholder="DD/MM/YYYY" maxlength="30">
                     <span asp-validation-for="IeJoinDt" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -163,7 +164,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Contract Alternate IE</label>
-                    @Html.DropDownListFor(model => model.AltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
+                    @Html.DropDownListFor(model => model.ContAltIe, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.IeRegion) , "Value", "Text"), "--Select--")
                 </div>
                 <div class="col-md-4 mb-3" style="display:none;">
                     <label for="Reference">Cluster Name <i class="text-danger">*</i></label>
@@ -172,29 +173,27 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEFullSignature" />
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IEInitials" />
                 </div>
             </div>
 
-            <div class="list-inner">
-                <div class="tast-list">
-                    <h4><span class="fa fa-plus"></span> Add Multiple Cluster</h4>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="heading3"><span class="fa fa-plus"></span> Add Multiple Cluster</h3>
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-1 mb-3">
-                    Cluster :
-                </div>
-                <div class="col-md-10 mb-3">
+                <div class="col-md-4 mb-3">
+                    <label>Cluster :</label>
                     @Html.DropDownListFor(model => model.ClusterID, new SelectList(IBS.Models.Common.GetClusterByIE(Model.IeRegion, Model.IeDepartment) , "Value", "Text"),"--Select--")
                     <span class="text-danger" id="spnErrorlstCluster"></span>
                 </div>
-                <div class="col-md-1 mb-3">
+                <div class="col-md-2 mb-3 btnAlign">
                     <button type="button" id="AddCluster" class="formBtn"><span class="fa fa-plus"></span> Add</button>
                 </div>
             </div>
@@ -277,6 +276,11 @@
         }
 
         $("#AddCluster").click(function () {
+            if($("#IeName").val() == "")
+            {
+                ShowHideMsgNew(false, "Please add IE Name");
+                return;
+            }
             if (ValidateClusterData() == false) {
                 return false;
             }
@@ -474,6 +478,10 @@
                 $("#spnIePhoneNo").html("Please add Phone No.");
                 IsValid = false;
             }
+            if ($("#IeCoCd").val() == "") {
+                $("#spnIeCoCd").html("Please add IE Controlling Officer");
+                IsValid = false;
+            }
             if ($("#IeEmpNo").val() == "") {
                 $("#spnIeEmpNo").html("Please add Emp No.");
                 IsValid = false;
@@ -493,11 +501,14 @@
 
             var formData = $("#frmInspectionEngineers").serialize();
             $.post("@Url.Action("DetailsSave", "InspectionEngineers")", formData, function (response) {
-                ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "InspectionEngineers")';
+                        }, 2000);
                 }
             });
-            //}
             return false;
         });
 

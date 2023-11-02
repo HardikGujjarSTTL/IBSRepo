@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Drawing;
+using static IBS.Helper.Enums;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace IBS.Controllers
 {
@@ -55,6 +57,15 @@ namespace IBS.Controllers
             {
                 model = pOMasterRepository.FindByID(CaseNo);
             }
+            List<IBS_DocumentDTO> lstCopyOfPurchaseOrderDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, CaseNo);
+            FileUploaderDTO FileUploaderCopyOfPurchaseOrderDocument = new FileUploaderDTO();
+            FileUploaderCopyOfPurchaseOrderDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCopyOfPurchaseOrderDocument.IBS_DocumentList = lstCopyOfPurchaseOrderDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+            FileUploaderCopyOfPurchaseOrderDocument.OthersSection = false;
+            FileUploaderCopyOfPurchaseOrderDocument.MaxUploaderinOthers = 5;
+            FileUploaderCopyOfPurchaseOrderDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.CopyOfPurchaseOrderDocument = FileUploaderCopyOfPurchaseOrderDocument;
+
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
             FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
             FileUploaderDrawingSpecification.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -101,7 +112,8 @@ namespace IBS.Controllers
                 {
                     model.PoiCd = model.VendCd;
                 }
-
+                //model.Purchaser = model.TempPurchaser;
+                model.PoiCd = model.TempPoiCd;
                 //PO_MasterModel pO_MasterModel = pOMasterRepository.alreadyExistT80_PO_MASTER(model);
                 //if (pO_MasterModel != null)
                 //{
@@ -119,9 +131,23 @@ namespace IBS.Controllers
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
+                        //int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
+                        //List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        //DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+
+                        string SpecificFileName = id.Trim();
+                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder };
+                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsCaseList.Count > 0)
+                        //{
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        //}
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsList.Count > 0)
+                        //{
+                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        //}
                     }
                     return Json(new { status = true, responseText = msg });
                 }
@@ -188,6 +214,13 @@ namespace IBS.Controllers
                 {
                     agencyClient = Common.GetPurchaserCd(consignee);
                 }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
@@ -197,20 +230,31 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor(int VendCd, int id = 0)
+        public IActionResult GetVendor(int VendCd, string searchValues = null, bool isSameAs = false)
         {
             try
             {
-                if (id > 0)
+                bool IsDigit = false;
+                if (searchValues != null && searchValues != "0")
                 {
-                    VendCd = id;
+                    char characterToCheck = searchValues[3];  
+                    IsDigit = Char.IsDigit(characterToCheck);
                 }
-                List<SelectListItem> agencyClient = Common.GetVendor(VendCd);
-                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(VendCd)).ToList())
+                int VendCdID = VendCd;
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (isSameAs)
                 {
-                    if (item.Value == Convert.ToString(VendCd))
+                    agencyClient = Common.GetVendor(VendCdID);
+                }
+                else
+                {
+                    if (IsDigit)
                     {
-                        item.Selected = true;
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(searchValues));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(searchValues);
                     }
                 }
                 return Json(new { status = true, list = agencyClient });
@@ -395,6 +439,39 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        [HttpGet]
+        public IActionResult GetVend_CD(string VEND_CD)
+        {
+            try
+            {
+                bool IsDigit = false;
+                if (VEND_CD != null)
+                {
+                    char characterToCheck = VEND_CD[3];
+                    IsDigit = Char.IsDigit(characterToCheck);
+                }
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (VEND_CD != null)
+                {
+                    if (IsDigit)
+                    {
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    }
+                }
+
+                return Json(new { status = true, list = agencyClient});
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOVendorPurchesOrder", "GetAgencyClient", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
         [HttpPost]
         public IActionResult EditCaseNo(string CaseNo, string PoNo, string PoDt, string RlyCd, string RealCaseNo)
         {
@@ -481,6 +558,14 @@ namespace IBS.Controllers
                 {
                     if (result[1] != null)
                     {
+                        string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO);
+                        string VendorPath = Path.Combine(TempFilePath, CaseNo + ".PDF");
+                        string TempFilePath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO);
+                        string DestinationPath = Path.Combine(TempFilePath1, CaseNo + ".PDF");
+                        if (System.IO.File.Exists(VendorPath) && !System.IO.File.Exists(DestinationPath))
+                        {
+                            System.IO.File.Copy(VendorPath, DestinationPath, true);
+                        }
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }

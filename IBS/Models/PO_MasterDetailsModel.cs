@@ -21,26 +21,33 @@ namespace IBS.Models
         public string? ConsigneeSearch { get; set; }
         public string? Consignee { get; set; }
 
+        [Required(ErrorMessage = "Qty is required")]
         public decimal? Qty { get; set; }
 
+        [Required(ErrorMessage = "Rate is required")]
         public decimal? Rate { get; set; }
 
         public byte? UomCd { get; set; }
 
         public decimal? BasicValue { get; set; }
 
+        [Required(ErrorMessage = "GST/Sale Tax(%) is required")]
         public decimal? SalesTaxPer { get; set; }
 
         public decimal? SalesTax { get; set; }
 
+        [Required(ErrorMessage = "Excise Type is required")]
         public string? ExciseType { get; set; }
 
+        [Required(ErrorMessage = "Excise Per is required")]
         public decimal? ExcisePer { get; set; }
 
         public decimal? Excise { get; set; }
 
+        [Required(ErrorMessage = "Discount Type is required")]
         public string? DiscountType { get; set; }
 
+        [Required(ErrorMessage = "Discount Per is required")]
         public decimal? DiscountPer { get; set; }
 
         public decimal? Discount { get; set; }
@@ -49,10 +56,12 @@ namespace IBS.Models
 
         public decimal? Value { get; set; }
 
+        [Required(ErrorMessage = "Last Date of Supply Date is required")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? DelvDt { get; set; }
 
+        [Required(ErrorMessage = "Delivery Deadline Date is required")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? ExtDelvDt { get; set; }
@@ -61,8 +70,9 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
+        [Required(ErrorMessage = "Other Charges Type is required")]
         public string? OtChargeType { get; set; }
-
+        //[Required(ErrorMessage = "Other Charges Per is required")]
         public decimal? OtChargePer { get; set; }
 
         public string? BpoCd { get; set; }

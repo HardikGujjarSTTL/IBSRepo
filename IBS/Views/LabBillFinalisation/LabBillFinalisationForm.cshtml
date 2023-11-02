@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "LAB BILLS FINALISATION FOR THE PERIOD";
     
-    string clsView = "";
+    //string clsView = "";
 }
 <style>
     #showPayment1 {
@@ -141,21 +141,22 @@
 </div>
 <div class="accordion-body">
     <div class="row my-0">
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="Reference">From</label>
             <input type="text" class="input datepicker" id="dtfrom" style="text-transform">
             <span class="text-danger field-validation-error" id="spnError1"></span>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="Reference">To</label>
             <input type="text" class="input datepicker" id="dtto" style="text-transform">
             <span class="text-danger field-validation-error" id="spnError2"></span>
         </div>
     </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
+    </div>
 </div>
-<div class="savenext-btn" style="margin-left:40%;">
-    <button type="button" class="save-btn active" onclick="GetLabBill();">Submit</button>
-</div>
+
 
 <div id="showPayment" style="display:none;">
     <section class="table-section">
@@ -202,11 +203,28 @@
         });
 
         function GetLabBill() {
-
-            var FromDate = $("#dtfrom").val();
-            var ToDate = $("#dtto").val();
+            $("#spnError1").html("");
+            $("#spnError2").html("")
+            var IsValid = true;
+            if ($("#dtfrom").val() == "") {
+                $("#spnError1").html("Please Enter From Date");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnError2").html("Please Enter To Date");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            var parts = $("#dtfrom").val().split('/');
+            var FromDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+            var parts1 = $("#dtto").val().split('/');
+            var ToDate = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            // var FromDate = $("#dtfrom").val();
+            // var ToDate = $("#dtto").val();
+            var url = '@Url.Action("LoadTable", "LabBillFinalisation")';
             $.ajax({
-                url: '/LabBillFinalisation/LoadTable', // Replace with your actual endpoint URL
+                //url: '/LabBillFinalisation/LoadTable', // Replace with your actual endpoint URL
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { FromDate: FromDate, ToDate: ToDate },
@@ -263,18 +281,7 @@
 
 
         function Update() {
-            $("#spnError1").html("");
-            $("#spnError2").html("")
-            var IsValid = true;
-            if ($("#dtfrom").val() == "") {
-                $("#spnError1").html("Please Enter From Date");
-                IsValid = false;
-            }
-            if ($("#dtto").val() == "") {
-                $("#spnError2").html("Please Enter To Date");
-                IsValid = false;
-            }
-            if (!IsValid) return;
+            
             var selectedsrno = [];
            
             $("input[type='checkbox'][data-sno]:checked").each(function () {
@@ -288,10 +295,12 @@
                 var LabBillFinalisationModel = {
                     InvoiceNo: billno
                 };
+                var url = '@Url.Action("UpdateBill", "LabBillFinalisation")';
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json",
-                    url: "/LabBillFinalisation/UpdateBill",
+                    //url: "/LabBillFinalisation/UpdateBill",
+                    url:url,
                     dataType: "json",
                     data: JSON.stringify(LabBillFinalisationModel),
                     success: function (result) {
@@ -300,8 +309,8 @@
                         if (result == true) {
 
                             alert('Data Saved Successfully!');
-                            
-                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+
+                            window.location.href = "@Url.Action("LabBillFinalisationForm", "LabBillFinalisation")";
                         }
                         else {
 
@@ -316,8 +325,8 @@
                         if (result == true) {
 
                             alert('Data Saved Successfully!');
-                            
-                            window.location.href = "@Url.Action("Index", "LabRegisterForm")";
+
+                            window.location.href = "@Url.Action("LabBillFinalisationForm", "LabBillFinalisation")";
                         }
                         else {
                             alert('Error Occurred. Contact Your admin!');

@@ -36,6 +36,8 @@ namespace IBS.Models
         [Required]
         public string? IePhoneNo { get; set; }
 
+        [Display(Name = "IE Controlling Officer")]
+        [Required]
         public byte? IeCoCd { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
@@ -76,6 +78,9 @@ namespace IBS.Models
         public int? AltIeTwo { get; set; }
 
         public int? AltIeThree { get; set; }
+
+        public int? ContAltIe { get; set; }
+
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]

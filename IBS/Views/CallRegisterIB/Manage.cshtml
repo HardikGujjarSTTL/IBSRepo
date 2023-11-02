@@ -1,23 +1,25 @@
 ﻿@model IBS.Models.VenderCallRegisterModel
 
 @{
-    ViewData["Title"] = "VENDOR CALL REGISTRATION";
+    ViewData["Title"] = "Vendor Call Registration";
 }
 <div id="tab-1">
     <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorCallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
         <div class="list-inner">
             <div class="tast-list">
-                <h2>@ViewData["Title"] </h2>
+                @*<h2>@ViewData["Title"] </h2>*@
+                <h3 class="heading3">@ViewData["Title"] </h3>
             </div>
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="CallRecvDt" />
-            <input type="hidden" asp-for="CallSno" />
+            @*<input type="hidden" asp-for="CallSno" />*@
             <input type="hidden" asp-for="ActionType" />
             <input type="hidden" asp-for="FOS" />
             <input type="hidden" asp-for="RegionCode" />
             <input type="hidden" asp-for="UpdateAllowed" />
             <input type="hidden" asp-for="RlyNonrly" />
+            <input type="hidden" asp-for="IeCd" />
         </div>
         <div class="accordion-body">
             <div class="row my-0">
@@ -29,7 +31,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Call Date : </label>
-                    <input type="text" class="input" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="CallRecvDt" maxlength="30" style="color:orangered" readonly="readonly">
                     @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.CallRecvDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="CallRecvDt" class="text-danger"></span>
                 </div>
@@ -55,7 +57,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="PoDt">Purchase Order Date : </label>
-                    <input type="text" class="input" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="PoDt" maxlength="100" style="color:orangered" readonly="readonly">
                     @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy") </label>*@
                     <span asp-validation-for="PoDt" class="text-danger"></span>
                 </div>
@@ -68,58 +70,34 @@
                     <span asp-validation-for="PoNo" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="CallStatus">Call Status : </label>
+                    <label for="CallStatus">Call Status </label>
                     <input type="text" asp-for="CallStatus" style="color:orangered" readonly="readonly">
-                    @*<label style="text-transform: uppercase; color:orangered;" class="input"> @Model.CallStatus </label>*@
                     <span asp-validation-for="CallStatus" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="RegionCode">Region : </label>
-                    @if (Model.RegionCode == "N")
-                    {
-                        <span style="color:orangered">Norther</span>
-                    }
-                    @if (Model.RegionCode == "S")
-                    {
-                        <span style="color:orangered">Southern</span>
-                    }
-                    @if (Model.RegionCode == "W")
-                    {
-                        <span style="color:orangered">Western</span>
-                    }
-                    @if (Model.RegionCode == "E")
-                    {
-                        <span style="color:orangered">Eastern</span>
-                    }
-                    @if (Model.RegionCode == "C")
-                    {
-                        <span style="color:orangered">Central</span>
-                    }
-                    @if (Model.RegionCode == "Q")
-                    {
-                        <span style="color:orangered">CO QA Division</span>
-                    }
-                    <span asp-validation-for="RegionCode" class="text-danger"></span>
+                    <input type="text" class="input" asp-for="Region" style="color:orangered" readonly="readonly">
+                    <span asp-validation-for="Region" class="text-danger"></span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Date of Mark of call to IE</label>
-                        <input type="text" class="input" asp-for="CallMarkDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallMarkDt" placeholder="DD/MM/YYYY">
                         <span asp-validation-for="CallMarkDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Call Status date</label>
-                        <input type="text" class="input" asp-for="CallStatusDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallStatusDt">
                         <span asp-validation-for="CallStatusDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Name">Inspecting Engineer to whom Call is marked</label>
+                        <label for="Name">Inspecting Engineer to whom Call is marked <i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
                         <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
@@ -129,12 +107,12 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="DtInspDesire">Expected Date of Inspection/Material Readiness Date.</label>
-                    <input type="text" class="input" asp-for="DtInspDesire" readonly="readonly">
+                    <input type="text" class="datepicker" asp-for="DtInspDesire" readonly="readonly">
                     <span asp-validation-for="DtInspDesire" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No.</label>
+                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
                         <span asp-validation-for="CallLetterNo" class="text-danger"></span>
                     </div>
@@ -142,7 +120,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="CallLetterDt">
                         <label for="CallLetterDt">Call Letter Date (DD/MM/YYYY)</label>
-                        <input type="text" class="input" asp-for="CallLetterDt" readonly="readonly">
+                        <input type="text" class="datepicker" asp-for="CallLetterDt" placeholder="DD/MM/YYYY">
                         <span asp-validation-for="CallLetterDt" class="text-danger"></span>
                     </div>
                 </div>
@@ -151,7 +129,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
+                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked) <i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
                     </div>
@@ -159,12 +137,12 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="CallInstallNo">Call Install No.</label>
-                        <input type="text" class="input" asp-for="CallInstallNo" readonly="readonly">
+                        <input type="text" class="input" asp-for="CallInstallNo">
                         <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc</label>
+                    <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
                     <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                 </div>
@@ -176,11 +154,16 @@
                         <div class="company-checkbox">
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" id="huey" name="drone" checked disabled="disabled">
+                                    @*<input type="radio" id="huey" name="drone" checked disabled="disabled">
                                     <label for="huey" id="rdbFinal" name="rdbFinal">Final</label>
 
                                     <input type="radio" id="dewey" name="drone" disabled="disabled">
-                                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>
+                                    <label for="dewey" id="rdbStage" name="rdbStage">Stage</label>*@
+                                    <input type="radio" asp-for="CallStage" value="F" id="CallStage_F" checked />
+                                    <label for="CallStage_F">Final</label>
+                                    &nbsp;&nbsp;
+                                    <input type="radio" asp-for="CallStage" value="S" id="CallStage_S" />
+                                    <label for="CallStage_S">Stage</label>
                                 </div>
                             </div>
                         </div>
@@ -192,6 +175,16 @@
                     <div class="reference">
                         <label for="IrfcFunded"><span style="color:red">In case of IRFC Funded Project, Select 'Yes'</span></label>
                         @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus">
+                                Is Finalized or Not
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -206,24 +199,27 @@
                 </div>
             </div>
         </div>
-        <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <div class="reference">
-                    <label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="company-checkbox">
-                    <div class="remember">
-                        <div class="remecheckbox">
-                            <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
-                            Same As Vendor
+
+        @*<div class="col-md-3 mb-3">
+        <div class="reference">*@
+        @*<label for="Name" style="color:RoyalBlue;text-decoration:underline;font-size:15pt;">Manufacturer's Information</label>*@
+        <h3 class="heading3">Manufacturer's Information </h3>
+        @*</div>
+        </div>*@
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsSameVender" id="IsSameVender">
+                                Same As Vendor
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="accordion-body">
+
             <div class="row my-0">
                 <div class="col-md-2 mb-3">
                     <div class="reference">
@@ -245,7 +241,6 @@
                             @*<button type="button" class="search-btn" id="SearchDetailsM" onclick="location.href='@Url.Action("VendorCallRegisterDetail", "VendorCallRegister",new { Action = "M",CaseNo = @Model.CaseNo,CallRecvDt = Convert.ToDateTime(@Model.CallRecvDt).ToString("dd-MM-yyyy"), CallSno = @Model.CallSno })'">Select Manufacturer</button>*@
                             <button type="button" class="search-btn" id="SearchDetailsM">Select Manufacturer</button>
                         </div>
-                        <span asp-validation-for="CallInstallNo" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -289,18 +284,36 @@
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                    @*<input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
                     <label for="Name" style="color:orangered">Kindly Check this option, If You are a New Vendor!!!</label>
+                    *@
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="IsNewVender" id="IsNewVender" asp-for="IsNewVender">
+                                Kindly Check this option, If You are a New Vendor!!!
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="accordion-body">
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
-                    <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan">
+                    @*<input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
                     <label for="Name" style="color:orangered">Call for Billing of Cancellation/Rejection Charges!!!</label>
-                    <br />
+                    <br />*@
+                    <div class="company-checkbox">
+                        <div class="remember">
+                            <div class="remecheckbox">
+                                <input type="checkbox" class="input" name="CHKRejCan" id="CHKRejCan" asp-for="CHKRejCan">
+                                Call for Billing of Cancellation/Rejection Charges!!!
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="savenext-btn center">
                     <button type="button" class="save-btn active" id="btnRegiserCallSave">Save</button>
                     <button type="button" class="save-btn" id="btnDelete">Delete</button>
@@ -333,6 +346,11 @@
     <script>
         $(document).ready(function () {
             debugger
+            $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#PoDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#CallStatusDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
             $("#MfgCd").prop("disabled", "disabled");
             if ($("#RlyNonrly").val() == "R") {
                 $("#dvIrfcFunded").show();
@@ -510,42 +528,64 @@
         });
 
         $("#btnRegiserCallSave").click(function () {
+            debugger
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
+
+            alert(actiontype);
+
             $("#ActionType").val(actiontype);
 
-            if ($("#MfgCd").is(":hidden")) {
-                alert("Please select Manufacturer first and then save it");
+
+            if ($("#ClusterCode").val() == "") {
+                ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
-            else if (!$("#CHKRejCan").prop("checked")) {
-                alert("Kindly [Select or Check] the declaration before you click on Register Call button.");
+            else if ($("#CallLetterNo").val() == "") {
+                ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
+            }
+            else if ($("#MfgCd").is(":hidden")) {
+                ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
             else if ($("#CallRemarkStatus").val() == "") {
-                alert("Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
+                ShowHideMsgNew(false, "Call Re-Mark Status.");
             }
-            else if ($("#RegionCode").val() == "R") {
-                alert("Select The project is IRFC Funded [Yes/No] !!!");
+            else if ($("#DepartmentCode").val() == "") {
+                ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }
+            else if ($("#IrfcFunded").val() == "" && $("#RlyNonrly").val() == "R") {
+                ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
+                //if ($("#RlyNonrly").val() == "R") {
+                //    ShowHideMsgNew(false, "Select The project is IRFC Funded [Yes/No] !!!");
+                //}
+            }
+            else if ($("#MfgCd").val() == "") {
+                ShowHideMsgNew(false, "Please add Name of Manufacturer code.");
+            }
+
             else {
-
-
                 event.preventDefault();
                 $("#MfgCd").prop("disabled", "");
 
                 var formData = $("#frmDetails").serialize();
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
+                    
                     if (response.status) {
+                        $("#btnRegiserCallSave").hide();
+                        $("#btnDelete").hide();
+                        $("#btnCDetails").show();
+                        
                     }
+                    //var UpdateAllowed = $("#UpdateAllowed").val();
+                    //    if (UpdateAllowed == "N") {
+                    //        $("#btnRegiserCallSave").hide();
+                    //        $("#btnDelete").hide();
+                    //    }
+                    //    else {
+                    //        $("#btnRegiserCallSave").show();
+                    //    }
                 });
-                var UpdateAllowed = $("#UpdateAllowed").val();
-                if (UpdateAllowed == "N") {
-                    $("#btnRegiserCallSave").hide();
-                    $("#btnDelete").hide();
-                }
-                else {
-                    $("#btnRegiserCallSave").show();
-                }
+                
             }
             return false;
         });
@@ -557,6 +597,10 @@
             $.post("@Url.Action("DetailsDelete", "CallRegisterIB")", formData, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
                 if (response.status) {
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "CallRegisterIB")';
+                        }, 2000);
                 }
             });
             return false;
@@ -571,10 +615,12 @@
             var cstatus = urlParams.get('cstatus');
             var status = "";
             debugger
-            //if ($('#btnRegiserCallSave').prop('disabled') === false || $('#btnDelete').prop('disabled') === false) {
-            if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
+            if ($('#btnRegisterCallSave').is(':hidden') || $('#btnDelete').is(':hidden')) {
                 status = "M";
             }
+            //if ($('#btnRegiserCallSave').hide() === true || $('#btnDelete').hide() === true) {
+            //    status = "M";
+            //}
             else {
                 status = "N";
             }

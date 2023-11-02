@@ -8,83 +8,146 @@
 
         clsView = "Permission_View";
     }
-    ViewData["Title"] = "UPDATE LAB REGISTER";
+    //ViewData["Title"] = "LAB REGISTER";
 }
 
-@* 
+@*
 <style>
     .custom-textarea {
         width: 400px; /* Set the desired width here */
     }
 
-<h2>@ViewData["Title"]</h2>
+    tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
 
-<section class="@clsView">
-    <div class="task-listinput">
-       
-           @* <form data-ajax="true" asp-antiforgery="true" asp-controller="EFTEntry" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmEftDetails">*@
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Lab Registration No.</label>
-                            <input type="text" id="txtlabregno"  maxlength="300" />
-                        </div>
+    /* Style for table cells */
+    td {
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #b0c4de;
+        vertical-align: top;
+    }
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Case No.</label>
-                            <input type="text" id="txtcaseno"  maxlength="300" />
-                           @* <span asp-validation-for="VCHR_DT" class="text-danger"></span>*@
-                        </div>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid #b0c4de; /* Add top border */
+        background-color: #f0f8ff;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Call Receive Date</label>
-                            <input type="text" class="input datepicker" id="txtcallRDt"/>
-                            @*  <input type="text" id="Chq_lbl" value="CASH" class="input" readonly="true">*@
+    /* Style for table cells */
+    td {
+        height: 50px; /* Adjust the height of table cells */
+        padding: 5px;
+        vertical-align: top;
+    }
 
-                        </div>
-                    <div class="savenext-btn">
-                        
-                        <button type="button" id="btnsr" class="save-btn active Permission_Save" onclick="grid();">Save</button>
-                    </div>
-                </div>
-            <div id="gridshow" style="display:none;">
-                <section class="table-section">
-                    <div class="task-listinput">
-                        <div class="dash-table">
-                            <div class="table-responsive">
-                                <table id="dtsearchdata" class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:6%;">Select</th>
-                                            <th style="width:13%;">Sample Reg No.</th>
-                                            <th style="width:9%;">Case No.</th>
-                                            <th style="width:9%;">Call Date</th>
-                                            <th style="width:7%;">Call SNo.</th>
-                                            <th style="width:5%;">IE</th>
-                                            <th style="width:9%;">Status</th>
+    /* Style for labels */
+    label {
+        display: block; /* Make labels block-level to occupy the whole cell width */
+        font-weight: bold;
+    }
 
+    /* Style for input fields */
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        padding: 5px;
+        box-sizing: border-box; /* Ensure the padding is included in the width */
+    }
 
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+    /* Style for error message */
+    .text-danger {
+        color: red;
+        margin-left: 6%;
+    }
+
+    /* Style for left-aligned button */
+    .left-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    /* Style for right-aligned button */
+    .right-button {
+        float: right;
+        margin-left: 10px;
+    }
+
+    /* Clear floating elements */
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        height: 190px;
+    }
+
+    .custom-textarea {
+        width: 400px;
+        height: auto;
+    }
+
+    .table-section {
+        width: 100%;
+        /*height: 400px;*/ /* Set the desired height */
+        overflow-y: auto; /* Enable vertical scrollbar if table exceeds height */
+    }
+
+    /* Set table width to 100% and disable horizontal scrollbar */
+    #dtsearchdata {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        /* Style table header cells */
+        #dtsearchdata th {
+            background-color: #f2f2f2;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table body cells */
+        #dtsearchdata td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+    /* Add custom scrollbar style for the table section */
+    .table-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-section::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+        .table-section::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+</style> *@
 
 <div class="list-inner">
     <div class="tast-list">
         <h2>LAB REGISTER FORM</h2>
     </div>
     @* <div class="list-btn">
-        <a asp-area="" asp-controller="LabRegisterForm" asp-action="LabRegisterFormNew" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Register</a>
+    <a asp-area="" asp-controller="LabRegisterForm" asp-action="LabRegisterFormNew" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Register</a>
     </div> *@
 </div>
 
-@*<section class="@clsView">
+<section class="@clsView">
     <div class="task-listinput">
         <div class="accordion-body">
             <div class="row my-0">
@@ -125,14 +188,12 @@
             @* <button type="submit" class="btn btn-primary Permission_Save" style="width:auto;margin-left:15%;margin-top:1%;" onclick="AddNew()">Add New</button> *@
 
 
-            <section class="table-section">
-                <div class="task-listinput">
-                    <div class="dash-table">
+   
 
                         <table id="dtsearchdata" class="table-responsive">
                             <thead>
                                 <tr>
-                                    
+
                                     <th>Sample Reg No.</th>
                                     <th>Case No.</th>
                                     <th>Call Date</th>
@@ -147,9 +208,7 @@
                             </tbody>
                         </table>
 
-                    </div>
-                </div>
-            </section>
+
 
         </div>
     </div>
@@ -162,9 +221,9 @@
             $(".datepicker").datepicker({
                 dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
             });
-            InitializeDatatableLabReg();
+            //InitializeDatatableLabReg();
         });
-        function InitializeDatatableLabReg(CaseNo, CallRdt,RegNo) {
+        function InitializeDatatableLabReg(CaseNo, CallRdt, RegNo) {
 
             $("#dtsearchdata").DataTable({
                 stateSave: false,// Design Assets
@@ -203,7 +262,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            
+
                             var CaseNo = data.CaseNo;
                             var CallRdt = data.CallRecDt;
                             var CallSno = data.CallSNO;
@@ -211,8 +270,7 @@
                             if (data.SampleRegNo == null) {
                                 var editUrl = '@Url.Action("LabRegisterFormNew", "LabRegisterForm")';
                             }
-                            else
-                            {
+                            else {
                                 var editUrl = '@Url.Action("LabRegisterForm", "LabRegisterForm")';
                             }
                             // var editUrl = '@Url.Action("LabRegisterForm", "LabRegisterForm")';
@@ -220,7 +278,7 @@
                             editUrl += '&CaseNo=' + CaseNo;
                             editUrl += '&CallRdt=' + CallRdt;
                             editUrl += '&CallSno=' + CallSno;
-                            
+
                             var html = '<div align=\"\" class=\"\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
@@ -255,9 +313,10 @@
             window.location.href = "/LabRegisterForm/LabRegisterFormNew?CaseNo=" + CaseNo + '&CallDt=' + CallDt + '&CallSno=' + CallSno;
         }
         function grid(CaseNo, CallRdt, RegNo) {
-
+            var url = '@Url.Action("LapIndexData", "LabRegisterForm")';
             $.ajax({
-                url: '/LabRegisterForm/LapIndexData',
+                //url: '/LabRegisterForm/LapIndexData',
+                url:url,
                 type: 'POST',
                 dataType: 'json',
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, RegNo: RegNo },
@@ -337,7 +396,7 @@
 
         }
         $("#btnsr").click(function () {
-            
+
             var CaseNo = $("#txtcaseno").val();
             var CallRdt = $("#txtcallRDt").val();
             var RegNo = $("#txtlabregno").val();

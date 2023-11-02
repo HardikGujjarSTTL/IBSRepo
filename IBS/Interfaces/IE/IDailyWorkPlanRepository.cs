@@ -6,7 +6,7 @@ namespace IBS.Interfaces.IE
     {
         public DailyWorkPlanModel FindByDetails(DailyWorkPlanModel model, string Region);
 
-        DTResult<DailyWorkPlanModel> GetLoadTable(DTParameters dtParameters,string Region, int GetIeCd);
+        DTResult<DailyWorkPlanModel> GetLoadTable(DTParameters dtParameters, string Region, int GetIeCd);
 
         DTResult<DailyWorkPlanModel> GetLoadTableCurrentDay(DTParameters dtParameters, string Region, int GetIeCd);
 
@@ -14,6 +14,10 @@ namespace IBS.Interfaces.IE
 
         int DetailsDelete(DailyWorkPlanModel model, string Region, int GetIeCd);
 
-        //string SaveDetails(InspectionCertModel model, string Region);
+        int NonInspectionSave(DailyWorkPlanModel model, string Region, int GetIeCd);
+
+        DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd);
+
+        string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region,string UserName);
     }
 }

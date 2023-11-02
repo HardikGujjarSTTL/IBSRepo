@@ -391,6 +391,31 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> BPORegion()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single.Text = "Northern Region";
+            single.Value = "N";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Eastern Region";
+            single.Value = "E";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Western Region";
+            single.Value = "W";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Southern Region";
+            single.Value = "S";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Bhilai Region";
+            single.Value = "C";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> FeedBackRegion()
         {
@@ -1113,6 +1138,24 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> TypeOutStandingBills()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "All Bills";
+            single.Value = "A";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Full Outstanding Bills";
+            single.Value = "F";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Partly Outstanding Bills";
+            single.Value = "P";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> SapBillStatus()
         {
@@ -1623,6 +1666,24 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+        public static List<SelectListItem> TypeofGST()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "--Select GST--";
+            single.Value = "0";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "IN-STATE";
+            single.Value = "IN-STATE";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "OUT-STATE";
+            single.Value = "OUT-STATE";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static List<SelectListItem> TestToBeConducted()
         {
@@ -1863,6 +1924,21 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
+        public static List<SelectListItem> RejectionType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Local (10,000/- Per Manday)";
+            single.Value = "L";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Out Station (15,000/- Per Manday)";
+            single.Value = "O";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
         public static List<SelectListItem> TrainingArea()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -2073,22 +2149,38 @@ namespace IBS.Models
             }
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
+                var query = ModelContext.T12BillPayingOfficers
+                        .Where(bpo => bpo.BpoType == "U")
+                        .GroupBy(bpo => new
+                        {
+                            RLY_CD = bpo.BpoRly.ToUpper().Trim(),
+                            RAILWAY = bpo.BpoOrgn
+                        })
+                        .Select(group => new
+                        {
+                            RLY_CD = group.Key.RLY_CD,
+                            RAILWAY = group.Key.RAILWAY
+                        })
+                        .OrderBy(result => result.RLY_CD)
+                        .ToList();
+
                 List<SelectListItem> dropList = new List<SelectListItem>();
-                dropList = (from a in ModelContext.T12BillPayingOfficers
-                            where a.BpoType == Convert.ToString(RlyNonrly)
+                dropList = (from a in query
+                            where a.RLY_CD != null
                             select
                        new SelectListItem
                        {
-                           Text = Convert.ToString(a.BpoRly),
-                           Value = Convert.ToString(a.BpoOrgn)
-                       }).OrderBy(x => x.Text).ToList();
+                           Text = Convert.ToString(a.RAILWAY),
+                           Value = Convert.ToString(a.RLY_CD)
+                       }).OrderBy(x => x.Value).ToList();
                 dropDownDTOs.AddRange(dropList);
                 SelectListItem drop = new SelectListItem();
                 drop.Text = "Other";
                 drop.Value = "0";
                 dropDownDTOs.Add(drop);
             }
-            return dropDownDTOs.DistinctBy(x => x.Text).ToList();
+            return dropDownDTOs.DistinctBy(x => x.Value).ToList();
+            //return dropDownDTOs.ToList();
         }
 
         public static List<SelectListItem> GetAgencyClientForDEOCris()
@@ -2337,6 +2429,30 @@ namespace IBS.Models
                         join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                         where v.VendCityCd == c.CityCd && v.VendName != null
                         && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper().Substring(0, 5))
+                        orderby v.VendName
+                        select
+                   new SelectListItem
+                   {
+                       Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                       Value = Convert.ToString(v.VendCd),
+                   }).ToList();
+            if (dropList.Count > 0)
+            {
+                dropDownDTOs.AddRange(dropList);
+            }
+            return dropDownDTOs;
+        }
+
+        public static List<SelectListItem> GetVendorUsingTextAndValues(string VENDOR)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
+
+            List<SelectListItem> dropList = new List<SelectListItem>();
+            dropList = (from v in ModelContext.T05Vendors
+                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                        where v.VendCityCd == c.CityCd && v.VendName != null
+                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
                         orderby v.VendName
                         select
                    new SelectListItem
@@ -2955,16 +3071,126 @@ namespace IBS.Models
         public static List<SelectListItem> GetBillPayingOfficerUsingSBPO(string SBPO)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (SBPO != null && SBPO != "")
+            {
+                var obj = (from of in context.V12BillPayingOfficers
+                           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                           select of).ToList();
+                 objdata = (from a in obj
+                                                select
+                                           new SelectListItem
+                                           {
+                                               Text = a.BpoCd + "-" + a.Bpo,
+                                               Value = a.BpoCd
+                                           }).ToList();
+            }
+            return objdata;
+        }
+        public static List<SelectListItem> GetBillPayingOfficer()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+           
+                var obj = (from of in context.V12BillPayingOfficers
+                           //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                           select of).ToList();
+                objdata = (from a in obj
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.BpoCd + "-" + a.Bpo,
+                          Value = a.BpoCd
+                      }).ToList();
+           
+            return objdata;
+        }
 
-            var obj = (from of in context.V12BillPayingOfficers
-                       where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                       select of).ToList();
-            List<SelectListItem> objdata = (from a in obj
+        public static List<SelectListItem> GetEditBillPayingOfficer(string BpoCd)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var query = (from bpo in context.T12BillPayingOfficers
+                        join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                        where bpo.BpoCd == BpoCd
+                         orderby bpo.BpoName
+                        select new
+                        {
+                            BPO_CD = bpo.BpoCd,
+                            BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
+                                 (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                 (city.Location != null ? city.City + "/" + city.Location : city.City)
+                        }).ToList();
+
+            List<SelectListItem> objdata = (from a in query
                                             select
                                        new SelectListItem
                                        {
-                                           Text = a.BpoCd + "-" + a.Bpo,
-                                           Value = a.BpoCd
+                                           Text = a.BPO_NAME,
+                                           Value = a.BPO_CD
+                                       }).ToList();
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetConsigneeUsingConsigneeBeforEdit(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (RLY_CD != null)
+            {
+                var query = from consignee in context.T06Consignees
+                            join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                            where consignee.ConsigneeType == "R" && consignee.ConsigneeFirm.Trim().ToUpper() == RLY_CD.Trim().ToUpper()
+                            orderby
+                                (consignee.ConsigneeDesig ?? "") + "/" +
+                                (consignee.ConsigneeDept ?? "") + "/" +
+                                (consignee.ConsigneeFirm ?? "") + "/" +
+                                (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                (city.Location ?? city.City)
+                            select new
+                            {
+                                CONSIGNEE_CD = consignee.ConsigneeCd,
+                                CONSIGNEE_NAME =
+                                    consignee.ConsigneeCd + "-" +
+                                    (consignee.ConsigneeDesig ?? "") + "/" +
+                                    (consignee.ConsigneeDept ?? "") + "/" +
+                                    (consignee.ConsigneeFirm ?? "") + "/" +
+                                    (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                    (city.Location != null ? city.Location + " : " + city.City : city.City)
+                            };
+                objdata = (from a in query
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.CONSIGNEE_NAME,
+                          Value = Convert.ToString(a.CONSIGNEE_CD)
+                      }).ToList();
+            }
+            return objdata;
+        }
+
+        public static List<SelectListItem> GetBillPayingOfficerBeforEdit(string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var RLY_CD = (from m in context.T91Railways where m.ImmsRlyCd == IMMS_RLY_CD select m.RlyCd).FirstOrDefault();
+            var query = (from bpo in context.T12BillPayingOfficers
+                         join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                         where bpo.BpoType == "R" && bpo.BpoRly.Trim().ToUpper() == RLY_CD
+                         orderby bpo.BpoName
+                         select new
+                         {
+                             BPO_CD = bpo.BpoCd,
+                             BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
+                                 (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                 (city.Location != null ? city.City + "/" + city.Location : city.City)
+                         }).ToList();
+
+            List<SelectListItem> objdata = (from a in query
+                                            select
+                                       new SelectListItem
+                                       {
+                                           Text = a.BPO_NAME,
+                                           Value = a.BPO_CD
                                        }).ToList();
             return objdata;
         }
@@ -3050,6 +3276,57 @@ namespace IBS.Models
                       }).ToList();
             }
             return objdata;
+        }
+
+        public static List<SelectListItem> GetEditConsigneeUsingConsignee(string ConsigneeCd)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (ConsigneeCd != null)
+            {
+                var query = (from consignee in context.T06Consignees
+                            join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                            where consignee.ConsigneeCd == Convert.ToInt32(ConsigneeCd)
+                            orderby (
+                                (consignee.ConsigneeDesig ?? "") + "/" +
+                                (consignee.ConsigneeDept ?? "") + "/" +
+                                (consignee.ConsigneeFirm ?? "") + "/" +
+                                (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                (city.Location ?? city.City)
+                            )
+                            select new
+                            {
+                                CONSIGNEE_CD = consignee.ConsigneeCd,
+                                CONSIGNEE_NAME =
+                                    consignee.ConsigneeCd + "-" +
+                                    (consignee.ConsigneeDesig ?? "") + "/" +
+                                    (consignee.ConsigneeDept ?? "") + "/" +
+                                    (consignee.ConsigneeFirm ?? "") + "/" +
+                                    (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                    (city.Location != null ? city.Location + " : " + city.City : city.City)
+                            });
+
+                objdata = (from a in query
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.CONSIGNEE_NAME,
+                          Value = Convert.ToString(a.CONSIGNEE_CD)
+                      }).ToList();
+            }
+            return objdata;
+        }
+
+        public static int? getConsigneeCd(string ConsigneeCd, string IMMS_RLY_CD)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            int? ConsigneeCd1 = (from detail in context.ImmsRitesPoDetails
+                                 where detail.ImmsConsigneeCd == ConsigneeCd
+                                && detail.ImmsRlyCd == IMMS_RLY_CD
+                                && detail.ConsigneeCd != null
+                                select detail.ConsigneeCd).Distinct().FirstOrDefault();
+            
+            return ConsigneeCd1;
         }
 
         public static List<SelectListItem> GetSummaryConsignee()
@@ -3257,6 +3534,22 @@ namespace IBS.Models
             single = new SelectListItem();
             single.Text = "60kg";
             single.Value = "2";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+        
+        public static List<SelectListItem> ICType()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Finalization";
+            single.Value = "F";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Stage";
+            single.Value = "S";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
@@ -3967,7 +4260,7 @@ namespace IBS.Models
         public static List<SelectListItem> GetAccountCode(string Role_Cd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            if (Role_Cd == "5")
+            if (Role_Cd == "6")
             {
                 return (from a in context.T95AccountCodes
                         where (a.AccCd == 2210 || a.AccCd == 2212)
@@ -4022,6 +4315,87 @@ namespace IBS.Models
                 new SelectListItem() { Text = "Others", Value = "X" }
             };
             return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> BindIEStamps()
+        {
+            DataSet ds = new DataSet();
+            ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
+            try
+            {
+                using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "SELECT 0 AS IE_STAMP_CD,'SELECT STAMP' AS IE_STAMPS_DETAIL FROM DUAL UNION SELECT IE_STAMP_CD, IE_STAMPS_DETAIL FROM IE_STAMPS ORDER BY IE_STAMP_CD"; ;
+
+                        using (var adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions if needed
+            }
+            DataTable dt = ds.Tables[0];
+            List<SelectListItem> lst = dt.AsEnumerable().Select(row => new SelectListItem
+            {
+                Text = row["IE_STAMPS_DETAIL"].ToString(),
+                Value = row["IE_STAMP_CD"].ToString()
+            }).ToList();
+            return lst;
+        }
+
+        public static List<SelectListItem> BindConsignee(string CASE_NO, string CALL_RECV_DT, string CALL_SNO)
+        {
+            DataSet ds = new DataSet();
+            ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
+            try
+            {
+                using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        var sql = "";
+                        sql = "select 0 as consignee_cd,'Select Consignee' as consignee_firm from dual union select distinct csn.consignee_cd,CSN.consignee_cd ||'-'|| csn.consignee consignee_firm   from t18_call_details CDT inner join V06_CONSIGNEE CSN ";
+                        sql += " on cdt.consignee_cd = csn.consignee_cd where case_no = '" + CASE_NO + "' and call_recv_dt = TO_date('" + Convert.ToDateTime(CALL_RECV_DT).ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') and call_sno = '" + CALL_SNO + "' ";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sql;
+
+                        using (var adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions if needed
+            }
+            DataTable dt = ds.Tables[0];
+            List<SelectListItem> lst = dt.AsEnumerable().Select(row => new SelectListItem
+            {
+                Text = row["consignee_firm"].ToString(),
+                Value = row["consignee_cd"].ToString()
+            }).ToList();
+            return lst;
+        }
+
+        public static List<SelectListItem> GetConsignneManufacturingType()
+        {
+            List<SelectListItem> lstManuf = new List<SelectListItem>() {
+                new SelectListItem() { Text = "BHILAI STEEL PLANT", Value = "B" },
+                new SelectListItem() { Text = "JINDAL STEEL & POWER LTD", Value = "J" },
+                new SelectListItem() { Text = "Others", Value = "O" }                
+            };
+            return lstManuf;
         }
     }
 

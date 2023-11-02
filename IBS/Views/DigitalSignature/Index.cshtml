@@ -1,0 +1,64 @@
+﻿@model IBS.Models.DigitalSignatureModel
+
+@{
+    ViewData["Title"] = "Digital Signrature Testing";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Digital Signrature Testing</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-12 mb-3">
+                <label for="DigitalSignratureFile" style="margin-right: 20px;">File (pdf only)</label>
+                <input type="file" name="file" id="DigitalSignratureFile" accept=".pdf" required />
+            </div>
+        </div>
+        <div class="savenext-btn">
+            <a asp-controller="DigitalSignature" asp-action="Index" class="reset-btn">Cancel</a>
+            <button type="button" class="save-btn active" onclick="SubmitDigitalSignratureData();">Save</button>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+           
+        });
+
+        function SubmitDigitalSignratureData() {
+            var formData = new FormData();
+            formData.append('file', $('#DigitalSignratureFile')[0].files[0]);
+            $.ajax({
+                url: '/DigitalSignature/Manage',
+                type: "POST",
+                processData: false,
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                success: function (response) {
+                    if (response.status) {
+                        var link = document.createElement('a');
+                        link.href = "/ReadWriteData/DigiSignatureFiles/" + response.responseText;
+                        link.download = response.responseText;
+                        link.click();
+                        link.remove();
+                    }
+                    else {
+                        ShowHideMsg("error", response.responseText);
+                    }
+                },
+                error: function (er) { }
+            });
+            return false;
+        }
+
+    </script>
+}

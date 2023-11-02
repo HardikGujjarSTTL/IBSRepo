@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    string ReportUrl = ViewBag.ReportUrl;
+}
 <div class="list-inner">
     <div class="tast-list">
         <h2>Client Wise Un-Posted / Partly Posted Cheque</h2>
@@ -20,16 +22,16 @@
             <div class="col-md-2 mb-3">
                 <label for="PropertyId">From Date</label>
                 <input type="text" class="input datepicker" id="dtfrom" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
             <div class="col-md-2 mb-3">
                 <label for="PropertyId">To Date</label>
                 <input type="text" class="input datepicker" id="dtto" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
         </div>
-        <div class="col-md-3" style="margin-top: 30px;">
-            <div class="savenext-btn">
+        <div class="col-md-3">
+            <div class="savenext-btn btnAlign">
                 <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
                 <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
             </div>
@@ -47,27 +49,48 @@
             location.reload(true);
         }
         function ViewReport() {
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
             var BPOType = $("#ddlbpo").val();
             var AccCD = $("#ddlAccCD").val();
             var FromDate = $("#dtfrom").val();
             var ToDate = $("#dtto").val();
-        
-        var QueryString = "RptFlag=6" +
+
+            var QueryString = "?RptFlag=6" +
                 "&BPOType=" + encodeURIComponent(BPOType) +
                 "&AccCD=" + encodeURIComponent(AccCD) +
                 "&FromDate=" + encodeURIComponent(FromDate) +
                 "&ToDate=" + encodeURIComponent(ToDate) +
                 "&Region=" + encodeURIComponent('@ViewBag.Region');
 
-        
+            var oWin = window.open('@ReportUrl' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
+            if (oWin === null || typeof (oWin) === 'undefined') {
+                alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
+            }
+            window.opener = 'x';
+            window.close();
 
-        var oWin = window.open('http://localhost:59575/Default?' + QueryString, '', 'fullscreen=yes, scrollbars=yes');
-        if (oWin === null || typeof (oWin) === 'undefined') {
-            alert('System has been blocked by POP-UP BLOCKER!!!\nPlease disable the POP-UP BLOCKER and try again or Please contact your system administrator.');
         }
-        window.opener = 'x';
-        window.close();
-      
-    }
-</script>
+    </script>
 }

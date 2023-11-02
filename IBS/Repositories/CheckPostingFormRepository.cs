@@ -21,14 +21,12 @@ namespace IBS.Repositories
         public DTResult<CheckPostingFormModel> BillList(DTParameters dtParameters)
         {
             CheckPostingFormModel model = new();
-            int count = 0;
 
             int BankNameDropdown = Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("BankNameDropdown"));
             string CHQ_NO = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_NO");
             var DATE = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_DATE");
             DateTime CHQ_DATE = Convert.ToDateTime(DateTime.ParseExact(DATE, "dd/MM/yyyy", null).ToString("dd/MM/yyyy"));
             DTResult<CheckPostingFormModel> dTResult = new() { draw = 0 };
-            IQueryable<CheckPostingFormModel>? query = null;
 
 
             // Use the converted DateTime values in the LINQ query
@@ -102,7 +100,7 @@ namespace IBS.Repositories
         {
             CheckPostingbillInvoice query = null;
             var query1 = from bill in context.V22Bills
-                        select new CheckPostingbillInvoice
+                         select new CheckPostingbillInvoice
                         {
                            BILL_NO = bill.BillNo,
                            Invoice_NO =  bill.InvoiceNo,

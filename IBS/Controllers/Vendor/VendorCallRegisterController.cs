@@ -74,7 +74,7 @@ namespace IBS.Controllers.Vendor
         public IActionResult VendorCallRegisterDetail(string ActionType, string CaseNo, string CallRecvDt, int CallSno, string FOS)
         {
             VenderCallRegisterModel model = new();
-
+            model.RegionCode = CaseNo.Substring(0, 1);
             if (CaseNo != null && CallRecvDt != null && FOS != null)
             {
                 model = venderRepository.FindByID(ActionType, CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, FOS, UserName.Trim());
@@ -182,49 +182,64 @@ namespace IBS.Controllers.Vendor
             {
                 string i = "";
                 string msg = "";
+                model.RegionCode = model.CaseNo.Substring(0, 1);
                 if (model.CaseNo != null && model.CallRecvDt != null)
                 {
                     model.UserId = UserName.Trim();
                     model.Createdby = UserName.Trim();
-                    model = venderRepository.GetValidate(model);
-                    if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                    if (model.ActionType == "A")
                     {
-                        i = venderRepository.RegiserCallSave(model);
+                        model = venderRepository.GetValidate(model);
                         if (model.callval == 0)
                         {
-                            msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!";
+                            //msg = "Master data not entered.So please enter master data cluster/vender/ie";
+                            msg = "Call can't be assigned to IE beyond the maximumn call limit.";
+                            return Json(new { status = false, responseText = msg, callval = model.callval });
                         }
                         else
                         {
-                            msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
+                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                            {
+                                i = venderRepository.RegiserCallSave(model);
+                                if (model.callval == 0)
+                                {
+                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!";
+                                }
+                                else
+                                {
+                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
+                                }
+                            }
+                            else
+                            {
+                                if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                                {
+                                    msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
+                                }
+                                else if (model.wMat_value < 1000)
+                                {
+                                    msg = "Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!";
+                                }
+                                else if (model.desire_dt > 0)
+                                {
+                                    msg = "Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!";
+                                }
+                                return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
+                            }
                         }
                     }
                     else
                     {
-                        if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
-                        {
-                            msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
-                        }
-                        else if (model.wMat_value < 1000)
-                        {
-                            msg = "Sorry, Your Call is not registered as offered material value is less than Rs 1 Thousand!!!";
-                        }
-                        else if (model.desire_dt > 0)
-                        {
-                            msg = "Sorry, Your Call is not registered as Delivery Period is not mentioned or Desire Date should be atleast five(5) days before the expiry of the delivery period!!!";
-                        }
-                        return Json(new { status = false, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
+                        i = venderRepository.RegiserCallSave(model);
+                        msg = "Record Update Successfully.";
+                        return Json(new { status = true, responseText = msg, callval = model.callval });
                     }
                 }
                 if (i != null)
                 {
                     return Json(new { status = true, responseText = msg, wMat_value = model.wMat_value, desire_dt = model.desire_dt, callval = model.callval });
                 }
-                if (model.e_status == 1 && model.callval != 0)
-                {
-                    string emailResult = venderRepository.send_Vendor_Email(model);
-                    Task<string> smsResult = venderRepository.send_IE_smsAsync(model);
-                }
+
             }
             catch (Exception ex)
             {
@@ -262,7 +277,7 @@ namespace IBS.Controllers.Vendor
         {
             VendorCallRegPrintReport model = new();
 
-            if (CaseNo != null && CallRecvDt != null && CallSno != null)
+            if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = venderRepository.FindByPrintReport(CaseNo, CallRecvDt, CallSno, UserName);
             }
@@ -491,14 +506,14 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GetItemDetails(string CaseNo)
+        public IActionResult GetItemDetails(string CaseNo, string CallRecvDt, int CallSno)
         {
             try
             {
                 int item = 0;
-                if (CaseNo != null)
+                if (CaseNo != null && CallRecvDt != null && CallSno > 0)
                 {
-                    item = venderRepository.GetItemList(CaseNo);
+                    item = venderRepository.GetItemList(CaseNo, Convert.ToDateTime(CallRecvDt), CallSno);
                 }
                 return Json(new { status = true, responseText = item });
             }
@@ -509,7 +524,7 @@ namespace IBS.Controllers.Vendor
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult PopUp(string CaseNo)
+        public IActionResult PopUp()
         {
             try
             {
@@ -521,6 +536,12 @@ namespace IBS.Controllers.Vendor
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        public IActionResult TermsCondition()
+        {
+            return PartialView("_TermsCondition");
+        }
+
 
     }
 }

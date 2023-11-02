@@ -1,14 +1,12 @@
 ﻿@model IBS.Models.Print_Call_letter_Model
-@{
-    Layout = null;
-}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Call Letter</title>
 </head>
 <body>
-    <table width="100%" align="center" style= LEFT: 8px; WIDTH: 100%; POSITION: absolute; TOP: 8px;" height="100" border="0">
+    <table width="100%" align="center" style="Z-INDEX: 101; LEFT: 8px; WIDTH: 90%; POSITION: absolute; TOP: 8px;" height="100" border="0">
         <tr>
             <td colspan="2" align="center">
                 <button onclick="window.print()">Print</button>
@@ -515,10 +513,7 @@
             </td>
         </tr>
         <tr>
-            <td width="100%" colspan="9">
-                @{
-                    int wsno = 0;
-                }
+            <td width="100%" colspan="2">
                 <table width="100%" align="center" border="1" bordercolor="#111111">
                     <tr>
                         <td colspan="9" align="center">
@@ -544,40 +539,36 @@
                 </table>
             </td>
         </tr>
-      
-        @if (Model != null && Model.printcalllater.Count > 0)
+      @*  @if (Model != null)
         {
-            var serialNumber = 1;
-            @foreach (var item in Model.printcalllater)
+            for (int i = 0; i < Model.subreport.Count; i++)
             {
-
+                var subItem = Model.subreport[i];
                 <tr>
-                    <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td> 
-                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(item.CONSIGNEE != null ? item.CONSIGNEE : string.Empty)</font></td>
-                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(item.ITEM_DESC_PO != null ? item.ITEM_DESC_PO : string.Empty)</font></td>
-                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(item.QTY_ORDERED != null ? item.QTY_ORDERED.ToString() : string.Empty)</font></td>
-                    <td valign='top' align='left'><font size='1' face='Verdana'>@(item.QTY_TO_INSP != null ? item.QTY_TO_INSP.ToString() : string.Empty)</font></td>
+                    <td valign='top' align='Center'><font size='1' face='Verdana'>@(i + 1)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.CONSIGNEE != null ? subItem.CONSIGNEE : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.ITEM_DESC_PO != null ? subItem.ITEM_DESC_PO : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.QTY_ORDERED != null ? subItem.QTY_ORDERED.ToString() : string.Empty)</font></td>
+                    <td valign='top' align='left'><font size='1' face='Verdana'>@(subItem.QTY_TO_INSP != null ? subItem.QTY_TO_INSP.ToString() : string.Empty)</font></td>
                     <td valign='top' align='left'>
                         <font size='1' face='Verdana'>
-                            @((item.CUM_QTY_PREV_OFFERED != null ? item.CUM_QTY_PREV_OFFERED.ToString() : string.Empty) +
+                            @((subItem.CUM_QTY_PREV_OFFERED != null ? subItem.CUM_QTY_PREV_OFFERED.ToString() : string.Empty) +
                                 " & " +
-                                (item.CUM_QTY_PREV_PASSED != null ? item.CUM_QTY_PREV_PASSED.ToString() : string.Empty))
+                                (subItem.CUM_QTY_PREV_PASSED != null ? subItem.CUM_QTY_PREV_PASSED.ToString() : string.Empty))
                         </font>
                     </td>
-                    <td valign='top' align='left'><font size='1' face='Verdana'>@(item.DELV_DT != null ? item.DELV_DT : string.Empty)</font></td>
-                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(item.BPO != null ? item.BPO : string.Empty)</font></td>
+                    <td valign='top' align='left'><font size='1' face='Verdana'>@(subItem.DELV_DT != null ? subItem.DELV_DT : string.Empty)</font></td>
+                    <td valign='top' align='Left'><font size='1' face='Verdana'>@(subItem.BPO != null ? subItem.BPO : string.Empty)</font></td>
                     <td valign='top' align='Left'>
                         <font size='1' face='Verdana'>
-                            <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/@(item.ITEM_CD != null ? item.ITEM_CD : string.Empty).RAR'>
-                                @(item.ITEM_CD != null ? item.ITEM_CD : string.Empty)
+                            <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/@(subItem.ITEM_CD != null ? subItem.ITEM_CD : string.Empty).RAR'>
+                                @(subItem.ITEM_CD != null ? subItem.ITEM_CD : string.Empty)
                             </a>
                         </font>
                     </td>
                 </tr>
-                serialNumber++;
             }
-
-        }
+        }*@
         </table>
         @if ( Model.REMARKS != null && !string.IsNullOrEmpty(Model.REMARKS.ToString()))
         {

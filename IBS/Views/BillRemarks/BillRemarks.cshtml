@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "INSPECTION FEE BILL";
-    string clsView = "";
 }
 
 
@@ -182,12 +181,13 @@
             var formData = new FormData();
             formData.append("BILL_NO", $("#hdnbillno").val());
             formData.append("LO_REMARKS", $("#textAreaInput").val());
-
+            var url = '@Url.Action("SaveData", "BillRemarks")';
             $.ajax({
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                url: "/BillRemarks/SaveData",
+                //url: "/BillRemarks/SaveData",
+                url:url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {

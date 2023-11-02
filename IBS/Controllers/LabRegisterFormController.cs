@@ -38,7 +38,7 @@ namespace IBS.Controllers
             //lABREGISTERModel.TestingType= "Normal";
             //lABREGISTERModel.CaseNo = "N12081010";
             lABREGISTERModel.CallRecDt = lABREGISTERModel.CallDateAndSno;
-            //lABREGISTERModel.CallSNO = "70";
+           
             return View(lABREGISTERModel);
         }
         [HttpPost]
@@ -105,8 +105,34 @@ namespace IBS.Controllers
         public bool SaveDataDetails([FromBody]LABREGISTERModel LABREGISTERModel)
         {
             LABREGISTERModel.UName = UserId.ToString();
+            var RegNo = LABREGISTERModel.SampleRegNo;
             bool result;
-            if(LABREGISTERModel.Flag == "1")
+            var testing = LABREGISTERModel.DTestingFee;
+            var tax = LABREGISTERModel.DServiceTax;
+            var hand = LABREGISTERModel.DHandlingCharges;
+            var defaultTesting = 0;
+            var defaultTax = 0;
+            var defaultHand = 0;
+
+            if (testing != null && int.TryParse(testing, out int testingValue))
+            {
+                defaultTesting = testingValue;
+            }
+
+            if (tax != null && int.TryParse(tax, out int taxValue))
+            {
+                defaultTax = taxValue;
+            }
+
+            if (hand != null && int.TryParse(hand, out int handValue))
+            {
+                defaultHand = handValue;
+            }
+
+            var total = defaultTesting + defaultTax + defaultHand;
+            //var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
+            if (LABREGISTERModel.Flag == "1")
             {
                 result = LabRegFormRepository.SaveDataDetails(LABREGISTERModel);
             }
@@ -129,6 +155,32 @@ namespace IBS.Controllers
         [Authorization("LabRegisterForm", "Index", "edit")]
         public bool InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
         {
+            var testing = LABREGISTERModel.DTestingFee;
+            var tax = LABREGISTERModel.DServiceTax;
+            var hand = LABREGISTERModel.DHandlingCharges;
+            //var total = Convert.ToInt32(testing) + Convert.ToInt32(tax) + Convert.ToInt32(hand);
+            var defaultTesting = 0;
+            var defaultTax = 0;
+            var defaultHand = 0;
+
+            if (testing != null && int.TryParse(testing, out int testingValue))
+            {
+                defaultTesting = testingValue;
+            }
+
+            if (tax != null && int.TryParse(tax, out int taxValue))
+            {
+                defaultTax = taxValue;
+            }
+
+            if (hand != null && int.TryParse(hand, out int handValue))
+            {
+                defaultHand = handValue;
+            }
+
+            var total = defaultTesting + defaultTax + defaultHand;
+            LABREGISTERModel.TotalLabCharges = Convert.ToString(total);
+            
             LABREGISTERModel.UName = UserId.ToString();
             LABREGISTERModel.Region = GetRegionCode;
             bool result;

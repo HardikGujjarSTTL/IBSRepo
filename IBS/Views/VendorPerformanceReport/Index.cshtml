@@ -61,8 +61,8 @@
         <input type="text" id="vendor" class="input" maxlength="3" />
         <span class="text-danger field-validation-error" id="spnErrorvendor"></span>
     </div>
-    <div class="col-md-3" style="margin-top: 30px;">
-        <div class="savenext-btn">
+    <div class="col-md-3">
+        <div class="savenext-btn btnAlign">
             <button type="button" class="save-btn active" onclick="ViewReport1();">Generate Report</button>
             <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
         </div>
@@ -82,8 +82,10 @@
 
             $("#vendor").autocomplete({
                 source: function (request, response) {
+                    var url = '@Url.Action("GetVendorData", "Search")';
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        //url: "/Search/GetVendorData",
+                        url:url,
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },

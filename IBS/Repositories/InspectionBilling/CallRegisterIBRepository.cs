@@ -3,12 +3,17 @@ using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
 using IBS.Models.Reports;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Build.Framework;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NuGet.Protocol.Plugins;
+//using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Data;
 using System.Dynamic;
 using System.Globalization;
@@ -227,30 +232,39 @@ namespace IBS.Repositories.InspectionBilling
             return SetRegion;
         }
 
-        public VenderCallRegisterModel FindByManageID(string CaseNo, string CallRecvDt, int CallSno, string ActionType, string GetRegionCode)
+        public VenderCallRegisterModel FindByManageID(string CaseNo, DateTime? CallRecvDt, int CallSno, string ActionType, string Region)
         {
             VenderCallRegisterModel model = new();
-            DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
 
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
 
+
             if (ActionType == "A")
             {
-                DateTime dt = DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null); // Replace "yourDate" with your actual date string
-                model.CallRecvDt = dt;
-                model.CallStatusDt = dt;
-                model.DtInspDesire = dt;
-                model.RegionCode = GetRegionCode;
+                model.CallRecvDt = CallRecvDt;
+                model.CallStatusDt = CallRecvDt;
+                model.DtInspDesire = CallRecvDt;
+                model.CallMarkDt = CallRecvDt;
+                model.RegionCode = Region;
+
+                //var maxCallSno = context.T17CallRegisters
+                //    .Where(call => call.CallRecvDt == CallRecvDt && call.RegionCode == Region)
+                //    .Max(call => (int?)call.CallSno) ?? 0;
+                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.RegionCode == Region).Count();
+
+                var callSno = cmdCL + 1;
+                model.CallSno = Convert.ToInt32(callSno);
 
                 var result = from c in context.T17CallRegisters
                              join i in context.T09Ies on c.IeCd equals i.IeCd into iGroup
                              from i in iGroup.DefaultIfEmpty()
-                             where c.CaseNo == CaseNo && c.CallRecvDt == dt
+                             where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt
                              select new
                              {
                                  CallMarkDt = c.CallMarkDt,
                                  CallSno = c.CallSno,
-                                 IeName = i != null ? i.IeName : "NIL"
+                                 IeName = i != null ? i.IeName : null
                              };
 
                 var queryResult = result.ToList();
@@ -260,9 +274,11 @@ namespace IBS.Repositories.InspectionBilling
                     string msg = "The Call Already Present for the Given Case No and Call Date -: \\n";
                     for (int i = 0; i < queryResult.Count; i++)
                     {
-                        msg += $"{i + 1}) Marked To: {queryResult[i].IeName} vide Call Serial No.={queryResult[i].CallSno} and Call Mark Date={queryResult[i].CallMarkDt}. \\n";
+                        msg += $"{i + 1}) Marked To: {queryResult[i].IeName} vide Call Serial No.={queryResult[i].CallSno} and Call Mark Date={Convert.ToDateTime(queryResult[i].CallMarkDt).ToString()}. \\n";
                     }
+                    model.MsgStatus = msg;
                 }
+
             }
             else if (ActionType == "M" || ActionType == "D")
             {
@@ -270,7 +286,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 var CallDetails = (from t17 in context.T17CallRegisters
                                    join t21 in context.T21CallStatusCodes on t17.CallStatus equals t21.CallStatusCd
-                                   where t17.CaseNo == CaseNo && t17.CallRecvDt == _CallRecvDt && t17.CallSno == CallSno
+                                   where t17.CaseNo == CaseNo && t17.CallRecvDt == CallRecvDt && t17.CallSno == CallSno
                                    select new
                                    {
                                        CaseNo = t17.CaseNo,
@@ -296,12 +312,9 @@ namespace IBS.Repositories.InspectionBilling
                                        //COUNT_DT = t17.CountDt ?? 0,
                                        IrfcFunded = t17.IrfcFunded,
                                        DepartmentCode = t17.DepartmentCode,
-                                       ClusterCode = t17.ClusterCode
+                                       ClusterCode = t17.ClusterCode,
+                                       Isfinalizedstatus = t17.Isfinalizedstatus
                                    }).FirstOrDefault();
-
-
-
-
                 if (CallDetails == null)
                     throw new Exception("Record Not found");
                 else
@@ -315,6 +328,10 @@ namespace IBS.Repositories.InspectionBilling
                     model.IeCd = CallDetails.IeCd;
                     model.DtInspDesire = CallDetails.DtInspDesire;
                     model.CallStatus = CallDetails.CallStatus;
+                    //if (CallDetails.CallStatus != null)
+                    //{
+                    //    model.CallStatus = CallDetails.CallStatus.Equals("M") ? "Marked" : CallDetails.CallStatus.Equals("C") ? "Cancelled" : CallDetails.CallStatus.Equals("A") ? "Accepted" : CallDetails.CallStatus.Equals("R") ? "Rejected" : CallDetails.CallStatus.Equals("U") ? "Under Lab Testing" : CallDetails.CallStatus.Equals("S") ? "Still Under Inspection" : CallDetails.CallStatus.Equals("G") ? "Stage Inspection" : "";
+                    //}
                     model.CallStatusDt = CallDetails.CallStatusDt;
                     model.CallRemarkStatus = CallDetails.CallRemarkStatus;
                     model.CallInstallNo = CallDetails.CallInstallNo;
@@ -325,21 +342,24 @@ namespace IBS.Repositories.InspectionBilling
                     model.Remarks = CallDetails.Remarks;
                     model.RejCanCall = CallDetails.RejCanCall;
                     model.FinalOrStage = CallDetails.FinalOrStage;
-                    model.NewVendor = CallDetails.NewVendor ?? "X";
+                    model.IsNewVender = CallDetails.NewVendor == "Y" ? true : false;
                     //model.CountDt = t17.CountDt ?? 0;
                     model.IrfcFunded = CallDetails.IrfcFunded;
                     model.DepartmentCode = CallDetails.DepartmentCode;
                     model.ClusterCode = CallDetails.ClusterCode;
+                    model.IsFinalizedStatus = CallDetails.Isfinalizedstatus == "F" ? true : false;
 
                     T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(CallDetails.MfgCd)).FirstOrDefault();
-
-                    model.VendAdd1 = Vendor.VendAdd1;
-                    model.VendContactPer1 = Vendor.VendContactPer1;
-                    model.VendContactTel1 = Vendor.VendContactTel1;
-                    model.VendStatus = Vendor.VendStatus;
-                    model.VendStatusDtFr = Vendor.VendStatusDtFr;
-                    model.VendStatusDtTo = Vendor.VendStatusDtTo;
-                    model.VendEmail = Vendor.VendEmail;
+                    if (Vendor != null)
+                    {
+                        model.VendAdd1 = Vendor.VendAdd1;
+                        model.VendContactPer1 = Vendor.VendContactPer1;
+                        model.VendContactTel1 = Vendor.VendContactTel1;
+                        model.VendStatus = Vendor.VendStatus;
+                        model.VendStatusDtFr = Vendor.VendStatusDtFr;
+                        model.VendStatusDtTo = Vendor.VendStatusDtTo;
+                        model.VendEmail = Vendor.VendEmail;
+                    }
                 }
             }
             else
@@ -359,6 +379,8 @@ namespace IBS.Repositories.InspectionBilling
                 model.Rly = GetView.Rly;
                 model.RlyNonrly = GetView.RlyNonrly;
             }
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(CaseNo.Substring(0, 1));
+            model.RegionCode = Region;
 
             return model;
         }
@@ -433,14 +455,39 @@ namespace IBS.Repositories.InspectionBilling
 
 
             string IE_name = null;
-            int ie_officer_code = 0;
-            string automaticCallMarked = null;
+            int ie_cd = 0;
 
             string ID = "";
             int CD = 0;
+            ie_cd = FindIeCODE(model);
+            string department1 = model.DepartmentCode;
+            if (department1 == "M")
+            {
+                department1 = "M";
+            }
+            else if (department1 == "E")
+            {
+                department1 = "E";
+            }
+            else if (department1 == "C")
+            {
+                department1 = "C";
+            }
+            else
+            {
+                department1 = "M";
+            }
+
+            var IeCd = context.T101IeClusters.Where(x => x.ClusterCode == model.ClusterCode && x.DepartmentCode == department1).Select(x => x.IeCode).FirstOrDefault();
+            model.IeCd = Convert.ToInt32(IeCd);
+
+            var Co = context.T09Ies.Where(x => x.IeCd == Convert.ToInt32(IeCd)).Select(x => x.IeCoCd).FirstOrDefault();
+            model.CoCd = Convert.ToByte(Co);
+
+
             if (model.ActionType == "A")
             {
-                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.SetRegionCode).Count();
+                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallLetterNo == model.CallLetterNo && x.RegionCode == model.SetRegionCode).Count();
                 if (cmdCL == 0)
                 {
                     var w_item_rdso = "";
@@ -448,34 +495,14 @@ namespace IBS.Repositories.InspectionBilling
                     var w_stag = "";
                     var w_stage_or_final = "";
 
-                    var str3 = context.T17CallRegisters.Where(x => x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.SetRegionCode).FirstOrDefault();
-                    CD = str3.CallSno + 1;
-                    if (model.ItemRdso == "Y")
+                    //var str3 = context.T17CallRegisters.Where(x => x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.SetRegionCode).FirstOrDefault();
+                    //CD = str3 + 1;
+                    string rej_can_call = "";
+                    if (model.CHKRejCan == "true")
                     {
-                        w_item_rdso = "Y";
-                        if (model.VendRdso == "Y")
-                        {
-                            w_vend_rdso = "Y";
-                        }
-                        else
-                        {
-                            w_vend_rdso = "N";
-                        }
+                        rej_can_call = "Y";
                     }
-                    else
-                    {
-                        w_item_rdso = "N";
-                        w_vend_rdso = "";
-                    }
-                    if (model.StaggeredDp == "Y")
-                    {
-                        w_stag = "Y";
-                    }
-                    else
-                    {
-                        w_stag = "N";
-                    }
-                    if (model.FOS == "S")
+                    if (model.CallStage == "S")
                     {
                         w_stage_or_final = "S";
                     }
@@ -484,30 +511,13 @@ namespace IBS.Repositories.InspectionBilling
                         w_stage_or_final = "F";
                     }
                     var w_New_Vendor = "";
-                    if (model.IsNewVender == "Y")
+                    if (model.IsNewVender == true)
                     {
                         w_New_Vendor = "Y";
                     }
-                    callval = FindIeCODE(model);
-                    if (callval == 0)
-                    {
-                        //DisplayAlert("Master data not entered.So please enter master data cluster/vender/ie");
-                    }
-                    else
-                    {
-                        var ieInfo = context.T09Ies.Where(ie => ie.IeCd == callval).Select(ie => new { IeName = ie.IeName, IeCoCode = ie.IeCoCd }).FirstOrDefault();
 
-                        if (ieInfo != null)
-                        {
-                            string ieName = ieInfo.IeName;
-                            int ieOfficerCode = Convert.ToInt32(ieInfo.IeCoCode);
-                            IE_name = ieName;
-                            ie_officer_code = ieOfficerCode;
-                            automaticCallMarked = "Y";
-                        }
-                    }
                     string w_irfc_funded = "";
-                    if (model.SetRegionCode == "R")
+                    if (model.RlyNonrly == "R")
                     {
                         w_irfc_funded = Convert.ToString(model.IrfcFunded);
                     }
@@ -515,109 +525,70 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         w_irfc_funded = "N";
                     }
-                    if (callval == 0)
+                    model.e_status = 1;
+                    if (ie_cd > 0)
                     {
-                        T17CallRegister obj = new T17CallRegister();
-                        obj.CaseNo = model.CaseNo;
-                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (int)CD;
-                        obj.CallLetterNo = model.CallLetterNo;
-                        obj.CallLetterDt = model.CallLetterDt;
-                        obj.CallMarkDt = model.CallMarkDt;
-                        obj.DepartmentCode = model.DepartmentCode;
-                        obj.DtInspDesire = model.DtInspDesire;
-                        obj.CallStatus = "M";
-                        obj.CallStatusDt = model.CallStatusDt;
-                        obj.CallRemarkStatus = model.CallRemarkStatus;
-                        obj.CallInstallNo = model.CallInstallNo;
-                        obj.RegionCode = model.SetRegionCode;
-                        obj.MfgCd = model.MfgCd;
-                        obj.UserId = model.UserId;
-                        obj.Datetime = DateTime.Now;
-                        obj.MfgPlace = model.MfgPlace;
-                        obj.Remarks = model.Remarks;
-                        obj.OnlineCall = "Y";
-                        obj.ItemRdso = w_item_rdso;
-                        obj.VendRdso = w_vend_rdso;
-                        obj.VendApprovalFr = model.VendApprovalFr;
-                        obj.VendApprovalTo = model.VendApprovalTo;
-                        obj.StaggeredDp = w_stag;
-                        obj.LotDp1 = model.LotDp1;
-                        obj.LotDp2 = model.LotDp2;
-                        obj.FinalOrStage = w_stage_or_final;
-                        obj.Bpo = model.Bpo;
-                        obj.RecipientGstinNo = model.RecipientGstinNo;
-                        obj.NewVendor = w_New_Vendor;
-                        obj.IrfcFunded = w_irfc_funded;
+                        try
+                        {
+                            T17CallRegister obj = new T17CallRegister();
+                            obj.CaseNo = model.CaseNo;
+                            obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                            obj.CallSno = Convert.ToInt32(model.CallSno);
+                            obj.CallLetterNo = model.CallLetterNo;
+                            obj.CallLetterDt = model.CallLetterDt;
+                            obj.CallMarkDt = model.CallMarkDt;
+                            obj.IeCd = model.IeCd;
+                            obj.CoCd = Convert.ToInt32(Co);
+                            obj.DtInspDesire = model.DtInspDesire;
+                            obj.CallStatus = "M";
+                            obj.CallStatusDt = model.CallStatusDt;
+                            obj.CallRemarkStatus = model.CallRemarkStatus;
+                            obj.CallInstallNo = model.CallInstallNo;
+                            obj.RegionCode = model.SetRegionCode;
+                            obj.MfgCd = model.MfgCd;
+                            obj.UserId = model.UserId;
+                            obj.Datetime = DateTime.Now;
+                            obj.MfgPlace = model.VendAdd1;
+                            obj.Remarks = model.Remarks;
+                            obj.RejCanCall = rej_can_call;
+                            obj.FinalOrStage = w_stage_or_final;
+                            obj.NewVendor = w_New_Vendor;
+                            obj.IrfcFunded = w_irfc_funded;
+                            obj.ClusterCode = model.ClusterCode;
+                            obj.DepartmentCode = model.DepartmentCode;
+                            obj.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
 
-                        obj.Createdby = model.Createdby;
-                        obj.Createddate = DateTime.Now;
-                        context.T17CallRegisters.Add(obj);
-                        context.SaveChanges();
-                        ID = obj.CaseNo;
+                            obj.Createdby = model.Createdby;
+                            obj.Createddate = DateTime.Now;
+                            context.T17CallRegisters.Add(obj);
+                            context.SaveChanges();
+                            ID = obj.CaseNo;
+                        }
+                        catch (Exception ex)
+                        {
+                            var msg = ex.Message;
+                        }
                     }
-                    else
-                    {
-                        T17CallRegister obj = new T17CallRegister();
-                        obj.CaseNo = model.CaseNo;
-                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                        obj.CallSno = (int)CD;
-                        obj.CallLetterNo = model.CallLetterNo;
-                        obj.CallLetterDt = model.CallLetterDt;
-                        obj.CallMarkDt = model.CallMarkDt;
-                        obj.IeCd = callval;
-                        obj.CoCd = (byte)ie_officer_code;
-                        obj.AutomaticCall = automaticCallMarked;
-                        obj.DepartmentCode = model.DepartmentCode;
-                        obj.DtInspDesire = model.DtInspDesire;
-                        obj.CallStatus = "M";
-                        obj.CallStatusDt = model.CallStatusDt;
-                        obj.CallRemarkStatus = model.CallRemarkStatus;
-                        obj.CallInstallNo = model.CallInstallNo;
-                        obj.RegionCode = model.SetRegionCode;
-                        obj.MfgCd = model.MfgCd;
-                        obj.UserId = model.UserId;
-                        obj.Datetime = DateTime.Now;
-                        obj.MfgPlace = model.MfgPlace;
-                        obj.Remarks = model.Remarks;
-                        obj.OnlineCall = "Y";
-                        obj.ItemRdso = w_item_rdso;
-                        obj.VendRdso = w_vend_rdso;
-                        obj.VendApprovalFr = model.VendApprovalFr;
-                        obj.VendApprovalTo = model.VendApprovalTo;
-                        obj.StaggeredDp = w_stag;
-                        obj.LotDp1 = model.LotDp1;
-                        obj.LotDp2 = model.LotDp2;
-                        obj.FinalOrStage = w_stage_or_final;
-                        obj.Bpo = model.Bpo;
-                        obj.RecipientGstinNo = model.RecipientGstinNo;
-                        obj.NewVendor = w_New_Vendor;
-                        obj.IrfcFunded = w_irfc_funded;
-                        obj.ClusterCode = model.ClusterCode;
-
-                        obj.Createdby = model.Createdby;
-                        obj.Createddate = DateTime.Now;
-                        context.T17CallRegisters.Add(obj);
-                        context.SaveChanges();
-                        ID = obj.CaseNo;
-                    }
-                    decimal wMat_value = 0;
-                    string ext_delv_dt = "";
-                    int desire_dt = 0;
-
-                    GetDtList(model);
-
+                    //GetDtList(model);
                 }
                 else
                 {
                     model.CaseNoNoFound = "NoFound";
+                    ID = model.CaseNoNoFound;
                 }
             }
             else if (model.ActionType == "M")
             {
+                var w_New_Vendor = "";
+                if (model.IsNewVender == true)
+                {
+                    w_New_Vendor = "Y";
+                }
                 var GetCall = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+
                 if (model.MfgCd > 0)
                 {
+                    model.e_status = 1;
                     #region Details save
                     if (model.DtInspDesire != null)
                     {
@@ -626,7 +597,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (int)model.CallSno;
+                            GetCall.CallSno = Convert.ToInt32(model.CallSno);
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -634,8 +605,11 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.Remarks = model.Remarks;
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
-                            GetCall.ClusterCode = (byte)model.IeCd;
+                            GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
                             GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -651,7 +625,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (int)model.CallSno;
+                            GetCall.CallSno = Convert.ToInt32(model.CallSno);
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -660,8 +634,11 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.CountDt = Convert.ToBoolean(1);
-                            GetCall.ClusterCode = (byte)model.IeCd;
-                            GetCall.DepartmentCode = model.CallRemarkStatus;
+                            GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
+                            GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
 
@@ -681,7 +658,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (int)model.CallSno;
+                            GetCall.CallSno = Convert.ToInt32(model.CallSno);
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -689,8 +666,11 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.Remarks = model.Remarks;
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
-                            GetCall.ClusterCode = (byte)model.IeCd;
-                            GetCall.DepartmentCode = model.CallRemarkStatus;
+                            GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
+                            GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();
@@ -705,7 +685,7 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.CallLetterNo = model.CallLetterNo;
                             GetCall.CallLetterDt = model.CallLetterDt;
                             GetCall.CallMarkDt = model.CallMarkDt;
-                            GetCall.CallSno = (int)model.CallSno;
+                            GetCall.CallSno = Convert.ToInt32(model.CallSno);
                             GetCall.DtInspDesire = model.DtInspDesire;
                             GetCall.CallStatusDt = model.CallStatusDt;
                             GetCall.CallRemarkStatus = model.CallRemarkStatus;
@@ -714,8 +694,11 @@ namespace IBS.Repositories.InspectionBilling
                             GetCall.MfgCd = model.MfgCd;
                             GetCall.MfgPlace = model.VendAdd1;
                             GetCall.CountDt = Convert.ToBoolean(1);
-                            GetCall.ClusterCode = (byte)model.IeCd;
-                            GetCall.DepartmentCode = model.CallRemarkStatus;
+                            GetCall.IeCd = model.IeCd;
+                            GetCall.CoCd = Convert.ToInt32(Co);
+                            GetCall.DepartmentCode = model.DepartmentCode;
+                            GetCall.NewVendor = w_New_Vendor;
+                            GetCall.Isfinalizedstatus = model.IsFinalizedStatus == true ? "F" : "N";
                             GetCall.Updatedby = model.UserId;
                             GetCall.Updateddate = DateTime.Now;
                             context.SaveChanges();
@@ -732,37 +715,116 @@ namespace IBS.Repositories.InspectionBilling
         {
             string department1 = string.Empty;
             int strval = 0;
-            int Clustercode;
+            int Clustercode = 0;
             int vcode = 0;
+            int cl_exist = 0;
             string region = model.SetRegionCode.ToString();
 
-            if (region == "N")
+            department1 = model.DepartmentCode;
+            if (department1 == "M")
             {
-                department1 = model.CallRemarkStatus;
-                if (department1 == "M")
-                {
-                    department1 = "M";
-                }
-                else if (department1 == "E")
-                {
-                    department1 = "E";
-                }
-                else
-                {
-                    department1 = "M";
-                }
+                department1 = "M";
+            }
+            else if (department1 == "E")
+            {
+                department1 = "E";
+            }
+            else if (department1 == "C")
+            {
+                department1 = "C";
             }
             else
             {
-                department1 = model.CallRemarkStatus;
+                department1 = "M";
             }
 
             vcode = Convert.ToInt32(model.MfgCd);
+
             var distinctClusterCodes = (from a in context.T100VenderClusters
-                                        join b in context.T99ClusterMasters on a.ClusterCode equals (byte)b.ClusterCode
+                                        join b in context.T99ClusterMasters
+                                        on a.ClusterCode equals b.ClusterCode
                                         where a.VendorCode == vcode && a.DepartmentName == department1 && b.RegionCode == region
-                                        select b.ClusterCode
-                                        ).Distinct().ToList();
+                                        select b.ClusterCode).Distinct().ToList();
+            if (distinctClusterCodes.Count > 0)
+            {
+                Clustercode = Convert.ToInt32(model.IeCd);
+            }
+            else
+            {
+                cl_exist = 1;
+            }
+            int ieCode = 0;
+            var GetIeCodes = context.T101IeClusters.Where(x => x.ClusterCode == Clustercode && x.DepartmentCode == department1).FirstOrDefault();
+            if (GetIeCodes != null)
+            {
+                ieCode = Convert.ToInt32(GetIeCodes.IeCode);
+                //model.IeCd = ieCode;
+                model.ClusterCode = ieCode;
+            }
+            var CoCd = context.T09Ies.Where(x => x.IeCd == model.ClusterCode).FirstOrDefault();
+            if (CoCd != null)
+            {
+                model.CoCd = Convert.ToByte(CoCd.IeCoCd);
+            }
+            if (cl_exist == 1 && model.CHKRejCan == "false")
+            {
+                T100VenderCluster T100 = new T100VenderCluster();
+                T100.VendorCode = model.MfgCd;
+                T100.DepartmentName = department1;
+                T100.ClusterCode = model.ClusterCode;
+                T100.UserId = model.UserId;
+                T100.Datetime = DateTime.Now.Date;
+                context.T100VenderClusters.Add(T100);
+                context.SaveChanges();
+                Clustercode = Convert.ToInt16(model.ClusterCode);
+            }
+            return ieCode;
+        }
+
+        int FindIeCODE_OLD(VenderCallRegisterModel model)
+        {
+            string department1 = string.Empty;
+            int strval = 0;
+            int Clustercode;
+            int vcode = 0;
+            int cl_exist = 0;
+            string region = model.SetRegionCode.ToString();
+
+            department1 = model.DepartmentCode;
+            if (department1 == "M")
+            {
+                department1 = "M";
+            }
+            else if (department1 == "E")
+            {
+                department1 = "E";
+            }
+            else if (department1 == "C")
+            {
+                department1 = "C";
+            }
+            else
+            {
+                department1 = "M";
+            }
+
+            vcode = Convert.ToInt32(model.MfgCd);
+
+            var distinctClusterCodes = (from a in context.T100VenderClusters
+                                        join b in context.T99ClusterMasters
+                                        on a.ClusterCode equals b.ClusterCode
+                                        where a.VendorCode == vcode && a.DepartmentName == department1 && b.RegionCode == region
+                                        select b.ClusterCode).Distinct().ToList();
+            if (distinctClusterCodes.Count > 0)
+            {
+                Clustercode = Convert.ToInt16(model.ClusterCode);
+            }
+            else
+            {
+                cl_exist = 1;
+            }
+
+
             if (distinctClusterCodes.Count > 0)
             {
                 Clustercode = distinctClusterCodes[0];
@@ -863,10 +925,10 @@ namespace IBS.Repositories.InspectionBilling
                                                         var altIeTwo = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeTwo).FirstOrDefault();
                                                         if (altIeTwo != null)
                                                         {
-                                                            strval = 0;
-                                                        }
-                                                        else
-                                                        {
+                                                            //    strval = 0;
+                                                            //}
+                                                            //else
+                                                            //{
                                                             int Alt_ieCode_TWO = Convert.ToInt32(altIeTwo);
                                                             DateTime startDate2 = new DateTime(2017, 1, 1);
 
@@ -986,6 +1048,22 @@ namespace IBS.Repositories.InspectionBilling
 
                 }
             }
+            else
+            {
+                cl_exist = 1;
+            }
+            if (cl_exist == 1 && model.CHKRejCan == "false")
+            {
+                T100VenderCluster T100 = new T100VenderCluster();
+                T100.VendorCode = model.MfgCd;
+                T100.DepartmentName = department1;
+                T100.ClusterCode = model.ClusterCode;
+                T100.UserId = model.UserId;
+                T100.Datetime = DateTime.Now.Date;
+                context.T100VenderClusters.Add(T100);
+                context.SaveChanges();
+                Clustercode = Convert.ToInt16(model.ClusterCode);
+            }
             return strval;
         }
 
@@ -1000,49 +1078,89 @@ namespace IBS.Repositories.InspectionBilling
                               where a.CaseNo == model.CaseNo && a.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && a.CallSno == Convert.ToInt16(model.CallSno)
                               select a.ItemSrnoPo).FirstOrDefault();
 
-            query = (from l in context.VenderCallRegisterItemView1s
-                     where l.CaseNo == model.CaseNo && l.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && l.CallSno == Convert.ToInt16(model.CallSno)
+            //query = (from l in context.VenderCallRegisterItemView1s
+            //         where l.CaseNo == model.CaseNo && l.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && l.CallSno == Convert.ToInt16(model.CallSno)
 
+            //         select new VenderCallRegisterModel
+            //         {
+            //             Status = l.Status,
+            //             ItemSrnoPo = l.ItemSrnoPo,
+            //             ItemDescPo = l.ItemDescPo,
+            //             QtyOrdered = l.QtyOrdered,
+            //             CumQtyPrevOffered = l.CumQtyPrevOffered,
+            //             CumQtyPrevPassed = l.CumQtyPrevPassed,
+            //             QtyToInsp = l.QtyToInsp,
+            //             QtyPassed = l.QtyPassed,
+            //             QtyRejected = l.QtyRejected,
+            //             QtyDue = l.QtyDue,
+            //             Consignee = l.Consignee,
+            //             DelvDate = l.DelvDate,
+            //             CaseNo = l.CaseNo,
+            //             CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
+            //             CallSno = Convert.ToInt16(l.CallSno)
+            //         }).ToList();
+
+            //query.AddRange(from l in context.VenderCallRegisterItemView2s
+            //               where l.CaseNo == model.CaseNo && l.ItemSrnoPo != ItemSrnoPo
+
+            //               select new VenderCallRegisterModel
+            //               {
+            //                   Status = l.Status,
+            //                   ItemSrnoPo = l.ItemSrnoPo,
+            //                   ItemDescPo = l.ItemDescPo,
+            //                   QtyOrdered = l.QtyOrdered,
+            //                   CumQtyPrevOffered = l.CumQtyPrevOffered,
+            //                   CumQtyPrevPassed = l.CumQtyPrevPassed,
+            //                   QtyToInsp = l.QtyToInsp,
+            //                   QtyPassed = l.QtyPassed,
+            //                   QtyRejected = l.QtyRejected,
+            //                   QtyDue = l.QtyDue,
+            //                   Consignee = l.Consignee,
+            //                   DelvDate = l.DelvDate,
+            //                   CaseNo = l.CaseNo,
+            //                   CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
+            //                   CallSno = Convert.ToInt16(l.CallSno)
+            //               });
+            query = (from t15 in context.T15PoDetails
+                     join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+                     join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+                     join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                     join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+                     join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+                     from bpo in bpoGroup.DefaultIfEmpty()
+                     join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+                     from city in cityGroup.DefaultIfEmpty()
+                     where t15.CaseNo == model.CaseNo && t18.ItemSrnoPo == ItemSrnoPo
                      select new VenderCallRegisterModel
                      {
-                         Status = l.Status,
-                         ItemSrnoPo = l.ItemSrnoPo,
-                         ItemDescPo = l.ItemDescPo,
-                         QtyOrdered = l.QtyOrdered,
-                         CumQtyPrevOffered = l.CumQtyPrevOffered,
-                         CumQtyPrevPassed = l.CumQtyPrevPassed,
-                         QtyToInsp = l.QtyToInsp,
-                         QtyPassed = l.QtyPassed,
-                         QtyRejected = l.QtyRejected,
-                         QtyDue = l.QtyDue,
-                         Consignee = l.Consignee,
-                         DelvDate = l.DelvDate,
-                         CaseNo = l.CaseNo,
-                         CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
-                         CallSno = Convert.ToInt16(l.CallSno)
+                         Status = "Available",
+                         ItemSrnoPo = t18.ItemSrnoPo,
+                         ItemDescPo = t18.ItemDescPo,
+                         QtyOrdered = t18.QtyOrdered,
+                         CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                         CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                         QtyToInsp = t18.QtyToInsp,
+                         QtyPassed = t18.QtyPassed,
+                         QtyRejected = t18.QtyRejected,
+                         QtyDue = t18.QtyDue,
+                         Consignee = t06.ConsigneeCd + "-" +
+                                    t06.ConsigneeDesig + "/" +
+                                    t06.ConsigneeDept + "/" +
+                                    t06.ConsigneeFirm + "/" +
+                                    t06.ConsigneeAdd1 + "/" +
+                                    t03.Location + " : " + t03.City,
+                         DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+                         CaseNo = t18.CaseNo,
+                         CallRecvDt = t18.CallRecvDt,
+                         CallSno = t18.CallSno,
+                         Bpo = bpo.BpoCd + '-' +
+                                bpo.BpoName + '/' +
+                                bpo.BpoRly + '/' +
+                                bpo.BpoAdd + '/' +
+                                city.Location + '/' +
+                                city.City,
+                         ConsigneeCd = t06.ConsigneeCd
                      }).ToList();
-
-            query.AddRange(from l in context.VenderCallRegisterItemView2s
-                           where l.CaseNo == model.CaseNo && l.ItemSrnoPo != ItemSrnoPo
-
-                           select new VenderCallRegisterModel
-                           {
-                               Status = l.Status,
-                               ItemSrnoPo = l.ItemSrnoPo,
-                               ItemDescPo = l.ItemDescPo,
-                               QtyOrdered = l.QtyOrdered,
-                               CumQtyPrevOffered = l.CumQtyPrevOffered,
-                               CumQtyPrevPassed = l.CumQtyPrevPassed,
-                               QtyToInsp = l.QtyToInsp,
-                               QtyPassed = l.QtyPassed,
-                               QtyRejected = l.QtyRejected,
-                               QtyDue = l.QtyDue,
-                               Consignee = l.Consignee,
-                               DelvDate = l.DelvDate,
-                               CaseNo = l.CaseNo,
-                               CallRecvDt = Convert.ToDateTime(l.CallRecvDt),
-                               CallSno = Convert.ToInt16(l.CallSno)
-                           });
             decimal wMat_value = 0;
             string ext_delv_dt = "";
             int desire_dt = 0;
@@ -1078,30 +1196,63 @@ namespace IBS.Repositories.InspectionBilling
                         model.wMat_value = wMat_value;
                         ext_delv_dt = record.EXT_DELV_DATE;
                     }
+                    var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && x.CallSno == model.CallSno && x.ItemSrnoPo == srno).FirstOrDefault();
 
-                    T18CallDetail obj = new T18CallDetail();
-                    obj.CaseNo = model.CaseNo;
-                    obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
-                    obj.CallSno = (int)model.CallSno;
-                    obj.ItemSrnoPo = (byte)srno;
-                    obj.ItemDescPo = dataItem.ItemDescPo;
-                    obj.ConsigneeCd = Convert.ToInt32(ccd);
-                    obj.QtyOrdered = dataItem.QtyOrdered;
-                    obj.CumQtyPrevOffered = dataItem.CumQtyPrevOffered;
-                    obj.CumQtyPrevPassed = dataItem.CumQtyPrevPassed;
-                    obj.QtyToInsp = Convert.ToDecimal(qtyOffNow);
-                    obj.QtyPassed = null;
-                    obj.QtyRejected = null;
-                    obj.QtyDue = null;
-                    obj.UserId = model.Createdby;
-                    obj.Datetime = DateTime.Now;
-                    obj.Createdby = model.Createdby;
-                    obj.Createddate = DateTime.Now;
+                    if (CallDetails == null)
+                    {
+                        T18CallDetail obj = new T18CallDetail();
+                        obj.CaseNo = model.CaseNo;
+                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                        obj.CallSno = (short)model.CallSno;
+                        obj.ItemSrnoPo = (byte)srno;
+                        obj.ItemDescPo = dataItem.ItemDescPo;
+                        obj.ConsigneeCd = Convert.ToInt32(ccd);
+                        obj.QtyOrdered = dataItem.QtyOrdered;
+                        obj.CumQtyPrevOffered = dataItem.CumQtyPrevOffered;
+                        obj.CumQtyPrevPassed = dataItem.CumQtyPrevPassed;
+                        obj.QtyToInsp = Convert.ToDecimal(qtyOffNow);
+                        obj.QtyPassed = null;
+                        obj.QtyRejected = null;
+                        obj.QtyDue = null;
+                        obj.UserId = model.Createdby;
+                        obj.Datetime = DateTime.Now;
+                        obj.Createdby = model.Createdby;
+                        obj.Createddate = DateTime.Now;
 
-                    obj.Isdeleted = Convert.ToByte(false);
-                    context.T18CallDetails.Add(obj);
-                    context.SaveChanges();
-                    err = Convert.ToInt32(obj.ItemSrnoPo);
+                        obj.Isdeleted = Convert.ToByte(false);
+                        context.T18CallDetails.Add(obj);
+                        context.SaveChanges();
+                        err = Convert.ToInt32(obj.ItemSrnoPo);
+                    }
+                    else
+                    {
+                        CallDetails.QtyToInsp = Convert.ToDecimal(qtyOffNow);
+                        context.SaveChanges();
+                        err = Convert.ToInt32(CallDetails.ItemSrnoPo);
+                    }
+                    //T18CallDetail obj = new T18CallDetail();
+                    //obj.CaseNo = model.CaseNo;
+                    //obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                    //obj.CallSno = (int)model.CallSno;
+                    //obj.ItemSrnoPo = (byte)srno;
+                    //obj.ItemDescPo = dataItem.ItemDescPo;
+                    //obj.ConsigneeCd = Convert.ToInt32(ccd);
+                    //obj.QtyOrdered = dataItem.QtyOrdered;
+                    //obj.CumQtyPrevOffered = dataItem.CumQtyPrevOffered;
+                    //obj.CumQtyPrevPassed = dataItem.CumQtyPrevPassed;
+                    //obj.QtyToInsp = Convert.ToDecimal(qtyOffNow);
+                    //obj.QtyPassed = null;
+                    //obj.QtyRejected = null;
+                    //obj.QtyDue = null;
+                    //obj.UserId = model.Createdby;
+                    //obj.Datetime = DateTime.Now;
+                    //obj.Createdby = model.Createdby;
+                    //obj.Createddate = DateTime.Now;
+
+                    //obj.Isdeleted = Convert.ToByte(false);
+                    //context.T18CallDetails.Add(obj);
+                    //context.SaveChanges();
+                    //err = Convert.ToInt32(obj.ItemSrnoPo);
 
                     if (desire_dt == 0)
                     {
@@ -1174,7 +1325,7 @@ namespace IBS.Repositories.InspectionBilling
 
         int check_desire_dt(VenderCallRegisterModel model, string ext_delv_dt)
         {
-            if (ext_delv_dt == "01-JAN-01")
+            if (ext_delv_dt == "01-01-2001")
             {
                 return (2);
             }
@@ -1223,7 +1374,7 @@ namespace IBS.Repositories.InspectionBilling
                                                (string.IsNullOrEmpty(t06.ConsigneeFirm) ? "" : t06.ConsigneeFirm + "/") +
                                                (string.IsNullOrEmpty(t06.ConsigneeAdd1) ? "" : t06.ConsigneeAdd1 + "/") +
                                                (string.IsNullOrEmpty(t03.Location) ? "" : t03.Location + " : " + t03.City),
-                                   DelvDate = "01-JAN-01"
+                                   DelvDate = "01-01-2001"
                                }).ToList();
 
                 var query22 = (from t15 in context.T15PoDetails
@@ -1252,7 +1403,7 @@ namespace IBS.Repositories.InspectionBilling
                                                (string.IsNullOrEmpty(t06.ConsigneeFirm) ? "" : t06.ConsigneeFirm + "/") +
                                                (string.IsNullOrEmpty(t06.ConsigneeAdd1) ? "" : t06.ConsigneeAdd1 + "/") +
                                                (string.IsNullOrEmpty(t03.Location) ? "" : t03.Location + " : " + t03.City),
-                                   DelvDate = t15.ExtDelvDt.HasValue ? t15.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01-JAN-01"
+                                   DelvDate = t15.ExtDelvDt.HasValue ? t15.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01-01-2001"
                                }).ToList();
 
                 //query11.AddRange(query22);
@@ -1344,7 +1495,249 @@ namespace IBS.Repositories.InspectionBilling
             return sms;
         }
 
-        public string send_Vendor_Email(VenderCallRegisterModel model)
+        public void Vendor_Rej_Email(VenderCallStatusModel model)
+        {
+            string email = "";
+            string Case_Region = model.CaseNo.ToString().Substring(0, 1);
+            string wRegion = "";
+            string sender = "";
+            string wPCity = "";
+            string manu_mail = "", mfg_cd = "", manu_name = "", manu_city = "";
+            string ie_phone = "", ie_name = "", ie_email = "", ie_co_email = "";
+            string vend_cd = "", vend_name = "", vend_email = "", rly_cd = "", vend_city = "";
+
+            var querys = from t13 in context.T13PoMasters
+                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+                         join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                         where t13.CaseNo == model.CaseNo.Trim()
+                         select new
+                         {
+                             t13.VendCd,
+                             t05.VendName,
+                             VEND_ADDRESS = t05.VendAdd2 != null ? t05.VendAdd1 + "/" + t05.VendAdd2 : t05.VendAdd1,
+                             t03.City,
+                             t05.VendEmail,
+                             t13.RegionCode,
+                             t13.RlyCd
+                         };
+
+            var results = querys.ToList();
+
+            foreach (var item in results)
+            {
+                vend_cd = item.VendCd.ToString();
+                vend_name = item.VendName;
+                vend_city = item.City;
+                vend_email = item.VendEmail;
+                rly_cd = item.RlyCd;
+
+                if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; wPCity = "New Delhi"; }
+                else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; wPCity = "Chennai"; }
+                else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; wPCity = "Kolkata"; wPCity = "Kolkata"; }
+                else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; wPCity = "Mumbai"; }
+                else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
+            }
+
+            var query = from t05 in context.T05Vendors
+                        join t17 in context.T17CallRegisters on t05.VendCd equals t17.MfgCd
+                        join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                        where t17.CaseNo == model.CaseNo.Trim() &&
+                              t17.CallRecvDt == model.CallRecvDt &&
+                              t17.CallSno == model.CallSno
+                        select new
+                        {
+                            MFG_NAME = t05.VendName,
+                            MFG_CITY = t03.City,
+                            t05.VendEmail,
+                            t17.MfgCd
+                        };
+            var result = query.FirstOrDefault();
+
+            manu_mail = result.VendEmail;
+            mfg_cd = result.MfgCd.ToString();
+            manu_name = result.MFG_NAME;
+            manu_city = result.MFG_CITY;
+
+            var query2 = from t09 in context.T09Ies
+                         join t08 in context.T08IeControllOfficers
+                         on t09.IeCoCd equals t08.CoCd
+                         where t09.IeCd == Convert.ToInt32(model.IeCd)
+                         select new
+                         {
+                             IE_PHONE_NO = t09.IePhoneNo,
+                             CO_NAME = t08.CoName,
+                             CO_PHONE_NO = t08.CoPhoneNo,
+                             IE_NAME = t09.IeName,
+                             IE_EMAIL = t09.IeEmail,
+                             CO_Email = t08.CoEmail,
+                         };
+
+            var result2 = query2.FirstOrDefault();
+
+            ie_phone = result2.IE_PHONE_NO;
+            ie_name = result2.IE_NAME;
+            ie_email = result2.IE_EMAIL;
+            ie_co_email = result2.CO_Email;
+
+            string call_letter_dt = "";
+            if (Convert.ToString(model.CallLetterDt) == "")
+            {
+                call_letter_dt = "NIL";
+            }
+            else
+            {
+                call_letter_dt = Convert.ToString(model.CallLetterDt);
+            }
+            string mail_body = "";
+
+            mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallStatusDt + ", at SNo. " + model.CallSno + ". is Rejected on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+
+            mail_body = mail_body + "You are requested to submit Rejection charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + wPCity + " along with next call.<br><b><u>Please note that call letter without Call Rejection charges will not be accepted.</u></b><br>";
+
+            mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+
+            if (vend_cd == mfg_cd && manu_mail != "")
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+                mail.To.Add(manu_mail);
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                // Create a SmtpClient
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                                                                                                                   // Send the email
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception (log, display error message, etc.)
+                }
+                finally
+                {
+                    // Dispose of resources
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+            else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+                mail.To.Add(vend_email);
+                mail.To.Add(manu_mail);
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                // Create a SmtpClient
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+
+                // Send the email
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception (log, display error message, etc.)
+                }
+                finally
+                {
+                    // Dispose of resources
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+            else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
+            {
+                // Create a MailMessage object
+                MailMessage mail = new MailMessage();
+
+                if (string.IsNullOrEmpty(vend_email))
+                {
+                    mail.To.Add(manu_mail);
+                }
+                else if (string.IsNullOrEmpty(manu_mail))
+                {
+                    mail.To.Add(vend_email);
+                }
+                else
+                {
+                    mail.To.Add(vend_email);
+                    mail.To.Add(manu_mail);
+                }
+
+                mail.Bcc.Add("nrinspn@gmail.com");
+                mail.From = new MailAddress("nrinspn@gmail.com");
+                mail.Subject = "Your Call for Inspection By RITES";
+                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                mail.Body = mail_body;
+
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+
+                try
+                {
+                    smtpClient.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+
+            if (vend_email == "" && manu_mail == "")
+            {
+                MailMessage mail = new MailMessage();
+                mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+
+                mail.To.Add(ie_co_email);
+                if (Case_Region == "N")
+                {
+                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
+                }
+                else
+                {
+                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
+                }
+                mail.From = new MailAddress(sender);
+                mail.Subject = "Your Call for Inspection By RITES has Rejected.";
+                mail.Body = mail_body;
+                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
+                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                try
+                {
+                    smtpClient.Send(mail);
+                    email = "success";
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                    mail.Dispose();
+                    smtpClient.Dispose();
+                }
+            }
+
+            // return email;
+        }
+
+        public string send_Vendor_Email(VenderCallStatusModel model)
         {
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
@@ -1355,7 +1748,7 @@ namespace IBS.Repositories.InspectionBilling
             else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
             else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
             else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
-            else if (Case_Region == "C") { wRegion = "Central Region"; }
+            else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
 
             var query = from t13 in context.T13PoMasters
                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
@@ -1374,12 +1767,15 @@ namespace IBS.Repositories.InspectionBilling
             int vend_cd = 0;
             string vend_add = "";
             string vend_email = "";
+            string vend_name = "";
+            string vend_city = "";
 
             if (result != null)
             {
                 vend_cd = Convert.ToInt32(result.VEND_CD);
                 vend_add = result.VEND_ADDRESS;
                 vend_email = result.VEND_EMAIL;
+                vend_name = result.VEND_NAME;
             }
 
             var query1 = from t05 in context.T05Vendors
@@ -1411,7 +1807,7 @@ namespace IBS.Repositories.InspectionBilling
             var query2 = from t09 in context.T09Ies
                          join t08 in context.T08IeControllOfficers
                          on t09.IeCoCd equals t08.CoCd
-                         where t09.IeCd == model.IeCd
+                         where t09.IeCd == Convert.ToInt32(model.IeCd)
                          select new
                          {
                              IE_PHONE_NO = t09.IePhoneNo,
@@ -1428,6 +1824,8 @@ namespace IBS.Repositories.InspectionBilling
             string co_mobile = "";
             string ie_name = "";
             string ie_email = "";
+            string manu_city = "";
+            string rly_cd = "";
 
             if (result2 != null)
             {
@@ -1443,7 +1841,7 @@ namespace IBS.Repositories.InspectionBilling
             var subquery = from t17 in context.T17CallRegisters
                            where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MM-yyyy", null) &&
                                  (t17.CallStatus == "M" || t17.CallStatus == "S") &&
-                                 t17.IeCd == model.IeCd
+                                 t17.IeCd == Convert.ToInt32(model.IeCd)
                            select t17;
 
             var query3 = from t17 in context.T17CallRegisters
@@ -1492,6 +1890,19 @@ namespace IBS.Repositories.InspectionBilling
                 days_to_ic = Convert.ToInt32(result4[0].DaysToIc);
                 item_cd = result4[0].ItemCd;
             }
+            string can_reasons = "";
+            string manu_name = "", manu_add = "";
+            var manufacturerInfo = (from t17 in context.T17CallRegisters
+                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+                                    where t17.CaseNo == model.CaseNo &&
+                                    t17.CallRecvDt == model.CallRecvDt &&
+                                    t17.CallSno == model.CallSno
+                                    select new
+                                    {
+                                        manu_name = t05.VendName,
+                                        manu_add = t03.City
+                                    }).FirstOrDefault();
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
             {
@@ -1501,45 +1912,61 @@ namespace IBS.Repositories.InspectionBilling
             {
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
+            string mail_body = "";
+            if (model.CallCancelStatus == "C")
+            {
+                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
 
-            string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
-            if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
-            {
-                mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
+
+                mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
             }
-            if (days_to_ic == 0)
+            else
             {
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
-            }
-            else if (days_to_ic > 0)
-            {
-                System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
-                System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
-                string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
-                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
-            }
-            mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
-            if (Case_Region == "N")
-            {
-                sender = "nrinspn@rites.com";
-            }
-            else if (Case_Region == "W")
-            {
-                sender = "wrinspn@rites.com";
-            }
-            else if (Case_Region == "E")
-            {
-                sender = "erinspn@rites.com";
-            }
-            else if (Case_Region == "S")
-            {
-                sender = "srinspn@rites.com";
-            }
-            else if (Case_Region == "C")
-            {
-                sender = "crinspn@rites.com";
+                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+                mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
             }
 
+            #region comment code
+            //string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
+            //if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
+            //{
+            //    mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
+            //}
+            //if (days_to_ic == 0)
+            //{
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            //}
+            //else if (days_to_ic > 0)
+            //{
+            //    System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
+            //    System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
+            //    string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
+            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
+            //}
+            //mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+
+            //if (Case_Region == "N")
+            //{
+            //    sender = "nrinspn@rites.com";
+            //}
+            //else if (Case_Region == "W")
+            //{
+            //    sender = "wrinspn@rites.com";
+            //}
+            //else if (Case_Region == "E")
+            //{
+            //    sender = "erinspn@rites.com";
+            //}
+            //else if (Case_Region == "S")
+            //{
+            //    sender = "srinspn@rites.com";
+            //}
+            //else if (Case_Region == "C")
+            //{
+            //    sender = "crinspn@rites.com";
+            //}
+            #endregion
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 // Create a MailMessage object
@@ -1650,22 +2077,11 @@ namespace IBS.Repositories.InspectionBilling
 
             var controllingEmail = (from t08 in context.T08IeControllOfficers
                                     join t09 in context.T09Ies on t08.CoCd equals t09.IeCoCd
-                                    where t09.IeCd == model.IeCd
+                                    where t09.IeCd == Convert.ToInt32(model.IeCd)
                                     select t08.CoEmail
                                     ).FirstOrDefault();
 
-            string manu_name = "", manu_add = "";
-            var manufacturerInfo = (from t17 in context.T17CallRegisters
-                                    join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
-                                    join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                                    where t17.CaseNo == model.CaseNo &&
-                                    t17.CallRecvDt == model.CallRecvDt &&
-                                    t17.CallSno == model.CallSno
-                                    select new
-                                    {
-                                        manu_name = t05.VendName,
-                                        manu_add = t03.City
-                                    }).FirstOrDefault();
+
             if (controllingEmail != "")
             {
                 MailMessage mail2 = new MailMessage();
@@ -1810,25 +2226,20 @@ namespace IBS.Repositories.InspectionBilling
             return val;
         }
 
-        public int show2(string CaseNo, string CallRecvDt, int CallSno)
+        public int show2(string CaseNo)
         {
             int val = 0;
             string ext_delv_dt = "";
+            string INSP_DATE = "";
             var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).ToList() // Retrieve data from the database into memory
                         .Select(l => new
                         {
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
-            var query = (from t17 in context.T17CallRegisters
-                         where t17.CaseNo == CaseNo && t17.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t17.CallSno == CallSno
-                         select new
-                         {
-                             INSP_DATE = Convert.ToDateTime(t17.DtInspDesire)
-                         }).FirstOrDefault();
 
             ext_delv_dt = result.ExtDelvDt;
+            INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
             {
                 val = 2;
@@ -1836,16 +2247,16 @@ namespace IBS.Repositories.InspectionBilling
             else
             {
                 System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(ext_delv_dt.Substring(6, 4)), Convert.ToInt32(ext_delv_dt.Substring(3, 2)), Convert.ToInt32(ext_delv_dt.Substring(0, 2)));
-                System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(query.INSP_DATE.ToString().Substring(6, 4)), Convert.ToInt32(query.INSP_DATE.ToString().Substring(3, 2)), Convert.ToInt32(query.INSP_DATE.ToString().Substring(0, 2)));
+                System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(INSP_DATE.ToString().Substring(6, 4)), Convert.ToInt32(INSP_DATE.ToString().Substring(3, 2)), Convert.ToInt32(INSP_DATE.ToString().Substring(0, 2)));
                 TimeSpan ts = w_dt1 - w_dt2;
                 int differenceInDays = ts.Days;
                 if (differenceInDays < 5)
                 {
-                    val = 1;
+                    val = 0;
                 }
                 else
                 {
-                    val = 0;
+                    val = 1;
                 }
             }
             return val;
@@ -2482,49 +2893,784 @@ namespace IBS.Repositories.InspectionBilling
                 model.DesireDt = Status.DesireDt;
                 model.CallStatusDt = Status.CallStatusDt != null ? Status.CallStatusDt : CallStatusDt;
             }
+
+            if (Status.CallStatus == "M" || Status.CallStatus == "U" || Status.CallStatus == "S")
+            {
+                model.Remarks = "";
+                model.Remarkslbl = Convert.ToString(Status.Remarks);
+            }
+            else
+            {
+                model.Remarks = Convert.ToString(Status.Remarks);
+                model.Hologram = Convert.ToString(Status.Hologram);
+            }
+
+            string formattedCallRecvDt = "";
+            if (CallRecvDt != null && CallRecvDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            //var selectConsigneeFirmList = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Value = "0", Text = "Select Consignee" }
+            //};
+
+            //var firstQuery = selectConsigneeFirmList.AsQueryable();
+
+            var secondQuery = (from cdt in context.T18CallDetails
+                               join csn in context.V06Consignees
+                               on cdt.ConsigneeCd equals csn.ConsigneeCd
+                               where cdt.CaseNo == CaseNo &&
+                                     cdt.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                     cdt.CallSno == CallSno
+                               select new SelectListItem
+                               {
+                                   Value = csn.ConsigneeCd.ToString(),
+                                   Text = csn.ConsigneeCd + "-" + csn.Consignee
+                               }).Distinct().ToList();
+
+            // Set ConsigneeFirmList to the query result
+            model.ConsigneeFirmList = secondQuery.ToList();
+
+            var queryResult = context.IcIntermediates
+                        .Where(ici => ici.CaseNo == CaseNo &&
+                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                      ici.CallSno == CallSno)
+                        .OrderByDescending(ici => ici.Datetime)
+                        .FirstOrDefault();
+
+            if (queryResult != null)
+            {
+                model.DocBkNo = queryResult.BkNo;
+                model.DocSetNo = queryResult.SetNo;
+
+            }
+            else
+            {
+                model.DocBkNo = "";
+                model.DocSetNo = "";
+
+            }
+
+            var CancelData = (from l in context.T19CallCancels
+                              join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
+                              where l.CaseNo == CaseNo && l.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && l.CallSno == CallSno
+                              select new VenderCallCancellationModel
+                              {
+                                  CaseNo = l.CaseNo,
+                                  CallRecvDt = l.CallRecvDt,
+                                  CallSno = (short)l.CallSno,
+                                  Cdesc = l.CancelDesc,
+                                  CancelDt = l.CancelDate,
+                                  DocRec = l.DocsSubmitted,
+                                  CallCancelStatus = c.CallCancelStatus,
+                                  chk1 = Convert.ToInt32(l.CancelCd1),
+                                  chk2 = Convert.ToInt32(l.CancelCd2),
+                                  chk3 = Convert.ToInt32(l.CancelCd3),
+                                  chk4 = Convert.ToInt32(l.CancelCd4),
+                                  chk5 = Convert.ToInt32(l.CancelCd5),
+                                  chk6 = Convert.ToInt32(l.CancelCd6),
+                                  chk7 = Convert.ToInt32(l.CancelCd7),
+                                  chk8 = Convert.ToInt32(l.CancelCd8),
+                                  chk9 = Convert.ToInt32(l.CancelCd9),
+                                  chk10 = Convert.ToInt32(l.CancelCd10),
+                                  chk11 = Convert.ToInt32(l.CancelCd11),
+                                  chk12 = Convert.ToInt32(l.CancelCd12),
+                              }).FirstOrDefault();
+            if (CancelData != null)
+            {
+                model.CaseNo = CancelData.CaseNo;
+                model.CallRecvDt = CancelData.CallRecvDt;
+                model.CallSno = CancelData.CallSno;
+                model.CancellationDescription = CancelData.Cdesc;
+                model.CallCancelStatus = CancelData.CallCancelStatus;
+
+                bool[] chk = new bool[12];
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    if (CancelData.chk1 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk2 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk3 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk4 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk5 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk6 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk7 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk8 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk9 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk10 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk11 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+                    else if (CancelData.chk12 == i)
+                    {
+                        chk[i - 1] = true;
+                    }
+
+                }
+
+                model.chkItems = chk;
+
+            }
+
             return model;
         }
 
-        public string Save(VenderCallStatusModel model)
+        public string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
             string str = "";
-            if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+            string w_call_cancel_status = "";
+            var wFifoVoilateReason = model.ReasonFIFO;
+            var document = "";
+            if (DocumentsList != null && DocumentsList.Count > 0)
             {
-                T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
-                if (t17 != null)
+                 document = DocumentsList[0].DocName;
+            }
+
+            if (model.CallStatus1 == "C" && model.CallStatus != "C")
+            {
+                var t19 = (from a in context.T19CallCancels
+                           where a.CaseNo == model.CaseNo && a.CallRecvDt == model.CallRecvDt && a.CallSno == model.CallSno
+                           select a).FirstOrDefault();
+                if (t19 != null)
                 {
-                    t17.CallStatus = model.CallStatus;
-                    if (model.ActionType == "C")
-                    {
-                        t17.CallStatusDt = model.CallStatusDt != null ? model.CallStatusDt : DateTime.Now.Date;
-                        t17.DtInspDesire = model.DesireDt;
-                        t17.BkNo = model.BkNo;
-                        t17.SetNo = model.SetNo;
-                    }
-
-                    t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
-                    t17.Updatedby = model.Updatedby;
-                    t17.Updateddate = DateTime.Now;
+                    t19.Isdeleted = 1;
+                    t19.Updatedby = model.UserId;
+                    t19.Updateddate = DateTime.Now;
                     context.SaveChanges();
+                }
+            }
+            else if (model.CallStatus == "C" && model.CallCancelStatus == "C")
+            {
+                w_call_cancel_status = "C";
+            }
+            else if (model.CallStatus == "C" && model.CallCancelStatus == "N")
+            {
+                w_call_cancel_status = "N";
+            }
+            else
+            {
+                w_call_cancel_status = "";
+            }
 
-                    if (model.CallStatus == "M" || model.CallStatus == "A")
+            if (model.CallStatus == "A" || model.CallStatus == "R")
+            {
+                string bscheck = null;
+                if (model.BkNo != "" && model.SetNo != "")
+                {
+                    bscheck = (from x in context.T10IcBooksets
+                               where x.BkNo.Trim() == model.BkNo.ToUpper()
+                               && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SetNo) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SetNo)
+                               select Convert.ToString(x.IssueToIecd)).FirstOrDefault();
+                }
+
+                if (!string.IsNullOrEmpty(model.BkNo.Trim()) && !string.IsNullOrEmpty(model.SetNo.Trim()) && !string.IsNullOrEmpty(bscheck) && !string.IsNullOrEmpty(model.Hologram) && document == "IC Image 1")
+                {
+                    var count = (from item in context.T49IcPhotoEncloseds
+                                 where item.CaseNo == model.CaseNo && item.BkNo == model.BkNo && item.SetNo == model.SetNo
+                                 select item).Count();
+                    if (count > 0)
                     {
-                        IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
-                        if (ic != null)
+                        string updateQuery = "";
+                        using (var trans = context.Database.BeginTransaction())
                         {
-                            ic.ConsgnCallStatus = model.CallStatus;
-                            ic.UserId = model.UserId;
-                            ic.Datetime = DateTime.Now.Date;
+                            try
+                            {
+                                var T17Details = from x in context.T17CallRegisters
+                                                 where x.CaseNo == model.CaseNo.Trim() && x.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && x.CallSno == model.CallSno
+                                                 select x;
+                                if (T17Details.Count() > 0) //!= null)
+                                {
+                                    if (model.CallStatus == "A" || model.CallStatus == "R")
+                                    {
+                                        foreach (var row in T17Details)
+                                        {
+                                            row.CallStatus = model.CallStatus;
+                                            row.CallStatusDt = DateTime.ParseExact(Convert.ToDateTime(model.CallStatusDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                            row.CallCancelStatus = null;
+                                            row.BkNo = model.BkNo;
+                                            row.SetNo = model.SetNo;
+                                            if (model.CallStatus == "R")
+                                            {
+                                                if (!string.IsNullOrEmpty(model.Remarkslbl))
+                                                {
+                                                    row.Remarks = model.Remarkslbl.Trim() + ", " + model.Remarks.Trim();
+                                                }
+                                                else
+                                                {
+                                                    row.Remarks = model.Remarks.Trim();
+                                                }
+                                            }
+                                            row.UserId = model.UserId;
+                                            row.Datetime = DateTime.Now;
+                                            row.Hologram = model.Hologram;
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    if (model.CallStatus == "R")
+                                    {
+                                        var recordToUpdate = context.T13PoMasters.Where(x => x.CaseNo == model.CaseNo);
+                                        if (recordToUpdate.Count() > 0) //!= null)
+                                        {
+                                            foreach (var item in recordToUpdate)
+                                            {
+                                                var pendingCharge = 0;
+                                                pendingCharge = item.PendingCharges == null ? 0 + 1 : Convert.ToInt16(item.PendingCharges) + 1;
+                                                item.PendingCharges = Convert.ToByte(pendingCharge);
+                                                context.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                    trans.Commit();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                model.AlertMsg = "Error";
+                            }
+                        }
+                        model.AlertMsg = "Success";
+                    }
+                    else
+                    {
+                        model.AlertMsg = "Photos against given Case No, Book No & Set No are not uploaded, So Upload Photos before changing the Call Status to [Aceepted OR Rejection]!!!";
+                    }
+                }
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bscheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
+                }
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document != "IC Image 1")
+                {
+                    model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
+                }
+            }
+            else if (model.CallStatus == "G" || model.CallStatus == "T")
+            {
+                string bsCheck = "";
+                if (!string.IsNullOrEmpty(model.CallStatus) && !string.IsNullOrEmpty(model.SetNo))
+                {
+                    bsCheck = context.T10IcBooksets
+                                  .Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo
+                                  && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
+                                  && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                  .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+                }
 
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document == "IC Image 1")
+                {
+                    var t17Detail = from a in context.T17CallRegisters
+                                    where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                                    select a;
+                    if (t17Detail.Count() > 0)
+                    {
+                        foreach (var row in t17Detail)
+                        {
+                            row.CallStatus = model.CallStatus;
+                            row.CallStatusDt = model.CallStatusDt;
+                            row.CallCancelStatus = null;
+                            row.BkNo = model.BkNo;
+                            row.SetNo = model.SetNo;
+                            row.UserId = model.UserId;
+                            row.Datetime = DateTime.Now;
+                            row.FifoVoilateReason = wFifoVoilateReason;
                             context.SaveChanges();
                         }
                     }
-                    str = model.CaseNo;
+                }
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                }
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && document != "IC Image 1")
+                {
+                    model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
                 }
             }
+            else
+            {
+                var detail = from a in context.T17CallRegisters
+                             where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                             select a;
+                if (detail.Count() > 0)
+                {
+                    foreach (var item in detail)
+                    {
+                        item.CallStatus = model.CallStatus;
+                        item.CallStatusDt = model.CallStatusDt;
+                        item.CallCancelStatus = w_call_cancel_status;
+                        item.UserId = model.UserId;
+                        item.Datetime = DateTime.Now;
+                        item.FifoVoilateReason = wFifoVoilateReason;
+                        context.SaveChanges();
+                    }
+                }
+                model.AlertMsg = "Success";
+            }
 
-            return str;
+            if (model.CallStatus == "C")
+            {
+                if (string.IsNullOrEmpty(model.CallCancelStatus) || (model.CallCancelStatus == "C" && string.IsNullOrEmpty(model.CallCancelCharges)))
+                {
+                    model.AlertMsg = "Mention Call Chargeable/Call Non-Chargeable & Select One of the Given Call Cancellation Charges in Case the Call is Chargeable!!!";
+                }
+                else
+                {
+                    wFifoVoilateReason = "";
+                    if (!string.IsNullOrEmpty(model.ChkFIFO))
+                    {
+                        wFifoVoilateReason = model.ReasonFIFO;
+                    }
 
+                    var CCd = (from x in context.T20Ics
+                               where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                               select x.CaseNo).FirstOrDefault();
+
+                    var Action = (from x in context.T19CallCancels
+                                  where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                  select x.CaseNo).FirstOrDefault();
+
+                    var w_IE_EMPNO = (from x in context.T09Ies
+                                      where x.IeCd == Convert.ToInt32(model.IeCd) // Request Parameter
+                                      select x.IeEmpNo).FirstOrDefault();
+
+                    if (string.IsNullOrEmpty(CCd))
+                    {
+                        using (var trans = context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (string.IsNullOrEmpty(Action))
+                                {
+                                    T19CallCancel obj = new T19CallCancel();
+                                    obj.CaseNo = model.CaseNo;
+                                    obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                                    obj.CallSno = Convert.ToInt32(model.CallSno);
+                                    obj.CancelDesc = model.CancellationDescription;
+                                    obj.UserId = w_IE_EMPNO; //model.UserId;
+                                    obj.Datetime = DateTime.Now.Date;
+                                    obj.Createdby = model.UserId;
+                                    obj.Createddate = DateTime.Now.Date;
+                                    obj.CancelCd1 = 0;
+                                    obj.CancelCd2 = 0;
+                                    obj.CancelCd3 = 0;
+                                    obj.CancelCd4 = 0;
+                                    obj.CancelCd5 = 0;
+                                    obj.CancelCd6 = 0;
+                                    obj.CancelCd7 = 0;
+                                    obj.CancelCd8 = 0;
+                                    obj.CancelCd9 = 0;
+                                    obj.CancelCd10 = 0;
+                                    obj.CancelCd11 = 0;
+                                    obj.CancelCd12 = 0;
+
+                                    var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                                    int count = indexes.Count();
+
+                                    if (count == 1)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                    }
+                                    else if (count == 2)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                    }
+                                    else if (count == 3)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                    }
+                                    else if (count == 4)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                    }
+                                    else if (count == 5)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                    }
+                                    else if (count == 6)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                    }
+                                    else if (count == 7)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                    }
+                                    else if (count == 8)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                    }
+                                    else if (count == 9)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                    }
+                                    else if (count == 10)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                    }
+                                    else if (count == 11)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                    }
+                                    else if (count == 12)
+                                    {
+                                        obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                        obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                        obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                        obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                        obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                        obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                        obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                        obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                        obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                        obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                        obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                        obj.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                                    }
+                                    context.T19CallCancels.Add(obj);
+                                    context.SaveChanges();
+
+
+                                    var t17Detail = from x in context.T17CallRegisters
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t17Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t17Detail)
+                                        {
+                                            row.CallStatus = "C";
+                                            row.CallStatusDt = model.CallStatusDt;
+                                            row.CallCancelStatus = model.CallCancelStatus;
+                                            if (model.CallCancelStatus == "C")
+                                            {
+                                                row.CallCancelCharges = Convert.ToInt16(model.CallCancelCharges);
+                                            }
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+
+                                    var t13Detail = from x in context.T13PoMasters
+                                                    where x.CaseNo == model.CaseNo
+                                                    select x;
+                                    if (t13Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t13Detail)
+                                        {
+                                            var PendCharge = row.PendingCharges == null ? 0 + 1 : Convert.ToInt16(row.PendingCharges) + 1;
+                                            row.PendingCharges = Convert.ToByte(PendCharge);
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    model.AlertMsg = "Success";
+                                }
+                                else if (!string.IsNullOrEmpty(Action))
+                                {
+                                    var t19Detail = from x in context.T19CallCancels
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t19Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t19Detail)
+                                        {
+                                            row.CancelDate = model.CallStatusDt;
+                                            row.CancelDesc = model.CancellationDescription;
+                                            row.UserId = w_IE_EMPNO; //model.UserId;
+                                            row.Datetime = DateTime.Now.Date;
+                                            row.Updatedby = model.UserId;
+                                            row.Updateddate = DateTime.Now.Date;
+                                            row.CancelCd1 = 0;
+                                            row.CancelCd2 = 0;
+                                            row.CancelCd3 = 0;
+                                            row.CancelCd4 = 0;
+                                            row.CancelCd5 = 0;
+                                            row.CancelCd6 = 0;
+                                            row.CancelCd7 = 0;
+                                            row.CancelCd8 = 0;
+                                            row.CancelCd9 = 0;
+                                            row.CancelCd10 = 0;
+                                            row.CancelCd11 = 0;
+                                            row.CancelCd12 = 0;
+
+                                            var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                                            int count = indexes.Count();
+
+                                            if (count == 1)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                            }
+                                            else if (count == 2)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                            }
+                                            else if (count == 3)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                            }
+                                            else if (count == 4)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                            }
+                                            else if (count == 5)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                            }
+                                            else if (count == 6)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                            }
+                                            else if (count == 7)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                            }
+                                            else if (count == 8)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                            }
+                                            else if (count == 9)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                            }
+                                            else if (count == 10)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                            }
+                                            else if (count == 11)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                                row.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                            }
+                                            else if (count == 12)
+                                            {
+                                                row.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                                row.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                                row.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                                row.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                                row.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                                row.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                                row.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                                row.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                                row.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                                row.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                                row.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                                row.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                                            }
+                                            context.SaveChanges();
+                                        }
+                                    }
+
+                                    var t17Detail = from x in context.T17CallRegisters
+                                                    where x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno
+                                                    select x;
+                                    if (t17Detail.Count() > 0)
+                                    {
+                                        foreach (var row in t17Detail)
+                                        {
+                                            row.CallStatus = "C";
+                                            row.CallStatusDt = model.CallStatusDt;
+                                            row.CallCancelStatus = model.CallCancelStatus;
+                                            if (model.CallCancelStatus == "C")
+                                            {
+                                                row.CallCancelCharges = Convert.ToInt16(model.CallListByRly);
+                                            }
+                                            row.FifoVoilateReason = wFifoVoilateReason;
+                                            context.SaveChanges();
+                                        }
+                                    }
+                                    model.AlertMsg = "Success";
+                                }
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
+                    }
+                    send_Vendor_Email(model);
+                }
+            }
+            #region Comment Code
+            //if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
+            //{
+            //    T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+            //    if (t17 != null)
+            //    {
+            //        t17.CallStatus = model.CallStatus;
+            //        if (model.ActionType == "C")
+            //        {
+            //            t17.CallStatusDt = model.CallStatusDt != null ? model.CallStatusDt : DateTime.Now.Date;
+            //            t17.DtInspDesire = model.DesireDt;
+            //            t17.BkNo = model.BkNo;
+            //            t17.SetNo = model.SetNo;
+            //        }
+            //        t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
+            //        t17.Updatedby = model.Updatedby;
+            //        t17.Updateddate = DateTime.Now;
+            //        context.SaveChanges();
+            //        if (model.CallStatus == "M" || model.CallStatus == "A")
+            //        {
+            //            IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
+            //            if (ic != null)
+            //            {
+            //                ic.ConsgnCallStatus = model.CallStatus;
+            //                ic.UserId = model.UserId;
+            //                ic.Datetime = DateTime.Now.Date;
+            //                context.SaveChanges();
+            //            }
+            //        }
+            //        str = model.CaseNo;
+            //    }
+            //}
+            #endregion
+            return model.AlertMsg;//str;
         }
 
         public VendrorCallDetailsModel CallDetailsFindByID(string CaseNo, string CallRecvDt, int CallSno, int ItemSrNoPo)
@@ -2544,10 +3690,18 @@ namespace IBS.Repositories.InspectionBilling
                   ).FirstOrDefault();
 
             var PODetails = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
+
+            var T15PO = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrNoPo).FirstOrDefault();
+            if (T15PO != null)
+            {
+                model.ItemDescPo = T15PO.ItemDesc;
+                model.ItemSrNoPo = T15PO.ItemSrno;
+                model.QtyOrdered = T15PO.Qty;
+                model.Consignee = Convert.ToString(T15PO.ConsigneeCd);
+            }
+
             var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == parsedDate && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrNoPo).FirstOrDefault();
-            if (GetValue == null)
-                throw new Exception("Record Not found");
-            else
+            if (GetValue != null)
             {
                 model.IESName = GetValue.v.IeSname;
                 model.CallRecvDt = GetValue.d.CallRecvDt;
@@ -2715,19 +3869,42 @@ namespace IBS.Repositories.InspectionBilling
                     var CallDetailsUpdate = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno && x.ItemSrnoPo == model.ItemSrNoPo).FirstOrDefault();
 
                     #region CallDetailsUpdate
-                    if (CallDetailsUpdate != null)
+
+                    if (CallDetailsUpdate == null)
+                    {
+                        T18CallDetail obj = new();
+                        obj.CaseNo = model.CaseNo;
+                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                        obj.CallSno = Convert.ToInt32(model.CallSno);
+                        obj.ItemSrnoPo = model.ItemSrNoPo;
+                        obj.ItemDescPo = model.ItemDescPo;
+                        obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                        obj.QtyOrdered = model.QtyOrdered != null ? model.QtyOrdered : 0;
+                        obj.CumQtyPrevOffered = model.CumQtyPrevOffered != null ? model.CumQtyPrevOffered : 0;
+                        obj.CumQtyPrevPassed = model.CumQtyPrevPassed != null ? model.CumQtyPrevPassed : 0;
+                        obj.QtyToInsp = model.QtyToInsp != null ? model.QtyToInsp : 0;
+                        obj.UserId = UserName;
+                        obj.Datetime = DateTime.Now;
+                        obj.Updatedby = model.Updatedby;
+                        obj.Updateddate = DateTime.Now;
+                        context.T18CallDetails.Add(obj);
+                        context.SaveChanges();
+                        Id = Convert.ToInt32(model.ItemSrNoPo);
+
+                    }
+                    else
                     {
                         CallDetailsUpdate.ItemDescPo = model.ItemDescPo;
-                        CallDetailsUpdate.QtyOrdered = model.QtyOrdered;
-                        CallDetailsUpdate.CumQtyPrevOffered = model.CumQtyPrevOffered;
-                        CallDetailsUpdate.CumQtyPrevPassed = model.CumQtyPrevPassed;
-                        CallDetailsUpdate.QtyToInsp = model.QtyToInsp;
+                        CallDetailsUpdate.QtyOrdered = model.QtyOrdered != null ? model.QtyOrdered : 0;
+                        CallDetailsUpdate.CumQtyPrevOffered = model.CumQtyPrevOffered != null ? model.CumQtyPrevOffered : 0;
+                        CallDetailsUpdate.CumQtyPrevPassed = model.CumQtyPrevPassed != null ? model.CumQtyPrevPassed : 0;
+                        CallDetailsUpdate.QtyToInsp = model.QtyToInsp != null ? model.QtyToInsp : 0;
                         CallDetailsUpdate.UserId = UserName;
                         CallDetailsUpdate.Datetime = DateTime.Now;
                         CallDetailsUpdate.Updatedby = model.Updatedby;
                         CallDetailsUpdate.Updateddate = DateTime.Now;
                         context.SaveChanges();
-                        Id = Convert.ToInt32(3);
+                        Id = Convert.ToInt32(model.ItemSrNoPo);
                     }
                     #endregion
 
@@ -2751,6 +3928,1058 @@ namespace IBS.Repositories.InspectionBilling
             return Id;
         }
 
+        public VenderCallStatusModel CallStatusFilesSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
+        {
+            int consignee_cd = 0;
+            ImageFiles filesimg = new ImageFiles();
+            string formattedCallRecvDt = "";
+
+            if (model.DocBkNo != null && model.DocSetNo != null)
+            {
+                var bsCheck = context.T10IcBooksets.Where(bookset => bookset.BkNo.Trim().ToUpper() == model.DocBkNo && Convert.ToInt32(model.DocSetNo) >= Convert.ToInt32(bookset.SetNoFr) &&
+                              Convert.ToInt32(model.DocSetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd)).Select(bookset => bookset.IssueToIecd).FirstOrDefault();
+
+                if (bsCheck != null)
+                {
+                    if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
+                    {
+                        DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+                    }
+
+                    var query = context.IcIntermediates
+                            .Where(ici => ici.CaseNo == model.CaseNo &&
+                                          ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                          ici.CallSno == model.CallSno &&
+                                          ici.BkNo == model.DocBkNo &&
+                                          ici.SetNo == model.DocSetNo)
+                            .OrderBy(ici => ici.Datetime)
+                            .Select(ici => ici.ConsigneeCd)
+                            .FirstOrDefault();
+
+                    consignee_cd = query;
+
+                    if (consignee_cd > 0)
+                    {
+                        if (consignee_cd.ToString() != model.ConsigneeFirm)
+                        {
+                            model.AlertMsg = "Please Enter other book no. or set no. same is used for consignee " + consignee_cd + " !!!";
+                            return model;
+                        }
+                    }
+
+                    string FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "_0";
+
+                    ImageFiles imageFiles = new ImageFiles();
+
+                    for (int i = 0; i < DocumentsList.Count && i < 10; i++)
+                    {
+                        var document = DocumentsList[i];
+                        string displayName = document.DocName;
+
+                        if (displayName == "IC Image 1")
+                        {
+                            filesimg.File_1 = FileName + "1.JPG";
+                        }
+                        else if (displayName == "IC Image 2")
+                        {
+                            filesimg.File_2 = FileName + "2.JPG";
+                        }
+                        else if (displayName == "IC Image 3")
+                        {
+                            filesimg.File_3 = FileName + "3.JPG";
+                        }
+                        else if (displayName == "IC Image 4")
+                        {
+                            filesimg.File_4 = FileName + "4.JPG";
+                        }
+                        else if (displayName == "IC Image 5")
+                        {
+                            filesimg.File_5 = FileName + "5.JPG";
+                        }
+                        else if (displayName == "IC Image 6")
+                        {
+                            filesimg.File_6 = FileName + "6.JPG";
+                        }
+                        else if (displayName == "IC Image 7")
+                        {
+                            filesimg.File_7 = FileName + "7.JPG";
+                        }
+                        else if (displayName == "IC Image 8")
+                        {
+                            filesimg.File_8 = FileName + "8.JPG";
+                        }
+                        else if (displayName == "IC Image 9")
+                        {
+                            filesimg.File_9 = FileName + "9.JPG";
+                        }
+                        else if (displayName == "IC Image 10")
+                        {
+                            filesimg.File_10 = FileName + "10.JPG";
+                        }
+                    }
+
+                    DateTime CallRecvDate = DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                    var IcDetail = (from item in context.IcIntermediates
+                                    where item.CaseNo == model.CaseNo.Trim() &&
+                                          item.CallSno == model.CallSno &&
+                                          item.CallRecvDt == CallRecvDate &&
+                                          item.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                    select item).FirstOrDefault();
+
+                    if (IcDetail == null)
+                    {
+                        var CallDetails = (from c in context.T18CallDetails
+                                           where c.CaseNo == model.CaseNo && c.CallRecvDt == CallRecvDate
+                                           && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                           select c).ToList();
+                        if (CallDetails.Count() > 0)
+                        {
+                            foreach (var i in CallDetails)
+                            {
+                                IcIntermediate obj = new IcIntermediate();
+                                obj.CaseNo = model.CaseNo;
+                                obj.CallRecvDt = CallRecvDate;
+                                obj.CallSno = Convert.ToInt16(model.CallSno);
+                                obj.BkNo = model.DocBkNo;
+                                obj.SetNo = model.DocSetNo;
+                                obj.PoNo = model.PoNo;
+                                obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                                obj.UserId = model.UserId;
+                                obj.ItemSrnoPo = i.ItemSrnoPo;
+                                obj.ItemDescPo = i.ItemDescPo;
+                                obj.QtyPassed = i.QtyPassed;
+                                obj.QtyRejected = i.QtyRejected;
+                                obj.QtyDue = i.QtyDue;
+                                obj.IeCd = Convert.ToInt32(model.IeCd);
+                                obj.Datetime = DateTime.Now;
+                                context.IcIntermediates.Add(obj);
+                                context.SaveChanges();
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        IcDetail.BkNo = model.DocBkNo;
+                        IcDetail.SetNo = model.DocSetNo;
+                        context.SaveChanges();
+                    }
+                    // Execute the query                    
+
+                    var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+
+                    if (recordExists == null)
+                    {
+                        T49IcPhotoEnclosed obj = new T49IcPhotoEnclosed();
+
+                        obj.CaseNo = model.CaseNo;
+                        obj.CallRecvDt = model.CallRecvDt;
+                        obj.CallSno = (short?)model.CallSno;
+                        obj.BkNo = model.DocBkNo;
+                        obj.SetNo = model.DocSetNo;
+                        obj.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                        obj.Datetime = DateTime.Now;
+                        obj.UserId = model.UserId;
+                        obj.File1 = filesimg.File_1;
+                        obj.File2 = filesimg.File_2;
+                        obj.File3 = filesimg.File_3;
+                        obj.File4 = filesimg.File_4;
+                        obj.File5 = filesimg.File_5;
+                        obj.File6 = filesimg.File_6;
+                        obj.File7 = filesimg.File_7;
+                        obj.File8 = filesimg.File_8;
+                        obj.File9 = filesimg.File_9;
+                        obj.File10 = filesimg.File_10;
+                        context.T49IcPhotoEncloseds.Add(obj);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        recordExists.CaseNo = model.CaseNo;
+                        recordExists.CallRecvDt = model.CallRecvDt;
+                        recordExists.CallSno = (short?)model.CallSno;
+                        recordExists.BkNo = model.DocBkNo;
+                        recordExists.SetNo = model.DocSetNo;
+                        recordExists.ConsigneeCd = Convert.ToInt32(model.ConsigneeFirm);
+                        recordExists.Datetime = DateTime.Now;
+                        recordExists.UserId = model.UserId;
+                        recordExists.File1 = filesimg.File_1;
+                        recordExists.File2 = filesimg.File_2;
+                        recordExists.File3 = filesimg.File_3;
+                        recordExists.File4 = filesimg.File_4;
+                        recordExists.File5 = filesimg.File_5;
+                        recordExists.File6 = filesimg.File_6;
+                        recordExists.File7 = filesimg.File_7;
+                        recordExists.File8 = filesimg.File_8;
+                        recordExists.File9 = filesimg.File_9;
+                        recordExists.File10 = filesimg.File_10;
+                        context.SaveChanges();
+                    }
+
+                    var IcDetail1 = (from ic in context.IcIntermediates
+                                     where ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
+                                     select ic).FirstOrDefault();
+
+                    if (IcDetail1 != null)
+                    {
+                        IcDetail1.File1 = filesimg.File_1;
+                        IcDetail1.File2 = filesimg.File_2;
+                        IcDetail1.File3 = filesimg.File_3;
+                        IcDetail1.File4 = filesimg.File_4;
+                        IcDetail1.File5 = filesimg.File_5;
+                        IcDetail1.File6 = filesimg.File_6;
+                        IcDetail1.File7 = filesimg.File_7;
+                        IcDetail1.File8 = filesimg.File_8;
+                        IcDetail1.File9 = filesimg.File_9;
+                        IcDetail1.File10 = filesimg.File_10;
+                        context.SaveChanges();
+                    }
+                    model.AlertMsg = "Success";
+                }
+                else if (model.DocBkNo != "" && model.DocSetNo != "" && (bsCheck == null || bsCheck == 0))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                    return model;
+                }
+            }
+            else
+            {
+                model.AlertMsg = "Please enter valid book no. and set no. !";
+                return model;
+            }
+
+            return model;
+        }
+
+        public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model)
+        {
+            var query = context.IcIntermediates
+        .Where(i => i.CaseNo == model.CaseNo &&
+                    i.CallRecvDt == model.CallRecvDt &&
+                    i.CallSno == model.CallSno &&
+                    (i.ConsgnCallStatus != "A" && i.ConsgnCallStatus != "R") || i.ConsgnCallStatus == null);
+
+            context.IcIntermediates.RemoveRange(query);
+
+            context.SaveChanges();
+
+            model.AlertMsg = "Success";
+
+            return model;
+        }
+
+        public VenderCallStatusModel CallCancellationSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
+        {
+            if (model.CallStatus == null || (model.CallStatus == "C" && model.CallStatus == ""))
+            {
+                model.AlertMsg = "Mention Call Chargeable/Call Non-Chargeable & Select One of the Given Call Cancellation Charges in Case the Call is Chargeable!!!";
+                return model;
+            }
+            else
+            {
+                string wFifoVoilateReason = "";
+                if (model.ReasonFIFO != null)
+                {
+                    wFifoVoilateReason = model.ReasonFIFO.Trim();
+                }
+                var CCd = context.T20Ics.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).Select(ic => ic.CaseNo).FirstOrDefault();
+
+                var Action = context.T19CallCancels.Where(cancel => cancel.CaseNo == model.CaseNo && cancel.CallRecvDt == model.CallRecvDt && cancel.CallSno == model.CallSno).Select(cancel => cancel.CaseNo).FirstOrDefault();
+
+                var w_IE_EMPNO = context.T09Ies.Where(ie => ie.IeCd == Convert.ToInt32(model.IeCd)).Select(ie => ie.IeEmpNo).FirstOrDefault();
+
+                if (CCd == null)
+                {
+                    if (Action == "")
+                    {
+                        T19CallCancel obj = new T19CallCancel();
+                        obj.CaseNo = model.CaseNo;
+                        obj.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
+                        obj.CallSno = (int)model.CallSno;
+                        obj.CancelDesc = model.CancellationDescription;
+                        obj.UserId = model.UserId;
+                        obj.Datetime = DateTime.Now.Date;
+
+                        obj.Createdby = model.UserId;
+                        obj.Createddate = DateTime.Now.Date;
+
+
+                        obj.CancelCd1 = 0;
+                        obj.CancelCd2 = 0;
+                        obj.CancelCd3 = 0;
+                        obj.CancelCd4 = 0;
+                        obj.CancelCd5 = 0;
+                        obj.CancelCd6 = 0;
+                        obj.CancelCd7 = 0;
+                        obj.CancelCd8 = 0;
+                        obj.CancelCd9 = 0;
+                        obj.CancelCd10 = 0;
+                        obj.CancelCd11 = 0;
+                        obj.CancelCd12 = 0;
+
+                        var indexes = model.chkItems.Select((v, i) => new { v, i }).Where(x => x.v == true).Select(x => x.i);
+                        int count = indexes.Count();
+
+                        if (count == 1)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                        }
+                        else if (count == 2)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                        }
+                        else if (count == 3)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                        }
+                        else if (count == 4)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                        }
+                        else if (count == 5)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                        }
+                        else if (count == 6)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                        }
+                        else if (count == 7)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                        }
+                        else if (count == 8)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                        }
+                        else if (count == 9)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                            obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                        }
+                        else if (count == 10)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                            obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                            obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                        }
+                        else if (count == 11)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                            obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                            obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                            obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                        }
+                        else if (count == 12)
+                        {
+                            obj.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            obj.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            obj.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            obj.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            obj.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            obj.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            obj.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            obj.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                            obj.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                            obj.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                            obj.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                            obj.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                        }
+
+                        context.T19CallCancels.Add(obj);
+                        context.SaveChanges();
+
+                        if (model.CallStatus == "C")
+                        {
+                            var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
+
+                            if (callRegister != null)
+                            {
+                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? (short?)null : Convert.ToInt16(model.CallCancelCharges);
+                                callRegister.CallStatus = model.CallStatus;
+                                callRegister.CallStatusDt = model.CallStatusDt;
+                                callRegister.CallCancelStatus = model.CallCancelStatus;
+                                callRegister.CallCancelCharges = cancelCharges;
+                                callRegister.FifoVoilateReason = wFifoVoilateReason;
+                                context.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
+
+                            if (callRegister != null)
+                            {
+                                callRegister.CallStatus = model.CallStatus;
+                                callRegister.CallStatusDt = model.CallStatusDt;
+                                callRegister.CallCancelStatus = model.CallCancelStatus;
+                                callRegister.FifoVoilateReason = wFifoVoilateReason;
+                                context.SaveChanges();
+                            }
+                        }
+
+                        if (model.CallStatus == "C")
+                        {
+                            var poMaster = context.T13PoMasters.FirstOrDefault(pm => pm.CaseNo == model.CaseNo);
+                            poMaster.PendingCharges = (byte?)((poMaster.PendingCharges ?? 0) + 1);
+
+                            context.SaveChanges();
+                        }
+                        model.AlertMsg = "Success";
+                    }
+                    else if (Action != "")
+                    {
+                        var CallCancalltion = context.T19CallCancels.FirstOrDefault(cc => cc.CaseNo == model.CaseNo && cc.CallRecvDt == model.CallRecvDt && cc.CallSno == model.CallSno);
+
+                        if (CallCancalltion != null)
+                        {
+                            CallCancalltion.CancelCd1 = 0;
+                            CallCancalltion.CancelCd2 = 0;
+                            CallCancalltion.CancelCd3 = 0;
+                            CallCancalltion.CancelCd4 = 0;
+                            CallCancalltion.CancelCd5 = 0;
+                            CallCancalltion.CancelCd6 = 0;
+                            CallCancalltion.CancelCd7 = 0;
+                            CallCancalltion.CancelCd8 = 0;
+                            CallCancalltion.CancelCd9 = 0;
+                            CallCancalltion.CancelCd10 = 0;
+                            CallCancalltion.CancelCd11 = 0;
+                            CallCancalltion.CancelCd12 = 0;
+
+                            var indexes = model?.chkItems?.Select((v, i) => new { v, i })?.Where(x => x.v == true)?.Select(x => x.i) ?? Enumerable.Empty<int>();
+
+                            int count = indexes.Count();
+
+                            if (count == 1)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                            }
+                            else if (count == 2)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                            }
+                            else if (count == 3)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                            }
+                            else if (count == 4)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                            }
+                            else if (count == 5)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                            }
+                            else if (count == 6)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                            }
+                            else if (count == 7)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                            }
+                            else if (count == 8)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                            }
+                            else if (count == 9)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                            }
+                            else if (count == 10)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                            }
+                            else if (count == 11)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                CallCancalltion.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                            }
+                            else if (count == 12)
+                            {
+                                CallCancalltion.CancelCd1 = Convert.ToByte(indexes.ElementAt(0) + 1);
+                                CallCancalltion.CancelCd2 = Convert.ToByte(indexes.ElementAt(1) + 1);
+                                CallCancalltion.CancelCd3 = Convert.ToByte(indexes.ElementAt(2) + 1);
+                                CallCancalltion.CancelCd4 = Convert.ToByte(indexes.ElementAt(3) + 1);
+                                CallCancalltion.CancelCd5 = Convert.ToByte(indexes.ElementAt(4) + 1);
+                                CallCancalltion.CancelCd6 = Convert.ToByte(indexes.ElementAt(5) + 1);
+                                CallCancalltion.CancelCd7 = Convert.ToByte(indexes.ElementAt(6) + 1);
+                                CallCancalltion.CancelCd8 = Convert.ToByte(indexes.ElementAt(7) + 1);
+                                CallCancalltion.CancelCd9 = Convert.ToByte(indexes.ElementAt(8) + 1);
+                                CallCancalltion.CancelCd10 = Convert.ToByte(indexes.ElementAt(9) + 1);
+                                CallCancalltion.CancelCd11 = Convert.ToByte(indexes.ElementAt(10) + 1);
+                                CallCancalltion.CancelCd12 = Convert.ToByte(indexes.ElementAt(11) + 1);
+                            }
+                            CallCancalltion.CancelDesc = model.CancellationDescription;
+                            CallCancalltion.UserId = model.Createdby;
+                            CallCancalltion.Datetime = DateTime.Now.Date;
+                            CallCancalltion.Updatedby = model.UserId;
+                            CallCancalltion.Updateddate = DateTime.Now.Date;
+
+                            context.SaveChanges();
+                        }
+                        if (model.CallStatus == "C")
+                        {
+                            var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
+
+                            if (callRegister != null)
+                            {
+                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? (short?)null : Convert.ToInt16(model.CallCancelCharges);
+                                callRegister.CallStatus = model.CallStatus;
+                                callRegister.CallStatusDt = model.CallStatusDt;
+                                callRegister.CallCancelStatus = model.CallCancelStatus;
+                                callRegister.CallCancelCharges = cancelCharges;
+                                callRegister.FifoVoilateReason = wFifoVoilateReason;
+                                context.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
+
+                            if (callRegister != null)
+                            {
+                                callRegister.CallStatus = model.CallStatus;
+                                callRegister.CallStatusDt = model.CallStatusDt;
+                                callRegister.CallCancelStatus = model.CallCancelStatus;
+                                callRegister.FifoVoilateReason = wFifoVoilateReason;
+                                context.SaveChanges();
+                            }
+                        }
+                        model.AlertMsg = "Success";
+                    }
+                }
+                else
+                {
+                    model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
+                    return model;
+                }
+                send_Vendor_Email(model);
+            }
+            return model;
+        }
+
+        public VenderCallStatusModel CallStatusUploadSave(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
+        {
+            using (var trans = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (model.CallStatus == "A" || model.CallStatus == "R")
+                    {
+                        var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.DocBkNo && t.SetNo == model.DocSetNo).Count();
+                        if (count > 0)
+                        {
+                            string FileName = model.CaseNo.Trim() + "-" + model.DocBkNo + "-" + model.DocSetNo;
+                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo).FirstOrDefault();
+                            if (recordExists != null)
+                            {
+                                recordExists.IcPhoto = FileName + ".pdf";
+                                recordExists.IcPhotoA1 = FileName + "-A1.PDF";
+                                recordExists.IcPhotoA2 = FileName + "-A2.PDF";
+                                context.SaveChanges();
+                            }
+                            model.AlertMsg = "Success";
+                        }
+                        else if (count == 0)
+                        {
+                            model.AlertMsg = "The Inspection Photos should be uploaded first against the given Case and then Upload the Files";
+                            return model;
+                        }
+
+                    }
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+            return model;
+        }
+
+        public VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model)
+        {
+            var groupedResults = (from t49 in context.T49IcPhotoEncloseds
+                                  join ic in context.IcIntermediates
+                                  on new { t49.CaseNo, t49.BkNo, t49.SetNo } equals new { ic.CaseNo, ic.BkNo, ic.SetNo }
+                                  where t49.CaseNo == model.CaseNo &&
+                                        t49.CallRecvDt == model.CallRecvDt &&
+                                        t49.CallSno == model.CallSno &&
+                                        t49.IcPhoto == null
+                                  select new { t49.CaseNo, t49.BkNo, t49.SetNo })
+                            .ToList() // Fetch data from the database
+                            .GroupBy(item => new { item.CaseNo, item.BkNo, item.SetNo }) // Group by in-memory
+                            .ToList(); // Materialize the grouped results in-memory
+
+            var no_ic_count = groupedResults.Count();
+
+            var no_of_photo = context.T49IcPhotoEncloseds
+                        .Where(t => t.CaseNo == model.CaseNo &&
+                                    t.CallRecvDt == model.CallRecvDt &&
+                                    t.CallSno == model.CallSno)
+                        .Count();
+
+            if (model.CallStatus.Trim() == "" || model.CallStatus == null)
+            {
+                model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
+                return model;
+            }
+            else if (model.CallStatus.Trim() == "R")
+            {
+                model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
+                return model;
+            }
+            else if (model.ConsigneeFirm == "0")
+            {
+                model.AlertMsg = "Select Consignee from the List and then Click on Accepted/Rejected Button";
+                return model;
+            }
+            else if (no_of_photo == 0)
+            {
+                model.AlertMsg = "Kindly upload the inspections photos and prepare the IC before updating the Call Status to Aceepted/Rejected!!!";
+                return model;
+            }
+            else if (no_ic_count > 0)
+            {
+                model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                return model;
+            }
+
+            var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
+
+            var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
+
+            if (result.Count > 0)
+            {
+                if (model.CallStatus == "R" && callStatus != "R")
+                {
+                    foreach (var entity in result)
+                    {
+                        int len_item = 0;
+                        string formatedItem = "";
+                        if (!string.IsNullOrEmpty(entity.ItemDescPo))
+                        {
+                            if (entity.ItemDescPo.Length > 400)
+                            {
+                                len_item = 390;
+                            }
+                            else
+                            {
+                                len_item = entity.ItemDescPo.Length;
+                            }
+
+                            formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                            existingEntity.ItemDescPo = formatedItem;
+                            existingEntity.QtyPassed = entity.QtyPassed;
+                            existingEntity.QtyRejected = entity.QtyRejected;
+                            existingEntity.QtyDue = entity.QtyDue;
+                            context.SaveChanges();
+                        }
+                    }
+                }
+
+                double wRejCharges = 0;
+                string wRejType = "";
+                if (callStatus == "R")
+                {
+                    wRejCharges = Convert.ToDouble(model.RejectionCharge);
+
+                }
+                if (model.LocalOutstation != "" && model.LocalOutstation != null)
+                {
+                    wRejType = model.LocalOutstation;
+                }
+
+                if (model.CallStatus == "R" && callStatus != "R")
+                {
+                    var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
+
+                    existingRecord2.PendingCharges = (byte?)((existingRecord2.PendingCharges ?? 0) + 1);
+                    context.SaveChanges();
+                }
+                var existingRecord = context.T17CallRegisters.FirstOrDefault(c => c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt && c.CallSno == model.CallSno);
+
+                if (existingRecord != null)
+                {
+                    existingRecord.CallStatus = model.CallStatus;
+                    existingRecord.CallStatusDt = model.CallStatusDt;
+                    existingRecord.BkNo = model.DocBkNo;
+                    existingRecord.SetNo = model.DocSetNo;
+                    existingRecord.UserId = model.UserId;
+                    existingRecord.Datetime = DateTime.Now;
+                    existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
+                    existingRecord.FifoVoilateReason = model.ReasonFIFO;
+                    existingRecord.LocalOrOuts = wRejType;
+
+                    context.SaveChanges();
+                }
+
+                var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
+
+                if (existingRecord1 != null)
+                {
+                    existingRecord1.ConsgnCallStatus = model.CallStatus;
+                    context.SaveChanges();
+                }
+                if (model.CallStatus == "R")
+                {
+                    Vendor_Rej_Email(model);
+                }
+                model.AlertMsg = "Success";
+
+            }
+            else
+            {
+                model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                return model;
+            }
+            return model;
+        }
+
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        {
+            string msg = "";
+            string formattedCallRecvDt = "";
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
+            var queryResult = context.IcIntermediates
+                         .Where(ici => ici.CaseNo == CaseNo &&
+                                       ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                       ici.CallSno == CallSno)
+                         .OrderByDescending(ici => ici.Datetime)
+                         .FirstOrDefault();
+
+            if (queryResult != null)
+            {
+                model.DocBkNo = queryResult.BkNo;
+                model.DocSetNo = queryResult.SetNo;
+
+            }
+            else
+            {
+                model.DocBkNo = "";
+                model.DocSetNo = "";
+
+            }
+            return model;
+        }
+
+        public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            string msg = "";
+            double w_cancharges = 0;
+            VenderCallStatusModel model = new();
+            string formattedCallRecvDt = "";
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+
+            var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
+
+            if (rly_nonrly == "R")
+            {
+                var result = (from t18 in context.T18CallDetails
+                              join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                              where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                              select new
+                              {
+                                  t18.CaseNo,
+                                  t18.CallRecvDt,
+                                  t18.CallSno,
+                                  Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
+                          ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
+                          : (decimal)0
+                              })
+                          .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
+                          .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
+                          .FirstOrDefault();
+
+                if (result != null)
+                {
+                    model.MaterialValue = Convert.ToString(result.Value);
+                    decimal callCancelCharges = result.Value * (decimal)0.9 / 100;
+                    model.CallCancelCharges = callCancelCharges.ToString();
+                }
+                else
+                {
+                    model.MaterialValue = "";
+                    model.CallCancelCharges = "";
+                }
+
+                if (selectedValue == "B")
+                {
+                    w_cancharges = Math.Round(Convert.ToDouble(model.CallCancelCharges) / 2);
+                    if (w_cancharges < 11000)
+                    {
+                        model.CallCancelCharges = Convert.ToString(w_cancharges);
+                    }
+                    else
+                    {
+                        model.CallCancelCharges = Convert.ToString(11000);
+                    }
+                }
+                else if (selectedValue == "A")
+                {
+
+                    w_cancharges = Math.Round(Convert.ToDouble(model.CallCancelCharges));
+                    if (w_cancharges < 22000)
+                    {
+                        model.CallCancelCharges = Convert.ToString(w_cancharges);
+                    }
+                    else
+                    {
+                        model.CallCancelCharges = Convert.ToString(22000);
+                    }
+                }
+
+            }
+            return model;
+        }
+
+        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue, string IeCd, string Region)
+        {
+            string formattedCallRecvDt = "";
+            VenderCallStatusModel model = new();
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            if (selectedValue == "C")
+            {
+                var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
+
+
+                if (rly_nonrly == "R")
+                {
+                    model = new VenderCallStatusModel
+                    {
+                        CallRlyFirmList = new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "B", Text = "Before Visit of IE to Vendor's premises (AS per Railway Board Order No. 99/RS(G)/709/4 Dated: 12-02/2016)" },
+                            new SelectListItem { Value = "A", Text = "After Visit of IE to Vendor's Premises (As per Railway Board Order No. 99/RS(G)/709/4 Dated: 12-02/2016)" }
+                        }
+                    };
+                }
+                else
+                {
+                    model = new VenderCallStatusModel
+                    {
+                        CallRlyFirmList = new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "3000", Text = "Before Visit of IE to Vendor's premises" },
+                            new SelectListItem { Value = "10000", Text = "After Visit of IE to Vendor Premises - Local" },
+                            new SelectListItem { Value = "15000", Text = "After Visit of IE to Vendor Premises - Out Station" }
+                        }
+                    };
+                }
+            }
+            if (selectedValue != "A" && selectedValue != "R")
+            {
+                var callCount = context.T17CallRegisters.Where(t => t.DtInspDesire < Convert.ToDateTime(formattedCallRecvDt) && t.CallStatus == "M" && t.IeCd == Convert.ToInt32(IeCd) &&
+                            t.RegionCode == Region && t.CallRecvDt > DateTime.ParseExact("01/04/2021", "dd/MM/yyyy", null)).Count();
+
+                if (callCount > 0)
+                {
+                    model.AlertMsg = "You are Voilating the FIFO for attending Calls, kindly enter the reason for voilating FIFO!!!";
+                    model.ChkFIFO = "true";
+                    return model;
+                }
+                else
+                {
+                    model.ChkFIFO = "false";
+                }
+            }
+            model.AlertMsg = "Success!!!";
+            return model;
+        }
+
+        public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            VenderCallStatusModel model = new();
+            string formattedCallRecvDt = "";
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            var rly_nonrly = context.T13PoMasters.Where(po => po.CaseNo == CaseNo).Select(po => po.RlyNonrly).FirstOrDefault();
+
+            var SumValue = (from t18 in context.T18CallDetails
+                            join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                            where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                            select new
+                            {
+                                t18.CaseNo,
+                                t18.CallRecvDt,
+                                t18.CallSno,
+                                Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
+                        ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
+                        : (decimal)0
+                            })
+                              .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
+                              .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
+                              .FirstOrDefault();
+            model.MaterialValue = Convert.ToString(SumValue.Value);
+            double w_cancharges = 0;
+            if (rly_nonrly == "R")
+            {
+                decimal callCancelCharges = SumValue.Value * (decimal)0.9 / 100;
+                model.RejectionCharge = callCancelCharges.ToString();
+
+                w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
+                if (w_cancharges < 5000)
+                {
+                    model.RejectionCharge = "5000";
+                }
+            }
+            else if (rly_nonrly != "R")
+            {
+                model.RejectionCharge = Convert.ToString(SumValue.Value * 1 / 100);
+                w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
+
+                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Count();
+                double w_rejcharges = 0;
+                if (selectedValue == "L")
+                {
+                    w_rejcharges = no_of_visits * 10000;
+                    if (w_rejcharges > w_cancharges)
+                    {
+                        model.RejectionCharge = Convert.ToString(w_rejcharges);
+                    }
+                }
+                if (selectedValue == "o")
+                {
+                    w_rejcharges = no_of_visits * 15000;
+                    if (w_rejcharges > w_cancharges)
+                    {
+                        model.RejectionCharge = Convert.ToString(w_rejcharges);
+                    }
+                }
+            }
+
+
+            return model;
+        }
+
         public bool CallDetailsRemove(VendrorCallDetailsModel model)
         {
             var itemDelete = context.T18CallDetails.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
@@ -2760,6 +4989,56 @@ namespace IBS.Repositories.InspectionBilling
             return true;
         }
 
-        
+
+        public bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD)
+        {
+            var flag = true;
+            CALL_RECV_DT = Convert.ToDateTime(CALL_RECV_DT).ToString("MM/dd/yyyy");
+            using ModelContext cont = new(DbContextHelper.GetDbContextOptions());
+            using (var command = cont.Database.GetDbConnection().CreateCommand())
+            {
+                var trans = cont.Database.BeginTransaction();
+                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                if (!wasOpen) command.Connection.Open();
+                try
+                {
+                    //command.Transaction = trans;
+                    command.CommandText = "select COUNT(*) from RPT_PRM_Inspection_Certificate where CASE_NO= '" + CASE_NO + "' and  CALL_SNO= '" + CALL_SNO + "' and CALL_RECV_DT= to_date('" + CALL_RECV_DT + "','mm/dd/yyyy') and CONSIGNEE_CD = '" + CONSIGNEE_CD + "' ";
+                    var res = Convert.ToInt32(command.ExecuteScalar());
+
+                    var qry = "";
+                    if (res <= 0)
+                    {
+                        command.CommandText = "INSERT INTO RPT_PRM_Inspection_Certificate VALUES ('" + CASE_NO + "', to_date('" + CALL_RECV_DT + "','mm/dd/yyyy'), " + CALL_SNO + " , NULL, NULL , CURRENT_TIMESTAMP,'" + CONSIGNEE_CD + "')";
+                        res = command.ExecuteNonQuery();
+                    }
+
+                    qry = "MERGE INTO RPT_PRM_Inspection_Certificate RP USING ";
+                    qry += "( SELECT CASE_NO, CALL_SNO, CALL_RECV_DT, COUNT(*) as NUM_VISITS, LISTAGG(TO_CHAR(Visit_DT, 'DD.MM.YYYY'), ', ') within group (order by Visit_DT ) as VISIT_DATES ";
+                    qry += "    FROM T47_IE_WORK_PLAN ";
+                    qry += "   WHERE CASE_NO = '" + CASE_NO + "' and CALL_SNO = " + CALL_SNO + " and CALL_RECV_DT = to_date('" + CALL_RECV_DT + "','mm/dd/yyyy') ";
+                    qry += "  GROUP BY CASE_NO, CALL_SNO, CALL_RECV_DT) WP ";
+                    qry += "ON(RP.CASE_NO = WP.CASE_NO AND RP.CALL_SNO = WP.CALL_SNO AND RP.CALL_RECV_DT = WP.CALL_RECV_DT) ";
+                    qry += "WHEN MATCHED THEN UPDATE SET ";
+                    qry += "RP.NUM_VISITS = WP.NUM_VISITS, ";
+                    qry += "RP.VISIT_DATES = WP.VISIT_DATES";
+
+                    command.CommandText = qry;
+                    res = command.ExecuteNonQuery();
+                    trans.Commit();
+                    flag = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    flag = false;
+                }
+                finally
+                {
+                    if (!wasOpen) command.Connection.Close();
+                }
+            }
+            return flag;
+        }
     }
 }
