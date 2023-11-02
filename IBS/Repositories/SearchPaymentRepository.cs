@@ -26,7 +26,10 @@ namespace IBS.Repositories
                      join t24 in context.T24Rvs on t25.VchrNo equals t24.VchrNo
                      join t94 in context.T94Banks on t25.BankCd equals t94.BankCd
                      from b in context.T12BillPayingOfficers.Where(x => t25.BpoCd != null && x.BpoCd == t25.BpoCd).DefaultIfEmpty()
-                     where t25.CaseNo == CASE_NO || t25.Amount == Convert.ToDecimal(AMOUNT) || t25.ChqNo == CHQ_NO
+                     where (string.IsNullOrEmpty(CASE_NO) || t25.CaseNo == CASE_NO.Trim())
+                     && (string.IsNullOrEmpty(AMOUNT) || t25.Amount == Convert.ToDecimal(AMOUNT.Trim()))
+                     && (string.IsNullOrEmpty(CHQ_NO) || t25.ChqNo == CHQ_NO.Trim())
+                     //|| t25.Amount == Convert.ToDecimal(AMOUNT) || t25.ChqNo == CHQ_NO
 
                      select new SearchPaymentsModel
                      {

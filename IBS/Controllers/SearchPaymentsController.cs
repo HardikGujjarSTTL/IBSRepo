@@ -15,7 +15,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        [Authorization("SearchPayments", "SearchPayment", "view")]
+       
 
         public IActionResult PaymentList(string AMOUNT , string CASE_NO , string CHQ_NO , string BankNameDropdown , string NARRATION, string VCHR_DT, string ACC_CD)
             {
@@ -27,7 +27,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        [Authorization("SearchPayments", "SearchPayment", "view")]
+        
 
         public IActionResult UpdatePayment()
         {
