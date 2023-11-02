@@ -165,7 +165,7 @@
                         <div class="reference">
                             <label for="Name">GST/Sale Tax(%)</label>
                             @*<input type="text" class="input" asp-for="SalesTaxPer" onblur="saletax();" disabled>*@
-                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" oninput="this.value = Math.min(this.value)" onblur="saletax();" disabled>
+                            <input type="number" class="input" asp-for="SalesTaxPer" min="1" max="100" oninput="this.value = Math.min(this.value)" onblur="saletax();" disabled>
                             <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
                         </div>
                     </div>
