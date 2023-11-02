@@ -181,20 +181,20 @@
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">Net Testing Charges Paid</label>
+                    <label for="Reference">Net Testing Charges Paid <i class="text-danger">*</i></label>
                     <input type="text" class="input" id="txttesfee">
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">TDS (If Any)</label>
+                    <label for="Reference">TDS (If Any) <i class="text-danger">*</i></label>
                     <input type="text" class="input" id="txttdsany">
 
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">UTR NO</label>
+                    <label for="Reference">UTR NO <i class="text-danger">*</i></label>
                     <input type="text" class="input" id="txtutrno">
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label for="Reference">UTR Date</label>
+                    <label for="Reference">UTR Date <i class="text-danger">*</i></label>
                     <input type="text" class="input datepicker" id="dtutr">
                 </div>
             </div>
@@ -329,6 +329,21 @@
 
         $('#upload').change(function (e) {
             //var tmppath = URL.createObjectURL(e.target.files[0]);
+            var file = this.files[0];
+            var maxSize = 1024 * 1024;
+            var allowedExtensions = /(\.pdf)$/i;
+
+            if (!allowedExtensions.test(file.name)) {
+                alert('Only PDF files are allowed.');
+                this.value = '';
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                alert('File size exceeds 1MB limit.');
+                this.value = '';
+                return false;
+            }
             reader.readAsArrayBuffer(e.target.files[0]);
             reader.onloadend = (evt) => {
                 if (evt.target.readyState === FileReader.DONE) {
@@ -412,7 +427,7 @@
                         $("#btnsave").css("display", "none");
                         $("#btnupdate").css("display", "");
                         var firstPart = success.PaymentStatus.substring(0, success.PaymentStatus.indexOf(" "));
-                        debugger;
+                        
                         if (success.File != "False") {
                             $("#download").text(success.FileNm);
                             // $("#HyperLink1").val(success.FileNm);

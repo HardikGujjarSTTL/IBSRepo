@@ -14,10 +14,12 @@ namespace IBS.Interfaces
 
         string DetailsInsertUpdate(InspectionEngineersModel model);
 
-        string GetMatch(int IeCd,string GetRegionCode);
+        string GetMatch(int IeCd,string Region);
 
         string DeleteIe(int IeCd);
 
         public DTResult<InspectionEngineersListModel> GetClusterValueList(DTParameters dtParameters, List<InspectionEngineersListModel> ClusterModels);
+
+        string GetUserID(string IeEmpNo);
     }
 }

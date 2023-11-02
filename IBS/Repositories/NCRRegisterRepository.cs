@@ -16,6 +16,8 @@ using System.Net.Mail;
 using System.Net;
 using System.Numerics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -282,8 +284,7 @@ namespace IBS.Repositories
 
             var query = from t69 in context.T69NcCodes
                         join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
-                        join t41 in context.T41NcMasters on t42.NcNo equals t41.NcNo
-                        where t41.NcNo == NCNO
+                        where t42.NcNo == NCNO
                         orderby t42.NcCdSno ascending
                         select new
                         {
@@ -356,6 +357,7 @@ namespace IBS.Repositories
             DataRow firstRow = dt.Rows[0];
             string ErrCD = firstRow["W_ERR_CD"].ToString();
             string genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
+            model.NC_NO = genrate_NCNO;
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
@@ -432,7 +434,6 @@ namespace IBS.Repositories
                     }
                     else
                     {
-
                         T42NcDetail obj1 = new T42NcDetail();
                         obj1.NcNo = genrate_NCNO;
                         obj1.NcCd = model.NcCdSno;
@@ -446,6 +447,12 @@ namespace IBS.Repositories
                 }
             }
 
+            return model.NC_NO;
+        }
+
+        public string SaveMoreNC(NCRRegister model, string extractedText)
+        {
+            string msg = "";
             return msg;
         }
 
@@ -584,5 +591,17 @@ namespace IBS.Repositories
             return 0;
         }
 
+        public List<SelectListItem> GetNcrCd(string NCRClass)
+        {
+            List<SelectListItem> NCCODE = (from a in context.T69NcCodes
+                                           where a.NcClass == NCRClass
+                                           select
+                                          new SelectListItem
+                                          {
+                                              Text = a.NcCd + " - " + a.NcDesc,
+                                              Value = a.NcCd
+                                          }).ToList();
+            return NCCODE;
+        }
     }
 }

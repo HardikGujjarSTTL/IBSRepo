@@ -223,7 +223,9 @@
                                   debugger
                                   var complaintId = data;
                                   var rowIndex = meta.row;
-                            return '<a href="/ConsigneeComplaints/Manage?ComplaintId=' + complaintId + '&index=' + rowIndex + '" class="edit-link Permission_EditView">' + data + '</a>';
+                                  var editUrl = '@Url.Action("Manage", "ConsigneeComplaints")?ComplaintId=' + complaintId + '&index=' + rowIndex;
+                                  return '<a href=\"' + editUrl + '\" class="edit-link Permission_EditView">' + data + '</a>';
+                                //return '<a href="/ConsigneeComplaints/Manage?ComplaintId=' + complaintId + '&index=' + rowIndex + '" class="edit-link Permission_EditView">' + data + '</a>';
                               }
                           },
                           { data: "JiSno" },

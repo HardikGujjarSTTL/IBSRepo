@@ -9,7 +9,7 @@
     <div class="row my-0">
         <div class="col-md-3 mb-3">
             <label for="txtChequeNo">Cheque No <i class="text-danger">*</i></label>
-            <input type="text" class="input" id="txtChequeNo" />
+        <input type="text" class="input" id="txtChequeNo" onkeypress="return isNumberWithDot(event)" />
             <span class="text-danger field-validation-error" id="spnErrorChequeNo"></span>
         </div>
         <div class="col-md-3 mb-3">
@@ -130,7 +130,7 @@
 
 
 <script type="text/javascript">
-
+    
     $(function () {
         $(".datepicker").datepicker({
             changeMonth: true,

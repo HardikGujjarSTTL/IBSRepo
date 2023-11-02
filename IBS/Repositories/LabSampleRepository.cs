@@ -157,7 +157,7 @@ namespace IBS.Repositories
             PaymentSlip = GetDateString(sqlQuery);
             if(PaymentSlip != null)
             {
-                Hlink = Showfile(CaseNo, CallRdt, CallSno);
+                
                 string sqlQuery1 = "SELECT DECODE(DOC_STATUS_FIN,'A','APPROVED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS'),'R','REJECTED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS')||DOC_REJ_REMARK,'PENDING') FROM T110_LAB_DOC WHERE  case_no='" + CaseNo.Trim() + "' and to_char(call_recv_dt,'dd/mm/yyyy')='" + CallRdt.Trim() + "' and call_sno='" + CallSno.Trim() + "'";
                 PaymentStatus = GetDateString(sqlQuery1);
             }
@@ -166,6 +166,7 @@ namespace IBS.Repositories
                 PaymentSlip = "Not Uploaded";
                     PaymentStatus = "Not Approved";
             }
+            Hlink = Showfile(CaseNo, CallRdt, CallSno);
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[5];
