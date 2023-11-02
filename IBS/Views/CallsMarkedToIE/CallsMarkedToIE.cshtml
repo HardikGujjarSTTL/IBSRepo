@@ -80,16 +80,22 @@
                         @foreach (var item in Model.ReportLstNew)
                         {
                             @*var redirectUrl = @Url.Action("CallsMarkedToIE", "CallsMarkedToIE");*@
-                            wSelect = Url.Action("CallsMarkedToIE", "CallsMarkedToIE");
-                            wSelect += "?CaseNo =" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&IeCd=" + @item.IE_CD + "&ActionType=C&type=C";
+                            @*
 
-                            wPrint = Url.Action("PrintCallletter", "VendorCallRegister");
-                            wPrint += "?CaseNo =" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&type=C";
+                    wPrint = Url.Action("PrintCallletter", "VendorCallRegister");
+                    wPrint += "?CaseNo =" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&type=C";
 
-                            wHistory = Url.Action("CaseHistory", "CallMarkedOnline");
-                            wHistory += "?CASE_NO =" + @item.CASE_NO + "&ActionType=CHI&type=C";
+                    wHistory = Url.Action("CaseHistory", "CallMarkedOnline");
+                    wHistory += "?CASE_NO =" + @item.CASE_NO + "&ActionType=CHI&type=C";
 
-                            callDocAny = $"/IBS/Vendor/CALLS_DOCUMENTS/{@item.CASE_NO}-{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{@item.CALL_SNO}.PDF";
+                    callDocAny = $"/IBS/Vendor/CALLS_DOCUMENTS/{@item.CASE_NO}-{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{@item.CALL_SNO}.PDF";
+                    CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{@item.PO_YR}/{@item.IMMS_RLY_CD}/{@item.PO_NO}.PDF";*@
+
+                            wSelect = Url.Action("CallsMarkedToIE", "CallsMarkedToIE") + "?CaseNo=" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&IeCd=" + @item.IE_CD + "&ActionType=C&type=C";
+
+                            wPrint = $"/VendorCallRegister/PrintCallletter?CaseNo={@item.CASE_NO}&CallSno={@item.CALL_SNO}&CallRecvDt={Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy")}&type=C";
+                            wHistory = $"/CallMarkedOnline/CaseHistory?CASE_NO={@item.CASE_NO}&ActionType=CHI&type=C";
+                            callDocAny = $"/RBS/Vendor/CALLS_DOCUMENTS/{@item.CASE_NO}-{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(@item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{@item.CALL_SNO}.PDF";
                             CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{@item.PO_YR}/{@item.IMMS_RLY_CD}/{@item.PO_NO}.PDF";
 
                             CallStausF = $"{@item.CALL_STATUS_FULL}";
@@ -115,7 +121,7 @@
                                     CallStausF += "\nPayment Reciept Not Uploaded By Vendor.";
                                 }
                             }
-                            if (@item.NEWVENDOR == "Y")
+                            @if (@item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
                             }
@@ -123,7 +129,7 @@
                             {
                                 NewVendor = "";
                             }
-                            if (@item.COUNT > 0)
+                            @if (@item.COUNT > 0)
                             {
                                 ItemDescPo = @item.ITEM_DESC_PO + "<span color='#FF00CC'> and more items as per call</span>";
                             }
@@ -131,7 +137,7 @@
                             {
                                 ItemDescPo = @item.ITEM_DESC_PO;
                             }
-                            if (@item.VEND_CD == @item.MFG_CD)
+                            @if (@item.VEND_CD == @item.MFG_CD)
                             {
                                 wVendor = @item.VENDOR;
                             }
@@ -182,23 +188,23 @@
                                 @*<td align="center"><font size="2" face="Verdana"><a href=@item.callDocAny>Call Documents</a></font></td>*@
 
                                 @*@if (System.IO.File.Exists(Server.MapPath(@callDocAny)))*@
-                                if (System.IO.File.Exists(@callDocAny))
+                                @if (System.IO.File.Exists(@callDocAny))
                                 {
-                                    <td align="center"><font size="2" face="Verdana"><a href=@callDocAny>Call Documents</a></font></td>
+                                <td align="center"><font size="2" face="Verdana"><a href=@callDocAny>Call Documents</a></font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="2" face="Verdana"></font></td>
+                                <td align="center"><font size="2" face="Verdana"></font></td>
                                 }
 
 
-                                if (@item.PO_SOURCE == "C")
+                                @if (@item.PO_SOURCE == "C")
                                 {
-                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
+                                <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
                                 }
                                 <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
                                 <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
