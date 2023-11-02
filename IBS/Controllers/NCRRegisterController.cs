@@ -4,8 +4,10 @@ using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using NuGet.Protocol.Core.Types;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace IBS.Controllers
@@ -71,16 +73,35 @@ namespace IBS.Controllers
         [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveUpdateNCR(NCRRegister model)
         {
-            string msg = "";
+            string NCNO = "";
             try
             {
                 bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
                 string extractedText = Request.Form["extractedText"];
-                msg = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+                NCNO = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+                AlertUpdateSuccess("Record Save Successfully!!");
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveUpdateNCR", 1, GetIPAddress());
+            }
+            return Json(new { status = true, responseText = NCNO, redirectToIndex = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("NCRRegister", "Index", "edit")]
+        public IActionResult SaveMoreNC(NCRRegister model)
+        {
+            string msg = "";
+            try
+            {
+                string extractedText = Request.Form["extractedText"];
+                msg = nCRRegisterRepository.SaveMoreNC(model, extractedText);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveMoreNC", 1, GetIPAddress());
             }
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
         }
@@ -108,6 +129,21 @@ namespace IBS.Controllers
         {
             bool msg = nCRRegisterRepository.SendEmail(nCRRegister);
             return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+        }
+
+        [HttpPost]
+        public IActionResult GetNCRCode(string NCRClass)
+        {
+            List<SelectListItem> NCRCode = new();
+            try
+            {
+                NCRCode = nCRRegisterRepository.GetNcrCd(NCRClass);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "GetNCRCode", 1, GetIPAddress());
+            }
+            return Json(NCRCode);
         }
 
     }

@@ -207,7 +207,8 @@ namespace IBS.Controllers.Vendor
                                 }
                                 else
                                 {
-                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.Call Marked To:" + model.IE_name;
+                                    msg = "Your Call is Registered, Acknowledgement mail is sent on your registered email-id!!!.        ";
+                                    msg += "Call Marked To:" + model.IE_name;
                                 }
                             }
                             else

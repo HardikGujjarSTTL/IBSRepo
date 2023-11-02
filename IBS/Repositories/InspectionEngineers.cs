@@ -81,18 +81,18 @@ namespace IBS.Repositories
             List<InspectionEngineersListModel> clst = (from T101 in context.T101IeClusters
                                                        join T09 in context.T09Ies on T101.IeCode equals T09.IeCd
                                                        join T99 in context.T99ClusterMasters on T101.ClusterCode equals T99.ClusterCode
-                                                              where T101.IeCode == Id
-                                                              select new
-                                                              InspectionEngineersListModel
-                                                              {
-                                                                  In_ID = Convert.ToInt32(T101.IeCode),
-                                                                  IeCd = Convert.ToInt32(T101.IeCode),
-                                                                  IeName = T09.IeName,
-                                                                  IeDepartment = T101.DepartmentCode,
-                                                                  Cluster = Convert.ToInt32(T101.ClusterCode),
-                                                                  ClusterID = Convert.ToString(T101.ClusterCode),
-                                                                  lstCluster = Convert.ToString(T99.ClusterName),
-                                                              }
+                                                       where T101.IeCode == Id
+                                                       select new
+                                                       InspectionEngineersListModel
+                                                       {
+                                                           In_ID = Convert.ToInt32(T101.IeCode),
+                                                           IeCd = Convert.ToInt32(T101.IeCode),
+                                                           IeName = T09.IeName,
+                                                           IeDepartment = T101.DepartmentCode,
+                                                           Cluster = Convert.ToInt32(T101.ClusterCode),
+                                                           ClusterID = Convert.ToString(T101.ClusterCode),
+                                                           lstCluster = Convert.ToString(T99.ClusterName),
+                                                       }
                                                  ).ToList();
             model.lstInspectionEClusterModel = clst;
 
@@ -277,25 +277,6 @@ namespace IBS.Repositories
                     return status;
                 }
             }
-            //var ClusterDetails = context.T101IeClusters.Where(x => x.ClusterCode == Convert.ToByte(model.Cluster) && x.DepartmentCode == model.IeDepartment).FirstOrDefault();
-            //if (ClusterDetails == null)
-            //{
-            //    T101IeCluster Cster = new T101IeCluster();
-            //    Cster.IeCode = model.IeCd;
-            //    Cster.ClusterCode = model.Cluster;
-            //    Cster.DepartmentCode = model.IeDepartment;
-            //    Cster.UserId = model.UserId;
-            //    Cster.Datetime = DateTime.Now.Date;
-            //    context.T101IeClusters.Add(Cster);
-            //    context.SaveChanges();
-            //}
-            //else
-            //{
-            //    ClusterDetails.IeCode = model.IeCd;
-            //    ClusterDetails.UserId = model.UserId;
-            //    ClusterDetails.Datetime = DateTime.Now.Date;
-            //    context.SaveChanges();
-            //}
 
             var T101IeClusters = (from T101 in context.T101IeClusters where T101.IeCode == model.IeCd select T101).ToList();
             if (T101IeClusters.Count > 0 && T101IeClusters != null)
@@ -309,7 +290,7 @@ namespace IBS.Repositories
                 {
                     T101IeCluster Clst = new T101IeCluster();
                     {
-                        Clst.IeCode = item.IeCd;
+                        Clst.IeCode = model.IeCd;
                         Clst.DepartmentCode = item.IeDepartment;
                         Clst.ClusterCode = Convert.ToInt32(item.ClusterID);
                         Clst.UserId = model.UserId;
@@ -318,9 +299,10 @@ namespace IBS.Repositories
                     context.T101IeClusters.Add(Clst);
                     context.SaveChanges();
                 }
-                
+
             }
 
+            UserUpdate(model);
             return status;
         }
 
@@ -403,6 +385,58 @@ namespace IBS.Repositories
 
         }
 
+        public string GetUserID(string IeEmpNo)
+        {
+            string ID = "";
+            var UserId = context.T02Users.Where(x => x.UserId == IeEmpNo).FirstOrDefault();
+            if (UserId != null)
+            {
+                ID = "1";
+            }
+            else
+            {
+                ID = "0";
+            }
+            return ID;
+        }
+
+        public void UserUpdate(InspectionEngineersModel model)
+        {
+            var UserDetails = context.T02Users.Where(x => x.UserId == Convert.ToString(model.IeEmpNo)).FirstOrDefault();
+            if (UserDetails == null)
+            {
+                T02User User = new();
+                User.UserId = Convert.ToString(model.IeEmpNo);
+                User.UserName = model.IeName;
+                User.RitesEmp = "Y";
+                User.EmpNo = Convert.ToString(model.IeEmpNo);
+                User.Region = model.IeRegion;
+                User.Password = Convert.ToString(model.IeEmpNo);
+                User.Createdby = model.UserId;
+                User.Createddate = DateTime.Now.Date;
+                User.Isdeleted = 0;
+                User.Migtype = "I";
+                User.Mobile = model.IePhoneNo;
+
+                context.T02Users.Add(User);
+                context.SaveChanges();
+            }
+            else
+            {
+                UserDetails.UserName = model.IeEmpNo;
+                UserDetails.RitesEmp = "Y";
+                UserDetails.EmpNo = Convert.ToString(model.IeEmpNo);
+                UserDetails.Region = model.IeRegion;
+                UserDetails.Password = Convert.ToString(model.IeEmpNo);
+                UserDetails.Updatedby = model.UserId;
+                UserDetails.Updateddate = DateTime.Now.Date;
+                UserDetails.Isdeleted = 0;
+                UserDetails.Migtype = "I";
+                UserDetails.Mobile = model.IePhoneNo;
+
+                context.SaveChanges();
+            }
+        }
     }
 
 }
