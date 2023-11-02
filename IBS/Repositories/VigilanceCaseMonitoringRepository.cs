@@ -111,74 +111,65 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<VigilanceCasesListModel> GetVigilanceList(DTParameters dtParameters)
+        public DTResult<VigilanceCasesListModel> GetVigilanceList1(DTParameters dtParameters)
         {
             DTResult<VigilanceCasesListModel> dTResult = new() { draw = 0 };
             IQueryable<VigilanceCasesListModel>? query = null;
 
             string CaseNo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]) ? Convert.ToString(dtParameters.AdditionalValues["CaseNo"]) : "";
+
+            query = from t20 in context.T20Ics
+                    join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
+                    where t20.CaseNo == CaseNo
+                    orderby t20.BkNo, t20.SetNo
+                    select new VigilanceCasesListModel
+                    {
+                        Id = 0,
+                        CaseNo = t20.CaseNo,
+                        BkNo = t20.BkNo,
+                        SetNo = t20.SetNo,
+                        ConsigneeCd = t20.ConsigneeCd,
+                        BpoCd = t20.BpoCd,
+                        IeCd = t20.IeCd ?? 0,
+                        BillNo = t20.BillNo,
+                        BillDt = t22.BillDt
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public DTResult<VigilanceCasesListModel> GetVigilanceList2(DTParameters dtParameters)
+        {
+            DTResult<VigilanceCasesListModel> dTResult = new() { draw = 0 };
+            IQueryable<VigilanceCasesListModel>? query = null;
+
             string RefRegNo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["RefRegNo"]) ? Convert.ToString(dtParameters.AdditionalValues["RefRegNo"]) : "";
 
-            if (string.IsNullOrEmpty(RefRegNo))
-            {
-                query = from t20 in context.T20Ics
-                        join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
-                        where t20.CaseNo == CaseNo
-                        orderby t20.BkNo, t20.SetNo
-                        select new VigilanceCasesListModel
-                        {
-                            Id = 0,
-                            CaseNo = t20.CaseNo,
-                            BkNo = t20.BkNo,
-                            SetNo = t20.SetNo,
-                            ConsigneeCd = t20.ConsigneeCd,
-                            BpoCd = t20.BpoCd,
-                            IeCd = t20.IeCd ?? 0,
-                            BillNo = t20.BillNo,
-                            BillDt = t22.BillDt
-                        };
-            }
-            else if (!string.IsNullOrEmpty(RefRegNo))
-            {
-                CaseNo = context.T54VigilanceCasesDetails.Where(x => x.RefRegNo == RefRegNo).Select(x => x.CaseNo).FirstOrDefault();
-
-                query = (from t20 in context.T20Ics
-                         join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
-                         where t20.CaseNo == CaseNo &&
-                             !context.T54VigilanceCasesDetails
-                                 .Any(t54 => t20.CaseNo == t54.CaseNo && t20.BkNo == t54.BkNo && t20.SetNo == t54.SetNo)
-                         select new VigilanceCasesListModel
-                         {
-                             Id = -1,
-                             CaseNo = t20.CaseNo,
-                             BkNo = t20.BkNo,
-                             SetNo = t20.SetNo,
-                             ConsigneeCd = t20.ConsigneeCd,
-                             BpoCd = t20.BpoCd,
-                             IeCd = t20.IeCd ?? 0,
-                             BillNo = t20.BillNo,
-                             BillDt = t22.BillDt
-                         }
-                        )
-                        .Union(
-                            from t54 in context.T54VigilanceCasesDetails
-                            where t54.RefRegNo == RefRegNo
-                            select new VigilanceCasesListModel
-                            {
-                                Id = Convert.ToInt32(t54.Id),
-                                CaseNo = t54.CaseNo,
-                                BkNo = t54.BkNo,
-                                SetNo = t54.SetNo,
-                                ConsigneeCd = t54.ConsigneeCd ?? 0,
-                                BpoCd = t54.BpoCd,
-                                IeCd = t54.IeCd ?? 0,
-                                BillNo = t54.BillNo,
-                                BillDt = t54.BillDt
-                            }
-                        );
-
-                query = query.OrderBy(x => x.BkNo).ThenBy(x => x.SetNo);
-            }
+            query = from t54 in context.T54VigilanceCasesDetails
+                    where t54.RefRegNo == RefRegNo
+                    orderby t54.CaseNo, t54.BkNo, t54.SetNo
+                    select new VigilanceCasesListModel
+                    {
+                        Id = Convert.ToInt32(t54.Id),
+                        CaseNo = t54.CaseNo,
+                        BkNo = t54.BkNo,
+                        SetNo = t54.SetNo,
+                        ConsigneeCd = t54.ConsigneeCd ?? 0,
+                        BpoCd = t54.BpoCd,
+                        IeCd = t54.IeCd ?? 0,
+                        BillNo = t54.BillNo,
+                        BillDt = t54.BillDt
+                    };
 
             dTResult.recordsTotal = query.Count();
 
@@ -269,39 +260,44 @@ namespace IBS.Repositories
 
                     context.SaveChanges();
 
-                    if (context.T54VigilanceCasesDetails.Any(x => x.RefRegNo == model.RefRegNo))
+                    if (model.lstVigilanceCasesList.Count > 0)
                     {
-                        context.T54VigilanceCasesDetails.RemoveRange(context.T54VigilanceCasesDetails.Where(x => x.RefRegNo == model.RefRegNo).ToList());
+                        string CaseNo = model.lstVigilanceCasesList.FirstOrDefault().CaseNo;
+
+                        if (context.T54VigilanceCasesDetails.Any(x => x.RefRegNo == model.RefRegNo && x.CaseNo == CaseNo))
+                        {
+                            context.T54VigilanceCasesDetails.RemoveRange(context.T54VigilanceCasesDetails.Where(x => x.RefRegNo == model.RefRegNo && x.CaseNo == CaseNo).ToList());
+                            context.SaveChanges();
+                        }
+
+                        int SNo = GetMaxSno(model.RefRegNo);
+                        SNo += 1;
+
+                        foreach (VigilanceCasesListModel data in model.lstVigilanceCasesList)
+                        {
+                            T54VigilanceCasesDetail details = new()
+                            {
+                                RefRegNo = model.RefRegNo,
+                                Sno = SNo,
+                                CaseNo = data.CaseNo,
+                                BkNo = data.BkNo,
+                                SetNo = data.SetNo,
+                                ConsigneeCd = data.ConsigneeCd,
+                                BpoCd = data.BpoCd,
+                                IeCd = data.IeCd,
+                                BillNo = data.BillNo,
+                                BillDt = data.BillDt,
+                                UserId = model.UserId,
+                                Datetime = DateTime.Now.Date,
+                            };
+
+                            context.T54VigilanceCasesDetails.Add(details);
+
+                            SNo += 1;
+                        }
+
                         context.SaveChanges();
                     }
-
-                    int SNo = GetMaxSno(model.RefRegNo);
-                    SNo += 1;
-
-                    foreach (VigilanceCasesListModel data in model.lstVigilanceCasesList)
-                    {
-                        T54VigilanceCasesDetail details = new()
-                        {
-                            RefRegNo = model.RefRegNo,
-                            Sno = SNo,
-                            CaseNo = data.CaseNo,
-                            BkNo = data.BkNo,
-                            SetNo = data.SetNo,
-                            ConsigneeCd = data.ConsigneeCd,
-                            BpoCd = data.BpoCd,
-                            IeCd = data.IeCd,
-                            BillNo = data.BillNo,
-                            BillDt = data.BillDt,
-                            UserId = model.UserId,
-                            Datetime = DateTime.Now.Date,
-                        };
-
-                        context.T54VigilanceCasesDetails.Add(details);
-
-                        SNo += 1;
-                    }
-
-                    context.SaveChanges();
                 }
 
             }

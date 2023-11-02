@@ -141,7 +141,6 @@
                 </tr>
                 <tr>
                     @{
-
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
@@ -520,7 +519,7 @@
                 var DesireDt = $('#CallRecvDt').val();
                 $('#MatCanvalue').hide();
                 $.ajax({
-                    url: '/CallRegisterIB/GetBkNoAndSetNo',
+                    url: '@Url.Action("GetBkNoAndSetNo", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -714,7 +713,7 @@
                 }
 
                 $.ajax({
-                    url: '/CallRegisterIB/GetRlyDrp',
+                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -926,7 +925,7 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
                 $.ajax({
-                    url: '/CallRegisterIB/LocalOutstation',
+                    url: '@Url.Action("LocalOutstation", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -954,7 +953,7 @@
                 }
 
                 $.ajax({
-                    url: '/CallRegisterIB/GetRlyDrp',
+                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
@@ -983,7 +982,7 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
                 $.ajax({
-                    url: '/CallRegisterIB/CancelChargeByStatus',
+                    url: '@Url.Action("CancelChargeByStatus", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
