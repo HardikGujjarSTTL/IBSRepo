@@ -74,14 +74,14 @@ namespace IBS.Repositories.Reports
 
         //    //return dTResult;
         //}
-        public BPOWiseOutstandingBillsModel GenerateReport(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, string Checkbox, string Railway, string PSU, string StateGovt, string ForeignRailways, string PrivateSector, string TypeofOutStandingBills, string Region)
+        public BPOWiseOutstandingBillsModel GenerateReport(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, Boolean Railway, Boolean PSU, Boolean StateGovt, Boolean ForeignRailways, Boolean PrivateSector, string TypeofOutStandingBills, string Region)
         {
 
             BPOWiseOutstandingBillsModel model = new();
             List<BPOWiseOutstandingBillsModel> lstlab = new();
 
 
-            OracleParameter[] par = new OracleParameter[10];
+            OracleParameter[] par = new OracleParameter[14];
             par[0] = new OracleParameter("p_RegionCode", OracleDbType.NVarchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_StartDate", OracleDbType.NVarchar2, FromDt, ParameterDirection.Input);
             par[2] = new OracleParameter("p_EndDate", OracleDbType.NVarchar2, ToDt, ParameterDirection.Input);
@@ -89,11 +89,15 @@ namespace IBS.Repositories.Reports
             par[4] = new OracleParameter("p_BPOType", OracleDbType.NVarchar2, BpoType, ParameterDirection.Input);
             par[5] = new OracleParameter("p_BPORly", OracleDbType.NVarchar2, BpoRly, ParameterDirection.Input);
             par[6] = new OracleParameter("p_BPORegion", OracleDbType.NVarchar2, BpoRegion, ParameterDirection.Input);
-            par[7] = new OracleParameter("p_BPOTypeFilter", OracleDbType.NVarchar2, "", ParameterDirection.Input);
-            par[8] = new OracleParameter("p_TypeOutstanding", OracleDbType.NVarchar2, TypeofOutStandingBills, ParameterDirection.Input);
-            par[9] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("p_Railway", OracleDbType.Boolean, Railway, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_PSU", OracleDbType.Boolean, PSU, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_StateGov", OracleDbType.Boolean, StateGovt, ParameterDirection.Input);
+            par[10] = new OracleParameter("p_FornRly", OracleDbType.Boolean, ForeignRailways, ParameterDirection.Input);
+            par[11] = new OracleParameter("p_Private", OracleDbType.Boolean, PrivateSector, ParameterDirection.Input);
+            par[12] = new OracleParameter("p_TypeOutstanding", OracleDbType.NVarchar2, TypeofOutStandingBills, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 9);
+            var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 13);
 
             if (ds.Tables[0].Rows.Count != 0)
             {
