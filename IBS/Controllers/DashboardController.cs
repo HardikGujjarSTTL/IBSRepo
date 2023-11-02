@@ -42,6 +42,30 @@ namespace IBS.Controllers
         {
             return View();
         }
+        public IActionResult CMDAR()
+        {
+            return View();
+        }
+
+        public IActionResult CMDFO()
+        {
+            return View();
+        }
+
+        public IActionResult CMJIIncharge()
+        {
+            return View();
+        }
+
+        public IActionResult LO()
+        {
+            return View();
+        }
+
+        public IActionResult LAB()
+        {
+            return View();
+        }
 
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
