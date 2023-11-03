@@ -101,5 +101,8 @@ namespace IBS.Models
         public string? PANNO { get; set; }
 
         public string Region { get; set; }
+
+        public string UserStatus { get; set; }
+        
     }
 }

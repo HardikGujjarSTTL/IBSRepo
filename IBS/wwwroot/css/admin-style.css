@@ -72,7 +72,7 @@ label { display: inline-block; padding-bottom: 10px; font-weight: 500; }
 .row {margin: 0 -15px 20px -15px;}
 body, html { height: 100%; width: 100%; }
 hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 10px 0; padding: 0 }
-body, button, input, select, textarea { color: #171717; font-family: 'Poppins'; font-size: 15px; line-height: 1.5; }
+body, button, input, select, textarea { color: #000; font-family: 'Poppins'; font-size: 15px; line-height: 1.5; }
 body { background-color: #fff; line-height: 1.5; }
 h1 { font-size: 2.308em; }
 h2 { font-size: 32px; }
@@ -693,7 +693,7 @@ div.dataTables_length span.customSelect { display: inline-block !important; marg
 .box-body .row .col-sm-12 { overflow-x: auto; overflow-y: hidden; }
 .box-body .row .col-sm-12 table.dataTable { width: 1600px; }
 .action { width: 8% !important; }
-.srNo { width: 40px !important; }
+.srNo { width: 65px !important; }
 .box-body .row .col-sm-12 table.confirmationContract { width: 2200px; }
 .box-body .row .col-sm-12 table.pageShipment { width: 100%; }
 .boxSearchPanel .searchDroPopup { display: inline-block; position: relative; width: auto; }
@@ -978,22 +978,51 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .dashHeader h2 { color: #2B368B; padding-left: 0; margin: 0; font-weight: 600; font-family: 'Poppins', sans-serif; line-height: 49px; font-size: 24px; }
 .admindashboard-section { padding: 0px 15px; }
 .dashboard-box { background: #fff; padding: 15px; border-radius: 12px; position: relative; z-index: 0; box-shadow: 0 9px 9px rgba(0, 0, 0, 0.10); display: flex; align-items: center; justify-content: space-between; }
-.das1, .das2, .das3, .das4{transition:all 0.5s ease;}
+.das1, .das2, .das3, .das4,
+.das5, .das6, .das7, .das8,
+.das9, .das10, .das11, .das12,
+.das13, .das14, .das15, .das16{transition:all 0.5s ease;}
 .das1{ background:#3F4BA5;}
 .das2{ background:#7A4EC1;}
 .das3{ background:#11BB8D;}
 .das4{ background:#3F95E1;}
+.das5{ background:#ff6600;}
+.das6{ background:#009900;}
+.das7{ background:#cc0098;}
+.das8{ background:#0051d6;}
+.das9{ background:#ff9800;}
+.das10{ background:#0ab4c3;}
+.das11{ background:#fe0000;}
+.das12{ background:#66cc00;}
+.das13{ background:#009688;}
+.das14{ background:#795548;}
+.das15{ background:#5f7d8a;}
+.das16{ background:#9e9e9e;}
 .das1:hover { box-shadow: #3F4BA5 0px 2px 12px 2px; }
 .das2:hover { box-shadow: #7A4EC1 0px 2px 12px 2px; }
 .das3:hover { box-shadow: #11BB8D 0px 2px 12px 2px; }
 .das4:hover { box-shadow: #3F95E1 0px 2px 12px 2px; }
+.das5:hover { box-shadow: #ff6600 0px 2px 12px 2px; }
+.das6:hover { box-shadow: #009900 0px 2px 12px 2px; }
+.das7:hover { box-shadow: #cc0098 0px 2px 12px 2px; }
+.das8:hover { box-shadow: #0051d6 0px 2px 12px 2px; }
+.das9:hover { box-shadow: #ff9800 0px 2px 12px 2px; }
+.das10:hover { box-shadow: #0ab4c3 0px 2px 12px 2px; }
+.das11:hover { box-shadow: #fe0000 0px 2px 12px 2px; }
+.das12:hover { box-shadow: #66cc00 0px 2px 12px 2px; }
+.das13:hover { box-shadow: #009688 0px 2px 12px 2px; }
+.das14:hover { box-shadow: #795548 0px 2px 12px 2px; }
+.das15:hover { box-shadow: #5f7d8a 0px 2px 12px 2px; }
+.das16:hover { box-shadow: #9e9e9e 0px 2px 12px 2px; }
 	
-.das1Client, .das2Client, .das3Client, .das4Client, .das5Client, .das6Client, .das7Client, .das8Client, .das9Client, .das10Client, .das11Client, .das12Client{transition:all 0.5s ease;}
+.das1Client, .das2Client, .das3Client, .das4Client,
+.das5Client, .das6Client, .das7Client, .das8Client,
+.das9Client, .das10Client, .das11Client, .das12Client{transition:all 0.5s ease;}
 .das1Client{ background: rgb(164,125,225); background: linear-gradient(90deg, rgba(164,125,225,1) 0%, rgba(150,110,213,1) 100%);}
 .das2Client{ background: rgb(43,111,200); background: linear-gradient(90deg, rgba(43,111,200,1) 0%, rgba(25,98,193,1) 100%);}
 .das3Client{ background: rgb(25,171,108); background: linear-gradient(90deg, rgba(25,171,108,1) 0%, rgba(0,139,101,1) 100%);}
 .das4Client{ background: rgb(243,124,160); background: linear-gradient(90deg, rgba(243,124,160,1) 0%, rgba(216,99,150,1) 100%);}
-.das5Client{ background: background: rgb(255,102,0); background: linear-gradient(90deg, rgba(255,102,0,1) 0%, rgba(154,53,1,1) 100%);}
+.das5Client{ background: rgb(255,102,0); background: linear-gradient(90deg, rgba(255,102,0,1) 0%, rgba(154,53,1,1) 100%);}
 .das6Client{ background: rgb(0,153,0); background: linear-gradient(90deg, rgba(0,153,0,1) 0%, rgba(0,102,0,1) 100%);}
 .das7Client{ background: rgb(204,0,152); background: linear-gradient(90deg, rgba(204,0,152,1) 0%, rgba(102,0,50,1) 100%);}
 .das8Client{ background: rgb(0,81,214); background: linear-gradient(90deg, rgba(0,81,214,1) 0%, rgba(0,51,153,1) 100%);}
@@ -1005,14 +1034,14 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das2Client:hover { box-shadow: rgb(43,111,200) 0px 2px 12px 2px; }
 .das3Client:hover { box-shadow: rgb(25,171,108) 0px 2px 12px 2px; }
 .das4Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das5Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das6Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das7Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das8Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das9Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das10Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das11Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
-.das12Client:hover { box-shadow: rgb(243,124,160) 0px 2px 12px 2px; }
+.das5Client:hover { box-shadow: rgb(255,102,0) 0px 2px 12px 2px; }
+.das6Client:hover { box-shadow: rgb(0,153,0) 0px 2px 12px 2px; }
+.das7Client:hover { box-shadow: rgb(204,0,152) 0px 2px 12px 2px; }
+.das8Client:hover { box-shadow: rgb(0,81,214) 0px 2px 12px 2px; }
+.das9Client:hover { box-shadow: rgb(255,204,0) 0px 2px 12px 2px; }
+.das10Client:hover { box-shadow: rgb(10,180,195) 0px 2px 12px 2px; }
+.das11Client:hover { box-shadow: rgb(254,0,0) 0px 2px 12px 2px; }
+.das12Client:hover { box-shadow: rgb(102,204,0) 0px 2px 12px 2px; }
 	
 .dashboard-box .dash-total .total-inner { font-size: 16px; line-height: 20px; color:#fff; }
 .dash-count .total-amount { font-size: 30px; font-weight: 600; color: #fff; }
@@ -1029,6 +1058,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .kimberley .kim-title { font-size: 16px; font-weight: 600; color: #000000; }
 .kimberley p { color: #646464; }
 .headingh3 { color: #0E2753; font-size: 20px; font-weight: 600; margin-bottom: 15px; }
+.headingh3 .subTitle{ font-size:16px; font-style:italic;}
 section.table-section { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; padding: 20px; }
 .dash-table table tr td { font-size: 13px; padding:5px; }
 .oranges { color: #EB7373; }
@@ -1254,7 +1284,7 @@ animation: show-bar-one 1.2s 0.1s forwards;}
 /*Steps End*/
 .validFiles { display: block; color: #8c8c8c; font-size: 14px; font-style:italic; }
 .reference label { display:block; }
-.reference input[type="file"] { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding:5px; width: 100%; color: #838d94; }
+.reference input[type="file"] { height: 43px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; line-height: 26px; padding:5px; width: 100%; color: #000; }
 /*21/07/2023 PCDO Entry Form Style End*/
 
 .graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:15px!important;}
@@ -1421,3 +1451,5 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .iePieGraphGrid table th{ background:#dcefff; font-size:14px;}
 .iePieGraphGrid table td{ font-size:13px;}
 .iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
+.action .deney .fa{ color:#f00!important;} 
+.text-left{ text-align:left!important;}

@@ -35,23 +35,24 @@
 
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ClientContract" asp-action="ClientContractDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmClientContractDetails">
             <input type="hidden" asp-for="Id" />
-            <input type="text" class="input datepicker" asp-for="@Model.TypeCb" style="display:none;">
+            <input type="hidden" asp-for="TypeCb" />
+            @*<input type="text" class="input" asp-for="@Model.TypeCb" style="display:none;">*@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-3 mb-4">
-                        <label for="VisitDt">Date Of Contract</label>
+                        <label for="VisitDt">Date Of Contract<i class="text-danger">*</i></label>
                         <input type="text" class="input datepicker" asp-for="VisitDt" readonly="true">
                         <span asp-validation-for="VisitDt" class="text-danger"></span>
                     </div>
                
                     <div class="col-md-3 mb-4">
-                        <label for="ClientType">Client Type</label>
+                        <label for="ClientType">Client Type<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"),"--Select--", new { @onChange="FillClient()"})
                         <span asp-validation-for="ClientType" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-3 mb-4">
-                        <label for="Client">Select Client</label>
+                        <label for="Client">Select Client<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.Client, new SelectList(IBS.Models.Common.GetClientByClientType(""), "Value", "Text"),"--Select--")
                         <span asp-validation-for="Client" class="text-danger"></span>
                     </div>
@@ -69,7 +70,7 @@
                     </div>
 
                     <div class="col-md-3 mb-4">
-                        <label for="RitesOfficerCd">Rites Controlling Officer</label>
+                        <label for="RitesOfficerCd">Rites Controlling Officer<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.RitesOfficerCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),Model.TypeCb.ToString()), "Value", "Text"),"--Select--")
                         <span asp-validation-for="RitesOfficerCd" class="text-danger"></span>
                     </div>
@@ -100,7 +101,7 @@
                     </div>
 
                     <div class="col-md-6 mb-4">
-                        <label for="OverallOutcome">Overall OutCome of the Visit</label>
+                        <label for="OverallOutcome">Overall OutCome of the Visit<i class="text-danger">*</i></label>
                         <textarea rows="3" type="text" name="OverallOutcome" class="input" asp-for="OverallOutcome" maxlength="500"></textarea>
                         <span asp-validation-for="OverallOutcome" class="text-danger"></span>
                     </div>

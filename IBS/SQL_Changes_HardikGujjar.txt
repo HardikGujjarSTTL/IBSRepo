@@ -1061,7 +1061,6 @@ ADD CONSTRAINT T66_TECH_REF_pk PRIMARY KEY (ID);
 ) AS
     w_YY VARCHAR2(500);
     w_ctr VARCHAR2(500);
-    w_sno VARCHAR2(500) := null;
     my_exception exception;
 
 BEGIN
@@ -4183,3 +4182,80 @@ ALTER TABLE Token
     MODIFY user_id CHAR(20 BYTE)
 
 
+==========================
+
+create or replace PROCEDURE GetCaseDetailForIE_API(
+    p_IeCd IN NUMBER,
+    p_Case_No IN VARCHAR2,
+    p_CALL_RECV_DT IN DATE,
+    p_CALL_SNO IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        x.CASE_NO AS Case_No, 
+        x.CALL_RECV_DT AS Call_Recv_DT, 
+        x.CALL_SNO AS Call_SNo, 
+        SUM(t18.QTY_TO_INSP) AS Qty, 
+        v.VEND_NAME AS Vendor, 
+        v.vend_add1 AS Vendor_Address, 
+        TO_CHAR(v.VEND_CD) AS Vendor_Code, 
+        ct.City AS Vendor_City, 
+        y.PO_DT AS PO_DT, 
+        y.PO_NO AS PO_No, 
+        CASE
+            WHEN y.po_source = 'V' THEN 'VENDOR'
+            WHEN y.po_source = 'M' THEN 'MANUAL'
+            WHEN y.po_source = 'C' THEN 'IREPS'
+            WHEN y.po_source = '' THEN 'OTHER'
+            ELSE ''
+        END AS PO_Source,
+        CASE
+             WHEN y.rly_nonrly = 'R' THEN 'Railways'
+            WHEN y.rly_nonrly = 'P' THEN 'Private'
+            WHEN y.rly_nonrly = 'U' THEN 'PSU'
+            WHEN y.rly_nonrly = 'S' THEN 'State Govt'
+            WHEN y.rly_nonrly = 'F' THEN 'Foreign Railways'
+            ELSE ''
+        END AS PO_Type,
+        cs.CALL_STATUS_DESC AS Status, 
+        ie.IE_EMAIL AS EMail, 
+        ie.IE_PHONE_NO AS MobileNo
+    FROM 
+        T17_CALL_REGISTER x
+    JOIN 
+        T18_CALL_DETAILS t18 ON x.CASE_NO = t18.CASE_NO 
+                            AND x.CALL_RECV_DT = t18.CALL_RECV_DT 
+                            AND x.CALL_SNO = t18.CALL_SNO
+    JOIN 
+        T13_PO_MASTER y ON x.CASE_NO = y.CASE_NO
+    JOIN 
+        V06_Consignee  p ON y.PURCHASER_CD = p.CONSIGNEE_CD
+    JOIN 
+        T05_VENDOR v ON y.VEND_CD = v.VEND_CD
+    JOIN 
+        T21_CALL_STATUS_CODES cs ON x.CALL_STATUS = cs.CALL_STATUS_CD
+    JOIN 
+        T09_IE ie ON x.IE_CD = ie.IE_CD
+    JOIN 
+        T03_CITY ct ON v.Vend_City_Cd = ct.CITY_CD
+    WHERE 
+        x.IE_CD = p_IeCd
+        AND x.CASE_NO = p_Case_No 
+        AND x.CALL_RECV_DT = p_CALL_RECV_DT
+        AND x.CALL_SNO = p_CALL_SNO
+    GROUP BY
+        x.CASE_NO, x.CALL_RECV_DT, x.CALL_SNO, 
+        v.VEND_NAME,v.vend_add1, v.VEND_CD, ct.City, 
+        y.PO_DT, y.PO_NO,y.po_source,y.rly_nonrly, cs.CALL_STATUS_DESC, 
+        ie.IE_EMAIL, ie.IE_PHONE_NO;
+
+END GetCaseDetailForIE_API;
+
+===============
+
+ALTER TABLE T80_PO_MASTER 
+ADD ClientUserID Varchar2(20);
+=====================

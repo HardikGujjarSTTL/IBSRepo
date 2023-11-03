@@ -794,7 +794,7 @@ namespace IBS.Repositories.Vendor
                      from bpo in bpoGroup.DefaultIfEmpty()
                      join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
                      from city in cityGroup.DefaultIfEmpty()
-                     where t15.CaseNo == model.CaseNo && t18.ItemSrnoPo == ItemSrnoPo
+                     where t15.CaseNo == model.CaseNo && t18.CallRecvDt == model.CallRecvDt && t18.CallSno == model.CallSno && t18.ItemSrnoPo == ItemSrnoPo
                      select new VenderCallRegisterModel
                      {
                          Status = "Available",

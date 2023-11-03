@@ -399,7 +399,12 @@
                         }
                     }
                     else {
-                        ShowHideMsgNew(false, "InValid Bill No.");
+                        if (BillTypes == "B") {
+                            ShowHideMsgNew(false, "InValid Bill No.");
+                        }
+                        else {
+                            ShowHideMsgNew(false, "InValid Invoice No.");
+                        }
                     }
                     //else {
                     //    $(".BillDetails").css("display", "none");
@@ -481,8 +486,8 @@
                     },
                     { data: "BpoName" },
                     { data: "BillAmount" },
-                    { data: "AmountCleared" },
                     { data: "BillAmtCleared" },
+                    { data: "AmountCleared" },
                     {
                         data: "PostingDt",
                         render: function (data, type, row) {

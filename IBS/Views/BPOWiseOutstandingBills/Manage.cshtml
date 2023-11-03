@@ -46,7 +46,7 @@
         }       
     });
     function loadLabRegReport() {
-        $("#dvReportViewer").load("@Url.Action("BPOWiseOutBills")", { FromDt: '@Model.FromDt', ToDt: '@Model.ToDt', BpoCd: '@Model.BpoCd', BpoType: '@Model.BpoType', BpoRly: '@Model.BpoRly', BpoRegion: '@Model.BpoRegion', Railway: '@Model.Railway', PSU: '@Model.PSU', ForeignRailways: '@Model.ForeignRailways', PrivateSector: '@Model.PrivateSector', TypeofOutStandingBills: '@Model.TypeofOutStandingBills' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("BPOWiseOutBills")", { FromDt: '@Model.FromDt', ToDt: '@Model.ToDt', BpoCd: '@Model.BpoCd', BpoType: '@Model.BpoType', BpoRly: '@Model.BpoRly', BpoRegion: '@Model.BpoRegion', Railway: '@Model.Railway', PSU: '@Model.PSU', StateGovt: '@Model.StateGovt', ForeignRailways: '@Model.ForeignRailways', PrivateSector: '@Model.PrivateSector', TypeofOutStandingBills: '@Model.TypeofOutStandingBills' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

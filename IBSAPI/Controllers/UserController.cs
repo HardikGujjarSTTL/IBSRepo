@@ -34,30 +34,43 @@ namespace IBSAPI.Controllers
 
         [HttpPost("SignIn", Name = "SignIn")]
         public IActionResult SignIn([FromBody] LoginModel loginModel)
-        {
-            //string EncryptPassword = Common.EncryptQueryString(loginModel.Password.ToString());
-            string DecryptPassword = Common.DecryptQueryString(loginModel.Password);
-            loginModel.Password= DecryptPassword;
-            UserModel userModel = userRepository.FindByLoginDetail(loginModel);
-            if (userModel != null)
+        {            
+            try
             {
-                var token = tokenServices.GenerateToken(userModel.userId);
-                tokenServices.InActiveOldActiveTokens(userModel.userId, token.AuthToken);
-                userModel.token = token.AuthToken;
-                var response = new
+                //string EncryptPassword = Common.EncryptQueryString(loginModel.Password.ToString());
+                string DecryptPassword = Common.DecryptQueryString(loginModel.Password);
+                loginModel.Password = DecryptPassword;
+                UserModel userModel = userRepository.FindByLoginDetail(loginModel);
+                if (userModel != null)
                 {
-                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                    message = "Data get successfully",
-                    data = userModel
-                };
-                return Ok(response);
+                    var token = tokenServices.GenerateToken(userModel.userId);
+                    tokenServices.InActiveOldActiveTokens(userModel.userId, token.AuthToken);
+                    userModel.token = token.AuthToken;
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = userModel
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "Invalid Username or Password."
+                    };
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "SignIn", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = "Invalid Username or Password."
+                    message = ex.Message.ToString(),
                 };
                 return Ok(response);
             }
@@ -66,37 +79,49 @@ namespace IBSAPI.Controllers
         [HttpPost("ForgotPassword", Name = "ForgotPassword")]
         public IActionResult ForgotPassword([FromBody] ForgotPasswordModel forgotPasswordModel)
         {
-            UserModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName);
-            if (userMaster != null)
+            try
             {
-                if (userMaster.Email != null && userMaster.Email != "")
+                UserModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName);
+                if (userMaster != null)
                 {
-                    string rootPath = Configuration["MyAppSettings:ResetPasswordPath"] + Common.EncryptQueryString(Convert.ToString(userMaster.userId));
-                    string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
-                    body = body.Replace("{{USERNAME}}", userMaster.userName).Replace("{{RESETPASSURL}}", rootPath );
-
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.To = userMaster.Email;
-                    sendMailModel.Subject = "Reset Password on IBS";
-                    sendMailModel.Message = body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-
-                    if (isSend)
+                    if (userMaster.Email != null && userMaster.Email != "")
                     {
-                        var response = new
-                        {
-                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                            message = "Reset Password link has been sent to registered email id"
-                        };
-                        return Ok(response);
+                        string rootPath = Configuration["MyAppSettings:ResetPasswordPath"] + Common.EncryptQueryString(Convert.ToString(userMaster.userId));
+                        string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
+                        body = body.Replace("{{USERNAME}}", userMaster.userName).Replace("{{RESETPASSURL}}", rootPath);
 
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.To = userMaster.Email;
+                        sendMailModel.Subject = "Reset Password on IBS";
+                        sendMailModel.Message = body;
+                        bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+
+                        if (isSend)
+                        {
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                message = "Reset Password link has been sent to registered email id"
+                            };
+                            return Ok(response);
+
+                        }
+                        else
+                        {
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                message = "Email not send"
+                            };
+                            return Ok(response);
+                        }
                     }
                     else
                     {
                         var response = new
                         {
                             resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                            message = "Email not send"
+                            message = "Email ID Not Found"
                         };
                         return Ok(response);
                     }
@@ -106,20 +131,21 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "Email ID Not Found"
+                        message = "Invalid Username"
                     };
                     return Ok(response);
                 }
             }
-            else
+            catch (Exception ex)
             {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "ForgotPassword", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = "Invalid Username"
+                    message = ex.Message.ToString(),
                 };
                 return Ok(response);
-            }
+            }            
         }
 
 

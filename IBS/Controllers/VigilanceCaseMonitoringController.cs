@@ -76,15 +76,22 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "BankMaster", "Manage", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "VigilanceCaseMonitoring", "Manage", 1, GetIPAddress());
             }
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult LoadTableVigilanceList([FromBody] DTParameters dtParameters)
+        public IActionResult LoadTableVigilanceList1([FromBody] DTParameters dtParameters)
         {
-            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList(dtParameters);
+            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList1(dtParameters);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableVigilanceList2([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VigilanceCasesListModel> dTResult = vigilanceCaseMonitoringRepository.GetVigilanceList2(dtParameters);
             return Json(dTResult);
         }
 

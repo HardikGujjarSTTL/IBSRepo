@@ -57,6 +57,8 @@ public partial class T80PoMaster
 
     public int? Contractid { get; set; }
 
+    public string? Clientuserid { get; set; }
+
     public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
     public virtual T01Region? RegionCodeNavigation { get; set; }

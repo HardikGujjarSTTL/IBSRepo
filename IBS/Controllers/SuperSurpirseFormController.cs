@@ -56,7 +56,7 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 // Handle any exceptions or errors here
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseManage", "SuperSurpirseForm", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseForm", "SuperSurpirseManage", 1, GetIPAddress());
             }
             return View(SuperSurpirseFormModel);
         }
@@ -81,7 +81,7 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 // Handle any exceptions or errors here
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Index", "SuperSurpirseForm", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseForm", "LoadTable", 1, GetIPAddress());
             }
             return Json(dTResult);
         }       
@@ -114,7 +114,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseManage", "SuperSurpirseForm", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseForm", "Save", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

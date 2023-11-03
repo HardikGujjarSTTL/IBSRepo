@@ -45,7 +45,7 @@ namespace IBSAPI.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "GetDeparmentList", "Department", 1, string.Empty);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Department_API", "GetDeparmentList", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,

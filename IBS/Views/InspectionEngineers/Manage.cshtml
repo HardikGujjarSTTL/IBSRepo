@@ -73,7 +73,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Department <i class="text-danger">*</i></label>
-                    @Html.DropDownListFor(model => model.IeDepartment, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"), "--Select--", new { @class = "", @onchange = "BindClusterName();" })
+                    @Html.DropDownListFor(model => model.IeDepartment, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"), "--Select--", new { @class = "", @onchange = "BindCluster();" })
                     <span asp-validation-for="IeDepartment" class="text-danger" id="spnIeDepartment"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -264,6 +264,20 @@
             InitializeClusterData();
         });
 
+        $('#IeEmpNo').change(function () {
+            $.get("@Url.Action("GetUserID", "InspectionEngineers")", { IeEmpNo: $("#IeEmpNo").val() }, function (response) {
+                if (response.status) {
+                    $('#IeEmpNo').val("");
+                    $("#spnIeEmpNo").html("Employee No. are Already Existing!!!.");
+                    $("#IeEmpNo").focus();
+                }
+                else
+                {
+                    $("#spnIeEmpNo").html("");
+                }
+            });
+        });
+
         function ValidateClusterData() {
             var isValidate = true;
             $("#spnErrorlstCluster").html("");
@@ -276,8 +290,7 @@
         }
 
         $("#AddCluster").click(function () {
-            if($("#IeName").val() == "")
-            {
+            if ($("#IeName").val() == "") {
                 ShowHideMsgNew(false, "Please add IE Name");
                 return;
             }
@@ -421,6 +434,7 @@
 
             $.get("@Url.Action("GetClusterByIE", "InspectionEngineers")", { IeDepartment: $("#IeDepartment").val() }, function (response) {
                 if (response != null) {
+                    debugger
                     $("#ClusterID").empty();
                     $("#ClusterID").append($('<option value="">--Select--</option>'));
                     $.each(response.list, function (ind, val) {
@@ -494,7 +508,7 @@
                 $("#spnIeType").html("Please add IE Posting.");
                 IsValid = false;
             }
-            
+
 
             if (!IsValid) return;
 
