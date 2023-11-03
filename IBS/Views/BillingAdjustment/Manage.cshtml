@@ -30,7 +30,7 @@
 
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Month: </label>
-                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"),"--Select--")
+                                @Html.DropDownListFor(model => model.AdjusmentPerMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="AdjusmentPerMon" class="text-danger"></span>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -45,7 +45,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-4">
                                 <label for="Reference">Adjustment Amount Fee(In Rs.)</label>
-                                <input type="text" class="input" asp-for="Adjustment_Amt" maxlength="500" />
+                                <input type="number" class="input" asp-for="Adjustment_Amt" maxlength="500" />
                                 <span asp-validation-for="Adjustment_Amt" class="text-danger"></span>
                             </div>
                             
@@ -75,8 +75,14 @@
             if (@Model.Adjusment_Yr_Mth > null) {
                 var s = @Model.Adjusment_Yr_Mth;
                 var year = s.toString().substring(0, 4);
-                var mon = s.toString().substring(4, 6);
-                $("#AdjusmentPerMon").val(mon);
+                var month = s.toString().substring(4, 6);
+                //if (month != "10" || month != "11" || month != "12") {
+                //    $("#AdjusmentPerMon").val(s.toString().substring(5, 6));
+                //}
+                //else {
+                //    $("#AdjusmentPerMon").val(month);
+                //}
+                $("#AdjusmentPerMon").val(month);
                 $("#AdjusmentPerYear").val(year);
             }
         });

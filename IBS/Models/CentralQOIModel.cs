@@ -4,19 +4,19 @@ namespace IBS.Models
 {
     public class CentralQOIModel
     {
-        [Required]
+        [Required(ErrorMessage = "Total Qty Dispatched is required")]
         public long? TotalQtyDispatched { get; set; }
 
         public long? NoOfIcIssued { get; set; }
-        [Required]
-        public string Client { get; set; } = null!;
-        public string ClientName { get; set; } = null!;
+        [Required(ErrorMessage = "Client is required")]
+        public string Clients { get; set; }
+        public string ClientName { get; set; }
 
-        public string QtyDate { get; set; } = null!;
-        [Required]
-        public string Month { get; set; } = null!;
-        [Required]
-        public string Year { get; set; } = null!;
+        public string QtyDate { get; set; }
+        [Required(ErrorMessage = "For The Period Month is required")]
+        public string Month { get; set; }
+        [Required(ErrorMessage = "For The Period Year is required")]
+        public string Year { get; set; } 
 
         public string? RegionCode { get; set; }
 

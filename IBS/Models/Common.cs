@@ -2162,7 +2162,7 @@ namespace IBS.Models
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
                 var query = ModelContext.T12BillPayingOfficers
-                        .Where(bpo => bpo.BpoType == "U")
+                        .Where(bpo => bpo.BpoType == RlyNonrly)
                         .GroupBy(bpo => new
                         {
                             RLY_CD = bpo.BpoRly.ToUpper().Trim(),

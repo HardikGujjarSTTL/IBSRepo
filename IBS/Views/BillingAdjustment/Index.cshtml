@@ -81,7 +81,7 @@
                             var _AdjusmentYrMth = data.Adjusment_Yr_Mth;
                             var editUrl = '@Url.Action("Manage", "BillingAdjustment")?_AdjusmentYrMth=' + _AdjusmentYrMth;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="BillingAdjustmentDelete(this._AdjusmentYrMth); return false;" href="javascript:void(\'0\');" id=\"' + _AdjusmentYrMth + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="BillingAdjustmentDelete(\'' + _AdjusmentYrMth + '\'); return false;" href="javascript:void(\'0\');" id=\"' + _AdjusmentYrMth + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -92,8 +92,8 @@
         }
 
         function BillingAdjustmentDelete(_AdjusmentYrMth) {
-            var url = '@Url.Action("Delete", "BillingAdjustment")';
-            $("#btn-delete-yes").attr("href", url + "/" + _AdjusmentYrMth);
+            var url = '@Url.Action("Delete", "BillingAdjustment")?_AdjusmentYrMth=' + _AdjusmentYrMth;
+            $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
     </script>

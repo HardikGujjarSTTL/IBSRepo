@@ -75,7 +75,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Client = data.Client;
+                            var Client = data.Clients;
                             var ClientName = "";
                             if (Client == "1") {
                                 ClientName = "RSM"
@@ -84,13 +84,10 @@
                                 ClientName = "URM"
                             }
                             else if (Client == "3") {
-                                ClientName = "JINDAL RAILWAY"
+                                ClientName = "JINDAL"
                             }
                             else if (Client == "4") {
-                                ClientName = "JINDAL NON RAILWAY."
-                            }
-                            else if (Client == "5") {
-                                ClientName = "PLATE(BSP)"
+                                ClientName = "PLATE(BSP)."
                             }
                             return ClientName;
                         }
@@ -100,10 +97,10 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Client = data.Client;
+                            var Client = data.Clients;
                             var QoiDate = data.QoiDate;
-                            var Weight = data.Weight;
-                            var QoiLength = data.QoiLength;
+                            var Weight = data.Weights;
+                            var QoiLength = data.QoiLengths;
                             var editUrl = '@Url.Action("Manage", "CentralQOII")/?Client=' + Client + "&QoiDate=" + QoiDate + "&Weight=" + Weight + "&QoiLength=" + QoiLength;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
                             html += '<a onclick="CentralQOIIDelete(\'' + Client + '\',\'' + QoiDate + '\',\'' + Weight + '\',\'' + QoiLength + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Client + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
