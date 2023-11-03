@@ -56,20 +56,20 @@ namespace IBSAPI.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<ManufacturerModel> manufacturerModels = new List<ManufacturerModel>();
             manufacturerModels = (from v in ModelContext.T05Vendors
-                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
-                        where v.VendCityCd == c.CityCd && v.VendName != null && v.VendCd == VendCd
-                        select
-                   new ManufacturerModel
-                   {
-                       ManufacturerEmail=v.VendEmail,
-                       ManufacturerName=v.VendName,
-                       PhoneNumber = v.VendContactTel1,
-                       ContactPersonName = v.VendContactPer1,
-                       PlaceofInspection = v.VendAdd1,
-                       ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
-                       ManufacturerID = v.VendCd,
-                   }).ToList();
-            
+                                  join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                                  where v.VendCityCd == c.CityCd && v.VendName != null && v.VendCd == VendCd
+                                  select
+                             new ManufacturerModel
+                             {
+                                 ManufacturerEmail = v.VendEmail,
+                                 ManufacturerName = v.VendName,
+                                 PhoneNumber = v.VendContactTel1,
+                                 ContactPersonName = v.VendContactPer1,
+                                 PlaceofInspection = v.VendAdd1,
+                                 ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                                 ManufacturerID = v.VendCd,
+                             }).ToList();
+
             return manufacturerModels;
         }
 
@@ -78,27 +78,49 @@ namespace IBSAPI.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<ManufacturerModel> manufacturerModels = new List<ManufacturerModel>();
             manufacturerModels = (from v in ModelContext.T05Vendors
-                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
-                        where v.VendCityCd == c.CityCd && v.VendName != null
-                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                        orderby v.VendName
-                        select
-                   new ManufacturerModel
-                   {
-                       ManufacturerEmail = v.VendEmail,
-                       ManufacturerName = v.VendName,
-                       PhoneNumber = v.VendContactTel1,
-                       ContactPersonName = v.VendContactPer1,
-                       PlaceofInspection = v.VendAdd1,
-                       ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
-                       ManufacturerID = v.VendCd,
-                   }).ToList();
+                                  join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                                  where v.VendCityCd == c.CityCd && v.VendName != null
+                                  && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                                  orderby v.VendName
+                                  select
+                             new ManufacturerModel
+                             {
+                                 ManufacturerEmail = v.VendEmail,
+                                 ManufacturerName = v.VendName,
+                                 PhoneNumber = v.VendContactTel1,
+                                 ContactPersonName = v.VendContactPer1,
+                                 PlaceofInspection = v.VendAdd1,
+                                 ManufacturerDropDownName = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                                 ManufacturerID = v.VendCd,
+                             }).ToList();
             return manufacturerModels;
         }
 
         public static string ConvertDateFormat(this DateTime dt)
         {
             return dt.ToString(Common.CommonDateFormate1);
+        }
+
+        public static DateTime GetFinancialYearStartDate()
+        {
+            DateTime currentDate = DateTime.Today;
+            DateTime financialYearStart;
+            if (currentDate.Month >= 4)
+            {
+                financialYearStart = new DateTime(currentDate.Year, 4, 1);
+            }
+            else
+            {
+                financialYearStart = new DateTime(currentDate.Year - 1, 4, 1);
+            }            
+            return financialYearStart;            
+        }
+
+        public static DateTime GetFinancialYearEndDate()
+        {
+            DateTime financialYearStart = GetFinancialYearStartDate();
+            DateTime financialYearEnd = financialYearStart.AddYears(1).AddDays(-1);
+            return financialYearEnd;
         }
     }
     public static class DbContextHelper
