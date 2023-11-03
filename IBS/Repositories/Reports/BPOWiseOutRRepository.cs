@@ -139,6 +139,7 @@ namespace IBS.Repositories.Reports
                     model.Amount = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_AMT"]);
                     model.CNOTE_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_AMOUNT"]);
                     model.CNOTE_NUMBER = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_BILL_NO"]);
+                    model.AU_DESC = Convert.ToString(ds.Tables[0].Rows[0]["AU_DESC"]);
                 }
                 model.lstBPOReport = lstlab;
             }
