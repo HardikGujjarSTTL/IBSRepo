@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using IBSAPI.Helper;
 using Newtonsoft.Json;
 using System.Data;
+using System.Dynamic;
 
 namespace IBSAPI.Repositories
 {
@@ -72,7 +73,7 @@ namespace IBSAPI.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 pendingList = JsonConvert.DeserializeObject<List<PendingInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
             }
-            return pendingList;            
+            return pendingList;
         }
         public CaseDetailIEModel GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd)
         {
@@ -92,6 +93,44 @@ namespace IBSAPI.Repositories
                 caseDetailIEModel = JsonConvert.DeserializeObject<List<CaseDetailIEModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
             }
             return caseDetailIEModel;
+        }
+
+        public List<DateWiseRecentInspectionModel> GetDateWiseRecentInspection(int IeCd, string FromDate, string ToDate)
+        {
+            List<DateWiseRecentInspectionModel> recentInspDetail = new List<DateWiseRecentInspectionModel>();
+            FromDate = Convert.ToDateTime(FromDate).ToString("dd/MM/yyyy");
+            ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GETDATEWISERECENTINSPECTION_API", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                recentInspDetail = JsonConvert.DeserializeObject<List<DateWiseRecentInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            return recentInspDetail;
+        }
+
+        public List<CompleteInspectionModel> GetCompleteInspection(int IeCd)
+        {
+            List<CompleteInspectionModel> completeInspList = new List<CompleteInspectionModel>();
+            
+            OracleParameter[] par = new OracleParameter[2];            
+            par[0] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GETCOMPLETEDINSPECTION_API", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                completeInspList = JsonConvert.DeserializeObject<List<CompleteInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            return completeInspList;
         }
     }
 }
