@@ -4,22 +4,22 @@ namespace IBS.Models
 {
     public class CentralQOIIModel
     {
-        [Required]
-        public string Client { get; set; } = null!;
-        [Required]
-        public string Weight { get; set; } = null!;
-        [Required]
-        public string QoiLength { get; set; } = null!;
-        [Required]
+        [Required(ErrorMessage = "Client is required")]
+        public string Clients { get; set; }
+        [Required(ErrorMessage = "Weight is required")]
+        public string Weights { get; set; }
+        [Required(ErrorMessage = "Height is required")]
+        public string QoiLengths { get; set; }
+        [Required(ErrorMessage = "Accepted Quantity(mt) is required")]
         public long Accepted { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Rejected Quantity(mt) is required")]
         public long Rejected { get; set; }
 
-        public string QoiDate { get; set; } = null!;
-        [Required]
-        public string Month { get; set; } = null!;
-        [Required]
-        public string Year { get; set; } = null!;
+        public string QoiDate { get; set; }
+        [Required(ErrorMessage = "For The Period Month is required")]
+        public string Month { get; set; }
+        [Required(ErrorMessage = "For The Period year is required")]
+        public string Year { get; set; }
 
         public string? Region { get; set; }
 

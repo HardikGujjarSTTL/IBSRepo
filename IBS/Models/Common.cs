@@ -2162,7 +2162,7 @@ namespace IBS.Models
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
                 var query = ModelContext.T12BillPayingOfficers
-                        .Where(bpo => bpo.BpoType == "U")
+                        .Where(bpo => bpo.BpoType == RlyNonrly)
                         .GroupBy(bpo => new
                         {
                             RLY_CD = bpo.BpoRly.ToUpper().Trim(),
@@ -2924,7 +2924,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-
+                                         orderby a.BankName
                                          select
                                     new SelectListItem
                                     {

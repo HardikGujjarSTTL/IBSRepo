@@ -87,7 +87,7 @@
                         render: function (data, type, row) {
                             var Id = data.BARCODE;
                             var qtyInput = '<input type="number" class="text-filter" name="qty" style="height:auto;" id="' + data.QTY + '" value="1" min="1" step="1" oninput="validity.valid||(value=\'1\');" onchange="validateQty(this);"';
-                            var printImage = '<img src="../images/print.png" alt="Print" />';
+                            var printImage = '<img src="@Url.Content("~/images/print.png")" alt="Print" />';
                             var printLink = '<a href="' + getEditUrl(Id) + '" class="btnicons" style="margin-left:40%;vertical-align:sub;">' + printImage + '</a>';
                             var html = '<div align="center" class="btnicons">' + printLink + '</div>';
                             return qtyInput + html;
@@ -101,6 +101,10 @@
 
         function getEditUrl(Id) {
             return '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id;
+            
+            // var qty = $(this).closest('td').find('input[name="qty"]').val();
+            // var editUrl = '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id + '&quantity=' + qty;
+            // return editUrl;
         }
 
         $('#dtbarcode').on('click', 'td a', function (e) {
@@ -108,8 +112,16 @@
             var qty = $(this).closest('td').find('input[name="qty"]').val();
             var Id = $(this).attr('href').split('Barcode=')[1];
             var editUrl = getEditUrl(Id) + '&quantity=' + qty;
-            printDirectly(editUrl);
+            window.location.href = editUrl;
         });
+
+        // $('#dtbarcode').on('click', 'td a', function (e) {
+        //     e.preventDefault();
+        //     var qty = $(this).closest('td').find('input[name="qty"]').val();
+        //     var Id = $(this).attr('href').split('Barcode=')[1];
+        //     var editUrl = getEditUrl(Id) + '&quantity=' + qty;
+        //     printDirectly(editUrl);
+        // });
 
         function printDirectly(url) {
             var iframe = document.createElement('iframe');

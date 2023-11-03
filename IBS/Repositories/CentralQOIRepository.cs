@@ -77,7 +77,7 @@ namespace IBS.Repositories
                     {
                         TotalQtyDispatched = l.TotalQtyDispatched,
                         NoOfIcIssued = l.NoOfIcIssued,
-                        Client = l.Client,
+                        Clients = l.Client,
                         QtyDate = l.QtyDate,
                         RegionCode = l.RegionCode,
                         UserId = l.UserId,
@@ -89,7 +89,7 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.NoOfIcIssued).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.QtyDate).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.RegionCode).ToLower().Contains(searchBy.ToLower())
                 );
 
@@ -117,24 +117,23 @@ namespace IBS.Repositories
             string Client = "";
 
             T78CentralQoi objExist = (from t in context.T78CentralQois
-                                      where t.Client == model.Client && t.QtyDate == model.QtyDate && t.RegionCode == model.RegionCode
+                                      where t.Client == model.Clients && t.QtyDate == model.QtyDate && t.RegionCode == model.RegionCode
                                       select t).FirstOrDefault();
             if (model.IsEdited == false && objExist != null)
             {
                 return "Already Exist";
             }
             T78CentralQoi objAdd = (from t in context.T78CentralQois
-                                    where t.Client == model.Client && t.QtyDate == model.QtyDate
+                                    where t.Client == model.Clients && t.QtyDate == model.QtyDate
                                     select t).FirstOrDefault();
-            #region Contract save
+            #region Contract save   
             if (objAdd == null)
             {
                 T78CentralQoi obj = new T78CentralQoi();
                 obj.TotalQtyDispatched = model.TotalQtyDispatched;
                 obj.NoOfIcIssued = model.NoOfIcIssued;
-                obj.Client = model.Client;
+                obj.Client = model.Clients;
                 obj.QtyDate = model.QtyDate;
-                obj.Client = model.Client;
                 obj.RegionCode = model.RegionCode;
                 obj.UserId = model.UserId;
                 obj.Datetime = DateTime.Now;
@@ -149,7 +148,7 @@ namespace IBS.Repositories
             {
                 objAdd.TotalQtyDispatched = model.TotalQtyDispatched;
                 objAdd.NoOfIcIssued = model.NoOfIcIssued;
-                objAdd.Client = model.Client;
+                objAdd.Client = model.Clients;
                 objAdd.RegionCode = model.RegionCode;
                 objAdd.UserId = model.UserId;
                 objAdd.Datetime = DateTime.Now;
