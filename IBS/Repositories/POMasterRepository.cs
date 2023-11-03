@@ -117,7 +117,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string ClientUserID)
+        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd)
         {
 
             DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
@@ -145,7 +145,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from POMaster in context.ViewPomasterlists
-                    where POMaster.Clientuserid == ClientUserID
+                    where POMaster.RlyCds == rly_cd
                     && POMaster.Isdeleted != Convert.ToByte(true)
                     select new PO_MasterModel
                     {

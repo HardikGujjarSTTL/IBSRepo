@@ -2195,6 +2195,36 @@ namespace IBS.Models
             //return dropDownDTOs.ToList();
         }
 
+
+        public static string GetClient(string RlyNonrly,string rly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            string ClintName = "";
+
+            if (RlyNonrly == "R")
+            {
+                ClintName = (from a in ModelContext.T91Railways
+                             where a.RlyCd == rly
+                             select a.Railway).FirstOrDefault();
+            }
+            else if (RlyNonrly != "" && RlyNonrly != null)
+            {
+                var objRailway = ModelContext.T12BillPayingOfficers
+                                .Where(bpo => bpo.BpoRly == rly)
+                                .GroupBy(bpo => new
+                                {
+                                    RAILWAY = bpo.BpoOrgn
+                                })
+                                .Select(group => new
+                                {
+                                    group.Key.RAILWAY
+                                })
+                                .FirstOrDefault();
+                ClintName = objRailway.RAILWAY;
+            }
+            return ClintName;
+        }
+
         public static List<SelectListItem> GetAgencyClientForDEOCris()
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
