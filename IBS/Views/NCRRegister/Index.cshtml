@@ -26,17 +26,17 @@
     <div class="col-md-3 mb-3">
         <label for="PropertyId">IE</label>
                 @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
-        <span asp-validation-for="IeCd" class="text-danger"></span>
+        <span id="spnIeCd" class="text-danger"></span>
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">Date From.</label>
-                <input type="text" class="input datepicker" asp-for="FromDate"  id="FromDate" required>
-                <span asp-validation-for="FromDate" class="text-danger"></span>
+                <input type="text" class="input datepicker" asp-for="FromDate" id="FromDate" placeholder="DD/MM/YYYY" required>
+                <span  class="text-danger field-validation-error" id="spnFromDate" ></span>
     </div>
     <div class="col-md-3 mb-3">
         <label for="Reference">To</label>
-                <input type="text" class="input datepicker" asp-for="ToDate" id="ToDate" required>
-        <span asp-validation-for="ToDate" class="text-danger"></span>
+                <input type="text" class="input datepicker" asp-for="ToDate" id="ToDate" placeholder="DD/MM/YYYY" required>
+                <span class="text-danger field-validation-error" id="spnToDate" ></span>
     </div>
     <div class="col-md-3 mb-3">
         <div class="savenext-btn">
@@ -82,32 +82,30 @@
      <script type="text/javascript">
 
          function Submit() {
-            var ncrNoInput = $("#FromDate");
-            var ncrNoInput1 = $("#ToDate");
-            
-            var ncrNoValue = ncrNoInput.val().trim();
-            var ncrNoValue1 = ncrNoInput.val().trim();
-            
-            var validationSpan = $("[data-valmsg-for='FromDate']");
-            var validationSpan1 = $("[data-valmsg-for='ToDate']");
-            var ieCdDropDown = $("#IENAME");
-            var ieCdValue = ieCdDropDown.val();
-            var ieCdValidationSpan = $("[data-valmsg-for='IeCd']");
+            $("#spnFromDate").html("");
+            $("#spnToDate").html("");
+            $("#spnIeCd").html("");
 
-            if (ncrNoValue === "" && ncrNoValue1 === "" && ieCdValue === "") {
-                validationSpan.html("FromDate is required.");
-                validationSpan1.html("ToDate is required.");
-                ieCdValidationSpan.html("IE Code is required.");
-                ieCdValidationSpan.show();
-                return;
-            } else {
-                if ($("#frmNCRDetails").valid()) {
-                    $("#frmNCRDetails").submit();
-                }
-                InitializeDatatable();
+            if ($("#FromDate").val() == "") {
+                $("#spnFromDate").html("Enter From Date.");
+                IsValid = false;
             }
-            validationSpan.hide();
-            ieCdValidationSpan.hide();
+            if ($("#ToDate").val() == "") {
+                $("#spnToDate").html("Enter To Date.");
+                IsValid = false;
+            }
+            if ($("#IENAME").val() == "") {
+                $("#spnIeCd").html("Select IE.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            var IsValid = true;
+            
+            if ($("#frmNCRDetails").valid()) {
+                $("#frmNCRDetails").submit();
+            }
+            InitializeDatatable();
         }
 
 

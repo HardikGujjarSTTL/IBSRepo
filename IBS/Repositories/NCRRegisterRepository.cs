@@ -426,7 +426,7 @@ namespace IBS.Repositories
             string genrate_NCNO = "";
             string ErrCD = "";
 
-            if (model.NC_NO != "" && model.NC_NO != null)
+            if (model.NC_NO != "" || model.NC_NO != null)
             {
                 OracleParameter[] par = new OracleParameter[3];
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.SetRegionCode, ParameterDirection.Input);
