@@ -28,9 +28,9 @@ namespace IBS.Repositories
                 throw new Exception("Central QOII Record Not found");
             else
             {
-                model.Client = t79CentralQoinsp.Client;
-                model.Weight = t79CentralQoinsp.Weight;
-                model.QoiLength = t79CentralQoinsp.QoiLength;
+                model.Clients = t79CentralQoinsp.Client;
+                model.Weights = t79CentralQoinsp.Weight;
+                model.QoiLengths = t79CentralQoinsp.QoiLength;
                 model.Accepted = Convert.ToInt64(t79CentralQoinsp.Accepted);
                 model.Rejected = Convert.ToInt64(t79CentralQoinsp.Rejected);
                 model.QoiDate = t79CentralQoinsp.QoiDate;
@@ -77,9 +77,9 @@ namespace IBS.Repositories
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new CentralQOIIModel
                     {
-                        Client = l.Client,
-                        Weight = l.Weight,
-                        QoiLength = l.QoiLength,
+                        Clients = l.Client,
+                        Weights = l.Weight,
+                        QoiLengths = l.QoiLength,
                         Accepted = Convert.ToInt64(l.Accepted),
                         Rejected = Convert.ToInt64(l.Rejected),
                         QoiDate = l.QoiDate,
@@ -93,7 +93,7 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Weight).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.QoiDate).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.Region).ToLower().Contains(searchBy.ToLower())
                 );
 
@@ -121,22 +121,22 @@ namespace IBS.Repositories
             string Client = "";
 
             T79CentralQoinsp objExist = (from t in context.T79CentralQoinsps
-                                      where t.Client == model.Client && t.QoiDate == model.QoiDate && t.Weight == model.Weight && t.QoiLength == model.QoiLength
+                                      where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
                                       select t).FirstOrDefault();
             if (model.IsEdited == false && objExist != null)
             {
                 return "Already Exist";
             }
             T79CentralQoinsp objAdd = (from t in context.T79CentralQoinsps
-                                    where t.Client == model.Client && t.QoiDate == model.QoiDate && t.Weight == model.Weight && t.QoiLength == model.QoiLength
+                                    where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
                                     select t).FirstOrDefault();
             #region Contract save
             if (objAdd == null)
             {
                 T79CentralQoinsp obj = new T79CentralQoinsp();
-                obj.Client = model.Client;
-                obj.Weight = model.Weight;
-                obj.QoiLength = model.QoiLength;
+                obj.Client = model.Clients;
+                obj.Weight = model.Weights;
+                obj.QoiLength = model.QoiLengths;
                 obj.Accepted = model.Accepted;
                 obj.Rejected = model.Rejected;
                 obj.QoiDate = model.QoiDate;

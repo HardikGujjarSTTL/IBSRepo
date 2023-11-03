@@ -70,7 +70,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T84OutsLies
-                    where l.RegionCode == RgnCd
+                    where l.RegionCode == RgnCd && l.Isdeleted != true
                     select new LastYearOutstandingModel
                     {
                         //Id = l.Id,
@@ -102,9 +102,8 @@ namespace IBS.Repositories
 
             if (_LyPer == null) { return false; }
 
-            //_BeTarget.Isdeleted = Convert.ToByte(true);
-            //_BeTarget.Updatedby = UserID;
-            //_BeTarget.Updateddate = DateTime.Now;
+            _LyPer.Isdeleted = true;
+            _LyPer.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -126,7 +125,7 @@ namespace IBS.Repositories
                 obj.LyOuts = model.Ly_Outs; 
                 obj.UserId = model.User_Id;
                 obj.RegionCode = model.Region_Code;
-                //obj.Isdeleted = Convert.ToByte(false);
+                obj.Isdeleted = false;
                 //obj.Createdby = model.UserId;
                 //obj.Createddate = DateTime.Now;
                // obj.Updatedby = model.UserId;

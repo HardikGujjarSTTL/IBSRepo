@@ -19515,7 +19515,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.LyOuts)
                 .HasColumnType("NUMBER(13,2)")
@@ -19560,7 +19560,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(500)
@@ -21427,6 +21427,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("AU");
+            entity.Property(e => e.AuDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("AU_DESC");
             entity.Property(e => e.BillAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("BILL_AMOUNT");
