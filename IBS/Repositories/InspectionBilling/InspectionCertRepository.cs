@@ -1835,7 +1835,7 @@ namespace IBS.Repositories.InspectionBilling
             string certdt = myYear1 + myMonth1 + myDay1;
 
             decimal in_fee;
-            if (model.BpoType == "R" && model.IcTypeId == 1)
+            if (model.BpoType == "R" && model.BpoFeeType == "P" && model.IcTypeId == 1)
             {
                 in_fee = model.RlyBpoFee;
             }
