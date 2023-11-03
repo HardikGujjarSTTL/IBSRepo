@@ -13,12 +13,15 @@
                 <tr>
 
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Bill No.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice No</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Bill Date.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Bill Amount.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">BK No.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Set No.</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Total TDS.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">GST TDS</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">I TAX TDS</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Retention Money</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">C Note Number</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">C Note Amount</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Write Off Amount</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Amount Posted</font></b></th>
@@ -27,14 +30,20 @@
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Case No.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Po No.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Po Date.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">PO OR Letter</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Consignee</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">BPO</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sap Cust CD BPO</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Vendor</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IE</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Invoice No</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Recipient GSTIN NO</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IC NO</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">IC Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Cheque Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Cheque Amount</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Narration/UTR No</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Lo Remarks</font></b></th>
-
+                    
                 </tr>
                 @if (Model != null && Model.lstBPOReport != null)
                 {
@@ -46,6 +55,11 @@
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
                                     @item.BILL_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INVOICE_NO
                                 </font>
                             </td>
                             <td width="25%" valign="top" align="center">
@@ -70,12 +84,22 @@
                             </td>
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
-                                    @item.TOTAL_TDS
+                                    @item.GST_TDS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.I_TAX_TDS
                                 </font>
                             </td>
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
                                     @item.RETENTION_MONEY
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CNOTE_NUMBER
                                 </font>
                             </td>
                             <td width="25%" valign="top" align="center">
@@ -120,6 +144,11 @@
                             </td>
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
+                                    @item.PO_OR_LETTER
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
                                     @item.CONSIGNEE
                                 </font>
                             </td>
@@ -145,9 +174,35 @@
                             </td>
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
-                                    @item.INVOICE_NO
+                                    @item.RECIPIENT_GSTIN_NO
                                 </font>
                             </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IC_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IC_DT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CHQ_DT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.Amount
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.NARRATION
+                                </font>
+                            </td>
+                            
                             <td width="25%" valign="top" align="center">
                                 <font size="1" face="Verdana">
                                     @item.LO_REMARKS
