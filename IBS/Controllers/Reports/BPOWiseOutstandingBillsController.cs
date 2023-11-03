@@ -36,7 +36,7 @@ namespace IBS.Controllers.Reports
             ViewBag.Region = Region;
             return View();
         }
-        public IActionResult Manage(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, string Checkbox, string Railway, string PSU, string StateGovt, string ForeignRailways, string PrivateSector, string TypeofOutStandingBills)
+        public IActionResult Manage(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, Boolean Railway, Boolean PSU, Boolean StateGovt, Boolean ForeignRailways, Boolean PrivateSector, string TypeofOutStandingBills)
         {
 
             BPOWiseOutstandingBillsModel model = new()
@@ -58,7 +58,7 @@ namespace IBS.Controllers.Reports
             if (ReportType == "BPO") model.ReportTitle = "OUTSTANDING BILLS";            
             return View(model);
         }
-        public IActionResult BPOWiseOutBills(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, string Checkbox, string Railway, string PSU, string StateGovt, string ForeignRailways, string PrivateSector, string TypeofOutStandingBills)
+        public IActionResult BPOWiseOutBills(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, Boolean Railway, Boolean PSU, Boolean StateGovt, Boolean ForeignRailways, Boolean PrivateSector, string TypeofOutStandingBills)
         {
             ViewBag.From = FromDt;
             ViewBag.To = ToDt;
@@ -75,7 +75,7 @@ namespace IBS.Controllers.Reports
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
 
-            BPOWiseOutstandingBillsModel model = BPOWiseOutstandingBillsRepository.GenerateReport(ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Checkbox, Railway, PSU, StateGovt, ForeignRailways, PrivateSector,TypeofOutStandingBills,Region);
+            BPOWiseOutstandingBillsModel model = BPOWiseOutstandingBillsRepository.GenerateReport(ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Railway, PSU, StateGovt, ForeignRailways, PrivateSector,TypeofOutStandingBills,Region);
             return PartialView(model);
         }
         [HttpGet]
