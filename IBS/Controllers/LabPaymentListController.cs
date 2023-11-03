@@ -30,7 +30,15 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabPaymentListModel> dTResult = LabPaymentListRepository.GetLapPaymentList(dtParameters, Regin);
+            DTResult<LabPaymentListModel> dTResult = new DTResult<LabPaymentListModel>();
+            try
+            {
+                dTResult = LabPaymentListRepository.GetLapPaymentList(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentList", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [Authorization("LabPaymentList", "LabPaymentList", "view")]
@@ -45,7 +53,15 @@ namespace IBS.Controllers
         public IActionResult LoadPayment(string CaseNo, string CallSno, string CallRecvDt)
         {
             string Regin = GetRegionCode;
-            LabPaymentListModel dTResult = LabPaymentListRepository.LoadPayment(CaseNo, CallSno, CallRecvDt, Regin);
+            LabPaymentListModel dTResult = new LabPaymentListModel();
+            try
+            {
+                dTResult = LabPaymentListRepository.LoadPayment(CaseNo, CallSno, CallRecvDt, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentList", "LoadPayment", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
@@ -53,24 +69,31 @@ namespace IBS.Controllers
         public JsonResult SaveData()
         {
             LabPaymentListModel LabPaymentListModel = new LabPaymentListModel();
-            LabPaymentListModel.UName = UserId.ToString();
-            LabPaymentListModel.CaseNo = Request.Form["CaseNo"];
-            LabPaymentListModel.CallRecvDt = Request.Form["CallRecvDt"];
-            LabPaymentListModel.CallSno = Request.Form["CallSno"];
-            LabPaymentListModel.DocStatusFin = Request.Form["DocStatusFin"];
-            LabPaymentListModel.Remarks = Request.Form["Remarks"];
-            
-            bool result;
-            result = LabPaymentListRepository.SaveData(LabPaymentListModel);
-            if (result == false)
+            try
             {
-                return Json(false);
-            }
-            else
-            {
-                return Json(true);
-            }
+                LabPaymentListModel.UName = UserId.ToString();
+                LabPaymentListModel.CaseNo = Request.Form["CaseNo"];
+                LabPaymentListModel.CallRecvDt = Request.Form["CallRecvDt"];
+                LabPaymentListModel.CallSno = Request.Form["CallSno"];
+                LabPaymentListModel.DocStatusFin = Request.Form["DocStatusFin"];
+                LabPaymentListModel.Remarks = Request.Form["Remarks"];
 
+                bool result;
+                result = LabPaymentListRepository.SaveData(LabPaymentListModel);
+                if (result == false)
+                {
+                    return Json(false);
+                }
+                else
+                {
+                    return Json(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentList", "SaveData", 1, GetIPAddress());
+            }
+            return Json(false);
         }
     }
 }

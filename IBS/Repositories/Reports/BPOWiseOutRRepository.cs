@@ -74,14 +74,14 @@ namespace IBS.Repositories.Reports
 
         //    //return dTResult;
         //}
-        public BPOWiseOutstandingBillsModel GenerateReport(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, string Checkbox, string Railway, string PSU, string StateGovt, string ForeignRailways, string PrivateSector, string TypeofOutStandingBills, string Region)
+        public BPOWiseOutstandingBillsModel GenerateReport(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, Boolean Railway, Boolean PSU, Boolean StateGovt, Boolean ForeignRailways, Boolean PrivateSector, string TypeofOutStandingBills, string Region)
         {
 
             BPOWiseOutstandingBillsModel model = new();
             List<BPOWiseOutstandingBillsModel> lstlab = new();
 
 
-            OracleParameter[] par = new OracleParameter[10];
+            OracleParameter[] par = new OracleParameter[14];
             par[0] = new OracleParameter("p_RegionCode", OracleDbType.NVarchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_StartDate", OracleDbType.NVarchar2, FromDt, ParameterDirection.Input);
             par[2] = new OracleParameter("p_EndDate", OracleDbType.NVarchar2, ToDt, ParameterDirection.Input);
@@ -89,11 +89,15 @@ namespace IBS.Repositories.Reports
             par[4] = new OracleParameter("p_BPOType", OracleDbType.NVarchar2, BpoType, ParameterDirection.Input);
             par[5] = new OracleParameter("p_BPORly", OracleDbType.NVarchar2, BpoRly, ParameterDirection.Input);
             par[6] = new OracleParameter("p_BPORegion", OracleDbType.NVarchar2, BpoRegion, ParameterDirection.Input);
-            par[7] = new OracleParameter("p_BPOTypeFilter", OracleDbType.NVarchar2, "", ParameterDirection.Input);
-            par[8] = new OracleParameter("p_TypeOutstanding", OracleDbType.NVarchar2, TypeofOutStandingBills, ParameterDirection.Input);
-            par[9] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("p_Railway", OracleDbType.Boolean, Railway, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_PSU", OracleDbType.Boolean, PSU, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_StateGov", OracleDbType.Boolean, StateGovt, ParameterDirection.Input);
+            par[10] = new OracleParameter("p_FornRly", OracleDbType.Boolean, ForeignRailways, ParameterDirection.Input);
+            par[11] = new OracleParameter("p_Private", OracleDbType.Boolean, PrivateSector, ParameterDirection.Input);
+            par[12] = new OracleParameter("p_TypeOutstanding", OracleDbType.NVarchar2, TypeofOutStandingBills, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 9);
+            var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 13);
 
             if (ds.Tables[0].Rows.Count != 0)
             {
@@ -108,7 +112,7 @@ namespace IBS.Repositories.Reports
                     model.BILL_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
                     model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
                     model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
-                    model.TOTAL_TDS = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_TDS"]);
+                    //model.TOTAL_TDS = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_TDS"]);
                     model.RETENTION_MONEY = Convert.ToString(ds.Tables[0].Rows[0]["RETENTION_MONEY"]);
                     model.WRITE_OFF_AMT = Convert.ToString(ds.Tables[0].Rows[0]["WRITE_OFF_AMT"]);
                     model.AMOUNT_POSTED = Convert.ToString(ds.Tables[0].Rows[0]["AMOUNT_POSTED"]);
@@ -123,7 +127,19 @@ namespace IBS.Repositories.Reports
                     model.VENDOR = Convert.ToString(ds.Tables[0].Rows[0]["VENDOR"]);
                     model.IE = Convert.ToString(ds.Tables[0].Rows[0]["IE"]);
                     model.INVOICE_NO = Convert.ToString(ds.Tables[0].Rows[0]["INVOICE_NO"]);
-                    model.LO_REMARKS = Convert.ToString(ds.Tables[0].Rows[0]["LO_REMARKS"]);                   
+                    model.LO_REMARKS = Convert.ToString(ds.Tables[0].Rows[0]["LO_REMARKS"]);
+                    model.I_TAX_TDS = Convert.ToString(ds.Tables[0].Rows[0]["I_TAX_TDS"]);
+                    model.GST_TDS = Convert.ToString(ds.Tables[0].Rows[0]["GST_TDS"]);
+                    model.PO_OR_LETTER = Convert.ToString(ds.Tables[0].Rows[0]["PO_OR_LETTER"]);
+                    model.IC_NO = Convert.ToString(ds.Tables[0].Rows[0]["IC_NO"]);
+                    model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
+                    model.RECIPIENT_GSTIN_NO = Convert.ToString(ds.Tables[0].Rows[0]["RECIPIENT_GSTIN_NO"]);
+                    model.CHQ_DT = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_DT"]);
+                    model.NARRATION = Convert.ToString(ds.Tables[0].Rows[0]["NARRATION"]);
+                    model.Amount = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_AMT"]);
+                    model.CNOTE_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_AMOUNT"]);
+                    model.CNOTE_NUMBER = Convert.ToString(ds.Tables[0].Rows[0]["CNOTE_BILL_NO"]);
+                    model.AU_DESC = Convert.ToString(ds.Tables[0].Rows[0]["AU_DESC"]);
                 }
                 model.lstBPOReport = lstlab;
             }

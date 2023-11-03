@@ -116,6 +116,70 @@ namespace IBS.Repositories
 
             return dTResult;
         }
+
+        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string ClientUserID)
+        {
+
+            DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
+            IQueryable<PO_MasterModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "RealCaseNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "RealCaseNo";
+                orderAscendingDirection = true;
+            }
+            query = from POMaster in context.ViewPomasterlists
+                    where POMaster.Clientuserid == ClientUserID
+                    && POMaster.Isdeleted != Convert.ToByte(true)
+                    select new PO_MasterModel
+                    {
+                        VendCd = POMaster.VendCd,
+                        CaseNo = POMaster.CaseNo.Trim(),
+                        PoNo = POMaster.PoNo,
+                        PoDtDate = POMaster.PoDt,
+                        RlyCd = POMaster.RlyCd,
+                        VendorName = POMaster.VendName,
+                        ConsigneeSName = POMaster.ConsigneeSName,
+                        RealCaseNo = POMaster.RealCaseNo,
+                        Remarks = POMaster.Remarks,
+                        RlyNonrly = POMaster.RlyNonrly,
+                        MainrlyCd = POMaster.MainrlyCd,
+                    };
+
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
         public bool Remove(string CaseNo, int UserID)
         {
             var POMasters = context.T80PoMasters.Find(CaseNo);
@@ -213,6 +277,10 @@ namespace IBS.Repositories
                 {
                     obj.Purchaser = model.Purchaser;
                 }
+                if (model.ClientUserID != null && model.ClientUserID != "")
+                {
+                    obj.Clientuserid = model.ClientUserID;
+                }
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
                 obj.Contractid = model.Contractid;
@@ -291,6 +359,42 @@ namespace IBS.Repositories
                 model.PoiCd = POMaster.PoiCd;
                 model.Contractid = POMaster.Contractid;
                 model.Isstageinspection =Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
+                return model;
+            }
+        }
+
+        public PO_MasterModel FindCaseNoForClient(string CaseNo)
+        {
+            PO_MasterModel model = new PO_MasterModel();
+            T13PoMaster POMaster = (from l in context.T13PoMasters
+                                    where l.CaseNo == CaseNo
+                                    select l).FirstOrDefault();
+
+            if (POMaster == null)
+            {
+                model = null;
+                return model;
+            }
+            else
+            {
+                model.CaseNo = POMaster.CaseNo;
+                model.PurchaserCd = POMaster.PurchaserCd;
+                model.StockNonstock = POMaster.StockNonstock;
+                model.RlyNonrly = POMaster.RlyNonrly;
+                model.PoOrLetter = POMaster.PoOrLetter;
+                model.PoNo = POMaster.PoNo;
+                model.PoDt = POMaster.PoDt;
+                model.RecvDt = POMaster.RecvDt;
+                model.VendCd = POMaster.VendCd;
+                model.RlyCd = POMaster.RlyCd;
+                model.RegionCode = POMaster.RegionCode;
+                model.UserId = POMaster.UserId;
+                model.Datetime = POMaster.Datetime;
+                model.Remarks = POMaster.Remarks;
+                model.PoiCd = POMaster.PoiCd;
+                model.Contractid = POMaster.Contractid;
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 return model;
             }

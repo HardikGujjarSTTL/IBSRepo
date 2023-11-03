@@ -27,7 +27,15 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             var region = GetUserInfo.Region;
-            DTResult<SearchPaymentsModel> dTResult = LabSearchPaymentRepository.GetSearchList(dtParameters);
+            DTResult<SearchPaymentsModel> dTResult = new DTResult<SearchPaymentsModel>();
+            try
+            {
+                dTResult = LabSearchPaymentRepository.GetSearchList(dtParameters);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSearchPayment", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
       
