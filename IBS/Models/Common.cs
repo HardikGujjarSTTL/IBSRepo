@@ -4302,7 +4302,7 @@ namespace IBS.Models
         public static List<SelectListItem> GetAccountCode(string Role_Cd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            if (Role_Cd == "6")
+            if (Role_Cd == "5")
             {
                 return (from a in context.T95AccountCodes
                         where (a.AccCd == 2210 || a.AccCd == 2212)
