@@ -2924,7 +2924,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-
+                                         orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
