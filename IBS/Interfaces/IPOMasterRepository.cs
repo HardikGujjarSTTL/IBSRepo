@@ -6,11 +6,13 @@ namespace IBS.Interfaces
     {
         public PO_MasterModel FindByID(string CaseNo);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters,int VendCd);
+        DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string ClientUserID);
         bool Remove(string CaseNo, int UserID);
         PO_MasterModel alreadyExistT80_PO_MASTER(PO_MasterModel model);
         PO_MasterModel alreadyExistT13_PO_MASTER(PO_MasterModel model);
         string POMasterDetailsInsertUpdate(PO_MasterModel model);
         public PO_MasterModel FindCaseNo(string CaseNo,int VendCd);
+        public PO_MasterModel FindCaseNoForClient(string CaseNo);
         DTResult<PO_MasterDetailListModel> GetPOMasterDetailsList(DTParameters dtParameters);
         bool RemovePODetails(string CaseNo,string ITEM_SRNO, int UserID);
         public int GenerateITEM_SRNO(string CASE_NO);

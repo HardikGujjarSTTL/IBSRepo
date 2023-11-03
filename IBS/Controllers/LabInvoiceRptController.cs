@@ -43,7 +43,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "LabInvoiceRpt", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "ManageLabInvoiceRpt", 1, GetIPAddress());
                 AlertDanger(ex.Message);
                 //return RedirectToAction("LabInvoiceRpt");
             }
@@ -66,7 +66,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "LabInvoiceRpt", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "LoadTable", 1, GetIPAddress());
                 AlertDanger(ex.Message);
                 //return RedirectToAction("LabInvoiceRpt");
             }
@@ -96,7 +96,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRptRepository", "ManageLabInvoiceRpt", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceRpt", "Save", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

@@ -31,7 +31,15 @@ namespace IBS.Controllers
         public IActionResult LapSampleIndex([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabSampleInfoModel> dTResult = LabSampleInfoRepository.LapSampleIndex(dtParameters, Regin);
+            DTResult<LabSampleInfoModel> dTResult = new DTResult<LabSampleInfoModel>();
+            try
+            {
+                dTResult = LabSampleInfoRepository.LapSampleIndex(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "LapSampleIndex", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         public IActionResult LabSampleDtl(string CaseNo, string CallRdt, string CallSno, string Flag)
@@ -46,8 +54,16 @@ namespace IBS.Controllers
         public IActionResult SampleDtlData(string CaseNo, string CallRdt, string CallSno)
         {
             string Regin = GetRegionCode;
-            LabSampleInfoModel dTResult = LabSampleInfoRepository.SampleDtlData(CaseNo, CallRdt, CallSno, Regin);
-            ViewBag.Hyperlink = dTResult.Hyperlink2;
+            LabSampleInfoModel dTResult = new LabSampleInfoModel();
+            try
+            {
+                dTResult = LabSampleInfoRepository.SampleDtlData(CaseNo, CallRdt, CallSno, Regin);
+                ViewBag.Hyperlink = dTResult.Hyperlink2;
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "SampleDtlData", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
@@ -55,97 +71,112 @@ namespace IBS.Controllers
         public JsonResult SaveDataDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
-            LabSampleInfoModel.UName = UserId.ToString();
-            LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
-            LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
-            LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
-            LabSampleInfoModel.IE = Request.Form["IE"];
-            LabSampleInfoModel.Status = Request.Form["Status"];
-            LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
-            LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
-            LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
-            LabSampleInfoModel.Remarks = Request.Form["Remarks"];
-            var file = Request.Form.Files["UploadLab"];
-            if (file != null && file.Length > 0)
+            try
             {
-                // Save the file or process it as needed
-                // For example:
-                //var fileName = Path.GetFileName(file.FileName);
-                //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData","LAB", fileName);
-                //using (var stream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-                string fn = "", MyFile = "", fx = "", fl = "";
-                string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
-                MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
-                fn = Path.GetFileName(file.FileName);
-                String SaveLocation = null;
-                SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
-                using (var stream = new FileStream(SaveLocation, FileMode.Create))
+                LabSampleInfoModel.UName = UserId.ToString();
+                LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
+                LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
+                LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
+                LabSampleInfoModel.IE = Request.Form["IE"];
+                LabSampleInfoModel.Status = Request.Form["Status"];
+                LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
+                LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
+                LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
+                LabSampleInfoModel.Remarks = Request.Form["Remarks"];
+                var file = Request.Form.Files["UploadLab"];
+                if (file != null && file.Length > 0)
                 {
-                    file.CopyTo(stream);
+                    // Save the file or process it as needed
+                    // For example:
+                    //var fileName = Path.GetFileName(file.FileName);
+                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData","LAB", fileName);
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    file.CopyTo(stream);
+                    //}
+                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
+                    MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
+                    fn = Path.GetFileName(file.FileName);
+                    String SaveLocation = null;
+                    SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
+                    using (var stream = new FileStream(SaveLocation, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+                bool result;
+                result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
+                if (result == false)
+                {
+                    return Json(false);
+                }
+                else
+                {
+                    return Json(true);
                 }
             }
-            bool result;
-            result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
-            if (result == false)
+            catch (Exception ex)
             {
-                return Json(false);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "SaveDataDetails", 1, GetIPAddress());
             }
-            else
-            {
-                return Json(true);
-            }
-
+            return Json(false);
         }
         [HttpPost]
         [Authorization("LabSampleInfo", "LabSampleInfo", "edit")]
         public JsonResult UpdateDetails()
         {
             LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
-            LabSampleInfoModel.UName = UserId.ToString();
-            LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
-            LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
-            LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
-            LabSampleInfoModel.Status = Request.Form["Status"];
-            LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
-            LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
-            LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
-            LabSampleInfoModel.Remarks = Request.Form["Remarks"];
-            var file = Request.Form.Files["UploadLab"];
-            if (file != null && file.Length > 0)
+            try
             {
-                // Save the file or process it as needed
-                // For example:
-                //var fileName = Path.GetFileName(file.FileName);
-                //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", fileName);
-                //using (var stream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-                string fn = "", MyFile = "", fx = "", fl = "";
-                string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
-                MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
-                fn = Path.GetFileName(file.FileName);
-                String SaveLocation = null;
-                SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
-                using (var stream = new FileStream(SaveLocation, FileMode.Create))
+                LabSampleInfoModel.UName = UserId.ToString();
+                LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
+                LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
+                LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
+                LabSampleInfoModel.Status = Request.Form["Status"];
+                LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
+                LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
+                LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
+                LabSampleInfoModel.Remarks = Request.Form["Remarks"];
+                var file = Request.Form.Files["UploadLab"];
+                if (file != null && file.Length > 0)
                 {
-                    file.CopyTo(stream);
-                }
+                    // Save the file or process it as needed
+                    // For example:
+                    //var fileName = Path.GetFileName(file.FileName);
+                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", fileName);
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    file.CopyTo(stream);
+                    //}
+                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
+                    MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
+                    fn = Path.GetFileName(file.FileName);
+                    String SaveLocation = null;
+                    SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
+                    using (var stream = new FileStream(SaveLocation, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
 
+                }
+                bool result;
+                result = LabSampleInfoRepository.UpdateDetails(LabSampleInfoModel);
+                if (result == false)
+                {
+                    return Json(false);
+                }
+                else
+                {
+                    return Json(true);
+                }
             }
-            bool result;
-            result = LabSampleInfoRepository.UpdateDetails(LabSampleInfoModel);
-            if (result == false)
+            catch (Exception ex)
             {
-                return Json(false);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "UpdateDetails", 1, GetIPAddress());
             }
-            else
-            {
-                return Json(true);
-            }
+            return Json(false);
 
         }
         string dateconcate(string dt)
@@ -177,23 +208,31 @@ namespace IBS.Controllers
         }
         public IActionResult DownloadFile(string caseno,string calldt,string csno,string filename)
         {
-            string fn = "", MyFile = "", fx = "", fl = "";
-            string mdt = dateconcate2(calldt.Trim());
-            MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
-            fn = Path.GetFileName(filename);
-            String filePath = null;
-            filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
-
-            if (System.IO.File.Exists(filePath))
+            try
             {
-                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                string fn = "", MyFile = "", fx = "", fl = "";
+                string mdt = dateconcate2(calldt.Trim());
+                MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
+                fn = Path.GetFileName(filename);
+                String filePath = null;
+                filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
 
-                return File(fileBytes, "application/pdf", fn);
+                if (System.IO.File.Exists(filePath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                    return File(fileBytes, "application/pdf", fn);
+                }
+                else
+                {
+                    return NotFound(); // Or return another result indicating the file does not exist
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound(); // Or return another result indicating the file does not exist
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "DownloadFile", 1, GetIPAddress());
             }
+            return NotFound();
         }
         #endregion
 

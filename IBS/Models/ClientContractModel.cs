@@ -6,22 +6,22 @@ namespace IBS.Models
     public class ClientContractModel
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Date Of Contract is required")]
         public DateTime VisitDt { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Officer Name Contracted is required")]
         public string? ClientOfficerName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Designation is required")]
         public string? Designation { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Client Type is required")]
         public string? ClientType { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Client is required")]
         public string Client { get; set; } = null!;
-        [Required]
+        [Required(ErrorMessage = "Rites Controlling Officer is required")]
         public int RitesOfficerCd { get; set; }
 
         public string? Highlights { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Overall OutCome of the Visit is required")]
         public string? OverallOutcome { get; set; }
 
         public string? RegionCd { get; set; }
@@ -31,7 +31,7 @@ namespace IBS.Models
         public DateTime? Datetime { get; set; }
 
         public string TypeCb { get; set; } = null!;
-        [Required]
+        [Required(ErrorMessage = "Outstanding Amount(In Rs.) is required")]
         public decimal? OutAmt { get; set; }
 
         public byte? Isdeleted { get; set; }

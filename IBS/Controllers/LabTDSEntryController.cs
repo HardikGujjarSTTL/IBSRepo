@@ -29,10 +29,17 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult SearchRegNo(string RegNo)
         {
-            
+
             LabTDSEntryModel model = new();
-            string Region = GetRegionCode;
-            model = TDSEntryRepository.SearchRegNo(RegNo, Region);            
+            try
+            {
+                string Region = GetRegionCode;
+                model = TDSEntryRepository.SearchRegNo(RegNo, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabTDSEntry", "SearchRegNo", 1, GetIPAddress());
+            }
             return Json(model);
         }
         [HttpPost]
@@ -41,9 +48,17 @@ namespace IBS.Controllers
         {
 
             LabTDSEntryModel model = new();
-            string Region = GetRegionCode;
-            bool result;
-            result = TDSEntryRepository.SaveTDSEntry(RegNo, TDSAmt, TDSDate);
+            bool result = false;
+            try
+            {
+                string Region = GetRegionCode;
+                
+                result = TDSEntryRepository.SaveTDSEntry(RegNo, TDSAmt, TDSDate);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabTDSEntry", "SaveTDSEntry", 1, GetIPAddress());
+            }
             return Json(result);
         }
 

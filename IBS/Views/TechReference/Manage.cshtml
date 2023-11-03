@@ -25,7 +25,7 @@
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-4">
-                        <label for="TechDate">Letter Date</label>
+                        <label for="TechDate">Letter Date<i class="text-danger">*</i></label>
                         <input type="text" class="input datepicker" onBlur="check_date(this)" asp-for="TechDate" readonly="true">
                         <span asp-validation-for="TechDate" class="text-danger"></span>
                         <asp:label id="Label9" runat="server" Font-Bold="True" Width="289px" ForeColor="DarkMagenta"
@@ -33,43 +33,43 @@
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechLetterNo">RITES Letter No.</label>
+                        <label for="TechLetterNo">RITES Letter No.<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="TechLetterNo" maxlength="500" />
                         <span asp-validation-for="TechLetterNo" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="RitesOfficerCd">CONTROLLING OFFICER</label>
+                        <label for="RitesOfficerCd">CONTROLLING OFFICER<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.TechCmCd, new SelectList(IBS.Models.Common.GetRitesOfficerCd(Model.RegionCd.ToString(),null), "Value", "Text"),"--Select--")
                         <span asp-validation-for="TechCmCd" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechIeCd">INSPECTION ENGINEER.</label>
+                        <label for="TechIeCd">INSPECTION ENGINEER.<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.TechIeCd, new SelectList(IBS.Models.Common.GetInspEngCdFortech(Model.RegionCd.ToString()), "Value", "Text"),"--Select--")
                         <span asp-validation-for="TechIeCd" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechItemDes">ITEM.</label>
+                        <label for="TechItemDes">ITEM.<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="TechItemDes" maxlength="500" />
                         <span asp-validation-for="TechItemDes" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechSpecDrg">SPEC & DRG.</label>
+                        <label for="TechSpecDrg">SPEC & DRG.<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="TechSpecDrg" maxlength="500" />
                         <span asp-validation-for="TechSpecDrg" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechRefMade">REFERENCE MADE TO.</label>
+                        <label for="TechRefMade">REFERENCE MADE TO.<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="TechRefMade" maxlength="500" />
                         <span asp-validation-for="TechRefMade" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-4">
-                        <label for="TechContent">CONTACT OF TECHNICAL REFERENCE IN BRIEF.</label>
+                        <label for="TechContent">CONTACT OF TECHNICAL REFERENCE IN BRIEF.<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="TechContent" maxlength="500" />
                         <span asp-validation-for="TechContent" class="text-danger"></span>
                     </div>

@@ -40,28 +40,52 @@ namespace IBS.Controllers
         public IActionResult LabPaymentEdit(string PaymentID)
         {
             ViewBag.PaymentID = PaymentID;
-            
+
             return View();
         }
         [HttpPost]
         public IActionResult LoadTableEdit([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPaymentsEdit(dtParameters);
+            DTResult<LabPaymentFormModel> dTResult = new DTResult<LabPaymentFormModel>();
+            try
+            {
+                dTResult = LabPaymentRepository.GetPaymentsEdit(dtParameters);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "LoadTableEdit", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
         public IActionResult Edit(string PaymentID)
         {
             string Regin = GetRegionCode;
-            LabPaymentFormModel dTResult = LabPaymentRepository.Edit(PaymentID);
+            LabPaymentFormModel dTResult = new LabPaymentFormModel();
+            try
+            {
+                dTResult = LabPaymentRepository.Edit(PaymentID);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "Edit", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {            
+        {
             string Regin = GetRegionCode;
-            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetLabPayments(dtParameters, Regin);
+            DTResult<LabPaymentFormModel> dTResult = new DTResult<LabPaymentFormModel>();
+            try
+            {
+                dTResult = LabPaymentRepository.GetLabPayments(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
 
@@ -76,51 +100,73 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult GetPayment([FromBody] DTParameters dtParameters)
         {
-            
+
             string Regin = GetRegionCode;
-            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.GetPayments(dtParameters, Regin);
+            DTResult<LabPaymentFormModel> dTResult = new DTResult<LabPaymentFormModel>();
+            try
+            {
+                dTResult = LabPaymentRepository.GetPayments(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "GetPayment", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
         [Authorization("LabPaymentsForm", "LabPaymentForm", "edit")]
         public JsonResult SavePayment([FromBody] LabPaymentFormModel paymentFormModel)
         {
-            paymentFormModel.Regin = GetRegionCode;
-            paymentFormModel.UserId = Convert.ToString(UserId);
-            bool result;
-            result = LabPaymentRepository.SavePayment(paymentFormModel);
-            if (result == true)
+            try
             {
+                paymentFormModel.Regin = GetRegionCode;
+                paymentFormModel.UserId = Convert.ToString(UserId);
+                bool result;
+                result = LabPaymentRepository.SavePayment(paymentFormModel);
+                if (result == true)
+                {
 
-                //ViewBag.PaymentID = paymentFormModel.PaymentID;
-                return Json(new { success = true, message = paymentFormModel.PaymentID });
+                    //ViewBag.PaymentID = paymentFormModel.PaymentID;
+                    return Json(new { success = true, message = paymentFormModel.PaymentID });
+                }
+                else
+                {
+                    return Json(new { success = false, message = paymentFormModel.PaymentID });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { success = false, message = paymentFormModel.PaymentID });
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "SavePayment", 1, GetIPAddress());
             }
-
+            return Json(false);
         }
 
         [HttpPost]
         [Authorization("LabPaymentsForm", "LabPaymentForm", "edit")]
         public JsonResult UpdatePayment([FromBody] LabPaymentFormModel paymentFormModel)
         {
-            paymentFormModel.Regin = GetRegionCode;
-            paymentFormModel.UserId = Convert.ToString(UserId);
-            bool result;
-            result = LabPaymentRepository.UpdatePayment(paymentFormModel);
-            if (result == true)
+            try
             {
+                paymentFormModel.Regin = GetRegionCode;
+                paymentFormModel.UserId = Convert.ToString(UserId);
+                bool result;
+                result = LabPaymentRepository.UpdatePayment(paymentFormModel);
+                if (result == true)
+                {
 
-                //ViewBag.PaymentID = paymentFormModel.PaymentID;
-                return Json(new { success = true, message = paymentFormModel.PaymentID });
+                    //ViewBag.PaymentID = paymentFormModel.PaymentID;
+                    return Json(new { success = true, message = paymentFormModel.PaymentID });
+                }
+                else
+                {
+                    return Json(new { success = false, message = paymentFormModel.PaymentID });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { success = false, message = paymentFormModel.PaymentID });
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "UpdatePayment", 1, GetIPAddress());
             }
-
+            return Json(false);
         }
 
         public IActionResult PrintLabPayment(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
@@ -145,10 +191,18 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult PrintLapPayments(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
         {
-            paymentFormModel.PaymentID = VOUCHER_NO;
-            paymentFormModel.Lab = Lab;
-            paymentFormModel.Regin = GetRegionCode;
-            LabPaymentFormModel dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
+            LabPaymentFormModel dTResult = new LabPaymentFormModel();
+            try
+            {
+                paymentFormModel.PaymentID = VOUCHER_NO;
+                paymentFormModel.Lab = Lab;
+                paymentFormModel.Regin = GetRegionCode;
+                dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "PrintLapPayments", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
@@ -189,7 +243,15 @@ namespace IBS.Controllers
         {
 
             string Regin = GetRegionCode;
-            DTResult<LabPaymentFormModel> dTResult = LabPaymentRepository.PrintLoadTable(dtParameters, Regin);
+            DTResult<LabPaymentFormModel> dTResult = new DTResult<LabPaymentFormModel>();
+            try
+            {
+                dTResult = LabPaymentRepository.PrintLoadTable(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabPaymentsForm", "PrintLoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         #endregion

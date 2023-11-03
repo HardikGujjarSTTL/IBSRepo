@@ -35,7 +35,15 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabInvoiceDownloadModel> dTResult = LabInvoiceDownloadRepository.GetLapInvoice(dtParameters, Regin);
+            DTResult<LabInvoiceDownloadModel> dTResult = new DTResult<LabInvoiceDownloadModel>();
+            try
+            {
+                dTResult = LabInvoiceDownloadRepository.GetLapInvoice(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoiceDownload", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         //[HttpPost]
