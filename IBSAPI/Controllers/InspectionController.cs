@@ -131,5 +131,43 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+
+        [HttpGet("GetPendingInspection", Name = "GetPendingInspection")]
+        public IActionResult GetPendingInspection(int IeCd, string Region, string Date)
+        {
+            try
+            {
+                var result = inspectionRepository.GetPendingInspection(IeCd, Region, Date);
+                if (result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetPendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
     }
 }
