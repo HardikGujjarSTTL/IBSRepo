@@ -30,8 +30,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-           DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
-           return Json(dTResult);
+            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
+            return Json(dTResult);
         }
 
         [Authorization("NCRRegister", "Index", "view")]
@@ -46,26 +46,40 @@ namespace IBS.Controllers
                     ViewBag.ShowNCRNO = false;
                     ViewBag.ShowRemarksButton = false;
                     ViewBag.ShowNCRButton = true;
+                    ViewBag.Showradio = true;
                 }
                 else if (Actions == "M")
                 {
                     ViewBag.ShowNCRButton = false;
+                    ViewBag.Showradio = false;
                     ViewBag.ShowNCRNO = true;
                     ViewBag.ShowRemarksButton = true;
                     ViewBag.ShowSaveButton = false;
                 }
 
-                model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo, NC_NO);
+                if (Actions == "M" && CaseNo != null && CaseNo != "")
+                {
+                    ViewBag.ShowNCRButton = true;
+                    ViewBag.Showradio = false;
+                }
 
-                ViewBag.JsonData = model.JsonData;
-                ViewBag.JsonData1 = model.msg;
+                model = nCRRegisterRepository.FindByIDActionA(CaseNo, BKNo, SetNo, NC_NO, Actions);
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "Manage", 1, GetIPAddress());
             }
+            List<Remarks> lst = new();
+            lst = model.lstRemark;
+            ViewBag.remarkList = lst;
+            return View(model);
+        }
 
-            return View(model.Model);
+        [HttpPost]
+        public IActionResult LoadTableRemarks([FromBody] DTParameters dtParameters)
+        {
+            DTResult<Remarks> dTResult = nCRRegisterRepository.GetRemarks(dtParameters);
+            return Json(dTResult);
         }
 
         [HttpPost]
@@ -73,19 +87,18 @@ namespace IBS.Controllers
         [Authorization("NCRRegister", "Index", "edit")]
         public IActionResult SaveUpdateNCR(NCRRegister model)
         {
-            string NCNO = "";
             try
             {
                 bool isRadioChecked = bool.Parse(Request.Form["IsRadioChecked"]);
                 string extractedText = Request.Form["extractedText"];
-                NCNO = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
+                model = nCRRegisterRepository.Saveupdate(model, isRadioChecked, extractedText);
                 AlertUpdateSuccess("Record Save Successfully!!");
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveUpdateNCR", 1, GetIPAddress());
             }
-            return Json(new { status = true, responseText = NCNO, redirectToIndex = true });
+            return Json(new { status = true, responseText = model, redirectToIndex = true });
         }
 
         [HttpPost]
@@ -97,29 +110,33 @@ namespace IBS.Controllers
             try
             {
                 string extractedText = Request.Form["extractedText"];
-                msg = nCRRegisterRepository.SaveMoreNC(model, extractedText);
+                model = nCRRegisterRepository.SaveMoreNC(model, extractedText);
+                //ViewBag.JsonData = model.JsonData;
+                //ViewBag.JsonData1 = model.msg;
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveMoreNC", 1, GetIPAddress());
             }
-            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+            return Json(new { status = true, responseText = model.NC_NO, redirectToIndex = true, alertMessage = msg });
         }
 
         [HttpPost]
         [Authorization("NCRRegister", "Index", "edit")]
-        public IActionResult SaveRemarks(string NCNO,string UserID, [FromForm] List<Remarks> model)
+        public IActionResult SaveRemarks(string NCNO, string UserID, [FromForm] List<Remarks> model)
         {
             string msg = "";
             try
             {
                 msg = nCRRegisterRepository.SaveRemarks(NCNO, UserID, model);
+                AlertAddSuccess("Remarks Save Succesfully!!!");
+                return Json(new { status = true, redirectToIndex = true });
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "SaveRemarks", 1, GetIPAddress());
             }
-            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+            return Json(new { status = false, redirectToIndex = false });
 
         }
 
@@ -144,6 +161,36 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "GetNCRCode", 1, GetIPAddress());
             }
             return Json(NCRCode);
+        }
+        
+        [HttpPost]
+        public IActionResult GetItem(string CaseNo,string BKNo,string SetNo)
+        {
+            var json = "";
+            try
+            {
+                json = nCRRegisterRepository.GetItems(CaseNo, BKNo, SetNo);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "GetItem", 1, GetIPAddress());
+            }
+            return Json(json);
+        }
+        
+        [HttpPost]
+        public IActionResult GetQtyByItem(string CaseNo, string CALLRECVDT, string CALLSNO,string ItemSno)
+        {
+            var json = "";
+            try
+            {
+                json = nCRRegisterRepository.GetQtyByItems(CaseNo, CALLRECVDT, CALLSNO, ItemSno);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "GetQtyByItem", 1, GetIPAddress());
+            }
+            return Json(json);
         }
 
     }

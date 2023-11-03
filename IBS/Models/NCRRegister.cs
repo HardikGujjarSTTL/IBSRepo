@@ -45,11 +45,10 @@ namespace IBS.Models
         public string? CoFinalRemarks1 { get; set; }
         public string? RegionCode { get; set; }
         public string? UserID { get; set; }
-        public NCRRegister Model { get; set; }
         public string JsonData { get; set; }
         public string rdononc { get; set; }
         public string msg { get; set; }
 
-        public List<Remarks> inputValues { get; set; }
-    }
+        public List<Remarks> lstRemark { get; set; }
+    }    
 }

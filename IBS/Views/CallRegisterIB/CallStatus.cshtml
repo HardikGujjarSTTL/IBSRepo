@@ -1221,6 +1221,7 @@
 
                                 if (response.Id == 1) {
                                     ShowHideMsgNew(true, response.responseText);
+                                    $('#consigneeFirmDropdown').trigger('change');
                                 }
                                 else {
                                     ShowHideMsgNew(false, response.responseText);

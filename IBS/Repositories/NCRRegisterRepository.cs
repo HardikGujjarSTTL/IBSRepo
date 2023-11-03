@@ -48,26 +48,18 @@ namespace IBS.Repositories
 
                     if (orderCriteria == "")
                     {
-                        orderCriteria = "NCNO";
+                        orderCriteria = "NC_NO";
                     }
                     orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
                 }
                 else
                 {
-                    orderCriteria = "NCNO";
+                    orderCriteria = "NC_NO";
                     orderAscendingDirection = true;
                 }
 
                 string ToDate = null, FromDate = null, IENAME = null;
 
-                //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
-                //{
-                //    NCNO = Convert.ToString(dtParameters.AdditionalValues["NCNO"]);
-                //}
-                //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASENO"]))
-                //{
-                //    CASENO = Convert.ToString(dtParameters.AdditionalValues["CASENO"]);
-                //}
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["selectedValue"]))
                 {
                     IENAME = Convert.ToString(dtParameters.AdditionalValues["selectedValue"]);
@@ -126,11 +118,10 @@ namespace IBS.Repositories
 
                     query = list.AsQueryable();
 
-                    dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+                    dTResult.recordsTotal = query.Count();
 
                     if (!string.IsNullOrEmpty(searchBy))
                         query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                        || Convert.ToString(w.NC_NO).ToLower().Contains(searchBy.ToLower())
                         );
 
                     dTResult.recordsFiltered = query.Count();
@@ -154,7 +145,59 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public NCRRegister FindByIDActionA(string CASE_NO, string BK_NO, string SET_NO, string NCNO)
+        public DTResult<Remarks> GetRemarks(DTParameters dtParameters)
+        {
+            DTResult<Remarks> dTResult = new() { draw = 0 };
+            IQueryable<Remarks>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "NC_NO";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                orderCriteria = "NC_NO";
+                orderAscendingDirection = true;
+            }
+
+            string NCNO = !string.IsNullOrEmpty(dtParameters.AdditionalValues["NC_NO"]) ? Convert.ToString(dtParameters.AdditionalValues["NC_NO"]) : "";
+
+           query = from t69 in context.T69NcCodes
+                               join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
+                               join t41 in context.T41NcMasters on t42.NcNo equals t41.NcNo
+                               where t41.NcNo == NCNO
+                               orderby t42.NcCdSno
+                               select new Remarks
+                               {
+                                   NcCd = t42.NcCd,
+                                   NC_DESC = t42.NcDescOthers != null ? t69.NcDesc + "-" + t42.NcDescOthers : t69.NcDesc,
+                                   NcCdSno = t42.NcCdSno,
+                                   IeAction1 = t42.IeAction1,
+                                   IE_ACTION1_DT = t42.IeAction1Dt,
+                                   CoFinalRemarks1 = t42.CoFinalRemarks1,
+                                   CO_FINAL_REMARKS1_DT = t42.CoFinalRemarks1Dt
+                               };
+            dTResult.recordsTotal = query.Count();
+
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public NCRRegister FindByIDActionA(string CASE_NO, string BK_NO, string SET_NO, string NCNO, string Actions)
         {
             NCRRegister model = new NCRRegister();
             DataTable dt = new DataTable();
@@ -167,7 +210,8 @@ namespace IBS.Repositories
                 var ds = DataAccessDB.GetDataSet("GetForAction_M_NCR", par, 1);
                 dt = ds.Tables[0];
             }
-            else
+
+            if (CASE_NO != "" && CASE_NO != null)
             {
                 OracleParameter[] par = new OracleParameter[4];
                 par[0] = new OracleParameter("p_case_no", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
@@ -176,8 +220,6 @@ namespace IBS.Repositories
                 par[3] = new OracleParameter("RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
                 var ds = DataAccessDB.GetDataSet("GetForAction_A_NCR", par, 1);
                 dt = ds.Tables[0];
-
-
             }
 
 
@@ -201,14 +243,21 @@ namespace IBS.Repositories
 
                     if (NCNO != "" && NCNO != null)
                     {
-                        model.QtyPassed = Convert.ToInt32(firstRow["QTY_PASSED"]);
-                        model.Item = firstRow["ITEM_DESC_PO"].ToString();
-                        if (!firstRow.IsNull("NC_DATE"))
+                        model.QtyPassed = firstRow.Table.Columns.Contains("QTY_PASSED") && firstRow["QTY_PASSED"] != DBNull.Value ? Convert.ToInt32(firstRow["QTY_PASSED"] as string) : 0;
+                        model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
+                            ? Convert.ToString(firstRow["ITEM_DESC_PO"])
+                            : string.Empty;
+                        if (firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value)
                         {
                             model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
                         }
+                        else
+                        {
+                            model.NCRDate = DateTime.MinValue;
+                        }
+
                     }
-                    else
+                    if (CASE_NO != "" && CASE_NO != null)
                     {
                         var qtyresult = context.T18CallDetails
                                   .Where(cd =>
@@ -255,7 +304,7 @@ namespace IBS.Repositories
                     model.Vendor = firstRow["vendor"].ToString();
                     model.VEND_CD = Convert.ToInt32(firstRow["VEND_CD"]);
                     model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
-
+                    model.NC_NO = NCNO;
                     // Parse CALL_RECV_DT if it's not null
 
 
@@ -282,32 +331,23 @@ namespace IBS.Repositories
                 }
             }
 
-            var query = from t69 in context.T69NcCodes
-                        join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
-                        where t42.NcNo == NCNO
-                        orderby t42.NcCdSno ascending
-                        select new
-                        {
-                            t42.NcCd,
-                            NC_DESC = t42.NcDescOthers != null
-                                ? t69.NcDesc + "-" + t42.NcDescOthers
-                                : t69.NcDesc,
-                            t42.NcCdSno,
-                            t42.IeAction1,
-                            IE_ACTION1_DT = t42.IeAction1Dt,
-                            t42.CoFinalRemarks1,
-                            CO_FINAL_REMARKS1_DT = t42.CoFinalRemarks1Dt
-                        };
+            model.lstRemark = (from t69 in context.T69NcCodes
+                              join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
+                              join t41 in context.T41NcMasters on t42.NcNo equals t41.NcNo
+                              where t41.NcNo == NCNO
+                              orderby t42.NcCdSno
+                              select new Remarks
+                              {
+                                  NcCd = t42.NcCd,
+                                  NC_DESC = t42.NcDescOthers != null ? t69.NcDesc + "-" + t42.NcDescOthers : t69.NcDesc,
+                                  NcCdSno = t42.NcCdSno,
+                                  IeAction1 = t42.IeAction1,
+                                  IE_ACTION1_DT = t42.IeAction1Dt,
+                                  CoFinalRemarks1 = t42.CoFinalRemarks1,
+                                  CO_FINAL_REMARKS1_DT = t42.CoFinalRemarks1Dt
+                              }).ToList();
 
-            var result = query.ToList();
-
-            var jsonData = JsonConvert.SerializeObject(result);
-            return new NCRRegister
-            {
-                Model = model,
-                JsonData = jsonData,
-                msg = msg
-            };
+            return model;
         }
 
         public string SaveRemarks(string NCNO, string UserID, List<Remarks> model)
@@ -341,23 +381,70 @@ namespace IBS.Repositories
 
             return msg;
         }
-        public string Saveupdate(NCRRegister model, bool isRadioChecked, string extractedText)
+
+        public string GetItems(string CaseNo, string BKNo, string SetNo)
+        {
+            var Desc = context.T18CallDetails
+                        .Where(t18 => context.T20Ics
+                            .Any(t20 => t20.CaseNo == CaseNo.Trim()
+                                        && t20.BkNo == BKNo.Trim()
+                                        && t20.SetNo == SetNo.Trim()
+                                        && t20.CaseNo == t18.CaseNo
+                                        && t20.CallRecvDt == t18.CallRecvDt
+                                        && t20.CallSno == t18.CallSno
+                                        && t20.ConsigneeCd == t18.ConsigneeCd))
+                        .Select(t18 => new
+                        {
+                            t18.ItemSrnoPo,
+                            t18.ItemDescPo
+                        })
+                        .ToList();
+
+            string json = JsonConvert.SerializeObject(Desc, Formatting.Indented);
+
+            return json;
+        }
+        
+        public string GetQtyByItems(string CaseNo, string CALLRECVDT, string CALLSNO, string ItemSno)
+        {
+            var result = context.T18CallDetails
+                        .Where(t18 => t18.CaseNo == CaseNo
+                                      && t18.CallRecvDt == Convert.ToDateTime(CALLRECVDT)
+                                      && t18.CallSno == Convert.ToInt32(CALLSNO)
+                                      && t18.ItemSrnoPo == Convert.ToInt32(ItemSno))
+                        .Select(t18 => t18.QtyPassed ?? 0)
+                        .FirstOrDefault();
+
+            decimal qtyPassed = result != null ? result : 0;
+
+            string json = Convert.ToString(qtyPassed);
+
+            return json;
+        }
+
+        public NCRRegister Saveupdate(NCRRegister model, bool isRadioChecked, string extractedText)
         {
             string msg = "";
 
             DataTable dt = new DataTable();
+            string genrate_NCNO = "";
+            string ErrCD = "";
 
-            OracleParameter[] par = new OracleParameter[3];
-            par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.SetRegionCode, ParameterDirection.Input);
-            par[1] = new OracleParameter("IN_NC_DT", OracleDbType.Varchar2, model.NCRDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-            var ds = DataAccessDB.GetDataSet("GENERATE_NC_NO_New", par, 1);
-            dt = ds.Tables[0];
+            if (model.NC_NO != "" && model.NC_NO != null)
+            {
+                OracleParameter[] par = new OracleParameter[3];
+                par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.SetRegionCode, ParameterDirection.Input);
+                par[1] = new OracleParameter("IN_NC_DT", OracleDbType.Varchar2, model.NCRDate, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GENERATE_NC_NO_New", par, 1);
+                dt = ds.Tables[0];
 
-            DataRow firstRow = dt.Rows[0];
-            string ErrCD = firstRow["W_ERR_CD"].ToString();
-            string genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
-            model.NC_NO = genrate_NCNO;
+                DataRow firstRow = dt.Rows[0];
+                ErrCD = firstRow["W_ERR_CD"].ToString();
+                genrate_NCNO = firstRow["W_NC_NO"].ToString().Trim();
+                model.NC_NO = genrate_NCNO;
+            }
+
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
@@ -386,6 +473,7 @@ namespace IBS.Repositories
                     obj.IcNo = model.IC_NO;
                     obj.IcDt = model.ICDate;
                     obj.IeCd = model.Ie_Cd;
+                    obj.ConsigneeCd = model.CONSIGNEECD;
                     obj.Datetime = DateTime.Now;
                     obj.ItemSrnoPo = model.Item_Srno_no;
                     obj.UserId = model.UserID;
@@ -396,26 +484,28 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    NCRMaster.NcDt = model.NCRDate;
-                    NCRMaster.CallRecvDt = model.CALLRECVDT;
-                    NCRMaster.ItemDescPo = model.Item;
-                    NCRMaster.CallSno = model.CALLSNO;
-                    NCRMaster.BkNo = model.BKNo;
-                    NCRMaster.SetNo = model.SetNo;
-                    NCRMaster.VendCd = model.VEND_CD;
-                    NCRMaster.CoCd = model.CONSIGNEECD;
-                    NCRMaster.QtyPassed = model.QtyPassed;
-                    NCRMaster.PoNo = model.PO_NO;
-                    NCRMaster.PoDt = model.PO_DT;
-                    NCRMaster.IcNo = model.IC_NO;
-                    NCRMaster.IcDt = model.ICDate;
-                    NCRMaster.IeCd = model.Ie_Cd;
-                    NCRMaster.Datetime = DateTime.Now;
-                    NCRMaster.ItemSrnoPo = model.Item_Srno_no;
-                    NCRMaster.UserId = model.UserID;
-                    NCRMaster.RegionCode = model.SetRegionCode;
-                    context.SaveChanges();
-                    msg = "Record Update Successfully";
+                    //NCRMaster.NcDt = model.NCRDate;
+                    //NCRMaster.CallRecvDt = model.CALLRECVDT;
+                    //NCRMaster.ItemDescPo = model.Item;
+                    //NCRMaster.CallSno = model.CALLSNO;
+                    //NCRMaster.BkNo = model.BKNo;
+                    //NCRMaster.SetNo = model.SetNo;
+                    //NCRMaster.VendCd = model.VEND_CD;
+                    //NCRMaster.CoCd = model.CONSIGNEECD;
+                    //NCRMaster.QtyPassed = model.QtyPassed;
+                    //NCRMaster.PoNo = model.PO_NO;
+                    //NCRMaster.PoDt = model.PO_DT;
+                    //NCRMaster.IcNo = model.IC_NO;
+                    //NCRMaster.IcDt = model.ICDate;
+                    //NCRMaster.IeCd = model.Ie_Cd;
+                    //NCRMaster.ConsigneeCd = model.CONSIGNEECD;
+                    //NCRMaster.Datetime = DateTime.Now;
+                    //NCRMaster.ItemSrnoPo = model.Item_Srno_no;
+                    //NCRMaster.UserId = model.UserID;
+                    //NCRMaster.RegionCode = model.SetRegionCode;
+                    //context.SaveChanges();
+                    //msg = "Record Update Successfully";
+                    model.NC_NO = NCRMaster.NcNo;
                 }
                 if (extractedText != "-Select--")
                 {
@@ -434,26 +524,72 @@ namespace IBS.Repositories
                     }
                     else
                     {
-                        T42NcDetail obj1 = new T42NcDetail();
-                        obj1.NcNo = genrate_NCNO;
-                        obj1.NcCd = model.NcCdSno;
-                        obj1.NcCdSno = 1;
-                        obj1.NcDescOthers = extractedText;
-                        obj1.UserId = model.UserID;
-                        obj1.Datetime = DateTime.Now;
-                        context.T42NcDetails.Add(obj1);
-                        context.SaveChanges();
+                        var NCRemarkMaster = context.T42NcDetails.FirstOrDefault(r => r.NcNo == model.NC_NO);
+
+                        if (NCRemarkMaster == null)
+                        {
+                            T42NcDetail obj1 = new T42NcDetail();
+                            obj1.NcNo = genrate_NCNO;
+                            obj1.NcCd = model.NcCdSno;
+                            obj1.NcCdSno = 1;
+                            obj1.NcDescOthers = extractedText;
+                            obj1.UserId = model.UserID;
+                            obj1.Datetime = DateTime.Now;
+                            context.T42NcDetails.Add(obj1);
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
 
-            return model.NC_NO;
+            return model;
         }
 
-        public string SaveMoreNC(NCRRegister model, string extractedText)
+        public NCRRegister SaveMoreNC(NCRRegister model, string extractedText)
         {
             string msg = "";
-            return msg;
+            var maxNcCdSno = context.T42NcDetails
+                        .Where(detail => detail.NcNo == model.NC_NO)
+                        .Select(detail => (int?)detail.NcCdSno) // Project to nullable int
+                        .Max();
+
+            int nextNcCdSno = maxNcCdSno.HasValue ? maxNcCdSno.Value + 1 : 1;
+
+            T42NcDetail obj1 = new T42NcDetail();
+            obj1.NcNo = model.NC_NO;
+            obj1.NcCd = model.NcCdSno;
+            obj1.NcCdSno = nextNcCdSno;
+            obj1.NcDescOthers = extractedText;
+            obj1.UserId = model.UserID;
+            obj1.Datetime = DateTime.Now;
+            context.T42NcDetails.Add(obj1);
+            context.SaveChanges();
+
+            model.lstRemark = (from t69 in context.T69NcCodes
+                               join t42 in context.T42NcDetails on t69.NcCd equals t42.NcCd
+                               join t41 in context.T41NcMasters on t42.NcNo equals t41.NcNo
+                               where t41.NcNo == model.NC_NO
+                               orderby t42.NcCdSno
+                               select new Remarks
+                               {
+                                   NcCd = t42.NcCd,
+                                   NC_DESC = t42.NcDescOthers != null ? t69.NcDesc + "-" + t42.NcDescOthers : t69.NcDesc,
+                                   NcCdSno = t42.NcCdSno,
+                                   IeAction1 = t42.IeAction1,
+                                   IE_ACTION1_DT = t42.IeAction1Dt,
+                                   CoFinalRemarks1 = t42.CoFinalRemarks1,
+                                   CO_FINAL_REMARKS1_DT = t42.CoFinalRemarks1Dt
+                               }).ToList();
+
+            //var result = query.ToList();
+
+            //var jsonData = JsonConvert.SerializeObject(result);            
+            return model;
+            //return new NCRRegister
+            //{
+            //    Model = model,
+            //    JsonData = jsonData,                
+            //};
         }
 
         public bool SendEmail(NCRRegister nCRRegister)
