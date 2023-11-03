@@ -85,6 +85,11 @@ namespace IBS.Repositories
             };
 
             dTResult.recordsTotal = query.Count();
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Lab_Bill_Per).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Lab_Exp).ToLower().Contains(searchBy.ToLower())
+                );
+
             dTResult.recordsFiltered = query.Count();
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;

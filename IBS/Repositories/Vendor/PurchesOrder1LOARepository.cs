@@ -325,7 +325,7 @@ namespace IBS.Repositories.Vendor
                         select new PurchesOrder1LOAModel
                         {
                             CaseNo = l.CaseNo,
-                            ItemSrno = l.ItemSrno,
+                            ItemSrno = Convert.ToByte(l.ItemSrno),
                             ItemDesc = l.ItemDesc,
                             ConsigneeName = l.ConsigneeName,
                             Qty = l.Qty,

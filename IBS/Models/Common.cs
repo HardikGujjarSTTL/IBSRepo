@@ -774,9 +774,10 @@ namespace IBS.Models
         public static IEnumerable<SelectListItem> GetClientByClientType(string CoCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> List = new List<SelectListItem>();
             if (CoCd == "R")
             {
-                return (from a in ModelContext.T91Railways
+                List = (from a in ModelContext.T91Railways
                         where a.RlyCd != "CORE"
                         select new SelectListItem
                         {
@@ -786,19 +787,29 @@ namespace IBS.Models
             }
             else if (CoCd != "" && CoCd != null)
             {
-                return (from a in ModelContext.T12BillPayingOfficers
-                        where a.BpoType == CoCd
+                var distinctRecords = from bpo in ModelContext.T12BillPayingOfficers
+                                      where bpo.BpoType == CoCd
+                                      group bpo by new
+                                      {
+                                          RLY_CD = bpo.BpoRly.Trim().ToUpper(),
+                                          ORGN = bpo.BpoOrgn
+                                      } into grp
+                                      select new
+                                      {
+                                          RLY_CD = grp.Key.RLY_CD,
+                                          ORGN = grp.Key.ORGN
+                                      } into distinctRec
+                                      orderby distinctRec.ORGN
+                                      select distinctRec;
+
+                List = (from a in distinctRecords
                         select new SelectListItem
                         {
-                            Text = Convert.ToString(a.BpoRly),
-                            Value = Convert.ToString(a.BpoOrgn)
-                        }).DistinctBy(x => x.Text).OrderBy(x => x.Value).ToList();
+                            Text = Convert.ToString(a.RLY_CD),
+                            Value = Convert.ToString(a.ORGN)
+                        }).ToList();
             }
-            else
-            {
-                List<SelectListItem> clients = new List<SelectListItem>();
-                return clients;
-            }
+            return List;
         }
 
         public static List<SelectListItem> GetMonth()
@@ -3078,24 +3089,6 @@ namespace IBS.Models
                 var obj = (from of in context.V12BillPayingOfficers
                            where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
                            select of).ToList();
-                 objdata = (from a in obj
-                                                select
-                                           new SelectListItem
-                                           {
-                                               Text = a.BpoCd + "-" + a.Bpo,
-                                               Value = a.BpoCd
-                                           }).ToList();
-            }
-            return objdata;
-        }
-        public static List<SelectListItem> GetBillPayingOfficer()
-        {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> objdata = new List<SelectListItem>();
-           
-                var obj = (from of in context.V12BillPayingOfficers
-                           //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                           select of).ToList();
                 objdata = (from a in obj
                            select
                       new SelectListItem
@@ -3103,7 +3096,25 @@ namespace IBS.Models
                           Text = a.BpoCd + "-" + a.Bpo,
                           Value = a.BpoCd
                       }).ToList();
-           
+            }
+            return objdata;
+        }
+        public static List<SelectListItem> GetBillPayingOfficer()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+
+            var obj = (from of in context.V12BillPayingOfficers
+                           //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                       select of).ToList();
+            objdata = (from a in obj
+                       select
+                  new SelectListItem
+                  {
+                      Text = a.BpoCd + "-" + a.Bpo,
+                      Value = a.BpoCd
+                  }).ToList();
+
             return objdata;
         }
 
@@ -3111,16 +3122,16 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             var query = (from bpo in context.T12BillPayingOfficers
-                        join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                        where bpo.BpoCd == BpoCd
+                         join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                         where bpo.BpoCd == BpoCd
                          orderby bpo.BpoName
-                        select new
-                        {
-                            BPO_CD = bpo.BpoCd,
-                            BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
-                                 (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
-                                 (city.Location != null ? city.City + "/" + city.Location : city.City)
-                        }).ToList();
+                         select new
+                         {
+                             BPO_CD = bpo.BpoCd,
+                             BPO_NAME = bpo.BpoCd + "-" + bpo.BpoName + "/" + bpo.BpoRly + "/" +
+                                  (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") +
+                                  (city.Location != null ? city.City + "/" + city.Location : city.City)
+                         }).ToList();
 
             List<SelectListItem> objdata = (from a in query
                                             select
@@ -3286,26 +3297,26 @@ namespace IBS.Models
             if (ConsigneeCd != null)
             {
                 var query = (from consignee in context.T06Consignees
-                            join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
-                            where consignee.ConsigneeCd == Convert.ToInt32(ConsigneeCd)
-                            orderby (
-                                (consignee.ConsigneeDesig ?? "") + "/" +
-                                (consignee.ConsigneeDept ?? "") + "/" +
-                                (consignee.ConsigneeFirm ?? "") + "/" +
-                                (consignee.ConsigneeAdd1 ?? "") + "/" +
-                                (city.Location ?? city.City)
-                            )
-                            select new
-                            {
-                                CONSIGNEE_CD = consignee.ConsigneeCd,
-                                CONSIGNEE_NAME =
-                                    consignee.ConsigneeCd + "-" +
-                                    (consignee.ConsigneeDesig ?? "") + "/" +
-                                    (consignee.ConsigneeDept ?? "") + "/" +
-                                    (consignee.ConsigneeFirm ?? "") + "/" +
-                                    (consignee.ConsigneeAdd1 ?? "") + "/" +
-                                    (city.Location != null ? city.Location + " : " + city.City : city.City)
-                            });
+                             join city in context.T03Cities on consignee.ConsigneeCity equals city.CityCd
+                             where consignee.ConsigneeCd == Convert.ToInt32(ConsigneeCd)
+                             orderby (
+                                 (consignee.ConsigneeDesig ?? "") + "/" +
+                                 (consignee.ConsigneeDept ?? "") + "/" +
+                                 (consignee.ConsigneeFirm ?? "") + "/" +
+                                 (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                 (city.Location ?? city.City)
+                             )
+                             select new
+                             {
+                                 CONSIGNEE_CD = consignee.ConsigneeCd,
+                                 CONSIGNEE_NAME =
+                                     consignee.ConsigneeCd + "-" +
+                                     (consignee.ConsigneeDesig ?? "") + "/" +
+                                     (consignee.ConsigneeDept ?? "") + "/" +
+                                     (consignee.ConsigneeFirm ?? "") + "/" +
+                                     (consignee.ConsigneeAdd1 ?? "") + "/" +
+                                     (city.Location != null ? city.Location + " : " + city.City : city.City)
+                             });
 
                 objdata = (from a in query
                            select
@@ -3325,8 +3336,8 @@ namespace IBS.Models
                                  where detail.ImmsConsigneeCd == ConsigneeCd
                                 && detail.ImmsRlyCd == IMMS_RLY_CD
                                 && detail.ConsigneeCd != null
-                                select detail.ConsigneeCd).Distinct().FirstOrDefault();
-            
+                                 select detail.ConsigneeCd).Distinct().FirstOrDefault();
+
             return ConsigneeCd1;
         }
 
@@ -3538,7 +3549,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-        
+
         public static List<SelectListItem> ICType()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -4394,7 +4405,7 @@ namespace IBS.Models
             List<SelectListItem> lstManuf = new List<SelectListItem>() {
                 new SelectListItem() { Text = "BHILAI STEEL PLANT", Value = "B" },
                 new SelectListItem() { Text = "JINDAL STEEL & POWER LTD", Value = "J" },
-                new SelectListItem() { Text = "Others", Value = "O" }                
+                new SelectListItem() { Text = "Others", Value = "O" }
             };
             return lstManuf;
         }

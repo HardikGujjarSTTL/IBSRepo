@@ -11,7 +11,7 @@ public partial class V25InspectionDetail
 
     public int? MfgCd { get; set; }
 
-    public byte ItemSrnoPo { get; set; }
+    public int ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 
@@ -33,7 +33,7 @@ public partial class V25InspectionDetail
 
     public string? SetNo { get; set; }
 
-    public byte IeCd { get; set; }
+    public int IeCd { get; set; }
 
     public string? IeName { get; set; }
 
