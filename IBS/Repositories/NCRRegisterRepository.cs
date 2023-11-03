@@ -58,23 +58,12 @@ namespace IBS.Repositories
                     orderAscendingDirection = true;
                 }
 
-                string ToDate = null, FromDate = null, IENAME = null;
+                string IENAME = !string.IsNullOrEmpty(dtParameters.AdditionalValues["selectedValue"]) ? Convert.ToString(dtParameters.AdditionalValues["selectedValue"]) : "";
+                string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : "";
+                string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : "";
 
-                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["selectedValue"]))
-                {
-                    IENAME = Convert.ToString(dtParameters.AdditionalValues["selectedValue"]);
-                }
-                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-                {
-                    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-                }
-                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-                {
-                    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-                }
 
                 NCRRegister model = new NCRRegister();
-                DataTable dt = new DataTable();
                 List<NCRRegister> modelList = new List<NCRRegister>();
 
                 DataSet ds;
@@ -84,57 +73,75 @@ namespace IBS.Repositories
                 string formattedDate = parsedDate.ToString("dd/mm/yyyy");
                 string formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
 
-                try
-                {
-                    OracleParameter[] par = new OracleParameter[4];
-                    par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-                    par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
-                    par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
-                    par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                    ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+               
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+                par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
+                par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
 
+                DataTable dt = ds.Tables[0];
+
+
+                List<NCRRegister> list = new();
                 if (ds != null && ds.Tables.Count > 0)
                 {
-                    dt = ds.Tables[0];
-
-                    List<NCRRegister> list = dt.AsEnumerable().Select(row => new NCRRegister
-                    {
-                        CaseNo = row.Field<string>("CASE_NO"),
-                        BKNo = row.Field<string>("BK_NO"),
-                        SetNo = row.Field<string>("SET_NO"),
-                        NC_NO = row.Field<string>("NC_NO"),
-                        CALL_SNO = row.Field<int>("CALL_SNO"),
-                        IE_SNAME = row.Field<string>("IE_SNAME"),
-                        CALL_RECV_DT = DateTime.TryParseExact(row.Field<string>("CALL_RECV_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime callRecvDate)
-                ? callRecvDate
-                : (DateTime?)null,
-                        CONSIGNEE = row.Field<string>("CONSIGNEE"),
-                    }).ToList();
-
-                    query = list.AsQueryable();
-
-                    dTResult.recordsTotal = query.Count();
-
-                    if (!string.IsNullOrEmpty(searchBy))
-                        query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                        );
-
-                    dTResult.recordsFiltered = query.Count();
-
-                    dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-                    dTResult.draw = dtParameters.Draw;
-
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    list = JsonConvert.DeserializeObject<List<NCRRegister>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 }
-                else
-                {
-                    return dTResult;
-                }
+
+                query = list.AsQueryable();
+
+                dTResult.recordsTotal = query.Count();
+
+                if (!string.IsNullOrEmpty(searchBy))
+                    query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                    );
+
+                dTResult.recordsFiltered = query.Count();
+
+                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+                dTResult.draw = dtParameters.Draw;
+
+                //if (ds != null && ds.Tables.Count > 0)
+                //{
+                //    dt = ds.Tables[0];
+
+                //    List<NCRRegister> list = dt.AsEnumerable().Select(row => new NCRRegister
+                //    {
+                //        CaseNo = row.Field<string>("CASE_NO"),
+                //        BKNo = row.Field<string>("BK_NO"),
+                //        SetNo = row.Field<string>("SET_NO"),
+                //        NC_NO = row.Field<string>("NC_NO"),
+                //        CALL_SNO = row.Field<int>("CALL_SNO"),
+                //        IE_SNAME = row.Field<string>("IE_SNAME"),
+                //        CALL_RECV_DT = DateTime.TryParseExact(row.Field<string>("CALL_RECV_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime callRecvDate)
+                //? callRecvDate
+                //: (DateTime?)null,
+                //        CONSIGNEE = row.Field<string>("CONSIGNEE"),
+                //    }).ToList();
+
+                //    query = list.AsQueryable();
+
+                //    dTResult.recordsTotal = query.Count();
+
+                //    if (!string.IsNullOrEmpty(searchBy))
+                //        query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                //        );
+
+                //    dTResult.recordsFiltered = query.Count();
+
+                //    dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+                //    dTResult.draw = dtParameters.Draw;
+
+                //}
+                //else
+                //{
+                //    return dTResult;
+                //}
 
             }
             catch (Exception ex)
