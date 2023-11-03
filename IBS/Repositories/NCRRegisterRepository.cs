@@ -305,21 +305,17 @@ namespace IBS.Repositories
                     model.VEND_CD = Convert.ToInt32(firstRow["VEND_CD"]);
                     model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
                     model.NC_NO = NCNO;
-                    // Parse CALL_RECV_DT if it's not null
 
 
                     model.IeCd = Convert.ToString(firstRow["IE_CD"]);
                     model.IE_SNAME = firstRow["IE_NAME"].ToString();
 
-                    // Parse IC_DATE if it's not null
                     if (!firstRow.IsNull("IC_DATE"))
                     {
                         model.ICDate = Convert.ToDateTime(firstRow["IC_DATE"]);
                     }
 
                     model.IC_NO = firstRow["IC_NO"].ToString();
-
-                    // Parse PO_DT if it's not null
                     if (!firstRow.IsNull("PO_DT"))
                     {
                         model.PO_DT = Convert.ToDateTime(firstRow["PO_DT"]);
@@ -484,27 +480,6 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    //NCRMaster.NcDt = model.NCRDate;
-                    //NCRMaster.CallRecvDt = model.CALLRECVDT;
-                    //NCRMaster.ItemDescPo = model.Item;
-                    //NCRMaster.CallSno = model.CALLSNO;
-                    //NCRMaster.BkNo = model.BKNo;
-                    //NCRMaster.SetNo = model.SetNo;
-                    //NCRMaster.VendCd = model.VEND_CD;
-                    //NCRMaster.CoCd = model.CONSIGNEECD;
-                    //NCRMaster.QtyPassed = model.QtyPassed;
-                    //NCRMaster.PoNo = model.PO_NO;
-                    //NCRMaster.PoDt = model.PO_DT;
-                    //NCRMaster.IcNo = model.IC_NO;
-                    //NCRMaster.IcDt = model.ICDate;
-                    //NCRMaster.IeCd = model.Ie_Cd;
-                    //NCRMaster.ConsigneeCd = model.CONSIGNEECD;
-                    //NCRMaster.Datetime = DateTime.Now;
-                    //NCRMaster.ItemSrnoPo = model.Item_Srno_no;
-                    //NCRMaster.UserId = model.UserID;
-                    //NCRMaster.RegionCode = model.SetRegionCode;
-                    //context.SaveChanges();
-                    //msg = "Record Update Successfully";
                     model.NC_NO = NCRMaster.NcNo;
                 }
                 if (extractedText != "-Select--")
@@ -581,21 +556,11 @@ namespace IBS.Repositories
                                    CO_FINAL_REMARKS1_DT = t42.CoFinalRemarks1Dt
                                }).ToList();
 
-            //var result = query.ToList();
-
-            //var jsonData = JsonConvert.SerializeObject(result);            
             return model;
-            //return new NCRRegister
-            //{
-            //    Model = model,
-            //    JsonData = jsonData,                
-            //};
         }
 
         public bool SendEmail(NCRRegister nCRRegister)
         {
-            //string msg = "";
-
             string region = nCRRegister.SetRegionCode;
             string wRegion = GetRegionDetails(region);
             string rsender = GetSenderEmail(region);
@@ -648,12 +613,7 @@ namespace IBS.Repositories
 
             MailMessage mail1 = new MailMessage();
 
-            // Add each recipient address to the To field
-            //foreach (string address in recipientAddresses)
-            //{
-            //    mail1.To.Add(address);
-            //}
-
+           
             if (j == 1 && nCRRegister.SetRegionCode == "N")
             {
                 mail1.CC.Add("sbu.ninsp@rites.com");

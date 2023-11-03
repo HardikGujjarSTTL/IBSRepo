@@ -111,8 +111,6 @@ namespace IBS.Controllers
             {
                 string extractedText = Request.Form["extractedText"];
                 model = nCRRegisterRepository.SaveMoreNC(model, extractedText);
-                //ViewBag.JsonData = model.JsonData;
-                //ViewBag.JsonData1 = model.msg;
             }
             catch (Exception ex)
             {

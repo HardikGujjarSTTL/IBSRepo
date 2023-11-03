@@ -216,8 +216,6 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
-        debugger;
-        
         $("#nccodeother").hide();
         $("#ncrcodes").hide();
         $("#ncrclass").hide();
@@ -248,7 +246,6 @@
 
         var url = '@Url.Action("GetItem", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo;
 
-        //var url = '@Url.Action("GetItem", "NCRRegister")';
         $.ajax({
             url: url,
             type: 'POST',
@@ -256,7 +253,6 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                debugger
                     var Item = $("#Item");
                     Item.empty();
                     Item.append($('<option>').text('--Select--').val(''));
@@ -286,7 +282,6 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                debugger
                 $("#QtyPassed").val(data);
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -319,7 +314,6 @@
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        debugger
                         var CaseNo = data.responseText.CaseNo;
                         var NCNO = data.responseText.NC_NO;
                         var BKNo = data.responseText.BKNo;
@@ -332,7 +326,6 @@
                         window.location.href = actionUrl;
                     }
                 } else {
-                    // Handle error case if needed
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -341,23 +334,12 @@
     }
 
     $('#btnSaveMoreNC').on('click', function () {
-        debugger
         var url = '@Url.Action("SaveMoreNC", "NCRRegister")';
         var selectedText = $("#NcCdSno").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
         var NCText = selectedText.substr(indexOfHyphen + 1).trim();
         var NcCd = $("#NcCdSno").val();
         var formData = new FormData($("#frmNCRDetails")[0]);
-
-        //var newDataItem = {
-        //    NcCd: NcCd,
-        //    NC_DESC: NCText,
-        //    IeAction1 : null,
-        //    CoFinalRemarks1 : null,
-        //};
-        //var dataTable = $('#dtNCR').DataTable();
-
-        //dataTable.row.add(newDataItem).draw(false);
 
         $.ajax({
             url: url,
@@ -366,15 +348,12 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                debugger
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
                         $("#NCNO").val(data.responseText);
                         InitializeDatatable();
                     }
-                } else {
-                    // Handle error case if needed
-                }
+                } 
             },
             error: function (xhr, textStatus, errorThrown) {
             }
@@ -431,7 +410,6 @@
     function BtnSaveRemarks() {
         var inputValues1 = [];
         var inputValues2 = [];
-        debugger
         var NCNO = $("#NCNO").val();
         var UserID = $("#UserID").val();
         var table = $('#dtNCR').DataTable();
@@ -537,7 +515,6 @@
                 $("#ncrcodes").hide();
                 $("#btnsendIE").show();
                 $("#tableNCR").hide();
-                // $("#nccodeother").hide();
                 $("#rdoaddnc").prop("checked", true);
                 $('#NcCdSno').trigger('change');
             }
