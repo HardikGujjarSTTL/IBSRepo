@@ -12,11 +12,11 @@ namespace IBS.Models
         public string BpoType { get; set; }
         public string BpoRly { get; set; }
         public string BpoRegion { get; set; }
-        public string Railway { get; set; }
-        public string PSU { get; set; }
-        public string StateGovt { get; set; }
-        public string ForeignRailways { get; set; }
-        public string PrivateSector { get; set; }
+        public Boolean Railway { get; set; }
+        public Boolean PSU { get; set; }
+        public Boolean StateGovt { get; set; }
+        public Boolean ForeignRailways { get; set; }
+        public Boolean PrivateSector { get; set; }
         public string TypeofOutStandingBills { get; set; }
         public string Region { get; set; }
         public string ReportType { get; set; }
@@ -30,6 +30,7 @@ namespace IBS.Models
         public string SET_NO { get; set; }
         public string TOTAL_TDS { get; set; }
         public string RETENTION_MONEY { get; set; }
+        public string CNOTE_NUMBER { get; set; }
         public string CNOTE_AMOUNT { get; set; }
         public string WRITE_OFF_AMT { get; set; }
         public string AMOUNT_POSTED { get; set; }
@@ -45,5 +46,14 @@ namespace IBS.Models
         public string IE { get; set; }
         public string INVOICE_NO { get; set; }
         public string LO_REMARKS { get; set; }
+        public string I_TAX_TDS { get; set; }
+        public string GST_TDS { get; set; }
+        public string PO_OR_LETTER { get; set; }
+        public string IC_NO { get; set; }
+        public string IC_DT { get; set; }
+        public string RECIPIENT_GSTIN_NO { get; set; }
+        public string CHQ_DT { get; set; }
+        public string NARRATION { get; set; }
+        public string Amount { get; set; }
     }
 }
