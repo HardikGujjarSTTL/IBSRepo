@@ -1,356 +1,174 @@
 ﻿@model IBS.Models.DownloadBillsModel
-@{
-    ViewData["Title"] = "DOWNLOAD ONLINE BILLS/PO/IC";
-}
 
+<div>
+    @* <h3 class="center">(@ViewBag.Region)</h3> *@
 
-
-
-<div class="list-inner">
-    <div class="tast-list">
-        <h2>DOWNLOAD ONLINE BILLS/PO/IC</h2>
-    </div>
-   
-        <div class="list-btn">
-            <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-            <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-        </div>
-  
-</div>
-<div class="accordion-body">
-
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For the Month</label>                    
-                    <span class="text-danger"></span>
-                </div>
-                <div class="col-md-3 mb-3">
-            <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> For Given Period</label>
-                    <span class="text-danger"></span>
-                </div>
-
-            </div>
-            <div id="monthyear" style="display:none;">
-        <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Month</label>
-                    @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),new { @id = "ddlmonth", @class = "form-control" })
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Year</label>
-                    @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),new { @id = "ddlyear", @class = "form-control" })
-                </div>
-        </div>
-            </div>
-            <div id="fdtodt" style="display:none;">
-        <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Month</label>
-                    <input type="text" class="input datepicker" id="fdt" />
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Year</label>
-                    <input type="text" class="input datepicker" id="tdt" />
-                </div>
-        </div>
-            </div>
+    @if (ViewBag.month != null)
+    {
+        <h3 class="center">Download Online BILLS For The Month of: <span class="orangeText"> @ViewBag.month </span>,<span class="orangeText">@ViewBag.year </span></h3>
         
-    <div class="savenext-btn">
-        <button type="submit" class="save-btn active" id="btngr">Generate Report</button>
+    }
+    else if (ViewBag.From != null)
+    {
+        <h3 class="center">Download Online BILLS For The Period: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+    }
+    else
+    {   
+        <h3 class="center">Download Online BILLS</h3>
+    }
+
+
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>S.No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>RLY</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>PO No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>PO Dt</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Case No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>PO OR Letter</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>BPO_NAME</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Bill No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Bill Dt.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Invoice No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>AU</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>IC No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>IC Date</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>BK No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Set No.</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Bill Amount</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Outstanding Amt</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Digital Bill Gen Date</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Digital Invoice</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>Digital IC</th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana"></font></b>PO</th>
+
+                </tr>
+                @if (Model != null && Model.lstbillReport != null)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstbillReport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BpoRly
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PoNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PoDt
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CaseNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PoOrLetter
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BpoName
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BillNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BillDt
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.InvoiceNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AuDesc
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IcNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IcDt
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BkNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SetNo
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.BillAmount
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.AmountOutstanding
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.DigBillGenDate
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.OnlineInvoice
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IcPhoto
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PoSource
+                                </font>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="22" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
 
-<div style="display:none" id="hide">
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtbill" class="table-responsive">
-                    <thead>
-                        <tr>
-
-                            <th>S.No.</th>
-                            <th>RLY</th>
-                            <th>PO No.</th>
-                            <th>PO Dt</th>
-                            <th>Case No.</th>
-                            <th>PO OR Letter</th>
-                            <th>BPO_NAME</th>
-                            <th>Bill No.</th>
-                            <th>Bill Dt.</th>
-                            <th>Invoice No.</th>
-                            <th>AU</th>
-                            <th>IC No.</th>
-                            <th>IC Date</th>
-                            <th>BK No.</th>
-                            <th>Set No.</th>
-                            <th>Bill Amount</th>
-                            <th>Outstanding Amt</th>
-                            <th>Digital Bill Gen Date</th>
-                            <th>Digital Invoice</th>
-                            <th>Digital IC</th>
-                            <th>PO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-</div>
-
-
-
-@section scripts{
-
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
-
-    <script type="text/javascript">
-        $("#btngr").click(function () {
-            var Month = $("#ddlmonth").val();
-            var Year = $("#ddlyear").val();
-            var FromDate = $("#fdt").val();
-            var ToDate = $("#tdt").val();
-            InitializeDatatable1(Month, Year, FromDate, ToDate);
-            $("#hide").css("display", "block");
-        })
-        $(function () {
-            $(".datepicker").datepicker({
-                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
-            });
-            sessionStorage.removeItem("month");
-        });
-        $("#rb1").click(function () {
-            $("#monthyear").css("display", "block");
-            $("#fdtodt").css("display", "none");
-            sessionStorage.setItem("month", true);
-        })
-        $("#rb2").click(function () {
-            $("#fdtodt").css("display", "block");
-            $("#monthyear").css("display", "none");
-        })
-        function InitializeDatatable1(Month, Year, FromDate, ToDate) {
-
-            if (FromDate != "" && ToDate != "") {
-                var parts = FromDate.split('/');
-                var FromDate = parts[2] + '/' + parts[1] + '/' + parts[0];
-                var parts1 = ToDate.split('/');
-                var ToDate = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
-            }
-            var _title = 'Download Bills';
-            $("#dtbill").DataTable({
-                stateSave: false,// Design Assets
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true, // ServerSide Setups
-                serverSide: true,
-                destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                dom: 'rtip',
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'Export to Excel',
-                        filename: function () { return getExportFileName('Download_Bills'); },
-                        download: 'open',
-                        orientation: 'landscape',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20],
-                            modifier: {
-                                page: 'all',
-                                search: 'none'
-                            }
-                        },
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        filename: function () { return getExportFileName('Download_Bills'); },
-                        text: 'Export to PDF',
-                        orientation: 'landscape',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20],
-                            modifier: {
-                                page: 'all',
-                                pageSize: 'LEGAL',
-                                search: 'none',
-                            }
-                        },
-                        customize: function (doc) {
-                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                            doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                            doc.pageMargins = [5, 100, 5, 5];
-
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        title: _title,
-                        footer: true,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,19,20]
-                        },
-                    },
-                ],
-                ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            Month: Month,
-                            Year: Year,
-                            FromDate: FromDate,
-                            ToDate: ToDate,
-                            Rb1: sessionStorage.getItem("month")
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    //{
-                    //    render: function (data, type, row) {
-                    //        var Id = data.LabId;
-                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")';
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
-                    { data: "BpoRly" },
-                    { data: "PoNo" },
-                    { data: "PoDt" },
-                    { data: "CaseNo" },
-                    { data: "PoOrLetter" },
-                    { data: "BpoName" },
-                    { data: "BillNo" },
-                    { data: "BillDt" },
-                    { data: "InvoiceNo" },
-                    { data: "AuDesc" },
-                    { data: "IcNo" },
-                    { data: "IcDt" },
-                    { data: "BkNo" },
-                    { data: "SetNo" },
-                    { data: "BillAmount" },
-                    { data: "AmountOutstanding" },
-                    { data: "DigBillGenDate" },
-                    //{ data: "OnlineInvoice" },
-
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-
-                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
-                            var linkText = 'INVOICE';
-                            var editLink = '<a href="javascript:void(0);" ' +
-                                'onclick="editRow(' + escapedRow + ')" ' +
-                                'style="color: blue; text-decoration: underline;">' +
-                                linkText +
-                                '</a>';
-
-                            return editLink;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            
-                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
-                            var linkText = '';
-                            if (data.ICExists != null){
-                                linkText = 'IC';
-                            }                            
-                            var editLink = '<a href="javascript:void(0);" ' +
-                                'onclick="editRow1(' + escapedRow + ')" ' +
-                                'style="color: blue; text-decoration: underline;">' +
-                                linkText +
-                                '</a>';
-
-                            return editLink;
-                        }
-                    },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-
-                            var escapedRow = JSON.stringify(row).replace(/"/g, '&quot;');
-                            var linkText = '';
-                            if (data.CaseNoExists != null) {
-                                linkText = 'VIEW PO';
-                            }
-                            
-                            var editLink = '<a href="javascript:void(0);" ' +
-                                'onclick="editRow2(' + escapedRow + ')" ' +
-                                'style="color: blue; text-decoration: underline;">' +
-                                linkText +
-                                '</a>';
-
-                            return editLink;
-                        }
-                    },
-
-
-                ],
-
-                "order": [[0, "asc"]]
-            });
-
-        }
-        function editRow(escapedRow) {
-            
-           var fpath1 = escapedRow.OnlineInvoice;
-            window.open(fpath1, "_blank");
-
-        }
-        function editRow1(escapedRow) {
-            var fpath1 = escapedRow.ICPATH;
-            window.open(fpath1, "_blank");
-        }
-        function editRow2(escapedRow) {
-            
-            if (escapedRow.PoSource == "C"){
-                var fpath = 'https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/"' + escapedRow.PoYr + '"/"' + escapedRow.ImmsRlyCd + '"/"' + escapedRow.PoNo + '".pdf'
-            }
-            else
-            {
-                var fpath1 = escapedRow.CASENOPATH;
-                window.open(fpath1, "_blank");
-            }
-        }
-        $("#imgExcel").on("click", function () {
-            $('#dtbill').DataTable().buttons(0, 0).trigger();
-        });
-
-        $("#imgPdf").on("click", function () {
-            $('#dtbill').DataTable().buttons(0, 1).trigger();
-        });
-
-        $("#imgPrint").on("click", function () {
-            $('#dtbill').DataTable().buttons(0, 2).trigger();
-        });
-                                //function UserDelete(UserId) {
-                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-                                //    $("#btn-delete-yes").attr("href", url);
-                                //    $("#modal-delete-conf").modal("show");
-                                //}
-
-    </script>
-}

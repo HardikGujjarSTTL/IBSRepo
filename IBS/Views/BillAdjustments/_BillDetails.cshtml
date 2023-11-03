@@ -288,16 +288,28 @@
         </div>
 
         <div class="row my-0">
-            <div class="col-md-4 mb-3">
+            @*<div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">FEE</label>
                     @Html.DropDownListFor(model => model.BpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                </div>
+            </div>*@
+            <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
+                <div class="reference">
+                    <label for="Reference">Rly BPO Fee</label>
+                    @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 BpoFee" style="display:none;">
+                <div class="reference">
+                    <label for="Reference">FEE</label>
+                    <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">FEE Type</label>
-                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()"})
                 </div>
             </div>
             @if (@Convert.ToInt32(Convert.ToDateTime(@Model.CertDt).ToString("yyyyMMdd")) >= @Convert.ToInt32(20170701))

@@ -1,0 +1,173 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>DOWNLOAD ONLINE BILLS/PO/IC</h2>
+    </div>
+</div>
+<div class="accordion-body">
+
+    <div class="row my-0">
+        <div class="col-md-3 mb-3">
+            <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For the Month</label>
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="rb2"><input type="radio" name="radioGroup" id="rb2" /> For Given Period</label>
+            <span class="text-danger"></span>
+        </div>
+
+    </div>
+    <div id="monthyear" style="display:none;">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Month <i class="text-danger">*</i></label>
+                @Html.DropDownList("Month", new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),new { @id = "ddlmonth", @class = "form-control" })
+                <span class="text-danger field-validation-error" id="spnError1"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Year <i class="text-danger">*</i></label>
+                @Html.DropDownList("Year", new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),new { @id = "ddlyear", @class = "form-control" })
+                <span class="text-danger field-validation-error" id="spnError2"></span>
+            </div>
+        </div>
+    </div>
+    <div id="fdtodt" style="display:none;">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">From Date <i class="text-danger">*</i></label>
+                <input type="text" class="input datepicker" id="fdt" />
+                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">To Date <i class="text-danger">*</i></label>
+                <input type="text" class="input datepicker" id="tdt" />
+                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="savenext-btn">
+        <button type="submit" class="save-btn active" id="btngr" onclick="ViewReport1()">Generate Report</button>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function ClearControls() {
+            location.reload(true);
+        }
+        
+
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
+            });
+            sessionStorage.removeItem("month");
+            sessionStorage.removeItem("date");
+            $("#ddlmonth").val(null);
+            $("#ddlyear").val(null);
+        });
+        $("#rb1").click(function () {
+            $("#monthyear").css("display", "block");
+            $("#fdtodt").css("display", "none");
+            sessionStorage.setItem("month", true);
+            sessionStorage.removeItem("date");
+        })
+        $("#rb2").click(function () {
+            $("#fdtodt").css("display", "block");
+            $("#monthyear").css("display", "none");
+            sessionStorage.setItem("date", true);
+            sessionStorage.removeItem("month");
+        })
+
+        function ViewReport1() {
+
+            if (sessionStorage.getItem("date") == 'true') {
+               $("#ddlmonth").val(null);
+                 $("#ddlyear").val(null);
+                $("#spnErrorFromDate").html("");
+                $("#spnErrorToDate").html("");
+                var IsValid = true;
+                if ($("#fdt").val() == "") {
+                    $("#spnErrorFromDate").html("The From Date field is required.");
+                    IsValid = false;
+                }
+                if ($("#tdt").val() == "") {
+                    $("#spnErrorToDate").html("The To Date field is required.");
+                    IsValid = false;
+                }
+
+                if ($("#fdt").val() != "" && IsValidDate($("#fdt").val()) == false) {
+                    $("#spnErrorFromDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if ($("#tdt").val() != "" && IsValidDate($("#tdt").val()) == false) {
+                    $("#spnErrorToDate").html("Invalid date format.");
+                    IsValid = false;
+                }
+                if (!IsValid) return;
+            }
+            
+            if (sessionStorage.getItem("month") == 'true') {
+                
+               $("#fdt").val(null);
+                $("#tdt").val(null);
+                $("#spnError1").html("");
+                $("#spnError2").html("");
+                var IsValid = true;
+                if ($("#ddlmonth").val() == null) {
+                    $("#spnError1").html("please select month.");
+                    IsValid = false;
+                }
+                if ($("#ddlyear").val() == null) {
+                    $("#spnError2").html("Tplease select year");
+                    IsValid = false;
+                }
+                
+                if (!IsValid) return;
+            }
+            var Month = $("#ddlmonth").val();
+            var Year = $("#ddlyear").val();
+            var Fdt = $("#fdt").val();
+            var Tdt = $("#tdt").val();
+
+            var parts, FromDate, parts1, ToDate;
+
+            if (Fdt != null) {
+                parts = Fdt.split('/');
+                if (parts.length === 3) {
+                    FromDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                } else {
+                    // Handle invalid date format
+                }
+            } else {
+                // Handle the case where Fdt is null
+            }
+
+            if (Tdt != null) {
+                parts1 = Tdt.split('/');
+                if (parts1.length === 3) {
+                    ToDate = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
+                } else {
+                    // Handle invalid date format
+                }
+            } else {
+                // Handle the case where Tdt is null
+            }
+
+            var RBMonth = sessionStorage.getItem("month");
+            $("#hide").css("display", "block");
+            let myObject = { Month, Year, FromDate, ToDate, RBMonth };
+
+            var url = '@Url.Action("Manage", "DownloadBills")?' + $.param(myObject);
+            window.open(url, '_blank');
+        }
+    </script>
+}
