@@ -27,10 +27,11 @@ namespace IBS.Repositories
             DTResult<ReturnedBillsModel> dTResult = new() { draw = 0 };
             IQueryable<ReturnedBillsModel>? query = null;
 
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            //var searchBy = dtParameters.Search?.Value;
+            //var orderCriteria = string.Empty;
+            //var orderAscendingDirection = true;
 
+            
             //if (dtParameters.Order != null)
             //{
             //    // in this example we just default sort on the 1st column
@@ -38,46 +39,23 @@ namespace IBS.Repositories
 
             //    if (orderCriteria == "")
             //    {
-            //        orderCriteria = "BILL_NO";
+            //        orderCriteria = "BillNo";
             //    }
             //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             //}
             //else
             //{
             //    // if we have an empty search then just order the results by Id ascending
-            //    orderCriteria = "BILL_NO";
+            //    orderCriteria = "BillNo";
             //    orderAscendingDirection = true;
             //}
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-                if (orderCriteria == "")
-                {
-                    orderCriteria = "BillNo";
-                }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "BillNo";
-                orderAscendingDirection = true;
-            }
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("p_orgn_type", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input);
             par[1] = new OracleParameter("p_orgn", OracleDbType.NVarchar2, Org, ParameterDirection.Input);
             par[2] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_BILL_DETAILS", par, 2);
-            //var par = new List<OracleParameter>();
-            //par.Add(new OracleParameter("p_orgn_type", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input));
-            //par.Add(new OracleParameter("p_orgn", OracleDbType.NVarchar2, Org, ParameterDirection.Input));
-            //par.Add(new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output));
-
-            //var ds = DataAccessDB.GetDataSet("GET_BILL_DETAILS", par.ToArray(), 2);
-
+            
             List<ReturnedBillsModel> modelList = new List<ReturnedBillsModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
@@ -123,15 +101,15 @@ namespace IBS.Repositories
 
             dTResult.recordsTotal = query.Count();
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.BillNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.BillNo).ToLower().Contains(searchBy.ToLower())
-                );
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => Convert.ToString(w.BillNo).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.BillNo).ToLower().Contains(searchBy.ToLower())
+            //    );
 
             dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.data = query.ToList();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
