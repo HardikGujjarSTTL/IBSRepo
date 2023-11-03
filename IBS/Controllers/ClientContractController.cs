@@ -27,6 +27,7 @@ namespace IBS.Controllers
         {
             string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
             ClientContractModel model = new();
+            model.VisitDt = DateTime.Now;
             if (id > 0)
             {
                 model = clientcontractRepository.FindByID(id);
