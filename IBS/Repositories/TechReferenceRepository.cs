@@ -176,7 +176,7 @@ namespace IBS.Repositories
         {
             int Id=0;
             OracleParameter[] par = new OracleParameter[3];
-            par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Varchar2, model.TechDate, ParameterDirection.Input);
+            par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Varchar2, model.TechDate.ToString().Replace("/", ""), ParameterDirection.Input);
             par[1] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.RegionCd, ParameterDirection.Input);
             par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 

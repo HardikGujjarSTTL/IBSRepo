@@ -1,17 +1,10 @@
-﻿
-using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using IronBarCode;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Net;
-using System.Text.Json;
+using System.Text;
 
 namespace IBS.Controllers
 {
@@ -37,20 +30,22 @@ namespace IBS.Controllers
             DTResult<BarcodeGenerate> dTResult = BarcodeGen.GetBarcodeData(dtParameters);
             return Json(dTResult);
         }
+
         public IActionResult AddBarcode(BarcodeGenerate barcodeGenerate)
         {
             barcodeGenerate.CURRENT_DATE = DateTime.Now.ToString("dd/MM/yyyy");
             barcodeGenerate.Region = GetRegionCode;
             return View(barcodeGenerate);
         }
+
         [HttpPost]
         public IActionResult CaseNoSearch([FromBody] DTParameters dtParameters)
         {
             DTResult<BarcodeGenerate> dTResult = BarcodeGen.CaseNoSearch(dtParameters);
             return Json(dTResult);
         }
-        [HttpPost]
 
+        [HttpPost]
         public IActionResult Save(BarcodeGenerate BarcodeGenerate)
         {
             string IPADDRESS = this.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -87,16 +82,19 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
         public IActionResult LabCalculation()
         {
             return PartialView();
         }
+
         [HttpPost]
         public IActionResult LoadCalculation([FromBody] DTParameters dtParameters)
         {
             DTResult<BarcodeGenerate> dTResult = BarcodeGen.LoadCalculation(dtParameters);
             return Json(dTResult);
         }
+
         [HttpPost]
         public IActionResult InsertDataForLabTran(BarcodeGenerate BarcodeGenerate)
         {
@@ -136,55 +134,57 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-        
+
         public IActionResult GenerateBarcode(string Barcode, int quantity)
         {
             try
             {
-                
                 List<string> imageUrls = new List<string>();
 
                 for (int i = 0; i < quantity; i++)
                 {
                     string uniqueBarcode = $"{Barcode}\n{DateTime.Now.ToString("dd-MM-yyyy")}";
-                    GeneratedBarcode barcode = IronBarCode.BarcodeWriter.CreateBarcode(uniqueBarcode, BarcodeWriterEncoding.Code128);
-                    barcode.ResizeTo(400, 120);
-                    barcode.AddBarcodeValueTextBelowBarcode();
-                    
-                    barcode.ChangeBarCodeColor(System.Drawing.Color.Black);
-                    barcode.SetMargins(10);
 
-                    string path = Path.Combine(env.WebRootPath, "GeneratedBarcode");
-                    //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode");
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
+                    BarcodeLib.Barcode b = new BarcodeLib.Barcode();
+                    MemoryStream ms = new MemoryStream();
+                    System.Drawing.Image img = null;
+                    BarcodeLib.TYPE type = BarcodeLib.TYPE.CODE128B;
 
+                    b.Alignment = BarcodeLib.AlignmentPositions.LEFT;
+                    b.IncludeLabel = true;
+                    b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMLEFT;
+
+                    int widthPixel = (int)ConvertPointToPixel(400);
+                    int HeightPixel = (int)ConvertPointToPixel(120);
+
+                    img = b.Encode(type, Barcode, System.Drawing.Color.Black, System.Drawing.Color.White, widthPixel, HeightPixel);
                     string fileName = $"barcode_{i + 1}.png";
                     string filePath = Path.Combine(env.WebRootPath, "GeneratedBarcode", fileName);
-                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode", fileName);
-                    barcode.SaveAsPng(filePath);
-                    //string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}{filePath}";
-                    //string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/wwwroot/ReadWriteData/GeneratedBarcode/{fileName}";
-                    string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/GeneratedBarcode/" + fileName;
-                    //string imageUrl = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "GeneratedBarcode" , fileName);
-                    imageUrls.Add(imageUrl);
-                }
 
+#pragma warning disable CA1416 // Validate platform compatibility
+                    img.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+#pragma warning restore CA1416 // Validate platform compatibility
+
+                    string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/GeneratedBarcode/" + fileName;
+
+                    imageUrls.Add(imageUrl);
+
+                }
                 ViewBag.QrCodeUris = imageUrls;
+
             }
             catch (Exception)
             {
                 throw;
             }
             return PartialView();
-            
+
         }
+
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)
         {
-           
+
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
@@ -210,6 +210,40 @@ namespace IBS.Controllers
             await browser.CloseAsync();
 
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
+
+        private string StringEncode128(string text)
+        {
+            const int Ascii_FNC1 = 102;
+            const int Ascii_STARTB = 104;
+
+            int CharAscii = 0;
+            for (int CharPos = 0; CharPos < text.Length; ++CharPos)
+            {
+                string letter = text.Substring(CharPos, 1);
+                CharAscii = (int)Convert.ToChar(letter);
+                if (CharAscii > 127 && CharAscii != Ascii_FNC1)
+                {
+                    throw new Exception(text + "|" + CharAscii);
+                }
+            }
+
+            StringBuilder outstring = new StringBuilder();
+            outstring.Append((char)(Ascii_STARTB));
+
+            for (int CharPos = 0; CharPos < text.Length; ++CharPos)
+            {
+                string letter = text.Substring(CharPos, 1);
+                CharAscii = (int)Convert.ToChar(letter) - 32;
+                outstring.Append((char)(CharAscii));
+            }
+
+            return outstring.ToString();
+        }
+
+        private float ConvertPointToPixel(float ValueInPoint)
+        {
+            return (ValueInPoint * 96) / 72;
         }
 
     }

@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -664,10 +660,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18983,6 +18975,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Clientuserid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CLIENTUSERID");
             entity.Property(e => e.Contractid)
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
@@ -21484,9 +21480,19 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.ChqAmt)
+                .HasColumnType("NUMBER(12,2)")
+                .HasColumnName("CHQ_AMT");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
             entity.Property(e => e.CnoteAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("CNOTE_AMOUNT");
+            entity.Property(e => e.CnoteBillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("CNOTE_BILL_NO");
             entity.Property(e => e.Consignee)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -21510,6 +21516,13 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("FIN_YR");
+            entity.Property(e => e.IcDt)
+                .HasColumnType("DATE")
+                .HasColumnName("IC_DT");
+            entity.Property(e => e.IcNo)
+                .HasMaxLength(29)
+                .IsUnicode(false)
+                .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
                 .HasColumnName("IE_CD");
@@ -21517,6 +21530,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false)
                 .HasColumnName("LO_REMARKS");
+            entity.Property(e => e.Narration)
+                .HasMaxLength(63)
+                .IsUnicode(false)
+                .HasColumnName("NARRATION");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");
@@ -21529,6 +21546,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("PO_OR_LETTER");
+            entity.Property(e => e.RecipientGstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("RECIPIENT_GSTIN_NO");
             entity.Property(e => e.RegionCode)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -21796,7 +21817,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeName)
                 .HasMaxLength(30)
@@ -21807,7 +21828,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC_PO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.MaterialValue)
                 .HasColumnType("NUMBER(15,2)")
@@ -24092,6 +24113,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Clientuserid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CLIENTUSERID");
             entity.Property(e => e.ConsigneeSName)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -24161,7 +24186,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.Qty)
                 .HasColumnType("NUMBER(12,4)")

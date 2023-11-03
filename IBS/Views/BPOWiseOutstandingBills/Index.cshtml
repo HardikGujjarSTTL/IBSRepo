@@ -202,29 +202,30 @@
             $("#chk3").prop("checked", true);
             $("#chk4").prop("checked", true);
             $("#chk5").prop("checked", true);
+           
             var isChecked = $("#chk1").prop("checked");
-            var value = isChecked ? "1" : "0";
+            var value = isChecked ? true : false;
             sessionStorage.setItem("chk1", value);
 
-            var isChecked = $("#chk2").prop("checked");
-            var value2 = isChecked ? "1" : "0";
+            var isChecked2 = $("#chk2").prop("checked");
+            var value2 = isChecked2 ? true : false;
             sessionStorage.setItem("chk2", value2);
 
-            var isChecked = $("#chk3").prop("checked");
-            var value3 = isChecked ? "1" : "0";
+            var isChecked3 = $("#chk3").prop("checked");
+            var value3 = isChecked3 ? true : false;
             sessionStorage.setItem("chk3", value3);
 
-            var isChecked = $("#chk4").prop("checked");
-            var value4 = isChecked ? "1" : "0";
+            var isChecked4 = $("#chk4").prop("checked");
+            var value4 = isChecked4 ? true : false;
             sessionStorage.setItem("chk4", value4);
 
-            var isChecked = $("#chk5").prop("checked");
-            var value5 = isChecked ? "1" : "0";
+            var isChecked5 = $("#chk5").prop("checked");
+            var value5 = isChecked5 ? true : false;
             sessionStorage.setItem("chk5", value5);
 
             // var checkedValues = [];
             // $("input[type='checkbox']").each(function () {
-               
+
             //     var checkboxId = $(this).attr("id");
             //     if ($(this).is(":checked")) {
             //         checkedValues.push(checkboxId); // Store the value of the checked checkbox
@@ -233,22 +234,148 @@
             var checkedValues = [];
 
             $(":checkbox").click(function () {
-                debugger;
+              
                 var checkboxId = $(this).attr("id");
-                var isChecked = $(this).is(":unchecked");
-
-                if (isChecked) {
-                    checkedValues.push(checkboxId);
-                } else {
-                    // If the checkbox is unchecked, remove it from the array
-                    var index = checkedValues.indexOf(checkboxId);
-                    if (index !== -1) {
-                        checkedValues.splice(index, 1);
+               
+                if (checkboxId == "chk1") {
+                   
+                    var isUnChecked = $(this).is(":unchecked");
+                    var isChecked = $(this).is(":checked");
+                    var checkbox = false;
+                    if (isUnChecked) {
+                        if (isChecked == true) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId); 
+                        sessionStorage.setItem("chk1", checkbox);
+                        
                     }
+                    else if (isChecked) {
+                        if (isUnChecked == false) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        checkbox = true;
+                        sessionStorage.setItem("chk1", checkbox);
+                    }
+                    else {
+                        var index = checkedValues.indexOf(checkboxId);
+                        if (index !== -1) {
+                            checkedValues.splice(index, 1);
+                        }
+                    }
+                    
+                }
+                else if (checkboxId == "chk2") {
+                    var isUnChecked = $(this).is(":unchecked");
+                    var isChecked = $(this).is(":checked");
+                    var checkbox2 = false;
+                    if (isUnChecked) {
+                        if (isChecked == true) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        sessionStorage.setItem("chk2", checkbox2);
+                    }
+                    else if (isChecked) {
+                        if (isUnChecked == false) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        checkbox2 = true;
+                        sessionStorage.setItem("chk2", checkbox2);
+                    }
+                    else {
+                        var index = checkedValues.indexOf(checkboxId);
+                        if (index !== -1) {
+                            checkedValues.splice(index, 1);
+                        }
+                    }
+                    
+                }
+               else if (checkboxId == "chk3") {
+                    var isUnChecked = $(this).is(":unchecked");
+                    var isChecked = $(this).is(":checked");
+                    var checkbox3 = false;
+                    if (isUnChecked) {
+                        if (isChecked == true) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        sessionStorage.setItem("chk3", checkbox3);
+                    }
+                    else if (isChecked) {
+                        if (isUnChecked == false) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        checkbox3 = true;
+                        sessionStorage.setItem("chk3", checkbox3);
+                    }
+                    else {
+                        var index = checkedValues.indexOf(checkboxId);
+                        if (index !== -1) {
+                            checkedValues.splice(index, 1);
+                        }
+                    }
+                    
+                }
+               else if (checkboxId == "chk4") {
+                    var isUnChecked = $(this).is(":unchecked");
+                    var isChecked = $(this).is(":checked");
+                    var checkbox4 = false;
+                    if (isUnChecked) {
+                        if (isChecked == true) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        sessionStorage.setItem("chk4", checkbox4);
+                    }
+                    else if (isChecked) {
+                        if (isUnChecked == false) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        checkbox4 = true;
+                        sessionStorage.setItem("chk4", checkbox4);
+                    }
+                    else {
+                        var index = checkedValues.indexOf(checkboxId);
+                        if (index !== -1) {
+                            checkedValues.splice(index, 1);
+                        }
+                    }
+                    
+                }
+               else if (checkboxId == "chk5") {
+                    var isUnChecked = $(this).is(":unchecked");
+                    var isChecked = $(this).is(":checked");
+                    var checkbox5 = false;
+                    if (isUnChecked) {
+                        if (isChecked == true) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        sessionStorage.setItem("chk5", checkbox5);
+                    }
+                    else if (isChecked) {
+                        if (isUnChecked == false) {
+                            checkedValues = [];
+                        }
+                        checkedValues.push(checkboxId);
+                        checkbox5 = true;
+                        sessionStorage.setItem("chk5", checkbox5);
+                    }
+                    else {
+                        var index = checkedValues.indexOf(checkboxId);
+                        if (index !== -1) {
+                            checkedValues.splice(index, 1);
+                        }
+                    }
+                    
                 }
 
-                // Now, 'checkedValues' contains the IDs of the checked checkboxes, and unchecked checkboxes have been removed.
-                console.log("Checked Values: " + checkedValues.join(", "));
+                
             });
             // var checkedValues = [];
             // $(":checkbox").click(function () {
@@ -274,6 +401,7 @@
                     sessionStorage.removeItem("region");
                     sessionStorage.removeItem("partibpo");
                     sessionStorage.removeItem("particlient");
+                    sessionStorage.setItem("allbpo", true);
                 } else if (selectedValue === "Report2") {
 
                     $("#allbpohide").css("display", "none");
@@ -283,6 +411,7 @@
                     sessionStorage.removeItem("region");
                     sessionStorage.setItem("partibpo", true);
                     sessionStorage.removeItem("particlient");
+                    sessionStorage.removeItem("allbpo");
                 } else if (selectedValue === "Report3") {
                     $("#allbpohide").css("display", "none");
                     $("#particularbpo").css("display", "none");
@@ -291,6 +420,7 @@
                     sessionStorage.removeItem("region");
                     sessionStorage.removeItem("partibpo");
                     sessionStorage.setItem("particlient", true);
+                    sessionStorage.removeItem("allbpo");
                 } else if (selectedValue === "Report4") {
 
                     $("#allbpohide").css("display", "none");
@@ -300,6 +430,7 @@
                     sessionStorage.setItem("region", true);
                     sessionStorage.removeItem("partibpo");
                     sessionStorage.removeItem("particlient");
+                    sessionStorage.removeItem("allbpo");
                 }
             });
         });
@@ -422,16 +553,31 @@
             if (sessionStorage.getItem("region") == 'true') {
                 BpoRegion = $("#ddlregion").val();
             }
-            debugger;
-            //var Checkbox = localStorage.getItem(checkboxId);
-            var Checkbox = "";
-            var Railway = sessionStorage.getItem("chk1");
-            var PSU = sessionStorage.getItem("chk2");
-            var StateGovt = sessionStorage.getItem("chk3");
-            var ForeignRailways = sessionStorage.getItem("chk4");
-            var PrivateSector = sessionStorage.getItem("chk5");
+           
+            
+            var Railway = false;
+            var PSU = false;
+            var StateGovt = false;
+            var ForeignRailways = false;
+            var PrivateSector = false;
+            if (sessionStorage.getItem("allbpo") == null) {
+                Railway = sessionStorage.getItem("chk1");
+                PSU = sessionStorage.getItem("chk2");
+                StateGovt = sessionStorage.getItem("chk3");
+                ForeignRailways = sessionStorage.getItem("chk4");
+                PrivateSector = sessionStorage.getItem("chk5");
+            }
+            else if (sessionStorage.getItem("allbpo") == 'true'){
+                Railway = sessionStorage.getItem("chk1");
+                PSU = sessionStorage.getItem("chk2");
+                StateGovt = sessionStorage.getItem("chk3");
+                ForeignRailways = sessionStorage.getItem("chk4");
+                PrivateSector = sessionStorage.getItem("chk5");
+            }
+            
+            
             var TypeofOutStandingBills = $("#ddlTypeOutStandingBills").val();
-            let myObject = { ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Checkbox, Railway, PSU, StateGovt, ForeignRailways, PrivateSector, TypeofOutStandingBills };
+            let myObject = { ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Railway, PSU, StateGovt, ForeignRailways, PrivateSector, TypeofOutStandingBills };
 
             var url = '@Url.Action("Manage", "BPOWiseOutstandingBills")?' + $.param(myObject);
             window.open(url, '_blank');
