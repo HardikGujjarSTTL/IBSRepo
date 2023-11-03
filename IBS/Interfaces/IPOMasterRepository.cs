@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public PO_MasterModel FindByID(string CaseNo);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters,int VendCd);
-        DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd);
+        DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd,string RlyNonrly);
         bool Remove(string CaseNo, int UserID);
         PO_MasterModel alreadyExistT80_PO_MASTER(PO_MasterModel model);
         PO_MasterModel alreadyExistT13_PO_MASTER(PO_MasterModel model);

@@ -92,7 +92,8 @@ namespace IBS.Controllers.Client
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string rly_cd= IBS.Helper.SessionHelper.UserModelDTO.Organisation.Trim();
-            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, rly_cd);
+            string RlyNonrly= IBS.Helper.SessionHelper.UserModelDTO.OrgnType.Trim();
+            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, rly_cd, RlyNonrly);
             return Json(dTResult);
         }
         [Authorization("ClientPurchaseOrder", "Index", "delete")]
