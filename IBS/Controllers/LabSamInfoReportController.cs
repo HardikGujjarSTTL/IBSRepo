@@ -32,7 +32,15 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabSamInfoReportModel> dTResult = LabSamInfoReportRepository.LabSamInfoReport(dtParameters, Regin);          
+            DTResult<LabSamInfoReportModel> dTResult = new DTResult<LabSamInfoReportModel>();
+            try
+            {
+                dTResult = LabSamInfoReportRepository.LabSamInfoReport(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSamInfoReport", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         

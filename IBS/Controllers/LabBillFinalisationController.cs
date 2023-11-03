@@ -28,27 +28,43 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable(string FromDate, string ToDate)
         {
-            
-            string Regin = GetRegionCode;
-            List<LabBillFinalisationModel> dTResult = LabBillFinalisationRepository.GetBill(FromDate,ToDate,Regin);
+            List<LabBillFinalisationModel> dTResult = new List<LabBillFinalisationModel>();
+            try
+            {
+                string Regin = GetRegionCode;
+                dTResult = LabBillFinalisationRepository.GetBill(FromDate, ToDate, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabBillFinalisation", "LoadTable", 1, GetIPAddress());
+            }
             return Json(dTResult);
         }
         [HttpPost]
         [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "edit")]
         public JsonResult UpdateBill([FromBody] LabBillFinalisationModel LabBillFinalisationModel)
         {
-            bool result;
-            result = LabBillFinalisationRepository.UpdateBill(LabBillFinalisationModel);
-            if (result == true)
+            
+            try
             {
+                bool result;
+                result = LabBillFinalisationRepository.UpdateBill(LabBillFinalisationModel);
+                if (result == true)
+                {
 
-                //ViewBag.PaymentID = paymentFormModel.PaymentID;
-                return Json(true);
+                    //ViewBag.PaymentID = paymentFormModel.PaymentID;
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(false);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabBillFinalisation", "UpdateBill", 1, GetIPAddress());
             }
+            return Json(false);
 
         }
         #endregion

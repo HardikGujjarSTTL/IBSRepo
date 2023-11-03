@@ -62,20 +62,27 @@ namespace IBS.Controllers.Reports
         {
             ViewBag.From = FromDt;
             ViewBag.To = ToDt;
-
+            BPOWiseOutstandingBillsModel model = new BPOWiseOutstandingBillsModel();
             string Region = GetRegionCode;
-            if (Region == "N")
-            { ViewBag.Region = "NORTHERN REGION"; }
-            else if (Region == "S")
-            { ViewBag.Region = "SOUTHERN REGION"; }
-            else if (Region == "E")
-            { ViewBag.Region = "EASTERN REGION"; }
-            else if (Region == "W")
-            { ViewBag.Region = "WESTERN REGION"; }
-            else if (Region == "C")
-            { ViewBag.Region = "CENTRAL REGION"; }
+            try
+            {
+                if (Region == "N")
+                { ViewBag.Region = "NORTHERN REGION"; }
+                else if (Region == "S")
+                { ViewBag.Region = "SOUTHERN REGION"; }
+                else if (Region == "E")
+                { ViewBag.Region = "EASTERN REGION"; }
+                else if (Region == "W")
+                { ViewBag.Region = "WESTERN REGION"; }
+                else if (Region == "C")
+                { ViewBag.Region = "CENTRAL REGION"; }
 
-            BPOWiseOutstandingBillsModel model = BPOWiseOutstandingBillsRepository.GenerateReport(ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Railway, PSU, StateGovt, ForeignRailways, PrivateSector,TypeofOutStandingBills,Region);
+                model = BPOWiseOutstandingBillsRepository.GenerateReport(ReportType, FromDt, ToDt, BpoCd, BpoType, BpoRly, BpoRegion, Railway, PSU, StateGovt, ForeignRailways, PrivateSector, TypeofOutStandingBills, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BPOWiseOutstandingBills", "BPOWiseOutBills", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
         [HttpGet]

@@ -68,49 +68,68 @@ namespace IBS.Controllers
     }
         public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab)
         {
-            ViewBag.From = wFrmDtO;
-            ViewBag.To = wToDt;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
+                ViewBag.To = wToDt;
 
-            string Region = GetRegionCode;
-            if (Region == "N")
-            { ViewBag.Region = "NORTHERN REGION"; }
-            else if (Region == "S")
-            { ViewBag.Region = "SOUTHERN REGION"; }
-            else if (Region == "E")
-            { ViewBag.Region = "EASTERN REGION"; }
-            else if (Region == "W")
-            { ViewBag.Region = "WESTERN REGION"; }
-            else if (Region == "C")
-            { ViewBag.Region = "CENTRAL REGION"; }
+                string Region = GetRegionCode;
+                if (Region == "N")
+                { ViewBag.Region = "NORTHERN REGION"; }
+                else if (Region == "S")
+                { ViewBag.Region = "SOUTHERN REGION"; }
+                else if (Region == "E")
+                { ViewBag.Region = "EASTERN REGION"; }
+                else if (Region == "W")
+                { ViewBag.Region = "WESTERN REGION"; }
+                else if (Region == "C")
+                { ViewBag.Region = "CENTRAL REGION"; }
 
-            LabReportsModel model = LabReportsRepository.LabRegisterReport( ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab, Region);
+                model = LabReportsRepository.LabRegisterReport(ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabRegisterReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 
         public IActionResult LabPerformanceReport(string ReportType, string wFrmDtO, string wToDt)
         {
-            ViewBag.From = wFrmDtO;
-            ViewBag.To = wToDt;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
+                ViewBag.To = wToDt;
 
-            string Region = GetRegionCode;
-            if (Region == "N")
-            { ViewBag.Region = "NORTHERN REGION"; }
-            else if (Region == "S")
-            { ViewBag.Region = "SOUTHERN REGION"; }
-            else if (Region == "E")
-            { ViewBag.Region = "EASTERN REGION"; }
-            else if (Region == "W")
-            { ViewBag.Region = "WESTERN REGION"; }
-            else if (Region == "C")
-            { ViewBag.Region = "CENTRAL REGION"; }
-            
-            LabReportsModel model = LabReportsRepository.LabPerformanceReport(ReportType, wFrmDtO, wToDt, Region);
+                string Region = GetRegionCode;
+                if (Region == "N")
+                { ViewBag.Region = "NORTHERN REGION"; }
+                else if (Region == "S")
+                { ViewBag.Region = "SOUTHERN REGION"; }
+                else if (Region == "E")
+                { ViewBag.Region = "EASTERN REGION"; }
+                else if (Region == "W")
+                { ViewBag.Region = "WESTERN REGION"; }
+                else if (Region == "C")
+                { ViewBag.Region = "CENTRAL REGION"; }
+
+                model = LabReportsRepository.LabPerformanceReport(ReportType, wFrmDtO, wToDt, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabPerformanceReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 
         public IActionResult LabPostingReport(string ReportType, string wFrmDtO, string wToDt)
         {
-            ViewBag.From = wFrmDtO;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
             ViewBag.To = wToDt;
 
             string Region = GetRegionCode;
@@ -125,13 +144,21 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             
-            LabReportsModel model = LabReportsRepository.LabPostingReport(ReportType, wFrmDtO, wToDt, Region);
+            model = LabReportsRepository.LabPostingReport(ReportType, wFrmDtO, wToDt, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabPostingReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 
         public IActionResult OnlinePaymentReport(string ReportType, string wFrmDtO, string wToDt)
         {
-            ViewBag.From = wFrmDtO;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
             ViewBag.To = wToDt;
 
             string Region = GetRegionCode;
@@ -146,13 +173,21 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            LabReportsModel model = LabReportsRepository.OnlinePaymentReport(ReportType, wFrmDtO, wToDt, Region);
+            model = LabReportsRepository.OnlinePaymentReport(ReportType, wFrmDtO, wToDt, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "OnlinePaymentReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 
         public IActionResult LabInvoiceReport(string ReportType, string wFrmDtO, string wToDt)
         {
-            ViewBag.From = wFrmDtO;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
             ViewBag.To = wToDt;
 
             string Region = GetRegionCode;
@@ -167,13 +202,21 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            LabReportsModel model = LabReportsRepository.LabInvoiceReport(ReportType, wFrmDtO, wToDt, Region);
+            model = LabReportsRepository.LabInvoiceReport(ReportType, wFrmDtO, wToDt, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabInvoiceReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 
         public IActionResult LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string lstStatus, string rdbrecvdt)
         {
-            ViewBag.From = wFrmDtO;
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
             ViewBag.To = wToDt;
             ViewBag.Date = DateTime.Now.ToString("dd/MM/yyyy");
             ViewBag.Time = DateTime.Now.ToShortTimeString();
@@ -189,7 +232,12 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            LabReportsModel model = LabReportsRepository.LabSamplePaymentReport(ReportType, wFrmDtO, wToDt,Region,lstStatus, rdbrecvdt);
+            model = LabReportsRepository.LabSamplePaymentReport(ReportType, wFrmDtO, wToDt,Region,lstStatus, rdbrecvdt);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabSamplePaymentReport", 1, GetIPAddress());
+            }
             return PartialView(model);
         }
 

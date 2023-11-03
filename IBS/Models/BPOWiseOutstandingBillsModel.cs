@@ -55,5 +55,6 @@ namespace IBS.Models
         public string CHQ_DT { get; set; }
         public string NARRATION { get; set; }
         public string Amount { get; set; }
+        public string AU_DESC { get; set; }
     }
 }
