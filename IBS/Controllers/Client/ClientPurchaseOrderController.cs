@@ -35,50 +35,23 @@ namespace IBS.Controllers.Client
         {
             return View();
         }
-
-        [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {
-            string region_code = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
-            DTResult<AdministratorPurchaseOrderListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterList(dtParameters, region_code);
-            return Json(dTResult);
-        }
-
         [Authorization("ClientPurchaseOrder", "Index", "view")]
         public IActionResult Manage(string CaseNo)
         {
-            AdministratorPurchaseOrderModel model = new();
-            string PO_TYPE = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.OrgnType);
-            string RLY_CD = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Organisation);
+            PO_MasterModel model = new();
             if (CaseNo != null)
             {
-                model = pIAdministratorPurchaseOrderRepository.FindByID(CaseNo);
-                string[] types = getType(model.RlyNonrly, model.RlyCd);
-                if (model.VendCd != null && model.PoiCd != null)
-                {
-                    VendorModel getvendor = Common.GetManufVEND(Convert.ToInt32(model.VendCd));
-                    model.MPOI = getvendor.VendAdd1;
-                }
-                ViewBag.Railway = types[0];
-                ViewBag.RLY_CD = types[1];
-            }
-            else
-            {
-                string[] types = getType(PO_TYPE, RLY_CD);
-                ViewBag.Railway = types[0];
-                ViewBag.RLY_CD = types[1];
-                model.RlyNonrly = PO_TYPE;
-                model.RlyCd = RLY_CD;
+                model = pOMasterRepository.FindByID(CaseNo);
             }
 
-            List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, Convert.ToString(CaseNo));
-            FileUploaderDTO FileUploaderUpload_a_scanned_copy = new FileUploaderDTO();
-            FileUploaderUpload_a_scanned_copy.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderUpload_a_scanned_copy.IBS_DocumentList = lstDocumentUpload_a_scanned_copy.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
-            FileUploaderUpload_a_scanned_copy.OthersSection = false;
-            FileUploaderUpload_a_scanned_copy.MaxUploaderinOthers = 5;
-            FileUploaderUpload_a_scanned_copy.FilUploadMode = (int)Enums.FilUploadMode.Single;
-            ViewBag.Upload_a_scanned_copy = FileUploaderUpload_a_scanned_copy;
+            List<IBS_DocumentDTO> lstCopyOfPurchaseOrderDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, CaseNo);
+            FileUploaderDTO FileUploaderCopyOfPurchaseOrderDocument = new FileUploaderDTO();
+            FileUploaderCopyOfPurchaseOrderDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCopyOfPurchaseOrderDocument.IBS_DocumentList = lstCopyOfPurchaseOrderDocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+            FileUploaderCopyOfPurchaseOrderDocument.OthersSection = false;
+            FileUploaderCopyOfPurchaseOrderDocument.MaxUploaderinOthers = 5;
+            FileUploaderCopyOfPurchaseOrderDocument.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.CopyOfPurchaseOrderDocument = FileUploaderCopyOfPurchaseOrderDocument;
 
             List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
             FileUploaderDTO FileUploaderDrawingSpecification = new FileUploaderDTO();
@@ -106,117 +79,215 @@ namespace IBS.Controllers.Client
             FileUploaderParentLOA.MaxUploaderinOthers = 5;
             FileUploaderParentLOA.FilUploadMode = (int)Enums.FilUploadMode.Single;
             ViewBag.ParentLOA = FileUploaderParentLOA;
-
             return View(model);
         }
 
-        public string[] getType(string ptype, string rtype)
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string[] strings = new string[2];
-            if (ptype == "P" || ptype == "F" || ptype == "U" || ptype == "S")
-            {
-                string rcd = ptype == "P" ? "Private" :
-                                     ptype == "F" ? "Foreign Railway" :
-                                     ptype == "U" ? "PSU" :
-                                     ptype == "S" ? "State Government" : "";
-                strings[0] = rcd;
-                strings[1] = " (" + rtype + ") ";
-                return strings;
-            }
-            else
-            {
-                string rcd = Common.GetRailway(rtype);
-                strings[0] = "Railways";
-                strings[1] = " (" + rcd + ") ";
-                return strings;
-            }
+            string ClientUserID = IBS.Helper.SessionHelper.UserModelDTO.UserName.Trim();
+            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, ClientUserID);
+            return Json(dTResult);
         }
-        [HttpGet]
-        public IActionResult GetRailwayCode(string type)
+        [Authorization("ClientPurchaseOrder", "Index", "delete")]
+        public IActionResult Delete(string CaseNo)
         {
             try
             {
-                List<SelectListItem> objList = Common.GetRailwayCode(type);
-                return Json(new { status = true, list = objList });
+                if (pOMasterRepository.Remove(CaseNo, UserId))
+                    AlertDeletedSuccess();
+                else
+                    AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetRailwayCode", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "Delete", 1, GetIPAddress());
+                AlertDanger();
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult getVendor(string vend_cd)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorization("ClientPurchaseOrder", "Index", "edit")]
+        public IActionResult POMasterSave(PO_MasterModel model, IFormCollection FrmCollection)
         {
             try
             {
-                List<SelectListItem> objList = Common.GetVendCd(vend_cd);
-                return Json(new { status = true, list = objList });
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "getVendor", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpGet]
-        public IActionResult Getvendor_status(int VendCd)
-        {
-            try
-            {
-                VendorModel getvendor_status = Common.Getvendor_status(VendCd);
-                if (getvendor_status != null)
+                string ClientUserID = IBS.Helper.SessionHelper.UserModelDTO.UserName;
+                string msg = "PO Master Inserted Successfully.";
+                if (model.PoDt > DateTime.Now)
                 {
-                    if (getvendor_status.VendStatus == "B")
+                    return Json(new { status = false, responseText = "PO Date Cannot Be Greater Then Current Date!!!" });
+                }
+                if (model.CaseNo != null)
+                {
+                    msg = "PO Master Updated Successfully.";
+                    model.Updatedby = UserId;
+                }
+                else
+                {
+                    PO_MasterModel pO_MasterModel2 = pOMasterRepository.alreadyExistT13_PO_MASTER(model);
+                    if (pO_MasterModel2 != null)
                     {
-                        return Json(new { status = true, responseText = "This Vendor is Banned/Blacklisted From  " + getvendor_status.VendStatusDtFr + " To " + getvendor_status.VendStatusDtTo });
+                        var Retmsg = "This Po No. Already Registered Vide Case No." + pO_MasterModel2.CaseNo + " And PO Date: " + pO_MasterModel2.PoDt + ". Use this Case No. to register the call using Call for Inspection Menu.";
+                        return Json(new { status = false, responseText = Retmsg });
                     }
                 }
-                return Json(new { status = false, responseText = "" });
+                model.Createdby = UserId;
+                model.ClientUserID=ClientUserID.Trim();
+                //model.Purchaser = model.TempPurchaser;
+                model.PoiCd = model.TempPoiCd;
+                if (model.PoiCd == null || model.PoiCd == 0)
+                {
+                    model.PoiCd = model.VendCd;
+                }
+                string id = pOMasterRepository.POMasterDetailsInsertUpdate(model);
+                if (id != "" && id != null)
+                {
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        string SpecificFileName = id.Trim();
+                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder };
+                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsCaseList.Count > 0)
+                        //{
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        //}
+                        int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
+                        //if (DocumentsList.Count > 0)
+                        //{
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "ClientPurchaseOrder", string.Empty, DocumentIds);
+                        //}
+                    }
+                    return Json(new { status = true, responseText = msg });
+                }
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "Getvendor_status", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "POMasterSave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        public IActionResult GetLOADetails(string CaseNo)
+        {
+            try
+            {
+                var obj = pOMasterRepository.FindCaseNoForClient(CaseNo);
+                if (obj != null)
+                {
+                    return Json(new { status = true, poMaster = obj, responseText = "" });
+                }
+                return Json(new { status = false, poMaster = obj, responseText = "Their is no record present for the given Case No." });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetLOADetails", 1, GetIPAddress());
+            }
+
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetAgencyClient(string RlyNonrly)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetAgencyClient(RlyNonrly);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetAgencyClient", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpGet]
+        public IActionResult Getfill_consignee_purcher(string RlyNonrlyValue, string RlyNonrlyText, string RlyCd)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.Getfill_consignee_purcher(RlyNonrlyValue, RlyNonrlyText, RlyCd);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "Getfill_consignee_purcher", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
         [HttpGet]
         public IActionResult GetPurchaserCd(string consignee)
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetPurchaserCd(consignee);
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (consignee != null)
+                {
+                    agencyClient = Common.GetPurchaserCd(consignee);
+                }
+                else
+                {
+                    SelectListItem drop = new SelectListItem();
+                    drop.Text = "Other";
+                    drop.Value = "0";
+                    agencyClient.Add(drop);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetPurchaserCd", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetPurchaserCd", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-
-        public IActionResult GetVendors(int id = 0)
+        [HttpGet]
+        public IActionResult GetVendor(string searchValues = null, bool isSameAs = false,string VendCdID="")
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetVendor(id);
-                foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(id)).ToList())
+                bool IsDigit = false;
+                if (searchValues != null && searchValues != "0")
                 {
-                    if (item.Value == Convert.ToString(id))
+                    char characterToCheck = searchValues[3];
+                    IsDigit = Char.IsDigit(characterToCheck);
+                    //IsDigit = Char.IsDigit(searchValues, 5);
+                }
+                
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (isSameAs)
+                {
+                    int VendID = 0;
+                    if(VendCdID!= null && VendCdID != "")
                     {
-                        item.Selected = true;
+                        VendID = Convert.ToInt32(VendCdID);
+                    }
+                    agencyClient = Common.GetVendor(VendID);
+                }
+                else
+                {
+                    if (IsDigit)
+                    {
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(searchValues));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(searchValues);
                     }
                 }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetVendor", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetVendor", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
 
         [HttpGet]
         public IActionResult GetManufVEND(int id = 0)
@@ -224,178 +295,36 @@ namespace IBS.Controllers.Client
             try
             {
                 VendorModel getvendor = Common.GetManufVEND(id);
-                return Json(new { status = true, getvendor = getvendor });
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetManufVEND", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorization("ClientPurchaseOrder", "Index", "edit")]
-        public IActionResult POMasterSave(AdministratorPurchaseOrderModel model, IFormCollection FrmCollection)
-        {
-            try
-            {
-                string RegionCode = IBS.Helper.SessionHelper.UserModelDTO.Region;
-                string msg = "Administrator Purchase Order Inserted Successfully.";
-                if (model.CaseNo != null)
+                if(getvendor!=null)
                 {
-                    msg = "Administrator Purchase Order Updated Successfully.";
-                    model.Updatedby = UserId;
+                    return Json(new { status = true, getvendor = getvendor });
                 }
-                model.Createdby = UserId;
-                model.UserId = Convert.ToString(UserId);
-                model.RegionCode = RegionCode;
-
-                //PO_MasterModel pO_MasterModel = pIAdministratorPurchaseOrderRepository.alreadyExistT80_PO_MASTER(model);
-                //if (pO_MasterModel != null)
-                //{
-                //    var Retmsg = "This Po No. Already Exists Vide Ref No. " + pO_MasterModel.CaseNo + " And PO Date: " + pO_MasterModel.PoDt; 
-                //    return Json(new { status = false, responseText = Retmsg });
-                //}
-                //PO_MasterModel pO_MasterModel2 = pIAdministratorPurchaseOrderRepository.alreadyExistT13_PO_MASTER(model);
-                //if (pO_MasterModel2 != null)
-                //{
-                //    var Retmsg = "This Po No. Already Registered Vide Case No." + pO_MasterModel2.CaseNo + " And PO Date: " + pO_MasterModel2.PoDt + ". Use this Case No. to register the call using Call for Inspection Menu.";
-                //    return Json(new { status = false, responseText = Retmsg });
-                //}
-
-                string id = pIAdministratorPurchaseOrderRepository.POMasterDetailsInsertUpdate(model);
-                if (id != "" && id != null)
-                {
-                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
-                    {
-                        int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order, (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification,
-                        (int)Enums.DocumentPurchaseOrderForm.Amendment,(int)Enums.DocumentPurchaseOrderForm.ParentLOA};
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
-                    }
-                    return Json(new { status = true, responseText = msg });
-                }
+                return Json(new { status = false, getvendor = getvendor });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "POMasterSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetManufVEND", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        #region Consignee
-        [HttpPost]
-        public IActionResult ConsigneeLoadTable([FromBody] DTParameters dtParameters)
+        public IActionResult ManageVendorDetails(string CaseNo)
         {
-            DTResult<ConsigneeListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetConsigneeDetaisList(dtParameters);
-            return Json(dTResult);
+            PO_MasterModel model = new();
+            if (CaseNo != null)
+            {
+                model = pOMasterRepository.FindByID(CaseNo);
+            }
+            return View(model);
         }
 
-        public IActionResult ConsigneeDelete(string CASE_NO, string CONSIGNEE_CD, string BPO_CD)
-        {
-            try
-            {
-                if (pIAdministratorPurchaseOrderRepository.ConsigneeDelete(CASE_NO, CONSIGNEE_CD, BPO_CD))
-                    AlertDeletedSuccess();
-                else
-                    AlertDanger();
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "ConsigneeDelete", 1, GetIPAddress());
-                AlertDanger();
-            }
-            return RedirectToAction("Manage", new { CaseNo = CASE_NO });
-        }
-
-        [HttpPost]
-        public IActionResult AddEditConsignee(string CaseNo, int Consignee_CD, string RLY_CD)
-        {
-            try
-            {
-                ConsigneeModel model = new ConsigneeModel();
-                if (CaseNo != null)
-                {
-                    model = pIAdministratorPurchaseOrderRepository.FindConsigneeByID(CaseNo, Consignee_CD);
-                }
-                ViewBag.RLY_CD = RLY_CD;
-                return PartialView("_AddEditConsignee", model);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "AddEditConsignee", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpGet]
-        public IActionResult getConsignee(int ConsigneeCd)
-        {
-            try
-            {
-                List<SelectListItem> objList = Common.GetConsigneeUsingConsignee(ConsigneeCd);
-                return Json(new { status = true, list = objList });
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "getConsignee", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpGet]
-        public IActionResult getBPO(string SBPO)
-        {
-            try
-            {
-                List<SelectListItem> objList = Common.GetBillPayingOfficerUsingSBPO(SBPO);
-                return Json(new { status = true, list = objList });
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "getBPO", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpPost]
-        public IActionResult SaveConsignee(string CaseNo, int ConsigneeCd, string BpoCd)
-        {
-            try
-            {
-                ConsigneeModel model = new ConsigneeModel();
-                string RegionCode = IBS.Helper.SessionHelper.UserModelDTO.Region;
-                string msg = "Consignee Inserted Successfully.";
-                if (CaseNo != null && ConsigneeCd > 0)
-                {
-                    msg = "Consignee Updated Successfully.";
-                }
-                model.CaseNo = CaseNo;
-                model.ConsigneeCd = ConsigneeCd;
-                model.BpoCd = BpoCd;
-                string i = pIAdministratorPurchaseOrderRepository.SaveConsignee(model);
-                if (i != "" && i != null)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOVendorPurchesOrder", "SaveConsignee", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        #endregion
-        #region PODetails
         [Authorization("ClientPurchaseOrder", "Index", "view")]
         public IActionResult PODetails(string CaseNo)
         {
-            AdministratorPurchaseOrderModel model = new();
+            PO_MasterModel model = new();
             if (CaseNo != null)
             {
-                model = pIAdministratorPurchaseOrderRepository.FindByID(CaseNo);
+                model = pOMasterRepository.FindByID(CaseNo);
             }
             return View(model);
         }
@@ -403,7 +332,7 @@ namespace IBS.Controllers.Client
         [HttpPost]
         public IActionResult LoadTableForPODetails([FromBody] DTParameters dtParameters)
         {
-            DTResult<PO_MasterDetailListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterDetailsList(dtParameters);
+            DTResult<PO_MasterDetailListModel> dTResult = pOMasterRepository.GetPOMasterDetailsList(dtParameters);
             return Json(dTResult);
         }
 
@@ -411,14 +340,14 @@ namespace IBS.Controllers.Client
         {
             try
             {
-                if (pIAdministratorPurchaseOrderRepository.RemovePODetails(CASE_NO, ITEM_SRNO, UserId))
+                if (pOMasterRepository.RemovePODetails(CASE_NO, ITEM_SRNO, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "DeletePODetails", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
             return RedirectToAction("PODetails", new { CaseNo = CASE_NO });
@@ -427,19 +356,19 @@ namespace IBS.Controllers.Client
         public IActionResult PoDetailManage(string CASE_NO, string ITEM_SRNO)
         {
             PO_MasterDetailsModel model = new();
-            AdministratorPurchaseOrderModel modelPM = new();
+            PO_MasterModel modelPM = new();
             if (CASE_NO != null)
             {
-                modelPM = pIAdministratorPurchaseOrderRepository.FindByID(CASE_NO);
+                modelPM = pOMasterRepository.FindByID(CASE_NO);
             }
             if (CASE_NO != null && ITEM_SRNO != null && ITEM_SRNO != "0")
             {
-                model = pIAdministratorPurchaseOrderRepository.FindPODetailsByID(CASE_NO, ITEM_SRNO);
+                model = pOMasterRepository.FindPODetailsByID(CASE_NO, ITEM_SRNO);
             }
             else
             {
                 model.CaseNo = modelPM.CaseNo;
-                model.ItemSrno = Convert.ToByte(pIAdministratorPurchaseOrderRepository.GenerateITEM_SRNO(CASE_NO));
+                model.ItemSrno = Convert.ToByte(pOMasterRepository.GenerateITEM_SRNO(CASE_NO));
             }
             model.RlyCd = modelPM.RlyCd;
             model.RlyNonrly = modelPM.RlyNonrly;
@@ -461,7 +390,7 @@ namespace IBS.Controllers.Client
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                int i = pIAdministratorPurchaseOrderRepository.POMasterSubDetailsInsertUpdate(model);
+                int i = pOMasterRepository.POMasterSubDetailsInsertUpdate(model);
                 if (i > 0)
                 {
                     return Json(new { status = true, responseText = msg });
@@ -469,10 +398,11 @@ namespace IBS.Controllers.Client
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "POMasterDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "POMasterDetailsSave", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
         [HttpGet]
         public IActionResult GetBillPayingOfficer(string SBPO)
         {
@@ -483,7 +413,7 @@ namespace IBS.Controllers.Client
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetBillPayingOfficer", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetBillPayingOfficer", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
@@ -497,7 +427,7 @@ namespace IBS.Controllers.Client
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "POMaster", "GetConsigneeUsingConsignee", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetConsigneeUsingConsignee", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
@@ -508,65 +438,57 @@ namespace IBS.Controllers.Client
             return Json(dTResult);
         }
 
-        #endregion
-
-        [HttpPost]
-        public IActionResult EditPODate(string CaseNo)
+        [HttpGet]
+        public IActionResult GetVend_CD(string VEND_CD)
         {
             try
             {
-                AdministratorPurchaseOrderModel model = new AdministratorPurchaseOrderModel();
-                if (CaseNo != null)
+                bool IsDigit = false;
+                if (VEND_CD != null)
                 {
-                    model = pIAdministratorPurchaseOrderRepository.FindByID(CaseNo);
+                    char characterToCheck = VEND_CD[3];
+                    IsDigit = Char.IsDigit(characterToCheck);
+                }
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (VEND_CD != null)
+                {
+                    if (IsDigit)
+                    {
+                        agencyClient = Common.GetVendor_City(Convert.ToInt32(VEND_CD));
+                    }
+                    else
+                    {
+                        agencyClient = Common.GetVendorUsingTextAndValues(VEND_CD);
+                    }
                 }
 
-                return PartialView("_EditPODate", model);
+                return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "DEOVendorPurchesOrder", "EditCaseNo", 1, GetIPAddress());
-            }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
-        }
-
-        [HttpPost]
-        public IActionResult UpdatePODate(string CaseNo, string PoDtNew)
-        {
-            try
-            {
-                AdministratorPurchaseOrderModel model = new AdministratorPurchaseOrderModel();
-                string msg = "PO Date Updated Successfully.";
-                model.CaseNo = CaseNo;
-                model.PoDtNew = Convert.ToDateTime(PoDtNew);
-                string id = pIAdministratorPurchaseOrderRepository.UpdatePODate(model);
-                if (id != null)
-                {
-                    return Json(new { status = true, responseText = msg });
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "UpdatePODate", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "GetAgencyClient", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
         [HttpGet]
-        public IActionResult GetPODetails(string PlNo)
+        public IActionResult Getvendor_status(int VendCd)
         {
             try
             {
-                MasterItemsPLFormModel model = new();
-                if (!string.IsNullOrEmpty(PlNo))
+                VendorModel getvendor_status = Common.Getvendor_status(VendCd);
+                if (getvendor_status != null)
                 {
-                    model = masterItemsPLFormRepository.FindByID(PlNo);
+                    if (getvendor_status.VendStatus == "B")
+                    {
+                        return Json(new { status = true, responseText = "This Vendor is Banned/Blacklisted From  " + getvendor_status.VendStatusDtFr + " To " + getvendor_status.VendStatusDtTo });
+                    }
                 }
-                return Json(new { status = true, model = model });
+                return Json(new { status = false, responseText = "" });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetPODetails", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientPurchaseOrder", "Getvendor_status", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

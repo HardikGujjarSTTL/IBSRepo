@@ -74,6 +74,8 @@ namespace IBS.Models
         public string? txtSPur { get; set; }
         public string? TempPurchaser { get; set; }
         public int? TempPoiCd { get; set; }
+
+        public string? ClientUserID { get; set; }
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 
         public virtual T01Region? RegionCodeNavigation { get; set; }

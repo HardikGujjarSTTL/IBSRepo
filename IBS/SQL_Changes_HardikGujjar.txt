@@ -4254,3 +4254,8 @@ BEGIN
 
 END GetCaseDetailForIE_API;
 
+===============
+
+ALTER TABLE T80_PO_MASTER 
+ADD ClientUserID Varchar2(20);
+=====================
