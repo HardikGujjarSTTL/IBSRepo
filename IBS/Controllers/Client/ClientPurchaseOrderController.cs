@@ -43,7 +43,13 @@ namespace IBS.Controllers.Client
             {
                 model = pOMasterRepository.FindByID(CaseNo);
             }
-
+            else
+            {
+                model.RlyNonrly = IBS.Helper.SessionHelper.UserModelDTO.OrgnType.Trim();
+                model.RlyCd = IBS.Helper.SessionHelper.UserModelDTO.Organisation.Trim();
+            }
+            string ClintName = Common.GetClient(model.RlyNonrly, model.RlyCd);
+            ViewBag.ClintName = ClintName;
             List<IBS_DocumentDTO> lstCopyOfPurchaseOrderDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, CaseNo);
             FileUploaderDTO FileUploaderCopyOfPurchaseOrderDocument = new FileUploaderDTO();
             FileUploaderCopyOfPurchaseOrderDocument.Mode = (int)Enums.FileUploaderMode.Add_Edit;
@@ -85,8 +91,9 @@ namespace IBS.Controllers.Client
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string ClientUserID = IBS.Helper.SessionHelper.UserModelDTO.UserName.Trim();
-            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, ClientUserID);
+            string rly_cd= IBS.Helper.SessionHelper.UserModelDTO.Organisation.Trim();
+            string RlyNonrly= IBS.Helper.SessionHelper.UserModelDTO.OrgnType.Trim();
+            DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, rly_cd, RlyNonrly);
             return Json(dTResult);
         }
         [Authorization("ClientPurchaseOrder", "Index", "delete")]

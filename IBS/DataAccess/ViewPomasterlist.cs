@@ -29,5 +29,5 @@ public partial class ViewPomasterlist
 
     public string? MainrlyCd { get; set; }
 
-    public string? Clientuserid { get; set; }
+    public string? RlyCds { get; set; }
 }

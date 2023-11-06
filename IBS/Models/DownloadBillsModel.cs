@@ -44,6 +44,8 @@ namespace IBS.Models
         public string CaseNoExists { get; set; }
         public string ICPATH { get; set; }
         public string CASENOPATH { get; set; }
+        public string RBMonth { get; set; }
+        public List<DownloadBillsModel> lstbillReport { get; set; }
 
     }
 

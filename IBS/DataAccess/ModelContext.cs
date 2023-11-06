@@ -24117,10 +24117,6 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
-            entity.Property(e => e.Clientuserid)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("CLIENTUSERID");
             entity.Property(e => e.ConsigneeSName)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -24153,6 +24149,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(68)
                 .IsUnicode(false)
                 .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyCds)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CDS");
             entity.Property(e => e.RlyNonrly)
                 .HasMaxLength(1)
                 .IsUnicode(false)

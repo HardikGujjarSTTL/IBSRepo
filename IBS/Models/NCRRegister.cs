@@ -22,7 +22,7 @@ namespace IBS.Models
         public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
         public int? CONSIGNEE_CD { get; set; }
-        public byte? CONSIGNEECD { get; set; }
+       // public byte? CONSIGNEECD { get; set; }
         public string Item { get; set; }
         public int Item_Srno_no { get; set; }
         public DateTime? FromDate { get; set; }
