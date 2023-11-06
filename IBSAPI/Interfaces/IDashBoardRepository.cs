@@ -13,5 +13,9 @@
         int GetVendorCompletedInspection(int Vendor_ID, string FromDate, string ToDate);
         int GetVendorPendingInspection(int Vendor_ID, string FromDate, string ToDate);
         #endregion
+
+        #region Client DashBoard
+        int GetClientTotalInspection(string Rly_CD, string RlyNoNType, string FromDate, string ToDate);
+        #endregion
     }
 }

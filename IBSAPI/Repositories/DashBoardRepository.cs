@@ -16,9 +16,9 @@ namespace IBSAPI.Repositories
         {
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
-            var totalCnt  =  (from x in context.T17CallRegisters
-                             where x.IeCd == IeCd && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                             select x).Count();
+            var totalCnt = (from x in context.T17CallRegisters
+                            where x.IeCd == IeCd && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                            select x).Count();
             return totalCnt;
         }
 
@@ -84,6 +84,20 @@ namespace IBSAPI.Repositories
                             && allowedStatuses.Contains(x.CallStatus)
                             select x).Count();
             return totalCnt;
+        }
+        #endregion
+
+        #region Client
+        public int GetClientTotalInspection(string Rly_CD, string RlyNoNType, string FromDate, string ToDate)
+        {
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+            var totalInspCount = (from t13 in context.T13PoMasters
+                                  join t17 in context.T17CallRegisters on t13.CaseNo equals t17.CaseNo
+                                  where t13.RlyCd == "SR" && t13.RlyNonrly == "R" &&
+                                        && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                                  select t13).Count();
+            return totalInspCount;
         }
         #endregion
     }

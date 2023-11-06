@@ -19,7 +19,7 @@ namespace IBSAPI.Controllers
             _env = env;
         }
 
-        #region DashBoard Methods For IE
+        #region IE
         [HttpGet("GetIETotalAssignInspection", Name = "GetIETotalAssignInspection")]
         public IActionResult GetIETotalAssignInspection(int IeCd)
         {
@@ -45,7 +45,7 @@ namespace IBSAPI.Controllers
                     message = ex.Message.ToString(),
                 };
                 return Ok(response);
-            }                                    
+            }
         }
 
         [HttpGet("GetIECompletedInspection", Name = "GetIECompletedInspection")]
@@ -105,7 +105,7 @@ namespace IBSAPI.Controllers
         }
         #endregion
 
-        #region DashBoard Methods For Vendor
+        #region Vendor
         [HttpGet("GetVendorTotalAssignInspection", Name = "GetVendorTotalAssignInspection")]
         public IActionResult GetVendorTotalAssignInspection(int Vendor_Cd)
         {
@@ -181,6 +181,35 @@ namespace IBSAPI.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "DashBoard_API", "GetVendorPendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+        #endregion
+
+        #region Client
+        public IActionResult GetClientTotalInspection(string Rly_CD, string RlyNoNType)
+        {
+            try
+            {
+                var startDate = Common.GetFinancialYearStartDate();
+                var ToDate = DateTime.Today.ToString("dd/MM/yyyy");
+                var totalInsp = dashBoardRepository.GetClientTotalInspection(Rly_CD, RlyNoNType, startDate.ToString("dd/MM.yyyy"), ToDate);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                    message = "Data get successfully",
+                    data = totalInsp
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "DashBoard_API", "GetClientTotalInspection", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
