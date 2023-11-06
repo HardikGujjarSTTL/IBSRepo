@@ -243,10 +243,14 @@ namespace IBS.Repositories
 
                     if (NCNO != "" && NCNO != null)
                     {
-                        model.QtyPassed = firstRow.Table.Columns.Contains("QTY_PASSED") && firstRow["QTY_PASSED"] != DBNull.Value ? Convert.ToInt32(firstRow["QTY_PASSED"] as string) : 0;
-                        model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
-                            ? Convert.ToString(firstRow["ITEM_DESC_PO"])
-                            : string.Empty;
+                        model.QtyPassed = firstRow.Table.Columns.Contains("QTY_PASSED") && firstRow["QTY_PASSED"] != DBNull.Value
+                                ? Convert.ToInt32(firstRow["QTY_PASSED"])
+                                : 0;
+
+                                                    model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
+                                ? Convert.ToString(firstRow["ITEM_DESC_PO"])
+                                : string.Empty;
+
                         if (firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value)
                         {
                             model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
@@ -440,6 +444,12 @@ namespace IBS.Repositories
                 model.NC_NO = genrate_NCNO;
             }
 
+            int? COCD = (from t in context.T20Ics
+                         where t.CaseNo == model.CaseNo.Trim() &&
+                               t.BkNo == model.BKNo.Trim() &&
+                               t.SetNo == model.SetNo.Trim()
+                         select (int?)t.CoCd).FirstOrDefault();
+
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
@@ -461,7 +471,7 @@ namespace IBS.Repositories
                     obj.BkNo = model.BKNo;
                     obj.SetNo = model.SetNo;
                     obj.VendCd = model.VEND_CD;
-                    //obj.CoCd = model.CONSIGNEE_CD;
+                    obj.CoCd = COCD;
                     obj.QtyPassed = model.QtyPassed;
                     obj.PoNo = model.PO_NO;
                     obj.PoDt = model.PO_DT;

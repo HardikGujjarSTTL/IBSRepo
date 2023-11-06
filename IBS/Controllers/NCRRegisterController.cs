@@ -50,7 +50,7 @@ namespace IBS.Controllers
                 }
                 else if (Actions == "M")
                 {
-                    ViewBag.ShowNCRButton = false;
+                    ViewBag.ShowNCRButton = true;
                     ViewBag.Showradio = false;
                     ViewBag.ShowNCRNO = true;
                     ViewBag.ShowRemarksButton = true;

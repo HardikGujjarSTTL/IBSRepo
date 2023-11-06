@@ -33,7 +33,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<IE_MaximumCallLimitFormModel> dTResult = iE_MaximumCallLimitForm.GetIE_MaximumCallLimitFormList(dtParameters,GetRegionCode);
+            DTResult<IE_MaximumCallLimitFormModel> dTResult = iE_MaximumCallLimitForm.GetIE_MaximumCallLimitFormList(dtParameters, Region);
             return Json(dTResult);
         }
         public IActionResult Delete(int id)

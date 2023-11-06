@@ -106,7 +106,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Qty Passed</label>
-                            <input type="text" id="QtyPassed" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
+                            <input type="text" asp-for="QtyPassed" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
                     @if (ViewBag.ShowNCRNO)
@@ -475,8 +475,8 @@
             formData.append('model[' + i + '].NcCdSno', modifiedItem.NcCdSno);
 
         }
-
-        var url = '/NCRRegister/SaveRemarks?NCNO=' + encodeURIComponent(NCNO) + '&UserID=' + encodeURIComponent(UserID);
+        var url = "@Url.Action("SaveRemarks", "NCRRegister")?NCNO=" + encodeURIComponent(NCNO) + "&UserID=" + encodeURIComponent(UserID);
+        //var url = '/NCRRegister/SaveRemarks?NCNO=' + encodeURIComponent(NCNO) + '&UserID=' + encodeURIComponent(UserID);
         $.ajax({
             url: url,
             type: 'POST',
