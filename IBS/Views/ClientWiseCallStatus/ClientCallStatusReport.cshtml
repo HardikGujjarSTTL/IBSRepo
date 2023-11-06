@@ -1,437 +1,150 @@
 ﻿@model IBS.Models.ClientCallRptModel
 
-@{
-    ViewData["Title"] = "CLIENT WISE CALL DETAILS";
-}
-
 <div>
-    <div class="list-inner">
-        <div class="tast-list">
-            @if (ViewBag.Action == "C")
-            {
-                <h2>
-                    CLIENT WISE CALL DETAILS
-                </h2>
-            }
-            else
-            {
-                <h2>
-                    VENDOR WISE REJECTION
-                </h2>
-            }
-        </div>
-        <div class="col-md-3">
-            <div class="list-btn">
-                <a class="btnicons" href="javascript:void(0);" title="Export to Excel"><img id="imgExcel" src="../images/excel.png" alt="Export to Excel" /></a>
-                <a class="btnicons" href="javascript:void(0);" title="Export to PDF"><img id="imgPdf" src="../images/pdf.png" alt="Export to PDF" /></a>
-                <a class="btnicons" href="javascript:void(0);" title="Print"><img id="imgPrint" src="../images/print.png" alt="Print" /></a>
-            </div>
-        </div>
+   @*  <h3 class="center">(@ViewBag.Region)</h3> *@
+
+
+    <h3 class="center">Client Wise Report For The Period: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SNO</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">VENDOR NAME	</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">PURCHASER</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">ITEM</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CALL DATE</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">DESIRE DATE/MATERIAL READINESS DATE</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">ENGINEER DEPUTED</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">ENGINEER CONTACT NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">PONO</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">PO DATE</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CASE NO	</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">STATUS</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">HOLOGRAM OR OTHER</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">VIEW IC</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CONTACT PERSON</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CONTACT PERSON PHONE NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CALL SERIAL NO.</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">CONTROLLING MANAGER</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">REMARKS</font></b></th>
+
+                </tr>
+                @if (Model != null && Model.lstreport != null)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstreport)
+                    {
+
+                        <tr>
+                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.Vendor
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.Consignee
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.ITEM_DESC_PO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_MARK_DT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.DESIRE_DT
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IE_NAME
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IE_PHONE_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PO_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.PO_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CASE_NO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_STATUS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.HOLOGRAM
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.IC_PHOTO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.MFG_PERS
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.MFG_PHONE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CALL_SNO
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CO_NAME
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.REMARK
+                                </font>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="22" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    <div class="accordion-body">
-        <div class="row my-0">
-
-            <div class="col-md-12 mb-3">
-                <h3 class="heading3">Calls For the Period</h3>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="PropertyId">From Date <i class="text-danger">*</i></label>
-                <input class="input datepicker" type="text" id="dtfrom" />
-                <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
-            </div>
-            <div class="col-md-3 mb-3">
-                <label for="PropertyId">To date <i class="text-danger">*</i></label>
-                <input class="input datepicker" type="text" id="dtto" />
-                <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
-            </div>
-
-       
-        @if (ViewBag.Action == "C")
-        {
-            
-                <div class="col-md-3 mb-3">
-                    <label for="PropertyId">Report Status</label>
-                    @Html.DropDownListFor(model => model.CallCode, new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"),"All",new { @id = "ddlstatus" })
-                </div>
-            
-        }
-        </div>
-        <div class="savenext-btn">
-        <button type="button" class="save-btn active" onclick="show();">Submit</button>
-    </div>
-    </div>
-    
-    @if (ViewBag.Action == "R")
-    {
-        <div id="hide" style="display:none;">
-            <section class="table-section">
-                <div class="task-listinput">
-                    <div class="dash-table">
-                        <table id="dtlistr" class="table-responsive">
-                            <thead>
-                                <tr>
-
-                                    <th>S.NO.</th>
-                                    <th>Vendor</th>
-                                    <th>PO NO.</th>
-                                    <th>PO Date</th>
-                                    <th>Item</th>
-                                    <th>Qty Offered</th>
-                                    <th>Qty Rejected</th>
-                                    <th>Reason For Rejection</th>
-                                    <th>IC Date</th>
-                                    <th>IE</th>
-                                    <th>Book No.</th>
-                                    <th>Set No.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-    }
-    else
-    {
-        <div id="hide" style="display:none;">
-            <section class="table-section">
-                <div class="task-listinput">
-                    <div class="dash-table">
-                        <table id="dtlistr" class="table-responsive">
-                            <thead>
-                                <tr>
-
-                                    <th>SNO</th>
-                                    <th>VENDOR NAME	</th>
-                                    <th>PURCHASER</th>
-                                    <th>ITEM</th>
-                                    <th>CALL DATE</th>
-                                    <th>DESIRE DATE/MATERIAL READINESS DATE</th>
-                                    <th>ENGINEER DEPUTED</th>
-                                    <th>ENGINEER CONTACT NO.</th>
-                                    <th>PONO</th>
-                                    <th>PO DATE</th>
-                                    <th>CASE NO	</th>
-                                    <th>STATUS</th>
-                                    <th>HOLOGRAM OR OTHER</th>
-                                    <th>VIEW IC</th>
-                                    <th>CONTACT PERSON</th>
-                                    <th>CONTACT PERSON PHONE NO.</th>
-                                    <th>CALL SERIAL NO.</th>
-                                    <th>CONTROLLING MANAGER</th>
-                                    <th>
-                                        REMARKS
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-    }
 </div>
 
-@section scripts{
 
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
-
-    <script type="text/javascript">
-        function show() {
-            $("#spnErrorFromDate").html("");
-            $("#spnErrorToDate").html("");
-            var IsValid = true;
-
-            if ($("#dtfrom").val() == "") {
-                $("#spnErrorFromDate").html("The From Date field is required.");
-                IsValid = false;
-            }
-            if ($("#dtto").val() == "") {
-                $("#spnErrorToDate").html("The To Date field is required.");
-                IsValid = false;
-            }
-
-            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
-                $("#spnErrorFromDate").html("Invalid date format.");
-                IsValid = false;
-            }
-            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
-                $("#spnErrorToDate").html("Invalid date format.");
-                IsValid = false;
-            }
-
-            if (!IsValid) return;
-            InitializeDatatable();
-            $("#hide").css("display", "block");
-        }
-        $("#imgExcel").on("click", function () {
-            $('#dtlistr').DataTable().buttons(0, 0).trigger();
-        });
-
-        $("#imgPdf").on("click", function () {
-            $('#dtlistr').DataTable().buttons(0, 1).trigger();
-        });
-
-        $("#imgPrint").on("click", function () {
-            $('#dtlistr').DataTable().buttons(0, 2).trigger();
-        });
-        $(function () {
-            $("#rb1").prop("checked", true);
-            if ($("#rb1").val() == true) {
-
-                sessionStorage.setItem("rb", true);
-            }
-            else {
-
-                sessionStorage.setItem("rb", true);
-            }
-
-
-            $(".datepicker").datepicker({
-                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
-            });
-            // InitializeDatatable();
-        });
-
-        function InitializeDatatable() {
-            var Action = '@ViewBag.Action';
-            var parts = $("#dtfrom").val().split('/');
-            var Fdt = parts[1] + '/' + parts[0] + '/' + parts[2];
-            var parts1 = $("#dtto").val().split('/');
-            var Tdt = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
-            if (Action == "R") {
-                var _title = 'Vendor Wise Rejection';
-                $("#dtlistr").DataTable({
-                    stateSave: false,// Design Assets
-                    autoWidth: true,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    processing: true, // ServerSide Setups
-                    serverSide: true,
-                    destroy: true,
-                    paging: true,// Paging Setups
-                    searching: true,// Searching Setups
-                    dom: 'rtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            text: 'Export to Excel',
-                            filename: function () { return getExportFileName('Vendor_Wise_Rejection'); },
-                            download: 'open',
-                            orientation: 'landscape',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                                modifier: {
-                                    page: 'all',
-                                    search: 'none'
-                                }
-                            },
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            filename: function () { return getExportFileName('Vendor_Wise_Rejection'); },
-                            text: 'Export to PDF',
-                            orientation: 'landscape',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                                modifier: {
-                                    page: 'all',
-                                    pageSize: 'LEGAL',
-                                    search: 'none',
-                                }
-                            },
-                            customize: function (doc) {
-                                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                                doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                                doc.pageMargins = [5, 100, 5, 5];
-
-                            }
-                        },
-                        {
-                            extend: 'print',
-                            text: 'Print',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                            },
-                        },
-                    ],
-                    ajax: {// Ajax Filter
-                        url: "@Url.Action("LoadTable")",
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: function (d) {
-                            var AdditionalValues = {
-                                FromDate: Fdt,
-                                ToDate: Tdt,
-                                ReportStatus: $("#ddlstatus").val(),
-                                RadioButton: sessionStorage.getItem("rb"),
-                                Action: Action
-                            };
-                            d.AdditionalValues = AdditionalValues;
-                            return JSON.stringify(d);
-                        }
-                    },
-
-                    columns: [// Columns Setups
-                        {
-                            data: '', orderable: false, width: '5%',
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-
-                        { data: "VendorName" },
-                        { data: "PO_NO" },
-                        { data: "PO_DT" },
-                        { data: "ITEM_DESC" },
-                        { data: "QTY_TO_INSP" },
-                        { data: "QTY_REJECTED" },
-                        { data: "REASON_REJECT" },
-                        { data: "IC_DT" },
-                        { data: "IE_NAME" },
-                        { data: "BK_NO" },
-                        { data: "SET_NO" },
-
-
-
-                    ],
-
-                    "order": [[0, "asc"]]
-                });
-            }
-            else {
-                var _title = 'Client Call Status Report';
-                $("#dtlistr").DataTable({
-                    stateSave: false,// Design Assets
-                    autoWidth: true,
-                    scrollX: true,
-                    scrollCollapse: true,
-                    processing: true, // ServerSide Setups
-                    serverSide: true,
-                    destroy: true,
-                    paging: true,// Paging Setups
-                    searching: true,// Searching Setups
-                    dom: 'rtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            text: 'Export to Excel',
-                            filename: function () { return getExportFileName('Client_Call_Status_Report'); },
-                            download: 'open',
-                            orientation: 'landscape',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-                                modifier: {
-                                    page: 'all',
-                                    search: 'none'
-                                }
-                            },
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            filename: function () { return getExportFileName('Client_Call_Status_Report'); },
-                            text: 'Export to PDF',
-                            orientation: 'landscape',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-                                modifier: {
-                                    page: 'all',
-                                    pageSize: 'LEGAL',
-                                    search: 'none',
-                                }
-                            },
-                            customize: function (doc) {
-                                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                                doc.defaultStyle.fontSize = 8; //<-- set fontsize to 16 instead of 10
-                                doc.pageMargins = [20, 100, 5, 5];
-
-                            }
-                        },
-                        {
-                            extend: 'print',
-                            text: 'Print',
-                            title: _title,
-                            footer: true,
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-                            },
-                        },
-                    ],
-                    ajax: {// Ajax Filter
-                        url: "@Url.Action("LoadTable")",
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: function (d) {
-                            var AdditionalValues = {
-                                FromDate: $("#dtfrom").val(),
-                                ToDate: $("#dtto").val(),
-                                ReportStatus: $("#ddlstatus").val(),
-                                RadioButton: sessionStorage.getItem("rb"),
-                                Action: Action
-                            };
-                            d.AdditionalValues = AdditionalValues;
-                            return JSON.stringify(d);
-                        }
-                    },
-
-                    columns: [// Columns Setups
-                        {
-                            data: '', orderable: false, width: '5%',
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-
-                        { data: "Vendor" },
-                        { data: "Consignee" },
-                        { data: "ITEM_DESC_PO" },
-                        { data: "CALL_MARK_DT" },
-                        { data: "DESIRE_DT" },
-                        { data: "IE_NAME" },
-                        { data: "IE_PHONE_NO" },
-                        { data: "PO_NO" },
-                        { data: "PO_DATE" },
-                        { data: "CASE_NO" },
-                        { data: "CALL_STATUS" },
-                        { data: "HOLOGRAM" },
-                        { data: "IC_PHOTO" },
-                        { data: "MFG_PERS" },
-                        { data: "MFG_PHONE" },
-                        { data: "CALL_SNO" },
-                        { data: "CO_NAME" },
-                        { data: "REMARK" },
-
-                    ],
-
-                    "order": [[0, "asc"]]
-                });
-            }
-        }
-
-
-
-                                                //function UserDelete(UserId) {
-                                                //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-                                                //    $("#btn-delete-yes").attr("href", url);
-                                                //    $("#modal-delete-conf").modal("show");
-                                                //}
-
-    </script>
-}
