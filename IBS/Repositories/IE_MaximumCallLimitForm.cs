@@ -32,7 +32,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<IE_MaximumCallLimitFormModel> GetIE_MaximumCallLimitFormList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<IE_MaximumCallLimitFormModel> GetIE_MaximumCallLimitFormList(DTParameters dtParameters, string Region)
         {
 
             DTResult<IE_MaximumCallLimitFormModel> dTResult = new() { draw = 0 };
@@ -60,7 +60,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T102IeMaximumCallLimits
-                    where l.Isdeleted == 0 || l.Isdeleted == null && l.RegionCode == GetRegionCode
+                    where (l.Isdeleted == 0 || l.Isdeleted == null) && l.RegionCode == Region
                     select new IE_MaximumCallLimitFormModel
                     {
                         RegionCode = l.RegionCode,
