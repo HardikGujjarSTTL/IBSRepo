@@ -13,6 +13,9 @@
     <form role="form" asp-controller="BillAdjustments" asp-action="Index" id="frmDetails">
         <input type="hidden" asp-for="UpdateStatus" />
         <input type="hidden" asp-for="ItemSrnoPo" />
+        <input type="hidden" asp-for="BpoType" />
+        <input type="hidden" asp-for="BpoFeeType" />
+        <input type="hidden" asp-for="IcTypeId" />
 
         <div class="accordion-body" style="overflow-x: auto;">
             <div class="row my-0">
@@ -46,22 +49,12 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-            $(document).ready(function () {
-            alert($("#BpoType").val());
-            alert($("#BpoFeeType").val());
-            alert($("#IcTypeId").val());
-            if ($("#BpoType").val() == "R" && $("#BpoFeeType").val() == "P" && $("#IcTypeId").val() == 1) {
-                $(".RlyBpoFee").show();
-                $(".BpoFee").hide();
-            }
-            else {
-                $(".RlyBpoFee").hide();
-                $(".BpoFee").show();
-            }
+        $(document).ready(function () {
         });
 
         function BillSearch() {
             var BillNo = $("#BillNo").val();
+            
             $("#spnBillNo").html("");
             if ($("#BillNo").val() == null || $("#BillNo").val() == "") {
                 $("#spnBillNo").html("Please add Bill No.");
@@ -71,8 +64,11 @@
             let myObject = { BillNo };
             $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
                 $("#tblsection").html(response);
+               
                 InitializeDatatable();
             });
+
+            onBpoFeeType();
         }
 
         function InitializeDatatable() {
@@ -225,8 +221,7 @@
             $("#PopUp").modal('hide');
         }
 
-        function onbtnGBill()
-        {
+        function onbtnGBill() {
             $("#spnMinFee").html("");
             $("#spnMaxFee").html("");
             $("#spnBillDt").html("");
