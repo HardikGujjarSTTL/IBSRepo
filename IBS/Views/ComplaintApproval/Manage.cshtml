@@ -222,18 +222,18 @@
         function Submit(){
 
             $("#acceptbtn").hide;
-
+            var urlpath = "@Url.Action("Submit", "ComplaintApproval")";
             var formData = $("#frmComplaints").serialize();
             
             $.ajax({
-                url: '/ComplaintApproval/Submit',
+                url: urlpath,
                 type: 'POST',
                 data: formData,
                 success: function (dataToSend) {
                     if (dataToSend.status === true) {
                         if (dataToSend.redirectToIndex === true) {
                             alert(dataToSend.alertMessage);
-                            window.location.href = '/ComplaintApproval/Index';
+                            window.location.href = "@Url.Action("Index", "ComplaintApproval")"; 
                         }
                     } else {
                         // Handle error case if needed
@@ -245,11 +245,11 @@
         }
 
         function Accept(){
-           
+            var urlpath = "@Url.Action("AcceptComplaint", "ComplaintApproval")";
             var formData = $("#frmComplaints").serialize();
             SaveSingleDocuments("tab-1");
             $.ajax({
-                url: '/ComplaintApproval/AcceptComplaint',
+                url: urlpath,
                 type: 'POST',
                 data: formData,
                 success: function (dataToSend) {
@@ -275,18 +275,18 @@
         function Send_Email(){
             $("#rejectvalue").show();
             var RejectValue = $("#rejecttext").val();
-
+            var urlpath = "@Url.Action("RejectComplaint", "ComplaintApproval")";
             var formData = $("#frmComplaints").serialize();
 
             $.ajax({
-                url: '/ComplaintApproval/RejectComplaint',
+                url: urlpath,
                 type: 'POST',
                 data: formData,
                 success: function (dataToSend) {
                     if (dataToSend.status === true) {
                         if (dataToSend.redirectToIndex === true) {
                             alert(dataToSend.alertMessage);
-                            window.location.href = '/ComplaintApproval/Index';
+                            window.location.href = "@Url.Action("Index", "ComplaintApproval")";
                         }
                     } else {
                         // Handle error case if needed
@@ -299,9 +299,9 @@
 
         $("#InspRegionDropdown").change(function () {
             var InspRegionDropdown = $(this).val();
-
+            var urlpath = "@Url.Action("GetItems", "ComplaintApproval")";
             $.ajax({
-                url: '/ComplaintApproval/GetItems',
+                url: urlpath,
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {

@@ -268,7 +268,6 @@
     }
 
     $("#Item").change(function () {
-        debugger
         var CaseNo = $("#CaseNo").val();
         var CALLRECVDT = $("#CALLRECVDT").val();
         var CALLSNO = $("#CALLSNO").val();
@@ -476,8 +475,8 @@
             formData.append('model[' + i + '].NcCdSno', modifiedItem.NcCdSno);
 
         }
-
-        var url = '/NCRRegister/SaveRemarks?NCNO=' + encodeURIComponent(NCNO) + '&UserID=' + encodeURIComponent(UserID);
+        var url = "@Url.Action("SaveRemarks", "NCRRegister")?NCNO=" + encodeURIComponent(NCNO) + "&UserID=" + encodeURIComponent(UserID);
+        //var url = '/NCRRegister/SaveRemarks?NCNO=' + encodeURIComponent(NCNO) + '&UserID=' + encodeURIComponent(UserID);
         $.ajax({
             url: url,
             type: 'POST',
