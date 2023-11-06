@@ -414,7 +414,8 @@ select
         m.REMARKS ,
         m.Isdeleted,
         m.RLY_NONRLY,
-        m.RLY_CD AS MAINRLY_CD
+        m.RLY_CD AS MAINRLY_CD,
+        m.RLY_CD AS RLY_CDs
         from 
             T80_PO_MASTER m,
             T05_VENDOR v,

@@ -81,7 +81,6 @@
 
      <script type="text/javascript">
          function Submit() {
-             debugger
             var IsValid = true;
             $("#spnFromDate").html("");
             $("#spnToDate").html("");
@@ -191,8 +190,11 @@
                             var SetNo = data.SetNo;
                             var editUrl = '@Url.Action("Manage", "NCRRegister")?NC_NO=' + NC_NO + '&Actions=' + "M";
                             var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_Add\" title="Edit"></i></a>';
-                            html += '<a href=\"' + AddUrl + '\" class=\"edit\"><i class=\"fa fa-plus Permission_Add\" title="Add" style="margin:10px;"></i>';
+                            if (NC_NO != null) {
+                                var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_Add\" title="Edit"></i></a>';
+                            }else{
+                                var html = '<a href=\"' + AddUrl + '\" class=\"edit\"><i class=\"fa fa-plus Permission_Add\" title="Add" style="margin:10px;"></i>';
+                            }
                             html += '</div>';
                             return html;
                         }
@@ -201,8 +203,6 @@
                 "order": [[0, "asc"]]
             });
         }
-
-        
 
      
         $("#NCNO").on("input", function () {
