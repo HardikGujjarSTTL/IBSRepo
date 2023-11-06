@@ -65,6 +65,11 @@ namespace IBS.Models
         public string IC_PHOTO_A2 { get; set; }
         public int COUNT { get; set; }
         public string CO_NAME { get; set; }
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public List<ClientCallRptModel> lstreport { get; set; }       
     }
-
+        
 }
