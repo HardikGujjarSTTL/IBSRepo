@@ -1,5 +1,6 @@
 ﻿using IBSAPI.DataAccess;
 using IBSAPI.Interfaces;
+using IBSAPI.Models;
 
 namespace IBSAPI.Repositories
 {
@@ -99,6 +100,55 @@ namespace IBSAPI.Repositories
             //                      select t13).Count();
             //return totalInspCount;
             return 0;
+        }
+        #endregion
+
+        #region CM
+        public List<IEModel> Get_CM_Wise_IE(int CO_CD)
+        {
+            List<IEModel> lstIE = new();
+            var IeList = (from x in context.T09Ies
+                          where x.IeCoCd == CO_CD
+                          select new IEModel
+                          {
+                              IE_CD = x.IeCd,
+                              IE_Name = x.IeName
+                          }).ToList();
+            return IeList;
+        }
+
+        public int Get_CM_TotalInspection(int CO_CD, string FromDate, string ToDate)
+        {
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+            var totalInsp = (from x in context.T17CallRegisters
+                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             select x).Count();
+            return totalInsp;
+        }
+
+        public int Get_CM_PendingInspection(int CO_CD, string FromDate, string ToDate)
+        {
+            var validCallStatus = new List<string> { "M", "U", "S", "W" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+            var totalInsp = (from x in context.T17CallRegisters
+                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             && validCallStatus.Contains(x.CallStatus)
+                             select x).Count();
+            return totalInsp;
+        }
+
+        public int Get_CM_RequestRejectedInspection(int CO_CD, string FromDate, string ToDate)
+        {
+            var validCallStatus = new List<string> { "R", "T" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+            var totalInsp = (from x in context.T17CallRegisters
+                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             && validCallStatus.Contains(x.CallStatus)
+                             select x).Count();
+            return totalInsp;
         }
         #endregion
     }

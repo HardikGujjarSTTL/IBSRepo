@@ -18,7 +18,7 @@ namespace IBSAPI.Controllers
             inspectionRepository = _inspectionRepository;
         }
 
-        [HttpGet("GetTodayInspection", Name = "GetTodayInspection")]
+        [HttpGet("Get_IE_TodayInspection", Name = "GetTodayInspection")]
         public IActionResult GetTodayInspection(int IeCd)
         {
             try
@@ -56,7 +56,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetTomorrowInspection", Name = "GetTomorrowInspection")]
+        [HttpGet("Get_IE_TomorrowInspection", Name = "GetTomorrowInspection")]
         public IActionResult GetTomorrowInspection(int IeCd)
         {
             try
@@ -94,7 +94,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetCaseDetailForIE", Name = "GetCaseDetailForIE")]
+        [HttpGet("Get_Case_Detail_For_IE", Name = "GetCaseDetailForIE")]
         public IActionResult GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd)
         {
             try
@@ -132,7 +132,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetPendingInspection", Name = "GetPendingInspection")]
+        [HttpGet("Get_IE_PendingInspection", Name = "GetPendingInspection")]
         public IActionResult GetPendingInspection(int IeCd, string Region, string Date)
         {
             try
@@ -170,7 +170,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetDateWiseRecentInspection", Name = "GetDateWiseRecentInspection")]
+        [HttpGet("Get_Date_Wise_Recent_Inspection", Name = "GetDateWiseRecentInspection")]
         public IActionResult GetDateWiseRecentInspection(int IeCd, string FromDate, string ToDate)
         {
             try
@@ -209,7 +209,7 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("GetCompleteInspection", Name = "GetCompleteInspection")]
+        [HttpGet("Get_IE_CompleteInspection", Name = "GetCompleteInspection")]
         public IActionResult GetCompleteInspection(int IeCd)
         {
             try
