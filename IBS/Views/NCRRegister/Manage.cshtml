@@ -22,14 +22,14 @@
         <form data-ajax="true" asp-antiforgery="true" asp-controller="SaveUpdateNCR" asp-action="SaveRemarksofNCR" data-ajax-method="post" data-ajax-complete="completed" id="frmNCRDetails">
             <div class="accordion-body">
                 <div class="row">
-                    <input type="text" asp-for="SetRegionCode"  hidden/>
-                    <input type="text" asp-for="VEND_CD"  hidden/>
-                    <input type="text" asp-for="CALLRECVDT"  hidden/>
-                    <input type="text" asp-for="CONSIGNEECD"  hidden/>
-                    <input type="text" asp-for="Item_Srno_no"  hidden/>
-                    <input type="text" asp-for="Ie_Cd"  hidden/>
-                    <input type="text" asp-for="CALLSNO" hidden/>
-                    <input type="text" asp-for="UserID" hidden/>
+                    <input type="text" asp-for="SetRegionCode" hidden />
+                    <input type="text" asp-for="VEND_CD" hidden />
+                    <input type="text" asp-for="CALLRECVDT" hidden />
+                    <input type="text" asp-for="CONSIGNEE_CD" hidden />
+                    <input type="text" asp-for="Item_Srno_no" hidden />
+                    <input type="text" asp-for="Ie_Cd" hidden />
+                    <input type="text" asp-for="CALLSNO" hidden />
+                    <input type="text" asp-for="UserID" hidden />
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">IC NO.</label>
@@ -237,7 +237,7 @@
         }
     });
 
-    function ItemGet(){
+    function ItemGet() {
 
         var CaseNo = $("#CaseNo").val();
         var BKNo = $("#BKNo").val();
@@ -252,20 +252,20 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                    var Item = $("#Item");
-                    Item.empty();
-                    Item.append($('<option>').text('--Select--').val(''));
+                var Item = $("#Item");
+                Item.empty();
+                Item.append($('<option>').text('--Select--').val(''));
 
-                    var items = JSON.parse(data);
+                var items = JSON.parse(data);
 
-                    $.each(items, function (index, item) {
+                $.each(items, function (index, item) {
                     Item.append($('<option>').text(item.ItemDescPo).val(item.ItemSrnoPo));
-                    });
+                });
             },
             error: function (xhr, textStatus, errorThrown) {
             }
         });
-    } 
+    }
 
     $("#Item").change(function () {
         var CaseNo = $("#CaseNo").val();
@@ -352,7 +352,7 @@
                         $("#NCNO").val(data.responseText);
                         InitializeDatatable();
                     }
-                } 
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
             }
@@ -524,11 +524,12 @@
 
         var NC_NO = "";
 
-        if ($("#NCNO").val() != undefined && $("#NCNO").val() != "" && $("#NCNO").val() != null ){
+        if (!isNullOrEmpty($("#NCNO").val())) {
             NC_NO = $("#NCNO").val();
             $("#ncrcodes").show();
             $("#ncrclass").show();
-        }else{
+        }
+        else {
             $("#ncrcodes").hide();
             $("#ncrclass").hide();
         }
@@ -599,6 +600,10 @@
                 }
             ]
         });
+    }
+
+    function isNullOrEmpty(value) {
+        return (!value || value == undefined || value == "" || value.length == 0);
     }
 
     completed = function (response) {
