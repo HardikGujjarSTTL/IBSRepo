@@ -106,7 +106,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Qty Passed</label>
-                            <input type="text" id="QtyPassed" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
+                            <input type="text" asp-for="QtyPassed" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                         </div>
                     </div>
                     @if (ViewBag.ShowNCRNO)
@@ -268,6 +268,7 @@
     }
 
     $("#Item").change(function () {
+        debugger
         var CaseNo = $("#CaseNo").val();
         var CALLRECVDT = $("#CALLRECVDT").val();
         var CALLSNO = $("#CALLSNO").val();
