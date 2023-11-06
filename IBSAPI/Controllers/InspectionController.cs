@@ -131,5 +131,120 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+
+        [HttpGet("GetPendingInspection", Name = "GetPendingInspection")]
+        public IActionResult GetPendingInspection(int IeCd, string Region, string Date)
+        {
+            try
+            {
+                var result = inspectionRepository.GetPendingInspection(IeCd, Region, Date);
+                if (result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetPendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+
+        [HttpGet("GetDateWiseRecentInspection", Name = "GetDateWiseRecentInspection")]
+        public IActionResult GetDateWiseRecentInspection(int IeCd, string FromDate, string ToDate)
+        {
+            try
+            {
+                var result = inspectionRepository.GetDateWiseRecentInspection(IeCd, FromDate, ToDate);
+                if (result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetDateWiseRecentInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+
+        [HttpGet("GetCompleteInspection", Name = "GetCompleteInspection")]
+        public IActionResult GetCompleteInspection(int IeCd)
+        {
+            try
+            {
+                var result = inspectionRepository.GetCompleteInspection(IeCd);
+                if (result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "GetCompleteInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
     }
 }
