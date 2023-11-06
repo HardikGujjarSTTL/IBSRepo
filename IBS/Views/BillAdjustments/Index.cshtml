@@ -46,13 +46,18 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
-        $(document).ready(function () {
-            //$("#Callrecvdt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
-
-            //$('input[name="BillTypes"]').change(function () {
-            //    var selectedId = $(this).attr('id');
-            //    alert(selectedId);
-            //});
+            $(document).ready(function () {
+            alert($("#BpoType").val());
+            alert($("#BpoFeeType").val());
+            alert($("#IcTypeId").val());
+            if ($("#BpoType").val() == "R" && $("#BpoFeeType").val() == "P" && $("#IcTypeId").val() == 1) {
+                $(".RlyBpoFee").show();
+                $(".BpoFee").hide();
+            }
+            else {
+                $(".RlyBpoFee").hide();
+                $(".BpoFee").show();
+            }
         });
 
         function BillSearch() {
@@ -259,6 +264,18 @@
                     ShowHideMsgNew(response.status, response.responseText);
                 }
             });
+        }
+
+        function onBpoFeeType() {
+            var BpoFeeType = $("#BpoFeeType").val();
+            if (BpoFeeType == "P") {
+                $(".RlyBpoFee").show();
+                $(".BpoFee").hide();
+            }
+            else {
+                $(".RlyBpoFee").hide();
+                $(".BpoFee").show();
+            }
         }
     </script>
 }

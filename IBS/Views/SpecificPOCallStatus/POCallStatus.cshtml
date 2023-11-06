@@ -23,7 +23,7 @@
         <div class="row my-0">
 
             <div class="col-md-12">
-                <h3 class="heading3">PO Date</h3>
+                <h3 class="heading3">PO Date <i class="text-danger">*</i></h3>
             </div>
             <div class="col-md-3 mb-3">
                @* <label for="PropertyId">PO Date</label>*@
@@ -117,7 +117,10 @@
                 $("#spnError1").html("The Po Date field is required.");
                 IsValid = false;
             }
-            
+            if ($("#DTPO").val() != "" && IsValidDate($("#DTPO").val()) == false) {
+                $("#spnError1").html("Invalid date format.");
+                IsValid = false;
+            }
             if (!IsValid) return;
             InitializeDatatable1();
             $("#hide1").css("display", "block");
@@ -126,7 +129,7 @@
         $(function () {
             
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
             });
             // InitializeDatatable();
         });
@@ -244,7 +247,9 @@
             }
 
         function InitializeDatatable1() {
-
+            var parts1 = $("#DTPO").val().split('/');
+            var PODate = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
+            
             $("#dtindexlist").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -262,7 +267,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            PODate: $("#DTPO").val(),
+                            PODate: PODate,
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
