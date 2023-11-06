@@ -35,12 +35,12 @@
                 <h3 class="heading3">Calls For the Period</h3>
             </div>
             <div class="col-md-3 mb-3">
-                <label for="PropertyId">From Date</label>
+                <label for="PropertyId">From Date <i class="text-danger">*</i></label>
                 <input class="input datepicker" type="text" id="dtfrom" />
                 <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
             </div>
             <div class="col-md-3 mb-3">
-                <label for="PropertyId">To date</label>
+                <label for="PropertyId">To date <i class="text-danger">*</i></label>
                 <input class="input datepicker" type="text" id="dtto" />
                 <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
             </div>
@@ -193,13 +193,17 @@
 
 
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
             });
             // InitializeDatatable();
         });
 
         function InitializeDatatable() {
             var Action = '@ViewBag.Action';
+            var parts = $("#dtfrom").val().split('/');
+            var Fdt = parts[1] + '/' + parts[0] + '/' + parts[2];
+            var parts1 = $("#dtto").val().split('/');
+            var Tdt = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
             if (Action == "R") {
                 var _title = 'Vendor Wise Rejection';
                 $("#dtlistr").DataTable({
@@ -269,8 +273,8 @@
                         dataType: "json",
                         data: function (d) {
                             var AdditionalValues = {
-                                FromDate: $("#dtfrom").val(),
-                                ToDate: $("#dtto").val(),
+                                FromDate: Fdt,
+                                ToDate: Tdt,
                                 ReportStatus: $("#ddlstatus").val(),
                                 RadioButton: sessionStorage.getItem("rb"),
                                 Action: Action

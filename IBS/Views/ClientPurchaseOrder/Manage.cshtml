@@ -1,16 +1,17 @@
 ﻿@model IBS.Models.PO_MasterModel
 
 @{
-    ViewData["Title"] = "VENDOR PURCHASE ORDER FORM";
+    ViewData["Title"] = "PURCHASE ORDER FORM";
     string clsView = "";
     if (Model.CaseNo != null)
     {
         clsView = "Permission_View";
     }
+    string railway = "";
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>VENDOR PURCHASE ORDER FORM</h2>
+        <h2>PURCHASE ORDER FORM</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="ClientPurchaseOrder" class="formBtn viewall-btn">View List</a>
@@ -43,30 +44,51 @@
                     <div class="col-md-2 mb-3">
                         <button type="button" class="btn btn-primary formSubBtn" onclick="LOASubmit();" style="margin-top: 0px;">Submit</button>
                     </div>
-
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+                        @*@Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})*@
+                        @*<span asp-validation-for="RlyNonrly" class="text-danger"></span>*@
+                        <input type="hidden" asp-for="RlyNonrly" />
 
-                        <span asp-validation-for="RlyNonrly" class="text-danger"></span>
+                        @if (Model.RlyNonrly == "R")
+                        {
+                            railway = "Railways";
+                        }
+                        else if (Model.RlyNonrly == "P")
+                        {
+                            railway = "Private";
+                        }
+                        else if (Model.RlyNonrly == "U")
+                        {
+                            railway = "PSU";
+                        }
+                        else if (Model.RlyNonrly == "S")
+                        {
+                            railway = "State Govt";
+                        }
+                        else if (Model.RlyNonrly == "F")
+                        {
+                            railway = "Foreign Railways";
+                        }
+                        <input type="text" class="input" value="@railway" readonly>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
-                                @*@Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient(Model.RlyNonrly) , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})*@
-                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="fill_consignee_purcher();"})
-
-                                <span asp-validation-for="RlyCd" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="txtBPO_RLY">&nbsp;</label><br />
-                                <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
-                            </div>
-                        </div>
+                        <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
+                        @*@Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient(Model.RlyNonrly) , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})*@
+                        @*@Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="fill_consignee_purcher();"})
+                        <span asp-validation-for="RlyCd" class="text-danger"></span>*@
+                        <input type="hidden" asp-for="RlyCd" />
+                        <input type="text" class="input" value="@ViewBag.ClintName" readonly>
                     </div>
+                    <div class="col-md-4 mb-3" style="display:none;">
+                        <label for="txtBPO_RLY">&nbsp;</label><br />
+                        <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
+                    </div>
+                </div>
+
+                <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Case To Be Registered At<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
@@ -266,7 +288,7 @@
         });
 
         function FillEditedData() {
-            FillAgencyClient(0);
+            //FillAgencyClient(0);
             setTimeout(function () {
                 $('#RlyCd').val('@Model.RlyCd');
                 $('#PoiCd').val('@Model.PoiCd');
@@ -278,32 +300,32 @@
             }
         }
 
-        function FillAgencyClient(types) {
-            var RlyNonrly = $("#RlyNonrly").val();
-            $.ajax({
-                url: '@Url.Action("GetAgencyClient", "ClientPurchaseOrder")?RlyNonrly=' + RlyNonrly,
-                type: 'GET',
-                cache: false,
-                data: '{}',
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response.status) {
-                    $("#RlyCd").html("");
-                    $.each(response.list, function (index, value) {
-                        $("#RlyCd").append("<option value='" + value.Value + "' >" + value.Text + "</option>");
-                    });
-                    $("#hdnRCD").val($("#RlyCd").val());
-                    $("#hdnRailway").val($("#RlyCd option:selected").text());
-                    $("#txtBPO_RLY").css("display", "none");
-                }
-            });
-            if (types == 1) {
-                setTimeout(function () {
-                    fill_consignee_purcher();
-                }, 2000);
-            }
-        }
+        //function FillAgencyClient(types) {
+        //    var RlyNonrly = $("#RlyNonrly").val();
+        //    $.ajax({
+        //        url: '@Url.Action("GetAgencyClient", "ClientPurchaseOrder")?RlyNonrly=' + RlyNonrly,
+        //        type: 'GET',
+        //        cache: false,
+        //        data: '{}',
+        //        processData: false,
+        //        contentType: false
+        //    }).done(function (response) {
+        //        if (response.status) {
+        //            $("#RlyCd").html("");
+        //            $.each(response.list, function (index, value) {
+        //                $("#RlyCd").append("<option value='" + value.Value + "' >" + value.Text + "</option>");
+        //            });
+        //            $("#hdnRCD").val($("#RlyCd").val());
+        //            $("#hdnRailway").val($("#RlyCd option:selected").text());
+        //            $("#txtBPO_RLY").css("display", "none");
+        //        }
+        //    });
+        //    if (types == 1) {
+        //        setTimeout(function () {
+        //            fill_consignee_purcher();
+        //        }, 2000);
+        //    }
+        //}
 
         function RlyCd_Changed() {
             $("#hdnRCD").val($("#RlyCd").val());
@@ -521,7 +543,7 @@
                     $('#StockNonstock').val(response.poMaster.StockNonstock);
                     $('#PoOrLetter').val(response.poMaster.PoOrLetter);
                     $('#RlyNonrly').val(response.poMaster.RlyNonrly);
-                    FillAgencyClient(0);
+                    //FillAgencyClient(0);
                     setTimeout(function () {
                         $('#RlyCd').val(response.poMaster.RlyCd);
                     }, 2000);
@@ -573,10 +595,8 @@
         }
 
         function Save() {
-            if($("#PurchaserCd").val() == "0")
-            {
-                if ($("#Purchaser").val() == "")
-                {
+            if ($("#PurchaserCd").val() == "0") {
+                if ($("#Purchaser").val() == "") {
                     ShowHideMsgNew(false, "Purchaser details is required.");
                     return;
                 }

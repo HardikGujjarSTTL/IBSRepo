@@ -1,19 +1,24 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using System.Drawing.Imaging;
 using System.Text;
+using System.Drawing;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers
 {
     public class BarcodeGenerationController : BaseController
     {
-        #region Variables
         private readonly IBarcodeGeneration BarcodeGen;
         private readonly IWebHostEnvironment env;
-        #endregion
+        private readonly int barcodeWidth = 400;
+        private readonly int barcodeHeight = 120;
+
         public BarcodeGenerationController(IBarcodeGeneration _BarcodeGen, IWebHostEnvironment _env)
         {
             BarcodeGen = _BarcodeGen;
@@ -137,48 +142,35 @@ namespace IBS.Controllers
 
         public IActionResult GenerateBarcode(string Barcode, int quantity)
         {
-            try
+            List<System.Drawing.Image> images = new List<System.Drawing.Image>();
+
+            for (int i = 0; i < quantity; i++)
             {
-                List<string> imageUrls = new List<string>();
+                string uniqueBarcode = $"{Barcode}\n{DateTime.Now.ToString("dd-MM-yyyy")}";
 
-                for (int i = 0; i < quantity; i++)
-                {
-                    string uniqueBarcode = $"{Barcode}\n{DateTime.Now.ToString("dd-MM-yyyy")}";
+                BarcodeLib.Barcode b = new BarcodeLib.Barcode();
+                BarcodeLib.TYPE type = BarcodeLib.TYPE.CODE128B;
 
-                    BarcodeLib.Barcode b = new BarcodeLib.Barcode();
-                    MemoryStream ms = new MemoryStream();
-                    System.Drawing.Image img = null;
-                    BarcodeLib.TYPE type = BarcodeLib.TYPE.CODE128B;
+                b.Alignment = BarcodeLib.AlignmentPositions.LEFT;
+                b.IncludeLabel = false;
+                b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMLEFT;
 
-                    b.Alignment = BarcodeLib.AlignmentPositions.LEFT;
-                    b.IncludeLabel = true;
-                    b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMLEFT;
+                int widthPixel = (int)ConvertPointToPixel(barcodeWidth);
+                int HeightPixel = (int)ConvertPointToPixel(barcodeHeight);
 
-                    int widthPixel = (int)ConvertPointToPixel(400);
-                    int HeightPixel = (int)ConvertPointToPixel(120);
+                System.Drawing.Image img = b.Encode(type, Barcode, System.Drawing.Color.Black, System.Drawing.Color.White, widthPixel, HeightPixel);
 
-                    img = b.Encode(type, Barcode, System.Drawing.Color.Black, System.Drawing.Color.White, widthPixel, HeightPixel);
-                    string fileName = $"barcode_{i + 1}.png";
-                    string filePath = Path.Combine(env.WebRootPath, "GeneratedBarcode", fileName);
+                images.Add(img);
 
-#pragma warning disable CA1416 // Validate platform compatibility
-                    img.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
-#pragma warning restore CA1416 // Validate platform compatibility
+                string fileName = $"barcode_{i + 1}.png";
+                string filePath = Path.Combine(env.WebRootPath, "GeneratedBarcode", fileName);
 
-                    string imageUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/GeneratedBarcode/" + fileName;
-
-                    imageUrls.Add(imageUrl);
-
-                }
-                ViewBag.QrCodeUris = imageUrls;
-
+                img.Save(filePath, ImageFormat.Png);
             }
-            catch (Exception)
-            {
-                throw;
-            }
-            return PartialView();
 
+            byte[] document = ImagesToPdf(images);
+
+            return File(document, "application/pdf", "barcode.pdf");
         }
 
         [HttpPost]
@@ -212,38 +204,38 @@ namespace IBS.Controllers
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
 
-        private string StringEncode128(string text)
-        {
-            const int Ascii_FNC1 = 102;
-            const int Ascii_STARTB = 104;
-
-            int CharAscii = 0;
-            for (int CharPos = 0; CharPos < text.Length; ++CharPos)
-            {
-                string letter = text.Substring(CharPos, 1);
-                CharAscii = (int)Convert.ToChar(letter);
-                if (CharAscii > 127 && CharAscii != Ascii_FNC1)
-                {
-                    throw new Exception(text + "|" + CharAscii);
-                }
-            }
-
-            StringBuilder outstring = new StringBuilder();
-            outstring.Append((char)(Ascii_STARTB));
-
-            for (int CharPos = 0; CharPos < text.Length; ++CharPos)
-            {
-                string letter = text.Substring(CharPos, 1);
-                CharAscii = (int)Convert.ToChar(letter) - 32;
-                outstring.Append((char)(CharAscii));
-            }
-
-            return outstring.ToString();
-        }
-
         private float ConvertPointToPixel(float ValueInPoint)
         {
             return (ValueInPoint * 96) / 72;
+        }
+
+        public byte[] ImagesToPdf(List<System.Drawing.Image> images)
+        {
+            using (var ms = new MemoryStream())
+            {
+                iTextSharp.text.Rectangle pageSize = new iTextSharp.text.Rectangle(0, 0, barcodeWidth, barcodeHeight);
+                var document = new Document(pageSize, 0, 0, 0, 0);
+
+                PdfWriter.GetInstance(document, ms).SetFullCompression();
+
+                document.Open();
+
+                foreach (System.Drawing.Image image in images)
+                {
+                    var img = iTextSharp.text.Image.GetInstance(ImageToByteArray(image));
+                    document.Add(img);
+                }
+
+                if (document.IsOpen()) document.Close();
+                return ms.ToArray();
+            }
+        }
+
+        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, ImageFormat.Png);
+            return ms.ToArray();
         }
 
     }

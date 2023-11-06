@@ -79,6 +79,8 @@ public partial class V22bOutstandingBill
 
     public decimal? ChqAmt { get; set; }
 
+    public string? AuDesc { get; set; }
+
     public decimal? Tds { get; set; }
 
     public decimal? TdsSgst { get; set; }

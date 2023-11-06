@@ -24,7 +24,7 @@ namespace IBS.Repositories
         }
 
         public BillingAdjustmentModel FindByID(string AdjusmentYrMth, string rgnCode)
-        {  
+        {
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[3];
@@ -38,13 +38,13 @@ namespace IBS.Repositories
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<BillingAdjustmentModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                } 
+                }
                 return model;
-            } 
+            }
         }
- 
+
         public DTResult<BillingAdjustmentModel> GetBillingAdjustmentList(DTParameters dtParameters, string RgnCd)
-        { 
+        {
             DTResult<BillingAdjustmentModel> dTResult = new() { draw = 0 };
             IQueryable<BillingAdjustmentModel>? query = null;
 
@@ -70,7 +70,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T85BillingAdjustementPcdos
-                    where l.RegionCode == RgnCd
+                    where l.RegionCode == RgnCd && l.Isdeleted != true
                     select new BillingAdjustmentModel
                     {
                         //Id = l.Id,
@@ -78,13 +78,13 @@ namespace IBS.Repositories
                         Adjustment_Amt = l.AdjustmentAmt,
                         Remarks = l.Remarks,
                         User_Id = l.UserId,
-                        Datetime = l.Datetime,                                                                     
+                        Datetime = l.Datetime,
                         //Isdeleted = l.Isdeleted,
                         //Createdby = l.Createdby,
                         //Createddate = l.Createddate,
                         //Updatedby= l.Updatedby,
                         //Updateddate= l.Updateddate,
-            };
+                    };
 
             dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
@@ -95,7 +95,7 @@ namespace IBS.Repositories
 
         public bool Remove(string BePer, string strRgn)
         {
-             
+
             var _BeTarget = (from m in context.T85BillingAdjustementPcdos
                              where m.AdjusmentYrMth == BePer
                              && m.RegionCode == strRgn
@@ -103,9 +103,8 @@ namespace IBS.Repositories
 
             if (_BeTarget == null) { return false; }
 
-            //_BeTarget.Isdeleted = Convert.ToByte(true);
-            //_BeTarget.Updatedby = UserID;
-            //_BeTarget.Updateddate = DateTime.Now;
+            _BeTarget.Isdeleted = true;
+            _BeTarget.Updateddate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -113,40 +112,37 @@ namespace IBS.Repositories
         public string BillingAdjustmentDetailsInsertUpdate(BillingAdjustmentModel model)
         {
             var Id = "";
-              
+
             var _BillingAdjustment = (from m in context.T85BillingAdjustementPcdos
-                             where m.AdjusmentYrMth == model.Adjusment_Yr_Mth
-                             && m.RegionCode == model.Region_Code
-                             select m).FirstOrDefault();
+                                      where m.AdjusmentYrMth == model.Adjusment_Yr_Mth
+                                      && m.RegionCode == model.Region_Code
+                                      select m).FirstOrDefault();
 
             #region BillingAdjustment save
             if (_BillingAdjustment == null)
             {
                 T85BillingAdjustementPcdo obj = new T85BillingAdjustementPcdo();
-                obj.AdjusmentYrMth = model.Adjusment_Yr_Mth;
+                obj.AdjusmentYrMth = model.AdjusmentPerYear + model.AdjusmentPerMon;
                 obj.AdjustmentAmt = model.Adjustment_Amt;
-                obj.Remarks = model.Remarks; 
+                obj.Remarks = model.Remarks;
                 obj.UserId = model.User_Id;
                 obj.RegionCode = model.Region_Code;
-                //obj.Isdeleted = Convert.ToByte(false);
-                //obj.Createdby = model.UserId;
-                //obj.Createddate = DateTime.Now;
-                //obj.Updatedby = model.UserId;
-                //obj.Updateddate = DateTime.Now;
+                obj.Isdeleted = false;
+                obj.Createddate = DateTime.Now;
+                obj.Updateddate = DateTime.Now;
                 context.T85BillingAdjustementPcdos.Add(obj);
                 context.SaveChanges();
                 Id = (obj.AdjusmentYrMth);
             }
             else
             {
-                _BillingAdjustment.AdjustmentAmt = model.Adjustment_Amt; 
+                _BillingAdjustment.AdjustmentAmt = model.Adjustment_Amt;
                 _BillingAdjustment.Remarks = model.Remarks;
-                //_BillingAdjustment.Updatedby = model.UserId;
-                //_BillingAdjustment.Updateddate = DateTime.Now;
+                _BillingAdjustment.Updateddate = DateTime.Now;
                 Id = _BillingAdjustment.AdjusmentYrMth;
                 context.SaveChanges();
             }
-            
+
             return Id;
             #endregion
         }

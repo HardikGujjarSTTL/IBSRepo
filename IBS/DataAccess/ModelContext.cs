@@ -19515,7 +19515,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.LyOuts)
                 .HasColumnType("NUMBER(13,2)")
@@ -19560,7 +19560,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(500)
@@ -21427,6 +21427,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("AU");
+            entity.Property(e => e.AuDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("AU_DESC");
             entity.Property(e => e.BillAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("BILL_AMOUNT");
@@ -24113,10 +24117,6 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
-            entity.Property(e => e.Clientuserid)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("CLIENTUSERID");
             entity.Property(e => e.ConsigneeSName)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -24149,6 +24149,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(68)
                 .IsUnicode(false)
                 .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyCds)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CDS");
             entity.Property(e => e.RlyNonrly)
                 .HasMaxLength(1)
                 .IsUnicode(false)

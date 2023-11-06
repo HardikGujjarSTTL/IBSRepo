@@ -2162,7 +2162,7 @@ namespace IBS.Models
             else if (RlyNonrly != "" && RlyNonrly != null)
             {
                 var query = ModelContext.T12BillPayingOfficers
-                        .Where(bpo => bpo.BpoType == "U")
+                        .Where(bpo => bpo.BpoType == RlyNonrly)
                         .GroupBy(bpo => new
                         {
                             RLY_CD = bpo.BpoRly.ToUpper().Trim(),
@@ -2193,6 +2193,36 @@ namespace IBS.Models
             }
             return dropDownDTOs.DistinctBy(x => x.Value).ToList();
             //return dropDownDTOs.ToList();
+        }
+
+
+        public static string GetClient(string RlyNonrly,string rly)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            string ClintName = "";
+
+            if (RlyNonrly == "R")
+            {
+                ClintName = (from a in ModelContext.T91Railways
+                             where a.RlyCd == rly
+                             select a.Railway).FirstOrDefault();
+            }
+            else if (RlyNonrly != "" && RlyNonrly != null)
+            {
+                var objRailway = ModelContext.T12BillPayingOfficers
+                                .Where(bpo => bpo.BpoRly == rly)
+                                .GroupBy(bpo => new
+                                {
+                                    RAILWAY = bpo.BpoOrgn
+                                })
+                                .Select(group => new
+                                {
+                                    group.Key.RAILWAY
+                                })
+                                .FirstOrDefault();
+                ClintName = objRailway.RAILWAY;
+            }
+            return ClintName;
         }
 
         public static List<SelectListItem> GetAgencyClientForDEOCris()
@@ -2924,7 +2954,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> Bank = (from a in context.T94Banks
-
+                                         orderby a.BankName
                                          select
                                     new SelectListItem
                                     {
@@ -4272,7 +4302,7 @@ namespace IBS.Models
         public static List<SelectListItem> GetAccountCode(string Role_Cd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            if (Role_Cd == "6")
+            if (Role_Cd == "5")
             {
                 return (from a in context.T95AccountCodes
                         where (a.AccCd == 2210 || a.AccCd == 2212)

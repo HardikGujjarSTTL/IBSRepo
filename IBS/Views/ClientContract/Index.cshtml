@@ -3,15 +3,15 @@
     string Title = "";
     if (ViewBag.Type == "C")
     {
-        Title = "Client Contract List";
+        Title = "Client Contact List";
     }
     else if (ViewBag.Type == "B")
     {
-        Title = "BD Efforts";
+        Title = "BD Efforts List";
     }
     else
     {
-        Title = "DFO Visit";
+        Title = "DFO Visit List";
     }
     ViewData["Title"] = Title;
 }
@@ -20,7 +20,7 @@
     <input type="hidden" id="@ViewBag.Type" value="@ViewBag.Type" />
     <div class="list-inner">
         <div class="tast-list">
-            <h2>Client Contract List</h2>
+            <h2>@Title</h2>
         </div>
         <div class="list-btn">
             <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client Contract</a>

@@ -69,9 +69,6 @@ namespace IBS.Controllers
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "NCRRegister", "Manage", 1, GetIPAddress());
             }
-            List<Remarks> lst = new();
-            lst = model.lstRemark;
-            ViewBag.remarkList = lst;
             return View(model);
         }
 

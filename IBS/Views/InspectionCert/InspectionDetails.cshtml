@@ -358,8 +358,8 @@
                     </div>
                 </div>
             </div>
-            
-            @if(Model.Callstatus == "R")
+
+            @if (Model.Callstatus == "R")
             {
                 <div class="row my-0">
                     <div class="col-md-8 mb-3">
@@ -370,7 +370,7 @@
                     </div>
                 </div>
             }
-            
+
 
             <div class="savenext-btn center">
                 @if (@Model.STS != "X")
@@ -454,28 +454,40 @@
             </div>
             <div class="row my-0">
 
-                @if (Model.BpoType == "R" && Model.BpoFeeType == "P" && Model.IcTypeId == 1)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="reference">
-                            <label for="Reference">Rly BPO Fee</label>
-                            @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
-                        </div>
+                <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
+                    <div class="reference">
+                        <label for="Reference">Rly BPO Fee</label>
+                        @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
                     </div>
+                </div>
+                <div class="col-md-4 mb-3 BpoFee" style="display:none;">
+                    <div class="reference">
+                        <label for="Reference">FEE</label>
+                        <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                @*@if (Model.BpoType == "R" && Model.BpoFeeType == "P" && Model.IcTypeId == 1)
+                {
+                <div class="col-md-4 mb-3 RlyBpoFee">
+                <div class="reference">
+                <label for="Reference">Rly BPO Fee</label>
+                @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                </div>
+                </div>
                 }
                 else
                 {
-                    <div class="col-md-4 mb-3">
-                        <div class="reference">
-                            <label for="Reference">FEE</label>
-                            <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
-                        </div>
-                    </div>
-                }
+                <div class="col-md-4 mb-3 BpoFee">
+                <div class="reference">
+                <label for="Reference">FEE</label>
+                <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
+                </div>
+                </div>
+                }*@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">FEE Type</label>
-                        @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()"})
                     </div>
                 </div>
                 @if (@Convert.ToInt32(Convert.ToDateTime(@Model.CertDt).ToString("yyyyMMdd")) >= @Convert.ToInt32(20170701))
@@ -520,7 +532,17 @@
             </div>
 
             <div class="row my-0">
-                <div class="col-md-12 mb-3">
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-8 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Remarks (if any) <span style="color:#d52127;">*</span></label>
+                        <textarea class="input" asp-for="Remarks"></textarea>
+                        <span id="spnRemarks" style="color:#d52127;"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
                     <div class="reference">
                         <div class="custom-control custom-checkbox" id="OuterDivOrBody">
                             <label class="custom-checkbox">
@@ -533,7 +555,7 @@
                                 {
                                     <input type="checkbox" id="chkABill" name="chkABill" asp-for="chkABill" />
                                 }
-                                <label for="chkABill">Advance Bill</label>
+                                Advance Bill
 
                             </label>
                         </div>
@@ -541,23 +563,6 @@
                 </div>
             </div>
 
-            <div class="row my-0">
-                <div class="col-md-8 mb-3">
-                    <div class="reference">
-                        <label for="Reference">Remarks (if any) <span style="color:#d52127;">*</span></label>
-                        <textarea class="input" asp-for="Remarks"></textarea>
-                        <span id="spnRemarks" style="color:#d52127;"></span>
-                    </div>
-                </div>
-            </div>
-
-            @*<div class="row my-0">
-            <div class="col-md-3 mb-3">
-            <div class="reference">
-            <label for="Reference"><span style="color:#d52127;">* Enter Fee Details Before Generating Bill !!!</span></label>
-            </div>
-            </div>
-            </div>*@
             <div class="alert alert-warning">
                 <div class="row center my-0">
                     <div class="col-md-12">
@@ -571,6 +576,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="alert alert-secondary UploadDoc">
                 <div class="row">
                     <div class="col-md-12">
@@ -590,11 +596,7 @@
                     </div>
                 </div>
             </div>
-            @*<div class="row my-0">
-            <div class="col-md-12">
-            <h3 class="heading3">Bill Date</h3>
-            </div>
-            </div>*@
+
             @if (Model.BillNo != null)
             {
                 <div class="row my-0 center lblBillDt">
@@ -640,6 +642,16 @@
                     $("#chkABill").val('X');
                 }
             });
+            if ($("#BpoType").val() == "R" && $("#BpoFeeType").val() == "P" && $("#IcTypeId").val() == 1)
+            {
+                $(".RlyBpoFee").show();
+                $(".BpoFee").hide();
+            }
+            else
+            {
+                $(".RlyBpoFee").hide();
+                $(".BpoFee").show();
+            }
 
 
             var GSTNo = $("#GstinNo").val();
@@ -807,7 +819,7 @@
                             success: function (contacts) {
                                 if (contacts.data && contacts.data.length > 0) {
                                     if (contacts.data && contacts.data.length > 0) {
-                                        
+
                                         $("#lblCity").text("City : " + contacts.data[0].City);
                                         $("#lblState").text(",State : " + contacts.data[0].State);
                                         $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
@@ -1267,6 +1279,20 @@
                     ShowHideMsgNew(response.status, response.responseText);
                 }
             });
+        }
+
+        function onBpoFeeType() {
+            var BpoFeeType = $("#BpoFeeType").val();
+            if(BpoFeeType == "P")
+            {
+                $(".RlyBpoFee").show();
+                $(".BpoFee").hide();
+            }
+            else
+            {
+                $(".RlyBpoFee").hide();
+                $(".BpoFee").show();
+            }
         }
 
     </script>

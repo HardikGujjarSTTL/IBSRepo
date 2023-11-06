@@ -4,7 +4,7 @@
     string Title = "";
     if (Model.TypeCb == "C")
     {
-        Title = "Manage Client Contract";
+        Title = "Manage Client Contact";
     }
     else if (Model.TypeCb == "B")
     {
@@ -24,10 +24,10 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Manage Contract</h2>
+        <h2>@Title</h2>
     </div>
     <div>
-        <a asp-action="Index" asp-controller="ClientContract" class="formBtn viewall-btn">View List</a>
+        <a asp-action="Index" asp-controller="ClientContract" asp-route-type="@Model.TypeCb" class="formBtn viewall-btn">View List</a>
     </div>
 </div>
 <section class="@clsView">
