@@ -23,6 +23,7 @@ builder.Services.AddScoped<ICallRepository, CallRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<IInspectionRepository, InspectionRepository>();
+builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
