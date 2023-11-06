@@ -230,6 +230,27 @@
                 dateFormat: 'dd-mm-yy',
             });
             $("#UomCd").val(3);
+            $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
+                var idName = $(this).attr('id');
+                if (idName == "OtChargePer") {
+                    othercharges();
+                }
+                else if (idName == "ExcisePer") {
+                    excise();
+                }
+                else if (idName == "DiscountPer") {
+                    discountype();
+                }
+                else if (idName == "Rate") {
+                    basevalue()
+                }
+                else if (idName == "Qty") {
+                    QuantityChanged()
+                }
+                else if (idName == "SalesTaxPer") {
+                    saletax();
+                }
+            });
             GetUOMChanged();
             AddRemoveValidation($("#DiscountType").val(), 'DiscountPer');
             AddRemoveValidation($("#ExciseType").val(), 'ExcisePer');

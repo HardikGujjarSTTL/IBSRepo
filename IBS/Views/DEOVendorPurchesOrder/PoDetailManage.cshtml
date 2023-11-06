@@ -262,6 +262,27 @@
             });
             $("#UomCd").val(3);
             GetUOMChanged();
+            $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
+                var idName = $(this).attr('id');
+                if (idName == "OtChargePer") {
+                    othercharges();
+                }
+                else if (idName == "ExcisePer") {
+                    excise();
+                }
+                else if (idName == "DiscountPer") {
+                    discountype();
+                }
+                else if (idName == "Rate") {
+                    basevalue()
+                }
+                else if (idName == "Qty") {
+                    QuantityChanged()
+                }
+                else if (idName == "SalesTaxPer") {
+                    saletax();
+                }
+            });
             AddRemoveValidation($("#DiscountType").val(), 'DiscountPer');
             AddRemoveValidation($("#ExciseType").val(), 'ExcisePer');
             AddRemoveValidation($("#OtChargeType").val(), 'OtChargePer');
