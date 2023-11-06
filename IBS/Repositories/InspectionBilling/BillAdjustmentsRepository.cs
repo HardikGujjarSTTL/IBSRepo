@@ -178,13 +178,13 @@ namespace IBS.Repositories.InspectionBilling
                 model.BpoFeeType = Bill.FeeType;
                 model.Rate = Bill.FeeRate;
                 model.TaxType = Bill.TaxType;
-                model.TIFee = Bill.InspFee;
+                model.TIFee = Convert.ToDecimal(Bill.InspFee);
                 model.ServiceTax = Bill.ServiceTax;
                 model.EduCess = Bill.EduCess;
                 model.SheCess = Bill.SheCess;
                 model.MinFee = Convert.ToInt32(Bill.MinFee);
                 model.MaxFee = Convert.ToInt32(Bill.MaxFee);
-                model.NetFee = Bill.BillAmount;
+                model.NetFee = Convert.ToDecimal(Bill.BillAmount);
                 model.AmountReceived = Bill.AmountReceived;
                 model.Tds = Bill.Tds;
                 model.BillAmtCleared = Bill.BillAmtCleared;
@@ -219,7 +219,11 @@ namespace IBS.Repositories.InspectionBilling
                 model.LoRemarks = Bill.LoRemarks;
                 model.SapStatus = Bill.SapStatus;
 
-                
+                model.TMValueDiff = (Convert.ToDecimal(model.TMValue) - Convert.ToDecimal(model.TMValueNew));
+                model.TIFeeDiff = (Convert.ToDecimal(model.TIFee) - Convert.ToDecimal(model.TIFeeNew));
+                model.NetFeeDiff = (Convert.ToDecimal(model.NetFee) - Convert.ToDecimal(model.NetFeeNew));
+
+
             }
             return model;
         }
@@ -763,8 +767,8 @@ namespace IBS.Repositories.InspectionBilling
                     if (str3 != null)
                     {
                         model.TMValue = Convert.ToDecimal(str3.MaterialValue);
-                        model.TIFee = str3.InspFee;
-                        model.NetFee = str3.BillAmount;
+                        model.TIFee = Convert.ToDecimal(str3.InspFee);
+                        model.NetFee = Convert.ToDecimal(str3.BillAmount);
                         model.InvoiceNo = str3.InvoiceNo;
                         model.CnoteBillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
                     }
