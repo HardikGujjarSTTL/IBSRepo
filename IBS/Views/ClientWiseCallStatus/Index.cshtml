@@ -1,0 +1,96 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string Region = ViewBag.Region;
+    string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
+    string ReportTitle = string.Empty;
+
+    if (ReportType == "ClientWise") ReportTitle = "CLIENT WISE CALL DETAILS";
+    else if (ReportType == "VendorWise") ReportTitle = "VENDOR WISE REJECTION";
+
+    ViewData["Title"] = ReportTitle;
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ReportTitle</h2>
+    </div>
+</div>
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <h3 class="heading3">Calls For the Period</h3>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="PropertyId">From Date <i class="text-danger">*</i></label>
+            <input class="input datepicker" type="text" id="dtfrom" />
+            <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="PropertyId">To date <i class="text-danger">*</i></label>
+            <input class="input datepicker" type="text" id="dtto" />
+            <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+        </div>
+        <div class="task-inner report1" style="display: none">
+        
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">Report Status</label>
+                @Html.DropDownList("CallCode", new SelectList(IBS.Models.Common.CallStatus() , "Value", "Text"),"All",new { @id = "ddlstatus" })
+            </div>
+
+        </div>
+    </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+    </div>
+</div>
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $("#r1").prop("checked", true);
+            $("#inforb1").prop("checked", true);
+            if ('@ReportType' == 'ClientWise') {
+                $(".report1").css("display", "");
+            }
+            else if ('@ReportType' == 'VendorWise') {
+                
+            }
+        });
+        function ViewReport() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+            debugger;
+            var ReportType = '@ReportType';
+            var FromDate = $("#dtfrom").val();
+            var ToDate = $("#dtto").val();
+            var ReportStatus = $("#ddlstatus").val();
+            let myObject = { ReportType, FromDate, ToDate, ReportStatus };
+
+            var url = '@Url.Action("Manage", "ClientWiseCallStatus")?' + $.param(myObject);
+            //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+    </script>
+}
