@@ -30,7 +30,6 @@ namespace IBS.Controllers.InspectionBilling
                     model = billRepository.FindByBillDetails(BillNo, Region);
                 }
                 return PartialView("_BillDetails", model);
-                //return View(model);
             }
             catch (Exception ex)
             {
