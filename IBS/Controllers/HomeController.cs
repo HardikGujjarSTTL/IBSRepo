@@ -4,76 +4,31 @@ using System.Diagnostics;
 using IBS.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
 using System.Text;
 using IBS.Helper;
 using IBS.DataAccess;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Hosting;
 
 namespace IBS.Controllers
 {
     public class HomeController : BaseController
     {
-        #region Variables
         private readonly IUserRepository userRepository;
         private readonly IWebHostEnvironment _env;
-        private readonly ILabInvoiceDownloadRepository LabInvoiceDownloadRepository;
         public IConfiguration Configuration { get; }
-        #endregion
-        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration, ILabInvoiceDownloadRepository _LabInvoiceDownloadRepository)
+
+        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration)
         {
             userRepository = _userRepository;
             _env = env;
             Configuration = configuration;
-            LabInvoiceDownloadRepository = _LabInvoiceDownloadRepository;
-
         }
 
         public IActionResult Index()
         {
-            //HttpContext.Session.SetString("LoginType", type);
             return View();
         }
-        //public IActionResult Download()
-        //{
-        //    //string Regin = GetRegionCode;
-        //    //DataSet dTResult = LabInvoiceDownloadRepository.Download(CaseNo, RegNo, InvoiceNo, TranNo);
-        //    string CaseNo= "N22050400", RegNo= "N/22/0780", InvoiceNo= "R0608L22/00001",  TranNo="";
-        //    string Srno = LabInvoiceDownloadRepository.GetSrNo(InvoiceNo);
-        //    LabInvoiceDownloadModel dtreg = LabInvoiceDownloadRepository.Getdtreg(InvoiceNo);
-        //    ReportDocument rd = new ReportDocument();
-        //    string reportPath = "";
-        //    if (Convert.ToInt32(Srno) > 3)
-        //    {
-        //        //reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN_NEW.rpt");
-        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN_NEW.rpt");
-
-        //    }
-        //    else if ((Convert.ToInt32(dtreg.INVOICE_DT) >= 202207) && (dtreg.Resign == "N"))
-        //    {
-        //        // reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN_HR.rpt");
-        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN_HR.rpt");
-        //    }
-        //    else
-        //    {
-        //        //reportPath = Server.MapPath("~/Reports/LAB_INVOICE_GEN.rpt");
-        //        reportPath = Path.Combine(_env.WebRootPath, "Reports", "LAB_INVOICE_GEN.rpt");
-        //    }
-        //    rd.Load(reportPath);
-
-        //    // Replace with your data retrieval logic
-        //    DataSet dsCustom = LabInvoiceDownloadRepository.Getdata(CaseNo, RegNo, InvoiceNo, TranNo);
-        //    rd.SetDataSource(dsCustom);
-
-        //    Stream stream = rd.ExportToStream(ExportFormatType.PortableDocFormat);
-        //    stream.Seek(0, SeekOrigin.Begin);
-
-        //    return File(stream, "application/pdf", "CustomerList.pdf");
-        //}
 
         [HttpPost]
-        //[ValidateDNTCaptcha(ErrorMessage = "Invalid security code.", CaptchaGeneratorLanguage = Language.English, CaptchaGeneratorDisplayMode = DisplayMode.ShowDigits)]
         public ActionResult Login(LoginModel loginModel)
         {
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
@@ -81,7 +36,7 @@ namespace IBS.Controllers
             {
                 //// temporary Commited - for local
                 //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
-                if (1==1)
+                if (1 == 1)
                 {
                     string sender = "RITES/QA";
                     Random random = new Random();
@@ -111,7 +66,7 @@ namespace IBS.Controllers
         public ActionResult OTPVerification(string UserName)
         {
             string DecryptUserName = Common.DecryptQueryString(UserName);
-            LoginModel loginModel1 =new LoginModel();
+            LoginModel loginModel1 = new LoginModel();
             loginModel1.DecryptUserName = DecryptUserName;
             return View(loginModel1);
         }
@@ -166,7 +121,7 @@ namespace IBS.Controllers
             LoginModel loginModel = new LoginModel();
             loginModel.UserName = UserName;
             UserSessionModel userMaster = userRepository.LoginByUserName(loginModel);
-            loginModel.MOBILE =userMaster.MOBILE;
+            loginModel.MOBILE = userMaster.MOBILE;
 
             string sender = "RITES/QA";
             Random random = new Random();
@@ -178,8 +133,9 @@ namespace IBS.Controllers
             loginModel.OTP = "123";
             userRepository.SaveOTPDetails(loginModel);
             string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-            return RedirectToAction("OTPVerification","Home", new { UserName = EncryptUserName });
+            return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
         }
+
         public IActionResult Privacy()
         {
             return View();

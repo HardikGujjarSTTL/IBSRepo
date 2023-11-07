@@ -246,6 +246,8 @@ builder.Services.AddScoped<IBarcodeGeneration, BarcodeGenerationRepository>();
 builder.Services.AddScoped<ILabSearchPaymentRepository, LabSearchPaymentsRepository>();
 builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRRepository>();
 
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
