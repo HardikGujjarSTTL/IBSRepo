@@ -71,9 +71,8 @@ namespace IBS.Controllers.WebsitePages
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
                     List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                     DocumentHelper.SaveFiles(Convert.ToString(Compid), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
-                    msg = "Complaint Register";
                 }
-                return Json(new { status = true, responseText = msg });
+                return Json(new { status = true , responseText = "Complaint Add Successfully!!"});
             }
             catch (Exception ex)
             {

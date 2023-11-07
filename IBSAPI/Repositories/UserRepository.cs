@@ -46,7 +46,7 @@ namespace IBSAPI.Repositories
 
         public UserModel FindByUsernameOrEmail(string UserName)
         {
-            UserModel userModel = (from u in context.T02Users 
+            UserModel userModel = (from u in context.T02Users
                                    where u.UserId.Trim() == UserName.Trim()
                                    select new UserModel
                                    {
@@ -87,6 +87,6 @@ namespace IBSAPI.Repositories
                 }
             }
             return RetRegion;
-        }
+        }       
     }
 }

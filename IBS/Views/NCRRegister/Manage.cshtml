@@ -99,8 +99,7 @@
                     <div class="col-md-3 mb-3">
                         <div class="reference">
                             <label for="Reference">Item</label>
-                            @*<input type="text" asp-for="Item" maxlength="100" readonly="true" style="text-transform: uppercase;" required>*@
-                            <select id="Item" asp-for="Item" class="form-control" required></select>
+                            <select asp-for="Item" class="form-control" required></select>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -114,7 +113,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="reference">
                                 <label for="Reference">NCR No.</label>
-                                <input type="text" asp-for="NC_NO" maxlength="100" id="NCNO" readonly="true" style="text-transform: uppercase;" required>
+                                <input type="text" asp-for="NC_NO" maxlength="100"  readonly="true" style="text-transform: uppercase;" required>
                             </div>
                         </div>
                     }
@@ -131,7 +130,7 @@
                         <div class="col-md-3 mb-3" id="ncrclass">
                             <div class="reference">
                                 <label for="NCRClass">	NCR Class</label>
-                                <select asp-for="NCRClass" id="NCRClass" required>
+                                <select asp-for="NCRClass" required>
                                     <option value="A">Minor</option>
                                     <option value="B">Major</option>
                                     <option value="C">Critical</option>
@@ -349,7 +348,7 @@
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        $("#NCNO").val(data.responseText);
+                        $("#NC_NO").val(data.responseText);
                         InitializeDatatable();
                     }
                 }
@@ -409,7 +408,7 @@
     function BtnSaveRemarks() {
         var inputValues1 = [];
         var inputValues2 = [];
-        var NCNO = $("#NCNO").val();
+        var NCNO = $("#NC_NO").val();
         var UserID = $("#UserID").val();
         var table = $('#dtNCR').DataTable();
         $('.textbox1').each(function () {
@@ -524,8 +523,8 @@
 
         var NC_NO = "";
 
-        if (!isNullOrEmpty($("#NCNO").val())) {
-            NC_NO = $("#NCNO").val();
+        if (!isNullOrEmpty($("#NC_NO").val())) {
+            NC_NO = $("#NC_NO").val();
             $("#ncrcodes").show();
             $("#ncrclass").show();
         }

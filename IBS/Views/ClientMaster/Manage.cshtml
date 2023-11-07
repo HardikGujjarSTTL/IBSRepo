@@ -20,7 +20,7 @@
                 <input type="hidden" asp-for="Id" />
                     <div class="col-md-4 mb-3">
                     <label for="Reference">Client Name</label><i class="text-danger">*</i>
-                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300" id="clientname" required />
+                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300" required />
                         <span asp-validation-for="ClientName" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -35,12 +35,12 @@
                     </div>
                     <div class="col-md-4 mb-3">
                     <label for="Reference">Mobile</label><i class="text-danger">*</i>
-                    <input type="text" class="input" ASP-FOR="MOBILE" onkeypress="return isNumber(event)" id="mobilenumber" maxlength="10" required />
+                    <input type="text" class="input" ASP-FOR="MOBILE" onkeypress="return isNumber(event)"  maxlength="10" required />
                     <span asp-validation-for="MOBILE" class="text-danger"></span>
                 </div>
                     <div class="col-md-4 mb-3">
                     <label for="Reference">Email</label><i class="text-danger">*</i>
-                        <input type="email" class="input" id="email" ASP-FOR="EMAIL" maxlength="30" required />
+                        <input type="email" class="input"  ASP-FOR="EMAIL" maxlength="30" required />
                     <span asp-validation-for="EMAIL" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -57,14 +57,14 @@
                     <div class="form-group">
                         <i class="text-danger">*</i>
                             <label for="Name">Password<i class="text-danger">*</i></label>
-                            <input id="password" class="form-control" asp-for="Password" maxlength="50" />
+                            <input  class="form-control" asp-for="Password" maxlength="50" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="Name">Confirm Password<i class="text-danger">*</i></label>
-                            <input asp-for="ConfirmPassword" class="form-control" id="confirmPassword" />
+                            <input asp-for="ConfirmPassword" class="form-control" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                             <div class="text-danger" id="confirmPasswordError"></div>
                         </div>
@@ -83,11 +83,11 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            $('#clientname').on('keypress', function (event) {
+            $('#ClientName').on('keypress', function (event) {
                 Validation();
             });
 
-            $('#mobilenumber').on('keypress', function (event) {
+            $('#MOBILE').on('keypress', function (event) {
                 var userInput = event.key;
                 var regex = /^[0-9]+$/;
 
@@ -95,7 +95,7 @@
                     event.preventDefault();
                 }
             });
-            $('#email').on('keyup', function () {
+            $('#EMAIL').on('keyup', function () {
                 Emailvalidation();
             });
         });
@@ -109,8 +109,8 @@
         }
 
         function Save() {
-            var password = $("#password").val();
-            var confirmPassword = $("#confirmPassword").val();
+            var password = $("#Password").val();
+            var confirmPassword = $("#ConfirmPassword").val();
            
             if (password !== confirmPassword) {
                 $("#confirmPasswordError").text("The password and confirmation password do not match.");
