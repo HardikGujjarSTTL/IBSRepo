@@ -238,9 +238,8 @@
                             model => model.JiStatusCd,
                             new SelectList(Model.JiStatusCd, "JiStatusCd", "JiStatusDesc"),
                             "--Select--",
-                            new { id = "" }
+                            new { id = "" })
                              <span class="text-danger field-validation-error" id="spnJiStatusCd"></span>
-                        )
                         }else{
                             @Html.DropDownListFor(model => model.JiStatusDesc, new SelectList(IBS.Models.Common.GetClassification() , "Text", "Text"),"--Select--", new { id = "JiStatusDesc" })
                             <span class="text-danger field-validation-error" id="spnJiStatusCd"></span>
