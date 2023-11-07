@@ -2,9 +2,10 @@
 
 <div class="task-listinput">
     <div class="accordion-body" style="overflow-x: auto;">
-        <input type="hidden" asp-for="BpoType" />
-        <input type="hidden" asp-for="BpoFeeType" />
-        <input type="hidden" asp-for="IcTypeId" />
+        <input type="hidden" id="_BpoType" value=@Model.BpoType />
+        <input type="hidden" id="_BpoFeeType" value=@Model.BpoFeeType />
+        @*<input type="hidden" asp-for="BpoFeeType" />*@
+        @*<input type="hidden" asp-for="IcTypeId" />*@
         <input type="hidden" asp-for="Callrecvdt" />
         <input type="hidden" asp-for="BpoCd" />
 
@@ -146,6 +147,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -243,23 +245,69 @@
 
         </div>
 
-        <div class="row my-0">
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Caseno">Material Value</label>
-                    <input type="text" class="input" asp-for="TMValue" maxlength="100" style="text-transform: uppercase;" readonly>
+
+        <div class="accordion-body inner">
+            <h3 class="heading3">Old Values </h3>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Material Value</label>
+                        <input type="text" class="input" asp-for="TMValue" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Insp Fee</label>
+                        <input type="text" class="input" asp-for="TIFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Net Fee</label>
+                        <input type="text" class="input" asp-for="NetFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Caseno">Insp Fee</label>
-                    <input type="text" class="input" asp-for="TIFee" maxlength="100" style="text-transform: uppercase;" readonly>
+            <h3 class="heading3">New Values </h3>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Material Value</label>
+                        <input type="text" class="input" asp-for="TMValueNew" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Insp Fee</label>
+                        <input type="text" class="input" asp-for="TIFeeNew" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Net Fee</label>
+                        <input type="text" class="input" asp-for="NetFeeNew" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Caseno">Net Fee</label>
-                    <input type="text" class="input" asp-for="NetFee" maxlength="100" style="text-transform: uppercase;" readonly>
+            <h3 class="heading3">Difference between Old Values & New Values </h3>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Material Value</label>
+                        <input type="text" class="input" asp-for="TMValueDiff" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Insp Fee</label>
+                        <input type="text" class="input" asp-for="TIFeeDiff" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Caseno">Net Fee</label>
+                        <input type="text" class="input" asp-for="NetFeeDiff" maxlength="100" style="text-transform: uppercase;" readonly>
+                    </div>
                 </div>
             </div>
         </div>
@@ -289,10 +337,10 @@
 
         <div class="row my-0">
             @*<div class="col-md-4 mb-3">
-                <div class="reference">
-                    <label for="Reference">FEE</label>
-                    @Html.DropDownListFor(model => model.BpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
-                </div>
+            <div class="reference">
+            <label for="Reference">FEE</label>
+            @Html.DropDownListFor(model => model.BpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+            </div>
             </div>*@
             <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
                 <div class="reference">
@@ -349,6 +397,7 @@
             </div>
 
         </div>
+
         <div class="alert alert-warning">
             <div class="row center my-0">
                 <div class="col-md-12">

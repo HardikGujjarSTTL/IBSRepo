@@ -14,7 +14,6 @@
         <input type="hidden" asp-for="UpdateStatus" />
         <input type="hidden" asp-for="ItemSrnoPo" />
         <input type="hidden" asp-for="BpoType" />
-        <input type="hidden" asp-for="BpoFeeType" />
         <input type="hidden" asp-for="IcTypeId" />
 
         <div class="accordion-body" style="overflow-x: auto;">
@@ -50,6 +49,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
+
         });
 
         function BillSearch() {
@@ -64,11 +64,12 @@
             let myObject = { BillNo };
             $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
                 $("#tblsection").html(response);
-               
+                $("#BpoFeeType").val($("#_BpoFeeType").val());
                 InitializeDatatable();
+                onBpoFeeType();
             });
 
-            onBpoFeeType();
+            
         }
 
         function InitializeDatatable() {

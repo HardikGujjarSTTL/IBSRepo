@@ -112,9 +112,21 @@ namespace IBS.Models
 
         public decimal TMValue { get; set; }
 
-        public decimal? TIFee { get; set; }
+        public decimal TMValueNew { get; set; }
 
-        public decimal? NetFee { get; set; }
+        public decimal TMValueDiff { get; set; }
+
+        public decimal TIFee { get; set; }
+
+        public decimal TIFeeNew { get; set; }
+
+        public decimal TIFeeDiff { get; set; }
+
+        public decimal NetFee { get; set; }
+
+        public decimal NetFeeNew { get; set; }
+
+        public decimal NetFeeDiff { get; set; }
 
         public string InvoiceNo { get; set; }
 

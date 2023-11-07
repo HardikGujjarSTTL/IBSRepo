@@ -712,8 +712,8 @@ namespace IBS.Repositories.InspectionBilling
                                 model.BpoTaxType = query3.TaxType;
                             }
                             model.TMValue = query3.MaterialValue;
-                            model.TIFee = query3.InspFee;
-                            model.NetFee = query3.BillAmount;
+                            model.TIFee = Convert.ToDecimal(query3.InspFee);
+                            model.NetFee = Convert.ToDecimal(query3.BillAmount);
                             model.MaxFee = Convert.ToInt32(query3.MaxFee);
                             model.MinFee = Convert.ToInt32(query3.MinFee);
                             model.BillDt = query3.BillDt;
@@ -1766,8 +1766,8 @@ namespace IBS.Repositories.InspectionBilling
                     if (str3 != null)
                     {
                         model.TMValue = Convert.ToDecimal(str3.MaterialValue);
-                        model.TIFee = str3.InspFee;
-                        model.NetFee = str3.BillAmount;
+                        model.TIFee = Convert.ToDecimal(str3.InspFee);
+                        model.NetFee = Convert.ToDecimal(str3.BillAmount);
                         model.InvoiceNo = str3.InvoiceNo;
                         model.CnoteBillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
                     }
@@ -1972,8 +1972,8 @@ namespace IBS.Repositories.InspectionBilling
                 if (str3 != null)
                 {
                     model.TMValue = Convert.ToDecimal(str3.MaterialValue);
-                    model.TIFee = str3.InspFee;
-                    model.NetFee = str3.BillAmount;
+                    model.TIFee = Convert.ToDecimal(str3.InspFee);
+                    model.NetFee = Convert.ToDecimal(str3.BillAmount);
                     model.InvoiceNo = str3.InvoiceNo;
                     model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
                 }
