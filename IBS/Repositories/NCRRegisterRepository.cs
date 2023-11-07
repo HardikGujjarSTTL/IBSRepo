@@ -634,7 +634,7 @@ namespace IBS.Repositories
             mail1.From = new MailAddress("nrinspn@gmail.com");
             mail1.Subject = "Non Conformities Register";
             mail1.Body = NC_REASONS + "\n" + wRegion;
-
+            rsender = "hardiksilvertouch007@outlook.com";
             SendMailModel sendMailModel = new SendMailModel();
             //rsender = rsender;
             sendMailModel.From = rsender;

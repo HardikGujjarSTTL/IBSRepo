@@ -15,13 +15,13 @@
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-3">
                 <label for="Reference">Client Name</label>
-                @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="ClientName" })
+                @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTNAME" })
                 <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
             </div>
 
             <div class="col-md-3">
                 <label for="Reference">Client Type</label>
-                @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control", @id="Clienttype" })
+                @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control", @id="CLIENTTYPE" })
                 <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
             </div>
 
@@ -63,11 +63,11 @@
 
         $("#btnSearch").click(function () {
 
-            var CnameDropDown = $("#ClientName");
+            var CnameDropDown = $("#CLIENTNAME");
             var cnameValue = CnameDropDown.val();
             var cnameValidationSpan = $("[data-valmsg-for='CLIENTNAME']");
 
-            var ctypeDropDown = $("#Clienttype");
+            var ctypeDropDown = $("#CLIENTTYPE");
             var ctypeValue = ctypeDropDown.val();
             var ctypeValidationSpan = $("[data-valmsg-for='CLIENTTYPE']");
 
@@ -88,8 +88,8 @@
         });
 
         function InitializeDatatable() {
-            var Clienttype = $("#Clienttype").val();
-            var ClientName = $("#ClientName").val();
+            var Clienttype = $("#CLIENTTYPE").val();
+            var ClientName = $("#CLIENTNAME").val();
 
             var ajaxUrl = "@Url.Action("LoadTable")";
 
@@ -146,21 +146,21 @@
             $("#modal-delete-conf").modal("show");
         }
 
-        $("#ClientName").on("change", function () {
+        $("#CLIENTNAME").on("change", function () {
             $("[data-valmsg-for='CLIENTNAME']").hide();
         });
 
-        $("#ClientName").on("blur", function () {
+        $("#CLIENTNAME").on("blur", function () {
             if ($(this).val() === "") {
                 $("[data-valmsg-for='CLIENTNAME']").show();
             }
         });
 
-        $("#Clienttype").on("change", function () {
+        $("#CLIENTTYPE").on("change", function () {
             $("[data-valmsg-for='CLIENTTYPE']").hide();
         });
 
-        $("#Clienttype").on("blur", function () {
+        $("#CLIENTTYPE").on("blur", function () {
             if ($(this).val() === "") {
                 $("[data-valmsg-for='CLIENTTYPE']").show();
             }
