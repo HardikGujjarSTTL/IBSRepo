@@ -3,6 +3,7 @@ using IBSAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Dynamic;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBSAPI.Controllers
 {
@@ -17,7 +18,7 @@ namespace IBSAPI.Controllers
         {
             inspectionRepository = _inspectionRepository;
         }
-
+        #region IE
         [HttpGet("Get_IE_TodayInspection", Name = "GetTodayInspection")]
         public IActionResult GetTodayInspection(int IeCd)
         {
@@ -100,7 +101,7 @@ namespace IBSAPI.Controllers
             try
             {
                 var result = inspectionRepository.GetCaseDetailForIE(Case_No, CallRecvDt, CallSNo, IeCd);
-                if(result != null)
+                if (result != null)
                 {
                     var response = new
                     {
@@ -133,7 +134,7 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("Get_IE_PendingInspection", Name = "GetPendingInspection")]
-        public IActionResult GetPendingInspection(int IeCd, string Region, string Date)
+        public IActionResult GetPendingInspection(int IeCd, string Region, DateTime Date)
         {
             try
             {
@@ -171,7 +172,7 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("Get_Date_Wise_Recent_Inspection", Name = "GetDateWiseRecentInspection")]
-        public IActionResult GetDateWiseRecentInspection(int IeCd, string FromDate, string ToDate)
+        public IActionResult GetDateWiseRecentInspection(int IeCd, DateTime FromDate, DateTime ToDate)
         {
             try
             {
@@ -246,5 +247,74 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+        #endregion
+
+        #region Vendor
+        [HttpGet("Get_Vendor_PendingInspection", Name = "Get_Vendor_PendingInspection")]
+        public IActionResult Get_Vendor_PendingInspection(int Vend_Cd)
+        {
+            try
+            {
+                DateTime currentDate = DateTime.Now;
+                DateTime FromDate = currentDate.AddMonths(-3);
+                FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
+                var result = inspectionRepository.Get_Vendor_PendingInspection(Vend_Cd, FromDate, currentDate);
+
+                return Ok(FromDate);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_Vendor_PendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+        #endregion
+
+        #region CM Methods
+        [HttpGet("Get_CM_RecentInspection", Name = "Get_CM_RecentInspection")]
+        public IActionResult Get_CM_RecentInspection(int Co_Cd)
+        {
+            try
+            {
+                var CurrDate = DateTime.Now;
+                var result = inspectionRepository.Get_CM_RecentInspection(Co_Cd, CurrDate);
+                if (result != null)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found"
+                    };
+                    return Ok(response);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_CM_RecentInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+        #endregion
     }
 }
