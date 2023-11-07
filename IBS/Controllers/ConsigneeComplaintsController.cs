@@ -126,7 +126,7 @@ namespace IBS.Controllers
                 string i = consigneeComplaints.ComplaintsDetailsInsertUpdate(model);
                 if (i != "")
                 {
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
                 }
             }
             catch (Exception ex)
@@ -152,12 +152,12 @@ namespace IBS.Controllers
                 string i = consigneeComplaints.JIChoice(model);
                 if (i != "")
                 {
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }
                 else
                 {
                      msg = "Invalid Selection.\\n\\n Valid options are --> [Yes / No] ";
-                    return Json(new { status = false, responseText = msg, alertMessage = msg });
+                    return Json(new { status = false, responseText = msg});
                 }
             }
             catch (Exception ex)
@@ -182,7 +182,7 @@ namespace IBS.Controllers
                 string i = consigneeComplaints.CancelJI(model);
                 if (i != "")
                 {
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }
             }
             catch (Exception ex)
@@ -219,7 +219,7 @@ namespace IBS.Controllers
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), env, iDocument, FileName, string.Empty, DocumentIds);
                         }
                     }
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
                 }
             }
             catch (Exception ex)
@@ -255,7 +255,7 @@ namespace IBS.Controllers
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, FileName, string.Empty, DocumentIds);
                         }
                     }
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
                 }
             }
             catch (Exception ex)
