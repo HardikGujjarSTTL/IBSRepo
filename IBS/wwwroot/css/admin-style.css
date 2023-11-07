@@ -1235,6 +1235,14 @@ a.registerLink{color:#F66A2F; text-decoration:none;}
 a.registerLink:hover{color:#646464; text-decoration:underline;}
 
 .boxRadius, .accordion-body { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; padding: 20px; }
+	.boxRadius, .accordion-body .inner {
+		background: #eae5e5;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+		margin-bottom: 20px;
+		padding: 20px;
+	}
 .accordion-body{ padding:20px!important;}
 /* Bar Graph Horizontal */
 .bar-graph .region {  -webkit-animation: fade-in-text 2.2s 0.1s forwards;  -moz-animation: fade-in-text 2.2s 0.1s forwards;  animation: fade-in-text 2.2s 0.1s forwards;}

@@ -6,6 +6,10 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
+    public ModelContext()
+    {
+    }
+
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -660,6 +664,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24446,54 +24454,6 @@ public partial class ModelContext : DbContext
             entity
                 .HasNoKey()
                 .ToView("VIEW_VENDOR_REGISTER_DETAILS");
-
-            entity.Property(e => e.Bpo)
-                .HasMaxLength(310)
-                .IsUnicode(false)
-                .HasColumnName("BPO");
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.Consignee)
-                .HasMaxLength(378)
-                .IsUnicode(false)
-                .HasColumnName("CONSIGNEE");
-            entity.Property(e => e.ConsigneeCd)
-                .HasPrecision(8)
-                .HasColumnName("CONSIGNEE_CD");
-            entity.Property(e => e.CumQtyPrevOffered)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_OFFERED");
-            entity.Property(e => e.CumQtyPrevPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_PASSED");
-            entity.Property(e => e.DelvDate)
-                .HasColumnType("DATE")
-                .HasColumnName("DELV_DATE");
-            entity.Property(e => e.ItemDescPo)
-                .HasMaxLength(400)
-                .IsUnicode(false)
-                .HasColumnName("ITEM_DESC_PO");
-            entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(6)
-                .HasColumnName("ITEM_SRNO_PO");
-            entity.Property(e => e.QtyDue)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_DUE");
-            entity.Property(e => e.QtyOrdered)
-                .HasColumnType("NUMBER(12,4)")
-                .HasColumnName("QTY_ORDERED");
-            entity.Property(e => e.QtyPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_PASSED");
-            entity.Property(e => e.QtyRejected)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_REJECTED");
-            entity.Property(e => e.QtyToInsp)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_TO_INSP");
         });
 
         modelBuilder.Entity<ViewVoucherList>(entity =>
