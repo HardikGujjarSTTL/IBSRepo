@@ -83,14 +83,16 @@ namespace IBS.Repositories.Inspection_Billing
 
             Date = Date.ToString() == "" ? string.Empty : Date.ToString();
 
+            DateTime p_date = Convert.ToDateTime(Date);
+
             OracleParameter[] par = new OracleParameter[6];
-            par[0] = new OracleParameter("P_DATE", OracleDbType.Varchar2, Date, ParameterDirection.Input);
+            par[0] = new OracleParameter("P_DATE", OracleDbType.Date, p_date, ParameterDirection.Input);
             par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
             par[4] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
             par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE", par, 1);
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_NEW", par, 1);
             DataTable dt = ds.Tables[0];
             List<CallMarkedOnlineModel> list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
             {
@@ -335,8 +337,8 @@ namespace IBS.Repositories.Inspection_Billing
 
                     _data.Remarks = model.REMARKS;
                     _data.IeCd = IE;
-                    _data.ClusterCode = Convert.ToByte(model.IE_NAME);
-                    _data.CoCd = Convert.ToByte(Co.Value);
+                    _data.ClusterCode = Convert.ToInt32(model.IE_NAME);
+                    _data.CoCd = Convert.ToInt32(Co.Value);
                     _data.UserId = uModel.UserName;
                     _data.DepartmentCode = model.DEPT_DROPDOWN;
                     _data.Datetime = DateTime.Now;
@@ -349,7 +351,7 @@ namespace IBS.Repositories.Inspection_Billing
                         T100VenderCluster insObj = new T100VenderCluster();
                         insObj.VendorCode = Convert.ToInt32(model.MFG_CD);
                         insObj.DepartmentName = model.DEPT_DROPDOWN;
-                        insObj.ClusterCode = Convert.ToByte(model.IE_NAME);
+                        insObj.ClusterCode = Convert.ToInt32(model.IE_NAME);
                         insObj.UserId = uModel.UserName;
                         insObj.Datetime = DateTime.Now;
                         insObj.Createdby = uModel.UserID;

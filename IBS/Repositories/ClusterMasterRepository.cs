@@ -37,7 +37,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<ClusterMasterModel> GetClusterMasterList(DTParameters dtParameters)
+        public DTResult<ClusterMasterModel> GetClusterMasterList(DTParameters dtParameters , string Region)
         {
 
             DTResult<ClusterMasterModel> dTResult = new() { draw = 0 };
@@ -65,7 +65,7 @@ namespace IBS.Repositories
             string DepartmentName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["DepartmentName"]) ? Convert.ToString(dtParameters.AdditionalValues["DepartmentName"]) : "";
 
             var lstQuery = (from t99 in context.T99ClusterMasters
-                            where t99.Isdeleted != 1
+                            where t99.Isdeleted != 1 && t99.RegionCode == Region
                             && ((ClusterCode != null) ? t99.ClusterCode == ClusterCode : true)
                             && (!string.IsNullOrEmpty(ClusterName) ? t99.ClusterName.ToLower().Contains(ClusterName.ToLower()) : true)
                             && (!string.IsNullOrEmpty(GeographicalArea) ? t99.GeographicalPartition.ToLower().Contains(GeographicalArea.ToLower()) : true)
