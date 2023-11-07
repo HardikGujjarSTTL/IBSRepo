@@ -262,7 +262,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-
+                            
                             var CaseNo = data.CaseNo;
                             var CallRdt = data.CallRecDt;
                             var CallSno = data.CallSNO;
@@ -285,7 +285,16 @@
                         }
                     },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                drawCallback: function (settings) {
+                    var api = this.api();
+                    var recordsTotal = api.page.info().recordsTotal;
+
+                    if (recordsTotal === 0) {
+                        // Data count is zero, you can show a message or perform an action here.
+                        alert("No Bill Pending!!");
+                    } 
+                }
             });
         }
         function Modify() {

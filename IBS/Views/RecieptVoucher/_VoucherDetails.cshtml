@@ -35,7 +35,7 @@
             @Html.DropDownList("ddlAccountCode", Common.GetAccountCode(Role_Cd), new { @onchange = "onchangeAccountCode();" })
         </div>
         <div class="col-md-3 mb-3" id="dvCaseNo" style="display: none;">
-            <label for="txtCaseNo">Case No</label> <br />
+        <label for="txtCaseNo">Case No <i class="text-danger">*</i></label> <br />
             <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
         </div>
         <div class="col-md-3 mb-3">

@@ -11,6 +11,7 @@
         public string Email { get; set; }
         public int IeCd { get; set; }
         public int RoleId { get; set; }
+        public string RoleName { get; set; }
         public string Organisation { get; set; }
         public string OrgnType { get; set; }
     }
