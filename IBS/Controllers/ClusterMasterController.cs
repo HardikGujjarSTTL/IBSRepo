@@ -37,7 +37,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<ClusterMasterModel> dTResult = clusterMasterRepository.GetClusterMasterList(dtParameters);
+            DTResult<ClusterMasterModel> dTResult = clusterMasterRepository.GetClusterMasterList(dtParameters, Region);
             return Json(dTResult);
         }
 
