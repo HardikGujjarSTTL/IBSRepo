@@ -21,7 +21,7 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Call Date</label>
-                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;">
                 </div>
             </div>
             <div class="col-md-2 mb-3">
@@ -39,7 +39,7 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">PO Date</label>
-                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                    <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;">
                 </div>
             </div>
 
@@ -109,7 +109,7 @@
 
     <script type="text/javascript">
         $(function () {
-            setDefaultDate();
+            //setDefaultDate();
             //InitializeDatatable();
 
             //$("#CallRecvDt").val(moment($("#CallRecvDt").val()).format("DD/MM/YYYY"));
@@ -343,6 +343,10 @@
                             ShowHideMsgNew(false, "Please Your Call are Register in Offline.");
                         }
                     }
+                    else {
+                        ShowHideMsgNew(response.status, response.responseText);
+                    }
+                    
                 });
             }
         });

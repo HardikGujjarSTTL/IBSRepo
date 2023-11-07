@@ -94,5 +94,44 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+        [HttpGet("Get_Call_Status_List", Name = "Get_Call_Status_List")]
+        public IActionResult Get_Call_Status_List()
+        {
+            try
+            {
+                var statusList = callRepository.Get_Call_Status_List();
+                if (statusList.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = statusList
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        data = statusList
+                    };
+                    return Ok(response);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "Get_Call_Status_List", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),                    
+                };
+                return Ok(response);
+            }
+        }
     }
 }

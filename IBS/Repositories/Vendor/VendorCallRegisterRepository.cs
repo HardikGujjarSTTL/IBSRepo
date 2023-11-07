@@ -1,34 +1,16 @@
-﻿using IBS.Controllers;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
-using NuGet.Packaging;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Data.Common;
 using System.Dynamic;
-using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Net.NetworkInformation;
-using System.Reflection.Emit;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
 using System.Xml;
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace IBS.Repositories.Vendor
 {
@@ -361,9 +343,9 @@ namespace IBS.Repositories.Vendor
         public DTResult<VenderCallRegisterModel> GetVenderListM(DTParameters dtParameters, string UserName)
         {
             DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
-            //IQueryable<VenderCallRegisterModel>? query = null;
+            IQueryable<VenderCallRegisterModel>? query = null;
 
-            List<VenderCallRegisterModel>? query = null;
+            //List<VenderCallRegisterModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
 
@@ -393,46 +375,56 @@ namespace IBS.Repositories.Vendor
                               where a.CaseNo == CaseNo && a.CallRecvDt == Convert.ToDateTime(CallRecvDt) && a.CallSno == Convert.ToInt16(CallSno)
                               select a.ItemSrnoPo).FirstOrDefault();
 
-            query = (from t15 in context.T15PoDetails
-                    join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
-                    join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
-                    join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
-                    join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
-                     join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
-                    from bpo in bpoGroup.DefaultIfEmpty()
-                     join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
-                    from city in cityGroup.DefaultIfEmpty()
-                     where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t18.CallSno == Convert.ToInt32(CallSno) && t18.ItemSrnoPo == ItemSrnoPo
-                     select new VenderCallRegisterModel
-                    {
-                        Status = "Available",
-                        ItemSrnoPo = t18.ItemSrnoPo,
-                        ItemDescPo = t18.ItemDescPo,
-                        QtyOrdered = t18.QtyOrdered,
-                        CumQtyPrevOffered = t18.CumQtyPrevOffered,
-                        CumQtyPrevPassed = t18.CumQtyPrevPassed,
-                        QtyToInsp = t18.QtyToInsp,
-                        QtyPassed = t18.QtyPassed,
-                        QtyRejected = t18.QtyRejected,
-                        QtyDue = t18.QtyDue,
-                        Consignee = t06.ConsigneeCd + "-" +
-                                    t06.ConsigneeDesig + "/" +
-                                    t06.ConsigneeDept + "/" +
-                                    t06.ConsigneeFirm + "/" +
-                                    t06.ConsigneeAdd1 + "/" +
-                                    t03.Location + " : " + t03.City,
-                        DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
-                        CaseNo = t18.CaseNo,
-                        CallRecvDt = t18.CallRecvDt,
-                        CallSno = t18.CallSno,
-                        Bpo = bpo.BpoCd + '-' +
-                                bpo.BpoName + '/' +
-                                bpo.BpoRly + '/' +
-                                bpo.BpoAdd + '/' +
-                                city.Location + '/' +
-                                city.City,
-                        ConsigneeCd = t06.ConsigneeCd
-                    }).ToList();
+            //query = (from t15 in context.T15PoDetails
+            //        join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+            //        join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+            //        join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+            //        join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+            //         join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+            //        from bpo in bpoGroup.DefaultIfEmpty()
+            //         join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+            //        from city in cityGroup.DefaultIfEmpty()
+            //         where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(CallRecvDt) && t18.CallSno == Convert.ToInt32(CallSno) && t18.ItemSrnoPo == ItemSrnoPo
+            //         select new VenderCallRegisterModel
+            //        {
+            //            Status = "Available",
+            //            ItemSrnoPo = t18.ItemSrnoPo,
+            //            ItemDescPo = t18.ItemDescPo,
+            //            QtyOrdered = t18.QtyOrdered,
+            //            CumQtyPrevOffered = t18.CumQtyPrevOffered,
+            //            CumQtyPrevPassed = t18.CumQtyPrevPassed,
+            //            QtyToInsp = t18.QtyToInsp,
+            //            QtyPassed = t18.QtyPassed,
+            //            QtyRejected = t18.QtyRejected,
+            //            QtyDue = t18.QtyDue,
+            //            Consignee = t06.ConsigneeCd + "-" +
+            //                        t06.ConsigneeDesig + "/" +
+            //                        t06.ConsigneeDept + "/" +
+            //                        t06.ConsigneeFirm + "/" +
+            //                        t06.ConsigneeAdd1 + "/" +
+            //                        t03.Location + " : " + t03.City,
+            //            DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+            //            CaseNo = t18.CaseNo,
+            //            CallRecvDt = t18.CallRecvDt,
+            //            CallSno = t18.CallSno,
+            //            Bpo = bpo.BpoCd + '-' +
+            //                    bpo.BpoName + '/' +
+            //                    bpo.BpoRly + '/' +
+            //                    bpo.BpoAdd + '/' +
+            //                    city.Location + '/' +
+            //                    city.City,
+            //            ConsigneeCd = t06.ConsigneeCd
+            //        }).ToList();
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno, ParameterDirection.Input);
+
+            par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+            DataTable dt = ds.Tables[0];
 
             //query = (from t15 in context.T15PoDetails
             //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
@@ -463,76 +455,134 @@ namespace IBS.Repositories.Vendor
             //             CallSno = t18.CallSno
             //         }).ToList();
 
-            var result = query.ToList();
+            VendrorCallDetailsModel model = new();
+            List<VenderCallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<VenderCallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            query = list.AsQueryable();
 
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
 
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => w.Status.Contains(searchBy) || w.Consignee.Contains(searchBy)).ToList();
-
-            dTResult.recordsFiltered = query.Count();
-
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+
+            //var result = query.ToList();
+            //dTResult.recordsTotal = query.Count();
+
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => w.Status.Contains(searchBy) || w.Consignee.Contains(searchBy)).ToList();
+
+            //dTResult.recordsFiltered = query.Count();
+
+            //dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            //dTResult.draw = dtParameters.Draw;
+
+            //return dTResult;
         }
 
         public DTResult<VenderCallRegisterModel> GetVenderListA(DTParameters dtParameters, string UserName)
         {
             DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
-            //IQueryable<VenderCallRegisterModel>? query = null;
+            IQueryable<VenderCallRegisterModel>? query = null;
 
-            List<VenderCallRegisterModel>? query = null;
+            //List<VenderCallRegisterModel>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
 
             string CaseNo = "";
+            string CallRecvDt = "";
+            string CallSno = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
             {
                 CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
             }
             CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
 
-            query = (from l in context.ViewVendorRegisterDetails
-                     where l.CaseNo == CaseNo
-                     orderby l.ItemSrnoPo
-                     select new VenderCallRegisterModel
-                     {
-                         Status = "Marked",
-                         ItemSrnoPo = l.ItemSrnoPo,
-                         ItemDescPo = l.ItemDescPo,
-                         QtyOrdered = l.QtyOrdered,
-                         CumQtyPrevOffered = l.CumQtyPrevOffered,
-                         CumQtyPrevPassed = l.CumQtyPrevPassed,
-                         QtyToInsp = l.QtyToInsp,
-                         QtyPassed = l.QtyPassed,
-                         QtyRejected = l.QtyRejected,
-                         QtyDue = l.QtyDue,
-                         Consignee = l.Consignee,
-                         DelvDt = l.DelvDate,
-                         Bpo = l.Bpo,
-                         CaseNo = CaseNo
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]))
+            {
+                CallRecvDt = Convert.ToString(dtParameters.AdditionalValues["CallRecvDt"]);
+            }
 
-                     }).ToList();
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]))
+            {
+                CallSno = Convert.ToString(dtParameters.AdditionalValues["CallSno"]);
+            }
 
-            dTResult.recordsTotal = query.Count();
+            CaseNo = CaseNo.ToString() == "" ? string.Empty : CaseNo.ToString();
+            //DateTime? _CallRecvDt = CallRecvDt == "" ? null : DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null);
+            CallSno = CallSno.ToString() == "" ? string.Empty : CallSno.ToString();
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => w.Status.Contains(searchBy) || w.Consignee.Contains(searchBy)).ToList();
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno, ParameterDirection.Input);
 
-            dTResult.recordsFiltered = query.Count();
+            par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+            DataTable dt = ds.Tables[0];
+            VendrorCallDetailsModel model = new();
+            List<VenderCallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<VenderCallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+
+            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
+
             dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+            //query = (from l in context.ViewVendorRegisterDetails
+            //         where l.CaseNo == CaseNo
+            //         orderby l.ItemSrnoPo
+            //         select new VenderCallRegisterModel
+            //         {
+            //             Status = "Marked",
+            //             ItemSrnoPo = l.ItemSrnoPo,
+            //             ItemDescPo = l.ItemDescPo,
+            //             QtyOrdered = l.QtyOrdered,
+            //             CumQtyPrevOffered = l.CumQtyPrevOffered,
+            //             CumQtyPrevPassed = l.CumQtyPrevPassed,
+            //             QtyToInsp = l.QtyToInsp,
+            //             QtyPassed = l.QtyPassed,
+            //             QtyRejected = l.QtyRejected,
+            //             QtyDue = l.QtyDue,
+            //             Consignee = l.Consignee,
+            //             DelvDt = l.DelvDate,
+            //             Bpo = l.Bpo,
+            //             CaseNo = CaseNo
+
+            //         }).ToList();
+
+            //dTResult.recordsTotal = query.Count();
+
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => w.Status.Contains(searchBy) || w.Consignee.Contains(searchBy)).ToList();
+
+            //dTResult.recordsFiltered = query.Count();
+
+            ////dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.data = query.Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            //dTResult.draw = dtParameters.Draw;
+
+            //return dTResult;
         }
 
         public int DetailsInsertUpdate(VenderCallRegisterModel model)
@@ -785,46 +835,75 @@ namespace IBS.Repositories.Vendor
                               where a.CaseNo == model.CaseNo && a.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && a.CallSno == Convert.ToInt16(model.CallSno)
                               select a.ItemSrnoPo).FirstOrDefault();
 
-            query = (from t15 in context.T15PoDetails
-                     join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
-                     join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
-                     join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
-                     join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
-                     join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
-                     from bpo in bpoGroup.DefaultIfEmpty()
-                     join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
-                     from city in cityGroup.DefaultIfEmpty()
-                     where t15.CaseNo == model.CaseNo && t18.CallRecvDt == model.CallRecvDt && t18.CallSno == model.CallSno && t18.ItemSrnoPo == ItemSrnoPo
-                     select new VenderCallRegisterModel
-                     {
-                         Status = "Available",
-                         ItemSrnoPo = t18.ItemSrnoPo,
-                         ItemDescPo = t18.ItemDescPo,
-                         QtyOrdered = t18.QtyOrdered,
-                         CumQtyPrevOffered = t18.CumQtyPrevOffered,
-                         CumQtyPrevPassed = t18.CumQtyPrevPassed,
-                         QtyToInsp = t18.QtyToInsp,
-                         QtyPassed = t18.QtyPassed,
-                         QtyRejected = t18.QtyRejected,
-                         QtyDue = t18.QtyDue,
-                         Consignee = t06.ConsigneeCd + "-" +
-                                    t06.ConsigneeDesig + "/" +
-                                    t06.ConsigneeDept + "/" +
-                                    t06.ConsigneeFirm + "/" +
-                                    t06.ConsigneeAdd1 + "/" +
-                                    t03.Location + " : " + t03.City,
-                         DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
-                         CaseNo = t18.CaseNo,
-                         CallRecvDt = t18.CallRecvDt,
-                         CallSno = t18.CallSno,
-                         Bpo = bpo.BpoCd + '-' +
-                                bpo.BpoName + '/' +
-                                bpo.BpoRly + '/' +
-                                bpo.BpoAdd + '/' +
-                                city.Location + '/' +
-                                city.City,
-                         ConsigneeCd = t06.ConsigneeCd
-                     }).ToList();
+            //query = (from t15 in context.T15PoDetails
+            //         join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+            //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+            //         join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+            //         join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+            //         join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+            //         from bpo in bpoGroup.DefaultIfEmpty()
+            //         join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+            //         from city in cityGroup.DefaultIfEmpty()
+            //         where t15.CaseNo == model.CaseNo && t18.CallRecvDt == model.CallRecvDt && t18.CallSno == model.CallSno && t18.ItemSrnoPo == ItemSrnoPo
+            //         select new VenderCallRegisterModel
+            //         {
+            //             Status = "Available",
+            //             ItemSrnoPo = t18.ItemSrnoPo,
+            //             ItemDescPo = t18.ItemDescPo,
+            //             QtyOrdered = t18.QtyOrdered,
+            //             CumQtyPrevOffered = t18.CumQtyPrevOffered,
+            //             CumQtyPrevPassed = t18.CumQtyPrevPassed,
+            //             QtyToInsp = t18.QtyToInsp,
+            //             QtyPassed = t18.QtyPassed,
+            //             QtyRejected = t18.QtyRejected,
+            //             QtyDue = t18.QtyDue,
+            //             Consignee = t06.ConsigneeCd + "-" +
+            //                        t06.ConsigneeDesig + "/" +
+            //                        t06.ConsigneeDept + "/" +
+            //                        t06.ConsigneeFirm + "/" +
+            //                        t06.ConsigneeAdd1 + "/" +
+            //                        t03.Location + " : " + t03.City,
+            //             DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+            //             CaseNo = t18.CaseNo,
+            //             CallRecvDt = t18.CallRecvDt,
+            //             CallSno = t18.CallSno,
+            //             Bpo = bpo.BpoCd + '-' +
+            //                    bpo.BpoName + '/' +
+            //                    bpo.BpoRly + '/' +
+            //                    bpo.BpoAdd + '/' +
+            //                    city.Location + '/' +
+            //                    city.City,
+            //             ConsigneeCd = t06.ConsigneeCd
+            //         }).ToList();
+
+            query = (from t18 in context.T18CallDetails
+                        join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
+                        join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                        where t18.CaseNo == model.CaseNo && t18.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && t18.CallSno == Convert.ToInt16(model.CallSno)
+                        select new VenderCallRegisterModel
+                        {
+                            ItemSrnoPo = t18.ItemSrnoPo,
+                            ItemDescPo = t18.ItemDescPo,
+                            QtyOrdered = t18.QtyOrdered,
+                            CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                            CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                            QtyToInsp = t18.QtyToInsp,
+                            QtyPassed = t18.QtyPassed,
+                            QtyRejected = t18.QtyRejected,
+                            QtyDue = t18.QtyDue,
+                            Consignee = t06.ConsigneeCd + "-" +
+                                                     t06.ConsigneeDesig + "/" +
+                                                     t06.ConsigneeDept + "/" +
+                                                     t06.ConsigneeFirm + "/" +
+                                                     t06.ConsigneeAdd1 + "/" +
+                                                     t03.Location + " : " + t03.City,
+                            CaseNo = t18.CaseNo,
+                            CallRecvDt = t18.CallRecvDt,
+                            CallSno = t18.CallSno
+                        }).ToList();
+
+
+
             //query = (from t15 in context.T15PoDetails
             //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
             //         join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
@@ -1052,47 +1131,67 @@ namespace IBS.Repositories.Vendor
                 //                               (string.IsNullOrEmpty(t03.Location) ? "" : t03.Location + " : " + t03.City),
                 //                   DelvDate = t15.ExtDelvDt.HasValue ? t15.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01-01-2001"
                 //               }).ToList();
-                var query = (from t15 in context.T15PoDetails
-                         join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
-                         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
-                         join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
-                         join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
-                         join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
-                         from bpo in bpoGroup.DefaultIfEmpty()
-                         join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
-                         from city in cityGroup.DefaultIfEmpty()
-                         where t15.CaseNo == model.CaseNo
-                         //&& t18.ItemSrnoPo == ItemSrnoPo
-                         select new VenderCallRegisterModel
-                         {
-                             Status = "Available",
-                             ItemSrnoPo = t18.ItemSrnoPo,
-                             ItemDescPo = t18.ItemDescPo,
-                             QtyOrdered = t18.QtyOrdered,
-                             CumQtyPrevOffered = t18.CumQtyPrevOffered,
-                             CumQtyPrevPassed = t18.CumQtyPrevPassed,
-                             QtyToInsp = t18.QtyToInsp,
-                             QtyPassed = t18.QtyPassed,
-                             QtyRejected = t18.QtyRejected,
-                             QtyDue = t18.QtyDue,
-                             Consignee = t06.ConsigneeCd + "-" +
-                                        t06.ConsigneeDesig + "/" +
-                                        t06.ConsigneeDept + "/" +
-                                        t06.ConsigneeFirm + "/" +
-                                        t06.ConsigneeAdd1 + "/" +
-                                        t03.Location + " : " + t03.City,
-                             DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
-                             CaseNo = t18.CaseNo,
-                             CallRecvDt = t18.CallRecvDt,
-                             CallSno = t18.CallSno,
-                             Bpo = bpo.BpoCd + '-' +
-                                    bpo.BpoName + '/' +
-                                    bpo.BpoRly + '/' +
-                                    bpo.BpoAdd + '/' +
-                                    city.Location + '/' +
-                                    city.City,
-                             ConsigneeCd = t06.ConsigneeCd
-                         }).ToList();
+
+
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, model.CaseNo, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(model.CallRecvDt), ParameterDirection.Input);
+                par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, model.CallSno, ParameterDirection.Input);
+
+                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
+                DataTable dt = ds.Tables[0];
+                
+                List<VenderCallRegisterModel> list = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    list = JsonConvert.DeserializeObject<List<VenderCallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+                var query = list.AsQueryable();
+
+                //var query = (from t15 in context.T15PoDetails
+                //         join t06 in context.T06Consignees on t15.ConsigneeCd equals t06.ConsigneeCd
+                //         join t18 in context.T18CallDetails on t15.CaseNo equals t18.CaseNo
+                //         join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                //         join t14 in context.T14PoBpos on new { t15.CaseNo, ConsigneeCd = t15.ConsigneeCd ?? 0 } equals new { t14.CaseNo, t14.ConsigneeCd }
+                //         join b in context.T12BillPayingOfficers on t14.BpoCd equals b.BpoCd into bpoGroup
+                //         from bpo in bpoGroup.DefaultIfEmpty()
+                //         join c in context.T03Cities on bpo.BpoCityCd equals c.CityCd into cityGroup
+                //         from city in cityGroup.DefaultIfEmpty()
+                //         where t15.CaseNo == model.CaseNo
+                //         //&& t18.ItemSrnoPo == ItemSrnoPo
+                //         select new VenderCallRegisterModel
+                //         {
+                //             Status = "Available",
+                //             ItemSrnoPo = t18.ItemSrnoPo,
+                //             ItemDescPo = t18.ItemDescPo,
+                //             QtyOrdered = t18.QtyOrdered,
+                //             CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                //             CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                //             QtyToInsp = t18.QtyToInsp,
+                //             QtyPassed = t18.QtyPassed,
+                //             QtyRejected = t18.QtyRejected,
+                //             QtyDue = t18.QtyDue,
+                //             Consignee = t06.ConsigneeCd + "-" +
+                //                        t06.ConsigneeDesig + "/" +
+                //                        t06.ConsigneeDept + "/" +
+                //                        t06.ConsigneeFirm + "/" +
+                //                        t06.ConsigneeAdd1 + "/" +
+                //                        t03.Location + " : " + t03.City,
+                //             DelvDt = Convert.ToDateTime(t15.ExtDelvDt),
+                //             CaseNo = t18.CaseNo,
+                //             CallRecvDt = t18.CallRecvDt,
+                //             CallSno = t18.CallSno,
+                //             Bpo = bpo.BpoCd + '-' +
+                //                    bpo.BpoName + '/' +
+                //                    bpo.BpoRly + '/' +
+                //                    bpo.BpoAdd + '/' +
+                //                    city.Location + '/' +
+                //                    city.City,
+                //             ConsigneeCd = t06.ConsigneeCd
+                //         }).ToList();
 
 
                 //var combinedQuery = query11.Union(query22).OrderByDescending(item => item.Status).ThenBy(item => item.ItemSrnoPo);
@@ -2091,22 +2190,35 @@ namespace IBS.Repositories.Vendor
 
         public VenderCallRegisterModel FindByItemID(VenderCallRegisterModel model)
         {
-            var CDetails = context.ViewVendorRegisterDetails.Where(x => x.CaseNo == model.CaseNo).FirstOrDefault();
-            if (CDetails != null)
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, model.CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(model.CallRecvDt), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, model.CallSno, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_ItemSrNoPo", OracleDbType.Int32, model.ItemSrnoPo, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS_EDIT", par, 1);
+            DataTable dt = ds.Tables[0];
+            if(dt != null)
             {
-                model.CaseNo = CDetails.CaseNo;
-                model.ItemSrnoPo = CDetails.ItemSrnoPo;
-                model.ItemDescPo = CDetails.ItemDescPo;
-                model.QtyOrdered = CDetails.QtyOrdered;
-                model.QtyPassed = CDetails.QtyPassed;
-                model.QtyToInsp = CDetails.QtyToInsp;
-                model.CumQtyPrevOffered = CDetails.CumQtyPrevOffered;
-                model.CumQtyPrevPassed = CDetails.CumQtyPrevPassed;
-                model.QtyRejected = CDetails.QtyRejected;
-                model.QtyDue = CDetails.QtyDue;
-                model.Consignee = CDetails.Consignee;
-                model.ConsigneeCd = CDetails.ConsigneeCd;
+                if(dt.Rows.Count >= 1)
+                {
+                    model.CaseNo = Convert.ToString(ds.Tables[0].Rows[0]["CaseNo"]);
+                    model.ItemSrnoPo = Convert.ToInt32(ds.Tables[0].Rows[0]["ItemSrNoPo"]);
+                    model.ItemDescPo = Convert.ToString(ds.Tables[0].Rows[0]["ItemDescPo"]);
+                    model.QtyOrdered = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyOrdered"]);
+                    model.QtyPassed = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyPassed"]);
+                    model.QtyToInsp = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyToInsp"]);
+                    model.CumQtyPrevOffered = Convert.ToDecimal(ds.Tables[0].Rows[0]["CumQtyPrevOffered"]);
+                    model.CumQtyPrevPassed = Convert.ToDecimal(ds.Tables[0].Rows[0]["CumQtyPrevPassed"]);
+                    model.QtyRejected = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyRejected"]);
+                    model.QtyDue = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyDue"]);
+                    model.Consignee  = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
+                    model.ConsigneeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["ConsigneeCd"]);
+                }
+                
             }
+
             return model;
         }
 

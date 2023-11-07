@@ -34,6 +34,7 @@ namespace IBSAPI.Repositories
                              Region = Convert.ToString(GetRegion(u.Region)),
                              userType = r != null ? Convert.ToString(r.Rolename) : string.Empty,
                              RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
+                             RoleName = r != null ? Convert.ToString(r.Rolename) : string.Empty,
                              OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
                              Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
                              IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0
@@ -45,7 +46,7 @@ namespace IBSAPI.Repositories
 
         public UserModel FindByUsernameOrEmail(string UserName)
         {
-            UserModel userModel = (from u in context.T02Users 
+            UserModel userModel = (from u in context.T02Users
                                    where u.UserId.Trim() == UserName.Trim()
                                    select new UserModel
                                    {
@@ -86,6 +87,6 @@ namespace IBSAPI.Repositories
                 }
             }
             return RetRegion;
-        }
+        }       
     }
 }

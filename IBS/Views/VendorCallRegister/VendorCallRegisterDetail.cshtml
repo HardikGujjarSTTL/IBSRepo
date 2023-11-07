@@ -189,16 +189,16 @@
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus" value="F">
+                <div class="company-checkbox">
+                    <div class="remember">
+                        <div class="remecheckbox">
+                            <input type="checkbox" class="input" name="IsFinalizedStatus" id="IsFinalizedStatus" asp-for="IsFinalizedStatus" value="F">
                             <span style="color:DarkMagenta"><b>Is Urgency</b></span>
 
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
         <div class="row my-0">
             <div class="col-md-6 mb-3">
@@ -571,7 +571,7 @@
                     $("#btnDelete").show();
                 }
 
-                InitializeDatatableM();
+                InitializeDatatable();
             }
 
             $("#ItemRdso_Y").change(function () {
@@ -660,6 +660,95 @@
             window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
 
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+
+            var IsValid = true;
+
+            if (CaseNo == null || (CallRecvDt == "Invalid date" || CallRecvDt == null) || (CallSno == "null" || CallSno == null || CallSno == "")) {
+                ShowHideMsgNew(false, "Case Not Registered!!!");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                ordering: false,
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableListM", "VendorCallRegister")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "CallRecvDt": CallRecvDt,
+                            "CallSno": CallSno
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var _ItemSrnoPo = data.ItemSrnoPo;
+                            var html = "";
+                            if ($("#ActionType").val() == "M" || $("#ActionType").val() == "D") {
+                                html = "";
+                            }
+                            else {
+                                html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                                html += '</div>';
+                            }
+                            return html;
+                        }
+                    },
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Status" },
+                    { data: "ItemDescPo" },
+                    { data: "Consignee" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    //{ data: "DelvDate" },
+                    {
+                        data: "DelvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Bpo" },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
         function InitializeDatatableM() {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
@@ -745,6 +834,9 @@
 
         function InitializeDatatableA() {
             var CaseNo = $("#CaseNo").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
+
             var IsValid = true;
             if (CaseNo == null) {
                 ShowHideMsgNew(false, "Case Not Registered!!!");
@@ -770,7 +862,9 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            "CaseNo": CaseNo
+                            "CaseNo": CaseNo,
+                            "CallRecvDt": CallRecvDt,
+                            "CallSno": CallSno
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -821,12 +915,16 @@
         }
 
         function OpenEditCallDetailsModal(ItemSrnoPo) {
+
             $("#ItemSrnoPo").val(ItemSrnoPo);
             event.preventDefault();
             $('select').prop('disabled', false);
-            var formData = $("#frmDetails").serialize();
+            var CaseNo = $('#CaseNo').val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var CallSno = $("#CallSno").val();
 
-            $.post("@Url.Action("EditListDetails", "VendorCallRegister")", formData, function (response) {
+            let myObject = { CaseNo, CallRecvDt, CallSno, ItemSrnoPo };
+            $.post("@Url.Action("EditListDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                 if (response != null) {
                     $("#EditCallDetailsModal").html("");
                     $("#EditCallDetailsModal").html(response);
@@ -834,6 +932,16 @@
                 }
 
             });
+
+            //var formData = $("#frmDetails").serialize();
+            //$.post("@Url.Action("EditListDetails", "VendorCallRegister")", formData, function (response) {
+            //    if (response != null) {
+            //        $("#EditCallDetailsModal").html("");
+            //        $("#EditCallDetailsModal").html(response);
+            //        $("#EditCallDetailsModal").modal('show');
+            //    }
+
+            //});
         }
 
         function UpdateCallDetails() {
@@ -873,6 +981,12 @@
                 return;
             }
 
+            if (QtyToInsp > QtyOrdered) {
+                ShowHideMsgNew(false, "Qty Off Now is not more then Qty. Ord.");
+                $("#QtyToInsp").val("0");
+                return;
+            }
+
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
@@ -882,7 +996,7 @@
                 if (response.status) {
                     $("#EditCallDetailsModal").modal('hide');
                     ShowHideMsgNew(response.status, response.responseText);
-                    InitializeDatatableM();
+                    InitializeDatatable();
                 }
             });
 
@@ -1123,7 +1237,7 @@
                     $.get("@Url.Action("GetItemDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                         if (response.status) {
                             if (response.responseText == "0") {
-                                ShowHideMsgNew(false, "Please add Item Details Qty Offered Now.");
+                                ShowHideMsgNew(false, "Please add minimun 1 Item Details Qty Offered Now.");
                             }
                             else {
                                 //event.preventDefault();
@@ -1263,12 +1377,13 @@
             let myObject = { CaseNo, CallRecvDt, CallSno };
             $.get("@Url.Action("GetItemDetails", "VendorCallRegister")", $.param(myObject), function (response) {
                 if (response.status) {
-                    if (response.responseText == "0") {
-                        InitializeDatatableA();
-                    }
-                    else {
-                        InitializeDatatableM();
-                    }
+                    InitializeDatatable();
+                    //if (response.responseText == "0") {
+                    //    InitializeDatatableA();
+                    //}
+                    //else {
+                    //    InitializeDatatableM();
+                    //}
                 }
             });
         }
