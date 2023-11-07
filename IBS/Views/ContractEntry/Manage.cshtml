@@ -36,22 +36,22 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Client Name</label>
-                        @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTNAME" })
                         <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Client Type</label>
-                        @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTTYPE" })
                         <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Time Period From.</label>
-                        <input type="text" class="input datepicker" asp-for="TPFROM" readonly="true" id="FromDate" required>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" readonly="true" required>
                         <span asp-validation-for="TPFROM" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">To</label>
-                        <input type="text" class="input datepicker" asp-for="TPTO" readonly="true" id="ToDate" required>
+                        <input type="text" class="input datepicker" asp-for="TPTO" readonly="true" required>
                         <span asp-validation-for="TPTO" class="text-danger"></span>
                     </div>
                     <div class="row mb-0">
