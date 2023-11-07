@@ -68,36 +68,44 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult Manage(string CaseNo, string CallRecvDt, int CallSno, string ActionType)
         {
             VenderCallRegisterModel model = new();
-            string myYear1 = "", myMonth1 = "", myDay1 = "";
-
-            myYear1 = CallRecvDt.ToString().Substring(6, 4);
-            myMonth1 = CallRecvDt.ToString().Substring(3, 2);
-            myDay1 = CallRecvDt.ToString().Substring(0, 2);
-
-            string calldt = myYear1 + myMonth1 + myDay1;
-            string DocID = CaseNo + "-" + calldt + "-" + CallSno;
-
-            if (ActionType == "A")
+            try
             {
-                DocID = "New Document";
-            }
-            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.CallRegistrationDoc, DocID);
-            FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
-            FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.CallRegistrationDoc).ToList();
-            FileUploaderCOI.OthersSection = false;
-            FileUploaderCOI.MaxUploaderinOthers = 5;
-            FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
-            ViewBag.CallRegistrationDoc = FileUploaderCOI;
+                string myYear1 = "", myMonth1 = "", myDay1 = "";
 
-            if (CaseNo != null && CallRecvDt != null)
-            {
-                model = callregisterRepository.FindByManageID(CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, ActionType, Region);
+                myYear1 = CallRecvDt.ToString().Substring(6, 4);
+                myMonth1 = CallRecvDt.ToString().Substring(3, 2);
+                myDay1 = CallRecvDt.ToString().Substring(0, 2);
+
+                string calldt = myYear1 + myMonth1 + myDay1;
+                string DocID = CaseNo + "-" + calldt + "-" + CallSno;
+
+                if (ActionType == "A")
+                {
+                    DocID = "New Document";
+                }
+                List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.CallRegistrationDoc, DocID);
+                FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+                FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+                FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_AdminUserUploadDoc.CallRegistrationDoc).ToList();
+                FileUploaderCOI.OthersSection = false;
+                FileUploaderCOI.MaxUploaderinOthers = 5;
+                FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+                ViewBag.CallRegistrationDoc = FileUploaderCOI;
+
+                if (CaseNo != null && CallRecvDt != null)
+                {
+                    model = callregisterRepository.FindByManageID(CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, ActionType, Region);
+                }
+                if (model.MsgStatus != null)
+                {
+                    AlertDanger(model.MsgStatus);
+                }
             }
-            if (model.MsgStatus != null)
+            catch (Exception ex)
             {
-                AlertDanger(model.MsgStatus);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "Manage", 1, GetIPAddress());
             }
+            
             return View(model);
         }
 
@@ -295,15 +303,18 @@ namespace IBS.Controllers.InspectionBilling
                             else if (check == "0")
                             {
                                 msg = "No Record Present for the Given Case No.!!! ";
+                                return Json(new { status = false, responseText = msg, code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
                             }
                             else
                             {
                                 msg = "You are not Authorised to Add The Call For Other Regions.!!! ";
+                                return Json(new { status = false, responseText = msg, code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
                             }
                         }
                         else
                         {
                             msg = "The Call Date Cannot be greater then Current Date.";
+                            return Json(new { status = false, responseText = msg, code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
                         }
                     }
                     else
@@ -341,6 +352,7 @@ namespace IBS.Controllers.InspectionBilling
                                 msg = "RITES has Suspended the Inspection against this PO. Kindly see the comments below : " + "\\n" + GetData.Remarks;
                             }
                         }
+                        return Json(new { status = false, responseText = msg, code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
                     }
                 }
                 return Json(new { status = true, responseText = "", code = CaseNo, dt = CallRecvDt, w_itemBlocked = "", Client = Client });
