@@ -13,25 +13,26 @@ namespace IBSAPI.Controllers
     {
         #region Varible
         private readonly IInspectionRepository inspectionRepository;
-        #endregion
+        #endregion        
         public InspectionController(IInspectionRepository _inspectionRepository)
         {
             inspectionRepository = _inspectionRepository;
         }
-        #region IE
+
+        #region IE Methods
         [HttpGet("Get_IE_TodayInspection", Name = "GetTodayInspection")]
         public IActionResult GetTodayInspection(int IeCd)
         {
             try
             {
-                var detail = inspectionRepository.GetToDayInspection(IeCd);
-                if (detail.Count() > 0)
+                var result = inspectionRepository.GetToDayInspection(IeCd);
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = detail
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -40,7 +41,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -62,14 +64,14 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                var detail = inspectionRepository.GetTomorrowInspection(IeCd);
-                if (detail.Count() > 0)
+                var result = inspectionRepository.GetTomorrowInspection(IeCd);
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = detail
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -78,7 +80,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -116,7 +119,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -139,13 +143,13 @@ namespace IBSAPI.Controllers
             try
             {
                 var result = inspectionRepository.GetPendingInspection(IeCd, Region, Date);
-                if (result != null)
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = result,
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -154,7 +158,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -177,13 +182,13 @@ namespace IBSAPI.Controllers
             try
             {
                 var result = inspectionRepository.GetDateWiseRecentInspection(IeCd, FromDate, ToDate);
-                if (result != null)
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = result,
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -192,7 +197,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -216,13 +222,13 @@ namespace IBSAPI.Controllers
             try
             {
                 var result = inspectionRepository.GetCompleteInspection(IeCd);
-                if (result != null)
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = result,
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -231,7 +237,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -249,7 +256,7 @@ namespace IBSAPI.Controllers
         }
         #endregion
 
-        #region Vendor
+        #region Vendor Methods
         [HttpGet("Get_Vendor_PendingInspection", Name = "Get_Vendor_PendingInspection")]
         public IActionResult Get_Vendor_PendingInspection(int Vend_Cd)
         {
@@ -259,8 +266,26 @@ namespace IBSAPI.Controllers
                 DateTime FromDate = currentDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
                 var result = inspectionRepository.Get_Vendor_PendingInspection(Vend_Cd, FromDate, currentDate);
-
-                return Ok(FromDate);
+                if (result.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        data = result
+                    };
+                    return Ok(response);
+                }
             }
             catch (Exception ex)
             {
@@ -283,13 +308,13 @@ namespace IBSAPI.Controllers
             {
                 var CurrDate = DateTime.Now;
                 var result = inspectionRepository.Get_CM_RecentInspection(Co_Cd, CurrDate);
-                if (result != null)
+                if (result.Count() > 0)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
-                        data = result,
+                        data = result
                     };
                     return Ok(response);
                 }
@@ -298,7 +323,8 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found"
+                        message = "No Data Found",
+                        data = result
                     };
                     return Ok(response);
 
@@ -316,5 +342,93 @@ namespace IBSAPI.Controllers
             }
         }
         #endregion
+
+        #region Client Methods
+        [HttpGet("Get_Client_PendingInspection", Name = "Get_Client_PendingInspection")]
+        public IActionResult Get_Client_PendingInspection(string Rly_CD, string Rly_NonType)
+        {
+            try
+            {
+                DateTime ToDate = DateTime.Now;
+                DateTime FromDate = ToDate.AddMonths(-3);
+                FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
+                var result = inspectionRepository.Get_Client_PendingInspection(Rly_CD, Rly_NonType, FromDate, ToDate);
+                if (result.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        data = result
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_Client_PendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+
+        [HttpGet("Get_Client_Region_Wise_PendingInspection", Name = "Get_Client_Region_Wise_PendingInspection")]
+        public IActionResult Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region = "")
+        {
+            try
+            {
+                DateTime ToDate = DateTime.Now;
+                DateTime FromDate = ToDate.AddMonths(-3);
+                FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
+                var result = inspectionRepository.Get_Client_Region_Wise_PendingInspection(Rly_CD, Rly_NonType, Region, FromDate, ToDate);
+                if (result.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        data = result
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_Client_Region_Wise_PendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+        #endregion
+
+
     }
 }

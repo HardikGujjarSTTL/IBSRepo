@@ -4,16 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System;
 using System.Security.Cryptography;
+using IBSAPI.Helper;
 
 namespace IBSAPI.Models
 {
     public static class Common
     {
+
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
         public const string CommonDateFormate1 = "dd/MM/yyyy";
-
+        
         public static string EncryptQueryString(this String strToEncrypt)
         {
             if (!string.IsNullOrEmpty(strToEncrypt))
@@ -80,6 +82,36 @@ namespace IBSAPI.Models
                 return Encoding.UTF8.GetString(decryptedBytes);
             }
         }
+
+
+        public static string getEncryptedText(string _dencryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
+        }
+
+        public static string getDecryptedText(string _encryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.decrypt(_encryptedText, encUniqueIdKey, encIv);
+        }
+
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -179,4 +211,6 @@ namespace IBSAPI.Models
         }
 
     }
+
+
 }

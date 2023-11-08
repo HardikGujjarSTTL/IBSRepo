@@ -92,6 +92,7 @@ namespace IBS.Repositories
             return userSessionModel;
 
         }
+
         public UserSessionModel LoginByUserPass(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
@@ -110,6 +111,7 @@ namespace IBS.Repositories
             return userSessionModel;
 
         }
+
         public UserSessionModel FindByLoginDetail(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
@@ -190,12 +192,14 @@ namespace IBS.Repositories
                 context.SaveChanges();
             }
         }
+
         public T02User FindByUsernameOrEmail(string UserName)
         {
             //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == UserName.Trim() || p.Email.Trim() == UserName.Trim());
             return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == UserName.Trim());
             //return new T02User();
         }
+
         public void ChangePassword(ResetPasswordModel resetPassword)
         {
             var user = context.T02Users.Find(resetPassword.UserId);
@@ -272,6 +276,7 @@ namespace IBS.Repositories
 
             return dTResult;
         }
+
         public bool Remove(string UserID)
         {
             var User = context.T02Users.Find(UserID);
@@ -441,6 +446,7 @@ namespace IBS.Repositories
             }
             return false;
         }
+
         public bool VerifyOTP(LoginModel model)
         {
             var objOtp = (from o in context.IbsUsersOtps
@@ -460,5 +466,4 @@ namespace IBS.Repositories
             return false;
         }
     }
-
 }

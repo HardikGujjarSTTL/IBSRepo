@@ -180,6 +180,8 @@ namespace IBS.Repositories.IE
                     join t05 in context.T05Vendors on t47.MfgCd equals t05.VendCd
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
                     where t47.IeCd == GetIeCd && t47.VisitDt == Convert.ToDateTime(PlanDt)
+                    join t17 in context.T17CallRegisters on new { t47.CaseNo, t47.CallRecvDt, t47.CallSno } equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } into t17Group
+                    from t17 in t17Group.DefaultIfEmpty()
                     orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno
                     select new DailyWorkPlanModel
                     {
@@ -189,8 +191,25 @@ namespace IBS.Repositories.IE
                         CallSno = t47.CallSno,
                         VendName = t05.VendName,
                         MfgPlace = t47.MfgPlace,
-                        MFGCity = t03.City
+                        MFGCity = t03.City,
+                        IsUrgency = (t17.Isfinalizedstatus == null || t17.Isfinalizedstatus == "") ? "N" : t17.Isfinalizedstatus
                     };
+
+            //query = from t47 in context.T47IeWorkPlans
+            //        join t05 in context.T05Vendors on t47.MfgCd equals t05.VendCd
+            //        join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+            //        where t47.IeCd == GetIeCd && t47.VisitDt == Convert.ToDateTime(PlanDt)
+            //        orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno
+            //        select new DailyWorkPlanModel
+            //        {
+            //            VisitDt = t47.VisitDt,
+            //            CaseNo = t47.CaseNo,
+            //            CallRecvDt = t47.CallRecvDt,
+            //            CallSno = t47.CallSno,
+            //            VendName = t05.VendName,
+            //            MfgPlace = t47.MfgPlace,
+            //            MFGCity = t03.City
+            //        };
 
             dTResult.recordsTotal = query.Count();
 

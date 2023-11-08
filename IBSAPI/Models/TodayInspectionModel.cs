@@ -46,6 +46,8 @@ namespace IBSAPI.Models
         public string PO_NO { get; set; }
         public string PO_DT { get; set; }
         public string Vend_Name { get; set; }
+        public string IE_Name { get; set; }
+        public string Client_Name { get; set; }
         public decimal? Qty { get; set; }
         public string Status { get; set; }
     }

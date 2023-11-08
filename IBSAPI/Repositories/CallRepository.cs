@@ -1,12 +1,16 @@
 ﻿using IBSAPI.DataAccess;
+using IBSAPI.Helper;
 using IBSAPI.Interfaces;
 using IBSAPI.Models;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace IBSAPI.Repositories
 {
     public class CallRepository : ICallRepository
     {
-
+        
         private readonly ModelContext context;
         public CallRepository(ModelContext context)
         {

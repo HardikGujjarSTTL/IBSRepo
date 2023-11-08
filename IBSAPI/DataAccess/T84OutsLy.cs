@@ -15,7 +15,7 @@ public partial class T84OutsLy
 
     public DateTime? Datetime { get; set; }
 
-    public byte? Isdeleted { get; set; }
+    public bool? Isdeleted { get; set; }
 
     public DateTime? Createddate { get; set; }
 

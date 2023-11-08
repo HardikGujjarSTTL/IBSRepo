@@ -28,4 +28,6 @@ public partial class ViewPomasterlist
     public string? RlyNonrly { get; set; }
 
     public string? MainrlyCd { get; set; }
+
+    public string? RlyCds { get; set; }
 }

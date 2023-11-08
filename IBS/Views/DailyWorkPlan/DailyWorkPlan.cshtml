@@ -130,6 +130,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Urgency Status</th>
                             <th>Visit Date</th>
                             <th>Case No.</th>
                             <th>Call Date</th>
@@ -218,8 +219,7 @@
         $(document).ready(function () {
             $("#FromDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
 
-            if($("#errcode").val() != 1)
-            {
+            if ($("#errcode").val() != 1) {
                 $("#InspWorkType_Y").attr('checked', 'checked');
                 $(".secInspectionWork").show();
                 $(".secNonInspectionWork").hide();
@@ -388,6 +388,29 @@
                         }
                     },
                     {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var IsUrgency = data.IsUrgency;
+                            var Desc = "";
+                            var html = '<div>';
+                             if (IsUrgency == "A")
+                            {
+                                Desc = "Approved";
+                            }
+                            else if (IsUrgency == "R") {
+                                Desc = "Rejected";
+                            }
+                            else
+                            {
+                                Desc = "Pending";
+                            }
+
+                            html += '<span>' + Desc + '</span>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
                         data: "VisitDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
@@ -480,6 +503,10 @@
                 $("#spnErrorNIWorkType").html("Please add Non Inspection Work Plan.");
                 IsValid = false;
             }
+            if ($("#ToDt").val() == "") {
+                $("#spnErrorToDt").html("Please add To date.");
+                IsValid = false;
+            }
             if (NIWorkType == "X") {
                 if ($("#OtherDesc").val() == "") {
                     $("#spnErrorOtherDesc").html("Please add NI Work Plan Others Desc.");
@@ -513,6 +540,10 @@
             var NIWorkType = $("#NIWorkType").val();
             if (NIWorkType == "X") {
                 $(".OtherDesc").show();
+            }
+            else
+            {
+                $(".OtherDesc").hide();
             }
         }
 
