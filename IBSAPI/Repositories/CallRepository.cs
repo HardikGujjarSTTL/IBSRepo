@@ -58,7 +58,7 @@ namespace IBSAPI.Repositories
             {
                 if (sheduleInspectionRequestModel.CaseNo != null && sheduleInspectionRequestModel.CallRecvDt != null && sheduleInspectionRequestModel.CallSno > 0)
                 {
-                    
+
                     T47IeWorkPlan obj = new T47IeWorkPlan();
                     obj.IeCd = query.IeCd;
                     obj.CoCd = Convert.ToByte(query.CoCd);
@@ -66,7 +66,7 @@ namespace IBSAPI.Repositories
                     {
                         obj.VisitDt = Convert.ToDateTime(DateTime.Now);
                     }
-                    else if(sheduleInspectionRequestModel.InspectionDay == "TM")
+                    else if (sheduleInspectionRequestModel.InspectionDay == "TM")
                     {
                         obj.VisitDt = Convert.ToDateTime(DateTime.Now.AddDays(1));
                     }
@@ -84,6 +84,20 @@ namespace IBSAPI.Repositories
                 }
             }
             return ID;
+        }
+
+        public List<CallStatusModel> Get_Call_Status_List()
+        {
+            List<CallStatusModel> lstStatus = new();
+
+            lstStatus = (from x in context.T21CallStatusCodes
+                         select new CallStatusModel
+                         {
+                             CallStatusCd = x.CallStatusCd,
+                             CallStatusDesc = x.CallStatusDesc,
+                             CallStatusColor = x.CallStatusColor,
+                         }).ToList();
+            return lstStatus;
         }
 
     }

@@ -98,7 +98,14 @@ namespace IBS.Controllers
                 int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
                 List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                 DocumentHelper.SaveFiles(Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
-                msg = "Complaint Register";
+            }
+            if (msg == "Success")
+            {
+                msg ="Accepted!";
+            }
+            else
+            {
+                return Json(new { status = false, responseText = msg });
             }
             return Json(new { status = true, responseText = msg });
         }
@@ -108,9 +115,10 @@ namespace IBS.Controllers
         public ActionResult Submit(OnlineComplaints model)
         {
             model.createdBy = UserId;
+            model.UpdatedBy = UserId;
             model.UserId = UserName.Substring(0, 8);
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);
-            return Json(new { status = true, responseText = msg, redirectToIndex = true, alertMessage = msg });
+            return Json(new { status = true, responseText = msg, redirectToIndex = true});
         }
     }
 }

@@ -28,22 +28,22 @@
                     <label id="datetimeLabel" asp-for="Registrationdt"></label>
                     <h3 class="heading3 mb-4">Consignee Details</h3>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Name</label>
+                        <label for="Reference">Name</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Name" maxlength="300" required />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Designation</label>
+                        <label for="Reference">Designation</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Designation" maxlength="300" required />
                         <span asp-validation-for="Designation" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Email</label>
+                        <label for="Reference">Email</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Email" maxlength="300" required />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Mobile No.</label>
+                        <label for="Reference">Mobile No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="MobileNO" onkeypress="return isNumber(event)" id="mobilenumber" maxlength="10" required />
                         <span asp-validation-for="MobileNO" class="text-danger"></span>
                     </div>
@@ -51,35 +51,36 @@
                 <div class="row m-3">
                     <h3 class="heading3 mb-4">Rejection Details</h3>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Book No.</label>
+                        <label for="Reference">Book No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="BKNo" maxlength="300" id="bkno" required />
                         <span asp-validation-for="BKNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Set No.</label>
+                        <label for="Reference">Set No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="SetNo" maxlength="300" id="setno" required />
                         <span asp-validation-for="SetNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="InspRegion">Inspection Region</label>
+                        <label for="InspRegion">Inspection Region</label><i class="text-danger">*</i>
                         @Html.DropDownListFor(model => model.InspRegion, new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--", new { id = "InspRegionDropdown" })
+                        <span asp-validation-for="InspRegion" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Item">Item</label>
+                        <label for="Item">Item</label><i class="text-danger">*</i>
                         <select id="Item" asp-for="Item" class="form-control" required></select>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Qty. as per IC</label>
+                        <label for="Reference">Qty. as per IC</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="QtyperIC" id="QtyperIC" maxlength="300" required />
                         <span asp-validation-for="QtyperIC" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Qty. Rejected</label>
+                        <label for="Reference">Qty. Rejected</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="QtyRejected" maxlength="300" required />
                         <span asp-validation-for="QtyRejected" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Reasons of Rejection</label>
+                        <label for="Reference">Reasons of Rejection</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="RejectionReason" maxlength="300" required />
                         <span asp-validation-for="RejectionReason" class="text-danger"></span>
                     </div>
@@ -89,23 +90,18 @@
                         <span asp-validation-for="Remarks" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Rejection Memo No.</label>
+                        <label for="Reference">Rejection Memo No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="RejMemono" maxlength="300" required />
                         <span asp-validation-for="RejMemono" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="Reference">Rejection Memo Date</label>
+                        <label for="Reference">Rejection Memo Date</label><i class="text-danger">*</i>
                         <input type="text" class="datepicker" placeholder="DD/MM/YYYY"  ASP-FOR="RejMemodate" maxlength="300" required />
-                        @*<input type="text" class="datepicker" asp-for="RejMemodate" />*@
                         <span asp-validation-for="RejMemodate" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
                     </div>
-                    @*<div class="col-md-4 mb-4">
-                    <label for="ComplaintFile">Rejection Memo Scanned File ( IN PDF ONLY) * (Not more then 1MB)</label>
-                    <input type="file" class="form-control-file" id="ComplaintFile" name="ComplaintFile" accept=".pdf" >
-                    </div>*@
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="Save();">Save</button>
                     </div>
@@ -146,7 +142,6 @@
             var setno = $("#setno").val();
             var url = '@Url.Action("GetItems", "OnlineComplaints")';
             $.ajax({
-                //url: '/OnlineComplaints/GetItems',
                 url:url,
                 type: 'GET',
                 data: { InspRegionDropdown: InspRegionDropdown, bkno: bkno, setno: setno },
@@ -170,14 +165,12 @@
             var setno = $("#setno").val();
             var url = '@Url.Action("GetItems", "OnlineComplaints")';
             $.ajax({
-               // url: '/OnlineComplaints/GetItems',
                url:url,
                 type: 'GET',
                 data: { ItemSno: ItemSno, bkno: bkno, setno: setno, InspRegionDropdown: InspRegionDropdown },
                 success: function (data) {
                     var Item = $("#Item");
                     Item.empty();
-                    debugger
                     var items = JSON.parse(data);
                     Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
                     $("#QtyperIC").val(items[0].QTY_TO_INSP);
@@ -203,9 +196,13 @@
         }
 
         completed = function (response) {
+            debugger
             var res = response.responseJSON;
+            var redirectUrl = '@Url.Action("Index", "OnlineComplaints")';
             ShowHideMsgNew(res.status, res.responseText);
-            window.location.href = '@Url.Action("Index", "OnlineComplaints")';
+            setTimeout(function () {
+                window.location.href = redirectUrl;
+            }, 1000);
         };
 
     </script>

@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public ClusterMasterModel FindByID(int Id);
 
-        DTResult<ClusterMasterModel>GetClusterMasterList(DTParameters dtParameters);
+        DTResult<ClusterMasterModel>GetClusterMasterList(DTParameters dtParameters, string Region);
 
         public int SaveDetails(ClusterMasterModel model);
 

@@ -108,8 +108,8 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Name).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.TEMP_COMPLAINT_ID).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -205,9 +205,9 @@ namespace IBS.Repositories
                     existingComplaint.UserId = model.UserId;
                     existingComplaint.Datetime = DateTime.Now;
                     existingComplaint.Updateddate = DateTime.Now;
-                    existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
+                    existingComplaint.Updatedby = model.UpdatedBy;
                     context.SaveChanges();
-                    msg = "Data Saved.";
+                    msg = "Success";
                 }
             }
 
@@ -244,34 +244,32 @@ namespace IBS.Repositories
 
                  model.ComplaintID = ComplaintID;
 
-                T40ConsigneeComplaint complaint = new T40ConsigneeComplaint
-                {
-                    ComplaintId = ComplaintID,
-                    ComplaintDt = DateTime.Now,
-                    RejMemoNo = firstOnlineComplaint.RejMemoNo,
-                    RejMemoDt = firstOnlineComplaint.RejMemoDt,
-                    CaseNo = firstOnlineComplaint.CaseNo,
-                    BkNo = firstOnlineComplaint.BkNo,
-                    SetNo = firstOnlineComplaint.SetNo,
-                    IeCoCd = (byte?)firstOnlineComplaint.CoCd,
-                    IeCd = (byte?)firstOnlineComplaint.IeCd,
-                    ConsigneeCd = firstOnlineComplaint.ConsigneeCd,
-                    JiRegion = firstOnlineComplaint.InspRegion,
-                    VendCd = firstOnlineComplaint.VendCd,
-                    ItemSrnoPo = firstOnlineComplaint.ItemSrnoPo,
-                    ItemDesc = firstOnlineComplaint.ItemDesc,
-                    QtyOffered = firstOnlineComplaint.QtyOffered,
-                    QtyRejected = firstOnlineComplaint.QtyRejected,
-                    UomCd = firstOnlineComplaint.UomCd,
-                    Rate = firstOnlineComplaint.Rate,
-                    RejectionValue = firstOnlineComplaint.RejectionValue,
-                    RejectionReason = firstOnlineComplaint.RejectionReason,
-                    Datetime = DateTime.Now,
-                    Createdby = Convert.ToInt32(model.UserId),
-                    Createddate = DateTime.Now,
-                };
+                T40ConsigneeComplaint obj = new T40ConsigneeComplaint();
+                obj.ComplaintId = ComplaintID;
+                obj.ComplaintDt = DateTime.Now;
+                obj.RejMemoNo = firstOnlineComplaint.RejMemoNo;
+                obj.RejMemoDt = firstOnlineComplaint.RejMemoDt;
+                obj.CaseNo = firstOnlineComplaint.CaseNo;
+                obj.BkNo = firstOnlineComplaint.BkNo;
+                obj.SetNo = firstOnlineComplaint.SetNo;
+                obj.IeCoCd = (byte?)firstOnlineComplaint.CoCd;
+                obj.IeCd = (byte?)firstOnlineComplaint.IeCd;
+                obj.ConsigneeCd = firstOnlineComplaint.ConsigneeCd;
+                obj.JiRegion = firstOnlineComplaint.InspRegion;
+                obj.VendCd = firstOnlineComplaint.VendCd;
+                obj.ItemSrnoPo = firstOnlineComplaint.ItemSrnoPo;
+                obj.ItemDesc = firstOnlineComplaint.ItemDesc;
+                obj.QtyOffered = firstOnlineComplaint.QtyOffered;
+                obj.QtyRejected = firstOnlineComplaint.QtyRejected;
+                obj.UomCd = firstOnlineComplaint.UomCd;
+                obj.Rate = firstOnlineComplaint.Rate;
+                obj.RejectionValue = firstOnlineComplaint.RejectionValue;
+                obj.RejectionReason = firstOnlineComplaint.RejectionReason;
+                obj.Datetime = DateTime.Now;
+                obj.Createdby = model.createdBy;
+                obj.Createddate = DateTime.Now;
 
-                context.T40ConsigneeComplaints.Add(complaint);
+                context.T40ConsigneeComplaints.Add(obj);
                 context.SaveChanges();
 
                 var tempOnlineComplaint = context.TempOnlineComplaints.FirstOrDefault(c => c.TempComplaintId == firstOnlineComplaint.TempComplaintId);
@@ -282,7 +280,7 @@ namespace IBS.Repositories
                     tempOnlineComplaint.ComplaintId = ComplaintID;
                     context.SaveChanges();
                 }
-                msg = "Data Saved";
+                msg = "Success";
             }
             else
             {
