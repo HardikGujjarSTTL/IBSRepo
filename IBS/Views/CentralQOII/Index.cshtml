@@ -114,7 +114,7 @@
         }
 
         function CentralQOIIDelete(Client, QoiDate, Weight, QoiLength) {
-            var url = '@Url.Action("Delete", "CentralQOII")/?Client=' + Client + "&QoiDate" + QoiDate + "&Weight" + Weight + "&QoiLength" + QoiLength;
+            var url = '@Url.Action("Delete", "CentralQOII")/?Client=' + Client + "&QoiDate=" + QoiDate + "&Weight=" + Weight + "&QoiLength=" + QoiLength;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }

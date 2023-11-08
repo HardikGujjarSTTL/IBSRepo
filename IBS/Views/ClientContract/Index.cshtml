@@ -3,7 +3,7 @@
     string Title = "";
     if (ViewBag.Type == "C")
     {
-        Title = "Client Contact List";
+        Title = "Clients Contact List";
     }
     else if (ViewBag.Type == "B")
     {
@@ -23,7 +23,7 @@
             <h2>@Title</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Client Contact</a>
+            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Clients Contact</a>
         </div>
     </div>
     <section class="table-section">

@@ -26,10 +26,12 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">For The Period Month<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.Month, new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="Month" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">For The Period year<i class="text-danger">*</i></label>
                         @Html.DropDownListFor(model => model.Year, new SelectList(IBS.Models.Common.GetYear() , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="Year" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Case No.<i class="text-danger">*</i></label>
