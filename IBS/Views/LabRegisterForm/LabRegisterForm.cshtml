@@ -264,7 +264,7 @@
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Code No</label>
-                    <input type="text" id="txtcodeno" class="input" />
+                    <input type="text" id="txtcodeno" class="input" maxlength="10" />
 
                 </div>
                 <div class="col-md-4 mb-4">
@@ -305,7 +305,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">No. Of Samples</label>
-                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="3" />
 
                 </div>
 
@@ -326,7 +326,7 @@
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
                     <label for="Reference">Test to be Conducted</label>
                     @Html.DropDownListFor(model => model.TestTobeCon, new SelectList(IBS.Models.Common.TestToBeConducted() , "Value", "Text"),new { @id = "ddltesttobecon",style="display:none;" })
-                    <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;"></textarea>
+                    <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;" maxlength="200"></textarea>
                 </div>
             </div>
              <div class="row my-0">
@@ -358,18 +358,18 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Testing Fee <i class="text-danger">*</i></label>
-                    <input type="text" id="testingfee" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="testingfee" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span class="text-danger field-validation-error" id="spnError3"></span>
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Service Tax <i class="text-danger">*</i></label>
-                    <input type="text" id="sertax" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+                    <input type="text" id="sertax" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span class="text-danger field-validation-error" id="spnError4"></span>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Handling Charges <i class="text-danger">*</i></label>
-                    <input type="text" id="handlingcharges" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="handlingcharges" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span class="text-danger field-validation-error" id="spnError5"></span>
                 </div>
             </div>
@@ -387,7 +387,7 @@
            
                 <div class="col-md-6 mb-4">
                     <label>Remarks</label>
-                    <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks"></textarea>
+                    <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks" maxlength="200"></textarea>
                 </div>
             </div>
             <div class="savenext-btn" style="margin-left:40%">
