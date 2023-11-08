@@ -80,6 +80,90 @@ namespace IBSAPI.Models
                 return Encoding.UTF8.GetString(decryptedBytes);
             }
         }
+
+        
+
+        public static string CnSHA256(string text, int length)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(text);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    builder.Append(b.ToString("x2")); // convert to hex
+                }
+
+                string resultStr = builder.ToString();
+
+                if (length > resultStr.Length)
+                {
+                    return resultStr;
+                }
+                else
+                {
+                    return resultStr.Substring(0, length);
+                }
+            }
+        }
+
+        public static string Encrypt(string plainText, string key, string iv)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(CnSHA256(key, key.Length));
+            byte[] ivBytes = Encoding.UTF8.GetBytes(CnSHA256(iv, 16));
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = keyBytes;
+                aesAlg.IV = ivBytes;
+
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+                byte[] inputBytes = Encoding.UTF8.GetBytes(plainText);
+                byte[] encryptedBytes = encryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+
+                return Convert.ToBase64String(encryptedBytes);
+            }
+        }
+
+        public static string Decrypt(string encryptedText, string key, string iv)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(CnSHA256(key, key.Length));
+            byte[] ivBytes = Encoding.UTF8.GetBytes(CnSHA256(iv, 16));
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = keyBytes;
+                aesAlg.IV = ivBytes;
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
+                byte[] decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
+
+                return Encoding.UTF8.GetString(decryptedBytes);
+            }
+        }
+
+        public static string EncryptString(string plainText, string key, string iv)
+        {
+            string k = key;
+            string i = iv;
+            k = CnSHA256(k, 32); // 32 bytes = 256 bits
+            i = CnSHA256(i, 16);
+            return Encrypt(plainText, k, i);
+        }
+
+        public static string DecryptString(string encryptedText, string key, string iv)
+        {
+            string k = key;
+            string i = iv;
+            k = CnSHA256(k, 32); // 32 bytes = 256 bits
+            i = CnSHA256(i, 16);
+            return Decrypt(encryptedText, k, i);
+        }
+
+
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -179,4 +263,6 @@ namespace IBSAPI.Models
         }
 
     }
+
+
 }

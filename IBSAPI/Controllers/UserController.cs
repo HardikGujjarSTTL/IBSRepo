@@ -40,12 +40,16 @@ namespace IBSAPI.Controllers
                 byte[] key = Encoding.UTF8.GetBytes(loginModel.key);
                 byte[] iv = Encoding.UTF8.GetBytes("8080808080808080");
 
+
                 //// Encrypt
                 //byte[] ciphertextUserName = Common.Encrypt("adminnr", key, iv);
                 //string encryptedUserNameText = Convert.ToBase64String(ciphertextUserName);
 
                 //byte[] ciphertext = Common.Encrypt("Rites123", key, iv);
                 //string encryptedText = Convert.ToBase64String(ciphertext);
+
+                //string ciphertextUserName = Common.EncryptString("adminnr", "301ae92bb2bc7599", "8080808080808080");
+                //string decryptStringUserName = Common.DecryptString("k3wn4nvm/oQoSAvAPegruA==", "301ae92bb2bc7599", "8080808080808080");
 
                 // Decrypt
                 byte[] bytesUserName = Convert.FromBase64String(loginModel.UserName);
