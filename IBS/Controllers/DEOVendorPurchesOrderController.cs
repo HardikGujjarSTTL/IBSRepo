@@ -140,13 +140,13 @@ namespace IBS.Controllers
                         List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsCaseList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
                         //}
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
                         //}
                     }
                     return Json(new { status = true, responseText = msg });
@@ -237,7 +237,7 @@ namespace IBS.Controllers
                 bool IsDigit = false;
                 if (searchValues != null && searchValues != "0")
                 {
-                    char characterToCheck = searchValues[3];  
+                    char characterToCheck = searchValues[3];
                     IsDigit = Char.IsDigit(characterToCheck);
                 }
                 int VendCdID = VendCd;
@@ -463,7 +463,7 @@ namespace IBS.Controllers
                     }
                 }
 
-                return Json(new { status = true, list = agencyClient});
+                return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
@@ -566,6 +566,22 @@ namespace IBS.Controllers
                         {
                             System.IO.File.Copy(VendorPath, DestinationPath, true);
                         }
+
+                        List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+
+                        foreach (var item in lstDocument)
+                        {
+                            string TempFilePath2 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm);
+                            string VendorPath2 = Path.Combine(TempFilePath2, item.FileID);
+                            string TempFilePath12 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder);
+                            string DestinationPath1 = Path.Combine(TempFilePath12, item.FileID);
+                            if (System.IO.File.Exists(VendorPath2) && !System.IO.File.Exists(DestinationPath1))
+                            {
+                                System.IO.File.Copy(VendorPath2, DestinationPath1, true);
+                            }
+                        }
+
+
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }
