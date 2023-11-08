@@ -160,7 +160,7 @@
                     </div>
                 </div>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();" id="btnsave">Save</button>
                 </div>
             </div>
         </form>
@@ -277,6 +277,7 @@
                 data: { Name: Name },
 
                 success: function (success) {
+                    
                     if (success.EmpNo == null){
                         $("#txtempno").val(" ");
                     }
