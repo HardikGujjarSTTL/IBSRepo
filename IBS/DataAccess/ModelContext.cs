@@ -12020,10 +12020,9 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CALL_REMARK_STATUS");
             entity.Property(e => e.CallStatus)
-                .HasMaxLength(1)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
-                .IsFixedLength()
                 .HasColumnName("CALL_STATUS");
             entity.Property(e => e.CallStatusDt)
                 .ValueGeneratedOnAdd()
@@ -12257,7 +12256,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("T17_CALL_REGISTER_HISTORY");
 
             entity.Property(e => e.Id)
-                .HasPrecision(6)
+                .HasPrecision(13)
                 .HasDefaultValueSql("\"IBSDEV\".\"T17_CALL_REGISTER_HISTORY_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Actiondate)
@@ -12279,21 +12278,26 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.BkNo)
                 .HasMaxLength(4)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("BK_NO");
             entity.Property(e => e.Bpo)
                 .HasMaxLength(300)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("BPO");
             entity.Property(e => e.CallCancelCharges)
                 .HasPrecision(5)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("CALL_CANCEL_CHARGES");
             entity.Property(e => e.CallCancelStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("CALL_CANCEL_STATUS");
             entity.Property(e => e.CallInstallNo)
                 .HasPrecision(4)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterDt)
                 .HasColumnType("DATE")
@@ -12311,15 +12315,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CallRemarkStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("CALL_REMARK_STATUS");
             entity.Property(e => e.CallSno)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CallStatus)
-                .HasMaxLength(1)
+                .HasMaxLength(3)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("CALL_STATUS");
             entity.Property(e => e.CallStatusDt)
                 .HasColumnType("DATE")
@@ -12331,20 +12336,25 @@ public partial class ModelContext : DbContext
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ClusterCode)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("CLUSTER_CODE");
             entity.Property(e => e.CmApproval)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("CM_APPROVAL");
             entity.Property(e => e.CmApprovalDt)
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("CM_APPROVAL_DT");
             entity.Property(e => e.CoCd)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("CO_CD");
             entity.Property(e => e.CountDt)
                 .HasPrecision(1)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("COUNT_DT");
             entity.Property(e => e.Createdby)
                 .HasMaxLength(50)
@@ -12365,11 +12375,13 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DT_INSP_DESIRE");
             entity.Property(e => e.ExpInspDt)
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("EXP_INSP_DT");
             entity.Property(e => e.FifoVoilateReason)
                 .HasMaxLength(400)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("FIFO_VOILATE_REASON");
             entity.Property(e => e.FinalOrStage)
                 .HasMaxLength(1)
@@ -12379,9 +12391,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Hologram)
                 .HasMaxLength(250)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("HOLOGRAM");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IrfcFunded)
                 .HasMaxLength(1)
@@ -12390,10 +12404,12 @@ public partial class ModelContext : DbContext
                 .HasColumnName("IRFC_FUNDED");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Isfinalizedstatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("ISFINALIZEDSTATUS");
             entity.Property(e => e.ItemRdso)
@@ -12404,18 +12420,22 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.LocalOrOuts)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("LOCAL_OR_OUTS");
             entity.Property(e => e.LotDp1)
                 .HasMaxLength(50)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("LOT_DP_1");
             entity.Property(e => e.LotDp2)
                 .HasMaxLength(50)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("LOT_DP_2");
             entity.Property(e => e.MfgCd)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("MFG_CD");
             entity.Property(e => e.MfgPlace)
                 .HasMaxLength(100)
@@ -12434,6 +12454,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RecipientGstinNo)
                 .HasMaxLength(15)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("RECIPIENT_GSTIN_NO");
             entity.Property(e => e.RegionCode)
                 .HasMaxLength(1)
@@ -12443,9 +12464,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RejCanCall)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("REJ_CAN_CALL");
             entity.Property(e => e.RejCharges)
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("NUMBER(9,2)")
                 .HasColumnName("REJ_CHARGES");
             entity.Property(e => e.Remarks)
@@ -12455,6 +12478,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SetNo)
                 .HasMaxLength(3)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("SET_NO");
             entity.Property(e => e.StaggeredDp)
                 .HasMaxLength(1)
@@ -12464,14 +12488,17 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UpdateAllowed)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("UPDATE_ALLOWED");
             entity.Property(e => e.Updatedby)
                 .HasMaxLength(50)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasPrecision(6)
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(20)
@@ -12479,14 +12506,17 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
             entity.Property(e => e.VendApprovalFr)
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("VEND_APPROVAL_FR");
             entity.Property(e => e.VendApprovalTo)
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("VEND_APPROVAL_TO");
             entity.Property(e => e.VendRdso)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("VEND_RDSO");
         });
@@ -20630,7 +20660,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("ISSUEON");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -21164,7 +21194,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
@@ -23198,9 +23228,8 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("CALL_SNO");
             entity.Property(e => e.CallStatus)
-                .HasMaxLength(1)
+                .HasMaxLength(3)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("CALL_STATUS");
             entity.Property(e => e.CallStatus1)
                 .HasMaxLength(22)
@@ -23553,7 +23582,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("CALLSNO");
             entity.Property(e => e.Callstatus)
-                .HasMaxLength(1)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CALLSTATUS");
