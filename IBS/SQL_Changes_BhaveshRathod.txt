@@ -589,5 +589,9 @@ ALTER TABLE T25_RV_DETAILS_HISTORY MODIFY UPDATEDBY VARCHAR2(12 BYTE)
 
 create a view
 VIEW_CHEQUE_POSTING_DETAILS
+
+
+Call Mark (Online)
+SP : SP_GET_CALL_MARKED_ONLINE_NEW
 =============================================================================================================================================
 
