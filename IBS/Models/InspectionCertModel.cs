@@ -100,7 +100,13 @@ namespace IBS.Models
 
         public decimal RlyBpoFee { get; set; }
 
+        [Required]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Fee required.")]
         public decimal? BpoFee { get; set; }
+
+        [Required]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Adjustment Fee required.")]
+        public decimal AdjustmentFee { get; set; }
 
         public string BpoFeeType { get; set; }
 

@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Dynamic;
@@ -136,6 +137,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.BpoFee = query2.BpoFee;
                     }
+                    //model.AdjustmentFee = query2.BpoFee;
                     model.BpoFeeType = query2.BpoFeeType;
                     model.TaxType = query2.BpoTaxType;
                     model.Au = query2.Au;
@@ -745,7 +747,7 @@ namespace IBS.Repositories.InspectionBilling
                 parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
                 parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, 10, model.CnoteBillNo == null ? "Z" : model.BillNo, ParameterDirection.Input);
                 parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, 1, model.BpoFeeType, ParameterDirection.Input);
-                parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, model.BpoFee, ParameterDirection.Input);
+                parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, model.AdjustmentFee, ParameterDirection.Input);
                 parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, 1, TaxType, ParameterDirection.Input);
                 parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
                 parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);

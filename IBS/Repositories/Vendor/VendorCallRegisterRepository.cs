@@ -612,7 +612,7 @@ namespace IBS.Repositories.Vendor
             int CD = 0;
             if (model.ActionType == "A")
             {
-                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.RegionCode).Count();
+                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.RegionCode && x.CallStatus == "M").Count();
                 if (cmdCL == 0)
                 {
                     var w_item_rdso = "";
