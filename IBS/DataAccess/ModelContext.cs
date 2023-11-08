@@ -13084,7 +13084,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("IC_NO");
@@ -13284,7 +13284,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IcSubmitDt)
@@ -21961,7 +21961,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
@@ -23571,7 +23571,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE");
             entity.Property(e => e.Icno)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("ICNO");
             entity.Property(e => e.Iesname)
