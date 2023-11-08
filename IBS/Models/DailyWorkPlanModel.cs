@@ -86,6 +86,8 @@ namespace IBS.Models
         public string OtherDesc { get; set; }
 
         public string ActionType { get; set; }
+
+        public string IsUrgency { get; set; }
     }
 
     public class DeSerializeDailyWorkModel
