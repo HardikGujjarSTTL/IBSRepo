@@ -115,7 +115,7 @@ public partial class T17CallRegisterHistory
 
     public string? Actionuserid { get; set; }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string? CmApproval { get; set; }
 
