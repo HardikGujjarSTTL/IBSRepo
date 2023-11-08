@@ -89,17 +89,47 @@ namespace IBSAPI.Repositories
         #endregion
 
         #region Client
-        public int GetClientTotalInspection(string Rly_CD, string RlyNoNType, string FromDate, string ToDate)
+        public int GetClientTotalInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
         {
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
-            //var totalInspCount = (from t13 in context.T13PoMasters
-            //                      join t17 in context.T17CallRegisters on t13.CaseNo equals t17.CaseNo
-            //                      where t13.RlyCd == "SR" && t13.RlyNonrly == "R" 
-            //                            && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-            //                      select t13).Count();
-            //return totalInspCount;
-            return 0;
+
+            var totalInspCount = (from t17 in context.T17CallRegisters
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo  
+                                  where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
+                                        && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
+                                  select t13).Count();
+            return totalInspCount;            
+        }
+
+        public int GetClientCompletedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
+        {
+            var allowedStatuses = new string[] { "A", "R", "C", "G", "B", "T", "PR", "PRB", "CB", "RB" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+
+            var totalInspCount = (from t17 in context.T17CallRegisters
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
+                                        && allowedStatuses.Contains(t17.CallStatus)
+                                        && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
+                                  select t13).Count();
+            return totalInspCount;
+        }
+
+        public int GetClientPendingInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
+        {
+            var allowedStatuses = new string[] { "M", "U", "S", "W" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+
+            var totalInspCount = (from t17 in context.T17CallRegisters
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
+                                        && allowedStatuses.Contains(t17.CallStatus)
+                                        && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT 
+                                  select t13).Count();
+            return totalInspCount;
         }
         #endregion
 

@@ -17,7 +17,9 @@ namespace IBSAPI.Interfaces
         #endregion
 
         #region Client DashBoard
-        int GetClientTotalInspection(string Rly_CD, string RlyNoNType, string FromDate, string ToDate);
+        int GetClientTotalInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientCompletedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientPendingInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         #endregion
 
         #region CM DashBoard
