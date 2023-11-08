@@ -43,11 +43,11 @@ public partial class T25RvDetailsHistory
 
     public DateTime? Datetime { get; set; }
 
-    public int? Createdby { get; set; }
+    public string? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public int? Updatedby { get; set; }
+    public string? Updatedby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 

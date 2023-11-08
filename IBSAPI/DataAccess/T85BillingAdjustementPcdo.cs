@@ -17,7 +17,7 @@ public partial class T85BillingAdjustementPcdo
 
     public DateTime? Datetime { get; set; }
 
-    public byte? Isdeleted { get; set; }
+    public bool? Isdeleted { get; set; }
 
     public string? Createdby { get; set; }
 

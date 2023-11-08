@@ -37,27 +37,59 @@ namespace IBSAPI.Controllers
         {            
             try
             {
-                byte[] key = Encoding.UTF8.GetBytes(loginModel.key);
-                byte[] iv = Encoding.UTF8.GetBytes("8080808080808080");
+                //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
+                //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
 
+                //string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
+                //string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
+                //loginModel.UserName = DecryptUserName;
+                //loginModel.Password = DecryptPassword;
+                UserModel userModel = userRepository.FindByLoginDetail(loginModel);
+                if (userModel != null)
+                {
+                    var token = tokenServices.GenerateToken(userModel.userId);
+                    tokenServices.InActiveOldActiveTokens(userModel.userId, token.AuthToken);
+                    userModel.token = token.AuthToken;
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        data = userModel
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "Invalid Username or Password."
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "SignIn", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
 
-                //// Encrypt
-                //byte[] ciphertextUserName = Common.Encrypt("adminnr", key, iv);
-                //string encryptedUserNameText = Convert.ToBase64String(ciphertextUserName);
+        [HttpPost("SignInNew", Name = "SignInNew")]
+        public IActionResult SignInNew([FromBody] LoginModel loginModel)
+        {
+            try
+            {
+                //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
+                //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
 
-                //byte[] ciphertext = Common.Encrypt("Rites123", key, iv);
-                //string encryptedText = Convert.ToBase64String(ciphertext);
-
-                //string ciphertextUserName = Common.EncryptString("adminnr", "301ae92bb2bc7599", "8080808080808080");
-                //string decryptStringUserName = Common.DecryptString("k3wn4nvm/oQoSAvAPegruA==", "301ae92bb2bc7599", "8080808080808080");
-
-                // Decrypt
-                byte[] bytesUserName = Convert.FromBase64String(loginModel.UserName);
-                string DecryptUserName = Common.Decrypt(bytesUserName, key, iv);
-
-                byte[] bytes = Convert.FromBase64String(loginModel.Password);
-                string DecryptPassword = Common.Decrypt(bytes, key, iv);
-
+                string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
+                string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
                 loginModel.UserName = DecryptUserName;
                 loginModel.Password = DecryptPassword;
                 UserModel userModel = userRepository.FindByLoginDetail(loginModel);

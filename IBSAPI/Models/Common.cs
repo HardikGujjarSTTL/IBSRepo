@@ -4,16 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System;
 using System.Security.Cryptography;
+using IBSAPI.Helper;
 
 namespace IBSAPI.Models
 {
     public static class Common
     {
+
         public const string CommonDateFormate = "{0:MM/dd/yyyy}";
         public const string CommonDateFormateForJS = "DD-MM-YYYY";
         public const string CommonDateFormateForDT = "{0:dd/MM/yyyy}";
         public const string CommonDateFormate1 = "dd/MM/yyyy";
-
+        
         public static string EncryptQueryString(this String strToEncrypt)
         {
             if (!string.IsNullOrEmpty(strToEncrypt))
@@ -81,88 +83,34 @@ namespace IBSAPI.Models
             }
         }
 
-        
 
-        public static string CnSHA256(string text, int length)
+        public static string getEncryptedText(string _dencryptedText, string UniqueId)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(text);
-                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
 
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in hashBytes)
-                {
-                    builder.Append(b.ToString("x2")); // convert to hex
-                }
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
 
-                string resultStr = builder.ToString();
+            CryptLib _crypt = new CryptLib();
 
-                if (length > resultStr.Length)
-                {
-                    return resultStr;
-                }
-                else
-                {
-                    return resultStr.Substring(0, length);
-                }
-            }
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
         }
 
-        public static string Encrypt(string plainText, string key, string iv)
+        public static string getDecryptedText(string _encryptedText, string UniqueId)
         {
-            byte[] keyBytes = Encoding.UTF8.GetBytes(CnSHA256(key, key.Length));
-            byte[] ivBytes = Encoding.UTF8.GetBytes(CnSHA256(iv, 16));
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
 
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = keyBytes;
-                aesAlg.IV = ivBytes;
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
 
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-                byte[] inputBytes = Encoding.UTF8.GetBytes(plainText);
-                byte[] encryptedBytes = encryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+            CryptLib _crypt = new CryptLib();
 
-                return Convert.ToBase64String(encryptedBytes);
-            }
+            return _crypt.decrypt(_encryptedText, encUniqueIdKey, encIv);
         }
-
-        public static string Decrypt(string encryptedText, string key, string iv)
-        {
-            byte[] keyBytes = Encoding.UTF8.GetBytes(CnSHA256(key, key.Length));
-            byte[] ivBytes = Encoding.UTF8.GetBytes(CnSHA256(iv, 16));
-
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = keyBytes;
-                aesAlg.IV = ivBytes;
-
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-                byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
-                byte[] decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
-
-                return Encoding.UTF8.GetString(decryptedBytes);
-            }
-        }
-
-        public static string EncryptString(string plainText, string key, string iv)
-        {
-            string k = key;
-            string i = iv;
-            k = CnSHA256(k, 32); // 32 bytes = 256 bits
-            i = CnSHA256(i, 16);
-            return Encrypt(plainText, k, i);
-        }
-
-        public static string DecryptString(string encryptedText, string key, string iv)
-        {
-            string k = key;
-            string i = iv;
-            k = CnSHA256(k, 32); // 32 bytes = 256 bits
-            i = CnSHA256(i, 16);
-            return Decrypt(encryptedText, k, i);
-        }
-
 
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
