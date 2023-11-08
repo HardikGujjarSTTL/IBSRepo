@@ -12,7 +12,9 @@ namespace IBS.Interfaces
         public void Update(UserModel model);
 
         public UserSessionModel LoginByUserName(LoginModel model);
+
         public UserSessionModel LoginByUserPass(LoginModel model);
+
         public UserSessionModel FindByLoginDetail(LoginModel model);
 
         public void ChangePassword(int UserId, String NewPassword);
@@ -34,7 +36,7 @@ namespace IBS.Interfaces
         public List<MenuMasterModel> GenerateMenuListByRoleId(int RoleID);
 
         public bool SaveOTPDetails(LoginModel model);
-        public bool VerifyOTP(LoginModel model);
 
+        public bool VerifyOTP(LoginModel model);
     }
 }

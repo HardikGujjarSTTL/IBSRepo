@@ -92,7 +92,8 @@
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3" id="showfill">
-                    <label for="Reference">Upload Lab Report</label>
+                    <label for="Reference">Upload Lab Report<i class="text-danger">(PDF Only and Max Size: 1 MB)</i><i id="mandatory" class="text-danger">*</i></label>
+                    
                     <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
                 </div>
                 <a id="download" href="javascript:void(0);" style="display:none;">Download File</a>
@@ -230,9 +231,11 @@
 
             if ($("#ddlstatus").val() != "U") {
                 $("#showfill").css("display", "none");
+                $("#mandatory").css("display", "none");
             }
             else {
                 $("#showfill").css("display", "");
+                $("#mandatory").css("display", "");
             }
         })
 
@@ -290,9 +293,11 @@
 
                         if ($("#ddlstatus").val(success.Status).val() != "U") {
                             $("#showfill").css("display", "none");
+                            $("#mandatory").css("display", "none");
                         }
                         else {
                             $("#showfill").css("display", "");
+                            $("#mandatory").css("display", "");
                         }
                     }
                     else {

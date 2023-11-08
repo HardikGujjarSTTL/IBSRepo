@@ -601,6 +601,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewCalldetailsforspecificpoReport> ViewCalldetailsforspecificpoReports { get; set; }
 
+    public virtual DbSet<ViewChequePostingDetail> ViewChequePostingDetails { get; set; }
+
+    public virtual DbSet<ViewChequePostingEditDetail> ViewChequePostingEditDetails { get; set; }
+
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
@@ -13072,7 +13076,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("IC_NO");
@@ -13272,7 +13276,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IcSubmitDt)
@@ -14265,7 +14269,8 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14313,7 +14318,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14412,7 +14418,8 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
@@ -14456,7 +14463,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("SUSPENSE_AMT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
@@ -14523,7 +14531,8 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
@@ -14545,7 +14554,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
@@ -14611,7 +14621,8 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CHQ_NO");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -14626,7 +14637,8 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("POSTING_DT");
             entity.Property(e => e.Updatedby)
-                .HasPrecision(6)
+                .HasMaxLength(12)
+                .IsUnicode(false)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -18963,6 +18975,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.Clientuserid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CLIENTUSERID");
             entity.Property(e => e.Contractid)
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
@@ -19499,7 +19515,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.LyOuts)
                 .HasColumnType("NUMBER(13,2)")
@@ -19544,7 +19560,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
             entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
+                .HasPrecision(1)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(500)
@@ -20606,7 +20622,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("ISSUEON");
             entity.Property(e => e.UserId)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -21140,7 +21156,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
@@ -21411,6 +21427,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("AU");
+            entity.Property(e => e.AuDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("AU_DESC");
             entity.Property(e => e.BillAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("BILL_AMOUNT");
@@ -21464,9 +21484,19 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.ChqAmt)
+                .HasColumnType("NUMBER(12,2)")
+                .HasColumnName("CHQ_AMT");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
             entity.Property(e => e.CnoteAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("CNOTE_AMOUNT");
+            entity.Property(e => e.CnoteBillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("CNOTE_BILL_NO");
             entity.Property(e => e.Consignee)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -21490,6 +21520,13 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("FIN_YR");
+            entity.Property(e => e.IcDt)
+                .HasColumnType("DATE")
+                .HasColumnName("IC_DT");
+            entity.Property(e => e.IcNo)
+                .HasMaxLength(29)
+                .IsUnicode(false)
+                .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
                 .HasColumnName("IE_CD");
@@ -21497,6 +21534,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false)
                 .HasColumnName("LO_REMARKS");
+            entity.Property(e => e.Narration)
+                .HasMaxLength(63)
+                .IsUnicode(false)
+                .HasColumnName("NARRATION");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");
@@ -21509,6 +21550,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("PO_OR_LETTER");
+            entity.Property(e => e.RecipientGstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("RECIPIENT_GSTIN_NO");
             entity.Property(e => e.RegionCode)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -21776,7 +21821,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeName)
                 .HasMaxLength(30)
@@ -21787,7 +21832,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC_PO");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.MaterialValue)
                 .HasColumnType("NUMBER(15,2)")
@@ -21908,7 +21953,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IcNo)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
@@ -22797,6 +22842,91 @@ public partial class ModelContext : DbContext
                 .HasColumnName("VENDOR");
         });
 
+        modelBuilder.Entity<ViewChequePostingDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_CHEQUE_POSTING_DETAILS");
+
+            entity.Property(e => e.AmountCleared)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("AMOUNT_CLEARED");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.BillAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("BILL_AMOUNT");
+            entity.Property(e => e.BillAmtCleared)
+                .HasColumnType("NUMBER")
+                .HasColumnName("BILL_AMT_CLEARED");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.BpoName)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO_NAME");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.PostingDt)
+                .HasColumnType("DATE")
+                .HasColumnName("POSTING_DT");
+        });
+
+        modelBuilder.Entity<ViewChequePostingEditDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_CHEQUE_POSTING_EDIT_DETAILS");
+
+            entity.Property(e => e.AccCd)
+                .HasPrecision(6)
+                .HasColumnName("ACC_CD");
+            entity.Property(e => e.Amount)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT");
+            entity.Property(e => e.AmountAdjusted)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMOUNT_ADJUSTED");
+            entity.Property(e => e.AmtTransferred)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AMT_TRANSFERRED");
+            entity.Property(e => e.BankCd)
+                .HasPrecision(6)
+                .HasColumnName("BANK_CD");
+            entity.Property(e => e.Bpo)
+                .HasMaxLength(310)
+                .IsUnicode(false)
+                .HasColumnName("BPO");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
+            entity.Property(e => e.ChqNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("CHQ_NO");
+            entity.Property(e => e.SuspenseAmt)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SUSPENSE_AMT");
+            entity.Property(e => e.VchrDt)
+                .HasColumnType("DATE")
+                .HasColumnName("VCHR_DT");
+            entity.Property(e => e.VchrNo)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("VCHR_NO");
+        });
+
         modelBuilder.Entity<ViewConsigneeDetail>(entity =>
         {
             entity
@@ -23433,7 +23563,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE");
             entity.Property(e => e.Icno)
-                .HasMaxLength(29)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("ICNO");
             entity.Property(e => e.Iesname)
@@ -24019,6 +24149,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(68)
                 .IsUnicode(false)
                 .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyCds)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CDS");
             entity.Property(e => e.RlyNonrly)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -24056,7 +24190,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_DESC");
             entity.Property(e => e.ItemSrno)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO");
             entity.Property(e => e.Qty)
                 .HasColumnType("NUMBER(12,4)")
@@ -24312,54 +24446,6 @@ public partial class ModelContext : DbContext
             entity
                 .HasNoKey()
                 .ToView("VIEW_VENDOR_REGISTER_DETAILS");
-
-            entity.Property(e => e.Bpo)
-                .HasMaxLength(310)
-                .IsUnicode(false)
-                .HasColumnName("BPO");
-            entity.Property(e => e.CaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CASE_NO");
-            entity.Property(e => e.Consignee)
-                .HasMaxLength(378)
-                .IsUnicode(false)
-                .HasColumnName("CONSIGNEE");
-            entity.Property(e => e.ConsigneeCd)
-                .HasPrecision(8)
-                .HasColumnName("CONSIGNEE_CD");
-            entity.Property(e => e.CumQtyPrevOffered)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_OFFERED");
-            entity.Property(e => e.CumQtyPrevPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("CUM_QTY_PREV_PASSED");
-            entity.Property(e => e.DelvDate)
-                .HasColumnType("DATE")
-                .HasColumnName("DELV_DATE");
-            entity.Property(e => e.ItemDescPo)
-                .HasMaxLength(400)
-                .IsUnicode(false)
-                .HasColumnName("ITEM_DESC_PO");
-            entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(6)
-                .HasColumnName("ITEM_SRNO_PO");
-            entity.Property(e => e.QtyDue)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_DUE");
-            entity.Property(e => e.QtyOrdered)
-                .HasColumnType("NUMBER(12,4)")
-                .HasColumnName("QTY_ORDERED");
-            entity.Property(e => e.QtyPassed)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_PASSED");
-            entity.Property(e => e.QtyRejected)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_REJECTED");
-            entity.Property(e => e.QtyToInsp)
-                .HasColumnType("NUMBER")
-                .HasColumnName("QTY_TO_INSP");
         });
 
         modelBuilder.Entity<ViewVoucherList>(entity =>

@@ -20,7 +20,7 @@
                 <input type="hidden" asp-for="Id" />
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Client Name</label><i class="text-danger">*</i>
-                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300" id="clientname" required />
+                    <input type="text" class="input" ASP-FOR="ClientName" maxlength="300"  required />
                     <span asp-validation-for="ClientName" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Contact Name</label><i class="text-danger">*</i>
-                    <input type="text" class="input" ASP-FOR="ContactName" maxlength="300" id="contactname" required />
+                    <input type="text" class="input" ASP-FOR="ContactName" maxlength="300"  required />
                     <span asp-validation-for="ContactName" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -45,12 +45,12 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Mobile No</label><i class="text-danger">*</i>
-                    <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10" id="mobilenumber" onkeypress="return isNumber(event)" required />
+                    <input type="text" class="input" ASP-FOR="MOBILE" maxlength="10"  onkeypress="return isNumber(event)" required />
                     <span asp-validation-for="MOBILE" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Email</label><i class="text-danger">*</i>
-                    <input type="email" class="input" ASP-FOR="EMAIL" id="email" maxlength="300" required />
+                    <input type="email" class="input" ASP-FOR="EMAIL"  maxlength="300" required />
                     <span asp-validation-for="EMAIL" class="text-danger"></span>
                 </div>
             </div>
@@ -67,14 +67,14 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            $('#clientname').on('keypress', function (event) {
+            $('#ClientName').on('keypress', function (event) {
                 Validation();
              });
 
-            $('#contactname').on('keypress', function (event) {
+            $('#ContactName').on('keypress', function (event) {
                 Validation();
              });
-            $('#mobilenumber').on('keypress', function (event) {
+            $('#MOBILE').on('keypress', function (event) {
                 var userInput = event.key;
                 var regex = /^[0-9]+$/;
 
@@ -82,7 +82,7 @@
                     event.preventDefault();
                 }
             });
-            $('#email').on('keyup', function () {
+            $('#EMAIL').on('keyup', function () {
                 Emailvalidation();
             });
         });

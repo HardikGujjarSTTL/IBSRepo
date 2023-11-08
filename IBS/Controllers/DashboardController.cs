@@ -1,20 +1,21 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    //[Authorize]
     public class DashboardController : BaseController
     {
-        #region Variables
         private readonly IIEMessageRepository userRepository;
-        #endregion
-        public DashboardController(IIEMessageRepository _userRepository)
+        private readonly IDashboardRepository dashboardRepository;
+
+        public DashboardController(IIEMessageRepository _userRepository, IDashboardRepository _dashboardRepository)
         {
             userRepository = _userRepository;
+            dashboardRepository = _dashboardRepository;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -29,10 +30,13 @@ namespace IBS.Controllers
         {
             return View();
         }
+
         public IActionResult IE()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd);
+            return View(model);
         }
+
         public IActionResult CM()
         {
             return View();
@@ -42,6 +46,7 @@ namespace IBS.Controllers
         {
             return View();
         }
+
         public IActionResult CMDAR()
         {
             return View();
