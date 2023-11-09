@@ -341,3 +341,48 @@ Select 6,null,1,sysdate, null,null,0,user_id
 from t02_users where Auth_levl in (5,6,7,8)
 
 
+insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType,
+    CO_CD)
+SELECT 
+        'CM'||to_char(co_cd),
+        CO_NAME as user_name,
+        'Y' as rites_emp,
+        null as emp_no,
+        CO_REGION as region,
+        'Rites123',
+        null as auth_levl,
+        CO_STATUS as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        sysdate as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'CM' as  MigType,
+        CO_CD as CO_CD
+FROM
+    T08_IE_CONTROLL_OFFICER where co_cd is not null 

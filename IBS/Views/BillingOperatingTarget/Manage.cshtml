@@ -27,7 +27,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="Reference">Year: </label>
+                            <label for="Reference">Year:<i class="text-danger">*</i> </label>
                             @Html.DropDownListFor(model => model.Be_Per, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                             <span asp-validation-for="Be_Per" class="text-danger"></span>
                         </div>
@@ -35,17 +35,17 @@
                     <div class="col-md-12 mb-4">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="Reference">Billing Target Amount (In lac of Rs.)</label>
+                                <label for="Reference">Billing Target Amount (In lac of Rs.)<i class="text-danger">*</i></label>
                                 <input type="text" class="input" asp-for="B_Target" maxlength="5000" />
                                 <span asp-validation-for="B_Target" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
-                                <label for="Reference">Operating Ratio Target</label>
+                                <label for="Reference">Operating Ratio Target<i class="text-danger">*</i></label>
                                 <input type="text" class="input" asp-for="E_Target" maxlength="5000" />
                                 <span asp-validation-for="E_Target" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
-                                    <label for="Reference">Expenditure Target Amount (In lac of Rs.)</label>
+                                <label for="Reference">Expenditure Target Amount (In lac of Rs.)<i class="text-danger">*</i></label>
                                     <input type="text" class="input" asp-for="Ex_Target" maxlength="5000" />
                                     <span asp-validation-for="Ex_Target" class="text-danger"></span>
                                 </div>

@@ -28,17 +28,17 @@
                  </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="Reference">Month: </label>
+                        <label for="Reference">Month:<i class="text-danger">*</i> </label>
                         @Html.DropDownListFor(model => model.HighDtMon, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                         <span asp-validation-for="HighDtMon" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
-                        <label for="Reference">Year: </label>
+                        <label for="Reference">Year:<i class="text-danger">*</i> </label>
                         @Html.DropDownListFor(model => model.HighDtYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                         <span asp-validation-for="HighDtYear" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
-                        <label for="Reference">Highlights</label>
+                        <label for="Reference">Highlights<i class="text-danger">*</i></label>
                         <input type="text" class="input" asp-for="Hight_Text" maxlength="5000" />
                         <span asp-validation-for="Hight_Text" class="text-danger"></span>
                     </div>

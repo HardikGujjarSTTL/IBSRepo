@@ -69,10 +69,10 @@ namespace IBS.Controllers.InspectionBilling
                 model.RlyCd = RLY_CD;
             }
 
-            List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderFormCase, Convert.ToString(CaseNo));
+            List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, Convert.ToString(CaseNo));
             FileUploaderDTO FileUploaderUpload_a_scanned_copy = new FileUploaderDTO();
             FileUploaderUpload_a_scanned_copy.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-            FileUploaderUpload_a_scanned_copy.IBS_DocumentList = lstDocumentUpload_a_scanned_copy.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
+            FileUploaderUpload_a_scanned_copy.IBS_DocumentList = lstDocumentUpload_a_scanned_copy.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
             FileUploaderUpload_a_scanned_copy.OthersSection = false;
             FileUploaderUpload_a_scanned_copy.MaxUploaderinOthers = 5;
             FileUploaderUpload_a_scanned_copy.FilUploadMode = (int)Enums.FilUploadMode.Single;

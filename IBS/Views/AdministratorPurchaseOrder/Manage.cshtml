@@ -322,7 +322,41 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
+
+            if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
+                FillPurchaserCdForEdit('@Model.PurchaserCd');
+                fill_manufacturer('@Model.PoiCd');
+            }
         });
+
+        function FillPurchaserCdForEdit(ids) {
+            $.ajax({
+                url: '@Url.Action("GetConsigneeUsingConsignee", "POMaster")?ConsigneeSearch=' + ids,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#PurchaserCd").html("");
+                    var isExist = false;
+                    $.each(response.list, function (index, value) {
+                        $("#PurchaserCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        if (ids != null && value.Value == ids.toString()) {
+                            isExist = true;
+                        }
+                        $("#PurchaserCd").append("<option value='0' >Other</option>");
+                    });
+                    if (ids == "0") {
+                        $("#PurchaserCd").append("<option value='0' >Other</option>");
+                    }
+                    if (isExist) {
+                        $("#PurchaserCd").val(ids);
+                    }
+                }
+            });
+        }
 
         function Save() {
             if ($("#frmPOMaster").valid()) {
@@ -493,12 +527,16 @@
                 $("#PoiCd").val("");
                 $("#txtMPOI").val("");
                 $("#ddlManufac").html("");
-                $("#PoiCd").removeAttr("disabled");
+                //$("#PoiCd").removeAttr("disabled");
             }
         }
 
         function fill_manufacturer(id) {
             var VendCd = $("#VendCd").val();
+            if(id!= "0")
+            {
+                VendCd=id;
+            }
             $.ajax({
                 url: '@Url.Action("GetVendors", "AdministratorPurchaseOrder")?id=' + VendCd,
                 type: 'GET',
@@ -538,7 +576,7 @@
                     else {
                         $("#PoiCd").val($("#ddlManufac").val());
                         $("#txtMPOI").val(response.getvendor.VendAdd1);
-                        $("#PoiCd").attr("disabled", "disabled");
+                        //$("#PoiCd").attr("disabled", "disabled");
                     }
                 }
 

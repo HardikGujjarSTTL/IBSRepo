@@ -116,7 +116,7 @@
         }
 
         function CentralQOIDelete(Client, QtyDate) {
-            var url = '@Url.Action("Delete", "CentralQOI")/?Client=' + Client + "&QtyDate" + QtyDate;
+            var url = '@Url.Action("Delete", "CentralQOI")/?Client=' + Client + "&QtyDate=" + QtyDate;
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
