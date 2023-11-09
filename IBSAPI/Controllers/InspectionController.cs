@@ -350,7 +350,7 @@ namespace IBSAPI.Controllers
             try
             {
                 DateTime ToDate = DateTime.Now;
-                DateTime FromDate = ToDate.AddMonths(-3);
+                DateTime FromDate = ToDate.AddMonths(-20);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
                 var result = inspectionRepository.Get_Client_PendingInspection(Rly_CD, Rly_NonType, FromDate, ToDate);
                 if (result.Count() > 0)

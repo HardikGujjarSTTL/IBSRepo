@@ -21,18 +21,19 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("GetCaseDetailsforvendor", Name = "GetCaseDetailsforvendor")]
-        public IActionResult GetCaseDetailsforvendor(int UserID)
+        public IActionResult GetCaseDetailsforvendor(string CaseNo, int UserID)
         {
             try
             {
-                List<CallRegiModel> callRegiModels = vendorRepository.GetCaseDetailsforvendor(UserID);
-                if (callRegiModels.Count() > 0)
+                //List<CallRegiModel> callRegiModels = vendorRepository.GetCaseDetailsforvendor(UserID);
+                PODetailsModel model = vendorRepository.GetPODetailsforvendor(CaseNo, UserID);
+                if (model != null)
                 {
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Successfully",
-                        data = callRegiModels
+                        data = model
                     };
                     return Ok(response);
                 }
