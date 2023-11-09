@@ -1839,7 +1839,7 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             var subquery = from t17 in context.T17CallRegisters
-                           where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MM-yyyy", null) &&
+                           where t17.CallRecvDt > DateTime.ParseExact("01-APR-2017", "dd-MMM-yyyy", null) &&
                                  (t17.CallStatus == "M" || t17.CallStatus == "S") &&
                                  t17.IeCd == Convert.ToInt32(model.IeCd)
                            select t17;
@@ -3057,7 +3057,7 @@ namespace IBS.Repositories.InspectionBilling
             var document = "";
             if (DocumentsList != null && DocumentsList.Count > 0)
             {
-                 document = DocumentsList[0].DocName;
+                document = DocumentsList[0].DocName;
             }
 
             if (model.CallStatus1 == "C" && model.CallStatus != "C")
@@ -3106,8 +3106,9 @@ namespace IBS.Repositories.InspectionBilling
 
                     var docSetNo = Convert.ToInt32(model.DocSetNo);
 
-                    var bsCheck = (from a in context.T10IcBooksets where a.BkNo.Trim() == model.DocBkNo.Trim() && docSetNo >= Convert.ToInt32(model.DocSetNo)
-                                   && docSetNo <= Convert.ToInt32(model.DocSetNo) && a.IssueToIecd == Convert.ToInt32(model.IeCd)&& a.Ictype == FinalOrStage
+                    var bsCheck = (from a in context.T10IcBooksets
+                                   where a.BkNo.Trim() == model.DocBkNo.Trim() && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                                   && docSetNo <= Convert.ToInt32(model.DocSetNo) && a.IssueToIecd == Convert.ToInt32(model.IeCd) && a.Ictype == FinalOrStage
                                    select a.IssueToIecd).FirstOrDefault();
                 }
 
@@ -3968,12 +3969,12 @@ namespace IBS.Repositories.InspectionBilling
                 var docSetNo = Convert.ToInt32(model.DocSetNo);
 
                 var bsCheck = (from a in context.T10IcBooksets
-                                   where a.BkNo.Trim() == model.DocBkNo.Trim()
-                                   && docSetNo >= Convert.ToInt32(model.DocSetNo)
-                                   && docSetNo <= Convert.ToInt32(model.DocSetNo)
-                                   && a.IssueToIecd == Convert.ToInt32(model.IeCd)
-                                   && a.Ictype == FinalOrStage
-                                   select a.IssueToIecd).FirstOrDefault();
+                               where a.BkNo.Trim() == model.DocBkNo.Trim()
+                               && docSetNo >= Convert.ToInt32(model.DocSetNo)
+                               && docSetNo <= Convert.ToInt32(model.DocSetNo)
+                               && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                               && a.Ictype == FinalOrStage
+                               select a.IssueToIecd).FirstOrDefault();
 
                 if (bsCheck != null)
                 {
@@ -4222,7 +4223,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 if (CCd == null)
                 {
-                    if (Action == "")
+                    if (Action == null)
                     {
                         T19CallCancel obj = new T19CallCancel();
                         obj.CaseNo = model.CaseNo;
@@ -4408,7 +4409,7 @@ namespace IBS.Repositories.InspectionBilling
                         }
                         model.AlertMsg = "Success";
                     }
-                    else if (Action != "")
+                    else if (Action != null)
                     {
                         var CallCancalltion = context.T19CallCancels.FirstOrDefault(cc => cc.CaseNo == model.CaseNo && cc.CallRecvDt == model.CallRecvDt && cc.CallSno == model.CallSno);
 
@@ -4589,7 +4590,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
                     return model;
                 }
-                send_Vendor_Email(model);
+               // send_Vendor_Email(model);
             }
             return model;
         }
@@ -4660,7 +4661,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
                 return model;
             }
-            else if (model.CallStatus.Trim() == "R")
+            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == ""&& model.RejectionCharge == null)
             {
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;

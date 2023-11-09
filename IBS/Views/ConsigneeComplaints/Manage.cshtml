@@ -183,7 +183,7 @@
                             <select  asp-for="InspER" class="form-control" required></select>
                             <span class="text-danger field-validation-error" id="spnInspER"></span>
                         </div>
-                        <div class="col-md-2 mb-2" id="JIDate">
+                        <div class="col-md-2 mb-2" id="JIDates">
                             <label for="Reference">JI Date</label>
                             <input type="text" class="input datepicker" asp-for="JIDate" readonly="true" >
                             <span class="text-danger field-validation-error" id="spnJIDate"></span>
@@ -210,17 +210,15 @@
                 </div>
             </div>
 
-            <div class="tast-list" id="outcomehd">
-                <h2>OUTCOME OF JI</h2>
-            </div>
             <div class="accordion-body" id="outcomeji">
+                <h3 class="heading3 mb-4">OUTCOME JI</h3>
                 <div class="row my-0">
                     <div class="col-md-2 mb-2">
                         <label for="Reference">JI Decided on</label>
                         <input type="text" class="input datepicker" ASP-FOR="JIDecided" maxlength="300" required />
                         <span class="text-danger field-validation-error" id="spnJIDecided"></span>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Status (Decision Taken by JI Committe)</label>
                         <input type="text" class="input" ASP-FOR="Status" maxlength="300" required />
                         <span class="text-danger field-validation-error" id="spnStatus"></span>
@@ -258,10 +256,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tast-list" id="finaldishd">
-                <h2>FINAL DISPOSAL</h2>
-            </div>
             <div class="accordion-body" id="finaldisposal">
+                <h3 class="heading3 mb-4">FINAL DISPOSAL</h3>
                 <div class="row my-0">
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Root Cause Analysis</label>
@@ -696,16 +692,10 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    if (response.redirectToIndex === true) {
-                        alert(response.alertMessage);
-                        //$("#btnsave").hide();
-                        //$("#btnsavechoice").hide();
-                        //$("#btnCancelJI").hide();
-                        //$("#JIoutcome").hide();
-                        //$("#btnfinaldisposal").hide();
-                        //$("#btnupload").hide();
+                    if (response.redirectToIndex == true) {
+                        ShowHideMsgNew(response.status, response.responseText);
                     } else {
-                        alert(response.alertMessage);
+                        ShowHideMsgNew(response.status, response.responseText);
                     }
                 }
             });

@@ -925,6 +925,7 @@ namespace IBS.Repositories.InspectionBilling
         public string InspectionCertSave(InspectionCertModel model, string Region)
         {
             string msg = "";
+            string Cstatus = "";
             var bscheck = (context.T10IcBooksets.Where(x => x.BkNo.Trim().ToUpper() == model.Bkno
                         && Convert.ToInt32(model.Setno) >= Convert.ToInt32(x.SetNoFr) && Convert.ToInt32(model.Setno) <= Convert.ToInt32(x.SetNoTo)
                         && x.IssueToIecd == model.IeCd).Select(x => x.IssueToIecd)).FirstOrDefault();
@@ -966,7 +967,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
 
                 var check1 = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.Substring(0, 1) == Region).Select(x => x.BkNo).FirstOrDefault();
-                string Cstatus = "";
+                
                 string w_irfc_funded = "";
                 string w_irfc_bpo = "";
                 if (model.ActionType == "A")
@@ -984,41 +985,82 @@ namespace IBS.Repositories.InspectionBilling
                             w_irfc_funded = "N";
                         }
                         var Co = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == Convert.ToInt32(model.Callsno) && x.IeCd == model.IeCd).Select(x => x.CoCd).FirstOrDefault();
+                        var T20 = context.T20Ics.Where(x=>x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
+                        
+                        if(T20 == null)
+                        {
+                            T20Ic obj = new T20Ic();
+                            obj.CaseNo = model.Caseno;
+                            obj.CallRecvDt = Convert.ToDateTime(model.Callrecvdt);
+                            obj.CallSno = Convert.ToInt16(model.Callsno);
+                            obj.IcTypeId = model.IcTypeId;
+                            obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                            obj.BpoCd = model.BpoCd;
+                            obj.BkNo = model.Bkno;
+                            obj.SetNo = model.Setno;
+                            obj.IeCd = model.IeCd;
+                            obj.IcNo = model.CertNo;
+                            obj.IcDt = model.CertDt;
+                            obj.CallDt = model.DtInspDesire;
+                            obj.CallInstallNo = model.CallInstallNo;
+                            obj.FullPart = model.FullPart;
+                            obj.ReasonReject = model.ReasonReject;
+                            obj.NoOfInsp = model.NoOfInsp;
+                            obj.FirstInspDt = model.FirstInspDt;
+                            obj.LastInspDt = model.LastInspDt;
+                            obj.OtherInspDt = Convert.ToString(model.OtherInspDt);
+                            obj.IcSubmitDt = model.ICSubmitDt;
+                            obj.UserId = model.UserId;
+                            obj.Datetime = DateTime.Now.Date;
+                            obj.Photo = model.Photo;
+                            obj.CoCd = Co;
+                            obj.StampPatternCd = model.StampPatternCd;
+                            obj.StampPattern = model.StampPattern;
+                            obj.RecipientGstinNo = model.GstinNo;
+                            obj.AccGroup = acc_group;
+                            obj.IrfcBpoCd = w_irfc_bpo;
+                            obj.IrfcFunded = w_irfc_funded;
 
-                        T20Ic obj = new T20Ic();
-                        obj.CaseNo = model.Caseno;
-                        obj.CallRecvDt = Convert.ToDateTime(model.Callrecvdt);
-                        obj.CallSno = Convert.ToInt16(model.Callsno);
-                        obj.IcTypeId = model.IcTypeId;
-                        obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
-                        obj.BpoCd = model.BpoCd;
-                        obj.BkNo = model.Bkno;
-                        obj.SetNo = model.Setno;
-                        obj.IeCd = model.IeCd;
-                        obj.IcNo = model.CertNo;
-                        obj.IcDt = model.CertDt;
-                        obj.CallDt = model.DtInspDesire;
-                        obj.CallInstallNo = model.CallInstallNo;
-                        obj.FullPart = model.FullPart;
-                        obj.ReasonReject = model.ReasonReject;
-                        obj.NoOfInsp = model.NoOfInsp;
-                        obj.FirstInspDt = model.FirstInspDt;
-                        obj.LastInspDt = model.LastInspDt;
-                        obj.OtherInspDt = Convert.ToString(model.OtherInspDt);
-                        obj.IcSubmitDt = model.ICSubmitDt;
-                        obj.UserId = model.UserId;
-                        obj.Datetime = DateTime.Now.Date;
-                        obj.Photo = model.Photo;
-                        obj.CoCd = Co;
-                        obj.StampPatternCd = model.StampPatternCd;
-                        obj.StampPattern = model.StampPattern;
-                        obj.RecipientGstinNo = model.GstinNo;
-                        obj.AccGroup = acc_group;
-                        obj.IrfcBpoCd = w_irfc_bpo;
-                        obj.IrfcFunded = w_irfc_funded;
+                            context.T20Ics.Add(obj);
+                            context.SaveChanges();
+                        }
+                        else
+                        {
+                            T20.CaseNo = model.Caseno;
+                            T20.CallRecvDt = Convert.ToDateTime(model.Callrecvdt);
+                            T20.CallSno = Convert.ToInt16(model.Callsno);
+                            T20.IcTypeId = model.IcTypeId;
+                            T20.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                            T20.BpoCd = model.BpoCd;
+                            T20.BkNo = model.Bkno;
+                            T20.SetNo = model.Setno;
+                            T20.IeCd = model.IeCd;
+                            T20.IcNo = model.CertNo;
+                            T20.IcDt = model.CertDt;
+                            T20.CallDt = model.DtInspDesire;
+                            T20.CallInstallNo = model.CallInstallNo;
+                            T20.FullPart = model.FullPart;
+                            T20.ReasonReject = model.ReasonReject;
+                            T20.NoOfInsp = model.NoOfInsp;
+                            T20.FirstInspDt = model.FirstInspDt;
+                            T20.LastInspDt = model.LastInspDt;
+                            T20.OtherInspDt = Convert.ToString(model.OtherInspDt);
+                            T20.IcSubmitDt = model.ICSubmitDt;
+                            T20.UserId = model.UserId;
+                            T20.Datetime = DateTime.Now.Date;
+                            T20.Photo = model.Photo;
+                            T20.CoCd = Co;
+                            T20.StampPatternCd = model.StampPatternCd;
+                            T20.StampPattern = model.StampPattern;
+                            T20.RecipientGstinNo = model.GstinNo;
+                            T20.AccGroup = acc_group;
+                            T20.IrfcBpoCd = w_irfc_bpo;
+                            T20.IrfcFunded = w_irfc_funded;
+                            T20.Updatedby = model.UserId;
+                            T20.Updateddate = DateTime.Now.Date;
 
-                        context.T20Ics.Add(obj);
-                        context.SaveChanges();
+                            context.SaveChanges();
+                        }
 
                         Cstatus = setCallStatus(model);
 
@@ -1134,7 +1176,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.TaxType = "I";
                 }
             }
-            return msg;
+            return Cstatus;
         }
 
         public string setCallStatus(InspectionCertModel model)
@@ -1564,9 +1606,9 @@ namespace IBS.Repositories.InspectionBilling
 
                     if (grace_days != null)
                     {
-                        if (dt1.CompareTo(grace_days) > 0 || dt1.CompareTo(grace_days) == 0)
+                        if (Convert.ToInt32(dt1).CompareTo(grace_days) > 0 || Convert.ToInt32(dt1).CompareTo(grace_days) == 0)
                         {
-                            if (Convert.ToDateTime(BillDt).ToString("dd/MM/yyyy").CompareTo(Convert.ToDateTime(min_bill_dt).ToString("dd/MM/yyyy")) > 0)
+                            if (Convert.ToString(Convert.ToDateTime(BillDt).ToString("yyyyMMdd")).CompareTo(Convert.ToString(Convert.ToDateTime(min_bill_dt).ToString("yyyyMMdd"))) > 0)
                             {
                                 return (1);
                             }

@@ -5,5 +5,6 @@ namespace IBS.Interfaces
     public interface IDashboardRepository
     {
         public DashboardModel GetIEDDashBoardCount(int IeCd);
+        public DashboardModel GetVendorDashBoardCount(int Vend_Cd);
     }
 }
