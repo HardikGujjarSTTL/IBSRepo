@@ -975,6 +975,13 @@
                 return;
             }
 
+            var Caseno = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+            var BkNo = $("#BkNo").val();
+            var SetNo = $("#SetNo").val();
+
+
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
             $.get("@Url.Action("Validation", "InspectionCert")", formData, function (response) {
@@ -987,6 +994,14 @@
                         $.post("@Url.Action("InspectionCertSave", "InspectionCert")", formData, function (response) {
                             ShowHideMsgNew(response.status, response.responseText);
                             if (response.status) {
+                                if (BkNo != null && SetNo != null)
+                                {
+                                    var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&Bkno=' + BkNo + '&Setno=' + SetNo + '&ActionType=M';
+                                    setTimeout(function () {
+                                        window.location.href = redirectUrl;
+                                    }, 1000);
+                                }
+                                
                             }
                         });
                     }
