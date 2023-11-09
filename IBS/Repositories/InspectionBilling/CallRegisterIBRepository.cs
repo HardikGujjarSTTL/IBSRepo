@@ -1574,10 +1574,14 @@ namespace IBS.Repositories.InspectionBilling
 
             var result2 = query2.FirstOrDefault();
 
-            ie_phone = result2.IE_PHONE_NO;
-            ie_name = result2.IE_NAME;
-            ie_email = result2.IE_EMAIL;
-            ie_co_email = result2.CO_Email;
+            if(result2  != null)
+            {
+                ie_phone = result2.IE_PHONE_NO;
+                ie_name = result2.IE_NAME;
+                ie_email = result2.IE_EMAIL;
+                ie_co_email = result2.CO_Email;
+            }
+            
 
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
@@ -4693,7 +4697,6 @@ namespace IBS.Repositories.InspectionBilling
                     foreach (var entity in result)
                     {
                         int len_item = 0;
-                        string formatedItem = "";
                         if (!string.IsNullOrEmpty(entity.ItemDescPo))
                         {
                             if (entity.ItemDescPo.Length > 400)
@@ -4705,13 +4708,16 @@ namespace IBS.Repositories.InspectionBilling
                                 len_item = entity.ItemDescPo.Length;
                             }
 
-                            formatedItem = entity.ItemDescPo.Substring(0, len_item);
-                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == model.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
-                            existingEntity.ItemDescPo = formatedItem;
-                            existingEntity.QtyPassed = entity.QtyPassed;
-                            existingEntity.QtyRejected = entity.QtyRejected;
-                            existingEntity.QtyDue = entity.QtyDue;
-                            context.SaveChanges();
+                            string formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == entity.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                            if (existingEntity != null)
+                            {
+                                existingEntity.ItemDescPo = formatedItem;
+                                existingEntity.QtyPassed = entity.QtyPassed;
+                                existingEntity.QtyRejected = entity.QtyRejected;
+                                existingEntity.QtyDue = entity.QtyDue;
+                                context.SaveChanges();
+                            }
                         }
                     }
                 }
