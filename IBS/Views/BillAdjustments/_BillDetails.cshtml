@@ -146,6 +146,60 @@
                     @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))
                 </div>
             </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Install No</label>
+                    <input type="text" class="input" asp-for="CallInstallNo" maxlength="100" style="text-transform: uppercase;" readonly>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Install Part</label>
+                    @Html.DropDownListFor(model => model.FullPart, new SelectList(IBS.Models.Common.GetFPart() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="FirstInspDt">First Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
+                    <input type="text" class="datepicker" asp-for="FirstInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="LastInspDt">Last Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
+                    <input type="text" class="datepicker" asp-for="LastInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Other Insp Dates</label>
+                    <input type="text" class="datepicker" asp-for="OtherInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">IC Submit Date</label>
+                    <input type="text" class="datepicker" asp-for="ICSubmitDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Sealing Pattern</label>
+                    @Html.DropDownListFor(model => model.StampPatternCd, new SelectList(IBS.Models.Common.GetSealing() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
+                    <textarea class="input" asp-for="StampPattern" style="text-transform: uppercase;display:none;"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Photo Attached</label>
+                    @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
+                </div>
+            </div>
         </div>
 
         <div class="row my-0">
@@ -351,7 +405,15 @@
             <div class="col-md-4 mb-3 BpoFee" style="display:none;">
                 <div class="reference">
                     <label for="Reference">FEE</label>
-                    <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <span asp-validation-for="BpoFee" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="reference">
+                    <label for="Reference">Adjustment Fee</label>
+                    <input type="text" class="input" asp-for="AdjustmentFee" maxlength="100" style="text-transform: uppercase;">
+                    <span asp-validation-for="AdjustmentFee" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">

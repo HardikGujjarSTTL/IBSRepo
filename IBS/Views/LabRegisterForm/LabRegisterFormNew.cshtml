@@ -261,7 +261,7 @@ input[type="date"] {
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Code No</label>
-                    <input type="text" id="txtcodeno" class="input" />
+                    <input type="text" id="txtcodeno" class="input" maxlength="10" />
 
                 </div>
                 <div class="col-md-4 mb-4">
@@ -301,7 +301,7 @@ input[type="date"] {
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">No. Of Samples</label>
-                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="txtnofsm" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="3" />
 
                 </div>
 
@@ -322,7 +322,7 @@ input[type="date"] {
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
 
                     @Html.DropDownListFor(model => model.TestTobeCon, new SelectList(IBS.Models.Common.TestToBeConducted() , "Value", "Text"),new { @id = "ddltesttobecon",style="display:none;" })
-                    <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;"></textarea>
+                    <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;" maxlength="200"></textarea>
                 </div>
             </div>
             <div class="row my-0">
@@ -353,18 +353,18 @@ input[type="date"] {
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Testing Fee</label>
-                    <input type="text" id="testingfee" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+                    <input type="text" id="testingfee" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
 
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Service Tax</label>
-                    <input type="text" id="sertax" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="sertax" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="Reference">Handling Charges</label>
-                    <input type="text" id="handlingcharges" class="input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <input type="text" id="handlingcharges" class="input"  maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                 </div>
             </div>
@@ -381,7 +381,7 @@ input[type="date"] {
             
                 <div class="col-md-6 mb-4">
                     <label>Remarks</label>
-                    <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks"></textarea>
+                    <textarea asp-for="Remarks" class="form-control custom-textarea" id="txtremarks" maxlength="200"></textarea>
                 </div>
             </div>
             <div class="savenext-btn" style="margin-left:40%">

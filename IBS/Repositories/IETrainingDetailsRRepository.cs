@@ -331,14 +331,28 @@ namespace IBS.Repositories
                     //par[0] = new OracleParameter("p_ie_cd", OracleDbType.Int16, iecode, ParameterDirection.Input);
                     //par[1] = new OracleParameter("p_course_id", OracleDbType.Varchar2, IETrainingDetailsModel.course_name, ParameterDirection.Input);
                     //var ds1 = DataAccessDB.ExecuteNonQuery(Query, par, 1);
+                   
                     int iecode = Convert.ToInt32(IETrainingDetailsModel.Name);
-                    var trainingDetail = new TrainingDetail
+                    var count = context.TrainingDetails
+                           .Where(item =>
+                               item.IeCd == iecode &&
+                               item.CourseId == IETrainingDetailsModel.course_name)
+                           .Count();
+                    if (count == 0)
                     {
-                        IeCd = iecode,
-                        CourseId = IETrainingDetailsModel.course_name
-                    };
-                    context.TrainingDetails.Add(trainingDetail);
-                    context.SaveChanges();
+                        var trainingDetail = new TrainingDetail
+                        {
+                            IeCd = iecode,
+                            CourseId = IETrainingDetailsModel.course_name
+                        };
+                        context.TrainingDetails.Add(trainingDetail);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        IETrainingDetailsModel.MSG = "Ie Code Already Exists";
+                        return false;
+                    }
                 }
                 catch (Exception ex)
                 {
