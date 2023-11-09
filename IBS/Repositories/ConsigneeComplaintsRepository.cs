@@ -382,7 +382,7 @@ namespace IBS.Repositories
                 obj.RejectionReason = model.RejectionReason;
                 obj.UserId = model.UserId;
                 obj.ComplaintDt = DateTime.Now;
-                obj.RejMemoDt = DateTime.Now;
+                obj.RejMemoDt = model.RejMemoDt;
                 obj.Datetime = DateTime.Now;
                 obj.Createdby = Convert.ToInt32(model.UserId);
                 obj.Createddate = DateTime.Now;
@@ -414,7 +414,7 @@ namespace IBS.Repositories
                     Complaint.RejectionReason = model.RejectionReason;
                     Complaint.UserId = model.UserId;
                     Complaint.ComplaintDt = DateTime.Now;
-                    Complaint.RejMemoDt = DateTime.Now;
+                    Complaint.RejMemoDt = model.RejMemoDt;
                     Complaint.Datetime = DateTime.Now;
                     Complaint.Updatedby = Convert.ToInt32(model.UserId);
                     Complaint.Updateddate = DateTime.Now;

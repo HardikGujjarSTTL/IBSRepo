@@ -4660,7 +4660,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
                 return model;
             }
-            else if (model.CallStatus.Trim() == "R")
+            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == "")
             {
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;

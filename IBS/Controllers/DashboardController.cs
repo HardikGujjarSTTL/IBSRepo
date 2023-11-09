@@ -28,7 +28,9 @@ namespace IBS.Controllers
 
         public IActionResult Vendor()
         {
-            return View();
+            int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
+            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd);
+            return View(model);
         }
 
         public IActionResult IE()

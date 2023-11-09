@@ -66,7 +66,7 @@
                         <span asp-validation-for="InspRegion" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Item">Item</label><i class="text-danger">*</i>
+                        <label for="Item">Item</label>
                         <select id="Item" asp-for="Item" class="form-control" required></select>
                     </div>
                     <div class="col-md-2 mb-2">
@@ -119,6 +119,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".datepicker").datepicker();
             var currentDateTime = new Date();
             var formattedDate = currentDateTime.getDate().toString().padStart(2, '0') + "/" +
                 (currentDateTime.getMonth() + 1).toString().padStart(2, '0') + "/" +

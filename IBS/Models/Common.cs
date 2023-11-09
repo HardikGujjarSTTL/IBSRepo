@@ -4439,6 +4439,28 @@ namespace IBS.Models
             };
             return lstManuf;
         }
+
+        public static DateTime GetFinancialYearStartDate()
+        {
+            DateTime currentDate = DateTime.Today;
+            DateTime financialYearStart;
+            if (currentDate.Month >= 4)
+            {
+                financialYearStart = new DateTime(currentDate.Year, 4, 1);
+            }
+            else
+            {
+                financialYearStart = new DateTime(currentDate.Year - 1, 4, 1);
+            }
+            return financialYearStart;
+        }
+
+        public static DateTime GetFinancialYearEndDate()
+        {
+            DateTime financialYearStart = GetFinancialYearStartDate();
+            DateTime financialYearEnd = financialYearStart.AddYears(1).AddDays(-1);
+            return financialYearEnd;
+        }
     }
 
     public static class DbContextHelper
