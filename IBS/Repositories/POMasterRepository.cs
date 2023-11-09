@@ -672,5 +672,51 @@ namespace IBS.Repositories
             }
             return result;
         }
+
+        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid,int DocumentID)
+        {
+            IBS_DocumentDTO aPPDocument = (from x in context.IbsAppdocuments
+                                                       where x.Applicationid == Convert.ToString(Applicationid)
+                                                       && x.Documentid == DocumentID
+                                          select new IBS_DocumentDTO
+                                          {
+                                              ID = x.Id,
+                                              DocumentCategory = x.Documentcategory,
+                                              APPDocumentID = x.Id,
+                                              ApplicationID = x.Applicationid,
+                                              DocumentID = x.Documentid ?? 0,
+                                              RelativePath = x.Relativepath,
+                                              FileID = x.Fileid,
+                                              Extension = x.Extension,
+                                              FileDisplayName = x.Filedisplayname,
+                                              IsOtherDoc = x.Isotherdoc,
+                                              OtherDocumentName = x.Otherdocumentname,
+                                          }).FirstOrDefault();
+            return aPPDocument;
+        }
+
+        public int SaveAPPDocumentByID(IBS_DocumentDTO model)
+        {
+            if (model != null)
+            {
+                IbsAppdocument ibsAppdocuments = new IbsAppdocument();
+                ibsAppdocuments.Applicationid = Convert.ToString(model.ApplicationID);
+                ibsAppdocuments.Documentid = model.DocumentID;
+                ibsAppdocuments.Relativepath = model.RelativePath;
+                ibsAppdocuments.Fileid = model.FileID;
+                ibsAppdocuments.Extension = model.Extension;
+                ibsAppdocuments.Filedisplayname = model.FileDisplayName;
+                ibsAppdocuments.Isotherdoc = model.IsOtherDoc;
+                ibsAppdocuments.Otherdocumentname = model.DocumentName;
+                ibsAppdocuments.Documentcategory = model.DocumentCategory;
+                context.IbsAppdocuments.Add(ibsAppdocuments);
+                context.SaveChanges();
+                return ibsAppdocuments.Id;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }

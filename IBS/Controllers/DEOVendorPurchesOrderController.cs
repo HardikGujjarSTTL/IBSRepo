@@ -561,14 +561,22 @@ namespace IBS.Controllers
                         string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO);
                         string VendorPath = Path.Combine(TempFilePath, CaseNo + ".PDF");
                         string TempFilePath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO);
-                        string DestinationPath = Path.Combine(TempFilePath1, CaseNo + ".PDF");
+                        string DestinationPath = Path.Combine(TempFilePath1, RealCaseNo + ".PDF");
                         if (System.IO.File.Exists(VendorPath) && !System.IO.File.Exists(DestinationPath))
                         {
                             System.IO.File.Copy(VendorPath, DestinationPath, true);
                         }
 
-                        List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+                        IBS_DocumentDTO iBS_DocumentDTO = pOMasterRepository.FindAPPDocumentByID(CaseNo, (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder);
+                        if (iBS_DocumentDTO != null)
+                        {
+                            iBS_DocumentDTO.ApplicationID = RealCaseNo;
+                            iBS_DocumentDTO.FileID = RealCaseNo + iBS_DocumentDTO.Extension;
+                            iBS_DocumentDTO.RelativePath = "/ReadWriteData/Files/CASE_NO";
+                            int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTO);
+                        }
 
+                        List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
                         foreach (var item in lstDocument)
                         {
                             string TempFilePath2 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm);
@@ -579,8 +587,14 @@ namespace IBS.Controllers
                             {
                                 System.IO.File.Copy(VendorPath2, DestinationPath1, true);
                             }
-                        }
 
+                            IBS_DocumentDTO iBS_DocumentDTOs = pOMasterRepository.FindAPPDocumentByID(Convert.ToString(item.ApplicationID), (int)item.DocumentID);
+                            if (iBS_DocumentDTOs != null)
+                            {
+                                iBS_DocumentDTOs.ApplicationID = RealCaseNo;
+                                int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTOs);
+                            }
+                        }
 
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
