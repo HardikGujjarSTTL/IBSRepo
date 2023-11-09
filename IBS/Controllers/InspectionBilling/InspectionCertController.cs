@@ -146,7 +146,7 @@ namespace IBS.Controllers.InspectionBilling
                 if (Region == "N")
                 {
                     string mess = "";
-                    if(model.CallDt == null)
+                    if (model.CallDt == null)
                     {
                         model.CallDt = model.Callrecvdt;
                     }
@@ -169,7 +169,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                         AlertDanger(mess);
                     }
-                    
+
                 }
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
@@ -275,7 +275,7 @@ namespace IBS.Controllers.InspectionBilling
                 else
                 {
                     model.UserId = Convert.ToString(UserId);
-                    
+
                     i = inpsRepository.BillUpdate(model, Region);
                     msg = "Update Successfully.";
                 }
@@ -563,7 +563,7 @@ namespace IBS.Controllers.InspectionBilling
                     model.UserId = USER_ID.Substring(0, 8);
                     model.Regioncode = Region;
                     inpsRepository.SaveChangeConsignee(model);
-                    if(model.UpdateStatus == "1")
+                    if (model.UpdateStatus == "1")
                     {
                         AlertAddSuccess("Record Updated Successfully.");
                     }
