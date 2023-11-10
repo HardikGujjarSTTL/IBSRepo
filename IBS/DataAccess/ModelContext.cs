@@ -8410,6 +8410,9 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("CALL_REMARKING");
+            entity.Property(e => e.CoCd)
+                .HasPrecision(6)
+                .HasColumnName("CO_CD");
             entity.Property(e => e.Createdby)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -8434,10 +8437,9 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Migtype)
-                .HasMaxLength(1)
+                .HasMaxLength(10)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
-                .IsFixedLength()
                 .HasColumnName("MIGTYPE");
             entity.Property(e => e.Mobile)
                 .HasMaxLength(10)
@@ -12672,6 +12674,15 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("NULL")
                 .HasColumnType("NUMBER(12,4)")
                 .HasColumnName("QTY_TO_INSP");
+            entity.Property(e => e.SuppBFlag)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("SUPP_B_FLAG");
+            entity.Property(e => e.SuppNewRate)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(11,2)")
+                .HasColumnName("SUPP_NEW_RATE");
             entity.Property(e => e.Updatedby)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -12769,6 +12780,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.QtyToInsp)
                 .HasColumnType("NUMBER(12,4)")
                 .HasColumnName("QTY_TO_INSP");
+            entity.Property(e => e.SuppBFlag)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("SUPP_B_FLAG");
+            entity.Property(e => e.SuppNewRate)
+                .HasColumnType("NUMBER(11,2)")
+                .HasColumnName("SUPP_NEW_RATE");
             entity.Property(e => e.Updatedby)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -23584,7 +23602,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Callstatus)
                 .HasMaxLength(3)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("CALLSTATUS");
             entity.Property(e => e.Callstatusdesc)
                 .HasMaxLength(50)

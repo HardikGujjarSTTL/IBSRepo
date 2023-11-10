@@ -15,40 +15,64 @@
         <div class="modal-body">
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Ord</label>
+                    <input type="text" class="input" asp-for="QtyOrdered" readonly>
+                    <span class="text-danger" id="spnQtyOrdered"></span>
+                </div>
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Qty Off Now</label>
-                    <input type="text" class="input" asp-for="QtyToInsp">
+                    <input type="text" class="input" asp-for="QtyToInsp" readonly>
+                    <span class="text-danger" id="spnQtyToInsp"></span>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Qty Passed</label>
-                    <input type="text" class="input" asp-for="QtyPassed">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Qty Rejected</label>
-                    <input type="text" class="input" asp-for="QtyRejected">
+                    <input type="text" class="input" asp-for="QtyPassed" readonly>
+                    <span class="text-danger" id="spnQtyPassed"></span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
+                    <label for="Reference">Qty Rejected</label>
+                    <input type="text" class="input" asp-for="QtyRejected" readonly>
+                    <span class="text-danger" id="spnQtyRejected"></span>
+                </div>
+                <div class="col-md-4 mb-3">
                     <label for="Reference">Qty Due</label>
-                    <input type="text" class="input" asp-for="QtyDue">
+                    <input type="text" class="input" asp-for="QtyDue" readonly>
+                    <span class="text-danger" id="spnQtyDue"></span>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Other Charges</label>
-                    <input type="text" class="input" asp-for="OtherCharges">
+                    <input type="text" class="input" asp-for="OtherCharges" readonly>
+                    <span class="text-danger" id="spnOtherCharges"></span>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Rate </label>
+                    <input type="text" class="input" asp-for="Rate" readonly>
+                    <span class="text-danger" id="spnRate"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference"><span class="text-danger"> New Rate For Supplimentory </span> </label>
+                    <input type="text" class="input" asp-for="SuppNewRate">
+                    <span class="text-danger" id="spnSuppNewRate"></span>
                 </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-12 mb-3">
                     <label for="Reference">Item Desc</label>
-                    <textarea asp-for="ItemDescPo" class="input"></textarea>
+                    <input type="text" class="input" asp-for="ItemDescPo" readonly>
+                    @*<textarea asp-for="ItemDescPo" class="input"></textarea>*@
+                    <span class="text-danger" id="spnItemDescPo"></span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
             <div class="savenext-btn">
                 <button type="button" class="reset-btn" data-bs-dismiss="modal">Close</button>
-                <button class="save-btn active" id="btnUpdateCallDetails" onclick="UpdateCallDetails()">Save</button>
+                <button type="button" class="save-btn active" id="btnUpdateCallDetails" onclick="UpdateCallDetails()">Save</button>
             </div>
         </div>
     </div>

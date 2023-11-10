@@ -8,6 +8,8 @@
         @*<input type="hidden" asp-for="IcTypeId" />*@
         <input type="hidden" asp-for="Callrecvdt" />
         <input type="hidden" asp-for="BpoCd" />
+        <input type="hidden" asp-for="ConsigneeCd" />
+        
 
         <h3 class="heading3">Credit/Debit Bill Details </h3>
         @*<h3 class="heading3"><span id="spnBillHdr"></span> </h3>*@
@@ -223,45 +225,6 @@
                 </div>
             </div>
         </div>
-
-        <h3 class="heading3">Items Details </h3>
-
-        <div id="divgrid">
-            <section class="table-section">
-                <div class="task-listinput">
-                    <div class="dash-table">
-                        <table id="dtList" class="table-responsive nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Action</th>
-                                    <th>Item SNo.</th>
-                                    <th>Item Desc</th>
-                                    <th>UOM</th>
-                                    <th>Qty. Ord</th>
-                                    <th>Cumm Qty off Prev</th>
-                                    <th>Qty Prev Passed</th>
-                                    <th>Qty Off Now</th>
-                                    <th>Qty Passed</th>
-                                    <th>Qty Rejected</th>
-                                    <th>Qty Due</th>
-                                    <th>Rate</th>
-                                    <th>Sales Tax(%)</th>
-                                    <th>Sales Tax</th>
-                                    <th>Excise (%)</th>
-                                    <th>Excise</th>
-                                    <th>Discount (%)</th>
-                                    <th>Discount</th>
-                                    <th>Other Charges</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -282,7 +245,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
@@ -296,10 +258,46 @@
                     <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
-
         </div>
 
-
+        <h3 class="heading3">Items Details </h3>
+        <div id="divgrid">
+            <section class="table-section">
+                <div class="task-listinput">
+                    <div class="dash-table">
+                        <table id="dtList" class="table-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Item SNo.</th>
+                                    <th>Item Desc</th>
+                                    <th>UOM</th>
+                                    <th>Qty. Ord</th>
+                                    <th>Cumm Qty off Prev</th>
+                                    <th>Qty Prev Passed</th>
+                                    <th>Qty Off Now</th>
+                                    <th>Qty Passed</th>
+                                    <th>Qty Rejected</th>
+                                    <th>Qty Due</th>
+                                    <th>Rate</th>
+                                    <th>Supp. New Rate</th>
+                                    <th>Sales Tax(%)</th>
+                                    <th>Sales Tax</th>
+                                    <th>Excise (%)</th>
+                                    <th>Excise</th>
+                                    <th>Discount (%)</th>
+                                    <th>Discount</th>
+                                    <th>Other Charges</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
         <div class="accordion-body inner">
             <h3 class="heading3">Old Values </h3>
             <div class="row my-0">
@@ -376,14 +374,14 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Min Fee Payble</label>
-                    <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnMinFee" style="color:#d52127;"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Max Fee Allowed</label>
-                    <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnMaxFee" style="color:#d52127;"></span>
                 </div>
             </div>
@@ -399,7 +397,7 @@
             <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
                 <div class="reference">
                     <label for="Reference">Rly BPO Fee</label>
-                    @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                    @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"), new { @disabled = "disabled" })
                 </div>
             </div>
             <div class="col-md-4 mb-3 BpoFee" style="display:none;">
@@ -412,14 +410,14 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Adjustment Fee</label>
-                    <input type="text" class="input" asp-for="AdjustmentFee" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="AdjustmentFee" maxlength="100" style="text-transform: uppercase;" onChange="onAdjustmentFee()">
                     <span asp-validation-for="AdjustmentFee" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">FEE Type</label>
-                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()"})
+                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()", @disabled = "disabled"})
                 </div>
             </div>
             @if (@Convert.ToInt32(Convert.ToDateTime(@Model.CertDt).ToString("yyyyMMdd")) >= @Convert.ToInt32(20170701))
@@ -427,7 +425,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">TAX GST Type</label>
-                        @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                     </div>
                 </div>
             }
@@ -436,7 +434,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">TAX Type</label>
-                        @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                     </div>
                 </div>
             }
@@ -446,7 +444,7 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Caseno">Advance Bill</label>
-                    @Html.DropDownListFor(model => model.AdvBill, new SelectList(IBS.Models.Common.GetAdvanceBill() , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.AdvBill, new SelectList(IBS.Models.Common.GetAdvanceBill() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                 </div>
             </div>
             <div class="col-md-8 mb-3">

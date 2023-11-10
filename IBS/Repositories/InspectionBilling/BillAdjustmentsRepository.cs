@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Dynamic;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -55,7 +56,9 @@ namespace IBS.Repositories.InspectionBilling
                     model.NoOfInsp = Convert.ToInt32(GetDetails.C.NoOfInsp);
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
-                    model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
+
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -158,7 +161,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.IrfcBpo = "N";
                 }
-                if(GetDetails.C.IrfcFunded == "Y")
+                if (GetDetails.C.IrfcFunded == "Y")
                 {
                     get_legalname(model, Convert.ToInt32(model.IrfcBpo), "B");
                 }
@@ -166,11 +169,9 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     get_legalname(model, Convert.ToInt32(model.ConsigneeCd), "C");
                 }
-                
+
             }
-            if (Bill == null)
-                throw new Exception("Bill Record Not found");
-            else
+            if (Bill != null)
             {
                 //Bill Details
                 model.Caseno = Bill.CaseNo;
@@ -179,6 +180,8 @@ namespace IBS.Repositories.InspectionBilling
                 model.TMValue = Convert.ToDecimal(Bill.MaterialValue);
                 model.BpoFeeType = Bill.FeeType;
                 model.Rate = Bill.FeeRate;
+                model.RlyBpoFee = Convert.ToDecimal(Bill.FeeRate);
+                model.AdjustmentFee = Convert.ToDecimal(Bill.FeeRate);
                 model.TaxType = Bill.TaxType;
                 model.TIFee = Convert.ToDecimal(Bill.InspFee);
                 model.ServiceTax = Bill.ServiceTax;
@@ -300,6 +303,7 @@ namespace IBS.Repositories.InspectionBilling
                         QtyRejected = c.QtyRejected,
                         QtyDue = c.QtyDue,
                         Rate = p.Rate,
+                        SuppNewRate = Convert.ToDecimal(c.SuppNewRate),
                         SalesTaxPer = p.SalesTaxPer,
                         SalesTax = p.SalesTax,
                         ExcisePer = p.ExcisePer,
@@ -340,7 +344,7 @@ namespace IBS.Repositories.InspectionBilling
                                      City = t03.City,
                                      State = t92.StateCd + "-" + t92.StateName
                                  }).FirstOrDefault();
-                if(GetLegalD != null)
+                if (GetLegalD != null)
                 {
                     model.LegalName = GetLegalD.LegalName;
                     model.City = GetLegalD.City;
@@ -379,10 +383,8 @@ namespace IBS.Repositories.InspectionBilling
             var query = (from c in context.T18CallDetails
                          join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                          join u in context.T04Uoms on p.UomCd equals u.UomCd
-                         where c.CaseNo == model.Caseno
-                             && c.CallRecvDt == model.Callrecvdt
-                             && c.CallSno == model.Callsno
-                         //&& c.CONSIGNEE_CD == consigneeCd
+                         where c.CaseNo == model.Caseno && c.CallRecvDt == model.Callrecvdt && c.CallSno == model.Callsno && c.ItemSrnoPo == model.ItemSrnoPo
+
                          select new
                          {
                              c,
@@ -391,9 +393,7 @@ namespace IBS.Repositories.InspectionBilling
                          }).FirstOrDefault();
             var CDetails = query;
 
-            if (CDetails == null)
-                throw new Exception("Call Record Not found");
-            else
+            if (CDetails != null)
             {
                 model.Caseno = CDetails.c.CaseNo;
                 model.Callrecvdt = CDetails.c.CallRecvDt;
@@ -401,12 +401,14 @@ namespace IBS.Repositories.InspectionBilling
 
                 model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
                 model.ItemDescPo = CDetails.c.ItemDescPo;
+                model.QtyOrdered = CDetails.c.QtyOrdered;
                 model.QtyPassed = CDetails.c.QtyPassed;
                 model.QtyToInsp = CDetails.c.QtyToInsp;
                 model.QtyPassed = CDetails.c.QtyPassed;
                 model.QtyRejected = CDetails.c.QtyRejected;
                 model.QtyDue = CDetails.c.QtyDue;
                 model.Rate = CDetails.p.Rate;
+                model.SuppNewRate = Convert.ToDecimal(CDetails.c.SuppNewRate);
                 model.SalesTaxPer = CDetails.p.SalesTaxPer;
                 model.SalesTax = CDetails.p.SalesTax;
                 model.ExcisePer = CDetails.p.ExcisePer;
@@ -415,9 +417,8 @@ namespace IBS.Repositories.InspectionBilling
                 model.Discount = CDetails.p.Discount;
                 model.OtherCharges = CDetails.p.OtherCharges;
                 model.Consignee = Convert.ToString(CDetails.c.ConsigneeCd);
-
-                return model;
             }
+            return model;
         }
 
         public string UpdateCallDetails(InspectionCertModel model, int ItemSrnoPo)
@@ -426,11 +427,9 @@ namespace IBS.Repositories.InspectionBilling
             var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
             if (CallDetails != null)
             {
-                CallDetails.ItemDescPo = model.ItemDescPo;
-                CallDetails.QtyToInsp = model.QtyToInsp;
-                CallDetails.QtyPassed = model.QtyPassed;
-                CallDetails.QtyRejected = model.QtyRejected;
-                CallDetails.QtyDue = model.QtyDue;
+                CallDetails.SuppBFlag = "S";
+                CallDetails.SuppNewRate = model.SuppNewRate;
+
                 CallDetails.Updatedby = model.UserId;
                 CallDetails.Updateddate = DateTime.Now.Date;
 
@@ -441,6 +440,9 @@ namespace IBS.Repositories.InspectionBilling
                 if (PODetails != null)
                 {
                     PODetails.OtherCharges = model.OtherCharges;
+
+                    PODetails.Updatedby = model.UserId;
+                    PODetails.Updateddate = DateTime.Now.Date;
                     context.SaveChanges();
                 }
 
@@ -518,7 +520,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         gen_credit_note(model);
                     }
-                    
+
                     if (model.CanOrRejctionFee == "Y" && model.BillNo == null)
                     {
                         var T13 = context.T13PoMasters.Where(x => x.CaseNo == model.Caseno && (x.PendingCharges == null || x.PendingCharges > 0)).FirstOrDefault();
@@ -659,7 +661,7 @@ namespace IBS.Repositories.InspectionBilling
                 string InvoiceNo = null;
                 if (Convert.ToInt32(certdt) >= 20170701)
                 {
-                    
+
                     if (model.InvoiceNo == null || model.InvoiceNo.Length < 13 || model.CnoteBillNo == null)
                     {
                         if (model.Regioncode == "N")
@@ -810,7 +812,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         str_cnote_bill.AmountReceived = w_cnote_amt;
                         str_cnote_bill.BillAmtCleared = w_cnote_amt;
-                        
+
                         context.SaveChanges();
                     }
 
@@ -825,12 +827,12 @@ namespace IBS.Repositories.InspectionBilling
                     };
                     context.T22AdjustmentBills.Add(T22);
                     context.SaveChanges();
-                    
-                    var AType = context.T22AdjustmentBills.Where(x=>x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if(AType != null)
+
+                    var AType = context.T22AdjustmentBills.Where(x => x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
+                    if (AType != null)
                     {
                         str_cnote_bill.Billadtype = model.BillAdType;
-                        str_cnote_bill.ReferenceAid = AType.Aid; 
+                        str_cnote_bill.ReferenceAid = AType.Aid;
                         context.SaveChanges();
                     }
                     model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
@@ -887,6 +889,436 @@ namespace IBS.Repositories.InspectionBilling
                 }
             }
             return sms;
+        }
+
+        //public DTResult<InspectionCertItemListModel> FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee)
+        //{
+        //    DTResult<InspectionCertItemListModel> dTResult = new() { draw = 0 };
+        //    int err = 0;
+
+        //    var query = (from c in context.T18CallDetails
+        //                 join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+        //                 join u in context.T04Uoms on p.UomCd equals u.UomCd
+        //                 where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == Caseno
+        //                        && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
+        //                        && c.CallSno == Callsno
+        //                        && c.ConsigneeCd == Convert.ToInt32(Consignee)
+        //                 select new InspectionCertItemListModel
+        //                 {
+        //                     ItemSrnoPo = c.ItemSrnoPo,
+        //                     ItemDescPo = c.ItemDescPo,
+        //                     UomSDesc = u.UomSDesc,
+        //                     QtyOrdered = c.QtyOrdered,
+        //                     CumQtyPrevOffered = c.CumQtyPrevOffered,
+        //                     CumQtyPrevPassed = c.CumQtyPrevPassed,
+        //                     QtyToInsp = c.QtyToInsp,
+        //                     QtyPassed = c.QtyPassed,
+        //                     QtyRejected = c.QtyRejected,
+        //                     QtyDue = c.QtyDue,
+        //                     Rate = p.Rate,
+        //                     SuppNewRate = Convert.ToDecimal(c.SuppNewRate),
+        //                     SalesTaxPer = p.SalesTaxPer,
+        //                     SalesTax = p.SalesTax,
+        //                     ExciseType = p.ExciseType,
+        //                     ExcisePer = p.ExcisePer,
+        //                     Excise = p.Excise,
+        //                     DiscountType = p.DiscountType,
+        //                     DiscountPer = p.DiscountPer,
+        //                     Discount = p.Discount,
+        //                     OtherCharges = p.OtherCharges,
+        //                     OtChargePer = p.OtChargePer,
+        //                     OtChargeType = p.OtChargeType
+        //                 }).ToList();
+
+        //    decimal basevalue = 0;
+        //    decimal discountamount = 0;
+        //    decimal exciseamount = 0;
+        //    decimal stamount = 0;
+        //    decimal otheramount = 0;
+
+
+        //    decimal totalvalue1 = 0;
+        //    decimal totalvalue2 = 0;
+        //    decimal totalvalue3 = 0;
+        //    decimal totalvalue = 0;
+
+        //    for (int i = 0; i < query.Count; i++)
+        //    {
+        //        InspectionCertItemListModel dataItem = query[i];
+        //        err = 0;
+
+        //        int srno = (byte)dataItem.ItemSrnoPo;
+
+        //        decimal qty = Convert.ToDecimal(dataItem.QtyOrdered);
+        //        decimal qtyOffNow = Convert.ToDecimal(dataItem.QtyPassed);
+
+        //        decimal SuppNewRateP = Convert.ToDecimal(dataItem.SuppNewRate);
+
+        //        decimal SalesTaxP = Convert.ToDecimal(dataItem.SalesTax);
+        //        decimal SalesTaxPerP = Convert.ToDecimal(dataItem.SalesTaxPer);
+        //        decimal ExcisePerP = Convert.ToDecimal(dataItem.ExcisePer);
+        //        decimal DiscountPerP = Convert.ToDecimal(dataItem.DiscountPer);
+        //        decimal OtChargePerP = Convert.ToDecimal(dataItem.OtChargePer);
+        //        decimal OtherChargesP = Convert.ToDecimal(dataItem.OtherCharges);
+        //        string DiscountTypeP = dataItem.DiscountType;
+        //        string ExciseTypeP = dataItem.ExciseType;
+        //        string OtChargeTypeP = dataItem.OtChargeType;
+
+        //        int uom = 1;
+        //        if (qtyOffNow > 0)
+        //        {
+        //            err = 1;
+        //        }
+        //        if (err == 1)
+        //        {
+        //            //Base value Calculation
+        //            basevalue += Convert.ToDecimal((qtyOffNow * SuppNewRateP) / uom);
+        //            //DisCount Calculation
+        //            if (DiscountTypeP == "P")
+        //            {
+        //                discountamount += Convert.ToDecimal((basevalue * DiscountPerP) / 100);
+        //            }
+        //            else if (DiscountTypeP == "L")
+        //            {
+        //                discountamount += DiscountPerP;
+        //            }
+        //            else if (DiscountTypeP == "N")
+        //            {
+        //                discountamount += Convert.ToDecimal(DiscountPerP * qtyOffNow);
+        //            }
+        //            else
+        //            {
+        //                discountamount += 0;
+        //            }
+        //            //Exise Calculation
+        //            if(qtyOffNow == qty)
+        //            {
+        //                if (ExciseTypeP == "P")
+        //                {
+        //                    exciseamount += Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+        //                }
+        //                else if (ExciseTypeP == "L")
+        //                {
+        //                    exciseamount += Convert.ToDecimal(ExcisePerP);
+        //                }
+        //                else
+        //                {
+        //                    exciseamount += 0;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                exciseamount += 0;
+        //            }
+
+        //            //Salse Tax
+        //            if (SalesTaxPerP > 0)
+        //            {
+        //                //stamount += Convert.ToDecimal((qtyOffNow / qty) * SalesTaxP);
+        //                stamount += Convert.ToDecimal((((basevalue - discountamount) + exciseamount) * SalesTaxPerP) / 100);
+        //            }
+        //            else
+        //            {
+        //                //stamount += Convert.ToDecimal(((basevalue - discountamount) * SalesTaxPerP) / 100);
+        //                stamount += 0;
+        //            }
+
+        //            //Other Charges
+        //            if (OtChargeTypeP == "P")
+        //            {
+        //                otheramount = Convert.ToDecimal((basevalue * OtChargePerP) / 100);
+        //            }
+        //            else if (OtChargeTypeP == "L")
+        //            {
+        //                otheramount += Convert.ToDecimal(OtChargePerP);
+        //            }
+        //            else if (OtChargeTypeP == "N")
+        //            {
+        //                otheramount += Convert.ToDecimal((qtyOffNow * OtChargePerP) / 100);
+        //            }
+        //            else
+        //            {
+        //                otheramount += 0;
+        //            }
+
+        //            //Total Calculation
+        //            totalvalue1 = Convert.ToDecimal(basevalue - discountamount);
+        //            totalvalue2 = Convert.ToDecimal(totalvalue1 + exciseamount);
+        //            totalvalue3 = Convert.ToDecimal(totalvalue2 + stamount);
+        //            totalvalue = Convert.ToDecimal(totalvalue3 + otheramount);
+        //        }
+        //    }
+
+        //    decimal MaxFee = 0;
+        //    decimal MinFee = 0;
+        //    decimal in_fee = 0;
+
+        //    var BillDetails = context.T22Bills.Where(x=>x.BillNo == BillNo).FirstOrDefault();
+        //    if(BillDetails != null)
+        //    {
+
+        //    }
+
+        //    dTResult.recordsTotal = Convert.ToInt32(totalvalue);
+        //    //dTResult.data = query;
+        //    return dTResult;
+        //}
+
+        public InspectionCertModel FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd)
+        {
+            //DTResult<InspectionCertItemListModel> dTResult = new() { draw = 0 };
+            InspectionCertModel model = new();
+            int err = 0;
+
+            var query = (from c in context.T18CallDetails
+                         join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                         join u in context.T04Uoms on p.UomCd equals u.UomCd
+                         where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == Caseno
+                                && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
+                                && c.CallSno == Callsno
+                                && c.ConsigneeCd == Convert.ToInt32(Consignee)
+                         select new InspectionCertItemListModel
+                         {
+                             ItemSrnoPo = c.ItemSrnoPo,
+                             ItemDescPo = c.ItemDescPo,
+                             UomSDesc = u.UomSDesc,
+                             QtyOrdered = c.QtyOrdered,
+                             CumQtyPrevOffered = c.CumQtyPrevOffered,
+                             CumQtyPrevPassed = c.CumQtyPrevPassed,
+                             QtyToInsp = c.QtyToInsp,
+                             QtyPassed = c.QtyPassed,
+                             QtyRejected = c.QtyRejected,
+                             QtyDue = c.QtyDue,
+                             Rate = p.Rate,
+                             SuppNewRate = Convert.ToDecimal(c.SuppNewRate),
+                             SalesTaxPer = p.SalesTaxPer,
+                             SalesTax = p.SalesTax,
+                             ExciseType = p.ExciseType,
+                             ExcisePer = p.ExcisePer,
+                             Excise = p.Excise,
+                             DiscountType = p.DiscountType,
+                             DiscountPer = p.DiscountPer,
+                             Discount = p.Discount,
+                             OtherCharges = p.OtherCharges,
+                             OtChargePer = p.OtChargePer,
+                             OtChargeType = p.OtChargeType
+                         }).ToList();
+
+            decimal basevalue = 0;
+            decimal discountamount = 0;
+            decimal exciseamount = 0;
+            decimal stamount = 0;
+            decimal otheramount = 0;
+
+
+            decimal totalvalue1 = 0;
+            decimal totalvalue2 = 0;
+            decimal totalvalue3 = 0;
+            decimal totalvalue = 0;
+
+            decimal w_insp_fee = 0;
+
+            decimal w_igst = 0;
+            decimal w_cgst = 0;
+            decimal w_sgst = 0;
+
+            decimal w_total_fee = 0;
+
+            for (int i = 0; i < query.Count; i++)
+            {
+                InspectionCertItemListModel dataItem = query[i];
+                err = 0;
+
+                int srno = (byte)dataItem.ItemSrnoPo;
+
+                decimal qty = Convert.ToDecimal(dataItem.QtyOrdered);
+                decimal qtyOffNow = Convert.ToDecimal(dataItem.QtyPassed);
+
+                decimal SuppNewRateP = Convert.ToDecimal(dataItem.SuppNewRate);
+
+                decimal SalesTaxP = Convert.ToDecimal(dataItem.SalesTax);
+                decimal SalesTaxPerP = Convert.ToDecimal(dataItem.SalesTaxPer);
+                decimal ExcisePerP = Convert.ToDecimal(dataItem.ExcisePer);
+                decimal DiscountPerP = Convert.ToDecimal(dataItem.DiscountPer);
+                decimal OtChargePerP = Convert.ToDecimal(dataItem.OtChargePer);
+                decimal OtherChargesP = Convert.ToDecimal(dataItem.OtherCharges);
+                string DiscountTypeP = dataItem.DiscountType;
+                string ExciseTypeP = dataItem.ExciseType;
+                string OtChargeTypeP = dataItem.OtChargeType;
+
+                int uom = 1;
+                if (qtyOffNow > 0)
+                {
+                    err = 1;
+                }
+                if (err == 1)
+                {
+                    //Base value Calculation
+                    basevalue += Convert.ToDecimal((qtyOffNow * SuppNewRateP) / uom);
+                    //DisCount Calculation
+                    if (DiscountTypeP == "P")
+                    {
+                        discountamount += Convert.ToDecimal((basevalue * DiscountPerP) / 100);
+                    }
+                    else if (DiscountTypeP == "L")
+                    {
+                        discountamount += DiscountPerP;
+                    }
+                    else if (DiscountTypeP == "N")
+                    {
+                        discountamount += Convert.ToDecimal(DiscountPerP * qtyOffNow);
+                    }
+                    else
+                    {
+                        discountamount += 0;
+                    }
+                    //Exise Calculation
+                    if (qtyOffNow == qty)
+                    {
+                        if (ExciseTypeP == "P")
+                        {
+                            exciseamount += Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                        }
+                        else if (ExciseTypeP == "L")
+                        {
+                            exciseamount += Convert.ToDecimal(ExcisePerP);
+                        }
+                        else
+                        {
+                            exciseamount += 0;
+                        }
+                    }
+                    else
+                    {
+                        exciseamount += 0;
+                    }
+
+                    //Salse Tax
+                    if (SalesTaxPerP > 0)
+                    {
+                        //stamount += Convert.ToDecimal((qtyOffNow / qty) * SalesTaxP);
+                        stamount += Convert.ToDecimal((((basevalue - discountamount) + exciseamount) * SalesTaxPerP) / 100);
+                    }
+                    else
+                    {
+                        //stamount += Convert.ToDecimal(((basevalue - discountamount) * SalesTaxPerP) / 100);
+                        stamount += 0;
+                    }
+
+                    //Other Charges
+                    if (OtChargeTypeP == "P")
+                    {
+                        otheramount = Convert.ToDecimal((basevalue * OtChargePerP) / 100);
+                    }
+                    else if (OtChargeTypeP == "L")
+                    {
+                        otheramount += Convert.ToDecimal(OtChargePerP);
+                    }
+                    else if (OtChargeTypeP == "N")
+                    {
+                        otheramount += Convert.ToDecimal((qtyOffNow * OtChargePerP) / 100);
+                    }
+                    else
+                    {
+                        otheramount += 0;
+                    }
+
+                    //Total Calculation
+                    totalvalue1 = Convert.ToDecimal(basevalue - discountamount);
+                    totalvalue2 = Convert.ToDecimal(totalvalue1 + exciseamount);
+                    totalvalue3 = Convert.ToDecimal(totalvalue2 + stamount);
+                    totalvalue = Convert.ToDecimal(totalvalue3 + otheramount);
+                    model.TMValueNew = totalvalue;
+                }
+            }
+
+            var BillDetails = context.T22Bills.Where(x => x.BillNo == BillNo).FirstOrDefault();
+            if (BillDetails != null)
+            {
+                model.MaxFee = Convert.ToInt32(BillDetails.MaxFee);
+                model.MinFee = Convert.ToInt32(BillDetails.MinFee);
+                model.TIFeeNew = Convert.ToDecimal(BillDetails.InspFee);
+                model.BpoFeeType = BillDetails.FeeType;
+                model.TaxType = BillDetails.TaxType;
+            }
+            var T20Details = context.T20Ics.Where(x => x.CaseNo == Caseno && x.CallRecvDt == Convert.ToDateTime(Callrecvdt) && x.CallSno == Callsno).FirstOrDefault();
+            if (T20Details != null)
+            {
+                model.NoOfInsp = Convert.ToInt32(T20Details.NoOfInsp);
+            }
+
+            if (model.BpoFeeType == "D" || model.BpoFeeType == "H")
+            {
+                w_insp_fee = Convert.ToDecimal(model.NoOfInsp * AdjustmentFee);
+            }
+            else if (model.BpoFeeType == "P")
+            {
+                w_insp_fee = Convert.ToDecimal((totalvalue * AdjustmentFee) / 100);
+            }
+            else if (model.BpoFeeType == "L")
+            {
+                w_insp_fee = AdjustmentFee;
+            }
+            else
+            {
+                w_insp_fee = 0;
+            }
+
+            if ((model.MinFee > 0) && (model.MinFee > w_insp_fee))
+            {
+                w_insp_fee += Convert.ToDecimal(model.MinFee);
+            }
+            if ((model.MaxFee >= 0) && (model.MaxFee < w_insp_fee))
+            {
+                w_insp_fee += Convert.ToDecimal(model.MaxFee);
+            }
+            model.TIFeeNew = w_insp_fee;
+
+            var Ic_Dt = context.T20Ics.Where(x => x.CaseNo == Caseno && x.CallRecvDt == Convert.ToDateTime(Callrecvdt) && x.CallSno == Callsno && x.ConsigneeCd == ConsigneeCd).Select(x => x.IcDt).FirstOrDefault();
+            var igst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.IgstRate ?? 0).FirstOrDefault();
+            var sgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.SgstRate ?? 0).FirstOrDefault();
+            var cgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.CgstRate ?? 0).FirstOrDefault();
+            if (model.TaxType == "I")
+            {
+                w_igst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(igst_rate) / 100)) / 100);
+                w_cgst = 0;
+                w_sgst = 0;
+            }
+            else if (model.TaxType == "C")
+            {
+                w_cgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(cgst_rate) / 100)) / 100);
+                w_sgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(sgst_rate) / 100)) / 100);
+                w_igst = 0;
+            }
+            else if (model.TaxType == "X")
+            {
+                w_cgst = 0;
+                w_sgst = 0;
+                w_igst = 0;
+            }
+            else if (model.TaxType == "Y")
+            {
+                w_total_fee = w_insp_fee;
+                w_insp_fee = w_total_fee / (1 + (Convert.ToInt32(igst_rate) / 100));
+                w_igst = Convert.ToDecimal(w_insp_fee * Convert.ToDecimal(igst_rate));
+                w_cgst = 0;
+                w_sgst = 0;
+                w_insp_fee = Convert.ToDecimal(w_total_fee - (w_igst));
+            }
+            else if (model.TaxType == "Z")
+            {
+                w_total_fee = w_insp_fee;
+                w_insp_fee = w_total_fee / (1 + (Convert.ToInt32(cgst_rate) / 100) + (Convert.ToInt32(sgst_rate) / 100));
+                w_igst = 0;
+                w_cgst = Convert.ToDecimal(w_insp_fee * (Convert.ToInt32(cgst_rate) / 100));
+                w_sgst = Convert.ToDecimal(w_insp_fee * (Convert.ToInt32(sgst_rate) / 100));
+                w_insp_fee = w_total_fee - (w_cgst + w_sgst);
+            }
+            w_total_fee = Convert.ToDecimal(w_insp_fee + w_cgst + w_sgst + w_igst);
+
+            model.NetFeeNew = w_total_fee;
+
+            return model;
         }
     }
 }
