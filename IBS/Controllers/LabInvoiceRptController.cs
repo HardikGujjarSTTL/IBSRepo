@@ -5,6 +5,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Drawing;
 using System.Text.Json;
@@ -48,6 +49,20 @@ namespace IBS.Controllers
                 //return RedirectToAction("LabInvoiceRpt");
             }
             return View(dTResult);
+        }
+        [HttpGet]
+        public IActionResult GetBPO(string BpoType)
+        {
+            try
+            {
+                List<SelectListItem> agencyClient = Common.GetBPO(BpoType);
+                return Json(new { status = true, list = agencyClient });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Billing", "GetBPO", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)

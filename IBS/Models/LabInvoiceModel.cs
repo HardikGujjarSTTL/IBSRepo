@@ -17,6 +17,7 @@ namespace IBS.Models
         public string BPOCD { get; set; }
         public string BPOTYPE { get; set; }
         public string BPONM { get; set; }
+        public string BPONMtext { get; set; }
         public string InvoiceNo { get; set; }
         public string InvoiceDt { get; set; }
         public string Item { get; set; }
