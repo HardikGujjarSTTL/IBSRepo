@@ -119,8 +119,7 @@ namespace IBSAPI.Controllers
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found",
-                        data = result
+                        message = "No Data Found"
                     };
                     return Ok(response);
                 }
