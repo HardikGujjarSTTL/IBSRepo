@@ -61,13 +61,34 @@ namespace IBS.Repositories
         {
             DashboardModel model = new();
 
-            model.TotalCallsCount = 35;
-            model.PendingCallsCount = 13;
-            model.AcceptedCallsCount = 15;
-            model.CancelledCallsCount = 2;
-            model.UnderLabTestingCount = 40;
-            model.StillUnderInspectionCount = 20;
-            model.StageRejectionCount = 17;
+            var GetFormDate = Common.GetFinancialYearStartDate();
+
+            string FormDate = GetFormDate.ToString(Common.CommonDateFormate1);
+            string ToDate = DateTime.Now.ToString(Common.CommonDateFormate1);
+
+            OracleParameter[] par = new OracleParameter[4];
+
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FormDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IECD", OracleDbType.NVarchar2, Vend_Cd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_VENDOR_DASHBOARD_COUNT", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalCallsCount = 0;
+                    model.PendingCallsCount = 0;
+                    model.AcceptedCallsCount = 0;
+                    model.CancelledCallsCount = 0;
+                    model.UnderLabTestingCount = 0;
+                    model.StillUnderInspectionCount = 0;
+                    model.StageRejectionCount = 0;
+                }
+
+            }
 
             return model;
         }
