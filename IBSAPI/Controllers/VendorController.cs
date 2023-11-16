@@ -21,30 +21,221 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("GetCaseDetailsforvendor", Name = "GetCaseDetailsforvendor")]
-        public IActionResult GetCaseDetailsforvendor(int UserID)
+        public IActionResult GetCaseDetailsforvendor(string CaseNo, int UserID,DateTime? CallRecvDt, string CallStage)
         {
             try
             {
-                List<CallRegiModel> callRegiModels = vendorRepository.GetCaseDetailsforvendor(UserID);
-                if (callRegiModels.Count() > 0)
+                VenderCallRegisterModel model = new();
+                string msg = "";
+                if (CaseNo != null)
                 {
-                    var response = new
+                    PODetailsModel model1 = vendorRepository.GetPODetailsforvendor(CaseNo, UserID);
+                    model = vendorRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, Convert.ToInt32(UserID));
+                    if (model.OnlineCallStatus == "Y")
                     {
-                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                        message = "Successfully",
-                        data = callRegiModels
-                    };
-                    return Ok(response);
+                        if (model.InspectingAgency == "R")
+                        {
+                            if (model.PoOrLetter == "P")
+                            {
+                                if (model.PendingCharges > 0)
+                                {
+                                    msg = "Call Cancellation/Rejection charges are pending, Kindly submit the pending charges before submitting the call.";
+                                }
+                                else
+                                {
+                                    //string check = model.VendCd;
+
+                                    string check = vendorRepository.GetMatch(CaseNo,Convert.ToString(UserID));
+                                    if (check == "2")
+                                    {
+                                        int cno = model.MaxCount;
+                                        if (cno == 0)
+                                        {
+                                            if (model.RlyNonrly == "R" || model.RlyNonrly == "U")
+                                            {
+                                                string dp = model.dp;
+                                                if (dp == "0")
+                                                {
+                                                    msg = "Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.";
+                                                }
+                                                else if (dp == "2")
+                                                {
+                                                    msg = "Delivery Period not available, so Call shall not be accepted.";
+                                                }
+                                                else
+                                                {
+                                                    if (model1 != null)
+                                                    {
+                                                        var response = new
+                                                        {
+                                                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                                            message = "Successfully",
+                                                            data = model
+                                                        };
+                                                        return Ok(response);
+                                                    }
+                                                    else
+                                                    {
+                                                        var response = new
+                                                        {
+                                                            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                                            message = "No Data Found",
+                                                        };
+                                                        return Ok(response);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (model1 != null)
+                                                {
+                                                    var response = new
+                                                    {
+                                                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                                        message = "Successfully",
+                                                        data = model
+                                                    };
+                                                    return Ok(response);
+                                                }
+                                                else
+                                                {
+                                                    var response = new
+                                                    {
+                                                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                                        message = "No Data Found",
+                                                    };
+                                                    return Ok(response);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            msg = "Call is already registered against given Case No. and the Call Status is still Pending, so New Call shall not be accepted.";
+                                        }
+                                    }
+                                    else if (check == "0")
+                                    {
+                                        msg = "No Record Present for the Given Case No.!!! ";
+                                    }
+                                    else
+                                    {
+                                        msg = "You are not Authorised to Add The Call For Other Vendors.!!! ";
+                                    }
+
+                                }
+                            }
+                            else if (model.PoOrLetter == "L")
+                            {
+                                if (model.RlyNonrly == "R" || model.RlyNonrly == "U")
+                                {
+                                    string dp = model.dp;
+                                    if (dp == "0")
+                                    {
+                                        msg = "Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.";
+                                    }
+                                    else if (dp == "2")
+                                    {
+                                        msg = "Delivery Period not available, so Call shall not be accepted.";
+                                    }
+                                    else
+                                    {
+                                        if (model1 != null)
+                                        {
+                                            var response = new
+                                            {
+                                                resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                                message = "Successfully",
+                                                data = model
+                                            };
+                                            return Ok(response);
+                                        }
+                                        else
+                                        {
+                                            var response = new
+                                            {
+                                                resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                                message = "No Data Found",
+                                            };
+                                            return Ok(response);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (model1 != null)
+                                    {
+                                        var response = new
+                                        {
+                                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                            message = "Successfully",
+                                            data = model
+                                        };
+                                        return Ok(response);
+                                    }
+                                    else
+                                    {
+                                        var response = new
+                                        {
+                                            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                            message = "No Data Found",
+                                        };
+                                        return Ok(response);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                msg = "Online Call cannot be registered as Purchase Order OR Letter of Offer is Blank.";
+                            }
+                        }
+                        else
+                        {
+                            if (model.InspectingAgency == "C")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    msg = "RITES is not the Inspection Agency for this CASE.";
+                                }
+                                else
+                                {
+                                    msg = "RITES is not the Inspection Agency for this CASE. Kindly see the comments below : " + "\\n" + model.Remarks.Trim();
+                                }
+                            }
+                            else if (model.InspectingAgency == "X")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    msg = "Railways has cancelled the PO for this CASE.";
+                                }
+                                else
+                                {
+                                    msg = "Railways has cancelled the PO for this CASE. Kindly see the comments below : " + "\\n" + model.Remarks.Trim();
+                                }
+                            }
+                            else if (model.InspectingAgency == "S")
+                            {
+                                if (model.Remarks == "")
+                                {
+                                    msg = "RITES has Suspended the Inspection against this PO.";
+                                }
+                                else
+                                {
+                                    msg = "RITES has Suspended the Inspection against this PO. Kindly see the comments below : " + "\\n" + model.Remarks.Trim();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        msg = "Please Your Call are Register in Online.";
+                    }
                 }
-                else
+                var response1 = new
                 {
-                    var response = new
-                    {
-                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found",
-                    };
-                    return Ok(response);
-                }
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = msg,
+                };
+                return Ok(response1);
             }
             catch (Exception ex)
             {
