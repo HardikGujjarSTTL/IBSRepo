@@ -23,7 +23,10 @@ namespace IBS.Controllers
 
         public IActionResult Client()
         {
-            return View();
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation);
+            return View(model);
         }
 
         public IActionResult Vendor()
