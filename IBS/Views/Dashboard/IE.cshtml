@@ -385,7 +385,7 @@
         @if (Model != null && Model.lstIE != null && Model.lstIE.Count > 0)
         {
             var SrNo = 0;
-            @foreach (var item in Model.lstIE)
+            @foreach (var item in Model.lstIE.Take(5))
             {
                 SrNo = SrNo + 1;
                 <tr>

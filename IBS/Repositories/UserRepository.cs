@@ -144,6 +144,7 @@ namespace IBS.Repositories
                                     OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
                                     Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
                                     IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0
+                                    //CoCd = ie != null ? Convert.ToInt16(u.) : 0
                                 }).FirstOrDefault();
 
             return userSessionModel;

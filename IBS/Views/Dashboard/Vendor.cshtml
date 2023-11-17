@@ -208,7 +208,7 @@
             @if (Model != null && Model.lstPOCallStatus != null && Model.lstPOCallStatus.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstPOCallStatus)
+                @foreach (var item in Model.lstPOCallStatus.Take(5))
                 {
                     SrNo = SrNo + 1;
                     <tr>
@@ -228,7 +228,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -251,7 +251,7 @@
             @if (Model != null && Model.lstRecentPO != null && Model.lstRecentPO.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstRecentPO)
+                @foreach (var item in Model.lstRecentPO.Take(5))
                 {
                     SrNo = SrNo + 1;
                     <tr>
@@ -268,7 +268,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>

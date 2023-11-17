@@ -33,6 +33,12 @@
         public List<RecentPOList> lstRecentPO { get; set; }
 
         public List<ClientVENDPOList> lstClientVEND { get; set; }
+
+        public List<ClientRecentReqList> lstClientRecentReq { get; set; }
+
+        public List<ClientRecentPOList> lstClientRecentPO { get; set; }
+
+        public List<ClientVendConCompList> lstClientVendConComp { get; set; }
     }
 
     public class IEList 
@@ -79,5 +85,31 @@
         public int TOTAL_CALL { get; set; }
         public int REJECTED_CALL { get; set; }
         public int CANCELLED_CALL { get; set; }
+    }
+    
+    public class ClientRecentReqList 
+    {
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public int CALL_SNO { get; set; }
+        public string VEND_NAME { get; set; }
+        public string DETAILS { get; set; }
+        public string IE_NAME { get; set; }
+        public string CALL_STATUS { get; set; }
+    }
+    
+    public class ClientRecentPOList 
+    {
+        public string CASE_NO { get; set; }
+        public decimal VALUE { get; set; }
+        public string VEND_NAME { get; set; }
+        public string PO_NO { get; set; }
+        public DateTime PO_DT { get; set; }
+    }
+    
+    public class ClientVendConCompList 
+    {
+        public int NO_OF_COMPLAINTS { get; set; }
+        public string VEND_NAME { get; set; }
     }
 }

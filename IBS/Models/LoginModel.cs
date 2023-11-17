@@ -36,6 +36,7 @@ namespace IBS.Models
         public string RoleName { get; set; }
         public string USER_ID { get; set; }
         public string MOBILE { get; set; }
+        public int CoCd { get; set; }
     }
 
     public class ForgotPasswordModel
