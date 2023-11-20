@@ -133,5 +133,41 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+        [HttpPost("CancelInspection", Name = "CancelInspection")]
+        public IActionResult CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno)
+        {
+            try
+            {
+                int id = callRepository.CancelInspection(IeCd, CaseNo, PlanDt, CallRecvDt, CallSno);
+                if (id > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Successfully"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "CancelInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
     }
 }

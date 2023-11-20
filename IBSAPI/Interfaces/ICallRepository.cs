@@ -7,5 +7,7 @@ namespace IBSAPI.Interfaces
         List<CallListModel> GetCallList();
         int SheduleInspection(SheduleInspectionRequestModel sheduleInspectionRequestModel);
         List<CallStatusModel> Get_Call_Status_List();
+
+        int CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno);
     }
 }
