@@ -14,7 +14,7 @@
         <input type="hidden" asp-for="UpdateStatus" />
         <input type="hidden" asp-for="ItemSrnoPo" />
         <input type="hidden" asp-for="BpoType" />
-        <input type="hidden" asp-for="IcTypeId" />
+        @*<input type="hidden" asp-for="IcTypeId" />*@
 
         <div class="accordion-body" style="overflow-x: auto;">
             <div class="row my-0">
@@ -73,6 +73,7 @@
                     InitializeDatatable();
                     onBpoFeeType();
                     AdjustCalculation();
+                    $("#IcTypeId").val("9");
                 }
 
             });
@@ -277,17 +278,17 @@
 
                     var OldValueM = $("#TMValue").val();
                     var NewValueM = $("#TMValueNew").val();
-                    var DiffValueM = (parseFloat(OldValueM) - parseFloat(NewValueM));
-                    $("#TMValueDiff").val(DiffValueM);
+                    var DiffValueM = (parseFloat(NewValueM) - parseFloat(OldValueM));
+                    $("#TMValueDiff").val(parseFloat(DiffValueM.toFixed(2)))
 
                     var TIFeeOldValueM = $("#TIFee").val();
                     var TIFeeNewValueM = $("#TIFeeNew").val();
-                    var TIFeeDiffValueM = (parseInt(TIFeeOldValueM) - parseInt(TIFeeNewValueM));
+                    var TIFeeDiffValueM = (parseInt(TIFeeNewValueM) - parseInt(TIFeeOldValueM));
                     $("#TIFeeDiff").val(TIFeeDiffValueM);
 
                     var NetFeeOldValueM = $("#NetFee").val();
                     var NetFeeNewValueM = $("#NetFeeNew").val();
-                    var NetFeeDiffValueM = (parseInt(NetFeeOldValueM) - parseInt(NetFeeNewValueM));
+                    var NetFeeDiffValueM = (parseInt(NetFeeNewValueM) - parseInt(NetFeeOldValueM));
                     $("#NetFeeDiff").val(NetFeeDiffValueM);
                 }
             });

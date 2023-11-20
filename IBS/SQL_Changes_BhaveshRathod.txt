@@ -644,5 +644,9 @@ ALTER TABLE t18_call_details ADD Supp_New_Rate NUMBER(11,2)
 
 ALTER TABLE T18_CALL_DETAILS_HISTORY ADD Supp_B_Flag VARCHAR2(10 BYTE)
 ALTER TABLE T18_CALL_DETAILS_HISTORY ADD Supp_New_Rate NUMBER(11,2)
+
+ALTER TABLE T22_Bill ADD NEW_MATERIAL_VALUE	NUMBER(15,2)
+ALTER TABLE T22_Bill ADD NEW_INSP_FEE	NUMBER(13,2)
+ALTER TABLE T22_Bill ADD NEW_BILL_AMOUNT	NUMBER(13,2)
 =============================================================================================================================================
 

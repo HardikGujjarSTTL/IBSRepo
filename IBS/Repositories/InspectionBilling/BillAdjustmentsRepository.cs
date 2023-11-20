@@ -621,17 +621,21 @@ namespace IBS.Repositories.InspectionBilling
             string c_note_bno = "";
             if (model.BillNo != null)
             {
+                //if (model.IcTypeId == 9)
+                //{
+                //    c_note_bno = model.CnoteBillNo;
+                //}
+                //else
+                //{
+                //    c_note_bno = model.BillNo;
+                //}
+                
                 if (model.IcTypeId == 9)
-                {
-                    c_note_bno = model.CnoteBillNo;
-                }
-                else
                 {
                     c_note_bno = model.BillNo;
                 }
-
             }
-            if (c_note_bno != "")
+            if (c_note_bno != null)
             {
                 string myYear1, myMonth1, myDay1;
 
@@ -741,7 +745,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 DataSet ds = new DataSet();
 
-                OracleParameter[] parameter = new OracleParameter[16];
+                OracleParameter[] parameter = new OracleParameter[22];
                 parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, 1, reg_cd, ParameterDirection.Input);
                 parameter[1] = new OracleParameter("in_case_no", OracleDbType.Varchar2, 10, model.Caseno, ParameterDirection.Input);
                 parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Date, model.Callrecvdt, ParameterDirection.Input);
@@ -757,7 +761,15 @@ namespace IBS.Repositories.InspectionBilling
                 parameter[12] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
                 parameter[13] = new OracleParameter("in_bill_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.BillDt).ToString("ddMMyyyy"), ParameterDirection.Input);
                 parameter[14] = new OracleParameter("in_adv_bill", OracleDbType.Varchar2, 1, model.AdvBill, ParameterDirection.Input);
-                parameter[15] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                parameter[15] = new OracleParameter("in_material_value_new", OracleDbType.Int32, model.TMValueNew, ParameterDirection.Input);
+                parameter[16] = new OracleParameter("in_insp_fee_new", OracleDbType.Int32, model.TIFeeNew, ParameterDirection.Input);
+                parameter[17] = new OracleParameter("in_bill_amount_new", OracleDbType.Int32, model.NetFeeNew, ParameterDirection.Input);
+                parameter[18] = new OracleParameter("in_material_value_diff", OracleDbType.Int32, model.TMValueDiff, ParameterDirection.Input);
+                parameter[19] = new OracleParameter("in_insp_fee_diff", OracleDbType.Int32, model.TIFeeDiff, ParameterDirection.Input);
+                parameter[20] = new OracleParameter("in_bill_amount_diff", OracleDbType.Int32, model.NetFeeDiff, ParameterDirection.Input);
+
+                parameter[21] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 ds = DataAccessDB.GetDataSet("SP_GENERATE_CREDIT_NOTE_NEW", parameter);
 
@@ -793,7 +805,7 @@ namespace IBS.Repositories.InspectionBilling
                     var str_cnote_bill = context.T22Bills.Where(b => b.BillNo == model.BillNo).FirstOrDefault();
                     if (str_cnote_bill != null)
                     {
-                        str_cnote_bill.CnoteAmount = w_cnote_amt;
+                        //str_cnote_bill.CnoteAmount = w_cnote_amt;
                         str_cnote_bill.BillAmtCleared = Convert.ToDecimal(w_amt_rec + w_tds_amt + w_ret_amt + w_writeoff_amt + w_cnote_amt);
                         context.SaveChanges();
                     }
@@ -801,40 +813,53 @@ namespace IBS.Repositories.InspectionBilling
                     var str = context.T22Bills.Where(b => b.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
                     if (str != null)
                     {
-                        str_cnote_bill.Remarks = model.Remarks;
-                        str_cnote_bill.UserId = model.UserId;
-                        str_cnote_bill.Datetime = DateTime.Now.Date;
-                        str_cnote_bill.CnoteBillNo = model.BillNo;
-                        context.SaveChanges();
-                    }
-                    var strUpdateCnoteAmt = context.T22Bills.Where(b => b.CnoteBillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if (strUpdateCnoteAmt != null)
-                    {
-                        str_cnote_bill.AmountReceived = w_cnote_amt;
-                        str_cnote_bill.BillAmtCleared = w_cnote_amt;
-
+                        str.Remarks = model.Remarks;
+                        str.UserId = model.UserId;
+                        str.Datetime = DateTime.Now.Date;
+                        str.CnoteAmount = w_cnote_amt;
+                        str.CnoteBillNo = model.BillNo;
                         context.SaveChanges();
                     }
 
-                    T22AdjustmentBill T22 = new()
-                    {
-                        BillNoN = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]),
-                        BillNoO = model.BillNo,
-                        CaseNo = model.Caseno,
-                        Billadtype = model.BillAdType,
-                        UserId = model.UserId,
-                        Datetime = DateTime.Now.Date,
-                    };
-                    context.T22AdjustmentBills.Add(T22);
-                    context.SaveChanges();
+                    
 
                     var AType = context.T22AdjustmentBills.Where(x => x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
-                    if (AType != null)
+                    if (AType == null)
                     {
-                        str_cnote_bill.Billadtype = model.BillAdType;
-                        str_cnote_bill.ReferenceAid = AType.Aid;
+                        T22AdjustmentBill T22 = new()
+                        {
+                            BillNoN = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]),
+                            BillNoO = model.BillNo,
+                            CaseNo = model.Caseno,
+                            Billadtype = model.BillAdType,
+                            UserId = model.UserId,
+                            Datetime = DateTime.Now.Date,
+                        };
+                        context.T22AdjustmentBills.Add(T22);
                         context.SaveChanges();
                     }
+                    else
+                    {
+                        AType.Billadtype = model.BillAdType;
+                        //AType.ReferenceAid = AType.Aid;
+                        context.SaveChanges();
+                    }
+
+                    var strUpdateCnoteAmt = context.T22Bills.Where(b => b.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
+                    if (strUpdateCnoteAmt != null)
+                    {
+                        strUpdateCnoteAmt.AmountReceived = w_cnote_amt;
+                        strUpdateCnoteAmt.BillAmtCleared = w_cnote_amt;
+
+                        strUpdateCnoteAmt.Billadtype = model.BillAdType;
+                        strUpdateCnoteAmt.ReferenceAid = AType.Aid;
+
+                        context.SaveChanges();
+                    }
+
+                    
+
+                   
                     model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
                 }
             }
