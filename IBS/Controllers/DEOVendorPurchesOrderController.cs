@@ -140,13 +140,13 @@ namespace IBS.Controllers
                         List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsCaseList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
                         //}
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
                         //}
                     }
                     return Json(new { status = true, responseText = msg });
@@ -237,7 +237,7 @@ namespace IBS.Controllers
                 bool IsDigit = false;
                 if (searchValues != null && searchValues != "0")
                 {
-                    char characterToCheck = searchValues[3];  
+                    char characterToCheck = searchValues[3];
                     IsDigit = Char.IsDigit(characterToCheck);
                 }
                 int VendCdID = VendCd;
@@ -463,7 +463,7 @@ namespace IBS.Controllers
                     }
                 }
 
-                return Json(new { status = true, list = agencyClient});
+                return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)
             {
@@ -561,11 +561,41 @@ namespace IBS.Controllers
                         string TempFilePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO);
                         string VendorPath = Path.Combine(TempFilePath, CaseNo + ".PDF");
                         string TempFilePath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO);
-                        string DestinationPath = Path.Combine(TempFilePath1, CaseNo + ".PDF");
+                        string DestinationPath = Path.Combine(TempFilePath1, RealCaseNo + ".PDF");
                         if (System.IO.File.Exists(VendorPath) && !System.IO.File.Exists(DestinationPath))
                         {
                             System.IO.File.Copy(VendorPath, DestinationPath, true);
                         }
+
+                        IBS_DocumentDTO iBS_DocumentDTO = pOMasterRepository.FindAPPDocumentByID(CaseNo, (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder);
+                        if (iBS_DocumentDTO != null)
+                        {
+                            iBS_DocumentDTO.ApplicationID = RealCaseNo;
+                            iBS_DocumentDTO.FileID = RealCaseNo + iBS_DocumentDTO.Extension;
+                            iBS_DocumentDTO.RelativePath = "/ReadWriteData/Files/CASE_NO";
+                            int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTO);
+                        }
+
+                        List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, CaseNo);
+                        foreach (var item in lstDocument)
+                        {
+                            string TempFilePath2 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm);
+                            string VendorPath2 = Path.Combine(TempFilePath2, item.FileID);
+                            string TempFilePath12 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder);
+                            string DestinationPath1 = Path.Combine(TempFilePath12, item.FileID);
+                            if (System.IO.File.Exists(VendorPath2) && !System.IO.File.Exists(DestinationPath1))
+                            {
+                                System.IO.File.Copy(VendorPath2, DestinationPath1, true);
+                            }
+
+                            IBS_DocumentDTO iBS_DocumentDTOs = pOMasterRepository.FindAPPDocumentByID(Convert.ToString(item.ApplicationID), (int)item.DocumentID);
+                            if (iBS_DocumentDTOs != null)
+                            {
+                                iBS_DocumentDTOs.ApplicationID = RealCaseNo;
+                                int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTOs);
+                            }
+                        }
+
                         //SendMail(CaseNo, PoNo, PoDt, RealCaseNo);
                         return Json(new { status = true, OUT_CASE_NO = RealCaseNo, responseText = msg });
                     }

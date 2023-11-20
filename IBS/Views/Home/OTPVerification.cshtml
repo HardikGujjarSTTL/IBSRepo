@@ -64,6 +64,9 @@
                     else if (res.RoleName.toLowerCase() == "lab user") {
                         window.location.href = '@Url.Action("Index", "Dashboard")';
                     }
+                    else if (res.RoleName.toLowerCase() == "cm-call desk incharge") {
+                        window.location.href = '@Url.Action("CM", "Dashboard")';
+                    }
                     else {
                         window.location.href = '@Url.Action("Index", "Dashboard")';
                     }

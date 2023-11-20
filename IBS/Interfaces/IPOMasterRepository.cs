@@ -23,5 +23,7 @@ namespace IBS.Interfaces
         string getVendorEmail(string CASE_NO);
 
         string[] GenerateRealCaseNo(string REGION_CD, string CASE_NO, string USER_ID);
+        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid, int DocumentID);
+        public int SaveAPPDocumentByID(IBS_DocumentDTO model);
     }
 }

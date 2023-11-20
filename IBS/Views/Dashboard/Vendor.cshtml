@@ -4,330 +4,278 @@
     ViewData["Title"] = "Vendor Dashboard";
 }
 <div class="dashHeader justify-content-between">
-  <h2 class="alignLeft">Vendor Dashboard</h2>
-  <div><a href="#" class="blueBtn">Call Registration</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New PO</a></div>
+    <h2 class="alignLeft">Vendor Dashboard</h2>
+    <div><a href="#" class="blueBtn">Call Registration</a> <a href="#" class="addNew"><span class="fa fa-plus"></span> Add New PO</a></div>
 </div>
 <div class="row">
-  <div class="col-lg-12">
-    <div class="admindashboard-section">
-      <div class="admindashboard-wrap">
-        <div class="row ie-dashboard">
-          <div class="col-lg-3">
-            <div class="dashboard-box das1Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.TotalCallsCount</div>
-                  <div class="total-inner"> Total<br />
-                    Calls </div>
+    <div class="col-lg-12">
+        <div class="admindashboard-section">
+            <div class="admindashboard-wrap">
+                <div class="row ie-dashboard">
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das1Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.TotalCallsCount</div>
+                                    <div class="total-inner">
+                                        Total<br />
+                                        Calls
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das2Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.PendingCallsCount</div>
+                                </div>
+                                <div class="total-inner">
+                                    Pending<br />
+                                    Calls
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das3Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.AcceptedCallsCount</div>
+                                </div>
+                                <div class="total-inner">
+                                    Accepted <br />
+                                    Calls
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das4Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.CancelledCallsCount</div>
+                                </div>
+                                <div class="total-inner">
+                                    Cancelled<br />
+                                    Calls
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="dashboard-box das2Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.PendingCallsCount</div>
+                <div class="row ie-dashboard">
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das5Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.UnderLabTestingCount</div>
+                                    <div class="total-inner">
+                                        Under Lab<br />
+                                        Testing
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das6Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                                </div>
+                                <div class="total-inner">
+                                    Still Under<br />
+                                    Inspection
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="dashboard-box das7Client">
+                            <div class="dash-total">
+                                <div class="dash-count">
+                                    <div class="total-amount">@Model.StageRejectionCount</div>
+                                </div>
+                                <div class="total-inner">
+                                    Stage<br />
+                                    Rejection
+                                </div>
+                            </div>
+                            <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="total-inner"> Pending<br />
-                  Calls </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
             </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="dashboard-box das3Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.AcceptedCallsCount</div>
-                </div>
-                <div class="total-inner"> Accepted <br />
-                  Calls </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="dashboard-box das4Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.CancelledCallsCount</div>
-                </div>
-                <div class="total-inner"> Cancelled<br />
-                  Calls </div>
-              </div>
-              <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
-            </div>
-          </div>
         </div>
-        <div class="row ie-dashboard">
-          <div class="col-lg-3">
-            <div class="dashboard-box das5Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.UnderLabTestingCount</div>
-                  <div class="total-inner"> Under Lab<br />
-                    Testing </div>
-                </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="dashboard-box das6Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.StillUnderInspectionCount</div>
-                </div>
-                <div class="total-inner"> Still Under<br />
-                  Inspection </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="dashboard-box das7Client">
-              <div class="dash-total">
-                <div class="dash-count">
-                  <div class="total-amount">@Model.StageRejectionCount</div>
-                </div>
-                <div class="total-inner"> Stage<br />
-                  Rejection </div>
-              </div>
-              <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 <section>
-  <div class="graph-section iePieGraphGrid">
-    <div class="row my-0">
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Complaint</h3>
+    <div class="graph-section iePieGraphGrid">
+        <div class="row my-0">
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Complaint</h3>
+                </div>
+                <div class="graph">
+                    <div id="region-wise-pie"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Complaint Status</h3>
+                </div>
+                <table class="borderGrid">
+                    <tr>
+                        <th class="textLeft">Status</th>
+                        <th class="text-center">Complaints</th>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Deleted</td>
+                        <td class="text-center">2</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Pending</td>
+                        <td class="text-center">12</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Accepted</td>
+                        <td class="text-center">25</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Upheld</td>
+                        <td class="text-center">5</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Sorting</td>
+                        <td class="text-center">2</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Rectification</td>
+                        <td class="text-center">4</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Price Reduction</td>
+                        <td class="text-center">8</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Lifted Before JI</td>
+                        <td class="text-center">3</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Transit Damange</td>
+                        <td class="text-center">2</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Unstamped</td>
+                        <td class="text-center">1</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Not on Rites A/C</td>
+                        <td class="text-center">3</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="graph">
-          <div id="region-wise-pie"></div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Complaint Status</h3>
-        </div>
-        <table class="borderGrid">
-          <tr>
-            <th class="textLeft">Status</th>
-            <th class="text-center">Complaints</th>
-          </tr>
-          <tr>
-            <td class="textLeft">Deleted</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr>
-            <td class ="textLeft">Pending</td>
-            <td class="text-center">12</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Accepted</td>
-            <td class="text-center">25</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Upheld</td>
-            <td class="text-center">5</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Sorting</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Rectification</td>
-            <td class="text-center">4</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Price Reduction</td>
-            <td class="text-center">8</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Lifted Before JI</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Transit Damange</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Unstamped</td>
-            <td class="text-center">1</td>
-          </tr>
-          <tr>
-            <td class="textLeft">Not on Rites A/C</td>
-            <td class="text-center">3</td>
-          </tr>
-        </table>
-      </div>
     </div>
-  </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Recent Calls Status</h3>
-    <div class="gridNote">(<strong>Note:</strong> Top 5 recent calls)</div>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-      <tr>
-        <th>Sr. No.</th>
-        <th>Call S.No</th>
-        <th>Case no</th>
-        <th>Call Date</th>
-        <th>Details </th>
-        <th>Client </th>
-        <th>IE </th>
-        <th>IE contact No.</th>
-        <th>CM</th>
-        <th>CM Contact no.</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>NR23101890</td>
-        <td>09-01-2023</td>
-        <td>compressor</td>
-        <td>M/S Ajay kumar </td>
-        <td>Ajay kumar </td>
-        <td>9411908242</td>
-        <td>Arun kumar </td>
-        <td>7017187517</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>6</td>
-        <td>NR23101894</td>
-        <td>09-01-2023</td>
-        <td>compressor</td>
-        <td>M/S Vijaykumar </td>
-        <td>Ajay kumar </td>
-        <td>9411908242</td>
-        <td>Arun kumar </td>
-        <td>7017187517</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>9</td>
-        <td>NR23101896</td>
-        <td>09-06-2023</td>
-        <td>compressor</td>
-        <td>M/S Rohan kumar </td>
-        <td>Ajay kumar </td>
-        <td>9411908242</td>
-        <td>Arun kumar </td>
-        <td>7017187517</td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>11</td>
-        <td>NR23101897</td>
-        <td>09-07-2023</td>
-        <td>compressor</td>
-        <td>M/S Arun kumar </td>
-        <td>Ajay kumar </td>
-        <td>9411908242</td>
-        <td>Arun kumar </td>
-        <td>7017187517</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>15</td>
-        <td>NR23101898</td>
-        <td>10-01-2023</td>
-        <td>compressor</td>
-        <td>M/S Sumit kumar </td>
-        <td>Ajay kumar </td>
-        <td>9411908242</td>
-        <td>Arun kumar </td>
-        <td>7017187517</td>
-      </tr>
-    </table>
-  </div>
-  <div class="tableBottomLink">
-    <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
-    <a class="viewall" href="#">View All</a> </div>
+    <div class="table-title">
+        <h3 class="headingh3">Recent Calls Status</h3>
+        <div class="gridNote">(<strong>Note:</strong> Top 5 recent calls)</div>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th>Sr. No.</th>
+                <th>Call S.No</th>
+                <th>Case no</th>
+                <th>Call Date</th>
+                <th>Details </th>
+                <th>Client </th>
+                <th>IE </th>
+                <th>IE contact No.</th>
+                <th>CM</th>
+                <th>CM Contact no.</th>
+            </tr>
+            @if (Model != null && Model.lstPOCallStatus != null && Model.lstPOCallStatus.Count > 0)
+            {
+                var SrNo = 0;
+                @foreach (var item in Model.lstPOCallStatus.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records</div>
+        <a class="viewall" href="#">View All</a>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Recent Purchase  Order</h3>
-    <div class="gridNote">(<strong>Note:</strong> Top 5 recent PO)</div>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-      <tr>
-        <th>S. No.</th>
-        <th>PO No.</th>
-        <th>Client</th>
-        <th>Details</th>
-        <th>Purchase Order</th>
-        <th>Status</th>
-        <th class="action center">Action</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
-      </tr>
-    </table>
-  </div>
-  <div class="tableBottomLink">
-    <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
-    <a class="viewall" href="#">View All</a> </div>
+    <div class="table-title">
+        <h3 class="headingh3">Recent Purchase  Order</h3>
+        <div class="gridNote">(<strong>Note:</strong> Top 5 recent PO)</div>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th>S. No.</th>
+                <th>PO No.</th>
+                <th>Client</th>
+                <th>Details</th>
+                <th>Purchase Order</th>
+                <th>Status</th>
+                <th class="action center">Action</th>
+            </tr>
+            @if (Model != null && Model.lstRecentPO != null && Model.lstRecentPO.Count > 0)
+            {
+                var SrNo = 0;
+                @foreach (var item in Model.lstRecentPO.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                        <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
+                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records</div>
+        <a class="viewall" href="#">View All</a>
+    </div>
 </section>
 @section scripts{
-<script>
+    <script>
         // Pie Chart
-         Highcharts.chart('region-wise-pie', {
+        Highcharts.chart('region-wise-pie', {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -397,7 +345,7 @@
                 }, {
                     name: 'Not on Rites A/C',
                     y: 3.0
-                }]                                      
+                }]
             }]
         });
     </script>

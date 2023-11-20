@@ -50,21 +50,40 @@
                         <span asp-validation-for="ManufacturerNM" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row my-0">
+                <div class="row align-items-end my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">BPO</label>
+                        <input type="text" class="input" asp-for="BPOCD">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="savenext-btn">
+                            <button type="button" class="save-btn active" onclick="SearchLABBPO();">Search BPO</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="Reference"></label>
+                        <select id="bpoid" asp-for="BPONM"></select>
+                        <input type="hidden" asp-for="InvoiceNo" id="hndInNo" />
+                        <input type="hidden" asp-for="InvoiceDt" id="hndInDt" />
+                        <input type="hidden" asp-for="RegNo" id="hndregno" />
+                    </div>
+                </div>
+                @* <div class="row my-0">
                     <div class="col-md-2 mb-3">
                         <label for="Reference">BPO</label>
                         <input type="text" class="input" asp-for="BPOCD" readonly="true">
                         <span asp-validation-for="BPOCD" class="text-danger"></span>
                     </div>
                     <div class="col-md-8 mb-3">
-                        @*<label for="Reference">Tel No.</label>*@
+                        
                         <input type="text" class="input" asp-for="BPONM" readonly="true" style="margin-top:4%">
                         <span asp-validation-for="BPONM" class="text-danger"></span>
                     </div>
                     <input type="hidden" asp-for="InvoiceNo" id="hndInNo" />
                     <input type="hidden" asp-for="InvoiceDt" id="hndInDt" />
                     <input type="hidden" asp-for="RegNo" id="hndregno" />
-                </div>
+                </div> *@
                 <div class="row my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">GSTN NO.</label>
@@ -74,8 +93,8 @@
                     </div>
                     <div class="col-md-8 mb-3">
                         <label for="Reference">BPO</label>
-                        <input type="text" class="input" asp-for="BPONM" readonly="true">
-                        <span asp-validation-for="BPONM" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="BPONMtext" readonly="true">
+                        <span asp-validation-for="BPONMtext" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -164,13 +183,48 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-       
+        function SearchLABBPO() {
+            FillBPO();
+
+        }
+        function FillBPO(ids) {
+            var BpoType = $("#BPOCD").val();
+            $.ajax({
+                url: '@Url.Action("GetBPO", "LabInvoiceRpt")?BpoType=' + BpoType,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#bpoid").html("");
+                    //$("#bpoid").append("<option value=''>--Select--</option>");
+                    var id = 0;
+                    $.each(response.list, function (index, value) {
+                        $("#bpoid").append("<option value=" + value.Value + ">" + value.Text + "</option>");
+                        if (value.Selected == true) {
+                            id = value.Value;
+                        }
+                    });
+                    if (id > 0) {
+                        $("#bpoid").val(id);
+                    }
+                    if (ids > 0) {
+                        $("#bpoid").val(ids);
+                    }
+                    //$("#hdnRCD").val($("#RlyCd").val());
+                    //$("#hdnRailway").val($("#RlyCd option:selected").text());
+                }
+            });
+        }
         $(function () {
             $("#IGST").val(0);
             $("#CGST").val(0);
             $("#SGST").val(0);
             var RegNo = '@ViewBag.RegNo';
              InitializeDatatable(RegNo);
+            FillBPO();
         });
 
         function InitializeDatatable(RegNo) {
@@ -282,7 +336,11 @@
             });
 
         }
-
+        $("#bpoid").change(function () {
+            var selectedText = $("#bpoid option:selected").text();
+            $("#BPONM").val(selectedText);
+        })
+        
         function Download() {
 
             var InvoiceNo = sessionStorage.getItem("InvoiceNo");

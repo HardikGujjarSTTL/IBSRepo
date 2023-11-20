@@ -1,9 +1,11 @@
 ﻿@model IBS.Models.IC_RPT_IntermediateModel;
+@using System.Web;
 @{
     ViewData["Title"] = "IC REPORT EDIT FORM";
     string clsView = "";
     clsView = "Permission_View";
     string ReportUrl = ViewBag.ReportUrl;
+    string gobackUrl = Url.Action("CallStatus", "CallRegisterIB") + "?CaseNo=" + Model.CASE_NO + "&CallSno=" + Model.Call_SNO + "&CallRecvDt="+Convert.ToDateTime(Model.Call_Recv_dt).ToString("yyyy-MM-dd")+"&IeCd=&ActionType=C&type=C";
 }
 
 <style>
@@ -16,6 +18,9 @@
 <div class="list-inner">
     <div class="tast-list">
         <h2>IC REPORT EDIT FORM</h2>
+    </div>
+    <div>
+        <a href="@gobackUrl" class="formBtn viewall-btn">Back</a>
     </div>
 </div>
 <div class="@clsView">
@@ -396,7 +401,7 @@
                 "&BkNo=" + encodeURIComponent(BkNo) +
                 "&SetNo=" + encodeURIComponent(SetNo);
 
-            window.open('@ReportUrl' + QueryString);            
+            window.open('@ReportUrl' + QueryString);
         }
 
         function lstman() {

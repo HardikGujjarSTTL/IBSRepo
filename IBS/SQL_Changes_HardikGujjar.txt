@@ -4260,3 +4260,8 @@ END GetCaseDetailForIE_API;
 ALTER TABLE T80_PO_MASTER 
 ADD ClientUserID Varchar2(20);
 =====================
+
+ALTER TABLE t02_users 
+ADD CO_CD NUMBER(6,0);
+
+ALTER TABLE t02_users MODIFY MIGTYPE VARCHAR2(10 BYTE);

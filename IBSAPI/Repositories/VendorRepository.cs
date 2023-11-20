@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace IBSAPI.Repositories
@@ -19,34 +20,62 @@ namespace IBSAPI.Repositories
             this.context = context;
         }
 
-        public List<CallRegiModel> GetCaseDetailsforvendor(int UserID)
-        {
-            List<CallRegiModel> lst = new();
+        //public List<CallRegiModel> GetCaseDetailsforvendor(int UserID)
+        //{
+        //    List<CallRegiModel> lst = new();
 
-            lst = (from x in context.T17CallRegisters
-                  join y in context.T13PoMasters on x.CaseNo equals y.CaseNo
-                  join p in context.V06Consignees on y.PurchaserCd equals p.ConsigneeCd
-                   join v in context.T05Vendors on y.VendCd equals v.VendCd
-                   join cs in context.T21CallStatusCodes on x.CallStatus equals cs.CallStatusCd
-                   join ie in context.T09Ies on x.IeCd equals ie.IeCd
-                   where x.MfgCd == UserID
-                   select new CallRegiModel
-                   {
-                       CaseNo = x.CaseNo,
-                       CallDate = x.Datetime,
-                       CallSNo = x.CallSno,
-                       Purchaser = p.Consignee,
-                       Vendor = v.VendName,
-                       PurchaseOrderDate=y.PoDt,
-                       PurchaseOrderNo = y.PoNo,
-                       CallStatus = cs.CallStatusDesc,
-                       Region = x.RegionCode,
-                       PlaceofInspection = x.MfgPlace,
-                       ContactPersonName = ie.IeName,
-                       ManufacturerEmail = ie.IeEmail,
-                       PhoneNumber = ie.IePhoneNo,
-                   }).ToList();
-            return lst;
+        //    lst = (from x in context.T17CallRegisters
+        //          join y in context.T13PoMasters on x.CaseNo equals y.CaseNo
+        //          join p in context.V06Consignees on y.PurchaserCd equals p.ConsigneeCd
+        //           join v in context.T05Vendors on y.VendCd equals v.VendCd
+        //           join cs in context.T21CallStatusCodes on x.CallStatus equals cs.CallStatusCd
+        //           join ie in context.T09Ies on x.IeCd equals ie.IeCd
+        //           where x.MfgCd == UserID
+        //           select new CallRegiModel
+        //           {
+        //               CaseNo = x.CaseNo,
+        //               CallDate = x.Datetime,
+        //               CallSNo = x.CallSno,
+        //               Purchaser = p.Consignee,
+        //               Vendor = v.VendName,
+        //               PurchaseOrderDate=y.PoDt,
+        //               PurchaseOrderNo = y.PoNo,
+        //               CallStatus = cs.CallStatusDesc,
+        //               Region = x.RegionCode,
+        //               PlaceofInspection = x.MfgPlace,
+        //               ContactPersonName = ie.IeName,
+        //               ManufacturerEmail = ie.IeEmail,
+        //               PhoneNumber = ie.IePhoneNo,
+        //           }).ToList();
+        //    return lst;
+        //}
+
+        public PODetailsModel GetPODetailsforvendor(string CaseNo, int UserID)
+        {
+            PODetailsModel model = new PODetailsModel();
+            VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
+            if (GetView != null)
+            {
+                model.PurchaserCd = GetView.PurchaserCd;
+                model.VendCd = GetView.VendCd;
+                model.PoNo = GetView.PoNo;
+                model.PoDt = GetView.PoDt;
+                model.Rly = GetView.Rly;
+                model.L5noPo = GetView.L5noPo;
+                model.RlyNonrly = GetView.RlyNonrly;
+            }
+            T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(UserID)).FirstOrDefault();
+            if (GetView != null)
+            {
+                model.VendAdd1 = Vendor.VendAdd1;
+                model.VendContactPer1 = Vendor.VendContactPer1;
+                model.VendContactTel1 = Vendor.VendContactTel1;
+                model.VendStatus = Vendor.VendStatus;
+                model.VendStatusDtFr = Vendor.VendStatusDtFr;
+                model.VendStatusDtTo = Vendor.VendStatusDtTo;
+                model.VendEmail = Vendor.VendEmail;
+            }
+            return model;
         }
 
         public List<CallRegiModel> GetCaseDetailsforClient(string UserID, string Organisation, string OrgnType)
@@ -123,8 +152,9 @@ namespace IBSAPI.Repositories
                 }
                 else
                 {
+                    string resultCallRecvDt = CallRecvDt != null ? CallRecvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001";
                     System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(ext_delv_dt.Substring(6, 4)), Convert.ToInt32(ext_delv_dt.Substring(3, 2)), Convert.ToInt32(ext_delv_dt.Substring(0, 2)));
-                    System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(6, 4)), Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(3, 2)), Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(0, 2)));
+                    System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(6, 4)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(3, 2)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(0, 2)));
                     TimeSpan ts = w_dt1 - w_dt2;
                     int differenceInDays = ts.Days;
                     if (differenceInDays < 5)

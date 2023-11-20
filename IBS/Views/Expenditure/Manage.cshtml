@@ -30,12 +30,12 @@
                     <div class="col-md-12">
                         <div class="row"> 
                             <div class="col-md-4">
-                                <label for="Reference">Month: </label>                                 
+                                <label for="Reference">Month:<i class="text-danger">*</i> </label>
                                 @Html.DropDownListFor(model => model.ExpPerMonth, new SelectList(IBS.Models.Common.GetMonth(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerMonth" class="text-danger"></span>
                             </div> 
                             <div class="col-md-4">
-                                <label for="Reference">Year: </label>                                
+                                <label for="Reference">Year:<i class="text-danger">*</i> </label>
                                 @Html.DropDownListFor(model => model.ExpPerYear, new SelectList(IBS.Models.Common.GetYear(), "Value", "Text"),"--Select--")
                                 <span asp-validation-for="ExpPerYear" class="text-danger"></span>
                             </div> 
@@ -45,12 +45,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="Expenditure">Expenditure Amount Fee(In Rs.)</label>
+                                <label for="Expenditure">Expenditure Amount Fee(In Rs.)<i class="text-danger">*</i></label>
                                 <input type="text" class="input" asp-for="ExpAmt" maxlength="500" />
                                 <span asp-validation-for="ExpAmt" class="text-danger"></span>
                             </div>
                             <div class="col-md-4">
-                                <label for="Expenditure">Tax Amount Fee(In Rs.)</label>
+                                <label for="Expenditure">Tax Amount Fee(In Rs.)<i class="text-danger">*</i></label>
                                 <input type="text" class="input" asp-for="TaxAmt" maxlength="500" />
                                 <span asp-validation-for="TaxAmt" class="text-danger"></span>
                             </div>  

@@ -2765,6 +2765,54 @@ namespace IBS.Models
 
             return BPOList;
         }
+        public static List<SelectListItem> GetBPOLabReport(string BpoType)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> BPOList = new();
+            var query = from b in ModelContext.T12BillPayingOfficers
+                        join c in ModelContext.T03Cities on b.BpoCityCd equals c.CityCd
+                        join t92 in ModelContext.T92States on c.StateCd equals t92.StateCd
+                        select new
+                        {
+                            BPO = b,
+                            City = c,
+                            State = t92
+                        };
+
+            var filteredQuery = query.AsEnumerable()
+                .Where(ti0 => ti0.BPO.BpoCd.Trim().ToUpper() == BpoType.ToUpper() ||
+                              (ti0.BPO.BpoName.Trim().ToUpper().StartsWith(BpoType.ToUpper()) && BpoType != ""))
+                .OrderBy(ti0 => (ti0.BPO.BpoName + '/' + (ti0.BPO.BpoAdd != null ? ti0.BPO.BpoAdd + '/' : "") +
+                                 (ti0.City.Location != null ? ti0.City.City + '/' + ti0.City.Location : ti0.City.City) + '/' + ti0.BPO.BpoRly))
+                .Select(ti0 => new SelectListItem
+                {
+                    Text = $"{ti0.BPO.BpoCd}-{ti0.BPO.BpoName}/" +
+                           $"{(ti0.BPO.BpoAdd != null ? ti0.BPO.BpoAdd + '/' : "")}" +
+                           $"{(ti0.City.Location != null ? ti0.City.City + '/' + ti0.City.Location : ti0.City.City)}",
+                    Value = Convert.ToString(ti0.BPO.BpoCd)
+                });
+
+            return filteredQuery.ToList();
+
+            //var query = from b in ModelContext.T12BillPayingOfficers
+            //           join c in ModelContext.T03Cities on b.BpoCityCd equals c.CityCd
+            //           join t92 in ModelContext.T92States on c.StateCd equals t92.StateCd
+            //           //where b.BpoCd.Trim().ToUpper() == BpoType.ToUpper() || OracleFunctions.Upper(b.BpoName).Trim().StartsWith(BpoType.ToUpper())
+            //           where b.BpoCd.Trim().ToUpperInvariant() == BpoType.ToUpperInvariant() || b.BpoName.Trim().ToUpperInvariant().StartsWith(BpoType.ToUpperInvariant())
+            //           orderby (b.BpoName + '/' + (b.BpoAdd != null ? b.BpoAdd + '/' : "") +
+            //          (c.Location != null ? c.City + '/' + c.Location : c.City) + '/' + b.BpoRly)
+            //           select new SelectListItem
+            //           {
+            //               Text = $"{b.BpoCd}-{b.BpoName}/" +
+            //                   $"{(b.BpoAdd != null ? b.BpoAdd + '/' : "")}" +
+            //                   $"{(c.Location != null ? c.City + '/' + c.Location : c.City)}",
+            //               Value = Convert.ToString(b.BpoCd)
+
+            //           };
+
+            //return query.ToList();
+        }
 
         public static List<SelectListItem> GetlstBPOType(string ClientType, string ClientName)
         {
@@ -2817,7 +2865,8 @@ namespace IBS.Models
                       select new SelectListItem
                       {
                           Value = bpo.BpoCd,
-                          Text = bpo.BpoName + "/" + bpo.BpoAdd + "/" + bpo.BpoRly
+                          //Text = bpo.BpoName + "/" + bpo.BpoAdd + "/" + bpo.BpoRly
+                          Text = bpo.BpoCd + '-' + bpo.BpoName + (bpo.BpoAdd != null ? ("/" + bpo.BpoAdd) : "") + "/" + bpo.BpoRly
                       }).Distinct().ToList();
             return BpoRly;
         }

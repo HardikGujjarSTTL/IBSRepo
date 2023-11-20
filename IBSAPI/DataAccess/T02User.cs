@@ -48,4 +48,6 @@ public partial class T02User
     public string? Migtype { get; set; }
 
     public string? Mobile { get; set; }
+
+    public int? CoCd { get; set; }
 }

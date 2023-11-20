@@ -1,7 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DashboardModel
+
 @{
+    ViewData["Title"] = "Client Dashboard";
 }
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">Client Dashboard</h2>
@@ -14,7 +14,7 @@
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">@Model.TotalCallsCount</div>
                             <div class="total-inner">
                                 Total<br />
                                 Calls
@@ -28,7 +28,7 @@
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">15</div>
+                            <div class="total-amount">@Model.PendingCallsCount</div>
                         </div>
                         <div class="total-inner">
                             Pending<br />
@@ -42,7 +42,7 @@
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">12</div>
+                            <div class="total-amount">@Model.AcceptedCallsCount</div>
                         </div>
                         <div class="total-inner">
                             Accepted<br />
@@ -56,7 +56,7 @@
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">07</div>
+                            <div class="total-amount">@Model.CancelledCallsCount</div>
                         </div>
                         <div class="total-inner">
                             Cancelled<br />
@@ -72,7 +72,7 @@
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">@Model.UnderLabTestingCount</div>
                             <div class="total-inner">
                                 Under Lab<br />
                                 Testing
@@ -86,7 +86,7 @@
                 <div class="dashboard-box das6Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">15</div>
+                            <div class="total-amount">@Model.StillUnderInspectionCount</div>
                         </div>
                         <div class="total-inner">
                             Still Under<br />
@@ -100,7 +100,7 @@
                 <div class="dashboard-box das7Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">12</div>
+                            <div class="total-amount">@Model.StageRejectionCount</div>
                         </div>
                         <div class="total-inner">
                             Stage<br />
@@ -196,45 +196,25 @@
                 <th class="text-center">Call Rejected</th>
                 <th class="text-center">Call Cancelled</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>ABC Pvt ltd.</td>
-                <td class="text-center">30</td>
-                <td class="text-center">12</td>
-                <td class="text-center">2</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>SilvertouchLtd.</td>
-                <td class="text-center">25</td>
-                <td class="text-center">10</td>
-                <td class="text-center">3</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>AFC pvt ltd.</td>
-                <td class="text-center">23</td>
-                <td class="text-center">14</td>
-                <td class="text-center">2</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>KYC pvt Ltd.</td>
-                <td class="text-center">22</td>
-                <td class="text-center">11</td>
-                <td class="text-center">1</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>NYC ltd.</td>
-                <td class="text-center">20</td>
-                <td class="text-center">10</td>
-                <td class="text-center">6</td>
-            </tr>
+            @if (Model != null && Model.lstClientVEND != null && Model.lstClientVEND.Count > 0)
+            {
+                var SrNo = 0;
+                @foreach (var item in Model.lstClientVEND.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.TOTAL_CALL</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.REJECTED_CALL</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CANCELLED_CALL</font></td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -255,60 +235,28 @@
                 <th>Inspection Engineer</th>
                 <th>Status</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @if (Model != null && Model.lstClientRecentReq != null && Model.lstClientRecentReq.Count > 0)
+            {
+                var SrNo = 0;
+                @foreach (var item in Model.lstClientRecentReq.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientRecentReq.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -334,65 +282,29 @@
                 <th>Quantity</th>
                 <th>Status</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @if (Model != null && Model.lstClientRecentPO != null && Model.lstClientRecentPO.Count > 0)
+            {
+                var SrNo = 0;
+                @foreach (var item in Model.lstClientRecentPO.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VALUE</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span> @Model.lstClientRecentPO.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -414,45 +326,26 @@
                 <th>Number of complaints</th>
                 <th>Issues</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @if (Model != null && Model.lstClientVendConComp != null && Model.lstClientVendConComp.Count > 0)
+            {
+                var SrNo = 0;
+                var totalRecords = Model.lstClientVendConComp?.Count ?? 0;
+                @foreach (var item in Model.lstClientVendConComp.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.NO_OF_COMPLAINTS</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVendConComp.Count</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>

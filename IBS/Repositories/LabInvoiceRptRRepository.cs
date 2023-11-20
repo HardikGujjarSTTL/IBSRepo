@@ -238,7 +238,8 @@ namespace IBS.Repositories
                             Vendor = Convert.ToString(row["vend_cd"]),
                             ManufacturerCD = Convert.ToString(row["mfg_cd"]),
                             BPOCD = mo.BPOCD,
-                            BPONM = mo.BPONM,
+                            BPONM = mo.BPOCD,
+                            BPONMtext = mo.BPONM,
                             State = mo.State,
                             GSTINNO = mo.GSTINNO,
                             RegNo = RegNo,
@@ -270,7 +271,7 @@ namespace IBS.Repositories
                             Vendor = Convert.ToString(row["vend_cd"]),
                             ManufacturerCD = Convert.ToString(row["mfg_cd"]),
                             BPOCD = mo.BPOCD,
-                            BPONM = mo.BPONM,
+                            BPONMtext = mo.BPONM,
                         };
                     }
                 }
@@ -375,7 +376,7 @@ namespace IBS.Repositories
                 obj.InvoiceDt = DateTime.ParseExact(model.InvoiceDt, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 obj.SampleRegNo = model.RegNo;
                 obj.CaseNo = model.CaseNo;
-                obj.BpoCd = model.BPOCD;
+                obj.BpoCd = model.BPONM;
                 obj.RecipientGstinNo = model.GSTINNO;
                 obj.BillAmount = Convert.ToDecimal(Testing_Charges);
                 obj.TotalCgst = Convert.ToDecimal(model.CGST);
