@@ -134,11 +134,11 @@ namespace IBSAPI.Controllers
             }
         }
         [HttpPost("CancelInspection", Name = "CancelInspection")]
-        public IActionResult CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno)
+        public IActionResult CancelInspection([FromBody] CancelInspectionRequestModel cancelInspectionRequestModel)
         {
             try
             {
-                int id = callRepository.CancelInspection(IeCd, CaseNo, PlanDt, CallRecvDt, CallSno);
+                int id = callRepository.CancelInspection(cancelInspectionRequestModel.IeCd, cancelInspectionRequestModel.CaseNo, cancelInspectionRequestModel.PlanDt, cancelInspectionRequestModel.CallRecvDt, cancelInspectionRequestModel.CallSno);
                 if (id > 0)
                 {
                     var response = new
