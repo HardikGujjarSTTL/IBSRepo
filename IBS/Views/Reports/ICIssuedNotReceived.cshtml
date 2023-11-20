@@ -62,7 +62,8 @@
                                 PartSrNo = PartSrNo + 1;
                             }
                         }
-                        var ICPath = "/ReadWriteData/BILL_IC/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        //var ICPath = $"/ReadWriteData/BILL_IC/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var ICPath = $"/ReadWriteData/BILL_IC/{item.CASE_NO}-{item.BK_NO}-{item.SET_NO}.PDF";
                         <tr>
                             <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
 
@@ -91,7 +92,7 @@
                                     {
                                         if (item.RLY_NONRLY == "R" && item.PO_SOURCE == "C")
                                         {
-                                            var url = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + item.PO_YR + "/" + item.IMMS_RLY_CD + "/" + item.PO_NO + ".pdf";
+                                            var url = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.pdf";
                                             <div width='10%' valign='top' align='center'><a href='@url' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'>@item.CASE_NO  </font></a></div>
                                         }
                                         else
@@ -116,7 +117,7 @@
                                     {
                                         if (item.RLY_NONRLY == "R" && item.PO_SOURCE == "C")
                                         {
-                                            var url = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + item.PO_YR + "/" + item.IMMS_RLY_CD + "/" + item.PO_NO + ".pdf";
+                                            var url = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.pdf";
                                             <div width='10%' valign='top' align='center'><a href='@url' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO </font></a></div>
                                         }
                                         else
