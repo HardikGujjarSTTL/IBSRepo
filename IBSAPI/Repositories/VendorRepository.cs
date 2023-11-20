@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace IBSAPI.Repositories
@@ -151,8 +152,9 @@ namespace IBSAPI.Repositories
                 }
                 else
                 {
+                    string resultCallRecvDt = CallRecvDt != null ? CallRecvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001";
                     System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(ext_delv_dt.Substring(6, 4)), Convert.ToInt32(ext_delv_dt.Substring(3, 2)), Convert.ToInt32(ext_delv_dt.Substring(0, 2)));
-                    System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(6, 4)), Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(3, 2)), Convert.ToInt32(Convert.ToString(CallRecvDt).Substring(0, 2)));
+                    System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(6, 4)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(3, 2)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(0, 2)));
                     TimeSpan ts = w_dt1 - w_dt2;
                     int differenceInDays = ts.Days;
                     if (differenceInDays < 5)
