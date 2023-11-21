@@ -44,8 +44,8 @@ namespace IBS.Controllers
 
         public IActionResult CM()
         {
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.CoCd);
-            return View();
+            DashboardModel model = dashboardRepository.GetCMDashBoardCount(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult IE_Instructions()

@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -21,12 +22,13 @@ namespace IBS.Repositories
         {
             DashboardModel model = new();
 
-            OracleParameter[] par = new OracleParameter[2];
+            OracleParameter[] par = new OracleParameter[3];
 
             par[0] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("P_RESULT_CURSOR1", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_IE_DASHBOARD_COUNT", par);
+            DataSet ds = DataAccessDB.GetDataSet("GET_IE_DASHBOARD", par);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -48,18 +50,12 @@ namespace IBS.Repositories
 
             }
 
-            OracleParameter[] par1 = new OracleParameter[2];
-
-            par1[0] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
-            par1[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            DataSet ds1 = DataAccessDB.GetDataSet("GET_IE_DASHBOARD_PENDING_CALL", par1);
             List<IEList> listIE = new();
-            if (ds1 != null && ds1.Tables.Count > 0)
+            if (ds != null && ds.Tables.Count > 0)
             {
-                if (ds1.Tables[0].Rows.Count > 0)
+                if (ds.Tables[1].Rows.Count > 0)
                 {
-                    DataTable dt = ds1.Tables[0];
+                    DataTable dt = ds.Tables[1];
                     listIE = dt.AsEnumerable().Select(row => new IEList
                     {
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
@@ -289,7 +285,62 @@ namespace IBS.Repositories
 
             return model;
         }
-    }
+
+        public DashboardModel GetCMDashBoardCount(int CoCd)
+        {
+            var startDate = Common.GetFinancialYearStartDate();
+            var ToDate = DateTime.Today.ToString("dd/MM/yyyy");
+            DashboardModel model = new();
+
+            OracleParameter[] par1 = new OracleParameter[2];
+
+            par1[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CoCd, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_COUNT", par1);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_CALL"]);
+                    model.OnlineRegCall = Convert.ToInt32(ds.Tables[0].Rows[0]["ONLINE_REG_CALL"]);
+                    model.ManualRegCall = Convert.ToInt32(ds.Tables[0].Rows[0]["MANUAL_REG_CALL"]);
+                    model.POAwaitingCaseNo = Convert.ToInt32(ds.Tables[0].Rows[0]["PO_AWAITING_CASE_NO"]);
+                    model.PendingCallRemarks = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_CALL_REMARK"]);
+                    model.PendingOnlineCallAwaitingMark = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_ONLINE_CALL_AWAITING_MARK"]);
+                }
+            }
+
+            OracleParameter[] par2 = new OracleParameter[2];
+
+            par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CoCd, ParameterDirection.Input);
+            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
+            List<DashboardModel> listVend = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    listVend = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList(); 
+                }              
+            }
+            model.IEWisePerformance = listVend;
+            return model;       
+        }                       
+    }                           
 
 }
 

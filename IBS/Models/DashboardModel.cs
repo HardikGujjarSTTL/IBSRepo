@@ -26,6 +26,21 @@
 
         public int ConsigneeCompaintCount { get; set; }
 
+        public int ManualRegCall { get; set; }
+
+        public int OnlineRegCall { get; set; }
+
+        public int POAwaitingCaseNo { get; set; }
+
+        public int PendingCallRemarks { get; set; }
+
+        public int PendingOnlineCallAwaitingMark { get; set; }
+
+        public string IE_NAME { get; set; }
+
+        //public DashboardModel DashboardData { get; set; }
+        public List<DashboardModel> IEWisePerformance { get; set; }
+
         public List<IEList> lstIE { get; set; }
 
         public List<POCallStatusList> lstPOCallStatus { get; set; }
@@ -112,4 +127,5 @@
         public int NO_OF_COMPLAINTS { get; set; }
         public string VEND_NAME { get; set; }
     }
+
 }
