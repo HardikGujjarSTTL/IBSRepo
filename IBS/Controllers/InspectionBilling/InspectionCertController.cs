@@ -179,7 +179,7 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 if (i != "")
                 {
-                    return Json(new { status = true, responseText = msg, Id = i });
+                    return Json(new { status = true, responseText = msg, Id = i, BkNo = model.Bkno, SetNo = model.Setno });
                 }
                 else
                 {

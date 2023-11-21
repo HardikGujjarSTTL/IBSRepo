@@ -157,11 +157,11 @@ namespace IBS.Models
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
-        public DateTime? FirstInspDt { get; set; }
+        public DateTime FirstInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
-        public DateTime? LastInspDt { get; set; }
+        public DateTime LastInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -215,22 +215,49 @@ namespace IBS.Models
 
 
         public int ItemSrnoPo { get; set; }
+
         public string ItemDescPo { get; set; }
+
         public string UomSDesc { get; set; }
+
         public decimal? QtyOrdered { get; set; }
+
         public decimal? CumQtyPrevOffered { get; set; }
+
         public decimal? CumQtyPrevPassed { get; set; }
+
         public decimal? QtyToInsp { get; set; }
+
         public decimal? QtyPassed { get; set; }
+
         public decimal? QtyRejected { get; set; }
+
         public decimal? QtyDue { get; set; }
+
+        public decimal SuppNewRate { get; set; }
+
         public decimal? Rate { get; set; }
+
         public decimal? SalesTaxPer { get; set; }
+
         public decimal? SalesTax { get; set; }
+
+        public string? ExciseType { get; set; }
+
         public decimal? ExcisePer { get; set; }
+
         public decimal? Excise { get; set; }
+
+        public string? DiscountType { get; set; }
+
         public decimal? DiscountPer { get; set; }
+
         public decimal? Discount { get; set; }
+
+        public string? OtChargeType { get; set; }
+
+        public decimal? OtChargePer { get; set; }
+
         public decimal? OtherCharges { get; set; }
 
         public decimal? ServiceTax { get; set; }
@@ -333,5 +360,58 @@ namespace IBS.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
+    }
+
+    public class InspectionCertItemListModel
+    {
+        public int ItemSrnoPo { get; set; }
+
+        public string ItemDescPo { get; set; }
+
+        public string UomSDesc { get; set; }
+
+        public decimal? QtyOrdered { get; set; }
+
+        public decimal? CumQtyPrevOffered { get; set; }
+
+        public decimal? CumQtyPrevPassed { get; set; }
+
+        public decimal? QtyToInsp { get; set; }
+
+        public decimal? QtyPassed { get; set; }
+
+        public decimal? QtyRejected { get; set; }
+
+        public decimal? QtyDue { get; set; }
+
+        public decimal SuppNewRate { get; set; }
+
+        public decimal? Rate { get; set; }
+
+        public decimal? SalesTaxPer { get; set; }
+
+        public decimal? SalesTax { get; set; }
+
+        public string? ExciseType { get; set; }
+
+        public decimal? ExcisePer { get; set; }
+
+        public decimal? Excise { get; set; }
+
+        public string? DiscountType { get; set; }
+
+        public decimal? DiscountPer { get; set; }
+
+        public decimal? Discount { get; set; }
+
+        public string? OtChargeType { get; set; }
+
+        public decimal? OtChargePer { get; set; }
+
+        public decimal? OtherCharges { get; set; }
+
+        public decimal? ServiceTax { get; set; }
+
+        public decimal MaterialValue { get; set; }
     }
 }

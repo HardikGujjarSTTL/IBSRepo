@@ -635,5 +635,18 @@ ALTER TABLE t17_call_register_history MODIFY REJ_CHARGES DEFAULT NULL;
 ALTER TABLE t17_call_register_history MODIFY LOCAL_OR_OUTS DEFAULT NULL;
 ALTER TABLE t17_call_register_history MODIFY UPDATEDBY DEFAULT NULL;
 ALTER TABLE t17_call_register_history MODIFY UPDATEDDATE DEFAULT NULL;
+
+
+Supplimentory Bill Related
+
+ALTER TABLE t18_call_details ADD Supp_B_Flag VARCHAR2(10 BYTE)
+ALTER TABLE t18_call_details ADD Supp_New_Rate NUMBER(11,2)
+
+ALTER TABLE T18_CALL_DETAILS_HISTORY ADD Supp_B_Flag VARCHAR2(10 BYTE)
+ALTER TABLE T18_CALL_DETAILS_HISTORY ADD Supp_New_Rate NUMBER(11,2)
+
+ALTER TABLE T22_Bill ADD NEW_MATERIAL_VALUE	NUMBER(15,2)
+ALTER TABLE T22_Bill ADD NEW_INSP_FEE	NUMBER(13,2)
+ALTER TABLE T22_Bill ADD NEW_BILL_AMOUNT	NUMBER(13,2)
 =============================================================================================================================================
 

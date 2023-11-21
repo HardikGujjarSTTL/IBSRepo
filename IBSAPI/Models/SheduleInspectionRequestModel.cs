@@ -18,4 +18,11 @@
         public DateTime CallRecvDt { get; set; }
         public int CallSno { get; set; }
     }
+
+    public class ICPhotoUploadRequestModel
+    {
+        public string CaseNo { get; set; }
+        public string DocBkNo { get; set; }
+        public string DocSetNo { get; set; }
+    }
 }

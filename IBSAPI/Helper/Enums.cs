@@ -15,7 +15,9 @@ namespace IBSAPI.Helper
             [Description("Invalid token")]
             TokenMessage = 2,
             [Description("Internal Exception")]
-            InternamException = 4
+            InternamException = 4,
+            [Description("Validation message")]
+            ValidationMessage = 5
         }
         public enum Region
         {
@@ -31,6 +33,42 @@ namespace IBSAPI.Helper
             C,
             [Description("QA Corporate")]
             Q,
+        }
+        public enum DocumentCategory_CANRegisrtation : int
+        {
+            IC_Photos_Upload1 = 22,
+            IC_Photos_Upload2 = 24,
+            IC_Photos_Upload3 = 25,
+            IC_Photos_Upload4 = 26,
+            IC_Photos_Upload5 = 27,
+            IC_Photos_Upload6 = 28,
+            IC_Photos_Upload7 = 29,
+            IC_Photos_Upload8 = 30,
+            IC_Photos_Upload9 = 31,
+            IC_Photos_Upload10 = 32,
+            ICPhoto_Dig_Sign = 33,
+        }
+
+        public enum FolderPath
+        {
+            [Description("/ReadWriteData/Files/TempUploadedFiles")]
+            TempFilePath = 1,
+            [Description("/ReadWriteData/IC_PHOTOS")]
+            ICPHOTOS = 30
+        }
+        public static string GetEnumDescription(object enumValue)
+        {
+            string defDesc = string.Empty;
+            FieldInfo fi = enumValue.GetType().GetField(enumValue.ToString());
+
+            if (null != fi)
+            {
+                object[] attrs = fi.GetCustomAttributes(typeof(DescriptionAttribute), true);
+                if (attrs != null && attrs.Length > 0)
+                    return ((DescriptionAttribute)attrs[0]).Description;
+            }
+
+            return defDesc;
         }
     }
     public class EnumUtility<T>
