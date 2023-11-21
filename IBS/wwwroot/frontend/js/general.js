@@ -244,7 +244,7 @@ $(document).ready( function(){
 			},
 			breakpoints: {
 				479: {
-					slidesPerView: 2,
+					slidesPerView: 1,
 					simulateTouch: true,
 					centerSlide: true,
 				},
