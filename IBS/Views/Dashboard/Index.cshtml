@@ -8,100 +8,113 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3" id="NoTotalCall">
-                @*<a class="totalcall" href="/Dashboard/TotalCallListing?Type=TC">*@
-                <div class="dashboard-box das1">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">92,000</div>
-                            <div class="total-inner">
-                                Total<br />Call
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TC" })">
+                    <div class="dashboard-box das1">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">92,000</div>
+                                <div class="total-inner">
+                                    Total<br />Call
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
-            <div class="col-lg-3" id="NoPendingCall">
-                <div class="dashboard-box das2">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">68,140</div>
+            <div class="col-lg-3">
+                <a class="PendingCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "M" })">
+                    <div class="dashboard-box das2">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">68,140</div>
+                            </div>
+                            <div class="total-inner">
+                                Pending<br />Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Pending<br />Calls
-                        </div>
+                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
-                </div>
+                </a>
             </div>
-            <div class="col-lg-3" id="NoAcceptedCall">
-                <div class="dashboard-box das3">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">56,422</div>
+            <div class="col-lg-3">
+                <a class="AcceptedCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "A" })">
+                    <div class="dashboard-box das3">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">56,422</div>
+                            </div>
+                            <div class="total-inner">
+                                Accepted<br />Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Accepted<br />Calls
-                        </div>
+                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
             </div>
-            <div class="col-lg-3" id="NoCancelleCall">
-                <div class="dashboard-box das4">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">11,718</div>
+            <div class="col-lg-3">
+                <a class="CancelleCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "C" })">
+                    <div class="dashboard-box das4">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">11,718</div>
+                            </div>
+                            <div class="total-inner">
+                                Cancelled<br />Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Cancelled<br />Calls
-                        </div>
+                        <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
-                </div>
+                </a>
             </div>
 
         </div>
         <div class="row admin-dashboard">
-            <div class="col-lg-3" id="NoUnderLabCall">
-                <div class="dashboard-box das5">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">92,000</div>
-                            <div class="total-inner">
-                                Under Lab<br /> Testing
+            <div class="col-lg-3">
+                <a class="UnderLabCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "U" })">
+                    <div class="dashboard-box das5">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">92,000</div>
+                                <div class="total-inner">
+                                    Under Lab<br /> Testing
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
-            <div class="col-lg-3" >
-                <div class="dashboard-box das6" id="NoStillUnderInspCall">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">68,140</div>
+            <div class="col-lg-3">
+                <a class="StillUnderInspCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "S" })">
+                    <div class="dashboard-box das6">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">68,140</div>
+                            </div>
+                            <div class="total-inner">
+                                Still Under<br /> Inspection
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Still Under<br /> Inspection
-                        </div>
+                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
-                </div>
+                </a>
             </div>
-            <div class="col-lg-3" id="NoStageRejectionCall">
-                <div class="dashboard-box das7">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">56,422</div>
+            <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "T" })">
+                    <div class="dashboard-box das7">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">56,422</div>
+                            </div>
+                            <div class="total-inner">
+                                Stage<br /> Rejection
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Stage<br /> Rejection
-                        </div>
+                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
                 <div class="dashboard-box das8">
@@ -1036,30 +1049,7 @@
         //        }]
         //    }]
         //});
-
-        $(document).ready(function () {
-        $('#NoTotalCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
-        });
-        $('#NoPendingCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=M';
-        });
-        $('#NoAcceptedCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=A';
-        });
-        $('#NoCancelleCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=C';
-        });
-        $('#NoUnderLabCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=U';
-        });
-        $('#NoStillUnderInspCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=S';
-        });
-        $('#NoStageRejectionCall').on("click", function () {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=T';
-        });
-        });
+        
         function TotalCall() {
             window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
         }
