@@ -276,6 +276,14 @@ namespace IBS.Models
 
         public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
 
+        public string FrIeName { get; set; }
+        
+        public string ToIeName { get; set; }
+        
+        public string UserName { get; set; }
+        
+        public DateTime? RemInitDatetime { get; set; }
+
     }
 
     public class VendorCallRegPrintReport

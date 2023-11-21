@@ -8,113 +8,100 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
-                <a class="totalcall" href="/Dashboard/TotalCallListing?Type=TC">
-                    <div class="dashboard-box das1">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">92,000</div>
-                                <div class="total-inner">
-                                    Total<br />Call
-                                </div>
-                            </div>
-                        </div>
-                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3">
-                <a class="pendingcall" href="/Dashboard/TotalCallListing?Type=M">
-                    <div class="dashboard-box das2">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">68,140</div>
-                            </div>
+            <div class="col-lg-3" id="NoTotalCall">
+                @*<a class="totalcall" href="/Dashboard/TotalCallListing?Type=TC">*@
+                <div class="dashboard-box das1">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">92,000</div>
                             <div class="total-inner">
-                                Pending<br />Calls
+                                Total<br />Call
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
                     </div>
-                </a>
+                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
             </div>
-            <div class="col-lg-3">
-                <a class="acceptedcall" href="/Dashboard/TotalCallListing?Type=A">
-                    <div class="dashboard-box das3">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">56,422</div>
-                            </div>
-                            <div class="total-inner">
-                                Accepted<br />Calls
-                            </div>
+            <div class="col-lg-3" id="NoPendingCall">
+                <div class="dashboard-box das2">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">68,140</div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        <div class="total-inner">
+                            Pending<br />Calls
+                        </div>
                     </div>
-                </a>
+                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                </div>
             </div>
-            <div class="col-lg-3">
-                <a class="cancelledcall" href="/Dashboard/TotalCallListing?Type=C">
-                    <div class="dashboard-box das4">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">11,718</div>
-                            </div>
-                            <div class="total-inner">
-                                Cancelled<br />Calls
-                            </div>
+            <div class="col-lg-3" id="NoAcceptedCall">
+                <div class="dashboard-box das3">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">56,422</div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                        <div class="total-inner">
+                            Accepted<br />Calls
+                        </div>
                     </div>
-                </a>
+                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3" id="NoCancelleCall">
+                <div class="dashboard-box das4">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">11,718</div>
+                        </div>
+                        <div class="total-inner">
+                            Cancelled<br />Calls
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                </div>
             </div>
 
         </div>
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
-                <a class="underlabcall" href="/Dashboard/TotalCallListing?Type=U">
-                    <div class="dashboard-box das5">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">92,000</div>
-                                <div class="total-inner">
-                                    Under Lab<br /> Testing
-                                </div>
-                            </div>
-                        </div>
-                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3">
-                <a class="stillunderinspcall" href="/Dashboard/TotalCallListing?Type=S">
-                    <div class="dashboard-box das6">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">68,140</div>
-                            </div>
+            <div class="col-lg-3" id="NoUnderLabCall">
+                <div class="dashboard-box das5">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">92,000</div>
                             <div class="total-inner">
-                                Still Under<br /> Inspection
+                                Under Lab<br /> Testing
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
                     </div>
-                </a>
+                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
             </div>
-            <div class="col-lg-3">
-                <a class="stagerejectioncall" href="/Dashboard/TotalCallListing?Type=T">
-                    <div class="dashboard-box das7">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">56,422</div>
-                            </div>
-                            <div class="total-inner">
-                                Stage<br /> Rejection
-                            </div>
+            <div class="col-lg-3" >
+                <div class="dashboard-box das6" id="NoStillUnderInspCall">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">68,140</div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        <div class="total-inner">
+                            Still Under<br /> Inspection
+                        </div>
                     </div>
-                </a>
+                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3" id="NoStageRejectionCall">
+                <div class="dashboard-box das7">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">56,422</div>
+                        </div>
+                        <div class="total-inner">
+                            Stage<br /> Rejection
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                </div>
             </div>
             <div class="col-lg-3">
                 <div class="dashboard-box das8">
@@ -190,7 +177,8 @@
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">21</div>
-                            <div class="total-inner">56,422
+                            <div class="total-inner">
+                                56,422
                                 Not received<br /> in office
                             </div>
                         </div>
@@ -919,137 +907,160 @@
             }]
         });
 
-                //Highcharts.chart('monthlychart', {
-                                                        //    chart: {
-                                                        //        type: 'column'
-                                                        //    },
-                                                        //    title: {
-                                                        //        text: ''
-                                                        //    },
-                                                        //    subtitle: {
-                                                        //        text: ''
-                                                        //    },
-                                                        //    xAxis: {
-                                                        //        categories: [
-                                                        //            'Jan',
-                                                        //            'Feb',
-                                                        //            'Mar',
-                                                        //            'Apr',
-                                                        //            'May',
-                                                        //            'Jun',
-                                                        //            'Jul',
-                                                        //            'Aug',
-                                                        //            'Sep',
-                                                        //            'Oct',
-                                                        //            'Nov',
-                                                        //            'Dec'
-                                                        //        ],
-                                                        //        crosshair: true
-                                                        //    },
-                                                        //    yAxis: {
-                                                        //        min: 0,
-                                                        //        title: {
-                                                        //            text: 'Number of Inspection Requests'
-                                                        //        }
-                                                        //    },
-                                                        //    tooltip: {
-                                                        //        headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
-                                                        //        pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
-                                                        //            '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
-                                                        //        footerFormat: '</tr></table>',
-                                                        //        shared: true,
-                                                        //        useHTML: true
-                                                        //    },
-                                                        //    plotOptions: {
-                                                        //        column: {
-                                                        //            pointPadding: 0.2,
-                                                        //            borderWidth: 0
-                                                        //        }
-                                                        //    },
-                                                        //    exporting: {
-                                                        //        enabled: false
-                                                        //    },
-                                                        //    series: [{
-                                                        //        name: 'Inspection Assigned',
-                                                        //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
-                                                        //            194.1, 95.6, 54.4]
+        //Highcharts.chart('monthlychart', {
+        //    chart: {
+        //        type: 'column'
+        //    },
+        //    title: {
+        //        text: ''
+        //    },
+        //    subtitle: {
+        //        text: ''
+        //    },
+        //    xAxis: {
+        //        categories: [
+        //            'Jan',
+        //            'Feb',
+        //            'Mar',
+        //            'Apr',
+        //            'May',
+        //            'Jun',
+        //            'Jul',
+        //            'Aug',
+        //            'Sep',
+        //            'Oct',
+        //            'Nov',
+        //            'Dec'
+        //        ],
+        //        crosshair: true
+        //    },
+        //    yAxis: {
+        //        min: 0,
+        //        title: {
+        //            text: 'Number of Inspection Requests'
+        //        }
+        //    },
+        //    tooltip: {
+        //        headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
+        //        pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
+        //            '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
+        //        footerFormat: '</tr></table>',
+        //        shared: true,
+        //        useHTML: true
+        //    },
+        //    plotOptions: {
+        //        column: {
+        //            pointPadding: 0.2,
+        //            borderWidth: 0
+        //        }
+        //    },
+        //    exporting: {
+        //        enabled: false
+        //    },
+        //    series: [{
+        //        name: 'Inspection Assigned',
+        //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
+        //            194.1, 95.6, 54.4]
 
-                                                        //    }, {
-                                                        //        name: 'Inspection Completed',
-                                                        //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
-                                                        //            106.6, 92.3]
+        //    }, {
+        //        name: 'Inspection Completed',
+        //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
+        //            106.6, 92.3]
 
-                                                        //    }, {
-                                                        //        name: 'Inspection Pending',
-                                                        //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
-                                                        //            51.2]
+        //    }, {
+        //        name: 'Inspection Pending',
+        //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
+        //            51.2]
 
-                                                        //    }]
-                                                        //});
+        //    }]
+        //});
 
 
-                                                        //// Pie Chart
+        //// Pie Chart
 
-                                                        //Highcharts.chart('region-wise-pie', {
-                                                        //    colors: ['#7ab971', '#f16a6b', '#5fb8e2', '#6c82e2', '#1962c1', '#e89b00'],
-                                                        //    chart: {
-                                                        //        type: 'pie',
-                                                        //        height: '250',
-                                                        //    },
-                                                        //    title: {
-                                                        //        text: ''
-                                                        //    },
-                                                        //    tooltip: {
-                                                        //        valueSuffix: '%'
-                                                        //    },
-                                                        //    legend: {
-                                                        //        layout: 'vertical',
-                                                        //        align: 'right',
-                                                        //        verticalAlign: 'middle',
-                                                        //        itemMarginTop: 10,
-                                                        //        itemMarginBottom: 10
-                                                        //    },
-                                                        //    plotOptions: {
-                                                        //        pie: {
-                                                        //            allowPointSelect: true,
-                                                        //            cursor: 'pointer',
+        //Highcharts.chart('region-wise-pie', {
+        //    colors: ['#7ab971', '#f16a6b', '#5fb8e2', '#6c82e2', '#1962c1', '#e89b00'],
+        //    chart: {
+        //        type: 'pie',
+        //        height: '250',
+        //    },
+        //    title: {
+        //        text: ''
+        //    },
+        //    tooltip: {
+        //        valueSuffix: '%'
+        //    },
+        //    legend: {
+        //        layout: 'vertical',
+        //        align: 'right',
+        //        verticalAlign: 'middle',
+        //        itemMarginTop: 10,
+        //        itemMarginBottom: 10
+        //    },
+        //    plotOptions: {
+        //        pie: {
+        //            allowPointSelect: true,
+        //            cursor: 'pointer',
 
-                                                        //            dataLabels: {
-                                                        //                distance: -20,
-                                                        //                enabled: true,
-                                                        //                //format: '{point.name}: {y} %'
-                                                        //                format: '{y} %'
-                                                        //            },
-                                                        //            showInLegend: true
-                                                        //        }
-                                                        //    },
-                                                        //    series: [{
-                                                        //        name: 'Percentage',
-                                                        //        colorByPoint: true,
-                                                        //        innerSize: '45%',
-                                                        //        data: [{
-                                                        //            name: 'Northern Region (NR)',
-                                                        //            y: 13
-                                                        //        }, {
-                                                        //            name: 'Southern Region (SR)',
-                                                        //            y: 22
-                                                        //        }, {
-                                                        //            name: 'Western Region (WR)',
-                                                        //            y: 19
-                                                        //        }, {
-                                                        //            name: 'Eastern Region (ER)',
-                                                        //            y: 17
-                                                        //        }, {
-                                                        //            name: 'Central Region (CR)',
-                                                        //            y: 15
-                                                        //        }, {
-                                                        //            name: 'QA Corporate',
-                                                        //            y: 14
-                                                        //        }]
-                                                        //    }]
-                                                        //});
-        function TotalCall()
-        {
+        //            dataLabels: {
+        //                distance: -20,
+        //                enabled: true,
+        //                //format: '{point.name}: {y} %'
+        //                format: '{y} %'
+        //            },
+        //            showInLegend: true
+        //        }
+        //    },
+        //    series: [{
+        //        name: 'Percentage',
+        //        colorByPoint: true,
+        //        innerSize: '45%',
+        //        data: [{
+        //            name: 'Northern Region (NR)',
+        //            y: 13
+        //        }, {
+        //            name: 'Southern Region (SR)',
+        //            y: 22
+        //        }, {
+        //            name: 'Western Region (WR)',
+        //            y: 19
+        //        }, {
+        //            name: 'Eastern Region (ER)',
+        //            y: 17
+        //        }, {
+        //            name: 'Central Region (CR)',
+        //            y: 15
+        //        }, {
+        //            name: 'QA Corporate',
+        //            y: 14
+        //        }]
+        //    }]
+        //});
+
+        $(document).ready(function () {
+        $('#NoTotalCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
+        });
+        $('#NoPendingCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=M';
+        });
+        $('#NoAcceptedCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=A';
+        });
+        $('#NoCancelleCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=C';
+        });
+        $('#NoUnderLabCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=U';
+        });
+        $('#NoStillUnderInspCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=S';
+        });
+        $('#NoStageRejectionCall').on("click", function () {
+            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=T';
+        });
+        });
+        function TotalCall() {
             window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
         }
         function AutometicCallMark() {
