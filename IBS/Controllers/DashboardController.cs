@@ -96,5 +96,11 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        public IActionResult IE_Dashboard_Detail(string Type)
+        {
+            ViewBag.Type = Type;    
+            return View();
+        }
+
     }
 }

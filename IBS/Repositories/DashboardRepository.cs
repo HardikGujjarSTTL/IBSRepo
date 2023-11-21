@@ -334,13 +334,12 @@ namespace IBS.Repositories
                         UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
                         StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
                         StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
-                    }).ToList(); 
-                }              
+                    }).ToList();
+                }
             }
             model.IEWisePerformance = listVend;
-            return model;       
-        }                       
-    }                           
+            return model;
+        }
 
         public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
         {
@@ -378,13 +377,13 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_CO_CD", OracleDbType.Varchar2, CO_CD, ParameterDirection.Input);            
+            par[2] = new OracleParameter("P_CO_CD", OracleDbType.Varchar2, CO_CD, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_CM_WISE_IE_DETAIL", par, 1);
             DataTable dt = ds.Tables[0];
             List<IE_Per_CM_Model> list = new List<IE_Per_CM_Model>();
-            if(dt != null && dt.Rows.Count > 0)
+            if (dt != null && dt.Rows.Count > 0)
             {
                 list = dt.AsEnumerable().Select(row => new IE_Per_CM_Model
                 {
@@ -413,6 +412,4 @@ namespace IBS.Repositories
             return dTResult;
         }
     }
-
 }
-

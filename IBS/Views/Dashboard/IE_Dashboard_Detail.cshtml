@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "IE_Dashboard_Detail";
+}
+
+<h1>IE_Dashboard_Detail</h1>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        var Type = "@ViewBag.Type";
+        var Columns = [];
+        $(function () {
+            // Get the current date
+            var currentDate = new Date();
+
+            // Determine the start date of the financial year (April 1st)
+            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+
+            // If the current date is before April 1st, subtract a year
+            if (currentDate < financialYearStartDate) {
+                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+
+            if (Type == "NC") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "IE_NAME" },
+                    { data: "VEND_NAME" },
+                    { data: "CALL_STATUS" },
+                ]
+            } else if (Type == "Outstanding") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "IE_NAME" },
+                    { data: "VEND_NAME" },
+                    { data: "CALL_STATUS" },
+                ]
+            }
+            //$("#ToDate").val(new Date());
+        });
+
+                        //function InitializeDatatable() {
+                        //    var FromDate = $("#FromDate").val();
+                        //    var ToDate = $("#ToDate").val();
+                        //    var CO_CD = $("#ddlCM").val();
+                        //    $("#dtList").DataTable({
+                        //        stateSave: false,// Design Assets
+                        //        autoWidth: true,
+                        //        scrollX: true,
+                        //        scrollCollapse: true,
+                        //        processing: true, // ServerSide Setups
+                        //        serverSide: true,
+                        //        destroy: true,
+                        //        paging: true,// Paging Setups
+                        //        searching: true,// Searching Setups
+                        //        ajax: {// Ajax Filter
+                        //            url: "@Url.Action("GetIEPerCM", "Dashboard")",
+                        //            type: "POST",
+                        //            contentType: "application/json; charset=utf-8",
+                        //            dataType: "json",
+                        //            data: function (d) {
+                        //                var AdditionalValues = {
+                        //                    FromDate, ToDate, CO_CD
+                        //                };
+                        //                d.AdditionalValues = AdditionalValues;
+                        //                return JSON.stringify(d);
+                        //            }
+                        //        },
+                                //        columns: Columns,
+                        //        "order": [[0, "asc"]]
+                        //    });
+                        //}
+    </script>
+}
