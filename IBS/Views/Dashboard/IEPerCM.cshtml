@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "IEPerCM";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+    </div>
+</div>
+<div class="accordion-body" id="body">
+    <div class="row my-0">
+        <div class="col-md-6 mb-3">
+            <div class="reference">
+                <label for="Reference">Controlling Officer</label>
+                @Html.DropDownList("ddlCM", new SelectList(IBS.Models.Common.GetAllIeControllingOfficers() , "Value", "Text"),"--Select--")
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Case No</th>
+                        <th>Call Date</th>
+                        <th>Call SNo</th>
+                        <th>IE</th>
+                        <th>Vendor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            // Get the current date
+            var currentDate = new Date();
+
+            // Determine the start date of the financial year (April 1st)
+            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+
+            // If the current date is before April 1st, subtract a year
+            if (currentDate < financialYearStartDate) {
+                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+            //$("#ToDate").val(new Date());
+        });
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var CO_CD = $("#ddlCM").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("GetIEPerCM", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate, ToDate, CO_CD
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "IE_NAME" },
+                    { data: "VEND_NAME" },
+                    { data: "CALL_STATUS" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}
+

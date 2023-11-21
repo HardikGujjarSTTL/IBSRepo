@@ -18,10 +18,8 @@
     <script type="text/javascript" src="~/frontend/js/modernizr.js"></script>
     <script type="text/javascript" src="~/frontend/js/jquery-min.js"></script>
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 </head>
 
 <body class="noJS">
@@ -31,14 +29,30 @@
                 <div class="container">
                     <div class="logoRow">
                         <div class="row m-0">
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="mainLogo">
-                                    <a asp-action="Index" asp-controller="Fhome" title="RITES Limited, A Government of India Enterprise"><img src="~/frontend/images/rites-logo.png" alt="RITES Limited, A Government of India Enterprise" /></a>
-                                    <div class="brandDetail"> <span class="firstTitle">Quality Assurance Division</span> <span class="secondTitle">(A Government of India Enterprise)</span> <span class="secondTitle">An ISO 9001 Company/Accreditation to ISO/IEC 17020</span> </div>
+                                    <a asp-action="Index" asp-controller="Fhome" title="RITES Limited, A Government of India Enterprise">
+                                        <img src="~/frontend/images/rites-logo.png" alt="RITES Limited, A Government of India Enterprise" /><br />
+                                        <span class="secondTitle">(A Government of India Enterprise)</span><br />
+                                        <span class="secondTitle">A navaratna Schedule 'A' CPSE</span>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12 d-flex align-items-center">
+                                <div class="brandDetail text-center"> <span class="firstTitle">Quality Assurance Division</span> <span class="secondTitle">ISO 9001, 17020, 17065</span> </div>
+                            </div>
+                            <div class="col-lg-4 col-md-12">
                                 <div class="">
+                                    <ul class="headerSkipContent">
+                                        <li><a tabindex="1" href="#content">Skip to Main Content</a></li>
+                                        <li class="fontResize">
+                                            <div id="accessControl" class="textResizeWrapper">
+                                                <input type="submit" value="A-" id="font_normal" title="Decrease Font Size" class="fontScaler large">
+                                                <input type="submit" value="A" id="font_large" title="Normal Font Size" class="fontScaler normal">
+                                                <input type="submit" value="A+" id="font_larger" title="Increase Font Size" class="fontScaler largest">
+                                            </div>
+                                        </li>
+                                    </ul>
                                     <ul class="rightLinks">
                                         <li class="helpLineNumber">National Helpline Number <span>1800 425 7000 (TOLL FREE)</span> </li>
                                         <li class="langSelectBoxIn">
@@ -56,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mainNavigationWrap">
+            <div class="mainNavigationWrap" id="top">
                 <div class="container">
                     <div id="mainNav" class="mainNavigation">
                         <div class="menuPart cf">
@@ -65,6 +79,7 @@
                                 <li>
                                     <a href="#" title="About Us">About Us</a>
                                     <ul>
+                                        <li><a asp-action="Overview" asp-controller="AboutUs">Overview</a></li>
                                         <li><a asp-action="QaDivisionProfile" asp-controller="AboutUs">QA Division Profile</a></li>
                                         <li><a asp-action="ServiceSpectrum" asp-controller="AboutUs">Service Spectrum</a></li>
                                         <li><a asp-action="Resources" asp-controller="AboutUs">Resources</a></li>
@@ -173,7 +188,7 @@
                 <p>Copyright © 2023 RITES IT Division, Northern Region</p>
             </div>
         </div>
-
+        <div id="backToTop"><a href="#top" id="atop" title="Go to Navigation">Go to Navigation</a></div>
     </div>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
