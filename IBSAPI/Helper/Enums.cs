@@ -15,7 +15,9 @@ namespace IBSAPI.Helper
             [Description("Invalid token")]
             TokenMessage = 2,
             [Description("Internal Exception")]
-            InternamException = 4
+            InternamException = 4,
+            [Description("Validation message")]
+            ValidationMessage = 5
         }
         public enum Region
         {

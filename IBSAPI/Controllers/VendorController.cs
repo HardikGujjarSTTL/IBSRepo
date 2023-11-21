@@ -237,7 +237,7 @@ namespace IBSAPI.Controllers
                 }
                 var response1 = new
                 {
-                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                     message = msg,
                 };
                 return Ok(response1);
@@ -474,7 +474,7 @@ namespace IBSAPI.Controllers
                                 }
                                 var response1 = new
                                 {
-                                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                                     message = msg,
                                 };
                                 return Ok(response1);
@@ -511,7 +511,7 @@ namespace IBSAPI.Controllers
                                 }
                                 var response2 = new
                                 {
-                                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                                     message = msg,
                                 };
                                 return Ok(response2);
