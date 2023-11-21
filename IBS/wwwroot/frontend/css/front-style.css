@@ -503,7 +503,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .headerSkipContent{ display:flex; justify-content:end;}
 .headerSkipContent li{ margin:0 10px;}
 .headerSkipContent a{ text-decoration:none; font-size:0.8em;}
-#accessControl input[type="submit"]{ padding:2px; line-height:16px; background:#666; border:none; border-radius:2px; font-size:13px; width:24px;}
+#accessControl input[type="submit"]{ padding:2px; line-height:16px; background:#666; border:none; border-radius:2px; font-size:11px; width:20px;}
 .servicesContent{ padding:20px 0;}
 .servicesList, .kipList{ display:flex; justify-content:space-between; list-style:none; flex-wrap:wrap; margin:0; padding:0;}
 .servicesList li, .kipList li{ width:33%; background:#e9fbff; box-shadow:2px 2px 4px 2px #d1d1d1; margin-bottom:10px; padding:20px; border-radius:2px; text-align:center; min-height:85px; align-items:center; font-weight:600; display:flex; justify-content:space-between;}
@@ -605,7 +605,6 @@ ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-righ
 .overViewRightSection{padding:35px;}
 .updateSection {background: #EEF0F5; padding: 0 0 25px;}
 .awardCollectionSection{padding:25px 0;}
-.overViewSection h2, .certificationWrap h2, .awardWrap h2, .ourClientWrap h2 {font-size: 25px; font-weight:500; margin-bottom:15px;}
 .awardCollectionContentPart .certificationWrap, 
 .awardCollectionContentPart .awardWrap {background: #fff; padding: 20px;}
 .ourClientSection {padding: 25px 0;}
@@ -619,4 +618,9 @@ ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-righ
 #nav li a:before, #nav li a:after{content:""; display:table;}
 #nav li a:after{ clear:both;}
 #nav li a:before{ display:none;}
+.headerSkipContent{ display:none;}
+.servicesList li, .kipList li{ width:100%;}
+.kipSection li{ margin-bottom:10px;}
+.homeGalleryWrap h2, .overViewSection h2, .servicesContent h2, .kipSection h2, .overViewSection h2, .certificationWrap h2, .awardWrap h2, .ourClientWrap h2{ font-size:20px; margin-bottom:15px;}
+.homeGalleryWrap a.mt-2{ margin-top:0!important;}
 }
