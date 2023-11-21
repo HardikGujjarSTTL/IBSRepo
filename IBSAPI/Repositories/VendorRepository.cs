@@ -50,9 +50,49 @@ namespace IBSAPI.Repositories
         //    return lst;
         //}
 
-        public PODetailsModel GetPODetailsforvendor(string CaseNo, int UserID)
+        public PODetailsModel GetPODetailsforvendor(string CaseNo, DateTime? CallRecvDt, string FOS, int UserID)
         {
             PODetailsModel model = new PODetailsModel();
+            model.CallStage = FOS;
+            model.CallStatus = "Marked";
+            var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt)).Count();
+            model.CallSno = count + 1;
+            var CallDetails = (from c in context.T17CallRegisters
+                               join i in context.T09Ies on c.IeCd equals i.IeCd into iGroup
+                               from i in iGroup.DefaultIfEmpty()
+                               where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt
+                               select new
+                               {
+                                   CallMarkDt = c.CallMarkDt,
+                                   CallSno = c.CallSno,
+                                   IeName = (i != null) ? i.IeName : null
+                               }).ToList();
+            if (CallDetails.Count > 0)
+            {
+                string msg = "The Call Already Present for the Given Case No and Call Date -: \\n";
+                for (int i = 0; i <= CallDetails.Count - 1; i++)
+                {
+                    msg = msg + (i + 1) + ") Marked To: " + CallDetails[i].IeName + " vide Call Serial No.=" + CallDetails[i].CallSno + " and Call Date=" + CallDetails[i].CallMarkDt + ". \\n";
+                }
+                model.MsgStatus = msg;
+                show1(model, CaseNo, UserID);
+            }
+            else
+            {
+                show1(model, CaseNo, UserID);
+            }
+
+            model.CallMarkDt = CallRecvDt;
+            model.CallStatusDt = CallRecvDt;
+            model.DtInspDesire = CallRecvDt;
+            model.RegionCode = CaseNo.Substring(0, 1).ToString();
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(CaseNo.Substring(0, 1));
+
+            return model;
+        }
+
+        public PODetailsModel show1(PODetailsModel model, string CaseNo, int UserID)
+        {
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
             if (GetView != null)
             {
@@ -64,7 +104,7 @@ namespace IBSAPI.Repositories
                 model.L5noPo = GetView.L5noPo;
                 model.RlyNonrly = GetView.RlyNonrly;
             }
-            T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(UserID)).FirstOrDefault();
+            T05Vendor Vendor = context.T05Vendors.Where(x => x.VendCd == UserID).FirstOrDefault();
             if (GetView != null)
             {
                 model.VendAdd1 = Vendor.VendAdd1;
@@ -77,7 +117,6 @@ namespace IBSAPI.Repositories
             }
             return model;
         }
-
         public List<CallRegiModel> GetCaseDetailsforClient(string UserID, string Organisation, string OrgnType)
         {
             List<CallRegiModel> lst = new();

@@ -38,7 +38,7 @@ namespace IBSAPI.Repositories
             var query = (from t17 in context.T17CallRegisters
                          join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
                          join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                         where t17.CaseNo == sheduleInspectionRequestModel.CaseNo && t17.CallRecvDt == Convert.ToDateTime(CallRecvDt)
+                         where t17.CaseNo == sheduleInspectionRequestModel.CaseNo && t17.CallRecvDt.Date == sheduleInspectionRequestModel.CallRecvDt.Date
                          && t17.CallSno == sheduleInspectionRequestModel.CallSno
                          select new
                          {
@@ -99,6 +99,17 @@ namespace IBSAPI.Repositories
                          }).ToList();
             return lstStatus;
         }
-
+        public int CancelInspection(int IeCd, string CaseNo,DateTime PlanDt, DateTime CallRecvDt, int CallSno)
+        {
+            int ID = 0;
+            var T47 = context.T47IeWorkPlans.Where(x => x.IeCd == IeCd && x.VisitDt.Date == PlanDt.Date && x.CaseNo == CaseNo && x.CallRecvDt.Date == CallRecvDt.Date && x.CallSno == CallSno).FirstOrDefault();
+            if (T47 != null)
+            {
+                context.T47IeWorkPlans.RemoveRange(T47);
+                context.SaveChanges();
+                ID = Convert.ToInt32(T47.CallSno);
+            }
+            return ID;
+        }
     }
 }
