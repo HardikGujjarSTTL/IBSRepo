@@ -4510,6 +4510,19 @@ namespace IBS.Models
             DateTime financialYearEnd = financialYearStart.AddYears(1).AddDays(-1);
             return financialYearEnd;
         }
+
+        public static List<SelectListItem> GetAllIeControllingOfficers()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from a in context.T08IeControllOfficers
+                    where a.CoStatus == null
+                    orderby a.CoName
+                    select new SelectListItem
+                    {
+                        Text = Convert.ToString(a.CoName),
+                        Value = Convert.ToString(a.CoCd)
+                    }).OrderBy(c => c.Text).ToList();
+        }
     }
 
     public static class DbContextHelper

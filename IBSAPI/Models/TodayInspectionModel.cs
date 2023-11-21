@@ -9,8 +9,9 @@ namespace IBSAPI.Models
         //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         //[DataType(DataType.Date)]
         public string Call_Recv_Dt { get; set; }
-        //public string Date { get { return this.Call_Recv_Dt != null ? Common.ConvertDateFormat(this.Call_Recv_Dt.Value) : ""; } }
+        //public string Date { get { return this.Call_Recv_Dt != null ? Common.ConvertDateFormat(this.Call_Recv_Dt.Value) : ""; } }        
         public int Call_Sno { get; set; }
+        public string PlanDt { get; set; }
         public string PO_NO { get; set; }
         public string PO_DT { get; set; }
         public string Vend_Name { get; set; }
@@ -27,6 +28,7 @@ namespace IBSAPI.Models
         public string Call_Recv_Dt { get; set; }
         //public string Date { get { return this.Call_Recv_Dt != null ? Common.ConvertDateFormat(this.Call_Recv_Dt.Value) : ""; } }
         public int Call_Sno { get; set; }
+        public string PlanDt { get; set; }
         public string PO_NO { get; set; }
         public string PO_DT { get; set; }
         public string Vend_Name { get; set; }
