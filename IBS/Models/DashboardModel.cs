@@ -137,4 +137,16 @@
         public string VEND_NAME { get; set; }
         public string CALL_STATUS { get; set; }
     }
+
+    public class NCIssued_Per_IE
+    {
+        public string NC_NO { get; set; }
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public int CALL_SNO { get; set; }
+        public string IE_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string SetNo { get; set; }
+        public string Consignee { get; set; }
+    }
 }

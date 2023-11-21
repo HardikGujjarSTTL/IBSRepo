@@ -1,6 +1,7 @@
 ﻿using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -89,6 +90,7 @@ namespace IBS.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult GetIEPerCM([FromBody] DTParameters dtParameters)
         {
@@ -98,9 +100,16 @@ namespace IBS.Controllers
 
         public IActionResult IE_Dashboard_Detail(string Type)
         {
-            ViewBag.Type = Type;    
+            ViewBag.Type = Type;
+            ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
             return View();
         }
 
+        [HttpPost]
+        public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
+        {
+            DTResult<NCIssued_Per_IE> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            return Json(dTResult);
+        }
     }
 }
