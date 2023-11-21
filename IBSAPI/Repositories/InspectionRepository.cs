@@ -77,6 +77,7 @@ namespace IBSAPI.Repositories
             }
             return pendingList;
         }
+
         public CaseDetailIEModel GetCaseDetailForIE(string Case_No, DateTime CallRecvDt, int CallSNo, int IeCd)
         {
             CaseDetailIEModel caseDetailIEModel = new CaseDetailIEModel();
