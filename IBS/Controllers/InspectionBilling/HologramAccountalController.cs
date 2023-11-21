@@ -54,7 +54,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dTResult);
         }
 
-        public JsonResult GetRegionCode()
+        public JsonResult Get_Region_Code()
         {
             var result = string.Empty;
             var region = GetUserInfo.Region.ToString();

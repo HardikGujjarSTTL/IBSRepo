@@ -82,7 +82,7 @@
         function GetRegionCode(bk_no, set_no, type) {
             //var bk_no = $("#BK_NO").val();
             //var set_no = $("#SET_NO").val();
-            var url = "@Url.Action("GetRegionCode", "HologramAccountal")" + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
+            var url = "@Url.Action("Get_Region_Code", "HologramAccountal")" + "?BK_NO=" + bk_no + "&SET_NO=" + set_no;
             $.ajax({
                 url: url,
                 type: "POST",
