@@ -1,0 +1,253 @@
+﻿@model IBS.Models.VenderCallRegisterModel
+@{
+    ViewData["Title"] = "Call Desk Information";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+</div>
+<input type="hidden" asp-for="ActionType" />
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="savenext-btn btnAlign">
+                <button type="button" class="save-btn active" onclick="Search();">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section CallMarked" style="display:none;">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Case No.</th>
+                        <th>Call Date</th>
+                        <th>Call SNo.</th>
+                        <th>Call Mark Date</th>
+                        <th>IE Name</th>
+                        <th>Vendor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="table-section PoCase" style="display:none;">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtListPoCase" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ref No.</th>
+                        <th>Purchase Order Number</th>
+                        <th>Purchase Order Date</th>
+                        <th>Agency</th>
+                        <th>Vendor</th>
+                        <th>Purchaser Name</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $("#FromDate").val("01/04/2023");
+            $("#ToDate").val("31/03/2024");
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "ACM") {
+                $("#spnHeading").text("No. of Automatic Marked  Calls.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+            }
+            else if (type == "MCM") {
+                $("#spnHeading").text("No. of Manually Marked  Calls.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+            }
+            else if (type == "POAC") {
+                $("#spnHeading").text("No. of POs, Awaiting for  Case No.");
+                InitializePoCase();
+                $(".CallMarked").css("display", "none");
+                $(".PoCase").css("display", "block");
+            }
+            
+        });
+
+        function Search()
+        {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "ACM") {
+                InitializeCallMarked();
+            }
+            else if (type == "MCM") {
+                InitializeCallMarked();
+            }
+            else if (type == "POAC") {
+                InitializePoCase();
+            }
+        }
+
+        function InitializeCallMarked() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    {
+                        data: "CallMarkDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+
+                    { data: "IE_name" },
+                    { data: "Vendor" },
+                    { data: "CallStatus" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function InitializePoCase() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtListPoCase").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Rly" },
+                    { data: "Vendor" },
+                    { data: "Consignee" },
+                    { data: "Remarks" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}
