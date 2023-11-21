@@ -49,6 +49,10 @@ namespace IBS.Controllers
             DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.CoCd);
             return View();
         }
+        public IActionResult AwaitingForCaseNo()
+        {
+            return View();
+        }
 
         #endregion
         public IActionResult IE_Instructions()
