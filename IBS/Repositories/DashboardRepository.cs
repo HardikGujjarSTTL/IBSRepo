@@ -67,7 +67,7 @@ namespace IBS.Repositories
             }
             model.lstIE = listIE;
 
-            DataSet ds2 = null; //ComplaintStatusSummary("N");
+            DataSet ds2 = ComplaintStatusSummary("N");
 
             model.complaintStatusSummaryModel = new();
 
@@ -620,7 +620,126 @@ namespace IBS.Repositories
 
         public DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region)
         {
-            throw new NotImplementedException();
+            DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
+            IQueryable<VenderCallRegisterModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "CaseNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", ActionType = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ActionType"]))
+            {
+                ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
+            }
+            if (ActionType == "ACM")
+            {
+                query = from T17 in context.T17CallRegisters
+                        join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
+                        join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
+                        where T17.RegionCode == Region
+                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        && T17.AutomaticCall == "Y"
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = T17.CaseNo,
+                            CallRecvDt = T17.CallRecvDt,
+                            CallSno = Convert.ToInt16(T17.CallSno),
+                            CallMarkDt = T17.CallMarkDt,
+                            CallStatus = T17.CallStatus,
+                            IE_name = T09.IeName,
+                            Vendor = T05.VendName,
+                            RegionCode = T17.RegionCode,
+                        };
+            }
+            else if (ActionType == "MCM")
+            {
+                query = from T17 in context.T17CallRegisters
+                        join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
+                        join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
+                        where T17.RegionCode == Region
+                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        && T17.AutomaticCall != "Y"
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = T17.CaseNo,
+                            CallRecvDt = T17.CallRecvDt,
+                            CallSno = Convert.ToInt16(T17.CallSno),
+                            CallMarkDt = T17.CallMarkDt,
+                            CallStatus = T17.CallStatus,
+                            IE_name = T09.IeName,
+                            Vendor = T05.VendName,
+                            RegionCode = T17.RegionCode,
+                        };
+            }
+            else if (ActionType == "POAC")
+            {
+                query = from T80 in context.ViewPomasterlists
+                        where T80.RegionCode == Region
+                        && T80.RealCaseNo == null
+                        && T80.Isdeleted != Convert.ToByte(true)
+                        && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = T80.CaseNo,
+                            PoNo = T80.PoNo,
+                            PoDt = Convert.ToDateTime(T80.PoDt),
+                            Rly = T80.RlyCd,
+                            Vendor = T80.VendName,
+                            Consignee = T80.ConsigneeSName,
+                            Remarks = T80.Remarks,
+                            RegionCode = T80.RegionCode,
+                        };
+            }
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public DataSet ComplaintStatusSummary(string Region)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            return DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COMPLAINT_STATUS", par);
         }
     }
 }
