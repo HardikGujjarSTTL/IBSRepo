@@ -43,12 +43,14 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        #region CM
         public IActionResult CM()
         {
             DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.CoCd);
             return View();
         }
 
+        #endregion
         public IActionResult IE_Instructions()
         {
             return View();
