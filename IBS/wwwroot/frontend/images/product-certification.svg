@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="53" viewBox="0 0 46 53">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_17980" data-name="Rectangle 17980" width="46" height="53" transform="translate(1572 2321)"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <rect id="Rectangle_17986" data-name="Rectangle 17986" width="36" height="51.6" transform="translate(0 0)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+    </clipPath>
+  </defs>
+  <g id="Product_Certification" data-name="Product Certification" transform="translate(-1572 -2321)" clip-path="url(#clip-path)">
+    <g id="Group_65661" data-name="Group 65661" transform="translate(1577 2322)">
+      <g id="Group_65660" data-name="Group 65660" clip-path="url(#clip-path-2)">
+        <path id="Path_45796" data-name="Path 45796" d="M2.4,51.6A2.377,2.377,0,0,1,0,49.2V2.4A2.382,2.382,0,0,1,2.351,0H33.6a2.391,2.391,0,0,1,1.742.719A2.34,2.34,0,0,1,36,2.395V41.664L26.063,51.6ZM2.289,1.333a1.019,1.019,0,0,0-.7.341,1.008,1.008,0,0,0-.253.738v46.9a1.02,1.02,0,0,0,1.016.957H25.133V43.133a2.385,2.385,0,0,1,2.352-2.4h4.182v1.333H27.424a1.018,1.018,0,0,0-.955,1.079l0,6.19,8.2-8.2V2.289a1.02,1.02,0,0,0-1.017-.958H2.344Z" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <rect id="Rectangle_17981" data-name="Rectangle 17981" width="9.999" height="1.333" transform="translate(13 5.2)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <rect id="Rectangle_17982" data-name="Rectangle 17982" width="22.132" height="1.333" transform="translate(6.934 28.6)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <rect id="Rectangle_17983" data-name="Rectangle 17983" width="22.132" height="1.333" transform="translate(6.934 32.933)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <rect id="Rectangle_17984" data-name="Rectangle 17984" width="22.132" height="1.333" transform="translate(6.934 37.267)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <rect id="Rectangle_17985" data-name="Rectangle 17985" width="14.333" height="1.333" transform="translate(6.934 41.6)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+        <path id="Path_45797" data-name="Path 45797" d="M10.4,22.731V12.4L18,8.6l7.6,3.8V22.731l-7.6,3.8Zm1.333-.793L18,25.071l6.266-3.134V14l-5.6,3.453v4.939H17.333V17.456L11.733,14Zm3.7-7.149L18,16.328l5.616-3.462-2.592-1.244Zm-3.044-1.921,1.79,1.12,5.354-3.1L18,10.062Z" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2"/>
+      </g>
+    </g>
+  </g>
+</svg>

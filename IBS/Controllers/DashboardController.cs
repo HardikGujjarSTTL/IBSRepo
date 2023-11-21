@@ -109,5 +109,17 @@ namespace IBS.Controllers
             DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataCallDeskInfoListing(dtParameters, Region);
             return Json(dTResult);
         }
+        
+        public IActionResult IEPerCM()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GetIEPerCM([FromBody] DTParameters dtParameters)
+        {
+            DTResult<IE_Per_CM_Model> dTResult = dashboardRepository.Get_CM_Wise_IE_Detail(dtParameters);
+            return Json(dTResult);
+        }
+
     }
 }

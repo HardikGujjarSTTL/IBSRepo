@@ -242,4 +242,12 @@ namespace IBSAPI.Models
         public string? VendContactTel { get; set; }
         public string? VendEmail { get; set; }
     }
+
+    public class RequestCaseDetailsforvendorModel
+    {
+        public string CaseNo { get; set; }
+        public int UserID { get; set; }
+        public DateTime CallRecvDt { get; set; }
+        public string CallStage { get; set; }
+    }
 }

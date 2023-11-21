@@ -9,4 +9,20 @@
         public string RegionCode { get; set; }
         public string UserId { get; set; }
     }
+
+    public class CancelInspectionRequestModel
+    {
+        public int IeCd { get; set; }
+        public string CaseNo { get; set; }
+        public DateTime PlanDt { get; set; }
+        public DateTime CallRecvDt { get; set; }
+        public int CallSno { get; set; }
+    }
+
+    public class ICPhotoUploadRequestModel
+    {
+        public string CaseNo { get; set; }
+        public string DocBkNo { get; set; }
+        public string DocSetNo { get; set; }
+    }
 }

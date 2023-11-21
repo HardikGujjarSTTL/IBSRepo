@@ -21,16 +21,21 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("GetCaseDetailsforvendor", Name = "GetCaseDetailsforvendor")]
-        public IActionResult GetCaseDetailsforvendor(string CaseNo, int UserID,DateTime? CallRecvDt, string CallStage)
+        public IActionResult GetCaseDetailsforvendor(string CaseNo,int UserID,DateTime CallRecvDt,string CallStage)
         {
             try
             {
+                RequestCaseDetailsforvendorModel requestCaseDetailsforvendorModel = new RequestCaseDetailsforvendorModel();
+                requestCaseDetailsforvendorModel.CaseNo = CaseNo;
+                requestCaseDetailsforvendorModel.UserID = UserID;
+                requestCaseDetailsforvendorModel.CallRecvDt = CallRecvDt;
+                requestCaseDetailsforvendorModel.CallStage = CallStage;
                 VenderCallRegisterModel model = new();
                 string msg = "";
-                if (CaseNo != null)
+                if (requestCaseDetailsforvendorModel.CaseNo != null)
                 {
-                    PODetailsModel model1 = vendorRepository.GetPODetailsforvendor(CaseNo, UserID);
-                    model = vendorRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, Convert.ToInt32(UserID));
+                    PODetailsModel model1 = vendorRepository.GetPODetailsforvendor(requestCaseDetailsforvendorModel.CaseNo, requestCaseDetailsforvendorModel.CallRecvDt, requestCaseDetailsforvendorModel.CallStage, requestCaseDetailsforvendorModel.UserID);
+                    model = vendorRepository.FindByAddDetails(requestCaseDetailsforvendorModel.CaseNo, requestCaseDetailsforvendorModel.CallRecvDt, requestCaseDetailsforvendorModel.CallStage, requestCaseDetailsforvendorModel.UserID);
                     if (model.OnlineCallStatus == "Y")
                     {
                         if (model.InspectingAgency == "R")
@@ -45,7 +50,7 @@ namespace IBSAPI.Controllers
                                 {
                                     //string check = model.VendCd;
 
-                                    string check = vendorRepository.GetMatch(CaseNo,Convert.ToString(UserID));
+                                    string check = vendorRepository.GetMatch(requestCaseDetailsforvendorModel.CaseNo,Convert.ToString(requestCaseDetailsforvendorModel.UserID));
                                     if (check == "2")
                                     {
                                         int cno = model.MaxCount;
@@ -70,7 +75,7 @@ namespace IBSAPI.Controllers
                                                         {
                                                             resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                                                             message = "Successfully",
-                                                            data = model
+                                                            data = model1
                                                         };
                                                         return Ok(response);
                                                     }
@@ -93,7 +98,7 @@ namespace IBSAPI.Controllers
                                                     {
                                                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                                                         message = "Successfully",
-                                                        data = model
+                                                        data = model1
                                                     };
                                                     return Ok(response);
                                                 }
@@ -145,7 +150,7 @@ namespace IBSAPI.Controllers
                                             {
                                                 resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                                                 message = "Successfully",
-                                                data = model
+                                                data = model1
                                             };
                                             return Ok(response);
                                         }
@@ -168,7 +173,7 @@ namespace IBSAPI.Controllers
                                         {
                                             resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                                             message = "Successfully",
-                                            data = model
+                                            data = model1
                                         };
                                         return Ok(response);
                                     }
@@ -232,7 +237,7 @@ namespace IBSAPI.Controllers
                 }
                 var response1 = new
                 {
-                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                     message = msg,
                 };
                 return Ok(response1);
@@ -469,7 +474,7 @@ namespace IBSAPI.Controllers
                                 }
                                 var response1 = new
                                 {
-                                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                                     message = msg,
                                 };
                                 return Ok(response1);
@@ -506,7 +511,7 @@ namespace IBSAPI.Controllers
                                 }
                                 var response2 = new
                                 {
-                                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                    resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
                                     message = msg,
                                 };
                                 return Ok(response2);

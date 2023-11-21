@@ -41,7 +41,7 @@
         public List<ClientVendConCompList> lstClientVendConComp { get; set; }
     }
 
-    public class IEList 
+    public class IEList
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
@@ -52,8 +52,8 @@
         public string CONTACT_PER { get; set; }
         public string CONTACT_NO { get; set; }
     }
-    
-    public class POCallStatusList 
+
+    public class POCallStatusList
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
@@ -65,8 +65,8 @@
         public string CO_NAME { get; set; }
         public string CO_PHONE_NO { get; set; }
     }
-    
-    public class RecentPOList 
+
+    public class RecentPOList
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
@@ -76,8 +76,8 @@
         public string PURCHASE_ORDER { get; set; }
         public string CALL_STATUS { get; set; }
     }
-    
-    public class ClientVENDPOList 
+
+    public class ClientVENDPOList
     {
         public string RLY_CD { get; set; }
         public string RLY_NONRLY { get; set; }
@@ -86,8 +86,8 @@
         public int REJECTED_CALL { get; set; }
         public int CANCELLED_CALL { get; set; }
     }
-    
-    public class ClientRecentReqList 
+
+    public class ClientRecentReqList
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
@@ -97,8 +97,8 @@
         public string IE_NAME { get; set; }
         public string CALL_STATUS { get; set; }
     }
-    
-    public class ClientRecentPOList 
+
+    public class ClientRecentPOList
     {
         public string CASE_NO { get; set; }
         public decimal VALUE { get; set; }
@@ -106,10 +106,20 @@
         public string PO_NO { get; set; }
         public DateTime PO_DT { get; set; }
     }
-    
-    public class ClientVendConCompList 
+
+    public class ClientVendConCompList
     {
         public int NO_OF_COMPLAINTS { get; set; }
         public string VEND_NAME { get; set; }
+    }
+
+    public class IE_Per_CM_Model
+    {
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public int CALL_SNO { get; set; }
+        public string IE_NAME { get; set; }
+        public string VEND_NAME { get; set; }
+        public string CALL_STATUS { get; set; }
     }
 }
