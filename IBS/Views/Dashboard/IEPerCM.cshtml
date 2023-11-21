@@ -21,13 +21,20 @@
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
-                <input type="text" class="datepicker" id="FromDate" />
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">To</label>
-                <input type="text" class="datepicker" id="ToDate" />
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Save</button>
             </div>
         </div>
     </div>
@@ -60,11 +67,25 @@
 
     <script type="text/javascript">
 
-        //$(function () {
-        //    InitializeDatatable();
-        //});
+        $(function () {
+            // Get the current date
+            var currentDate = new Date();
+
+            // Determine the start date of the financial year (April 1st)
+            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+
+            // If the current date is before April 1st, subtract a year
+            if (currentDate < financialYearStartDate) {
+                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+            //$("#ToDate").val(new Date());
+        });
 
         function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
             var CO_CD = $("#ddlCM").val();
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -77,13 +98,13 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("IEPerCM", "Dashboard")",
+                    url: "@Url.Action("GetIEPerCM", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            CO_CD
+                            FromDate, ToDate, CO_CD
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

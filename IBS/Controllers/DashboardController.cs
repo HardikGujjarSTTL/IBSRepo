@@ -84,12 +84,17 @@ namespace IBS.Controllers
             DTResult<IEMessagesModel> dTResult = userRepository.GetUserList(dtParameters,GetRegionCode);
             return Json(dTResult);
         }
-
+        
+        public IActionResult IEPerCM()
+        {
+            return View();
+        }
         [HttpPost]
-        public IActionResult IEPerCM([FromBody] DTParameters dtParameters)
+        public IActionResult GetIEPerCM([FromBody] DTParameters dtParameters)
         {
             DTResult<IE_Per_CM_Model> dTResult = dashboardRepository.Get_CM_Wise_IE_Detail(dtParameters);
-            return View(dTResult);
+            return Json(dTResult);
         }
+
     }
 }
