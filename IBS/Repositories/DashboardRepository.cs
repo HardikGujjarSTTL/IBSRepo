@@ -613,6 +613,16 @@ namespace IBS.Repositories
 
             return dTResult;
         }
+
+        public DataSet ComplaintStatusSummary(string Region)
+        {
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            return DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COMPLAINT_STATUS", par);
+        }
     }
 
 }
