@@ -552,7 +552,9 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 #nav ul {display:block;}
 }
 @media only screen and (max-width:1599px) {
-#nav li a{padding:10px 45px;}
+#nav li a{padding:10px 40px;}
+ul.rightLinks li{ font-size:0.675em}
+.brandDetail span.firstTitle{ font-size:1.2em;}
 }
 
 @media only screen and (max-width:1169px) {
