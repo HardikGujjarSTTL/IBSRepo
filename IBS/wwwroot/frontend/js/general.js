@@ -228,5 +228,66 @@ $(document).ready( function(){
 		});
 	}
 
+	//Our Clients Slider
+	if ($(".homeGallerySlider").length) {
+		var ourClientSlider = new Swiper('.homeGallerySlider .swiper-container', {
+			speed: 2000,
+			spaceBetween: 10,
+			slidesPerView: 8,
+			lazy: true,
+			loop: true,
+			simulateTouch: true,
+			autoplay: true,
+			navigation: {
+				nextEl: '.homeGallerySlider-next',
+				prevEl: '.homeGallerySlider-prev',
+			},
+			breakpoints: {
+				479: {
+					slidesPerView: 2,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				639: {
+					slidesPerView: 3,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1024: {
+					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1169: {
+					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1600: {
+					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				}
+			}
+
+		});
+	}
+
+
+	$("#backToTop").hide();
+	$(window).scroll(function () {
+		if ($(this).scrollTop() > 100) {
+			$('#backToTop').fadeIn('fast');
+		} else {
+			$('#backToTop').hide();
+		}
+	});
+	$('#backToTop a').click(function () {
+		$('html, body').animate({
+			scrollTop: 0
+		}, '200');
+		return false;
+	});
+
 });	
 })(jQuery);
