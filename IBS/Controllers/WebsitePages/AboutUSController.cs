@@ -24,5 +24,9 @@ namespace IBS.Controllers
         {
             return View();
         }
+        public IActionResult Overview()
+        {
+            return View();
+        }
     }
 }
