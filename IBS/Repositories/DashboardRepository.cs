@@ -518,7 +518,104 @@ namespace IBS.Repositories
 
         public DTResult<VenderCallRegisterModel> GetDataListTotalCallListing(DTParameters dtParameters, string Region)
         {
-            throw new NotImplementedException();
+            DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
+            IQueryable<VenderCallRegisterModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "CaseNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", ActionType = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ActionType"]))
+            {
+                ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
+            }
+            if (ActionType == "TC")
+            {
+                query = from l in context.ViewGetCallRegCancellations
+                        where l.RegionCode == Region
+                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        orderby l.CaseNo, l.CallRecvDt
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = l.CaseNo,
+                            CallRecvDt = l.CallRecvDt,
+                            CallInstallNo = l.CallInstallNo,
+                            CallSno = Convert.ToInt16(l.CallSno),
+                            CallStatus = l.CallStatus,
+                            CallLetterNo = l.CallLetterNo,
+                            Remarks = l.Remarks,
+                            PoNo = l.PoNo,
+                            PoDt = l.PoDt,
+                            IeSname = l.IeSname,
+                            Vendor = l.Vendor,
+                            RegionCode = l.RegionCode,
+                        };
+            }
+            else
+            {
+                query = from l in context.ViewGetCallRegCancellations
+                        where l.RegionCode == Region
+                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                              && l.CStatus == ActionType
+                        orderby l.CaseNo, l.CallRecvDt
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = l.CaseNo,
+                            CallRecvDt = l.CallRecvDt,
+                            CallInstallNo = l.CallInstallNo,
+                            CallSno = Convert.ToInt16(l.CallSno),
+                            CallStatus = l.CallStatus,
+                            CallLetterNo = l.CallLetterNo,
+                            Remarks = l.Remarks,
+                            PoNo = l.PoNo,
+                            PoDt = l.PoDt,
+                            IeSname = l.IeSname,
+                            Vendor = l.Vendor,
+                            RegionCode = l.RegionCode,
+                        };
+            }
+
+
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
 
         public DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region)
