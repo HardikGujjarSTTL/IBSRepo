@@ -71,6 +71,11 @@ namespace IBS.Controllers
             return View();
         }
 
+        public IActionResult CMGeneral()
+        {
+            return View();
+        }
+
         public IActionResult LO()
         {
             return View();
