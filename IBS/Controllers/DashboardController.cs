@@ -1,7 +1,7 @@
 ﻿using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
+using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -82,7 +82,31 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<IEMessagesModel> dTResult = userRepository.GetUserList(dtParameters,GetRegionCode);
+            DTResult<IEMessagesModel> dTResult = userRepository.GetUserList(dtParameters, GetRegionCode);
+            return Json(dTResult);
+        }
+
+        public IActionResult TotalCallListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
+            return Json(dTResult);
+        }
+
+        public IActionResult CallDeskInfo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CallDeskInfoListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataCallDeskInfoListing(dtParameters, Region);
             return Json(dTResult);
         }
         

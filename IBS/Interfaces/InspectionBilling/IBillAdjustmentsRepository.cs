@@ -17,5 +17,8 @@ namespace IBS.Interfaces.InspectionBilling
         int financial_year_check(InspectionCertModel model);
 
         string BillUpdate(InspectionCertModel model, string Region);
+
+        //DTResult<InspectionCertItemListModel> FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee);
+        public InspectionCertModel FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd);
     }
 }

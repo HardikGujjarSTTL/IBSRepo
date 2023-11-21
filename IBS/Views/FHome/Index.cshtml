@@ -28,7 +28,7 @@
     <div class="container">
         <div class="aboutSection">
             <div class="latestNews">
-                <h2 class="newsTitle">Note</h2>
+                <h2 class="newsTitle">Latest News</h2>
                 <div class="tickerNews">
                     <div class="marqueeScrolling cf">
                         <a class="btnMPause">Pause</a>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="overViewSection">
+       @* <div class="overViewSection">
             <div class="row m-0">
                 <div class="col-md-9">
                     <div class="overViewContent">
@@ -79,7 +79,68 @@
                     </div>
                 </div>
             </div>
+        </div>*@
+        <div class="servicesSection" id="content">
+            <div class="servicesContent">
+                <h2>Services</h2>
+
+                <ul class="servicesList">
+                    <li>
+                        <div class="serviceText">Third Party<br /> Inspections</div>
+                        <div class="icons"><img src="~/frontend/images/third-party-inspection.svg" alt="Third Party Inspections" /></div>
+                    </li>
+                    <li>
+                        <div class="serviceText">Capability and Capacity<br /> Assesment</div>
+                        <div class="icons"><img src="~/frontend/images/capability-assement.svg" alt="Capability and Capacity Assesment" /></div>
+                    </li>
+                    <li>
+                        <div class="serviceText">Independent <br />Safety Assesment</div>
+                        <div class="icons"><img src="~/frontend/images/indepent-safety-assessment.svg" alt="Independent Safety Assesment" /></div>
+                    </li>
+                    <li>
+                        <div class="serviceText">Laboratory <br />Material Testing</div>
+                        <div class="icons"><img src="~/frontend/images/laboratory-testing-material.svg" alt="Laboratory Material Testing" /></div>
+                    </li>
+                    <li>
+                        <div class="serviceText">Independent Review <br />and Monitoring Agency</div>
+                        <div class="icons"><img src="~/frontend/images/indepent-review.svg" alt="Independent Review and Monitoring Agency" /></div></li>
+                    <li>
+                        <div class="serviceText">Product Certification <br /><span class="subText">(Recently Luanched ISO 1706/5)</span></div>
+                        <div class="icons"><img src="~/frontend/images/product-certification.svg" alt="Product Certification" /></div>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </div>
+</div>
+<div class="kipSection">
+    <div class="container">
+        <h2>
+            KPIs
+        </h2>
+        <ul class="kipList">
+            <li>
+                <div class="icons"><img src="~/frontend/images/no-of-inspections.svg" alt="No of Inspections" /></div>
+                <div>
+                    <span class="counts">105073</span>
+                No of Inspections
+                </div>
+            </li>
+            <li>
+                <div class="icons"><img src="~/frontend/images/no-of-vendors.svg" alt="No of Vendors" /></div>
+                <div>
+                    <span class="counts">8114</span>
+                No of Vendors
+                </div>
+            </li>
+            <li>
+                <div class="icons"><img src="~/frontend/images/no-of-client.svg" alt="No of Clients" /></div>
+                <div>
+                <span class="counts">3924</span>
+                No of Clients
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 <div class="awardCollectionSection">
@@ -115,13 +176,13 @@
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <a href="~/frontend/images/A1.jpg" class="homeImgPopup"><img src="images/award-01.jpg" alt="Award" /></a> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A1.jpg" class="homeImgPopup"><img src="images/award-01.jpg" alt="Award" /> <span>11<sup>th</sup> National Quality Conclave</span></a> </div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <a href="~/frontend/images/A2.jpg" class="homeImgPopup"><img src="images/award-02.jpg" alt="Award" /></a> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A2.jpg" class="homeImgPopup"><img src="images/award-03.jpg" alt="Award" /> <span>हिंदी वाक् प्रतियोगिता</span></a> </div>
                                     </div>
                                     <div class="swiper-slide">
-                                        <div class="awardImageBox"> <a href="~/frontend/images/A5.jpg" class="homeImgPopup"><img src="images/award-03.jpg" alt="Award" /></a> </div>
+                                        <div class="awardImageBox"> <a href="~/frontend/images/A5.jpg" class="homeImgPopup"><img src="images/award-02.jpg" alt="Award" /> <span>RITES Annual Day Awards 2018</span></a> </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,6 +230,36 @@
                 </div>
                 <!--<div class="ourClientSlider-prev sliderSmallArrow" role="button" aria-label="Previous slide" tabindex="0"><img src="~/frontend/images/slider-left-arrow.png" alt="Left Arrow" /> </div>
                 <div class="ourClientSlider-next sliderSmallArrow" role="button" aria-label="Next slide" tabindex="0"><img src="~/frontend/images/slider-right-arrow.png" alt="Right Arrow" /> </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="homeGallerySection">
+    <div class="container">
+        <div class="homeGalleryWrap">
+            <div class="d-flex justify-content-between">
+            <h2>Inspections Gallery</h2>
+                <a class="mt-2" href="~/Miscellaneous/PhotoGallery" title="View All Gallery">View All <span class="fa fa-chevron-right"></span></a>
+            </div>
+            <div class="homeGallerySlider">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="homeGalleryImageBox"> <img src="~/frontend/images/insp7.jpg" alt="Inspection" /> </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="homeGalleryImageBox"> <img src="~/frontend/images/insp8.jpg" alt="Inspection" /> </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="homeGalleryImageBox"> <img src="~/frontend/images/insp9.jpg" alt="Inspection" /> </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="homeGalleryImageBox"> <img src="~/frontend/images/insp10.jpg" alt="Inspection" /> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="homeGallerySlider-prev sliderSmallArrow" role="button" aria-label="Previous slide" tabindex="0"><span class="fa fa-chevron-circle-left"></span> </div>
+                <div class="homeGallerySlider-next sliderSmallArrow" role="button" aria-label="Next slide" tabindex="0"><span class="fa fa-chevron-circle-right"></span></div>
             </div>
         </div>
     </div>

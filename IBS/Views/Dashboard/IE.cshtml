@@ -208,48 +208,48 @@
                         <th class="text-center">Complaints</th>
                     </tr>
                     <tr>
-                        <td class="textLeft">Deleted</td>
-                        <td class="text-center">2</td>
-                    </tr>
-                    <tr>
                         <td class="textLeft">Pending</td>
-                        <td class="text-center">12</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.PENDING</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Accepted</td>
-                        <td class="text-center">25</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.ACCEPTED</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Upheld</td>
-                        <td class="text-center">5</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.UPHELD</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Sorting</td>
-                        <td class="text-center">2</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.SORTING</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Rectification</td>
-                        <td class="text-center">4</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.RECTIFICATION</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Price Reduction</td>
-                        <td class="text-center">8</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.PRICE_REDUCTION</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Lifted Before JI</td>
-                        <td class="text-center">3</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.LIFTED_BEFORE_JI</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Transit Damange</td>
-                        <td class="text-center">2</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.TRANSIT_DEMANGE</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Unstamped</td>
-                        <td class="text-center">1</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.UNSTAMPED</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Not on Rites A/C</td>
-                        <td class="text-center">3</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.NOT_ON_RITES</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Deleted</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.DELETED</td>
                     </tr>
                 </table>
             </div>
@@ -407,79 +407,53 @@
 </section>
 
 @section scripts{
+
     <script>
         Highcharts.chart('complaintPieChart', {
             chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                },
+                margin: [10, 10, 75, 10],
+                spacingTop: 0,
+                spacingBottom: 10,
+                spacingLeft: 0,
+                spacingRight: 0,
+                backgroundColor: 'transparent'
             },
             title: {
-                text: '',
-                align: 'left'
+                text: ''
             },
-            tooltip: {
-                pointFormat: '{name}'
+            subtitle: {
+                text: ''
             },
-            tooltip: {
-                valueSuffix: ''
-            },
-            filter: {
-                operator: '>',
-                property: 'percentage',
-                value: 10
+            legend: {
+                itemStyle: {
+                },
             },
             plotOptions: {
                 pie: {
-                    allowPointSelect: false,
+                    size: '105%',
+                    innerSize: 0,
+                    borderColor: 'transparent',
+                    depth: 50,
+                    showInLegend: true,
                     cursor: 'pointer',
+                    allowPointSelect: true,
                     dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
+                        enabled: true,
+                        distance: -50,
+                        //color: '#fff',
+                        format: '<b>{point.y}</b>'
+                    }
+                },
             },
             series: [{
-                //name: 'Brands',
-                colorByPoint: true,
-                data: [{
-                    name: 'Deleted',
-                    y: 2.0,
-                    sliced: false,
-                    selected: false
-                }, {
-                    name: 'Pending',
-                    y: 12.0
-                }, {
-                    name: 'Accepted',
-                    y: 25.0
-                }, {
-                    name: 'Upheld',
-                    y: 5.0
-                }, {
-                    name: 'Sorting',
-                    y: 2.0
-                }, {
-                    name: 'Rectification',
-                    y: 4.0
-                }, {
-                    name: 'Price Reduction',
-                    y: 8.0
-                }, {
-                    name: 'Lifted Before JI',
-                    y: 3.0
-                }, {
-                    name: 'Transit Damange',
-                    y: 2.0
-                }, {
-                    name: 'Unstamped',
-                    y: 1.0
-                }, {
-                    name: 'Not on Rites A/C',
-                    y: 3.0
-                }]
-            }]
+                name: '',
+                data: @Html.Raw(Model.ComplaintStatusSummary),
+            }],
         });
 
     </script>

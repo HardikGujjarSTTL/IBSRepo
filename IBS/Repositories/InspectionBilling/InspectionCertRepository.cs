@@ -562,7 +562,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
                     //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
-                    model.OtherInspDt = GetDetails.C.OtherInspDt == null ? null : Convert.ToDateTime(GetDetails.C.OtherInspDt);
+                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt)? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -967,7 +967,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
 
                 var check1 = context.T20Ics.Where(x => x.BkNo == model.Bkno && x.SetNo == model.Setno && x.CaseNo.Substring(0, 1) == Region).Select(x => x.BkNo).FirstOrDefault();
-                
+
                 string w_irfc_funded = "";
                 string w_irfc_bpo = "";
                 if (model.ActionType == "A")
@@ -985,9 +985,9 @@ namespace IBS.Repositories.InspectionBilling
                             w_irfc_funded = "N";
                         }
                         var Co = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == Convert.ToInt32(model.Callsno) && x.IeCd == model.IeCd).Select(x => x.CoCd).FirstOrDefault();
-                        var T20 = context.T20Ics.Where(x=>x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
-                        
-                        if(T20 == null)
+                        var T20 = context.T20Ics.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
+
+                        if (T20 == null)
                         {
                             T20Ic obj = new T20Ic();
                             obj.CaseNo = model.Caseno;
@@ -2051,10 +2051,7 @@ namespace IBS.Repositories.InspectionBilling
             var query = (from c in context.T18CallDetails
                          join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                          join u in context.T04Uoms on p.UomCd equals u.UomCd
-                         where c.CaseNo == CaseNo
-                             && c.CallRecvDt == CallRecvDt
-                             && c.CallSno == CallSno
-                         //&& c.CONSIGNEE_CD == consigneeCd
+                         where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
                          select new
                          {
                              c,
@@ -2063,14 +2060,13 @@ namespace IBS.Repositories.InspectionBilling
                          }).FirstOrDefault();
             var CDetails = query;
 
-            if (CDetails == null)
-                throw new Exception("Call Record Not found");
-            else
+            if (CDetails != null)
             {
                 model.Caseno = CDetails.c.CaseNo;
                 model.Callrecvdt = CDetails.c.CallRecvDt;
                 model.Callsno = CDetails.c.CallSno;
 
+                model.QtyOrdered = CDetails.c.QtyOrdered;
                 model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
                 model.ItemDescPo = CDetails.c.ItemDescPo;
                 model.QtyPassed = CDetails.c.QtyPassed;
@@ -2086,9 +2082,8 @@ namespace IBS.Repositories.InspectionBilling
                 model.DiscountPer = CDetails.p.DiscountPer;
                 model.Discount = CDetails.p.Discount;
                 model.OtherCharges = CDetails.p.OtherCharges;
-
-                return model;
             }
+            return model;
         }
 
         public ICPopUpModel FindByBillDetails(string BillNo, string Region)
