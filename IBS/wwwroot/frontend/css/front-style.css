@@ -110,7 +110,7 @@ a.registerLink:hover { color:#646464; text-decoration:underline; }
 .headerRow { padding: 10px 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; }
 .mainLogo, .topStrip { text-align: left;}
 .mainLogo img { width: 204px; margin-bottom:10px; }
-.mainLogo a { float: left; text-decoration:none; font-size:13px; line-height:16px; }
+.mainLogo a { float: left; text-decoration:none; font-size:11px; line-height:14px; }
 .brandDetail span { display: block; color: #323232; }
 .brandDetail span.firstTitle { font-weight: 600; font-size:1.6em; transition:all 0.2s ease; }
 .brandDetail span.secondTitle { font-weight:400; font-size:13px; }
@@ -271,7 +271,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .aboutSection .latestNews .tickerNews ul { margin: 0; }
 .marquee { overflow: hidden; }
 .aboutSection .latestNews .tickerNews ul li { margin: 0 10px 0 0; list-style: none; border-right: 1px solid #fff; padding: 0 10px 0 0; color: #fff; line-height: 27px; }
-.aboutSection .latestNews .tickerNews ul li a { color: #323232; text-decoration: none; font-size:18px; }
+.aboutSection .latestNews .tickerNews ul li a { color: #323232; text-decoration: none; font-size:16px; }
 .marqueeScrolling ul li:first-child, .marqueeScrolling ul li:first-child a { animation: myanimation 3s infinite; }
 .latestNews .marqueeScrolling .viewAllLink { position: absolute; right: 0; top: 0; font-size:18px; text-decoration: none; color:#118133; }
 .latestNews .marqueeScrolling .viewAllLink img { vertical-align: baseline; padding-left: 3px; }
@@ -282,7 +282,7 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .noJS .ticker .tickerDivBlock { height:150px; overflow-y:scroll; overflow-x:hidden }
 /**********News Sliding Style End****/
 .overViewSection { background-color: #fff; /*box-shadow: 0 3px 35px rgba(0, 0, 0, 0.2);*/ padding:0; border-bottom: 5px solid #118133; }
-.overViewSection h2, .servicesContent h2 { font-size: 2em; font-weight: 600; }
+.overViewSection h2, .servicesContent h2, .kipSection h2 { font-size: 2em; font-weight: 600; }
 ul.bulletTextList { list-style:none; padding:0; }
 ul.bulletTextList li { padding-left:20px; margin-bottom: 10px; line-height:1.5; position: relative; color:#323232; }
 ul.bulletTextList li::before { position: absolute; left: 0; top: 3px; content: ""; font-family: 'FontAwesome'; content: "\f111"; font-size: 10px; color: #118133;}
@@ -502,7 +502,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .headerSkipContent{ list-style:none; margin:0;}
 .headerSkipContent{ display:flex; justify-content:end;}
 .headerSkipContent li{ margin:0 10px;}
-.headerSkipContent a{ text-decoration:none;}
+.headerSkipContent a{ text-decoration:none; font-size:0.8em;}
 #accessControl input[type="submit"]{ padding:2px; line-height:16px; background:#666; border:none; border-radius:2px; font-size:13px; width:24px;}
 .servicesContent{ padding:20px 0;}
 .servicesList, .kipList{ display:flex; justify-content:space-between; list-style:none; flex-wrap:wrap; margin:0; padding:0;}
@@ -542,9 +542,10 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .homeGallerySlider .sliderSmallArrow:hover { background-color:#118133; border-color: #ccc; color: rgb(246,158,62); }
 .homeGalleryImageBox { text-align: center; }
 .homeGalleryImageBox img { padding: 5px; border: 1px solid #ccc; background: #fff; text-align: center; width: auto; }
-
-
-
+#backToTop:before {font-family: "FontAwesome"; position: absolute; left: 50%; top: 50%; margin-left: -8px; margin-top: -13px;  content: "\f077";  color: #fff;}
+#backToTop a {display: block; width: 35px; height: 35px; text-indent: -999px; overflow: hidden; position: relative; z-index: 11; color: #fff; border-radius: 50%;}
+#backToTop { background: #FC5518; cursor: pointer; display: none; height: 35px; width: 35px; overflow: hidden; position: fixed; right: 10px; bottom: 55px; text-indent: -99999px; z-index: 999; display: none; border-radius: 50%; animation: bounce 4s ease infinite;   transition: all 0.3s ease-in-out;    -webkit-transition: all 0.3s ease-in-out;}
+#backToTop { right: 30px; text-indent: 0;}
 
 /*New Responsive Style*/
 @media only screen and (min-width: 1170px) {
