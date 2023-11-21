@@ -67,7 +67,7 @@ namespace IBS.Repositories
             }
             model.lstIE = listIE;
 
-            DataSet ds2 = ComplaintStatusSummary("N");
+            DataSet ds2 = null; //ComplaintStatusSummary("N");
 
             model.complaintStatusSummaryModel = new();
 
@@ -514,6 +514,16 @@ namespace IBS.Repositories
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public DTResult<VenderCallRegisterModel> GetDataListTotalCallListing(DTParameters dtParameters, string Region)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region)
+        {
+            throw new NotImplementedException();
         }
     }
 }
