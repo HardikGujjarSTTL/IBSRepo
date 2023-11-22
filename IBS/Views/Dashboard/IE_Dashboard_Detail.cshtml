@@ -1,0 +1,229 @@
+﻿@model DashboardModel
+@{
+    ViewData["Title"] = "IE_Dashboard_Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">NC Isuued Against IE Details</label></h2>
+    </div>
+    <div>
+        <a asp-action="IE" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+    </div>
+</div>
+<div class="accordion-body" id="body">
+    <div class="row my-0">
+        <input asp-for="Type" hidden />
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">IE Name</label>
+                @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIENameByIECD(@ViewBag.IeCdCode), "Value", "Text"), new { id = "IENAME" })
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (@Model.Type == "NCI")
+{
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NC No</th>
+                            <th>Case No</th>
+                            <th>Call Date</th>
+                            <th>Call SNo</th>
+                            <th>IE Name</th>
+                            <th>BooK No</th>
+                            <th>Set No</th>
+                            <th>Consignee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+}
+else if (@Model.Type == "ConsigneeComp")
+{
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Complaint ID</th>
+                            <th>JI Unique Sno</th>
+                            <th>Case Number</th>
+                            <th>Bk No.</th>
+                            <th>Set No.</th>
+                            <th>Po No.</th>
+                            <th>Po Date</th>
+                            <th>IC No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+}
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        // var Type = "@ViewBag.Type";
+        var Columns = [];
+        $(function () {
+            var currentDate = new Date();
+
+            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+
+            if (currentDate < financialYearStartDate) {
+                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+            var TypeOfList = $("Type").val();
+            if (TypeOfList == "NCI") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "NC_NO" },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "IE_NAME" },
+                    { data: "BK_NO" },
+                    { data: "SetNo" },
+                    { data: "Consignee" },
+                ]
+            } else if (TypeOfList == "OutstandingNC") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "NC_NO" },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "IE_NAME" },
+                    { data: "BKNo" },
+                    { data: "SetNo" },
+                    { data: "CONSIGNEE" },
+                ]
+            } else if (TypeOfList == "ConsigneeComp") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "case_no" },
+                    { data: "po_no" },
+                    { data: "bk_no" },
+                    { data: "set_no" },
+                    { data: "IC_NO" },
+                    { data: "ji_sno" },
+                    { data: "complaint_id" },
+                    {
+                        data: "PO_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                ]
+            }
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            debugger
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var IE_CD = $("#IENAME").val();
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("GetIEDashboardDetailsList", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate, ToDate, IE_CD
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: Columns,
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}

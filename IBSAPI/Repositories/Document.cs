@@ -97,7 +97,7 @@ namespace IBSAPI.Repositories
             {
                 return 0;
             }
-            
+
         }
 
         public void DeleteAllFiles(string ApplicationID)
@@ -131,5 +131,6 @@ namespace IBSAPI.Repositories
                 MaxContentLengthInKB = objAdd.Maxcontentlengthinkb,
             };
         }
+
     }
 }

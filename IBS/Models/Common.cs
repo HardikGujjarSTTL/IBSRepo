@@ -1047,12 +1047,13 @@ namespace IBS.Models
         public static List<SelectListItem> GetBPOByRegion(string BpoRegion)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            return (from a in ModelContext.T12BillPayingOfficers
-                    where a.BpoRegion == BpoRegion
+            return (from t12 in ModelContext.T12BillPayingOfficers
+                    join t03 in ModelContext.T03Cities on t12.BpoCityCd equals t03.CityCd
+                    where t12.BpoRegion == BpoRegion
                     select new SelectListItem
                     {
-                        Text = Convert.ToString(a.BpoName),
-                        Value = Convert.ToString(a.BpoCd)
+                        Text = t12.BpoName + (t12.BpoAdd != null ? ("/" + t12.BpoAdd) : "") + (t03.Location != null ? ("/" + t03.City + "/" + t03.Location) : ("/" + t03.City)) + "/" + t12.BpoRly,
+                        Value = Convert.ToString(t12.BpoCd)
                     }).OrderBy(c => c.Text).ToList();
         }
 
@@ -4081,6 +4082,21 @@ namespace IBS.Models
                         Value = c.IeCd.ToString(),
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
+        }
+        
+        public static IEnumerable<SelectListItem> GetIENameByIECD(int IeCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from v in ModelContext.T09Ies
+                                             where v.IeCd == IeCd
+                                             select
+                                     new SelectListItem
+                                     {
+                                         Text = v.IeName,
+                                         Value = Convert.ToString(v.IeCd)
+                                     }).ToList();
+            return contacts;
         }
 
         public static List<TextValueDropDownDTO> GetIcStatus()

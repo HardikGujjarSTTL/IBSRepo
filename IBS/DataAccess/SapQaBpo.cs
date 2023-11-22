@@ -29,7 +29,7 @@ public partial class SapQaBpo
 
     public string? Sort1BpoRailways { get; set; }
 
-    public string? Sort2BpoCd { get; set; }
+    public string Sort2BpoCd { get; set; } = null!;
 
     public string? HouseNum1 { get; set; }
 

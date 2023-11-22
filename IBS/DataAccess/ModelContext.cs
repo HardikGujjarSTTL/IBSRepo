@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -613,6 +609,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
 
+    public virtual DbSet<ViewDashboardPomasterlist> ViewDashboardPomasterlists { get; set; }
+
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
     public virtual DbSet<ViewGetBpodetail> ViewGetBpodetails { get; set; }
@@ -666,10 +664,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -8318,10 +8312,15 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<SapQaBpo>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("SAP_QA_BPO");
+            entity.HasKey(e => e.Sort2BpoCd).HasName("PK_BPO_CODE_SAP_QA_BPO");
 
+            entity.ToTable("SAP_QA_BPO");
+
+            entity.Property(e => e.Sort2BpoCd)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("SORT2_BPO_CD");
             entity.Property(e => e.AccountStatement)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -8611,11 +8610,6 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("SORT1_BPO_RAILWAYS");
-            entity.Property(e => e.Sort2BpoCd)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("SORT2_BPO_CD");
             entity.Property(e => e.SortKey)
                 .HasMaxLength(3)
                 .IsUnicode(false)
@@ -23524,6 +23518,65 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(378)
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE_NAME");
+        });
+
+        modelBuilder.Entity<ViewDashboardPomasterlist>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VIEW_DASHBOARD_POMASTERLIST");
+
+            entity.Property(e => e.ConsigneeSName)
+                .HasMaxLength(132)
+                .IsUnicode(false)
+                .HasColumnName("CONSIGNEE_S_NAME");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("DATE")
+                .HasColumnName("DATETIME");
+            entity.Property(e => e.MainrlyCd)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MAINRLY_CD");
+            entity.Property(e => e.PoDt)
+                .HasColumnType("DATE")
+                .HasColumnName("PO_DT");
+            entity.Property(e => e.PoNo)
+                .HasMaxLength(75)
+                .IsUnicode(false)
+                .HasColumnName("PO_NO");
+            entity.Property(e => e.RealCaseNo)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REAL_CASE_NO");
+            entity.Property(e => e.RegionCode)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Remarks)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("REMARKS");
+            entity.Property(e => e.RlyCd)
+                .HasMaxLength(68)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CD");
+            entity.Property(e => e.RlyCds)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLY_CDS");
+            entity.Property(e => e.RlyNonrly)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasColumnName("RLY_NONRLY");
+            entity.Property(e => e.VendCd)
+                .HasPrecision(6)
+                .HasColumnName("VEND_CD");
+            entity.Property(e => e.VendName)
+                .HasMaxLength(205)
+                .IsUnicode(false)
+                .HasColumnName("VEND_NAME");
         });
 
         modelBuilder.Entity<ViewGetBillregisterDtail>(entity =>
