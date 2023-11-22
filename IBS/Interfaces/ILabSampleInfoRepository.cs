@@ -11,5 +11,7 @@ namespace IBS.Interfaces
         string CheckExist(string CaseNo, string CallRdt, string CallSno, string Regin);
         bool SaveDataDetails(LabSampleInfoModel LabSampleInfoModel);
         bool UpdateDetails(LabSampleInfoModel LabSampleInfoModel);
+        bool UploadDate(LabSampleInfoModel LabSampleInfoModel);
+
     }
 }
