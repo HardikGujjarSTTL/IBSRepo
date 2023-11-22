@@ -26,6 +26,10 @@
 
         public int ConsigneeCompaintCount { get; set; }
 
+        public string ComplaintStatusSummary { get; set; }
+
+        public ComplaintStatusModel complaintStatusSummaryModel { get; set; }
+
         public List<IEList> lstIE { get; set; }
 
         public List<POCallStatusList> lstPOCallStatus { get; set; }
@@ -121,5 +125,21 @@
         public string IE_NAME { get; set; }
         public string VEND_NAME { get; set; }
         public string CALL_STATUS { get; set; }
+    }
+
+    public class ComplaintStatusModel
+    {
+        public string REGION { get; set; }
+        public int PENDING { get; set; }
+        public int ACCEPTED { get; set; }
+        public int UPHELD { get; set; }
+        public int SORTING { get; set; }
+        public int RECTIFICATION { get; set; }
+        public int PRICE_REDUCTION { get; set; }
+        public int LIFTED_BEFORE_JI { get; set; }
+        public int TRANSIT_DEMANGE { get; set; }
+        public int UNSTAMPED { get; set; }
+        public int NOT_ON_RITES { get; set; }
+        public int DELETED { get; set; }
     }
 }

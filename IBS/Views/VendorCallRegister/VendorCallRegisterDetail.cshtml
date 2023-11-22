@@ -981,7 +981,7 @@
                 return;
             }
 
-            if (QtyToInsp > QtyOrdered) {
+            if (parseInt(QtyToInsp) > parseInt(QtyOrdered)) {
                 ShowHideMsgNew(false, "Qty Off Now is not more then Qty. Ord.");
                 $("#QtyToInsp").val("0");
                 return;

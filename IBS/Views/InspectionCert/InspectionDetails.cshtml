@@ -993,10 +993,10 @@
                     else {
                         $.post("@Url.Action("InspectionCertSave", "InspectionCert")", formData, function (response) {
                             ShowHideMsgNew(response.status, response.responseText);
+                            debugger
                             if (response.status) {
-                                if (BkNo != null && SetNo != null)
-                                {
-                                    var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&Bkno=' + BkNo + '&Setno=' + SetNo + '&ActionType=M';
+                                if (response.BkNo != null && response.SetNo != null) {
+                                    var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&Bkno=' + response.BkNo + '&Setno=' + response.SetNo + '&ActionType=M';
                                     setTimeout(function () {
                                         window.location.href = redirectUrl;
                                     }, 1000);
@@ -1122,6 +1122,7 @@
         }
 
         function UpdateCallDetails() {
+            debugger
             var CaseNo = $("#Caseno").val();
             var CallRecvDt = $("#Callrecvdt").val();
             var CallSno = $("#Callsno").val();
@@ -1130,28 +1131,77 @@
             var QtyToInsp = $("#QtyToInsp").val();
             var QtyPassed = $("#QtyPassed").val();
             var QtyRejected = $("#QtyRejected").val();
+            var OtherCharges = $("#OtherCharges").val();
+
+            var QtyOrdered = $("#QtyOrdered").val();
             var QtyDue = $("#QtyDue").val();
 
-            if (QtyToInsp == "") {
-                ShowHideMsgNew(false, "Please add Qty Off Now.");
-                return;
+
+            $("#spnQtyToInsp").html("");
+            $("#spnQtyPassed").html("");
+            $("#spnQtyRejected").html("");
+            $("#spnQtyDue").html("");
+            $("#spnOtherCharges").html("");
+
+            var IsValid = true;
+
+            if(QtyToInsp == "") {
+                //ShowHideMsgNew(false, "Please add Qty Off Now.");
+                $("#spnQtyToInsp").html("Please add Qty Off Now.");
+                IsValid = false;
             }
             if (QtyPassed == "") {
-                ShowHideMsgNew(false, "Please add Qty Passed.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Passed.");
+                $("#spnQtyPassed").html("Please add Qty Passed.");
+                IsValid = false;
             }
             if (QtyRejected == "") {
-                ShowHideMsgNew(false, "Please add Qty Rejected.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Rejected.");
+                $("#spnQtyRejected").html("Please add Qty Passed.");
+                IsValid = false;
             }
             if (QtyDue == "") {
-                ShowHideMsgNew(false, "Please add Qty Due.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Due.");
+                $("#spnQtyDue").html("Please add Qty Passed.");
+                IsValid = false;
+            }
+            if (OtherCharges == "") {
+                //ShowHideMsgNew(false, "Please add Other Charges.");
+                $("#spnOtherCharges").html("Please add Other Charges.");
+                IsValid = false;
             }
             if (ItemDescPo == "") {
-                ShowHideMsgNew(false, "Please add Description.");
-                return;
+                //ShowHideMsgNew(false, "Please add Description.");
+                $("#spnItemDescPo").html("Please add Description.");
+                IsValid = false;
             }
+
+            if (parseInt(QtyToInsp) > parseInt(QtyOrdered)) {
+                $("#spnQtyToInsp").html("Please add less then Qty Ord.");
+                $("#QtyToInsp").val("0");
+                IsValid = false;
+            }
+            if (parseInt(QtyPassed) > parseInt(QtyToInsp)) {
+                $("#spnQtyPassed").html("Please add less then Qty Off Now.");
+                $("#QtyPassed").val("0");
+                IsValid = false;
+            }
+
+            var QtyR = parseInt(QtyToInsp) - parseInt(QtyPassed);
+            if (parseInt(QtyRejected) > parseInt(QtyR)) {
+                $("#spnQtyRejected").html("Less then Qty Off Now - Qty Passed.");
+                $("#QtyRejected").val("0");
+                IsValid = false;
+            }
+            var QtyD = parseInt(QtyToInsp) - parseInt(QtyPassed) - parseInt(QtyRejected);
+            if (parseInt(QtyDue) > parseInt(QtyD)) {
+                $("#spnQtyDue").html("Less then Qty Off Now - Qty Passed - Qty Rejected.");
+                $("#QtyDue").val("0");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
             let myObject = { CaseNo, CallRecvDt, CallSno, ItemSrnoPo, ItemDescPo, QtyToInsp, QtyToInsp, QtyPassed, QtyRejected, QtyDue };
             $.post("@Url.Action("UpdateCallDetails", "InspectionCert")", $.param(myObject), function (response) {
                 if (response.status) {

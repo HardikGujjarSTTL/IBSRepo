@@ -1,6 +1,7 @@
 ﻿using IBS.Interfaces.InspectionBilling;
 using Microsoft.AspNetCore.Mvc;
 using IBS.Models;
+using IBS.Repositories;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -29,7 +30,14 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     model = billRepository.FindByBillDetails(BillNo, Region);
                 }
-                return PartialView("_BillDetails", model);
+                if(model.BillNo != null)
+                {
+                    return PartialView("_BillDetails", model);
+                }
+                else
+                {
+                    return Json(new { status = false, responseText = "No Record Found!!!." });
+                }
             }
             catch (Exception ex)
             {
@@ -215,6 +223,28 @@ namespace IBS.Controllers.InspectionBilling
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "BillAdjustments", "BillUpdate", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        //public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee,string BillNo, decimal AdjustmentFee)
+        //{
+        //    DTResult<InspectionCertItemListModel> dTResult = billRepository.FindByFeesDetails(Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee);
+        //    return Json(dTResult);
+        //}
+
+        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee,int ConsigneeCd)
+        {
+            InspectionCertModel model = new();
+            try
+            {
+                model = billRepository.FindByFeesDetails(Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd);
+                return Json(new { status = true, responseText = model });
+            }
+
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillAdjustments", "UpdateCallDetails", 1, GetIPAddress());
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }

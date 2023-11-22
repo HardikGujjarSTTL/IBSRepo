@@ -289,5 +289,25 @@ $(document).ready( function(){
 		return false;
 	});
 
+
+	$('a').not(".litebox").filter(function () {
+		return this.hostname && this.hostname !== location.hostname;
+	}).click(function (e) {
+		e.preventDefault();
+		var url = $(this).attr("href");
+		smoke.confirm("You are about to proceed to an external website. Click Yes to proceed.", function (e) {
+			if (e) {
+				window.open(url, "_blank");
+			} else {
+				return false;
+			}
+		}, {
+			ok: "Yes",
+			cancel: "No",
+			classname: "custom-class",
+			reverseButtons: true
+		});
+	});
+
 });	
 })(jQuery);

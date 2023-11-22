@@ -14,7 +14,7 @@
         <input type="hidden" asp-for="UpdateStatus" />
         <input type="hidden" asp-for="ItemSrnoPo" />
         <input type="hidden" asp-for="BpoType" />
-        <input type="hidden" asp-for="IcTypeId" />
+        @*<input type="hidden" asp-for="IcTypeId" />*@
 
         <div class="accordion-body" style="overflow-x: auto;">
             <div class="row my-0">
@@ -54,7 +54,7 @@
 
         function BillSearch() {
             var BillNo = $("#BillNo").val();
-            
+
             $("#spnBillNo").html("");
             if ($("#BillNo").val() == null || $("#BillNo").val() == "") {
                 $("#spnBillNo").html("Please add Bill No.");
@@ -63,13 +63,22 @@
 
             let myObject = { BillNo };
             $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
-                $("#tblsection").html(response);
-                $("#BpoFeeType").val($("#_BpoFeeType").val());
-                InitializeDatatable();
-                onBpoFeeType();
+                debugger
+                if (response.status == false) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+                if (response != null) {
+                    $("#tblsection").html(response);
+                    $("#BpoFeeType").val($("#_BpoFeeType").val());
+                    InitializeDatatable();
+                    onBpoFeeType();
+                    AdjustCalculation();
+                    $("#IcTypeId").val("9");
+                }
+
             });
 
-            
+
         }
 
         function InitializeDatatable() {
@@ -87,7 +96,7 @@
                 destroy: true,
                 paging: true,
                 searching: true,
-                dom: 'rtip',
+                dom: 'rti',
                 ajax: {
                     url: "@Url.Action("LoadTableDetails", "BillAdjustments")",
                     type: "POST",
@@ -125,6 +134,7 @@
                     { data: "QtyRejected" },
                     { data: "QtyDue" },
                     { data: "Rate" },
+                    { data: "SuppNewRate" },
                     { data: "SalesTaxPer" },
                     { data: "SalesTax" },
                     { data: "ExcisePer" },
@@ -163,41 +173,139 @@
             var QtyRejected = $("#QtyRejected").val();
             var QtyDue = $("#QtyDue").val();
             var Consignee = $("#Consignee").val();
+            var QtyOrdered = $("#QtyOrdered").val();
+            var OtherCharges = $("#OtherCharges").val();
+
+            $("#spnQtyToInsp").html("");
+            $("#spnQtyPassed").html("");
+            $("#spnQtyRejected").html("");
+            $("#spnQtyDue").html("");
+            $("#spnOtherCharges").html("");
+            $("#spnItemDescPo").html("");
+
+
+            var IsValid = true;
 
             if (QtyToInsp == "") {
-                ShowHideMsgNew(false, "Please add Qty Off Now.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Off Now.");
+                $("#spnQtyToInsp").html("Please add Qty Off Now.");
+                IsValid = false;
             }
             if (QtyPassed == "") {
-                ShowHideMsgNew(false, "Please add Qty Passed.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Passed.");
+                $("#spnQtyPassed").html("Please add Qty Passed.");
+                IsValid = false;
             }
             if (QtyRejected == "") {
-                ShowHideMsgNew(false, "Please add Qty Rejected.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Rejected.");
+                $("#spnQtyRejected").html("Please add Qty Passed.");
+                IsValid = false;
             }
             if (QtyDue == "") {
-                ShowHideMsgNew(false, "Please add Qty Due.");
-                return;
+                //ShowHideMsgNew(false, "Please add Qty Due.");
+                $("#spnQtyDue").html("Please add Qty Passed.");
+                IsValid = false;
+            }
+            if (OtherCharges == "") {
+                //ShowHideMsgNew(false, "Please add Other Charges.");
+                $("#spnOtherCharges").html("Please add Other Charges.");
+                IsValid = false;
             }
             if (ItemDescPo == "") {
-                ShowHideMsgNew(false, "Please add Description.");
-                return;
+                //ShowHideMsgNew(false, "Please add Description.");
+                $("#spnItemDescPo").html("Please add Description.");
+                IsValid = false;
             }
+
+            if (parseInt(QtyToInsp) > parseInt(QtyOrdered)) {
+                $("#spnQtyToInsp").html("Please add less then Qty Ord.");
+                $("#QtyToInsp").val("0");
+                IsValid = false;
+            }
+            if (parseInt(QtyPassed) > parseInt(QtyToInsp)) {
+                $("#spnQtyPassed").html("Please add less then Qty Off Now.");
+                $("#QtyPassed").val("0");
+                IsValid = false;
+            }
+
+            var QtyR = parseInt(QtyToInsp) - parseInt(QtyPassed);
+            if (parseInt(QtyRejected) > parseInt(QtyR)) {
+                $("#spnQtyRejected").html("Less then Qty Off Now - Qty Passed.");
+                $("#QtyRejected").val("0");
+                IsValid = false;
+            }
+            var QtyD = parseInt(QtyToInsp) - parseInt(QtyPassed) - parseInt(QtyRejected);
+            if (parseInt(QtyDue) > parseInt(QtyD)) {
+                $("#spnQtyDue").html("Less then Qty Off Now - Qty Passed - Qty Rejected.");
+                $("#QtyDue").val("0");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
-            //let myObject = { CaseNo, CallRecvDt, CallSno, ItemSrnoPo, Consignee };
-            //$.post("@Url.Action("UpdateCallDetails", "BillAdjustments")", $.param(myObject), function (response) {
             $.post("@Url.Action("UpdateCallDetails", "BillAdjustments")", formData, function (response) {
                 if (response.status) {
                     $("#EditCallDetailsModal").modal('hide');
                     ShowHideMsgNew(response.status, response.responseText);
                     InitializeDatatable();
+                    AdjustCalculation();
                 }
                 else {
                     ShowHideMsgNew(response.status, response.responseText);
                 }
             });
+        }
+
+        function AdjustCalculation() {
+            var Caseno = $('#Caseno').val();
+            var Callrecvdt = $('#Callrecvdt').val();
+            var Callsno = $('#Callsno').val();
+            var Consignee = $('#Consignee').val();
+            var AdjustmentFee = $('#AdjustmentFee').val();
+            var BillNo = $('#BillNo').val();
+            var ConsigneeCd = $('#ConsigneeCd').val();
+
+
+            let myObject = { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd };
+            $.get("@Url.Action("GetFeeCalculation", "BillAdjustments")", $.param(myObject), function (response) {
+                debugger
+                if (response.status) {
+                    $("#TMValueNew").val(parseFloat(response.responseText.TMValueNew).toFixed(2));
+                    $("#TIFeeNew").val(parseFloat(response.responseText.TIFeeNew).toFixed(2));
+                    $("#NetFeeNew").val(parseFloat(response.responseText.NetFeeNew).toFixed(2));
+
+                    var OldValueM = $("#TMValue").val();
+                    var NewValueM = $("#TMValueNew").val();
+                    var DiffValueM = (parseFloat(NewValueM) - parseFloat(OldValueM));
+                    $("#TMValueDiff").val(parseFloat(DiffValueM.toFixed(2)))
+
+                    var TIFeeOldValueM = $("#TIFee").val();
+                    var TIFeeNewValueM = $("#TIFeeNew").val();
+                    var TIFeeDiffValueM = (parseInt(TIFeeNewValueM) - parseInt(TIFeeOldValueM));
+                    $("#TIFeeDiff").val(TIFeeDiffValueM);
+
+                    var NetFeeOldValueM = $("#NetFee").val();
+                    var NetFeeNewValueM = $("#NetFeeNew").val();
+                    var NetFeeDiffValueM = (parseInt(NetFeeNewValueM) - parseInt(NetFeeOldValueM));
+                    $("#NetFeeDiff").val(NetFeeDiffValueM);
+                }
+            });
+
+            //$.ajax({
+            //    url: '@Url.Action("GetFeeCalculation", "BillAdjustments")',
+            //    type: "GET",
+            //    dataType: "JSON",
+            //    data: { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee },
+            //    success: function (contacts) {
+            //        $("#TMValueNew").val(contacts.recordsTotal);
+            //        var OldValueM = $("#TMValue").val();
+            //        var NewValueM = $("#TMValueNew").val();
+            //        var DiffValueM = (parseFloat(OldValueM) - parseFloat(NewValueM));
+            //        $("#TMValueDiff").val(DiffValueM);
+            //    }
+            //});
         }
 
         function PopUp(BillNo) {
@@ -273,5 +381,11 @@
                 $(".BpoFee").show();
             }
         }
+
+        function onAdjustmentFee() {
+            AdjustCalculation();
+        }
+
+        
     </script>
 }
