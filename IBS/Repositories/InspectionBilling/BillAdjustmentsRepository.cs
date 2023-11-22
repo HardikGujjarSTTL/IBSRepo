@@ -850,16 +850,14 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         strUpdateCnoteAmt.AmountReceived = w_cnote_amt;
                         strUpdateCnoteAmt.BillAmtCleared = w_cnote_amt;
-
+                        
                         strUpdateCnoteAmt.Billadtype = model.BillAdType;
-                        strUpdateCnoteAmt.ReferenceAid = AType.Aid;
+                        
+                        int Aid = context.T22AdjustmentBills.Where(x => x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => x.Aid).FirstOrDefault();
+                        strUpdateCnoteAmt.ReferenceAid = Aid;
 
                         context.SaveChanges();
                     }
-
-                    
-
-                   
                     model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
                 }
             }
