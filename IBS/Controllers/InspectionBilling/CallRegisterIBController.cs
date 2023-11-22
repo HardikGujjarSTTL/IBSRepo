@@ -784,7 +784,7 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
                 {
-                    model.Updatedby = UserName.Substring(0, 8);
+                    model.Updatedby = Convert.ToString(UserId);
                     model.UserId = Convert.ToString(UserId);
                     string msg = callregisterRepository.Save(model, DocumentsList);
 
