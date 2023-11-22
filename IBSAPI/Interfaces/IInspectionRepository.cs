@@ -25,5 +25,8 @@ namespace IBSAPI.Interfaces
         List<PendingInspectionModel> Get_Client_PendingInspection(string Rly_CD, string Rly_NonType, DateTime FromDate, DateTime ToDate);
         List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region, DateTime FromDate, DateTime ToDate);
         #endregion
+
+        List<PhotosModel> GetDocRecordsList(int DocumentCategoryID, string ApplicationID, string WebRootPath);
+        int DeleteSingleRecord(DeleteICPhotoRequestModel model);
     }
 }
