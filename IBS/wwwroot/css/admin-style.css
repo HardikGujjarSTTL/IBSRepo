@@ -1461,3 +1461,4 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
 .action .deney .fa{ color:#f00!important;} 
 .text-left{ text-align:left!important;}
+.admin-dashboard a{ text-decoration:none;}

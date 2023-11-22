@@ -39,7 +39,7 @@ namespace IBS.Models
 
         public string? Remarks { get; set; }
 
-        public DateTime? Datetime { get; set; }
+        public DateTime? pDatetime { get; set; }
 
         public int? PoiCd { get; set; }
 
@@ -74,7 +74,7 @@ namespace IBS.Models
         public string? txtSPur { get; set; }
         public string? TempPurchaser { get; set; }
         public int? TempPoiCd { get; set; }
-
+        public DateTime? Datetime { get; set; }
         public string? ClientUserID { get; set; }
         public virtual T06Consignee? PurchaserCdNavigation { get; set; }
 

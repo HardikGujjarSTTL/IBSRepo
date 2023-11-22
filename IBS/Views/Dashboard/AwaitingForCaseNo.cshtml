@@ -1,5 +1,90 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "No. of POs,Awaiting for  Case No";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>No. of POs,Awaiting for  Case No</h2>
+        </div>
+        <div class="list-btn">
+            <a asp-action="CM" asp-controller="Dashboard" class="formBtn viewall-btn">Go to Dashboard</a>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtPOMaster" class="table-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Purchase Order Number</th>
+                            <th>Purchase Order Date</th>
+                            <th>Agency</th>
+                            <th>Vendor</th>
+                            <th>Purchaser Name</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializePOMasterDatatable();
+        });
+
+        function InitializePOMasterDatatable() {
+            $("#dtPOMaster").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                //scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadAwaitingForCaseNoTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "PoNo" },
+                    { data: "PoDtDate" },
+                    { data: "RlyCd" },
+                    { data: "VendorName" },
+                    { data: "ConsigneeSName" },
+                    { data: "Remarks" },
+                ],
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtPOMaster").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+    </script>
 }

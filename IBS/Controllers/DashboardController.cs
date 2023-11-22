@@ -1,6 +1,8 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,6 +56,13 @@ namespace IBS.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult LoadAwaitingForCaseNoTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<PO_MasterModel> dTResult = dashboardRepository.GetPOMasterList(dtParameters);
+            return Json(dTResult);
+        }
+
         #endregion
         public IActionResult IE_Instructions()
         {
@@ -89,7 +98,46 @@ namespace IBS.Controllers
         {
             return View();
         }
-
+        public IActionResult TotalInvoice(int Flag)
+        {
+            ViewBag.Flag = Flag;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult LoadTableInvoice([FromBody] DTParameters dtParameters)
+        {
+            string Regin = GetRegionCode;
+            DTResult<LabReportsModel> dTResult = new DTResult<LabReportsModel>();
+            try
+            {
+                dTResult = dashboardRepository.LoadTableInvoice(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "LoadTableInvoice", 1, GetIPAddress());
+            }
+            return Json(dTResult);
+        }
+        public IActionResult TotalReportUploaded()
+        {
+            
+            return View();
+        }
+        [HttpPost]
+        public IActionResult LoadTableReportU([FromBody] DTParameters dtParameters)
+        {
+            string Regin = GetRegionCode;
+            DTResult<LabSampleInfoModel> dTResult = new DTResult<LabSampleInfoModel>();
+            try
+            {
+                dTResult = dashboardRepository.LoadTableReportU(dtParameters, Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "LoadTableReportU", 1, GetIPAddress());
+            }
+            return Json(dTResult);
+        }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
