@@ -378,5 +378,32 @@ namespace IBS.Repositories
 
             return count;
         }
+        public bool UploadDate(LabSampleInfoModel LabSampleInfoModel)
+        {
+            string ss;
+            string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
+
+            ss = GetDateString(sqlQuery);
+            using (var conn = context.Database.GetDbConnection())
+            {
+                conn.Open();
+
+                string query = "UPDATE t109_lab_sample_info SET lab_rep_uploaded_dt = :lab_rep_uploaded_dt, USER_ID = :USER_ID, DATETIME = : DATETIME WHERE CASE_NO = :CASE_NO AND CALL_RECV_DT =: CALL_RECV_DT AND CALL_SNO = : CALL_SNO";
+                using (var cmd = new OracleCommand(query, (OracleConnection)conn))
+                {
+                    cmd.Parameters.Add(new OracleParameter("lab_rep_uploaded_dt", OracleDbType.Date)).Value = ss;
+                    cmd.Parameters.Add(new OracleParameter("USER_ID", OracleDbType.NVarchar2)).Value = LabSampleInfoModel.UName;
+                    cmd.Parameters.Add(new OracleParameter("DATETIME", OracleDbType.Date)).Value = ss;
+                    cmd.Parameters.Add(new OracleParameter("CASE_NO", OracleDbType.NVarchar2)).Value = LabSampleInfoModel.CaseNo;
+                    cmd.Parameters.Add(new OracleParameter("CALL_RECV_DT", OracleDbType.Date)).Value = LabSampleInfoModel.CallRecDt;
+                    cmd.Parameters.Add(new OracleParameter("CALL_SNO", OracleDbType.NVarchar2)).Value = LabSampleInfoModel.CallSNO;
+
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            return true;
+
+        }
     }
 }

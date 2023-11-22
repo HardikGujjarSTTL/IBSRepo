@@ -201,7 +201,6 @@ namespace IBS.Models
 
         public decimal? CumQtyPrevPassed { get; set; }
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Qty Off Now must be a number")]
         public decimal? QtyToInsp { get; set; }
 
         public decimal? QtyPassed { get; set; }
