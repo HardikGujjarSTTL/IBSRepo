@@ -16,7 +16,9 @@
         public DateTime? PO_DT { get; set; }
         public string PO_Source { get; set; }
         public string MobileNo { get; set; }
-        public string EMail { get; set; }        
+        public string EMail { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
     }
 
     public class PhotosModel

@@ -26,6 +26,21 @@
 
         public int ConsigneeCompaintCount { get; set; }
 
+        public int ManualRegCall { get; set; }
+
+        public int OnlineRegCall { get; set; }
+
+        public int POAwaitingCaseNo { get; set; }
+
+        public int PendingCallRemarks { get; set; }
+
+        public int PendingOnlineCallAwaitingMark { get; set; }
+
+        public string IE_NAME { get; set; }
+
+        //public DashboardModel DashboardData { get; set; }
+        public List<DashboardModel> IEWisePerformance { get; set; }
+
         public string ComplaintStatusSummary { get; set; }
 
         public ComplaintStatusModel complaintStatusSummaryModel { get; set; }
@@ -43,6 +58,10 @@
         public List<ClientRecentPOList> lstClientRecentPO { get; set; }
 
         public List<ClientVendConCompList> lstClientVendConComp { get; set; }
+
+        public List<ConsigneeComplaint> lstConsigneeComplaint { get; set; }
+
+        public List<NCIssued_Per_IE> lstNCIssued_Per_IE { get; set; }
     }
 
     public class IEList
@@ -127,6 +146,18 @@
         public string CALL_STATUS { get; set; }
     }
 
+    public class NCIssued_Per_IE
+    {
+        public string NC_NO { get; set; }
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public int CALL_SNO { get; set; }
+        public string IE_NAME { get; set; }
+        public string BK_NO { get; set; }
+        public string SetNo { get; set; }
+        public string Consignee { get; set; }
+    }
+
     public class ComplaintStatusModel
     {
         public string REGION { get; set; }
@@ -141,5 +172,17 @@
         public int UNSTAMPED { get; set; }
         public int NOT_ON_RITES { get; set; }
         public int DELETED { get; set; }
+    }
+
+    public class ConsigneeComplaint
+    {
+        public string CASE_NO { get; set; }
+        public string PO_NO { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string IC_NO { get; set; }
+        public string JiSno { get; set; }
+        public string ComplaintId { get; set; }
+        public DateTime? PO_DT { get; set; }
     }
 }

@@ -64,7 +64,7 @@ namespace IBS.Controllers
             if (model.IsNew)
             {
                 model.Createdby = UserId;
-                model.UserName = USER_ID.Substring(0, 8);
+                model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                 model.lstVoucherDetails = GetLstVoucherDetailsModel;
                 model.Region = GetRegionCode;
                 if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)

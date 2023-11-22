@@ -67,6 +67,18 @@
                     else if (res.RoleName.toLowerCase() == "cm-call desk incharge") {
                         window.location.href = '@Url.Action("CM", "Dashboard")';
                     }
+                    else if (res.RoleName.toLowerCase() == "cm-d&a incharge") {
+                        window.location.href = '@Url.Action("CMDAR", "Dashboard")';
+                    }
+                    else if (res.RoleName.toLowerCase() == "cm-dfo") {
+                        window.location.href = '@Url.Action("CMDFO", "Dashboard")';
+                    }
+                    else if (res.RoleName.toLowerCase() == "cm-ji incharge") {
+                        window.location.href = '@Url.Action("CMJIIncharge", "Dashboard")';
+                    }
+                    else if (res.RoleName.toLowerCase() == "cm-general") {
+                        window.location.href = '@Url.Action("CMGeneral", "Dashboard")';
+                    }
                     else {
                         window.location.href = '@Url.Action("Index", "Dashboard")';
                     }

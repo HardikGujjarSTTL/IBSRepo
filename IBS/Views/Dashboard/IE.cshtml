@@ -127,6 +127,7 @@
         </div>
         <div class="row ie-dashboard">
             <div class="col-lg-3">
+                <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>
                 <div class="dashboard-box das9Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -139,8 +140,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                @*<a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
                 <div class="dashboard-box das10Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -153,6 +156,7 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                 </div>
+               @* </a>*@
             </div>
             <div class="col-lg-3">
                 <div class="dashboard-box das11Client">
@@ -169,6 +173,7 @@
                 </div>
             </div>
             <div class="col-lg-3">
+                <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=ConsigneeComp'>
                 <div class="dashboard-box das12Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -181,6 +186,7 @@
                     </div>
                     <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
                 </div>
+                </a>
             </div>
         </div>
     </div>
