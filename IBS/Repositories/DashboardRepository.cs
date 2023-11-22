@@ -19,6 +19,36 @@ namespace IBS.Repositories
             this.context = context;
         }
 
+        public DashboardModel GetDashBoardCount(int UserId)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, UserId, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_CALL"]);
+                    model.PendingCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_CALL"]);
+                    model.AcceptedCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["ACCEPTED_CALL"]);
+                    model.CancelledCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["CANCELLED_CALL"]);
+                    model.UnderLabTestingCount = Convert.ToInt32(ds.Tables[0].Rows[0]["UNDER_LAB_TESTING"]);
+                    model.StillUnderInspectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STILL_UNDER_INSPECTION"]);
+                    model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
+                    model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
+                }
+            }
+            ComplaintStatusDetails(model);
+
+            return model;
+        }
+
         public DashboardModel GetIEDDashBoardCount(int IeCd)
         {
             DashboardModel model = new();
@@ -672,7 +702,7 @@ namespace IBS.Repositories
                 //dTResult.data = DbContextHelper.OrderByDynamic(query1, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
                 //dTResult.draw = dtParameters.Draw;
             }
-            else if(Type == "ConsgineeComp")
+            else if (Type == "ConsgineeComp")
             {
                 OracleParameter[] par1 = new OracleParameter[1];
                 par1[0] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -706,7 +736,7 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
                 );
 
-            
+
             return dTResult;
         }
 
@@ -1029,6 +1059,46 @@ namespace IBS.Repositories
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+        }
+
+        public void ComplaintStatusDetails(DashboardModel model)
+        {
+            DataSet ds2 = ComplaintStatusSummary("N");
+
+            model.complaintStatusSummaryModel = new();
+
+            if (ds2 != null && ds2.Tables.Count > 0)
+            {
+                if (ds2.Tables[0].Rows.Count > 0)
+                {
+                    model.complaintStatusSummaryModel.REGION = Convert.ToString(ds2.Tables[0].Rows[0]["REGION"]);
+                    model.complaintStatusSummaryModel.PENDING = Convert.ToInt32(ds2.Tables[0].Rows[0]["PENDING"]);
+                    model.complaintStatusSummaryModel.ACCEPTED = Convert.ToInt32(ds2.Tables[0].Rows[0]["ACCEPTED"]);
+                    model.complaintStatusSummaryModel.UPHELD = Convert.ToInt32(ds2.Tables[0].Rows[0]["UPHELD"]);
+                    model.complaintStatusSummaryModel.SORTING = Convert.ToInt32(ds2.Tables[0].Rows[0]["SORTING"]);
+                    model.complaintStatusSummaryModel.RECTIFICATION = Convert.ToInt32(ds2.Tables[0].Rows[0]["RECTIFICATION"]);
+                    model.complaintStatusSummaryModel.PRICE_REDUCTION = Convert.ToInt32(ds2.Tables[0].Rows[0]["PRICE_REDUCTION"]);
+                    model.complaintStatusSummaryModel.LIFTED_BEFORE_JI = Convert.ToInt32(ds2.Tables[0].Rows[0]["LIFTED_BEFORE_JI"]);
+                    model.complaintStatusSummaryModel.TRANSIT_DEMANGE = Convert.ToInt32(ds2.Tables[0].Rows[0]["TRANSIT_DEMANGE"]);
+                    model.complaintStatusSummaryModel.UNSTAMPED = Convert.ToInt32(ds2.Tables[0].Rows[0]["UNSTAMPED"]);
+                    model.complaintStatusSummaryModel.NOT_ON_RITES = Convert.ToInt32(ds2.Tables[0].Rows[0]["NOT_ON_RITES"]);
+                    model.complaintStatusSummaryModel.DELETED = Convert.ToInt32(ds2.Tables[0].Rows[0]["DELETED"]);
+                }
+            }
+
+            model.ComplaintStatusSummary = "[";
+            model.ComplaintStatusSummary += "['Pending'," + model.complaintStatusSummaryModel.PENDING + "],";
+            model.ComplaintStatusSummary += "['Accepted'," + model.complaintStatusSummaryModel.ACCEPTED + "],";
+            model.ComplaintStatusSummary += "['Upheld'," + model.complaintStatusSummaryModel.UPHELD + "],";
+            model.ComplaintStatusSummary += "['Sorting'," + model.complaintStatusSummaryModel.SORTING + "],";
+            model.ComplaintStatusSummary += "['Rectification'," + model.complaintStatusSummaryModel.RECTIFICATION + "],";
+            model.ComplaintStatusSummary += "['Price Reduction'," + model.complaintStatusSummaryModel.PRICE_REDUCTION + "],";
+            model.ComplaintStatusSummary += "['Lifted Before JI'," + model.complaintStatusSummaryModel.LIFTED_BEFORE_JI + "],";
+            model.ComplaintStatusSummary += "['Transit Damange'," + model.complaintStatusSummaryModel.TRANSIT_DEMANGE + "],";
+            model.ComplaintStatusSummary += "['Unstamped'," + model.complaintStatusSummaryModel.UNSTAMPED + "],";
+            model.ComplaintStatusSummary += "['Not on Rites A/C'," + model.complaintStatusSummaryModel.NOT_ON_RITES + "],";
+            model.ComplaintStatusSummary += "['Deleted'," + model.complaintStatusSummaryModel.DELETED + "]";
+            model.ComplaintStatusSummary += "]";
         }
     }
 }

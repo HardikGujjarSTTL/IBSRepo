@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "IE_Dashboard_Detail";
-    var Type = ViewBag.Type;
+    var Type = ViewBag.Types;
 }
 
 <div class="list-inner">
@@ -100,7 +100,7 @@ else if (@Type == "ConsigneeComp")
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-       // var Type = "@ViewBag.Type";
+        // var Type = "@ViewBag.Type";
         var Columns = [];
         $(function () {
             var currentDate = new Date();
@@ -193,6 +193,7 @@ else if (@Type == "ConsigneeComp")
         });
 
         function InitializeDatatable() {
+            debugger
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var IE_CD = $("#IENAME").val();

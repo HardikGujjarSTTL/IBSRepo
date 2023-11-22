@@ -21,7 +21,8 @@ namespace IBS.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.UserID);
+            return View(model);
         }
 
         public IActionResult Client()
@@ -183,7 +184,7 @@ namespace IBS.Controllers
 
         public IActionResult IE_Dashboard_Detail(string Type)
         {
-            ViewBag.Type = Type;
+            ViewBag.Types = Type;
             ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
             return View();
         }
