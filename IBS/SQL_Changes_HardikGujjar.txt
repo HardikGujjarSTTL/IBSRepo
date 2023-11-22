@@ -4223,7 +4223,9 @@ BEGIN
         END AS PO_Type,
         cs.CALL_STATUS_DESC AS Status, 
         ie.IE_EMAIL AS EMail, 
-        ie.IE_PHONE_NO AS MobileNo
+        ie.IE_PHONE_NO AS MobileNo,
+        x.BK_NO,
+        x.SET_NO
     FROM 
         T17_CALL_REGISTER x
     JOIN 
@@ -4251,9 +4253,11 @@ BEGIN
         x.CASE_NO, x.CALL_RECV_DT, x.CALL_SNO, 
         v.VEND_NAME,v.vend_add1, v.VEND_CD, ct.City, 
         y.PO_DT, y.PO_NO,y.po_source,y.rly_nonrly, cs.CALL_STATUS_DESC, 
-        ie.IE_EMAIL, ie.IE_PHONE_NO;
+        ie.IE_EMAIL, ie.IE_PHONE_NO,
+        x.BK_NO,
+        x.SET_NO;
 
-END GetCaseDetailForIE_API;
+END;
 
 ===============
 
