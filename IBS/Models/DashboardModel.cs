@@ -58,6 +58,10 @@
         public List<ClientRecentPOList> lstClientRecentPO { get; set; }
 
         public List<ClientVendConCompList> lstClientVendConComp { get; set; }
+
+        public List<ConsigneeComplaint> lstConsigneeComplaint { get; set; }
+
+        public List<NCIssued_Per_IE> lstNCIssued_Per_IE { get; set; }
     }
 
     public class IEList
@@ -168,5 +172,17 @@
         public int UNSTAMPED { get; set; }
         public int NOT_ON_RITES { get; set; }
         public int DELETED { get; set; }
+    }
+
+    public class ConsigneeComplaint
+    {
+        public string CASE_NO { get; set; }
+        public string PO_NO { get; set; }
+        public string BK_NO { get; set; }
+        public string SET_NO { get; set; }
+        public string IC_NO { get; set; }
+        public string JiSno { get; set; }
+        public string ComplaintId { get; set; }
+        public DateTime? PO_DT { get; set; }
     }
 }

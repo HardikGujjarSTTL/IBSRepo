@@ -15,6 +15,6 @@ namespace IBS.Interfaces
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
         
-        DTResult<NCIssued_Per_IE> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
+        DTResult<DashboardModel> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
     }
 }

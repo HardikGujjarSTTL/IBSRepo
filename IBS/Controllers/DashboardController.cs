@@ -143,7 +143,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
         {
-            DTResult<NCIssued_Per_IE> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
             return Json(dTResult);
         }
     }
