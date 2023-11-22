@@ -104,7 +104,7 @@ namespace IBS.Repositories
                                     MOBILE = u.Mobile,
                                     UserID = Convert.ToInt32(u.Id),
                                     Name = Convert.ToString(u.UserName),
-                                    UserName = Convert.ToString(u.UserId).Trim()
+                                    UserName = Convert.ToString(u.UserId)
                                 }).FirstOrDefault();
 
 
@@ -134,7 +134,7 @@ namespace IBS.Repositories
                                     MOBILE = u.Mobile,
                                     UserID = Convert.ToInt32(u.Id),
                                     Name = Convert.ToString(u.UserName),
-                                    UserName = Convert.ToString(u.UserId).Trim(),
+                                    UserName = Convert.ToString(u.UserId),
                                     Region = Convert.ToString(u.Region),
                                     AuthLevl = Convert.ToString(u.AuthLevl),
                                     RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
