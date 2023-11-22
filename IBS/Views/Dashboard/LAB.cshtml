@@ -119,3 +119,23 @@
 </table>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        
+        $('.dashboard-box.das1Client').on('click', function () {
+            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 1;
+        });
+        $('.dashboard-box.das2Client').on('click', function () {
+            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 2;
+        });
+        $('.dashboard-box.das3Client').on('click', function () {
+            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 3;
+        });
+        $('.dashboard-box.das5Client').on('click', function () {
+            window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
+        });
+        $('.dashboard-box.das6Client').on('click', function () {
+            window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
+        });
+    });
+</script>

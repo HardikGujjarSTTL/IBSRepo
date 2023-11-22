@@ -16,5 +16,7 @@ namespace IBS.Interfaces
         DTResult<NCIssued_Per_IE> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
+        DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin);
+        DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
     }
 }

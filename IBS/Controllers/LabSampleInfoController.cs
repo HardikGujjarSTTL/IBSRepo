@@ -84,6 +84,7 @@ namespace IBS.Controllers
                 LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
                 LabSampleInfoModel.Remarks = Request.Form["Remarks"];
                 var file = Request.Form.Files["UploadLab"];
+                bool result;
                 if (file != null && file.Length > 0)
                 {
                     // Save the file or process it as needed
@@ -103,9 +104,10 @@ namespace IBS.Controllers
                     using (var stream = new FileStream(SaveLocation, FileMode.Create))
                     {
                         file.CopyTo(stream);
+                        result = LabSampleInfoRepository.UploadDate(LabSampleInfoModel);
                     }
                 }
-                bool result;
+               
                 result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
                 if (result == false)
                 {
@@ -139,6 +141,7 @@ namespace IBS.Controllers
                 LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
                 LabSampleInfoModel.Remarks = Request.Form["Remarks"];
                 var file = Request.Form.Files["UploadLab"];
+                bool result;
                 if (file != null && file.Length > 0)
                 {
                     // Save the file or process it as needed
@@ -158,10 +161,11 @@ namespace IBS.Controllers
                     using (var stream = new FileStream(SaveLocation, FileMode.Create))
                     {
                         file.CopyTo(stream);
+                        result = LabSampleInfoRepository.UploadDate(LabSampleInfoModel);
                     }
 
                 }
-                bool result;
+                
                 result = LabSampleInfoRepository.UpdateDetails(LabSampleInfoModel);
                 if (result == false)
                 {

@@ -388,6 +388,170 @@ namespace IBS.Repositories
                 // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
+        public DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin)
+        {
+
+            DTResult<LabReportsModel> dTResult = new() { draw = 0 };
+            IQueryable<LabReportsModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "invoice_dt";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "invoice_dt";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("wFrmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
+            par[1] = new OracleParameter("wToDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[2] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[3] = new OracleParameter("Flag", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("Flag"), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("Dashboard_TotalInvoice", par, 4);
+
+            List<LabReportsModel> modelList = new List<LabReportsModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+
+                    LabReportsModel model = new LabReportsModel
+                    {
+                    BPO_NAME = row["BPO_NAME"].ToString(),
+                    recipient_gstin_no = row["recipient_gstin_no"].ToString(),
+                    St_cd = row["St_cd"].ToString(),
+                    invoice_no = row["invoice_no"].ToString(),
+                    invoice_dt = row["invoice_dt"].ToString(),
+                    Total_AMT = Convert.ToString(row["Total_AMT"]),
+                    INV_TYPE = row["INV_TYPE"].ToString(),
+                    HSN_CD = row["HSN_CD"].ToString(),
+                    INV_amount = Convert.ToString(row["INV_amount"]),
+                    INV_sgst = Convert.ToString(row["INV_sgst"]),
+                    INV_cgst = Convert.ToString(row["INV_cgst"]),
+                    INV_igst = Convert.ToString(row["INV_igst"]),
+                    INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
+                    INC_TYPE = row["INC_TYPE"].ToString(),
+                    Total_GST = Convert.ToString(row["Total_GST"]),
+                    IRN_NO = row["IRN_NO"].ToString(),
+                    BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
+                    BILL_SENT = row["BILL_SENT"].ToString(),
+                };
+
+                    modelList.Add(model);
+                }
+            }
+
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.BPO_NAME).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BPO_NAME).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+
+            
+        }
+
+        public DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin)
+        {
+
+            DTResult<LabSampleInfoModel> dTResult = new() { draw = 0 };
+            IQueryable<LabSampleInfoModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "CallRecDt";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CallRecDt";
+                orderAscendingDirection = true;
+            }
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("wFrmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
+            par[1] = new OracleParameter("wToDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
+            par[2] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("Dashboard_TotalReportsU", par, 3);
+
+            List<LabSampleInfoModel> modelList = new List<LabSampleInfoModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+
+                    LabSampleInfoModel model = new LabSampleInfoModel
+                    {
+                        CaseNo = Convert.ToString(row["case_no"]),
+                        CallRecDt = Convert.ToString(row["call_recv_dt"]),
+                        CallSNO = Convert.ToString(row["call_sno"]),
+                        IEName = Convert.ToString(row["ie_name"]),
+                    };
+
+                    modelList.Add(model);
+                }
+            }
+
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+
+
+        }
+    }
+
                 if (orderCriteria == "" || orderCriteria == null)
                 {
                     orderCriteria = "CASE_NO";
