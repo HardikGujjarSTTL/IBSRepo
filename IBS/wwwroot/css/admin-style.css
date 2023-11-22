@@ -1004,7 +1004,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das1Client, .das2Client, .das3Client, .das4Client,
 .das5Client, .das6Client, .das7Client, .das8Client,
 .das9Client, .das10Client, .das11Client, .das12Client{transition:all 0.5s ease;}
-.das1Client{ background: rgb(164,125,225); background: linear-gradient(90deg, rgba(164,125,225,1) 0%, rgba(150,110,213,1) 100%);}
+.das1Client{ background:#BCA4E4;}
 .das2Client{ background: rgb(43,111,200); background: linear-gradient(90deg, rgba(43,111,200,1) 0%, rgba(25,98,193,1) 100%);}
 .das3Client{ background: rgb(25,171,108); background: linear-gradient(90deg, rgba(25,171,108,1) 0%, rgba(0,139,101,1) 100%);}
 .das4Client{ background: rgb(243,124,160); background: linear-gradient(90deg, rgba(243,124,160,1) 0%, rgba(216,99,150,1) 100%);}
@@ -1029,8 +1029,10 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das11Client:hover { box-shadow: rgb(254,0,0) 0px 2px 12px 2px; }
 .das12Client:hover { box-shadow: rgb(102,204,0) 0px 2px 12px 2px; }
 	
-.dashboard-box .dash-total .total-inner { font-size: 16px; line-height: 20px; color:#323232; }
-.dash-count .total-amount { font-size: 30px; font-weight: 600; color: #323232; }
+.dashboard-box .dash-total .total-inner, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-total .total-inner,
+.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-total .total-inner{ font-size: 16px; font-weight:500; line-height: 20px; color:#fff; }
+.dash-count .total-amount, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-count .total-amount,
+.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-count .total-amount{ font-size: 30px; font-weight: 600; color: #fff; }
 .dash-count .total-add a { background: #e4eefd; padding: 5px 10px; border-radius: 30px; font-size: 12px; text-decoration: none; color: #0E2753; transition: all 0.4s; }
 .dash-count .total-add a:hover { background: #0E2753; color: #fff; }
 .graph-section { background: #fff;padding: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; }
@@ -1306,8 +1308,7 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .reset-btn:hover{ background:#333; color:#fff;}
 .left-side-collapsed .navbar-static-side ul li .nav-second-level.show{ display:none;}
 
-.ie-dashboard .total-icons{ position:relative; margin-right:10px; text-align:center;}
-.ie-dashboard img{ width:80%;}
+.ie-dashboard .total-icons{ position:relative; margin-right:5%; text-align:center;}
 .ie-dashboard .total-icons:before{ content:""; background:rgba(255,255,255,0.2); width:80px; height:80px; border-radius:50%; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index:-1;}
 .inlineCalendar .ui-datepicker{ width:100%;}
 .inlineCalendar .ui-datepicker .ui-datepicker-header, .inlineCalendar .ui-datepicker th, .inlineCalendar .ui-state-highlight{ background:none;}
@@ -1450,4 +1451,6 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
 .action .deney .fa{ color:#f00!important;} 
 .text-left{ text-align:left!important;}
-.admin-dashboard a{ text-decoration:none;}
+.admin-dashboard a, .admindashboard-wrap a{ text-decoration:none;}
+ .admindashboard-wrap .admin-dashboard .dashboard-box .dash-total .total-inner, .admindashboard-wrap .admin-dashboard .dashboard-box .dash-count .total-amount{ color:#000;}
+ 
