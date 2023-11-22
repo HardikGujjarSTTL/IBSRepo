@@ -4082,6 +4082,21 @@ namespace IBS.Models
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
         }
+        
+        public static IEnumerable<SelectListItem> GetIENameByIECD(int IeCd)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from v in ModelContext.T09Ies
+                                             where v.IeCd == IeCd
+                                             select
+                                     new SelectListItem
+                                     {
+                                         Text = v.IeName,
+                                         Value = Convert.ToString(v.IeCd)
+                                     }).ToList();
+            return contacts;
+        }
 
         public static List<TextValueDropDownDTO> GetIcStatus()
         {
