@@ -43,12 +43,18 @@ namespace IBS.Controllers
             return View(model);
         }
 
+        #region CM
         public IActionResult CM()
         {
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.CoCd);
+            DashboardModel model = dashboardRepository.GetCMDashBoardCount(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
+        }
+        public IActionResult AwaitingForCaseNo()
+        {
             return View();
         }
 
+        #endregion
         public IActionResult IE_Instructions()
         {
             return View();
@@ -65,6 +71,11 @@ namespace IBS.Controllers
         }
 
         public IActionResult CMJIIncharge()
+        {
+            return View();
+        }
+
+        public IActionResult CMGeneral()
         {
             return View();
         }
@@ -114,6 +125,7 @@ namespace IBS.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult GetIEPerCM([FromBody] DTParameters dtParameters)
         {
@@ -121,5 +133,18 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
+        public IActionResult IE_Dashboard_Detail(string Type)
+        {
+            ViewBag.Type = Type;
+            ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
+        {
+            DTResult<NCIssued_Per_IE> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            return Json(dTResult);
+        }
     }
 }
