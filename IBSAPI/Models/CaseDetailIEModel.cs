@@ -19,10 +19,17 @@
         public string EMail { get; set; }
         public string BK_NO { get; set; }
         public string SET_NO { get; set; }
+
+        public List<PhotosModel> photosModel { get; set; }
     }
 
     public class PhotosModel
     {
-        public string Images { get; set; }
+        public long? ID { get; set; }
+        public string? ApplicationID { get; set; }
+        public int? DocumentCategoryID { get; set; }
+        public int? DocumentID { get; set; }
+        public string OtherDocumentName { get; set; }
+        public string Imageurl { get; set; }
     }
 }

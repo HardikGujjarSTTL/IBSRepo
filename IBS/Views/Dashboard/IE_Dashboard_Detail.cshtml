@@ -1,6 +1,6 @@
-﻿@{
+﻿@model DashboardModel
+@{
     ViewData["Title"] = "IE_Dashboard_Detail";
-    var Type = ViewBag.Type;
 }
 
 <div class="list-inner">
@@ -13,6 +13,7 @@
 </div>
 <div class="accordion-body" id="body">
     <div class="row my-0">
+        <input asp-for="Type" hidden />
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">IE Name</label>
@@ -41,7 +42,7 @@
     </div>
 </div>
 
-@if (@Type == "NCIssuedAgainstIE")
+@if (@Model.Type == "NCI")
 {
     <section class="table-section">
         <div class="task-listinput">
@@ -67,7 +68,7 @@
         </div>
     </section>
 }
-else if (@Type == "ConsigneeComp")
+else if (@Model.Type == "ConsigneeComp")
 {
     <section class="table-section">
         <div class="task-listinput">
@@ -100,7 +101,7 @@ else if (@Type == "ConsigneeComp")
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-       // var Type = "@ViewBag.Type";
+        // var Type = "@ViewBag.Type";
         var Columns = [];
         $(function () {
             var currentDate = new Date();
@@ -112,8 +113,8 @@ else if (@Type == "ConsigneeComp")
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-
-            if (@Type == "NCIssuedAgainstIE") {
+            var TypeOfList = $("Type").val();
+            if (TypeOfList == "NCI") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -138,7 +139,7 @@ else if (@Type == "ConsigneeComp")
                     { data: "SetNo" },
                     { data: "Consignee" },
                 ]
-            } else if (@Type == "OutstandingNC") {
+            } else if (TypeOfList == "OutstandingNC") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -163,7 +164,7 @@ else if (@Type == "ConsigneeComp")
                     { data: "SetNo" },
                     { data: "CONSIGNEE" },
                 ]
-            } else if (@Type == "ConsigneeComp") {
+            } else if (TypeOfList == "ConsigneeComp") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -193,6 +194,7 @@ else if (@Type == "ConsigneeComp")
         });
 
         function InitializeDatatable() {
+            debugger
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var IE_CD = $("#IENAME").val();

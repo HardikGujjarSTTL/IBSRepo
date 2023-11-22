@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace IBS.Repositories
 {
@@ -17,6 +18,36 @@ namespace IBS.Repositories
         public DashboardRepository(ModelContext context)
         {
             this.context = context;
+        }
+
+        public DashboardModel GetDashBoardCount(int UserId)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, UserId, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_CALL"]);
+                    model.PendingCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_CALL"]);
+                    model.AcceptedCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["ACCEPTED_CALL"]);
+                    model.CancelledCallsCount = Convert.ToInt32(ds.Tables[0].Rows[0]["CANCELLED_CALL"]);
+                    model.UnderLabTestingCount = Convert.ToInt32(ds.Tables[0].Rows[0]["UNDER_LAB_TESTING"]);
+                    model.StillUnderInspectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STILL_UNDER_INSPECTION"]);
+                    model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
+                    model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
+                }
+            }
+            ComplaintStatusDetails(model);
+
+            return model;
         }
 
         public DashboardModel GetIEDDashBoardCount(int IeCd)
@@ -67,42 +98,7 @@ namespace IBS.Repositories
             }
             model.lstIE = listIE;
 
-            DataSet ds2 = ComplaintStatusSummary("N");
-
-            model.complaintStatusSummaryModel = new();
-
-            if (ds2 != null && ds2.Tables.Count > 0)
-            {
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    model.complaintStatusSummaryModel.REGION = Convert.ToString(ds2.Tables[0].Rows[0]["REGION"]);
-                    model.complaintStatusSummaryModel.PENDING = Convert.ToInt32(ds2.Tables[0].Rows[0]["PENDING"]);
-                    model.complaintStatusSummaryModel.ACCEPTED = Convert.ToInt32(ds2.Tables[0].Rows[0]["ACCEPTED"]);
-                    model.complaintStatusSummaryModel.UPHELD = Convert.ToInt32(ds2.Tables[0].Rows[0]["UPHELD"]);
-                    model.complaintStatusSummaryModel.SORTING = Convert.ToInt32(ds2.Tables[0].Rows[0]["SORTING"]);
-                    model.complaintStatusSummaryModel.RECTIFICATION = Convert.ToInt32(ds2.Tables[0].Rows[0]["RECTIFICATION"]);
-                    model.complaintStatusSummaryModel.PRICE_REDUCTION = Convert.ToInt32(ds2.Tables[0].Rows[0]["PRICE_REDUCTION"]);
-                    model.complaintStatusSummaryModel.LIFTED_BEFORE_JI = Convert.ToInt32(ds2.Tables[0].Rows[0]["LIFTED_BEFORE_JI"]);
-                    model.complaintStatusSummaryModel.TRANSIT_DEMANGE = Convert.ToInt32(ds2.Tables[0].Rows[0]["TRANSIT_DEMANGE"]);
-                    model.complaintStatusSummaryModel.UNSTAMPED = Convert.ToInt32(ds2.Tables[0].Rows[0]["UNSTAMPED"]);
-                    model.complaintStatusSummaryModel.NOT_ON_RITES = Convert.ToInt32(ds2.Tables[0].Rows[0]["NOT_ON_RITES"]);
-                    model.complaintStatusSummaryModel.DELETED = Convert.ToInt32(ds2.Tables[0].Rows[0]["DELETED"]);
-                }
-            }
-
-            model.ComplaintStatusSummary = "[";
-            model.ComplaintStatusSummary += "['Pending'," + model.complaintStatusSummaryModel.PENDING + "],";
-            model.ComplaintStatusSummary += "['Accepted'," + model.complaintStatusSummaryModel.ACCEPTED + "],";
-            model.ComplaintStatusSummary += "['Upheld'," + model.complaintStatusSummaryModel.UPHELD + "],";
-            model.ComplaintStatusSummary += "['Sorting'," + model.complaintStatusSummaryModel.SORTING + "],";
-            model.ComplaintStatusSummary += "['Rectification'," + model.complaintStatusSummaryModel.RECTIFICATION + "],";
-            model.ComplaintStatusSummary += "['Price Reduction'," + model.complaintStatusSummaryModel.PRICE_REDUCTION + "],";
-            model.ComplaintStatusSummary += "['Lifted Before JI'," + model.complaintStatusSummaryModel.LIFTED_BEFORE_JI + "],";
-            model.ComplaintStatusSummary += "['Transit Damange'," + model.complaintStatusSummaryModel.TRANSIT_DEMANGE + "],";
-            model.ComplaintStatusSummary += "['Unstamped'," + model.complaintStatusSummaryModel.UNSTAMPED + "],";
-            model.ComplaintStatusSummary += "['Not on Rites A/C'," + model.complaintStatusSummaryModel.NOT_ON_RITES + "],";
-            model.ComplaintStatusSummary += "['Deleted'," + model.complaintStatusSummaryModel.DELETED + "]";
-            model.ComplaintStatusSummary += "]";
+            ComplaintStatusDetails(model);
 
             return model;
         }
@@ -186,6 +182,8 @@ namespace IBS.Repositories
             }
             model.lstRecentPO = lstRecentPO;
 
+            ComplaintStatusDetails(model);
+
             return model;
         }
 
@@ -193,14 +191,21 @@ namespace IBS.Repositories
         {
             DashboardModel model = new();
 
-            OracleParameter[] par = new OracleParameter[3];
+            OracleParameter[] par = new OracleParameter[7];
 
             par[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Organisation, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, OrgnType, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_RESULT_VND_WISE_PER", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_REC_REQ", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_REC_PO", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_VND_CONS_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD_COUNT", par);
-
+            DataSet ds = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD", par);
+            List<ClientVENDPOList> lstClientVEND = new();
+            List<ClientRecentReqList> lstClientRecentReq = new();
+            List<ClientRecentPOList> lstClientRecentPO = new();
+            List<ClientVendConCompList> lstClientVendConComp = new();
             if (ds != null && ds.Tables.Count > 0)
             {
                 if (ds.Tables[0].Rows.Count > 0)
@@ -213,21 +218,9 @@ namespace IBS.Repositories
                     model.StillUnderInspectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STILL_UNDER_INSPECTION"]);
                     model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
                 }
-            }
-
-            OracleParameter[] par1 = new OracleParameter[3];
-
-            par1[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Organisation, ParameterDirection.Input);
-            par1[1] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, OrgnType, ParameterDirection.Input);
-            par1[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            DataSet ds1 = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD_VENDOR_WISE_PERFORMANCE", par1);
-            List<ClientVENDPOList> lstClientVEND = new();
-            if (ds1 != null && ds1.Tables.Count > 0)
-            {
-                if (ds1.Tables[0].Rows.Count > 0)
+                if (ds.Tables[1].Rows.Count > 0)
                 {
-                    DataTable dt = ds1.Tables[0];
+                    DataTable dt = ds.Tables[1];
                     lstClientVEND = dt.AsEnumerable().Select(row => new ClientVENDPOList
                     {
                         RLY_CD = Convert.ToString(row["RLY_CD"]),
@@ -238,22 +231,9 @@ namespace IBS.Repositories
                         CANCELLED_CALL = Convert.ToInt32(row["CANCELLED_CALL"]),
                     }).ToList();
                 }
-            }
-            model.lstClientVEND = lstClientVEND;
-
-            OracleParameter[] par2 = new OracleParameter[3];
-
-            par2[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Organisation, ParameterDirection.Input);
-            par2[1] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, OrgnType, ParameterDirection.Input);
-            par2[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            DataSet ds2 = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD_RECENT_REQUEST", par2);
-            List<ClientRecentReqList> lstClientRecentReq = new();
-            if (ds2 != null && ds2.Tables.Count > 0)
-            {
-                if (ds2.Tables[0].Rows.Count > 0)
+                if (ds.Tables[2].Rows.Count > 0)
                 {
-                    DataTable dt = ds2.Tables[0];
+                    DataTable dt = ds.Tables[2];
                     lstClientRecentReq = dt.AsEnumerable().Select(row => new ClientRecentReqList
                     {
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
@@ -265,22 +245,9 @@ namespace IBS.Repositories
                         CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
                     }).ToList();
                 }
-            }
-            model.lstClientRecentReq = lstClientRecentReq;
-
-            OracleParameter[] par3 = new OracleParameter[3];
-
-            par3[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Organisation, ParameterDirection.Input);
-            par3[1] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, OrgnType, ParameterDirection.Input);
-            par3[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            DataSet ds3 = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD_RECENT_PO", par3);
-            List<ClientRecentPOList> lstClientRecentPO = new();
-            if (ds3 != null && ds3.Tables.Count > 0)
-            {
-                if (ds3.Tables[0].Rows.Count > 0)
+                if (ds.Tables[3].Rows.Count > 0)
                 {
-                    DataTable dt = ds3.Tables[0];
+                    DataTable dt = ds.Tables[3];
                     lstClientRecentPO = dt.AsEnumerable().Select(row => new ClientRecentPOList
                     {
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
@@ -290,23 +257,9 @@ namespace IBS.Repositories
                         PO_NO = Convert.ToString(row["PO_NO"]),
                     }).ToList();
                 }
-            }
-            model.lstClientRecentPO = lstClientRecentPO;
-
-
-            OracleParameter[] par4 = new OracleParameter[3];
-
-            par4[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Organisation, ParameterDirection.Input);
-            par4[1] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, OrgnType, ParameterDirection.Input);
-            par4[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            DataSet ds4 = DataAccessDB.GetDataSet("GET_CLIENT_DASHBOARD_VENDOR_CONSIGNEE_COMPLAINTS", par4);
-            List<ClientVendConCompList> lstClientVendConComp = new();
-            if (ds4 != null && ds4.Tables.Count > 0)
-            {
-                if (ds4.Tables[0].Rows.Count > 0)
+                if (ds.Tables[4].Rows.Count > 0)
                 {
-                    DataTable dt = ds4.Tables[0];
+                    DataTable dt = ds.Tables[4];
                     lstClientVendConComp = dt.AsEnumerable().Select(row => new ClientVendConCompList
                     {
                         VEND_NAME = Convert.ToString(row["VEND_NAME"]),
@@ -314,8 +267,16 @@ namespace IBS.Repositories
                     }).ToList();
                 }
             }
+
+            model.lstClientVEND = lstClientVEND;
+
+            model.lstClientRecentReq = lstClientRecentReq;
+
+            model.lstClientRecentPO = lstClientRecentPO;
+
             model.lstClientVendConComp = lstClientVendConComp;
 
+            ComplaintStatusDetails(model);
             return model;
         }
 
@@ -672,7 +633,7 @@ namespace IBS.Repositories
                 //dTResult.data = DbContextHelper.OrderByDynamic(query1, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
                 //dTResult.draw = dtParameters.Draw;
             }
-            else if(Type == "ConsgineeComp")
+            else if (Type == "ConsgineeComp")
             {
                 OracleParameter[] par1 = new OracleParameter[1];
                 par1[0] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -706,7 +667,7 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
                 );
 
-            
+
             return dTResult;
         }
 
@@ -1029,6 +990,46 @@ namespace IBS.Repositories
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+        }
+
+        public void ComplaintStatusDetails(DashboardModel model)
+        {
+            DataSet ds2 = ComplaintStatusSummary("N");
+
+            model.complaintStatusSummaryModel = new();
+
+            if (ds2 != null && ds2.Tables.Count > 0)
+            {
+                if (ds2.Tables[0].Rows.Count > 0)
+                {
+                    model.complaintStatusSummaryModel.REGION = Convert.ToString(ds2.Tables[0].Rows[0]["REGION"]);
+                    model.complaintStatusSummaryModel.PENDING = Convert.ToInt32(ds2.Tables[0].Rows[0]["PENDING"]);
+                    model.complaintStatusSummaryModel.ACCEPTED = Convert.ToInt32(ds2.Tables[0].Rows[0]["ACCEPTED"]);
+                    model.complaintStatusSummaryModel.UPHELD = Convert.ToInt32(ds2.Tables[0].Rows[0]["UPHELD"]);
+                    model.complaintStatusSummaryModel.SORTING = Convert.ToInt32(ds2.Tables[0].Rows[0]["SORTING"]);
+                    model.complaintStatusSummaryModel.RECTIFICATION = Convert.ToInt32(ds2.Tables[0].Rows[0]["RECTIFICATION"]);
+                    model.complaintStatusSummaryModel.PRICE_REDUCTION = Convert.ToInt32(ds2.Tables[0].Rows[0]["PRICE_REDUCTION"]);
+                    model.complaintStatusSummaryModel.LIFTED_BEFORE_JI = Convert.ToInt32(ds2.Tables[0].Rows[0]["LIFTED_BEFORE_JI"]);
+                    model.complaintStatusSummaryModel.TRANSIT_DEMANGE = Convert.ToInt32(ds2.Tables[0].Rows[0]["TRANSIT_DEMANGE"]);
+                    model.complaintStatusSummaryModel.UNSTAMPED = Convert.ToInt32(ds2.Tables[0].Rows[0]["UNSTAMPED"]);
+                    model.complaintStatusSummaryModel.NOT_ON_RITES = Convert.ToInt32(ds2.Tables[0].Rows[0]["NOT_ON_RITES"]);
+                    model.complaintStatusSummaryModel.DELETED = Convert.ToInt32(ds2.Tables[0].Rows[0]["DELETED"]);
+                }
+            }
+
+            model.ComplaintStatusSummary = "[";
+            model.ComplaintStatusSummary += "['Pending'," + model.complaintStatusSummaryModel.PENDING + "],";
+            model.ComplaintStatusSummary += "['Accepted'," + model.complaintStatusSummaryModel.ACCEPTED + "],";
+            model.ComplaintStatusSummary += "['Upheld'," + model.complaintStatusSummaryModel.UPHELD + "],";
+            model.ComplaintStatusSummary += "['Sorting'," + model.complaintStatusSummaryModel.SORTING + "],";
+            model.ComplaintStatusSummary += "['Rectification'," + model.complaintStatusSummaryModel.RECTIFICATION + "],";
+            model.ComplaintStatusSummary += "['Price Reduction'," + model.complaintStatusSummaryModel.PRICE_REDUCTION + "],";
+            model.ComplaintStatusSummary += "['Lifted Before JI'," + model.complaintStatusSummaryModel.LIFTED_BEFORE_JI + "],";
+            model.ComplaintStatusSummary += "['Transit Damange'," + model.complaintStatusSummaryModel.TRANSIT_DEMANGE + "],";
+            model.ComplaintStatusSummary += "['Unstamped'," + model.complaintStatusSummaryModel.UNSTAMPED + "],";
+            model.ComplaintStatusSummary += "['Not on Rites A/C'," + model.complaintStatusSummaryModel.NOT_ON_RITES + "],";
+            model.ComplaintStatusSummary += "['Deleted'," + model.complaintStatusSummaryModel.DELETED + "]";
+            model.ComplaintStatusSummary += "]";
         }
     }
 }

@@ -25,4 +25,12 @@
         public string DocBkNo { get; set; }
         public string DocSetNo { get; set; }
     }
+
+    public class DeleteICPhotoRequestModel
+    {
+        public long? ID { get; set; }
+        public string ApplicationID { get; set; }
+        public int DocumentCategoryID { get; set; }
+        public int DocumentID { get; set; }
+    }
 }

@@ -127,7 +127,8 @@
         </div>
         <div class="row ie-dashboard">
             <div class="col-lg-3">
-                <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>
+                <a class="NCIssued" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "NCI" })">
+               @* <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
                 <div class="dashboard-box das9Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -459,6 +460,8 @@
                 data: @Html.Raw(Model.ComplaintStatusSummary),
             }],
         });
-
+        function NCIssued() {
+            window.location.href = '@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCI';
+        }
     </script>
 }
