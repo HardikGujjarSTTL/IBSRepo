@@ -19,17 +19,19 @@ namespace IBSAPI.Controllers
     {
         #region Variable
         private readonly ICallRepository callRepository;
+        private readonly IInspectionRepository inspectionRepository;
         private readonly IWebHostEnvironment env;
         //private readonly IDocument iDocument;
         public IConfiguration Configuration { get; }
         #endregion
 
-        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment,  IConfiguration configuration)
+        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment,  IConfiguration configuration, IInspectionRepository _inspectionRepository)
         {
             callRepository = _callRepository;
             env = _environment;
             //iDocument = _iDocumentRepository;
             Configuration = configuration;
+            inspectionRepository = _inspectionRepository;
         }
 
         [HttpGet("GetCallList", Name = "GetCallList")]
@@ -253,6 +255,43 @@ namespace IBSAPI.Controllers
             catch (Exception ex)
             {
                 // Handle exceptions
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
+
+        [HttpPost("DeleteICPhoto", Name = "DeleteICPhoto")]
+        public IActionResult DeleteICPhoto([FromBody] DeleteICPhotoRequestModel deleteICPhotoRequestModel)
+        {
+            try
+            {
+                int id = inspectionRepository.DeleteSingleRecord(deleteICPhotoRequestModel);
+                if (id > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Successfully"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "DeleteICPhoto", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,

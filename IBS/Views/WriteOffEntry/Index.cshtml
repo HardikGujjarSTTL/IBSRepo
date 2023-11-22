@@ -91,7 +91,7 @@
                 });
             });
 
-            var url = '/WriteOffEntry/UpdateWriteAmt';
+            var url = "@Url.Action("UpdateWriteAmt", "WriteOffEntry")";
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -101,7 +101,8 @@
                 success: function (response) {
                     if (response.success) {
                         setTimeout(function () {
-                            window.location.href = '/WriteOffEntry/Index';
+                            var redirecturl = "@Url.Action("Index", "WriteOffEntry")";
+                            window.location.href = redirecturl;
                         }, 2000);
                     }
                 },

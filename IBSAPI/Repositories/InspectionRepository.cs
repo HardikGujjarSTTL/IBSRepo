@@ -225,5 +225,39 @@ namespace IBSAPI.Repositories
             return pendingInspList;
         }
         #endregion
+
+
+        public List<PhotosModel> GetDocRecordsList(int DocumentCategoryID, string ApplicationID, string WebRootPath)
+        {
+            var MainList = (from e in context.IbsAppdocuments
+                            where e.Documentcategory == DocumentCategoryID && e.Applicationid.Contains(ApplicationID)
+                            && e.Isdeleted != Convert.ToByte(true)
+                            select new PhotosModel
+                            {
+                                ID = e.Id,
+                                ApplicationID = e.Applicationid,
+                                DocumentCategoryID = e.Documentcategory,
+                                DocumentID = e.Documentid ?? 0,
+                                OtherDocumentName = e.Otherdocumentname,
+                                Imageurl = WebRootPath + e.Relativepath + "/" + e.Fileid,
+                            }).ToList();
+            return MainList;
+        }
+
+        public int DeleteSingleRecord(DeleteICPhotoRequestModel model)
+        {
+            int id = 0;
+            IbsAppdocument objGNR_APPDocument = (from c in context.IbsAppdocuments
+                                                 where c.Id == model.ID && c.Applicationid == model.ApplicationID
+                                                       && c.Documentcategory == model.DocumentCategoryID && c.Documentid == model.DocumentID
+                                                 select c).FirstOrDefault();
+            if (objGNR_APPDocument != null)
+            {
+                objGNR_APPDocument.Isdeleted = Convert.ToByte(true);
+                context.SaveChanges();
+                id = objGNR_APPDocument.Id;
+            }
+            return id;
+        }
     }
 }
