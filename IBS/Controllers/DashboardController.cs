@@ -184,9 +184,10 @@ namespace IBS.Controllers
 
         public IActionResult IE_Dashboard_Detail(string Type)
         {
-            ViewBag.Types = Type;
+            DashboardModel model = new();
+            model.Type = Type;
             ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
-            return View();
+            return View(model);
         }
 
         [HttpPost]
