@@ -671,7 +671,7 @@ namespace IBS.Repositories
                             CallRecvDt = T17.CallRecvDt,
                             CallSno = Convert.ToInt16(T17.CallSno),
                             CallMarkDt = T17.CallMarkDt,
-                            CallStatus = T17.CallStatus,
+                            CallStatus = T17.CallStatus == "M" ? "Pending" : T17.CallStatus == "A" ? "Accepted" : T17.CallStatus == "R" ? "Rejection" : T17.CallStatus == "C" ? "Cancelled" : T17.CallStatus == "U" ? "Under Lab Testing" : T17.CallStatus == "S" ? "Still Under Inspection" : T17.CallStatus == "G" ? "Stage Inspection Accepted" : T17.CallStatus == "B" ? "Accepted and Billed" : T17.CallStatus == "T" ? "Stage Rejection" : "Withheld",
                             IE_name = T09.IeName,
                             Vendor = T05.VendName,
                             RegionCode = T17.RegionCode,
@@ -691,7 +691,7 @@ namespace IBS.Repositories
                             CallRecvDt = T17.CallRecvDt,
                             CallSno = Convert.ToInt16(T17.CallSno),
                             CallMarkDt = T17.CallMarkDt,
-                            CallStatus = T17.CallStatus,
+                            CallStatus = T17.CallStatus == "M" ? "Pending" : T17.CallStatus == "A" ? "Accepted" : T17.CallStatus == "R" ? "Rejection" : T17.CallStatus == "C" ? "Cancelled" : T17.CallStatus == "U" ? "Under Lab Testing" : T17.CallStatus == "S" ? "Still Under Inspection" : T17.CallStatus == "G" ? "Stage Inspection Accepted" : T17.CallStatus == "B" ? "Accepted and Billed" : T17.CallStatus == "T" ? "Stage Rejection" : "Withheld",
                             IE_name = T09.IeName,
                             Vendor = T05.VendName,
                             RegionCode = T17.RegionCode,
@@ -716,7 +716,44 @@ namespace IBS.Repositories
                             RegionCode = T80.RegionCode,
                         };
             }
-
+            else if (ActionType == "PCR")
+            {
+                query = from t108 in context.T108RemarkedCalls
+                        join t09From in context.T09Ies on (int)t108.FrIeCd equals t09From.IeCd
+                        join t10To in context.T09Ies on (int)t108.ToIeCd equals t10To.IeCd
+                        join t02 in context.T02Users on t108.RemInitBy equals t02.UserId
+                        where t108.RemarkingStatus == "P" && t108.CaseNo.Substring(0, 1) == Region 
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = t108.CaseNo,
+                            CallRecvDt = t108.CallRecvDt,
+                            CallSno = t108.CallSno,
+                            CallRemarkStatus = t108.RemarkingStatus == "P" ? "Pending" : null,
+                            FrIeName = t09From.IeName,
+                            ToIeName = t10To.IeName,
+                            UserName = t02.UserName,
+                            RemInitDatetime = t108.RemInitDatetime
+                        };
+            }
+            else if (ActionType == "POCAM")
+            {
+                query = from T17 in context.T17CallRegisters
+                        join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
+                        where T17.RegionCode == Region && T17.IeCd == null
+                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        
+                        select new VenderCallRegisterModel
+                        {
+                            CaseNo = T17.CaseNo,
+                            CallRecvDt = T17.CallRecvDt,
+                            CallSno = Convert.ToInt16(T17.CallSno),
+                            CallMarkDt = T17.CallMarkDt,
+                            CallStatus = T17.CallStatus == "M" ? "Pending" : T17.CallStatus == "A" ? "Accepted" : T17.CallStatus == "R" ? "Rejection" : T17.CallStatus == "C" ? "Cancelled" : T17.CallStatus == "U" ? "Under Lab Testing" : T17.CallStatus == "S" ? "Still Under Inspection" : T17.CallStatus == "G" ? "Stage Inspection Accepted" : T17.CallStatus == "B" ? "Accepted and Billed" : T17.CallStatus == "T" ? "Stage Rejection" : "Withheld",
+                            IE_name = null,
+                            Vendor = T05.VendName,
+                            RegionCode = T17.RegionCode,
+                        };
+            }
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
