@@ -245,7 +245,7 @@ namespace IBSAPI.Repositories
 
             if (!string.IsNullOrEmpty(model.CallSno))
             {
-                CallSno1 = Convert.ToString(model.CallRecvDt);
+                CallSno1 = Convert.ToString(model.CallSno);
             }
 
             CaseNo1 = CaseNo1.ToString() == "" ? string.Empty : CaseNo1.ToString();
@@ -255,11 +255,9 @@ namespace IBSAPI.Repositories
             par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo1, ParameterDirection.Input);
             par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt1), ParameterDirection.Input);
             par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno1, ParameterDirection.Input);
-
             par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
-            DataTable dt = ds.Tables[0];
             List<VenderCallRegisterModel> models = new();
             if (ds != null && ds.Tables.Count > 0)
             {
