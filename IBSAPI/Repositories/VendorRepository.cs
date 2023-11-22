@@ -96,6 +96,7 @@ namespace IBSAPI.Repositories
             VendorCallPoDetailsView GetView = context.VendorCallPoDetailsViews.Where(X => X.CaseNo == CaseNo).FirstOrDefault();
             if (GetView != null)
             {
+                model.RecvDt = GetView.RecvDt;
                 model.PurchaserCd = GetView.PurchaserCd;
                 model.VendCd = GetView.VendCd;
                 model.PoNo = GetView.PoNo;
