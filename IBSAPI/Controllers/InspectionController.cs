@@ -1,4 +1,5 @@
-﻿using IBSAPI.Interfaces;
+﻿using IBSAPI.Helper;
+using IBSAPI.Interfaces;
 using IBSAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,14 @@ namespace IBSAPI.Controllers
     {
         #region Varible
         private readonly IInspectionRepository inspectionRepository;
+        private readonly IWebHostEnvironment env;
+        public IConfiguration Configuration { get; }
         #endregion        
-        public InspectionController(IInspectionRepository _inspectionRepository)
+        public InspectionController(IInspectionRepository _inspectionRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             inspectionRepository = _inspectionRepository;
+            env = _environment;
+            Configuration = configuration;
         }
 
         #region IE Methods
@@ -103,9 +108,22 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                var result = inspectionRepository.GetCaseDetailForIE(Case_No, CallRecvDt, CallSNo, IeCd);
+                CaseDetailIEModel result = inspectionRepository.GetCaseDetailForIE(Case_No, CallRecvDt, CallSNo, IeCd);
                 if (result != null)
                 {
+                    int DocumentCategoryID = (int)Enums.DocumentCategory.ICPHOTOS;
+                    string IsStaging = Configuration["MyAppSettings:IsStaging"];
+                    string WebRootPath = "https://192.168.0.101/IBS2";
+                    //if (Convert.ToBoolean(IsStaging) == true)
+                    //{
+                    //    //WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
+                    //    WebRootPath = env.WebRootPath.Replace("IBSAPI", "IBS");
+                    //}
+                    //else
+                    //{
+                    //    WebRootPath = env.WebRootPath;
+                    //}
+                    result.photosModel = inspectionRepository.GetDocRecordsList(DocumentCategoryID, Case_No, WebRootPath);
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,

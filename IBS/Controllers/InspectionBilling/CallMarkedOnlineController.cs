@@ -146,11 +146,11 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 result = callMarkedOnlineRepository.Call_Marked_Online_Save(Model, GetUserInfo);
-                callMarkedOnlineRepository.Send_Vendor_Email(Model, GetUserInfo.Region);
-                if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
-                {
-                    var res = callMarkedOnlineRepository.send_IE_smsAsync(Model);
-                }
+                //callMarkedOnlineRepository.Send_Vendor_Email(Model, GetUserInfo.Region);
+                //if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
+                //{
+                //    var res = callMarkedOnlineRepository.send_IE_smsAsync(Model);
+                //}
             }
             catch (Exception ex)
             {

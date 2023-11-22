@@ -4,6 +4,7 @@ namespace IBS.Interfaces
 {
     public interface IDashboardRepository
     {
+        public DashboardModel GetDashBoardCount(int UserId);
         public DashboardModel GetIEDDashBoardCount(int IeCd);
         public DashboardModel GetCMDashBoardCount(int CoCd);
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd);
@@ -13,7 +14,7 @@ namespace IBS.Interfaces
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
         
-        DTResult<NCIssued_Per_IE> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
+        DTResult<DashboardModel> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
         DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin);
