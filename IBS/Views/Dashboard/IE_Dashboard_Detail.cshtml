@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "IE_Dashboard_Detail";
+    var Type = ViewBag.Type;
 }
 
 <div class="list-inner">
@@ -7,7 +8,7 @@
         <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">NC Isuued Against IE Details</label></h2>
     </div>
     <div>
-        <a asp-action="Index" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+        <a asp-action="IE" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
     </div>
 </div>
 <div class="accordion-body" id="body">
@@ -39,29 +40,59 @@
         </div>
     </div>
 </div>
-<section class="table-section">
-    <div class="task-listinput">
-        <div class="dash-table">
-            <table id="dtList" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NC No</th>
-                        <th>Case No</th>
-                        <th>Call Date</th>
-                        <th>Call SNo</th>
-                        <th>IE Name</th>
-                        <th>BooK No</th>
-                        <th>Set No</th>
-                        <th>Consignee</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+
+@if (@Type == "NCIssuedAgainstIE")
+{
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NC No</th>
+                            <th>Case No</th>
+                            <th>Call Date</th>
+                            <th>Call SNo</th>
+                            <th>IE Name</th>
+                            <th>BooK No</th>
+                            <th>Set No</th>
+                            <th>Consignee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+else if (@Type == "ConsigneeComp")
+{
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Complaint ID</th>
+                            <th>JI Unique Sno</th>
+                            <th>Case Number</th>
+                            <th>Bk No.</th>
+                            <th>Set No.</th>
+                            <th>Po No.</th>
+                            <th>Po Date</th>
+                            <th>IC No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+}
 
 @section scripts{
 
@@ -69,7 +100,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        var Type = "@ViewBag.Type";
+       // var Type = "@ViewBag.Type";
         var Columns = [];
         $(function () {
             var currentDate = new Date();
@@ -82,7 +113,7 @@
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
 
-            if (Type == "NCIssuedAgainstIE") {
+            if (@Type == "NCIssuedAgainstIE") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -107,7 +138,7 @@
                     { data: "SetNo" },
                     { data: "Consignee" },
                 ]
-            } else if (Type == "OutstandingNC") {
+            } else if (@Type == "OutstandingNC") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -132,7 +163,33 @@
                     { data: "SetNo" },
                     { data: "CONSIGNEE" },
                 ]
+            } else if (@Type == "ConsigneeComp") {
+                Columns = [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "case_no" },
+                    { data: "po_no" },
+                    { data: "bk_no" },
+                    { data: "set_no" },
+                    { data: "IC_NO" },
+                    { data: "ji_sno" },
+                    { data: "complaint_id" },
+                    {
+                        data: "PO_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                ]
             }
+            InitializeDatatable();
         });
 
         function InitializeDatatable() {

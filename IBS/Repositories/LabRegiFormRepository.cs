@@ -803,6 +803,7 @@ namespace IBS.Repositories
         {
             try
             {
+                LABREGISTERModel.SampleRegNo = REG_NO;
                 LABREGISTERModel = UpdateLabRegCal(LABREGISTERModel);
                 string ss;
                 string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
@@ -941,13 +942,13 @@ namespace IBS.Repositories
                         string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
                         ss = GetDateString(sqlQuery);
                         int wposting_amt = 0;
-                        if (Convert.ToInt32(amt[i]) >= (Convert.ToInt32(LABREGISTERModel.TotalLabCharges) - (Convert.ToInt32(LABREGISTERModel.AmountRecieved) + Convert.ToInt32(LABREGISTERModel.TotalTDS))))
+                        if (Convert.ToInt32(susamt[i]) >= (Convert.ToInt32(LABREGISTERModel.TotalLabCharges) - (Convert.ToInt32(LABREGISTERModel.AmountRecieved) + Convert.ToInt32(LABREGISTERModel.TotalTDS))))
                         {
                             wposting_amt = Convert.ToInt32(LABREGISTERModel.TotalLabCharges) - (Convert.ToInt32(LABREGISTERModel.AmountRecieved) + Convert.ToInt32(LABREGISTERModel.TotalTDS));
                         }
                         else
                         {
-                            wposting_amt = Convert.ToInt32(amt[i]);
+                            wposting_amt = Convert.ToInt32(susamt[i]);
                         }
                         OracleParameter[] par = new OracleParameter[8];
                         par[0] = new OracleParameter("RegNo", OracleDbType.Varchar2, LABREGISTERModel.SampleRegNo, ParameterDirection.Input);
@@ -955,7 +956,7 @@ namespace IBS.Repositories
                         par[2] = new OracleParameter("ChqNo", OracleDbType.Varchar2, chqno[i], ParameterDirection.Input);
                         par[3] = new OracleParameter("ChqDt", OracleDbType.Date, chqdt[i], ParameterDirection.Input);
                         par[4] = new OracleParameter("AmtClear", OracleDbType.Varchar2, wposting_amt, ParameterDirection.Input);
-                        par[5] = new OracleParameter("TotalLabC", OracleDbType.Varchar2, LABREGISTERModel.TotalAmountCleared, ParameterDirection.Input);
+                        par[5] = new OracleParameter("TotalLabC", OracleDbType.Varchar2, LABREGISTERModel.TotalLabCharges, ParameterDirection.Input);
                         par[6] = new OracleParameter("UserId", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
                         par[7] = new OracleParameter("Datetime", OracleDbType.Date, ss, ParameterDirection.Input);
                         var ds = DataAccessDB.ExecuteNonQuery("INSERT_LAB_POSTING_PROC", par, 1);
