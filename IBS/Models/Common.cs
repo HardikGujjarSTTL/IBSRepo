@@ -4085,14 +4085,17 @@ namespace IBS.Models
         
         public static IEnumerable<SelectListItem> GetIENameByIECD(int IeCd)
         {
-            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            return (from c in context.T09Ies
-                    where c.IeCd == IeCd
-                    select new SelectListItem
-                    {
-                        Value = c.IeCd.ToString(),
-                        Text = c.IeName
-                    }).OrderBy(c => c.Text).ToList();
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+
+            List<SelectListItem> contacts = (from v in ModelContext.T09Ies
+                                             where v.IeCd == IeCd
+                                             select
+                                     new SelectListItem
+                                     {
+                                         Text = v.IeName,
+                                         Value = Convert.ToString(v.IeCd)
+                                     }).ToList();
+            return contacts;
         }
 
         public static List<TextValueDropDownDTO> GetIcStatus()

@@ -15,7 +15,7 @@
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">IE Name</label>
-                @Html.DropDownList("", new SelectList(IBS.Models.Common.GetIENameByIECD(@ViewBag.IeCdCode), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIENameByIECD(@ViewBag.IeCdCode), "Value", "Text"), new { id = "IENAME" })
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -103,9 +103,9 @@
                     },
                     { data: "CALL_SNO" },
                     { data: "IE_NAME" },
-                    { data: "BKNo" },
+                    { data: "BK_NO" },
                     { data: "SetNo" },
-                    { data: "CONSIGNEE" },
+                    { data: "Consignee" },
                 ]
             } else if (Type == "OutstandingNC") {
                 Columns = [
@@ -138,7 +138,7 @@
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
-            var CO_CD = $("#ddlCM").val();
+            var IE_CD = $("#IENAME").val();
             $("#dtList").DataTable({
                 stateSave: false,
                 autoWidth: true,
@@ -156,7 +156,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, CO_CD
+                            FromDate, ToDate, IE_CD
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
