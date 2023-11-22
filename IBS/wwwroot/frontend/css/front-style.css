@@ -261,12 +261,12 @@ button.swiper-pagination-bullet { border:none; margin:0; padding:0; -webkit-box-
 .noJS .marqueeScrolling { overflow-y:hidden; overflow-x:auto }
 .noJS .marquee { width:240% }
 .updateSection { background:#EEF0F5; padding:0; }
-.aboutSection { background: #eafff0; padding: 20px; margin-top: -73px; position:relative;}
+.aboutSection { background: #eafff0; padding: 20px 20px 10px; margin-top: -63px; position:relative;}
 .aboutSection .latestNews { display: inline-block; width: 100%; overflow: hidden; position: relative; }
 .aboutSection .latestNews h2.newsTitle { float: left; margin: 0 10px 0 0; padding: 0; font-size:22px; line-height: 27px; color: #323232; font-weight: 600; }
 .aboutSection .latestNews .tickerNews { padding: 0; }
 .latestNews .marqueeScrolling { position: relative; }
-.aboutSection .latestNews .tickerNews a.btnMPause { float: left; margin: 2px 30px 0 0; font-size: 0; background: url(../images/play-pause-icon.png) no-repeat 0 0; width: 20px; height: 20px; cursor: pointer; }
+.aboutSection .latestNews .tickerNews a.btnMPause { float: left; margin: 2px 10px 0 0; font-size: 0; background: url(../images/play-pause-icon.png) no-repeat 0 0; width: 20px; height: 20px; cursor: pointer; }
 .aboutSection .latestNews .tickerNews a.btnMPause.play { background-position: 0-20px; }
 .aboutSection .latestNews .tickerNews ul { margin: 0; }
 .marquee { overflow: hidden; }
@@ -293,7 +293,7 @@ ul.bulletTextList ul { padding:0; list-style:none; margin-top:25px; }
 a.knowMoreButton { padding: 10px 15px; background: #118133; transition: all 0.3s ease 0ms; -webkit-transition: all 0.3s ease 0ms; color: #fff; text-decoration: none; border: 1px solid #118133; }
 a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .awardCollectionSection { background: url(../images/collection-award-bg.jpg); padding:60px 0; background-size: cover; background-position: center top; }
-.awardCollectionContentPart .certificationWrap, .awardCollectionContentPart .awardWrap { background:#fff; padding:45px;}
+.awardCollectionContentPart .certificationWrap, .awardCollectionContentPart .awardWrap { background:#fff; padding:25px 30px;}
 
 .certificationWrap h2, .awardWrap h2 { font-size: 32px; font-weight: 600; }
 /*Certification Slider Start*/
@@ -571,10 +571,11 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 }
 @media only screen and (max-width:1599px) {
 #nav li a{padding:10px 40px;}
+}
+@media only screen and (max-width:1368px) {
 ul.rightLinks li{ font-size:0.675em}
 .brandDetail span.firstTitle{ font-size:1.2em;}
 }
-
 @media only screen and (max-width:1169px) {
 .hasJS .menuPart #nav a:focus + ul, .hasJS .menuPart #nav li.focus > ul, .hasJS .menuPart #nav ul ul { opacity: 0; display: none;}
 /*Navigation*/
