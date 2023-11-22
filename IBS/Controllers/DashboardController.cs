@@ -1,6 +1,7 @@
 ﻿using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,13 @@ namespace IBS.Controllers
         public IActionResult AwaitingForCaseNo()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadAwaitingForCaseNoTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<PO_MasterModel> dTResult = dashboardRepository.GetPOMasterList(dtParameters);
+            return Json(dTResult);
         }
 
         #endregion

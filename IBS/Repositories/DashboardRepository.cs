@@ -623,6 +623,64 @@ namespace IBS.Repositories
 
             return DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COMPLAINT_STATUS", par);
         }
+
+        public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters)
+        {
+
+            DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
+            IQueryable<PO_MasterModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "pDatetime";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "pDatetime";
+                orderAscendingDirection = true;
+            }
+            query = from POMaster in context.ViewDashboardPomasterlists
+                    select new PO_MasterModel
+                    {
+                        VendCd = POMaster.VendCd,
+                        PoNo = POMaster.PoNo,
+                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
+                        RlyCd = POMaster.RlyCd,
+                        VendorName = POMaster.VendName,
+                        ConsigneeSName = POMaster.ConsigneeSName,
+                        Remarks = POMaster.Remarks,
+                        RlyNonrly = POMaster.RlyNonrly,
+                        MainrlyCd = POMaster.MainrlyCd,
+                        pDatetime = POMaster.Datetime,
+                    };
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
     }
 
 }
