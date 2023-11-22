@@ -373,21 +373,6 @@ namespace IBS.Repositories
             model.IEWisePerformance = listVend;
             return model;
         }
-
-        public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
-        {
-            DTResult<IE_Per_CM_Model> dTResult = new() { draw = 0 };
-            IQueryable<IE_Per_CM_Model>? query = null;
-
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
-
-            if (dtParameters.Order != null)
-            {
-                // in this example we just default sort on the 1st column
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
         public DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin)
         {
 
@@ -433,25 +418,25 @@ namespace IBS.Repositories
 
                     LabReportsModel model = new LabReportsModel
                     {
-                    BPO_NAME = row["BPO_NAME"].ToString(),
-                    recipient_gstin_no = row["recipient_gstin_no"].ToString(),
-                    St_cd = row["St_cd"].ToString(),
-                    invoice_no = row["invoice_no"].ToString(),
-                    invoice_dt = row["invoice_dt"].ToString(),
-                    Total_AMT = Convert.ToString(row["Total_AMT"]),
-                    INV_TYPE = row["INV_TYPE"].ToString(),
-                    HSN_CD = row["HSN_CD"].ToString(),
-                    INV_amount = Convert.ToString(row["INV_amount"]),
-                    INV_sgst = Convert.ToString(row["INV_sgst"]),
-                    INV_cgst = Convert.ToString(row["INV_cgst"]),
-                    INV_igst = Convert.ToString(row["INV_igst"]),
-                    INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
-                    INC_TYPE = row["INC_TYPE"].ToString(),
-                    Total_GST = Convert.ToString(row["Total_GST"]),
-                    IRN_NO = row["IRN_NO"].ToString(),
-                    BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
-                    BILL_SENT = row["BILL_SENT"].ToString(),
-                };
+                        BPO_NAME = row["BPO_NAME"].ToString(),
+                        recipient_gstin_no = row["recipient_gstin_no"].ToString(),
+                        St_cd = row["St_cd"].ToString(),
+                        invoice_no = row["invoice_no"].ToString(),
+                        invoice_dt = row["invoice_dt"].ToString(),
+                        Total_AMT = Convert.ToString(row["Total_AMT"]),
+                        INV_TYPE = row["INV_TYPE"].ToString(),
+                        HSN_CD = row["HSN_CD"].ToString(),
+                        INV_amount = Convert.ToString(row["INV_amount"]),
+                        INV_sgst = Convert.ToString(row["INV_sgst"]),
+                        INV_cgst = Convert.ToString(row["INV_cgst"]),
+                        INV_igst = Convert.ToString(row["INV_igst"]),
+                        INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
+                        INC_TYPE = row["INC_TYPE"].ToString(),
+                        Total_GST = Convert.ToString(row["Total_GST"]),
+                        IRN_NO = row["IRN_NO"].ToString(),
+                        BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
+                        BILL_SENT = row["BILL_SENT"].ToString(),
+                    };
 
                     modelList.Add(model);
                 }
@@ -474,7 +459,7 @@ namespace IBS.Repositories
 
             return dTResult;
 
-            
+
         }
 
         public DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin)
@@ -550,15 +535,31 @@ namespace IBS.Repositories
 
 
         }
-    }
+        public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
+        {
+            DTResult<IE_Per_CM_Model> dTResult = new() { draw = 0 };
+            IQueryable<IE_Per_CM_Model>? query = null;
 
-                if (orderCriteria == "" || orderCriteria == null)
-                {
-                    orderCriteria = "CASE_NO";
-                }
-                //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-                orderAscendingDirection = true;
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+
             }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CASE_NO";
+            }
+            //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            //orderAscendingDirection = true;
+
+
             else
             {
                 // if we have an empty search then just order the results by Id ascending
@@ -886,7 +887,7 @@ namespace IBS.Repositories
                         join t09From in context.T09Ies on (int)t108.FrIeCd equals t09From.IeCd
                         join t10To in context.T09Ies on (int)t108.ToIeCd equals t10To.IeCd
                         join t02 in context.T02Users on t108.RemInitBy equals t02.UserId
-                        where t108.RemarkingStatus == "P" && t108.CaseNo.Substring(0, 1) == Region 
+                        where t108.RemarkingStatus == "P" && t108.CaseNo.Substring(0, 1) == Region
                         select new VenderCallRegisterModel
                         {
                             CaseNo = t108.CaseNo,
@@ -905,7 +906,7 @@ namespace IBS.Repositories
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
                         where T17.RegionCode == Region && T17.IeCd == null
                         && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
-                        
+
                         select new VenderCallRegisterModel
                         {
                             CaseNo = T17.CaseNo,
