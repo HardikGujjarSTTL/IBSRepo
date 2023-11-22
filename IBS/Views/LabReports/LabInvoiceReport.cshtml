@@ -33,7 +33,7 @@
 
 
                 </tr>
-                @if (Model != null && Model.lstLabReport.Count > 0)
+                @if (Model != null && Model.lstLabReport != null && Model.lstLabReport.Count > 0)
                 {
                     var serialNumber = 1;
                     @foreach (var item in Model.lstLabReport)
@@ -150,7 +150,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                        <td colspan="17" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
                     </tr>
                 }
             </tbody>

@@ -34,7 +34,7 @@ namespace IBS.Models
         public string FileLink { get; set; }
         public string Hyperlink2 { get; set; }
         public string LabelExist { get; set; }
-
+        public string NO_OF_Register_Per_Day { get; set; }
 
     }
 

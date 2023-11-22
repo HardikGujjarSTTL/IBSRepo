@@ -120,6 +120,8 @@ namespace IBS.Models
         public string lstIE { get; set; }
         public string ddlVender { get; set; }
         public string lstLab { get; set; }
+        public string from { get; set; }
+        public string to { get; set; }
         public List<LabReportsModel> lstLabReport { get; set; }
     }
 }

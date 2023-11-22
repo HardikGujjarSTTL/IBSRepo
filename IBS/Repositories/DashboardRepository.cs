@@ -535,6 +535,33 @@ namespace IBS.Repositories
 
 
         }
+
+        public LabSampleInfoModel GetNOOfRegisterCount(string Regin)
+        {
+
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("Dashboard_NOOFRegisterCount", par, 1);
+
+                LabSampleInfoModel model = new();
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+
+                    DataRow row = ds.Tables[0].Rows[0];
+                    model = new LabSampleInfoModel
+                    {
+                        NO_OF_Register_Per_Day = Convert.ToString(row["NO_OF_Sample_Register_Per_Day"]),
+                       
+                    };
+                }
+
+                return model;
+            }
+        }
         public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
         {
             DTResult<IE_Per_CM_Model> dTResult = new() { draw = 0 };

@@ -33,7 +33,7 @@ namespace IBS.Controllers
             ViewBag.Region = Region;
             return View();
         }
-        public IActionResult Manage(string ReportType,string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string lstStatus, string rdbrecvdt)
+        public IActionResult Manage(string ReportType,string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string lstStatus, string rdbrecvdt,string from,string to)
         {
             
             LabReportsModel model = new()
@@ -56,7 +56,9 @@ namespace IBS.Controllers
                 ddlVender = ddlVender,
                 lstLab = lstLab,
                 lstStatus = lstStatus,
-                rdbrecvdt = rdbrecvdt
+                rdbrecvdt = rdbrecvdt,
+                from = from,
+                to = to
             };
             if (ReportType == "LabReg") model.ReportTitle = "LAB REGISTER REPORT";
             else if (ReportType == "LabPer") model.ReportTitle = "LAB PERFORMANCE REPORT";
@@ -66,13 +68,13 @@ namespace IBS.Controllers
             else if (ReportType == "LabInfo") model.ReportTitle = "LAB SAMPLE INFO DETAILS";
             return View(model);
     }
-        public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab)
+        public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string from, string to)
         {
             LabReportsModel model = new LabReportsModel();
             try
             {
-                ViewBag.From = wFrmDtO;
-                ViewBag.To = wToDt;
+                ViewBag.From = from;
+                ViewBag.To = to;
 
                 string Region = GetRegionCode;
                 if (Region == "N")
@@ -158,8 +160,10 @@ namespace IBS.Controllers
             LabReportsModel model = new LabReportsModel();
             try
             {
-                ViewBag.From = wFrmDtO;
-            ViewBag.To = wToDt;
+                var from = Convert.ToDateTime(wFrmDtO).ToString("dd/MM/yyyy");
+                var to = Convert.ToDateTime(wToDt).ToString("dd/MM/yyyy");
+                ViewBag.From = from;
+            ViewBag.To = to;
 
             string Region = GetRegionCode;
             if (Region == "N")
