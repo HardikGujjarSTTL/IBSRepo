@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IBS.DataAccess;
+namespace IBSAPI.DataAccess;
 
-public partial class ViewPomasterlist
+public partial class ViewDashboardPomasterlist
 {
     public int? VendCd { get; set; }
 
-    public string CaseNo { get; set; } = null!;
-
     public string? PoNo { get; set; }
 
-    public string? PoDt { get; set; }
+    public DateTime? PoDt { get; set; }
 
     public string? RlyCd { get; set; }
 
@@ -23,11 +21,13 @@ public partial class ViewPomasterlist
 
     public string? Remarks { get; set; }
 
-    public decimal? Isdeleted { get; set; }
-
     public string? RlyNonrly { get; set; }
 
     public string? MainrlyCd { get; set; }
 
-    public string? Rlycds { get; set; }
+    public string? RlyCds { get; set; }
+
+    public string? RegionCode { get; set; }
+
+    public DateTime? Datetime { get; set; }
 }

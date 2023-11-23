@@ -121,6 +121,12 @@ public partial class T22Bill
 
     public int? ReferenceAid { get; set; }
 
+    public decimal? NewMaterialValue { get; set; }
+
+    public decimal? NewInspFee { get; set; }
+
+    public decimal? NewBillAmount { get; set; }
+
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 
     public virtual ICollection<T30IcReceived> T30IcReceiveds { get; set; } = new List<T30IcReceived>();

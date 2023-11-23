@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <label for="email">OTP</label>
-                <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off">
+                <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off" autofocus />
                 <span asp-validation-for="OTP" class="text-danger"></span>
                 <br />
                 <span id="timeSpan" class="text-danger"></span>
@@ -69,10 +69,10 @@
                         window.location.href = '@Url.Action("Client", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "liasioning officer (lo)") {
-                        window.location.href = '@Url.Action("Index", "Dashboard")';
+                        window.location.href = '@Url.Action("LO", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "lab user") {
-                        window.location.href = '@Url.Action("Index", "Dashboard")';
+                        window.location.href = '@Url.Action("LAB", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "cm-call desk incharge") {
                         window.location.href = '@Url.Action("CM", "Dashboard")';

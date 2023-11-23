@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IBS.DataAccess;
+namespace IBSAPI.DataAccess;
 
 public partial class SapQaBpo
 {

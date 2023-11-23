@@ -52,4 +52,8 @@ public partial class T18CallDetailsHistory
     public string? Actionuserid { get; set; }
 
     public int Id { get; set; }
+
+    public string? SuppBFlag { get; set; }
+
+    public decimal? SuppNewRate { get; set; }
 }
