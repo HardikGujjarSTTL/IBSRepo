@@ -34,6 +34,10 @@ namespace IBSAPI.Helper
             [Description("QA Corporate")]
             Q,
         }
+        public enum DocumentCategory : int
+        {
+            ICPHOTOS = 22,
+        }
         public enum DocumentCategory_CANRegisrtation : int
         {
             IC_Photos_Upload1 = 22,

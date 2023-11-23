@@ -38,7 +38,8 @@
 
         public string IE_NAME { get; set; }
 
-        //public DashboardModel DashboardData { get; set; }
+        public string Type { get; set; }
+
         public List<DashboardModel> IEWisePerformance { get; set; }
 
         public string ComplaintStatusSummary { get; set; }

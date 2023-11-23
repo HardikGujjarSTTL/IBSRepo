@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DashboardModel
+@{
     ViewData["Title"] = "Dashboard";
 }
 
@@ -13,13 +14,13 @@
                     <div class="dashboard-box das1">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">92,000</div>
+                                <div class="total-amount">@Model.TotalCallsCount</div>
                                 <div class="total-inner">
                                     Total<br />Call
                                 </div>
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                        <div class="total-icons"><img src="images/total-calls-icon.svg" width="46" height="54" alt="Total Call"> </div>
                     </div>
                 </a>
             </div>
@@ -28,13 +29,13 @@
                     <div class="dashboard-box das2">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">68,140</div>
+                                <div class="total-amount">@Model.PendingCallsCount</div>
                             </div>
                             <div class="total-inner">
                                 Pending<br />Calls
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                        <div class="total-icons"><img src="images/pending-calls-icon.svg" width="46" height="54" alt="Pending Calls"> </div>
                     </div>
                 </a>
             </div>
@@ -43,13 +44,13 @@
                     <div class="dashboard-box das3">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">56,422</div>
+                                <div class="total-amount">@Model.AcceptedCallsCount</div>
                             </div>
                             <div class="total-inner">
                                 Accepted<br />Calls
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        <div class="total-icons"><img src="images/accepted-calls-icon.svg" width="46" height="54" alt="Accepted Calls"> </div>
                     </div>
                 </a>
             </div>
@@ -58,13 +59,13 @@
                     <div class="dashboard-box das4">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">11,718</div>
+                                <div class="total-amount">@Model.CancelledCallsCount</div>
                             </div>
                             <div class="total-inner">
                                 Cancelled<br />Calls
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                        <div class="total-icons"><img src="images/cancelled-calls-icon.svg" width="46" height="54" alt="Cancelled Calls"> </div>
                     </div>
                 </a>
             </div>
@@ -76,13 +77,13 @@
                     <div class="dashboard-box das5">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">92,000</div>
+                                <div class="total-amount">@Model.UnderLabTestingCount</div>
                                 <div class="total-inner">
                                     Under Lab<br /> Testing
                                 </div>
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                        <div class="total-icons"><img src="images/under-lab-testing-icon.svg" width="46" height="54" alt="Under Lab Testing"> </div>
                     </div>
                 </a>
             </div>
@@ -91,13 +92,13 @@
                     <div class="dashboard-box das6">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">68,140</div>
+                                <div class="total-amount">@Model.StillUnderInspectionCount</div>
                             </div>
                             <div class="total-inner">
                                 Still Under<br /> Inspection
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                        <div class="total-icons"><img src="images/still-under-inspection-icon.svg" width="46" height="54" alt="Still Under Inspection"> </div>
                     </div>
                 </a>
             </div>
@@ -106,13 +107,13 @@
                     <div class="dashboard-box das7">
                         <div class="dash-total">
                             <div class="dash-count">
-                                <div class="total-amount">56,422</div>
+                                <div class="total-amount">@Model.StageRejectionCount</div>
                             </div>
                             <div class="total-inner">
                                 Stage<br /> Rejection
                             </div>
                         </div>
-                        <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                        <div class="total-icons"><img src="images/stage-rejection-icon.svg" width="46" height="54" alt="Stage Rejection"> </div>
                     </div>
                 </a>
             </div>
@@ -126,7 +127,7 @@
                             Issued IC and<br /> received in office
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                    <div class="total-icons"><img src="images/dash-icon-2.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
                 </div>
             </div>
         </div>
@@ -141,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                    <div class="total-icons"><img src="images/not-billed-IC-icon.svg" width="46" height="54" alt="Not billed IC"> </div>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -154,7 +155,7 @@
                             No. of<br /> Bills
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                    <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -167,7 +168,7 @@
                             No. of IEs<br /> per CMs
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                    <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
                 </a>
             </div>
             <div class="col-lg-3">
@@ -180,7 +181,7 @@
                             Issued<br /> IC
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                    <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
                 </div>
             </div>
         </div>
@@ -189,14 +190,13 @@
                 <div class="dashboard-box das13">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">21</div>
+                            <div class="total-amount">@Model.NotRecievedCount</div>
                             <div class="total-inner">
-                                56,422
                                 Not received<br /> in office
                             </div>
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                    <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -209,7 +209,7 @@
                             No. of Calls<br /> per IE
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-4.svg" alt="Inspection Assigned"> </div>
+                    <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -222,7 +222,7 @@
                             Avg<br /> fees
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                    <div class="total-icons"><img src="images/AVG-fees-icon.svg" width="46" height="54" alt="Avg fees"> </div>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -235,7 +235,7 @@
                             Issued<br /> IC
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/dash-icon-2.svg" alt="Inspection Pending"> </div>
+                    <div class="total-icons"><img src="images/issued-IC-icon.svg" width="46" height="54" alt="Issued IC"> </div>
                 </div>
             </div>
         </div>
@@ -275,48 +275,48 @@
                         <th class="text-center">Complaints</th>
                     </tr>
                     <tr>
-                        <td class="textLeft">Deleted</td>
-                        <td class="text-center">2</td>
-                    </tr>
-                    <tr>
                         <td class="textLeft">Pending</td>
-                        <td class="text-center">12</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.PENDING</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Accepted</td>
-                        <td class="text-center">25</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.ACCEPTED</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Upheld</td>
-                        <td class="text-center">5</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.UPHELD</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Sorting</td>
-                        <td class="text-center">2</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.SORTING</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Rectification</td>
-                        <td class="text-center">4</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.RECTIFICATION</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Price Reduction</td>
-                        <td class="text-center">8</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.PRICE_REDUCTION</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Lifted Before JI</td>
-                        <td class="text-center">3</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.LIFTED_BEFORE_JI</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Transit Damange</td>
-                        <td class="text-center">2</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.TRANSIT_DEMANGE</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Unstamped</td>
-                        <td class="text-center">1</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.UNSTAMPED</td>
                     </tr>
                     <tr>
                         <td class="textLeft">Not on Rites A/C</td>
-                        <td class="text-center">3</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.NOT_ON_RITES</td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Deleted</td>
+                        <td class="text-center">@Model.complaintStatusSummaryModel.DELETED</td>
                     </tr>
                 </table>
             </div>
@@ -848,76 +848,49 @@
         // Pie Chart
         Highcharts.chart('region-wise-pie', {
             chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                },
+                margin: [10, 10, 95, 10],
+                spacingTop: 0,
+                spacingBottom: 10,
+                spacingLeft: 0,
+                spacingRight: 0,
+                backgroundColor: 'transparent'
             },
             title: {
-                text: '',
-                align: 'left'
+                text: ''
             },
-            tooltip: {
-                pointFormat: '{name}'
+            subtitle: {
+                text: ''
             },
-            tooltip: {
-                valueSuffix: ''
-            },
-            filter: {
-                operator: '>',
-                property: 'percentage',
-                value: 10
+            legend: {
+                itemStyle: {
+                },
             },
             plotOptions: {
                 pie: {
-                    allowPointSelect: false,
+                    size: '105%',
+                    innerSize: 0,
+                    borderColor: 'transparent',
+                    depth: 50,
+                    showInLegend: true,
                     cursor: 'pointer',
+                    allowPointSelect: true,
                     dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
+                        enabled: true,
+                        distance: -50,
+                        //color: '#fff',
+                        format: '<b>{point.y}</b>'
+                    }
+                },
             },
             series: [{
-                //name: 'Brands',
-                colorByPoint: true,
-                data: [{
-                    name: 'Deleted',
-                    y: 2.0,
-                    sliced: false,
-                    selected: false
-                }, {
-                    name: 'Pending',
-                    y: 12.0
-                }, {
-                    name: 'Accepted',
-                    y: 25.0
-                }, {
-                    name: 'Upheld',
-                    y: 5.0
-                }, {
-                    name: 'Sorting',
-                    y: 2.0
-                }, {
-                    name: 'Rectification',
-                    y: 4.0
-                }, {
-                    name: 'Price Reduction',
-                    y: 8.0
-                }, {
-                    name: 'Lifted Before JI',
-                    y: 3.0
-                }, {
-                    name: 'Transit Damange',
-                    y: 2.0
-                }, {
-                    name: 'Unstamped',
-                    y: 1.0
-                }, {
-                    name: 'Not on Rites A/C',
-                    y: 3.0
-                }]
-            }]
+                name: '',
+                data: @Html.Raw(Model.ComplaintStatusSummary),
+            }],
         });
 
         //Highcharts.chart('monthlychart', {
