@@ -3977,7 +3977,8 @@ namespace IBS.Repositories.InspectionBilling
                                && docSetNo >= Convert.ToInt32(model.DocSetNo)
                                && docSetNo <= Convert.ToInt32(model.DocSetNo)
                                && a.IssueToIecd == Convert.ToInt32(model.IeCd)
-                               && a.Ictype == FinalOrStage
+                               //&& a.Ictype == FinalOrStage
+                               && FinalOrStage == "F" ? (a.Ictype == null || a.Ictype == FinalOrStage) : a.Ictype == FinalOrStage
                                select a.IssueToIecd).FirstOrDefault();
 
                 if (bsCheck != null)
