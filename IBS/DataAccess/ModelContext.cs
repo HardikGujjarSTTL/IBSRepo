@@ -23539,15 +23539,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(132)
                 .IsUnicode(false)
                 .HasColumnName("CONSIGNEE_S_NAME");
-            entity.Property(e => e.Datetime)
-                .HasColumnType("DATE")
-                .HasColumnName("DATETIME");
             entity.Property(e => e.MainrlyCd)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("MAINRLY_CD");
-            entity.Property(e => e.PoDt)
+            entity.Property(e => e.Pdatetime)
                 .HasColumnType("DATE")
+                .HasColumnName("PDATETIME");
+            entity.Property(e => e.PoDt)
+                .HasMaxLength(10)
+                .IsUnicode(false)
                 .HasColumnName("PO_DT");
             entity.Property(e => e.PoNo)
                 .HasMaxLength(75)
