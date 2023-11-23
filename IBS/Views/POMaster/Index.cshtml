@@ -38,9 +38,10 @@
     </section>
 </div>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
 
         $(function () {
@@ -112,7 +113,7 @@
                     { data: "ConsigneeSName" },
                     { data: "Remarks" },
                     { data: "RealCaseNo" },
-                    
+
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {
@@ -126,5 +127,6 @@
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
+
     </script>
 }
