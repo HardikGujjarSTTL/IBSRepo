@@ -42,58 +42,30 @@
     </div>
 </div>
 
-@if (@Model.Type == "NCI")
-{
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>NC No</th>
-                            <th>Case No</th>
-                            <th>Call Date</th>
-                            <th>Call SNo</th>
-                            <th>IE Name</th>
-                            <th>BooK No</th>
-                            <th>Set No</th>
-                            <th>Consignee</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Case No</th>
+                        <th>Call Date</th>
+                        <th>Call Sno</th>
+                        <th>Client Name</th>
+                        <th>Vendor</th>
+                        <th>Contact Name</th>
+                        <th>Contact No</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-    </section>
-}
-else if (@Model.Type == "ConsigneeComp")
-{
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Complaint ID</th>
-                            <th>JI Unique Sno</th>
-                            <th>Case Number</th>
-                            <th>Bk No.</th>
-                            <th>Set No.</th>
-                            <th>Po No.</th>
-                            <th>Po Date</th>
-                            <th>IC No.</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-}
+    </div>
+</section>
+
 
 @section scripts{
 
@@ -113,91 +85,37 @@ else if (@Model.Type == "ConsigneeComp")
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-            var TypeOfList = $("Type").val();
-            if (TypeOfList == "NCI") {
-                Columns = [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "NC_NO" },
-                    { data: "CASE_NO" },
-                    {
-                        data: "CALL_RECV_DT",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CALL_SNO" },
-                    { data: "IE_NAME" },
-                    { data: "BK_NO" },
-                    { data: "SetNo" },
-                    { data: "Consignee" },
-                ]
-            } else if (TypeOfList == "OutstandingNC") {
-                Columns = [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "NC_NO" },
-                    { data: "CASE_NO" },
-                    {
-                        data: "CALL_RECV_DT",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CALL_SNO" },
-                    { data: "IE_NAME" },
-                    { data: "BKNo" },
-                    { data: "SetNo" },
-                    { data: "CONSIGNEE" },
-                ]
-            } else if (TypeOfList == "ConsigneeComp") {
-                Columns = [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "case_no" },
-                    { data: "po_no" },
-                    { data: "bk_no" },
-                    { data: "set_no" },
-                    { data: "IC_NO" },
-                    { data: "ji_sno" },
-                    { data: "complaint_id" },
-                    {
-                        data: "PO_DT",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                ]
-            }
+
             InitializeDatatable();
+            // BindDatatable();
         });
 
+        //function InitializeDatatable(data) {
+        //    debugger
+        //    $("#dtList").DataTable({
+        //        stateSave: false,
+        //        autoWidth: true,
+        //        scrollX: true,
+        //        scrollCollapse: true,
+        //        processing: true,
+        //        serverSide: true,
+        //        destroy: true,
+        //        paging: true,
+        //        searching: true,
+        //        data: data,
+        //        columns: Columns,
+        //        "order": [[0, "asc"]]
+        //    });
+
+
+        //}
+
         function InitializeDatatable() {
-            debugger
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var IE_CD = $("#IENAME").val();
+            var TypeOfList = $("#Type").val();
+
             $("#dtList").DataTable({
                 stateSave: false,
                 autoWidth: true,
@@ -215,15 +133,69 @@ else if (@Model.Type == "ConsigneeComp")
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, IE_CD
+                            FromDate, ToDate, IE_CD, TypeOfList
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
                     }
                 },
-                columns: Columns,
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CASE_NO" },
+                    {
+                        data: "CALL_RECV_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CALL_SNO" },
+                    { data: "CLIENT_NAME" },
+                    { data: "VEND_NAME" },
+                    { data: "CONTACT_PER" },
+                    { data: "CONTACT_NO" },
+                ],
                 "order": [[0, "asc"]]
             });
         }
+
+                //function BindDatatable() {
+                //    debugger
+                //    var FromDate = $("#FromDate").val();
+                //    var ToDate = $("#ToDate").val();
+                //    var IE_CD = $("#IENAME").val();
+                //    var TypeOfList = $("#Type").val();
+
+                //    $.ajax({
+                //        url: "@Url.Action("GetIEDashboardDetailsList", "Dashboard")",
+                //        type: "GET",
+                //        dataType: "JSON",
+                //        data: { "FromDate": FromDate, "ToDate": ToDate, "IE_CD": IE_CD, "TypeOfList": TypeOfList },
+                //        //type: 'POST',
+                //        //data: { FromDate: FromDate, ToDate: ToDate, IE_CD: IE_CD, TypeOfList: TypeOfList },
+                //        contentType: "application/json; charset=utf-8",
+                //        dataType: "json",
+                //        success: function (data) {
+                //            debugger
+                //            if (TypeOfList=="CC"){
+                //                var dataList = data.lstConsigneeComplaint;
+
+                //            } else if (TypeOfList == "NCI"){
+                //                var datalist = data.lstNCIssued_Per_IE;
+                //            }
+                //            InitializeDatatable(dataList);
+                //        },
+                //        error: function (error) {
+                //            console.log(error);
+                //        }
+                //    });
+                //}
     </script>
 }

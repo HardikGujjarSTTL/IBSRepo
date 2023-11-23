@@ -43,7 +43,8 @@ namespace IBS.Controllers
 
         public IActionResult IE()
         {
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd);
+            var RegionCode = Region;
+            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode);
             return View(model);
         }
 
@@ -194,8 +195,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
         {
-            DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
-            return Json(dTResult);
+            DTResult<IEList> model = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            return Json(model);
         }
         [HttpGet]
         public IActionResult NOOfRegisterCount()
