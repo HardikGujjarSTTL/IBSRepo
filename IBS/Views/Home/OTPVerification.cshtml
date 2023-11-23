@@ -6,7 +6,6 @@
 <div class="loginForm">
     <h2 class="heading1 bold">OTP Verification</h2>
     <form data-ajax="true" asp-antiforgery="true" asp-controller="Home" asp-action="OTPProceed" data-ajax-method="post" data-ajax-complete="completed" id="frmOTP">
-
         <input type="hidden" asp-for="UserName" />
         <input type="hidden" asp-for="DecryptUserName" />
         <div class="row">
@@ -34,14 +33,25 @@
         </div>
     </form>
 </div>
-@section scripts{
+
+@section scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                $('#frmOTP').submit();
+            }
+        });
+
         function Loginsubmit() {
             if ($("#frmOTP").valid()) {
                 $("#frmOTP").submit();
             }
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             if (res.status) {
@@ -83,8 +93,7 @@
                         window.location.href = '@Url.Action("Index", "Dashboard")';
                     }
                 }
-                else
-                {
+                else {
                     window.location.href = '@Url.Action("Index", "Dashboard")';
                 }
             }
@@ -92,7 +101,9 @@
                 ShowHideMsgNew(res.status, res.responseText);
             }
         };
+
         var countdown = 0;
+
         $(document).ready(function () {
             TimeInterval();
         });
