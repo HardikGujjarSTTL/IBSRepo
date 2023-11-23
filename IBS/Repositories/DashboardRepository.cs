@@ -118,7 +118,7 @@ namespace IBS.Repositories
                 //}
 
             }
-            ComplaintStatusDetails(model);
+            ComplaintStatusDetails(model, Region);
 
             return model;
         }
@@ -184,12 +184,12 @@ namespace IBS.Repositories
 
             model.lstInstructionsIE = query.ToList();
 
-            ComplaintStatusDetails(model);
+            ComplaintStatusDetails(model, RegionCode);
 
             return model;
         }
 
-        public DashboardModel GetVendorDashBoardCount(int Vend_Cd)
+        public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode)
         {
             DashboardModel model = new();
 
@@ -268,12 +268,12 @@ namespace IBS.Repositories
             }
             model.lstRecentPO = lstRecentPO;
 
-            ComplaintStatusDetails(model);
+            ComplaintStatusDetails(model, RegionCode);
 
             return model;
         }
 
-        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation)
+        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation,string RegionCode)
         {
             DashboardModel model = new();
 
@@ -362,7 +362,7 @@ namespace IBS.Repositories
 
             model.lstClientVendConComp = lstClientVendConComp;
 
-            ComplaintStatusDetails(model);
+            ComplaintStatusDetails(model,RegionCode);
             return model;
         }
 
@@ -1085,9 +1085,9 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public void ComplaintStatusDetails(DashboardModel model)
+        public void ComplaintStatusDetails(DashboardModel model,string Region)
         {
-            DataSet ds2 = ComplaintStatusSummary("N");
+            DataSet ds2 = ComplaintStatusSummary(Region);
 
             model.complaintStatusSummaryModel = new();
 

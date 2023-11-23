@@ -28,16 +28,18 @@ namespace IBS.Controllers
 
         public IActionResult Client()
         {
+            var RegionCode = Region;
             string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
             string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
-            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation);
+            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode);
             return View(model);
         }
 
         public IActionResult Vendor()
         {
+            var RegionCode = Region;
             int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
-            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd);
+            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode);
             return View(model);
         }
 

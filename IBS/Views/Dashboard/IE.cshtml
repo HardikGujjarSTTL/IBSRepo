@@ -293,16 +293,25 @@
         @if (Model != null && Model.lstInstructionsIE != null && Model.lstInstructionsIE.Count > 0)
         {
             var SrNo = 0;
-            @foreach (var item in Model.lstInstructionsIE.Take(10))
+            if (Model.lstInstructionsIE.Count() > 0)
             {
-                SrNo = SrNo + 1;
+                @foreach (var item in Model.lstInstructionsIE.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.MessageId</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MessageDt?.ToString("dd/MM/yyyy")</font></td>
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Message</font></td>
+                        <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterNo</font></td>
+                        <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterDt?.ToString("dd/MM/yyyy")</font></td>
+                    </tr>
+                }
+            }
+            else
+            {
                 <tr>
-                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.MessageId</font></td>
-                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MessageDt</font></td>
-                    <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Message</font></td>
-                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterNo</font></td>
-                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterDt</font></td>
+                    <td colspan="4">No Data Found</td>
                 </tr>
             }
         }
@@ -327,19 +336,28 @@
         @if (Model != null && Model.lstIE != null && Model.lstIE.Count > 0)
         {
             var SrNo = 0;
-            @foreach (var item in Model.lstIE.Take(5))
+            if (Model.lstInstructionsIE.Count() > 0)
             {
-                SrNo = SrNo + 1;
+                @foreach (var item in Model.lstIE.Take(5))
+                {
+                    SrNo = SrNo + 1;
+                    <tr>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
+                    </tr>
+                }
+            }
+            else
+            {
                 <tr>
-                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
-                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
-                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
+                    <td colspan="4">No Data Found</td>
                 </tr>
             }
         }
