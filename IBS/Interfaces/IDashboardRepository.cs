@@ -14,7 +14,7 @@ namespace IBS.Interfaces
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
         
-        DTResult<DashboardModel> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
+        DashboardModel Get_IE_Dashboard_Details_List(string FromDate, string ToDate, string IE_CD, string TypeOfList);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
         DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin);

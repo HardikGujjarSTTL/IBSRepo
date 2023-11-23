@@ -174,7 +174,7 @@
                 </div>
             </div>
             <div class="col-lg-3">
-                <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=ConsigneeComp'>
+                <a class="ConsigneeComp" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "CC" })">
                 <div class="dashboard-box das12Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -462,6 +462,8 @@
         });
         function NCIssued() {
             window.location.href = '@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCI';
+        } function ConsigneeComp() {
+            window.location.href = '@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=CC';
         }
     </script>
 }

@@ -190,11 +190,11 @@ namespace IBS.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
+        [HttpGet]
+        public IActionResult GetIEDashboardDetailsList(string FromDate,string ToDate,string IE_CD,string TypeOfList)
         {
-            DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
-            return Json(dTResult);
+            DashboardModel model = dashboardRepository.Get_IE_Dashboard_Details_List(FromDate,ToDate,IE_CD,TypeOfList);
+            return Json(model);
         }
     }
 }

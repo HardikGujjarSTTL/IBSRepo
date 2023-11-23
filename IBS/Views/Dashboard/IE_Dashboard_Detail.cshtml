@@ -42,15 +42,16 @@
     </div>
 </div>
 
-@if (@Model.Type == "NCI")
-{
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        @if (@Model.Type == "NCI")
+                        {
+
                             <th>NC No</th>
                             <th>Case No</th>
                             <th>Call Date</th>
@@ -59,24 +60,9 @@
                             <th>BooK No</th>
                             <th>Set No</th>
                             <th>Consignee</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-}
-else if (@Model.Type == "ConsigneeComp")
-{
-    <section class="table-section">
-        <div class="task-listinput">
-            <div class="dash-table">
-                <table id="dtList" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
+                        }
+                        else if (@Model.Type == "CC")
+                        {
                             <th>Complaint ID</th>
                             <th>JI Unique Sno</th>
                             <th>Case Number</th>
@@ -85,15 +71,16 @@ else if (@Model.Type == "ConsigneeComp")
                             <th>Po No.</th>
                             <th>Po Date</th>
                             <th>IC No.</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-    </section>
-}
+    </div>
+</section>
+
 
 @section scripts{
 
@@ -113,7 +100,7 @@ else if (@Model.Type == "ConsigneeComp")
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-            var TypeOfList = $("Type").val();
+            var TypeOfList = $("#Type").val();
             if (TypeOfList == "NCI") {
                 Columns = [
                     {
@@ -164,7 +151,7 @@ else if (@Model.Type == "ConsigneeComp")
                     { data: "SetNo" },
                     { data: "CONSIGNEE" },
                 ]
-            } else if (TypeOfList == "ConsigneeComp") {
+            } else if (TypeOfList == "CC") {
                 Columns = [
                     {
                         data: '', orderable: false, width: '5%',
@@ -190,14 +177,12 @@ else if (@Model.Type == "ConsigneeComp")
                     },
                 ]
             }
-            InitializeDatatable();
+            //InitializeDatatable();
+            BindDatatable();
         });
 
-        function InitializeDatatable() {
+        function InitializeDatatable(data) {
             debugger
-            var FromDate = $("#FromDate").val();
-            var ToDate = $("#ToDate").val();
-            var IE_CD = $("#IENAME").val();
             $("#dtList").DataTable({
                 stateSave: false,
                 autoWidth: true,
@@ -208,21 +193,43 @@ else if (@Model.Type == "ConsigneeComp")
                 destroy: true,
                 paging: true,
                 searching: true,
-                ajax: {
-                    url: "@Url.Action("GetIEDashboardDetailsList", "Dashboard")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            FromDate, ToDate, IE_CD
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
+                data: data,
                 columns: Columns,
                 "order": [[0, "asc"]]
+            });
+
+
+        }
+
+        function BindDatatable() {
+            debugger
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var IE_CD = $("#IENAME").val();
+            var TypeOfList = $("#Type").val();
+
+            $.ajax({
+                url: "@Url.Action("GetIEDashboardDetailsList", "Dashboard")",
+                type: "GET",
+                dataType: "JSON",
+                data: { "FromDate": FromDate, "ToDate": ToDate, "IE_CD": IE_CD, "TypeOfList": TypeOfList },
+                //type: 'POST',
+                //data: { FromDate: FromDate, ToDate: ToDate, IE_CD: IE_CD, TypeOfList: TypeOfList },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger
+                    if (TypeOfList=="CC"){
+                        var dataList = data.lstConsigneeComplaint;
+
+                    } else if (TypeOfList == "NCI"){
+                        var datalist = data.lstNCIssued_Per_IE;
+                    }
+                    InitializeDatatable(dataList);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
             });
         }
     </script>
