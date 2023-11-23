@@ -240,10 +240,9 @@
             </div>
         </div>
 
-        <div class="row admin-dashboard">
+        @* <div class="row admin-dashboard">
             <div class="col-lg-12">
                 <div class="savenext-btn btnAlign">
-                    @*<button type="button" class="save-btn active" onclick="TotalCall();">No. of Total Calls</button>*@
                     <button type="button" class="save-btn active" onclick="AutometicCallMark();">No. of Automatic Marked  calls</button>
                     <button type="button" class="save-btn active" onclick="ManuallyCallMark();">No. of Manually Marked  Calls</button>
                     <button type="button" class="save-btn active" onclick="POAwaitingcase();">No. of POs, Awaiting for  Case No.</button>
@@ -251,7 +250,7 @@
                     <button type="button" class="save-btn active" onclick="PendingOnlineCallsAwaiting();">No. of pending online calls awaiting marking</button>
                 </div>
             </div>
-        </div>
+        </div> *@
     </div>
 </div>
 <section>
@@ -1023,24 +1022,24 @@
         //    }]
         //});
         
-        function TotalCall() {
-            window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
-        }
-        function AutometicCallMark() {
-            window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=ACM';
-        }
-        function ManuallyCallMark() {
-            window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=MCM';
-        }
-        function POAwaitingcase() {
-            window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POAC';
-        }
-        function PendingCallsRemark() {
-            window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=PCR';
-        }
-        function PendingOnlineCallsAwaiting() {
-            window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POCAM';
-        }
+        // function TotalCall() {
+        //     window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
+        // }
+        // function AutometicCallMark() {
+        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=ACM';
+        // }
+        // function ManuallyCallMark() {
+        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=MCM';
+        // }
+        // function POAwaitingcase() {
+        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POAC';
+        // }
+        // function PendingCallsRemark() {
+        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=PCR';
+        // }
+        // function PendingOnlineCallsAwaiting() {
+        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POCAM';
+        // }
 
     </script>
 }

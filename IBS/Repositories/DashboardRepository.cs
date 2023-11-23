@@ -749,8 +749,7 @@ namespace IBS.Repositories
             if (ActionType == "TC")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
                         {
@@ -771,8 +770,7 @@ namespace IBS.Repositories
             else
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                               && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
@@ -853,8 +851,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall == "Y"
                         select new VenderCallRegisterModel
                         {
@@ -873,8 +870,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall != "Y"
                         select new VenderCallRegisterModel
                         {
@@ -891,8 +887,7 @@ namespace IBS.Repositories
             else if (ActionType == "POAC")
             {
                 query = from T80 in context.ViewPomasterlists
-                        where T80.RegionCode == Region
-                        && T80.RealCaseNo == null
+                        where T80.RealCaseNo == null
                         && T80.Isdeleted != Convert.ToByte(true)
                         && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
                         select new VenderCallRegisterModel
@@ -930,7 +925,7 @@ namespace IBS.Repositories
             {
                 query = from T17 in context.T17CallRegisters
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region && T17.IeCd == null
+                        where T17.IeCd == null
                         && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
 
                         select new VenderCallRegisterModel
