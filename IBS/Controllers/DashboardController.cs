@@ -197,7 +197,7 @@ namespace IBS.Controllers
             DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
             return Json(dTResult);
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult NOOfRegisterCount()
         {
             LabSampleInfoModel model = new LabSampleInfoModel();
