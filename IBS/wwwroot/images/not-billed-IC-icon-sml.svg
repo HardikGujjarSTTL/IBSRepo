@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="37.66" height="43.869" viewBox="0 0 37.66 43.869">
+  <g id="Not_billed_IC" data-name="Not billed IC" transform="translate(-6.25 -6.75)">
+    <g id="Group_70889" data-name="Group 70889" transform="translate(7.5 7.5)">
+      <path id="Path_74773" data-name="Path 74773" d="M31.363,45.089H9.02A1.394,1.394,0,0,0,7.5,46.305V81.614a.5.5,0,0,0,.366.451.74.74,0,0,0,.664-.084l2.67-1.927a.8.8,0,0,1,.9,0l2.361,1.7a2.383,2.383,0,0,0,2.677,0l1.9-1.373a1.616,1.616,0,0,1,1.818,0l1.9,1.373a2.383,2.383,0,0,0,2.677,0l1.9-1.373a1.616,1.616,0,0,1,1.818,0l1.9,1.373a2.384,2.384,0,0,0,2.678,0l1.9-1.373a1.616,1.616,0,0,1,1.818,0l2.3,1.663a.669.669,0,0,0,.607.08.454.454,0,0,0,.332-.414l-.242-31.345" transform="translate(-7.5 -40.4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      <g id="Group_70899" data-name="Group 70899" transform="translate(5.553 18.114)">
+        <line id="Line_767" data-name="Line 767" x2="11.838" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+        <line id="Line_768" data-name="Line 768" x2="3.98" transform="translate(20.129)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      </g>
+      <g id="Group_70900" data-name="Group 70900" transform="translate(5.553 12.786)">
+        <line id="Line_769" data-name="Line 769" x2="11.838" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+        <line id="Line_770" data-name="Line 770" x2="3.98" transform="translate(20.129)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      </g>
+      <g id="Group_70898" data-name="Group 70898" transform="translate(5.553 22.376)">
+        <line id="Line_771" data-name="Line 771" x2="11.838" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+        <line id="Line_772" data-name="Line 772" x2="3.98" transform="translate(20.129)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      </g>
+      <line id="Line_775" data-name="Line 775" x2="25.682" transform="translate(5.553 33.856)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      <g id="Group_70890" data-name="Group 70890" transform="translate(5.553 26.833)">
+        <line id="Line_776" data-name="Line 776" x2="5.553" transform="translate(18.741 2.776)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+        <rect id="Rectangle_24938" data-name="Rectangle 24938" width="12.308" height="5.117" rx="2.559" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      </g>
+      <path id="Path_74774" data-name="Path 74774" d="M215.574,13.556A6.057,6.057,0,1,0,221.631,7.5a6.057,6.057,0,0,0-6.057,6.056Z" transform="translate(-192.028 -7.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <line id="Line_777" data-name="Line 777" x1="2.736" y2="2.737" transform="translate(28.235 4.688)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <line id="Line_778" data-name="Line 778" x1="2.736" y1="2.737" transform="translate(28.235 4.688)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    </g>
+  </g>
+</svg>

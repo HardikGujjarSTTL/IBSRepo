@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
@@ -22,16 +23,21 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public DashboardModel GetDashBoardCount(int UserId)
+        public DashboardModel GetDashBoardCount(string Region)
         {
             DashboardModel model = new();
 
             OracleParameter[] par = new OracleParameter[2];
-
-            par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, UserId, ParameterDirection.Input);
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[2] = new OracleParameter("P_RESUT_HIGH_PAYMENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[3] = new OracleParameter("P_RESUT_HIGH_OUTSTANDING", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[4] = new OracleParameter("P_RESULT_PENDING_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[5] = new OracleParameter("P_RESULT_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[6] = new OracleParameter("P_RESULT_REGION_CONSINEE_COMPLAINTS", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par, 1);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -46,6 +52,71 @@ namespace IBS.Repositories
                     model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
                     model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
                 }
+
+
+                //if (ds.Tables[1].Rows.Count > 0)
+                //{
+                //    DataTable dt = ds.Tables[1];
+                //    List<ClientDetailListModel> lstHighPayment = dt.AsEnumerable().Select(row => new ClientDetailListModel
+                //    {
+                //        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                //        NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
+                //        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                //    }).ToList();
+                //    model.lstHightPayment = lstHighPayment;
+                //}
+
+                //if (ds.Tables[2].Rows.Count > 0)
+                //{
+                //    DataTable dt = ds.Tables[2];
+                //    List<ClientDetailListModel> lstHighOutstanding = dt.AsEnumerable().Select(row => new ClientDetailListModel
+                //    {
+                //        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                //        NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
+                //        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                //    }).ToList();
+                //    model.lstHightOutstanding = lstHighOutstanding;
+                //}
+
+                //// Oldest Pending Cases
+                //if(ds.Tables[3].Rows.Count > 0)
+                //{
+                //    DataTable dt = ds.Tables[3];
+                //    List<PendingOrJICaseListModel> lstPendingCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
+                //    {
+                //        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                //        DATE = Convert.ToDateTime(row["DATE"]),
+                //        CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                //        PO_NO = Convert.ToString(row["PO_NO"])
+                //    }).ToList();
+                //    model.lstPendingCase = lstPendingCase;
+                //}
+
+                ////// Oldest JI Cases
+                //if (ds.Tables[4].Rows.Count > 0)
+                //{
+                //    DataTable dt = ds.Tables[4];
+                //    List<PendingOrJICaseListModel> lstJiCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
+                //    {
+                //        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                //        DATE = Convert.ToDateTime(row["DATE"]),                        
+                //        PO_NO = Convert.ToString(row["PO_NO"])
+                //    }).ToList();
+                //    model.lstJiCase = lstJiCase;
+                //}
+
+                //// Region Wise Consignee complaints
+                //if (ds.Tables[5].Rows.Count > 0) 
+                //{
+                //    DataTable dt = ds.Tables[5];
+                //    List<RegionConsigneeComplaintsListModel> lstRegionConsComp = dt.AsEnumerable().Select(row => new RegionConsigneeComplaintsListModel
+                //    {
+                //        REGION = Convert.ToString(row["REGION"]),
+                //        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                //    }).ToList();
+                //    model.lstRegionConsComp = lstRegionConsComp;
+                //}
+
             }
             ComplaintStatusDetails(model);
 
@@ -509,6 +580,33 @@ namespace IBS.Repositories
 
 
         }
+
+        public LabSampleInfoModel GetNOOfRegisterCount(string Regin)
+        {
+
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("Dashboard_NOOFRegisterCount", par, 1);
+
+                LabSampleInfoModel model = new();
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+
+                    DataRow row = ds.Tables[0].Rows[0];
+                    model = new LabSampleInfoModel
+                    {
+                        NO_OF_Register_Per_Day = Convert.ToString(row["NO_OF_Sample_Register_Per_Day"]),
+
+                    };
+                }
+
+                return model;
+            }
+        }
         public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
         {
             DTResult<IE_Per_CM_Model> dTResult = new() { draw = 0 };
@@ -700,8 +798,7 @@ namespace IBS.Repositories
             if (ActionType == "TC")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
                         {
@@ -722,8 +819,7 @@ namespace IBS.Repositories
             else
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                               && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
@@ -804,8 +900,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall == "Y"
                         select new VenderCallRegisterModel
                         {
@@ -824,8 +919,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall != "Y"
                         select new VenderCallRegisterModel
                         {
@@ -839,25 +933,25 @@ namespace IBS.Repositories
                             RegionCode = T17.RegionCode,
                         };
             }
-            else if (ActionType == "POAC")
-            {
-                query = from T80 in context.ViewPomasterlists
-                        where T80.RegionCode == Region
-                        && T80.RealCaseNo == null
-                        && T80.Isdeleted != Convert.ToByte(true)
-                        && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
-                        select new VenderCallRegisterModel
-                        {
-                            CaseNo = T80.CaseNo,
-                            PoNo = T80.PoNo,
-                            PoDt = Convert.ToDateTime(T80.PoDt),
-                            Rly = T80.RlyCd,
-                            Vendor = T80.VendName,
-                            Consignee = T80.ConsigneeSName,
-                            Remarks = T80.Remarks,
-                            RegionCode = T80.RegionCode,
-                        };
-            }
+            //else if (ActionType == "POAC")
+            //{
+            //    query = from T80 in context.ViewPomasterlists
+            //            where T80.RegionCode == Region
+            //            && T80.RealCaseNo == null
+            //            && T80.Isdeleted != Convert.ToByte(true)
+            //            && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
+            //            select new VenderCallRegisterModel
+            //            {
+            //                CaseNo = T80.CaseNo,
+            //                PoNo = T80.PoNo,
+            //                PoDt = Convert.ToDateTime(T80.PoDt),
+            //                Rly = T80.RlyCd,
+            //                Vendor = T80.VendName,
+            //                Consignee = T80.ConsigneeSName,
+            //                Remarks = T80.Remarks,
+            //                RegionCode = T80.RegionCode,
+            //            };
+            //}
             else if (ActionType == "PCR")
             {
                 query = from t108 in context.T108RemarkedCalls
@@ -881,7 +975,7 @@ namespace IBS.Repositories
             {
                 query = from T17 in context.T17CallRegisters
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region && T17.IeCd == null
+                        where T17.IeCd == null
                         && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
 
                         select new VenderCallRegisterModel
@@ -948,6 +1042,19 @@ namespace IBS.Repositories
                 orderCriteria = "pDatetime";
                 orderAscendingDirection = true;
             }
+
+            //List<PO_MasterModel> model = new();
+            //OracleParameter[] par = new OracleParameter[1];
+            //par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            //var ds = DataAccessDB.GetDataSet("SP_CM_DASHBOARD_POMASTERLIST", par, 1);
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            //    model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //}
+            //query = model.AsQueryable();
+            //dTResult.recordsTotal = query.Count();
+
             query = from POMaster in context.ViewDashboardPomasterlists
                     select new PO_MasterModel
                     {
@@ -960,10 +1067,9 @@ namespace IBS.Repositories
                         Remarks = POMaster.Remarks,
                         RlyNonrly = POMaster.RlyNonrly,
                         MainrlyCd = POMaster.MainrlyCd,
-                        pDatetime = POMaster.Datetime,
+                        pDatetime=POMaster.Pdatetime
                     };
             dTResult.recordsTotal = query.Count();
-
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())

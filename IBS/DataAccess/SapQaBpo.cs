@@ -188,4 +188,8 @@ public partial class SapQaBpo
     public string? VendPerEmail1 { get; set; }
 
     public string? Stcd3 { get; set; }
+
+    public long? Id { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
 }

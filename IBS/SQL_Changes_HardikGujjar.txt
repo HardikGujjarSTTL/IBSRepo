@@ -4269,3 +4269,78 @@ ALTER TABLE t02_users
 ADD CO_CD NUMBER(6,0);
 
 ALTER TABLE t02_users MODIFY MIGTYPE VARCHAR2(10 BYTE);
+================
+CREATE OR REPLACE VIEW VIEW_DASHBOARD_POMASTERLIST AS
+WITH TempResult AS (
+    SELECT
+        m.VEND_CD,
+        m.PO_NO,
+        to_char(m.PO_DT,'dd/mm/yyyy') PO_DT,
+        (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RLY_CD,
+        m.REAL_CASE_NO,
+        (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VEND_NAME,
+        (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+            NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME,
+        m.REMARKS,
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD,
+        m.RLY_CD AS RLY_CDS,
+        m.region_code,
+        m.datetime as Pdatetime
+    FROM
+        T80_PO_MASTER m
+        JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+        LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+        LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE
+        (m.ISDELETED IS NULL OR m.ISDELETED = 0) AND
+        m.REAL_CASE_NO IS NULL
+       
+
+    UNION
+
+    SELECT
+        m.VEND_CD,
+        m.PO_NO,
+        to_char(m.PO_DT,'dd/mm/yyyy') PO_DT,
+        (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RLY_CD,
+        m.RITES_CASE_NO,
+        (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VEND_NAME,
+        (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+            NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME,
+        m.REMARKS,
+        m.RLY_NONRLY,
+        m.RLY_CD AS MAINRLY_CD,
+        m.RLY_CD AS RLY_CDS,
+        m.region_code,
+        m.datetime as Pdatetime
+    FROM
+        IMMS_RITES_PO_HDR m
+        JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+        LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+        LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE
+        m.RITES_CASE_NO IS NULL
+        
+)
+-- Now apply the ORDER BY to the entire result set
+SELECT 
+    VEND_CD,
+    PO_NO,
+    PO_DT,
+    RLY_CD,
+    REAL_CASE_NO,
+    VEND_NAME,
+    CONSIGNEE_S_NAME,
+    REMARKS,
+    RLY_NONRLY,
+    MAINRLY_CD,
+    RLY_CDS,
+    REGION_CODE,
+    Pdatetime
+FROM TempResult
+ORDER BY Pdatetime DESC;
+
+
+========================
+

@@ -311,10 +311,14 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("GetItemDetails", Name = "GetItemDetails")]
-        public IActionResult GetItemDetails(RequestVenderCallRegisterModel model)
+        public IActionResult GetItemDetails(string CaseNo,string CallSno,DateTime CallRecvDt)
         {
             try
             {
+                RequestVenderCallRegisterModel model = new RequestVenderCallRegisterModel();
+                model.CallRecvDt = CallRecvDt;
+                model.CallSno = CallSno;
+                model.CaseNo = CaseNo;
                 List<VenderCallRegisterModel> models = vendorRepository.GetVenderListM(model);
                 if (models.Count() > 0)
                 {

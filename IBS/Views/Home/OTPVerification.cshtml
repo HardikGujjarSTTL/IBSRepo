@@ -6,13 +6,12 @@
 <div class="loginForm">
     <h2 class="heading1 bold">OTP Verification</h2>
     <form data-ajax="true" asp-antiforgery="true" asp-controller="Home" asp-action="OTPProceed" data-ajax-method="post" data-ajax-complete="completed" id="frmOTP">
-
         <input type="hidden" asp-for="UserName" />
         <input type="hidden" asp-for="DecryptUserName" />
         <div class="row">
             <div class="col-md-12">
                 <label for="email">OTP</label>
-                <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off">
+                <input type="text" class="input" asp-for="OTP" maxlength="4" autocomplete="off" autofocus />
                 <span asp-validation-for="OTP" class="text-danger"></span>
                 <br />
                 <span id="timeSpan" class="text-danger"></span>
@@ -34,14 +33,25 @@
         </div>
     </form>
 </div>
-@section scripts{
+
+@section scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
     <script type="text/javascript">
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                $('#frmOTP').submit();
+            }
+        });
+
         function Loginsubmit() {
             if ($("#frmOTP").valid()) {
                 $("#frmOTP").submit();
             }
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             if (res.status) {
@@ -59,10 +69,10 @@
                         window.location.href = '@Url.Action("Client", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "liasioning officer (lo)") {
-                        window.location.href = '@Url.Action("Index", "Dashboard")';
+                        window.location.href = '@Url.Action("LO", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "lab user") {
-                        window.location.href = '@Url.Action("Index", "Dashboard")';
+                        window.location.href = '@Url.Action("LAB", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "cm-call desk incharge") {
                         window.location.href = '@Url.Action("CM", "Dashboard")';
@@ -83,8 +93,7 @@
                         window.location.href = '@Url.Action("Index", "Dashboard")';
                     }
                 }
-                else
-                {
+                else {
                     window.location.href = '@Url.Action("Index", "Dashboard")';
                 }
             }
@@ -92,7 +101,9 @@
                 ShowHideMsgNew(res.status, res.responseText);
             }
         };
+
         var countdown = 0;
+
         $(document).ready(function () {
             TimeInterval();
         });

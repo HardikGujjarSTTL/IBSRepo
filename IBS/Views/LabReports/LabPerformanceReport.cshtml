@@ -26,60 +26,60 @@
                     
 
                 </tr>
-                @if (Model != null && Model.lstLabReport.Count > 0)
+                @if (Model != null && Model.lstLabReport != null && Model.lstLabReport.Count > 0)
                 {
                     var serialNumber = 1;
                     @foreach (var item in Model.lstLabReport)
                     {
 
                         <tr>
-                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="25%" valign="top" align="left">
                                 <font size="1" face="Verdana">
                                     @item.LAB
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.NO_OF_TEST
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.NO_OF_SAMPLES
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.NO_OF_FAILURE
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.NO_OF_FAIL_SAMPLES
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.NO_OFNOCOMMENTS
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.MAXM_DAYS
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.MIN_DAYS
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.AVG_DAYS
                                 </font>
                             </td>
-                            <td width="25%" valign="top" align="center">
+                            <td width="25%" valign="top" align="right">
                                 <font size="1" face="Verdana">
                                     @item.TOTAL_FEE
                                 </font>
@@ -93,7 +93,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="13" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
+                        <td colspan="10" style="text-align:center; background: #f1f1f1 !important;"><font size="1" face="Verdana">No records found</font></td>
                     </tr>
                 }
             </tbody>

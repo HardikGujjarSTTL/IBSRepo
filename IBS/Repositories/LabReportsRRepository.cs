@@ -10,6 +10,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
 using System.Dynamic;
+using System.Globalization;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using static IBS.Helper.Enums;
@@ -104,40 +105,55 @@ namespace IBS.Repositories
             par[2] = new OracleParameter("result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("Lab_Performance_Report", par, 2);
-
-            if (ds.Tables[0].Rows.Count != 0)
+            DataTable dt = ds.Tables[0];
+            lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
             {
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    lstlab = JsonConvert.DeserializeObject<List<LabReportsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                LAB = row["LAB"].ToString(),
+                NO_OF_TEST = row["NO_OF_TEST"].ToString(),
+                NO_OF_SAMPLES = row["NO_OF_SAMPLES"].ToString(),
+                NO_OF_FAILURE = row["NO_OF_FAILURE"].ToString(),
+                NO_OF_FAIL_SAMPLES = row["NO_OF_FAIL_SAMPLES"].ToString(),
+                NO_OFNOCOMMENTS = row["NO_OFNOCOMMENTS"].ToString(),
+                MAXM_DAYS = row["MAXM_DAYS"].ToString(),
+                MIN_DAYS = row["MIN_DAYS"].ToString(),
+                AVG_DAYS = row["AVG_DAYS"].ToString(),
+                TOTAL_FEE = row["TOTAL_FEE"].ToString(),                
+            }).ToList();
+            model.lstLabReport = lstlab;
+            //if (ds.Tables[0].Rows.Count != 0)
+            //{
+            //    if (ds != null && ds.Tables.Count > 0)
+            //    {
+            //        string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            //        lstlab = JsonConvert.DeserializeObject<List<LabReportsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                    model.LAB = Convert.ToString(ds.Tables[0].Rows[0]["LAB"]);
-                    model.NO_OF_TEST = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_TEST"]);
-                    model.NO_OF_SAMPLES = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_SAMPLES"]);
-                    model.NO_OF_FAILURE = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_FAILURE"]);
-                    model.NO_OF_FAIL_SAMPLES = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_FAIL_SAMPLES"]);
-                    model.NO_OFNOCOMMENTS = Convert.ToString(ds.Tables[0].Rows[0]["NO_OFNOCOMMENTS"]);
-                    model.MAXM_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["MAXM_DAYS"]);
-                    model.MIN_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["MIN_DAYS"]);
-                    model.AVG_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["AVG_DAYS"]);
-                    model.TOTAL_FEE = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_FEE"]);
-                }
-                model.lstLabReport = lstlab;
-            }
+            //        model.LAB = Convert.ToString(ds.Tables[0].Rows[0]["LAB"]);
+            //        model.NO_OF_TEST = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_TEST"]);
+            //        model.NO_OF_SAMPLES = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_SAMPLES"]);
+            //        model.NO_OF_FAILURE = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_FAILURE"]);
+            //        model.NO_OF_FAIL_SAMPLES = Convert.ToString(ds.Tables[0].Rows[0]["NO_OF_FAIL_SAMPLES"]);
+            //        model.NO_OFNOCOMMENTS = Convert.ToString(ds.Tables[0].Rows[0]["NO_OFNOCOMMENTS"]);
+            //        model.MAXM_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["MAXM_DAYS"]);
+            //        model.MIN_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["MIN_DAYS"]);
+            //        model.AVG_DAYS = Convert.ToString(ds.Tables[0].Rows[0]["AVG_DAYS"]);
+            //        model.TOTAL_FEE = Convert.ToString(ds.Tables[0].Rows[0]["TOTAL_FEE"]);
+            //    }
+            //    model.lstLabReport = lstlab;
+            //}
             return model;
         }
         public LabReportsModel LabPostingReport(string ReportType, string wFrmDtO, string wToDt, string Regin)
         {
-
+            var from = Convert.ToDateTime(wFrmDtO).ToString("MM/dd/yyyy");
+            var to = Convert.ToDateTime(wToDt).ToString("MM/dd/yyyy");
             LabReportsModel model = new();
             List<LabReportsModel> lstlab = new();
 
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_Region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_FromDate", OracleDbType.Date, wFrmDtO, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_ToDate", OracleDbType.Date, wToDt, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_FromDate", OracleDbType.Date, from, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_ToDate", OracleDbType.Date, to, ParameterDirection.Input);
             par[3] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("LabRegisterReportPosting", par, 3);
@@ -282,7 +298,7 @@ namespace IBS.Repositories
             model.SumGST = LabReportsModel.SumGST;
             return model;
         }
-        public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin,string lstStatus,string rdbrecvdt)
+        public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin, string lstStatus, string rdbrecvdt)
         {
 
             LabReportsModel model = new();

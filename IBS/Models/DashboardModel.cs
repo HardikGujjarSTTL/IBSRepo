@@ -64,6 +64,12 @@
 
         public List<NCIssued_Per_IE> lstNCIssued_Per_IE { get; set; }
 
+        public List<ClientDetailListModel> lstHightPayment { get; set; } = new List<ClientDetailListModel>();
+        public List<ClientDetailListModel> lstHightOutstanding { get; set; } = new List<ClientDetailListModel>();
+        public List<RegionConsigneeComplaintsListModel> lstRegionConsComp { get; set; } = new List<RegionConsigneeComplaintsListModel>();
+        public List<PendingOrJICaseListModel> lstPendingCase { get; set; } = new List<PendingOrJICaseListModel>();
+        public List<PendingOrJICaseListModel> lstJiCase { get; set; } = new List<PendingOrJICaseListModel>();
+
         public List<InstructionsIE> lstInstructionsIE { get; set; }
     }
 
@@ -187,6 +193,27 @@
         public string JiSno { get; set; }
         public string ComplaintId { get; set; }
         public DateTime? PO_DT { get; set; }
+    }
+
+    public class ClientDetailListModel
+    {
+        public string CLIENT_NAME { get; set; }
+        public int NO_OF_BILL { get; set; }
+        public decimal AMOUNT { get; set; }
+    }
+
+    public class PendingOrJICaseListModel
+    {
+        public string CASE_NO { get; set; }
+        public DateTime DATE { get; set; }
+        public string CALL_SNO { get; set; }
+        public string PO_NO { get; set; }
+    }
+
+    public class RegionConsigneeComplaintsListModel
+    {
+        public string REGION { get; set; }
+        public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
     }
 
     public class InstructionsIE
