@@ -411,7 +411,8 @@ namespace IBS.Repositories
                 User.RitesEmp = "Y";
                 User.EmpNo = Convert.ToString(model.IeEmpNo);
                 User.Region = model.IeRegion;
-                User.Password = Convert.ToString(model.IeEmpNo);
+                //User.Password = Convert.ToString(model.IeEmpNo);
+                User.Password = "Rites123";
                 User.Createdby = model.UserId;
                 User.Createddate = DateTime.Now.Date;
                 User.Isdeleted = 0;
@@ -423,17 +424,18 @@ namespace IBS.Repositories
             }
             else
             {
-                UserDetails.UserName = model.IeEmpNo;
-                UserDetails.RitesEmp = "Y";
-                UserDetails.EmpNo = Convert.ToString(model.IeEmpNo);
-                UserDetails.Region = model.IeRegion;
-                UserDetails.Password = Convert.ToString(model.IeEmpNo);
-                UserDetails.Updatedby = model.UserId;
-                UserDetails.Updateddate = DateTime.Now.Date;
-                UserDetails.Isdeleted = 0;
-                UserDetails.Migtype = "I";
-                UserDetails.Mobile = model.IePhoneNo;
+                //UserDetails.UserName = model.IeEmpNo;
+                //UserDetails.RitesEmp = "Y";
+                //UserDetails.EmpNo = Convert.ToString(model.IeEmpNo);
+                //UserDetails.Region = model.IeRegion;
+                //UserDetails.Password = Convert.ToString(model.IeEmpNo);
+                //UserDetails.Updatedby = model.UserId;
+                //UserDetails.Updateddate = DateTime.Now.Date;
+                //UserDetails.Isdeleted = 0;
+                //UserDetails.Migtype = "I";
+                //UserDetails.Mobile = model.IePhoneNo;
 
+                UserDetails.Password = "Rites123";
                 context.SaveChanges();
             }
         }

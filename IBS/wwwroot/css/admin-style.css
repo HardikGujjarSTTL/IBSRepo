@@ -977,7 +977,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .dashHeader{ display:flex; justify-content:start; margin-bottom:20px;}
 .dashHeader h2 { color: #2B368B; padding-left: 0; margin: 0; font-weight: 600; font-family: 'Poppins', sans-serif; line-height: 49px; font-size: 24px; }
 .admindashboard-section { padding: 0px 15px; }
-.dashboard-box { background: #fff; padding: 15px; border-radius: 12px; position: relative; z-index: 0; box-shadow: 0 9px 9px rgba(0, 0, 0, 0.10); display: flex; align-items: center; justify-content: space-between; }
+.dashboard-box { background: #fff; padding: 15px; border-radius: 12px; position: relative; z-index: 0; box-shadow: 0 4px 4px rgba(0, 0, 0, 0.10); display: flex; align-items: center; justify-content: space-between; }
 .das1, .das2, .das3, .das4,
 .das5, .das6, .das7, .das8,
 .das9, .das10, .das11, .das12,
@@ -1029,12 +1029,43 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das11Client:hover { box-shadow: rgb(254,0,0) 0px 2px 12px 2px; }
 .das12Client:hover { box-shadow: rgb(102,204,0) 0px 2px 12px 2px; }
 	
-.dashboard-box .dash-total .total-inner, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-total .total-inner,
-.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-total .total-inner{ font-size: 16px; font-weight:500; line-height: 20px; color:#fff; }
-.dash-count .total-amount, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-count .total-amount,
-.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-count .total-amount{ font-size: 30px; font-weight: 600; color: #fff; }
+.dashboard-box .dash-total .total-inner, .admindashboard-wrap.cmDash .admin-dashboard .dashboard-box .dash-total .total-inner{ font-size: 16px; font-weight:500; line-height: 20px; color:#fff; }
+.dash-count .total-amount, .admindashboard-wrap.cmDash .admin-dashboard .dashboard-box .dash-count .total-amount{ font-size: 30px; font-weight: 600; color: #fff; }
 .dash-count .total-add a { background: #e4eefd; padding: 5px 10px; border-radius: 30px; font-size: 12px; text-decoration: none; color: #0E2753; transition: all 0.4s; }
 .dash-count .total-add a:hover { background: #0E2753; color: #fff; }
+
+.admin-dashboard a, .admindashboard-wrap a{ text-decoration:none;}
+.admindashboard-wrap .admin-dashboard .dashboard-box .dash-total .total-inner, .admindashboard-wrap .admin-dashboard .dashboard-box .dash-count .total-amount{ color:#000;}
+.admin-dashboard .total-icons{ position:relative; text-align:center; margin-right:5%;}
+.admin-dashboard .total-icons img{ width:80%;}
+ 
+ .admin-dashboard .das1 .total-icons:before, .admin-dashboard .das2 .total-icons:before,
+ .admin-dashboard .das3 .total-icons:before, .admin-dashboard .das4 .total-icons:before,
+ .admin-dashboard .das5 .total-icons:before, .admin-dashboard .das6 .total-icons:before,
+ .admin-dashboard .das7 .total-icons:before, .admin-dashboard .das8 .total-icons:before,
+ .admin-dashboard .das9 .total-icons:before, .admin-dashboard .das10 .total-icons:before,
+ .admin-dashboard .das11 .total-icons:before, .admin-dashboard .das12 .total-icons:before,
+ .admin-dashboard .das13 .total-icons:before, .admin-dashboard .das14 .total-icons:before,
+ .admin-dashboard .das15 .total-icons:before, .admin-dashboard .das16 .total-icons:before
+ { content:""; width:70px; height:70px; border-radius:50%; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index:-1;}
+ .admin-dashboard .das1 .total-icons:before{background:#875FC7;}
+ .admin-dashboard .das2 .total-icons:before{background:#B45A5C;}
+ .admin-dashboard .das3 .total-icons:before{background:#49C48D;}
+ .admin-dashboard .das4 .total-icons:before{background:#F1669F;}
+ .admin-dashboard .das5 .total-icons:before{background:#6B554A;}
+ .admin-dashboard .das6 .total-icons:before{background:#E5B304;}
+ .admin-dashboard .das7 .total-icons:before{background:#3A91C6;}
+ .admin-dashboard .das8 .total-icons:before{background:#2E68CE;}
+ .admin-dashboard .das9 .total-icons:before{background:#289FA7;}
+ .admin-dashboard .das10 .total-icons:before{background:#DE484A;}
+ .admin-dashboard .das11 .total-icons:before{background:#E06B22;}
+ .admin-dashboard .das12 .total-icons:before{background:#6B705C;}
+ .admin-dashboard .das13 .total-icons:before{background:#219D77;}
+ .admin-dashboard .das14 .total-icons:before{background:#66A900;}
+ .admin-dashboard .das15 .total-icons:before{background:#59A69B;}
+ .admin-dashboard .das16 .total-icons:before{background:#548AD0;}
+
+
 .graph-section { background: #fff;padding: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; }
 .recently-inner { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; padding: 20px; height: 95%; }
 .recently-inner h3 { font-size: 20px; font-weight: 600; margin: 0; }
@@ -1451,6 +1482,5 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
 .action .deney .fa{ color:#f00!important;} 
 .text-left{ text-align:left!important;}
-.admin-dashboard a, .admindashboard-wrap a{ text-decoration:none;}
- .admindashboard-wrap .admin-dashboard .dashboard-box .dash-total .total-inner, .admindashboard-wrap .admin-dashboard .dashboard-box .dash-count .total-amount{ color:#000;}
- 
+.chatIcon{ background:#b38cee; border-radius:50%; width:60px; height:60px; position:fixed; right:20px; bottom:20px; text-align:center; box-shadow:2px 2px 4px 2px #d1d1d1; }
+.chatIcon .fa{ font-size:36px; color:#fff; line-height:60px;}

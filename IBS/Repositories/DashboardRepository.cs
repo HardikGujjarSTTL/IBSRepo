@@ -1003,14 +1003,14 @@ namespace IBS.Repositories
                     {
                         VendCd = POMaster.VendCd,
                         PoNo = POMaster.PoNo,
-                        //PoDtDate = POMaster.PoDt,
+                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
                         RlyCd = POMaster.RlyCd,
                         VendorName = POMaster.VendName,
                         ConsigneeSName = POMaster.ConsigneeSName,
                         Remarks = POMaster.Remarks,
                         RlyNonrly = POMaster.RlyNonrly,
                         MainrlyCd = POMaster.MainrlyCd,
-                        //pDatetime = POMaster.Datetime,
+                        pDatetime=POMaster.Pdatetime
                     };
             dTResult.recordsTotal = query.Count();
             if (!string.IsNullOrEmpty(searchBy))
