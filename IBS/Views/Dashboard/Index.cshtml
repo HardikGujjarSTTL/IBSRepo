@@ -336,40 +336,32 @@
                 <th>No. of bills</th>
                 <th>Value (₹)</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @{
+                var Srno = 0;
+                if(Model.lstHightPayment.Count() > 0)
+                {                    
+                    foreach(var item in Model.lstHightPayment)
+                    {
+                        Srno = Srno + 1;
+                        <tr>
+                            <td>@Srno</td>
+                            <td>@item.CLIENT_NAME</td>
+                            <td>@item.NO_OF_BILL</td>
+                            <td>@item.AMOUNT</td>
+                        </tr>
+                    }                
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No Data Found</td>                        
+                    </tr>
+                }
+            }                        
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -387,40 +379,32 @@
                 <th>No. of bills</th>
                 <th>Value (₹)</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @{
+                var No = 0;
+                if (Model.lstHightOutstanding.Count() > 0)
+                {                    
+                    foreach (var item in Model.lstHightOutstanding)
+                    {
+                        No = No + 1;
+                        <tr>
+                            <td>@No</td>
+                            <td>@item.CLIENT_NAME</td>
+                            <td>@item.NO_OF_BILL</td>
+                            <td>@item.AMOUNT</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No Data Found</td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstHightOutstanding.Count()</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -438,40 +422,32 @@
                 <th>Date</th>
                 <th>PO No.</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @{
+                var P_SrNo = 0;
+                if (Model.lstPendingCase.Count() > 0)
+                {
+                    foreach (var item in Model.lstPendingCase)
+                    {
+                        P_SrNo = P_SrNo + 1;
+                        <tr>
+                            <td>@P_SrNo</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.DATE.ToString("dd/MM/yyyy")</td>
+                            <td>@item.PO_NO</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No Data Found</td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPendingCase.Count()</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -489,40 +465,32 @@
                 <th>Date</th>
                 <th>PO No.</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @{
+                var J_SrNo = 0;
+                if (Model.lstJiCase.Count() > 0)
+                {
+                    foreach (var item in Model.lstJiCase)
+                    {
+                        J_SrNo = J_SrNo + 1;
+                        <tr>
+                            <td>@J_SrNo</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.DATE.ToString("dd/MM/yyyy")</td>
+                            <td>@item.PO_NO</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No Data Found</td>
+                    </tr>
+                }
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstJiCase.Count()</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -539,35 +507,33 @@
                 <th>Region</th>
                 <th>No. of Consignee complaints</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>NR</td>
-                <td>20</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>WR</td>
-                <td>21</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>SR</td>
-                <td>22</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>ER</td>
-                <td>23</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>CR</td>
-                <td>24</td>
-            </tr>
+
+            @{
+                var RegionRowNo = 0;
+                if (Model.lstRegionConsComp.Count() > 0)
+                {
+                    foreach (var item in Model.lstRegionConsComp)
+                    {
+                        RegionRowNo = RegionRowNo + 1;
+                        <tr>
+                            <td>@RegionRowNo</td>
+                            <td>@item.REGION</td>
+                            <td>@item.NO_OF_CONSINEE_COMPLAINTS</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+            
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>100</span> records</div>
+        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRegionConsComp.Count()</span> records</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
