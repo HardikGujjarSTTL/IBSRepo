@@ -58,7 +58,7 @@
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">07</div>
+                            <div class="total-amount" id="nocount"></div>
                         </div>
                         <div class="total-inner">
                            No. of sample <br />registered per day	
@@ -121,7 +121,7 @@
 </section>
 <script>
     $(document).ready(function () {
-        
+        Count();
         $('.dashboard-box.das1Client').on('click', function () {
             window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 1;
         });
@@ -138,4 +138,16 @@
             window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
         });
     });
+    function Count() {
+
+        $.ajax({
+            url: '/Dashboard/NOOfRegisterCount',
+            type: "POST",
+            dataType: "JSON",
+
+            success: function (success) {
+                $("#nocount").html(success.NO_OF_Register_Per_Day);
+            }
+        });
+    }
 </script>

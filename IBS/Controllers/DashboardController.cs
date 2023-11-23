@@ -5,6 +5,7 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
+using System.Dynamic;
 
 namespace IBS.Controllers
 {
@@ -121,7 +122,7 @@ namespace IBS.Controllers
         }
         public IActionResult TotalReportUploaded()
         {
-            
+
             return View();
         }
         [HttpPost]
@@ -169,7 +170,7 @@ namespace IBS.Controllers
             DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataCallDeskInfoListing(dtParameters, Region);
             return Json(dTResult);
         }
-        
+
         public IActionResult IEPerCM()
         {
             return View();
@@ -195,6 +196,22 @@ namespace IBS.Controllers
         {
             DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
             return Json(dTResult);
+        }
+        [HttpPost]
+        public IActionResult NOOfRegisterCount()
+        {
+            LabSampleInfoModel model = new LabSampleInfoModel();
+           
+            try
+            {
+                string Regin = GetRegionCode;
+                model = dashboardRepository.GetNOOfRegisterCount(Regin);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "NOOfRegisterCount", 1, GetIPAddress());
+            }
+            return Json(model);
         }
     }
 }

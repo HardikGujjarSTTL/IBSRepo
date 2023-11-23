@@ -495,6 +495,33 @@ namespace IBS.Repositories
 
 
         }
+
+        public LabSampleInfoModel GetNOOfRegisterCount(string Regin)
+        {
+
+            using (var dbContext = context.Database.GetDbConnection())
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("Dashboard_NOOFRegisterCount", par, 1);
+
+                LabSampleInfoModel model = new();
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+
+                    DataRow row = ds.Tables[0].Rows[0];
+                    model = new LabSampleInfoModel
+                    {
+                        NO_OF_Register_Per_Day = Convert.ToString(row["NO_OF_Sample_Register_Per_Day"]),
+                       
+                    };
+                }
+
+                return model;
+            }
+        }
         public DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters)
         {
             DTResult<IE_Per_CM_Model> dTResult = new() { draw = 0 };
@@ -714,8 +741,7 @@ namespace IBS.Repositories
             if (ActionType == "TC")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
                         {
@@ -736,8 +762,7 @@ namespace IBS.Repositories
             else
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region
-                              && (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
                               && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
@@ -818,8 +843,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall == "Y"
                         select new VenderCallRegisterModel
                         {
@@ -838,8 +862,7 @@ namespace IBS.Repositories
                 query = from T17 in context.T17CallRegisters
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region
-                        && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
                         && T17.AutomaticCall != "Y"
                         select new VenderCallRegisterModel
                         {
@@ -895,7 +918,7 @@ namespace IBS.Repositories
             {
                 query = from T17 in context.T17CallRegisters
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
-                        where T17.RegionCode == Region && T17.IeCd == null
+                        where T17.IeCd == null
                         && (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
 
                         select new VenderCallRegisterModel

@@ -247,6 +247,7 @@ builder.Services.AddScoped<ILabSearchPaymentRepository, LabSearchPaymentsReposit
 builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRRepository>();
 
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
 
 var app = builder.Build();
 

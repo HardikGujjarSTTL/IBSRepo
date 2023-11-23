@@ -19,5 +19,7 @@ namespace IBS.Interfaces
 
         DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin);
         DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
+
+        public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
     }
 }

@@ -10,6 +10,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
 using System.Dynamic;
+using System.Globalization;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using static IBS.Helper.Enums;
@@ -129,15 +130,16 @@ namespace IBS.Repositories
         }
         public LabReportsModel LabPostingReport(string ReportType, string wFrmDtO, string wToDt, string Regin)
         {
-
+            var from = Convert.ToDateTime(wFrmDtO).ToString("MM/dd/yyyy");
+            var to = Convert.ToDateTime(wToDt).ToString("MM/dd/yyyy");
             LabReportsModel model = new();
             List<LabReportsModel> lstlab = new();
 
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_Region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_FromDate", OracleDbType.Date, wFrmDtO, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_ToDate", OracleDbType.Date, wToDt, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_FromDate", OracleDbType.Date, from, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_ToDate", OracleDbType.Date, to, ParameterDirection.Input);
             par[3] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("LabRegisterReportPosting", par, 3);
@@ -282,7 +284,7 @@ namespace IBS.Repositories
             model.SumGST = LabReportsModel.SumGST;
             return model;
         }
-        public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin,string lstStatus,string rdbrecvdt)
+        public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin, string lstStatus, string rdbrecvdt)
         {
 
             LabReportsModel model = new();

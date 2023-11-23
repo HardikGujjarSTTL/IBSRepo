@@ -982,43 +982,29 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das5, .das6, .das7, .das8,
 .das9, .das10, .das11, .das12,
 .das13, .das14, .das15, .das16{transition:all 0.5s ease;}
-.das1{ background:#3F4BA5;}
-.das2{ background:#7A4EC1;}
-.das3{ background:#11BB8D;}
-.das4{ background:#3F95E1;}
-.das5{ background:#ff6600;}
-.das6{ background:#009900;}
-.das7{ background:#cc0098;}
-.das8{ background:#0051d6;}
-.das9{ background:#ff9800;}
-.das10{ background:#0ab4c3;}
-.das11{ background:#fe0000;}
-.das12{ background:#66cc00;}
-.das13{ background:#009688;}
-.das14{ background:#795548;}
-.das15{ background:#5f7d8a;}
-.das16{ background:#9e9e9e;}
-.das1:hover { box-shadow: #3F4BA5 0px 2px 12px 2px; }
-.das2:hover { box-shadow: #7A4EC1 0px 2px 12px 2px; }
-.das3:hover { box-shadow: #11BB8D 0px 2px 12px 2px; }
-.das4:hover { box-shadow: #3F95E1 0px 2px 12px 2px; }
-.das5:hover { box-shadow: #ff6600 0px 2px 12px 2px; }
-.das6:hover { box-shadow: #009900 0px 2px 12px 2px; }
-.das7:hover { box-shadow: #cc0098 0px 2px 12px 2px; }
-.das8:hover { box-shadow: #0051d6 0px 2px 12px 2px; }
-.das9:hover { box-shadow: #ff9800 0px 2px 12px 2px; }
-.das10:hover { box-shadow: #0ab4c3 0px 2px 12px 2px; }
-.das11:hover { box-shadow: #fe0000 0px 2px 12px 2px; }
-.das12:hover { box-shadow: #66cc00 0px 2px 12px 2px; }
-.das13:hover { box-shadow: #009688 0px 2px 12px 2px; }
-.das14:hover { box-shadow: #795548 0px 2px 12px 2px; }
-.das15:hover { box-shadow: #5f7d8a 0px 2px 12px 2px; }
-.das16:hover { box-shadow: #9e9e9e 0px 2px 12px 2px; }
+.das1{ background:#BCA4E4;}
+.das2{ background:#9E2A2B4D;}
+.das3{ background:#AAE1CB;}
+.das4{ background:#F2ABC3;}
+.das5{ background:#DBCDC7;}
+.das6{ background:#F2D97C;}
+.das7{ background:#3A91C652;}
+.das8{ background:#0048C44D;}
+.das9{ background:#7DC7CD;}
+.das10{ background:#F08687;}
+.das11{ background:#F5A472;}
+.das12{ background:#7D8B5152;}
+.das13{ background:#9ED5C2;}
+.das14{ background:#BDD999;}
+.das15{ background:#AEDAD5;}
+.das16{ background:#266BC666;}
+.das1:hover, .das2:hover, .das3:hover, .das4:hover, .das5:hover, .das6:hover, .das7:hover, .das8:hover, .das9:hover, .das10:hover,
+.das11:hover, .das12:hover, .das13:hover, .das14:hover, .das15:hover, .das16:hover { box-shadow: #9e9e9e 0px 2px 12px 2px; }
 	
 .das1Client, .das2Client, .das3Client, .das4Client,
 .das5Client, .das6Client, .das7Client, .das8Client,
 .das9Client, .das10Client, .das11Client, .das12Client{transition:all 0.5s ease;}
-.das1Client{ background: rgb(164,125,225); background: linear-gradient(90deg, rgba(164,125,225,1) 0%, rgba(150,110,213,1) 100%);}
+.das1Client{ background:#BCA4E4;}
 .das2Client{ background: rgb(43,111,200); background: linear-gradient(90deg, rgba(43,111,200,1) 0%, rgba(25,98,193,1) 100%);}
 .das3Client{ background: rgb(25,171,108); background: linear-gradient(90deg, rgba(25,171,108,1) 0%, rgba(0,139,101,1) 100%);}
 .das4Client{ background: rgb(243,124,160); background: linear-gradient(90deg, rgba(243,124,160,1) 0%, rgba(216,99,150,1) 100%);}
@@ -1043,8 +1029,10 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .das11Client:hover { box-shadow: rgb(254,0,0) 0px 2px 12px 2px; }
 .das12Client:hover { box-shadow: rgb(102,204,0) 0px 2px 12px 2px; }
 	
-.dashboard-box .dash-total .total-inner { font-size: 16px; line-height: 20px; color:#fff; }
-.dash-count .total-amount { font-size: 30px; font-weight: 600; color: #fff; }
+.dashboard-box .dash-total .total-inner, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-total .total-inner,
+.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-total .total-inner{ font-size: 16px; font-weight:500; line-height: 20px; color:#fff; }
+.dash-count .total-amount, .admindashboard-wrap.cmdar .admin-dashboard .dashboard-box .dash-count .total-amount,
+.admindashboard-wrap.cm .admin-dashboard .dashboard-box .dash-count .total-amount{ font-size: 30px; font-weight: 600; color: #fff; }
 .dash-count .total-add a { background: #e4eefd; padding: 5px 10px; border-radius: 30px; font-size: 12px; text-decoration: none; color: #0E2753; transition: all 0.4s; }
 .dash-count .total-add a:hover { background: #0E2753; color: #fff; }
 .graph-section { background: #fff;padding: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; }
@@ -1205,6 +1193,9 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .left-side-collapsed .navBtn{left:70px;}
 .adminInnerContent{ padding:20px 20px 50px 20px;}
 .das1:hover .total-icons, .das2:hover .total-icons, .das3:hover .total-icons, .das4:hover .total-icons,
+.das5:hover .total-icons, .das6:hover .total-icons, .das7:hover .total-icons, .das8:hover .total-icons,
+.das9:hover .total-icons, .das10:hover .total-icons, .das11:hover .total-icons, .das12:hover .total-icons,
+.das13:hover .total-icons, .das14:hover .total-icons, .das15:hover .total-icons, .das16:hover .total-icons,
 .das1Client:hover .total-icons, .das2Client:hover .total-icons, .das3Client:hover .total-icons, .das4Client:hover .total-icons,
 .das5Client:hover .total-icons, .das6Client:hover .total-icons, .das7Client:hover .total-icons, .das8Client:hover .total-icons,
 .das9Client:hover .total-icons, .das10Client:hover .total-icons, .das11Client:hover .total-icons, .das12Client:hover .total-icons
@@ -1317,8 +1308,7 @@ body table.dataTable thead .sorting_asc:after, body table.dataTable thead .sorti
 .reset-btn:hover{ background:#333; color:#fff;}
 .left-side-collapsed .navbar-static-side ul li .nav-second-level.show{ display:none;}
 
-.ie-dashboard .total-icons{ position:relative; margin-right:10px; text-align:center;}
-.ie-dashboard img{ width:80%;}
+.ie-dashboard .total-icons{ position:relative; margin-right:5%; text-align:center;}
 .ie-dashboard .total-icons:before{ content:""; background:rgba(255,255,255,0.2); width:80px; height:80px; border-radius:50%; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index:-1;}
 .inlineCalendar .ui-datepicker{ width:100%;}
 .inlineCalendar .ui-datepicker .ui-datepicker-header, .inlineCalendar .ui-datepicker th, .inlineCalendar .ui-state-highlight{ background:none;}
@@ -1461,4 +1451,6 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .iePieGraphGrid table td:first-child, .iePieGraphGrid table th:first-child{ text-align:center;}
 .action .deney .fa{ color:#f00!important;} 
 .text-left{ text-align:left!important;}
-.admin-dashboard a{ text-decoration:none;}
+.admin-dashboard a, .admindashboard-wrap a{ text-decoration:none;}
+ .admindashboard-wrap .admin-dashboard .dashboard-box .dash-total .total-inner, .admindashboard-wrap .admin-dashboard .dashboard-box .dash-count .total-amount{ color:#000;}
+ 

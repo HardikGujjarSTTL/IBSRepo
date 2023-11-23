@@ -67,7 +67,7 @@
 
     });
     function loadLabRegReport() {
-        $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab',from:'@Model.from',to:'@Model.to' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
