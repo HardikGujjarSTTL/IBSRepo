@@ -11,104 +11,118 @@
     <div class="admindashboard-wrap">
         <div class="row ie-dashboard">
             <div class="col-lg-3">
-                <div class="dashboard-box das1Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalCallsCount</div>
+                <a class="totalcall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "TC" })">
+                    <div class="dashboard-box das1Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalCallsCount</div>
+                                <div class="total-inner">
+                                    Total<br />
+                                    Calls
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <a class="PendingCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "M" })">
+                    <div class="dashboard-box das2Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.PendingCallsCount</div>
+                            </div>
                             <div class="total-inner">
-                                Total<br />
+                                Pending<br />
                                 Calls
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das2Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.PendingCallsCount</div>
+                <a class="AcceptedCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "A" })">
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.AcceptedCallsCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Accepted <br />
+                                Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Pending<br />
-                            Calls
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das3Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.AcceptedCallsCount</div>
+                <a class="CancelleCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "C" })">
+                    <div class="dashboard-box das4Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.CancelledCallsCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Cancelled<br />
+                                Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Accepted <br />
-                            Calls
-                        </div>
+                        <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="dashboard-box das4Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.CancelledCallsCount</div>
-                        </div>
-                        <div class="total-inner">
-                            Cancelled<br />
-                            Calls
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
-                </div>
+                </a>
             </div>
         </div>
         <div class="row ie-dashboard">
             <div class="col-lg-3">
-                <div class="dashboard-box das5Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.UnderLabTestingCount</div>
-                            <div class="total-inner">
-                                Under Lab <br />
-                                Testing
+                <a class="UnderLabCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "U" })">
+                    <div class="dashboard-box das5Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.UnderLabTestingCount</div>
+                                <div class="total-inner">
+                                    Under Lab <br />
+                                    Testing
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das6Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                <a class="StillUnderInspCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "S" })">
+                    <div class="dashboard-box das6Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Still Under<br />
+                                Inspection
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Still Under<br />
-                            Inspection
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das7Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.StageRejectionCount</div>
+                <a class="StageRejectionCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "T" })">
+                    <div class="dashboard-box das7Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.StageRejectionCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Stage<br />
+                                Rejection
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Stage<br />
-                            Rejection
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
                 <div class="dashboard-box das8Client">
@@ -128,19 +142,19 @@
         <div class="row ie-dashboard">
             <div class="col-lg-3">
                 <a class="NCIssued" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "NCI" })">
-               @* <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
-                <div class="dashboard-box das9Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NCIsuedAgainstIECount</div>
-                            <div class="total-inner">
-                                Total Number of NC<br />
-                                Isued against IE
+                    @* <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
+                    <div class="dashboard-box das9Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NCIsuedAgainstIECount</div>
+                                <div class="total-inner">
+                                    Total Number of NC<br />
+                                    Isued against IE
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-lg-3">
@@ -157,9 +171,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                 </div>
-               @* </a>*@
+                @* </a>*@
             </div>
             <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "ICIE" })">
                 <div class="dashboard-box das11Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -172,21 +187,22 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
                 <a class="ConsigneeComp" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "CC" })">
-                <div class="dashboard-box das12Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.ConsigneeCompaintCount</div>
+                    <div class="dashboard-box das12Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.ConsigneeCompaintCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Total Consignee<br />
+                                Compaint
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Total Consignee<br />
-                            Compaint
-                        </div>
+                        <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
-                </div>
                 </a>
             </div>
         </div>
@@ -267,110 +283,29 @@
     </div>
     <table class="borderGrid">
         <tr>
+            <th>#</th>
             <th>Message ID</th>
             <th>Message Dt</th>
             <th>Message</th>
             <th>Letter No.</th>
             <th>Letter Date</th>
         </tr>
-        <tr>
-            <td>380</td>
-            <td>13/07/2022</td>
-            <td>SIGNING OF DOCUMENTS DURING INSPECTION</td>
-            <td>RITES/RMI/06/IE INST NO. 331</td>
-            <td>07-07-2022</td>
-        </tr>
-        <tr>
-            <td>379</td>
-            <td>13/07/2022</td>
-            <td>ASSESSMENT OF IEs AFTER COMPLETING OF INDUCTION TRAINING</td>
-            <td>RITES/RMI/06/IE INST NO. 330</td>
-            <td>07-04-2022</td>
-        </tr>
-        <tr>
-            <td>378</td>
-            <td>13/07/2022</td>
-            <td>PROCEDURAL LAPSES OBSERVED DURING PREVENTIVE CHECK BY VIGILANCE</td>
-            <td>RITES/RMI/06/IE INST NO. 329</td>
-            <td>30/05/2022</td>
-        </tr>
-        <tr>
-            <td>377</td>
-            <td>16/03/2022</td>
-            <td>VERIFICATION OF MODIFICATION ADVICE (MA) BY INSPECTING ENGINEERS</td>
-            <td>RITES/RMI/06/IE INST NO. 328</td>
-            <td>16/03/2022</td>
-        </tr>
-        <tr>
-            <td>376</td>
-            <td>02-01-2022</td>
-            <td>INSPECTION OF &quot;CABLE HARNESS OF UNDER FRAME &amp; ROOF ARR FOR LHB AC EOG 2-TIER COACHES&quot; AS PER SPEC EDTS252,REV-J</td>
-            <td>RITES/RMI/06/IE INST NO. 327</td>
-            <td>31/01/2021</td>
-        </tr>
-        <tr>
-            <td>375</td>
-            <td>23/11/2021</td>
-            <td>PREVENTIVE MEASURES TO BE TAKEN DURING INSPECTION OF AUSTENITIC STAINLESS STEEL ITEMS</td>
-            <td>RITES/RMI/06/IE INST NO. 326</td>
-            <td>22/11/2021</td>
-        </tr>
-        <tr>
-            <td>365</td>
-            <td>21/01/2021</td>
-            <td>SYSTEM IMPROVEMENT FOR INSPECTION</td>
-            <td>RITES/RMI/06/IE INST NO. 316</td>
-            <td>14/01/2021</td>
-        </tr>
-        <tr>
-            <td>373</td>
-            <td>21/09/2021</td>
-            <td>TESTING OF CONDUCTOR RESISTANCE FOR XLPE/PVC CABLES</td>
-            <td>RITES/RMI/06/IE INST NO. 325</td>
-            <td>21/09/2021</td>
-        </tr>
-        <tr>
-            <td>374</td>
-            <td>21/09/2021</td>
-            <td>TESTING OF CONDUCTOR RESISTANCE FOR XLPE/PVC CABLES</td>
-            <td>RITES/RMI/06/IE INST NO. 325</td>
-            <td>21/09/2021</td>
-        </tr>
-        <tr>
-            <td>372</td>
-            <td>21/09/2021</td>
-            <td>STRICT COMPLIANCE OF INSPECTION PROCEDURES TO REDUCE CONSIGNEE COMPLAINTS</td>
-            <td>RITES/RMI/06/IE INST NO. 324</td>
-            <td>21/09/2021</td>
-        </tr>
-        <tr>
-            <td>371</td>
-            <td>21/09/2021</td>
-            <td>NO. OF SAMPLES FOR DESTRUCTIVE TESTING IF HEAT OR CAST DETAILS ARE NOT AVAILABLE OR RELEVANT</td>
-            <td>RITES/RMI/06/IE INST NO. 323</td>
-            <td>20/09/2021</td>
-        </tr>
-        <tr>
-            <td>370</td>
-            <td>08-10-2021</td>
-            <td>TESTING OF CONDUCTOR RESISTANCE FOR XLPE/PVC CABLES</td>
-            <td>RITES/RMI/06/IE INST NO. 321</td>
-            <td>08-10-2021</td>
-        </tr>
-        <tr>
-            <td>369</td>
-            <td>23/06/2021</td>
-            <td>SYSTEM IMPROVEMENT FOR INSPECTION - REGARDING BILLING</td>
-            <td>RITES/RMI/06/IE INST NO. 320</td>
-            <td>22/06/2021</td>
-        </tr>
-        <tr>
-            <td>368</td>
-            <td>06-08-2021</td>
-            <td>UTILIZATION OF CALIBRATOR BOX ISSUED FROM OFFICE</td>
-            <td>RITES/RMI/06/IE INST NO. 319</td>
-            <td>06-08-2021</td>
-        </tr>
+        @if (Model != null && Model.lstInstructionsIE != null && Model.lstInstructionsIE.Count > 0)
+        {
+            var SrNo = 0;
+            @foreach (var item in Model.lstInstructionsIE.Take(10))
+            {
+                SrNo = SrNo + 1;
+                <tr>
+                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.MessageId</font></td>
+                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.MessageDt</font></td>
+                    <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.Message</font></td>
+                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterNo</font></td>
+                    <td width="3%" valign="top" align="left"><font size="1" face="Verdana">@item.LetterDt</font></td>
+                </tr>
+            }
+        }
     </table>
 </section>
 <section class="table-section iePieGraphGrid">

@@ -63,6 +63,8 @@
         public List<ConsigneeComplaint> lstConsigneeComplaint { get; set; }
 
         public List<NCIssued_Per_IE> lstNCIssued_Per_IE { get; set; }
+
+        public List<InstructionsIE> lstInstructionsIE { get; set; }
     }
 
     public class IEList
@@ -185,5 +187,19 @@
         public string JiSno { get; set; }
         public string ComplaintId { get; set; }
         public DateTime? PO_DT { get; set; }
+    }
+
+    public class InstructionsIE
+    {
+        public int MessageId { get; set; }
+
+        public string? LetterNo { get; set; }
+
+        public DateTime? LetterDt { get; set; }
+
+        public string? Message { get; set; }
+
+        public DateTime? MessageDt { get; set; }
+
     }
 }
