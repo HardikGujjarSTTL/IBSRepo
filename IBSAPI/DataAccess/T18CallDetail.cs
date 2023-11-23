@@ -45,5 +45,9 @@ public partial class T18CallDetail
 
     public decimal? Isdeleted { get; set; }
 
+    public string? SuppBFlag { get; set; }
+
+    public decimal? SuppNewRate { get; set; }
+
     public virtual T06Consignee? ConsigneeCdNavigation { get; set; }
 }

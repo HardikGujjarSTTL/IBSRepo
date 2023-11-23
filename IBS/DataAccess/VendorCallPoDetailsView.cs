@@ -20,4 +20,6 @@ public partial class VendorCallPoDetailsView
     public string? L5noPo { get; set; }
 
     public string? RlyNonrly { get; set; }
+
+    public DateTime? RecvDt { get; set; }
 }

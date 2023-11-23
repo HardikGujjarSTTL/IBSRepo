@@ -59,6 +59,7 @@ namespace IBSAPI.Models
         public string MsgStatus { get; set; }
         public DateTime? CallMarkDt { get; set; }
         public DateTime? CallStatusDt { get; set; }
+        public DateTime? RecvDt { get; set; }
         public DateTime? DtInspDesire { get; set; }
         public string? RegionCode { get; set; }
         public string Region { get; set; }

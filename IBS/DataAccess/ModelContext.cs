@@ -8397,6 +8397,9 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("NULL")
                 .IsFixedLength()
                 .HasColumnName("COUNTY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.District)
                 .HasMaxLength(35)
                 .IsUnicode(false)
@@ -8436,6 +8439,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("HOUSE_NUM1");
+            entity.Property(e => e.Id)
+                .HasPrecision(13)
+                .HasColumnName("ID");
             entity.Property(e => e.Inco1)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -23226,6 +23232,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(173)
                 .IsUnicode(false)
                 .HasColumnName("PURCHASER_CD");
+            entity.Property(e => e.RecvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("RECV_DT");
             entity.Property(e => e.Rly)
                 .HasMaxLength(28)
                 .IsUnicode(false)
@@ -24763,7 +24772,8 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("MAINRLY_CD");
             entity.Property(e => e.PoDt)
-                .HasColumnType("DATE")
+                .HasMaxLength(10)
+                .IsUnicode(false)
                 .HasColumnName("PO_DT");
             entity.Property(e => e.PoNo)
                 .HasMaxLength(75)
@@ -24774,11 +24784,6 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REAL_CASE_NO");
-            entity.Property(e => e.RegionCode)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("region_code");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -24787,15 +24792,15 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(68)
                 .IsUnicode(false)
                 .HasColumnName("RLY_CD");
-            entity.Property(e => e.RlyCds)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("RLY_CDS");
             entity.Property(e => e.RlyNonrly)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("RLY_NONRLY");
+            entity.Property(e => e.Rlycds)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RLYCDS");
             entity.Property(e => e.VendCd)
                 .HasPrecision(6)
                 .HasColumnName("VEND_CD");
