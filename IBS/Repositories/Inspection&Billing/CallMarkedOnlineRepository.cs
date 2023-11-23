@@ -339,7 +339,7 @@ namespace IBS.Repositories.Inspection_Billing
                     _data.IeCd = IE;
                     _data.ClusterCode = Convert.ToInt32(model.IE_NAME);
                     _data.CoCd = Convert.ToInt32(Co.Value);
-                    _data.UserId = uModel.UserName.Trim();
+                    _data.UserId = uModel.UserName.Substring(0, 8);
                     _data.DepartmentCode = model.DEPT_DROPDOWN;
                     _data.Datetime = DateTime.Now;
                     _data.Updatedby = Convert.ToString(uModel.UserID);
@@ -352,7 +352,7 @@ namespace IBS.Repositories.Inspection_Billing
                         insObj.VendorCode = Convert.ToInt32(model.MFG_CD);
                         insObj.DepartmentName = model.DEPT_DROPDOWN;
                         insObj.ClusterCode = Convert.ToInt32(model.IE_NAME);
-                        insObj.UserId = uModel.UserName.Trim();
+                        insObj.UserId = uModel.UserName.Substring(0, 8);
                         insObj.Datetime = DateTime.Now;
                         insObj.Createdby = uModel.UserID;
                         insObj.Createddate = DateTime.Now;

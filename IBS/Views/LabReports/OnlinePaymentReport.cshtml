@@ -29,7 +29,7 @@
                     
 
                 </tr>
-                @if (Model != null && Model.lstLabReport.Count > 0)
+                @if (Model != null && Model.lstLabReport != null && Model.lstLabReport.Count > 0)
                 {
                     var serialNumber = 1;
                     @foreach (var item in Model.lstLabReport)

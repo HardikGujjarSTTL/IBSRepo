@@ -443,10 +443,15 @@
             }
 
             if (!IsValid) return;
+            var parts = $("#dtfrom").val().split('/');
+            var dtfrom = parts[1] + '/' + parts[0] + '/' + parts[2];
+
+            var parts1 = $("#dtto").val().split('/');
+            var dtto = parts1[1] + '/' + parts1[0] + '/' + parts1[2];
 
             var ReportType = '@ReportType';
-            var wFrmDtO = $("#dtfrom").val();
-            var wToDt = $("#dtto").val();
+            var wFrmDtO = dtfrom;
+            var wToDt = dtto;
             var rdbIEWise = sessionStorage.getItem("rbb1");
             var rdbPIE = sessionStorage.getItem("ch2");
             var rdbVendWise = sessionStorage.getItem("rbb2");
@@ -461,7 +466,9 @@
             var lstIE = $("#ddl1p").val();
             var ddlVender = $("#ddl2p").val();
             var lstLab = $("#ddl3p").val();
-            let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab };
+            var from = $("#dtfrom").val();
+            var to = $("#dtto").val();
+            let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab,from,to };
 
             var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
             //var url = '@Url.Action("Manage", "LabReports")?' + formData;
