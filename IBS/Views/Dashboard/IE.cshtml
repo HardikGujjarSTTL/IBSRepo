@@ -348,7 +348,185 @@
 <div class="chatIcon">
     <span class="fa fa-commenting-o"></span>
 </div>
+<div class="overlay">
+    <div class="chatBox chat1stOpen">
+        <div class="chatBoxHeader">
+            <h2>Chats</h2>
+            <a href="javascript:void(0);" id="broadcastOpen" title="Broadcast" class="btn btn-light px-3" style="width:auto;">Broadcast</a>
+        </div>
+        <div class="chatBoxBody">
+            <ul>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                    <div class="chatBoxInfo">
+                        <h4>Deep Ravrani</h4>
+                        <p>Inspection Engineer | Rajasthan</p>
+                        <div class="chatRedNotIcon">2</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg2">AS</div>
+                    <div class="chatBoxInfo">
+                        <h4>Ajay Sharma</h4>
+                        <p>General Manager | Maharastra</p>
+                        <div class="chatRedNotIcon">2</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg3">BR</div>
+                    <div class="chatBoxInfo">
+                        <h4>Bhavin Rathod</h4>
+                        <p>Inspection Engineer | Madhya Pradesh</p>
+                        <div class="chatRedNotIcon">2</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg4">RB</div>
+                    <div class="chatBoxInfo">
+                        <h4>
+                            Rahul Banna
+                            <span class="badge text-bg-primary rounded-pill">NEW</span>
+                        </h4>
+                        <p>Control Manager | Uttar Pradesh</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg5">YP</div>
+                    <div class="chatBoxInfo">
+                        <h4>Yadav Paras</h4>
+                        <p>Genneral Manager | Punjab</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg6">CV</div>
+                    <div class="chatBoxInfo">
+                        <h4>Chauhan Vijay</h4>
+                        <p>Inpection Engineer |Delhi</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg7">JS</div>
+                    <div class="chatBoxInfo">
+                        <h4>Jaydeep Sanchaniya</h4>
+                        <p>Inspection Engineer | Hariyana</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="chatBox broadcastBox">
+        <div class="chatBoxHeader">
+            <h2><span class="fa fa-angle-left"></span> Broadcast</h2>
+            <label>Select All <input type="checkbox" /></label>
+        </div>
+        <div class="chatBoxBody">
+            <ul>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                    <div class="chatBoxInfo">
+                        <h4>Deep Ravrani</h4>
+                        <p>Inspection Engineer | Rajasthan</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg2">AS</div>
+                    <div class="chatBoxInfo">
+                        <h4>Ajay Sharma</h4>
+                        <p>General Manager | Maharastra</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg3">BR</div>
+                    <div class="chatBoxInfo">
+                        <h4>Bhavin Rathod</h4>
+                        <p>Inspection Engineer | Madhya Pradesh</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg4">RB</div>
+                    <div class="chatBoxInfo">
+                        <h4>
+                            Rahul Banna
+                            <span class="badge text-bg-primary rounded-pill">NEW</span>
+                        </h4>
+                        <p>Control Manager | Uttar Pradesh</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg5">YP</div>
+                    <div class="chatBoxInfo">
+                        <h4>Yadav Paras</h4>
+                        <p>Genneral Manager | Punjab</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg6">CV</div>
+                    <div class="chatBoxInfo">
+                        <h4>Chauhan Vijay</h4>
+                        <p>Inpection Engineer |Delhi</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="chatBoxIcon chatBoxIconBg7">JS</div>
+                    <div class="chatBoxInfo">
+                        <h4>Jaydeep Sanchaniya</h4>
+                        <p>Inspection Engineer | Hariyana</p>
+                        <div class="selectCheckbox"><input type="checkbox" /></div>
+                    </div>
+                </li>
+            </ul>
+            <div class="chatInputArea">
+                <div class="chatInputHolder">
+                    <input type="text" />
+                    <div class="chatSubmit">
+                        <a href="javascript:void(0);"><span class="fa fa-paperclip"></span></a>
+                    <button><span class="fa fa-paper-plane"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
+    <script>
+        $(document).ready(function(){
+            $(".overlay, .broadcastBox").hide();
+            if ($(".chatIcon").length) {
+                $(".chatIcon").click(function () {
+                    if ($(this).next().is(":visible")) {
+                        $(this).next().hide();
+                        return false;
+                    }
+                    else {
+                        $(".overlay").hide();
+                        $(this).next().show();
+                        return false;
+                    }
+
+                });
+            }
+            if ($("#broadcastOpen").length) {
+                $("#broadcastOpen").click(function () {
+                    if ($(".broadcastBox").is(":visible")) {
+                        $(this).hide();
+                        return false;
+                    }
+                    else {
+                        $(".chat1stOpen").hide();
+                        $(".broadcastBox").show();
+                        return false;
+                    }
+
+                });
+            }
+        });
+    </script>
 
     <script>
         Highcharts.chart('complaintPieChart', {
