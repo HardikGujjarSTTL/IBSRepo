@@ -13,104 +13,118 @@
             <div class="admindashboard-wrap">
                 <div class="row ie-dashboard">
                     <div class="col-lg-3">
-                        <div class="dashboard-box das1Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.TotalCallsCount</div>
+                        <a class="totalcall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "TC" })">
+                            <div class="dashboard-box das1Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.TotalCallsCount</div>
+                                        <div class="total-inner">
+                                            Total<br />
+                                            Calls
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="total-icons"><img src="~/images/total-calls-icon.svg" alt="Inspection Requests"> </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3">
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "M" })">
+                            <div class="dashboard-box das2Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.PendingCallsCount</div>
+                                    </div>
                                     <div class="total-inner">
-                                        Total<br />
+                                        Pending<br />
                                         Calls
                                     </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/pending-calls-icon.svg" alt="Inspection Completed"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/total-calls-icon.svg" alt="Inspection Requests"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das2Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.PendingCallsCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "A" })">
+                            <div class="dashboard-box das3Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.AcceptedCallsCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Accepted <br />
+                                        Calls
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Pending<br />
-                                    Calls
-                                </div>
+                                <div class="total-icons"><img src="~/images/accepted-calls-icon.svg" alt="Inspection Assigned"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/pending-calls-icon.svg" alt="Inspection Completed"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das3Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.AcceptedCallsCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "C" })">
+                            <div class="dashboard-box das4Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.CancelledCallsCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Cancelled<br />
+                                        Calls
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Accepted <br />
-                                    Calls
-                                </div>
+                                <div class="total-icons"><img src="~/images/cancelled-calls-icon.svg" alt="Request Cancel"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/accepted-calls-icon.svg" alt="Inspection Assigned"> </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das4Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.CancelledCallsCount</div>
-                                </div>
-                                <div class="total-inner">
-                                    Cancelled<br />
-                                    Calls
-                                </div>
-                            </div>
-                            <div class="total-icons"><img src="~/images/cancelled-calls-icon.svg" alt="Request Cancel"> </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="row ie-dashboard">
                     <div class="col-lg-3">
-                        <div class="dashboard-box das5Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.UnderLabTestingCount</div>
-                                    <div class="total-inner">
-                                        Under Lab<br />
-                                        Testing
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "U" })">
+                            <div class="dashboard-box das5Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.UnderLabTestingCount</div>
+                                        <div class="total-inner">
+                                            Under Lab<br />
+                                            Testing
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/under-lab-testing-icon.svg" alt="Inspection Requests"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/under-lab-testing-icon.svg" alt="Inspection Requests"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das6Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "S" })">
+                            <div class="dashboard-box das6Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Still Under<br />
+                                        Inspection
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Still Under<br />
-                                    Inspection
-                                </div>
+                                <div class="total-icons"><img src="~/images/still-under-inspection-icon.svg" alt="Inspection Assigned"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/still-under-inspection-icon.svg" alt="Inspection Assigned"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das7Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.StageRejectionCount</div>
+                        <a class="StageRejectionCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "T" })">
+                            <div class="dashboard-box das7Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.StageRejectionCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Stage<br />
+                                        Rejection
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Stage<br />
-                                    Rejection
-                                </div>
+                                <div class="total-icons"><img src="~/images/stage-rejection-icon.svg" alt="Inspection Completed"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/stage-rejection-icon.svg" alt="Inspection Completed"> </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
