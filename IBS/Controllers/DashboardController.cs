@@ -22,7 +22,7 @@ namespace IBS.Controllers
 
         public IActionResult Index()
         {
-            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.UserID);
+            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
             return View(model);
         }
 
