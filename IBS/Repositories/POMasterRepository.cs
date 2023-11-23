@@ -145,7 +145,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from POMaster in context.ViewPomasterlists
-                    where POMaster.RlyCds == rly_cd && POMaster.RlyNonrly== RlyNonrly
+                    where POMaster.Rlycds == rly_cd && POMaster.RlyNonrly== RlyNonrly
                     && POMaster.Isdeleted != Convert.ToByte(true)
                     select new PO_MasterModel
                     {

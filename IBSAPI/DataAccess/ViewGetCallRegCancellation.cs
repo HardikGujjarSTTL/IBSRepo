@@ -28,4 +28,6 @@ public partial class ViewGetCallRegCancellation
     public string? Vendor { get; set; }
 
     public string? RegionCode { get; set; }
+
+    public string? CStatus { get; set; }
 }

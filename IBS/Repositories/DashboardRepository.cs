@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
@@ -945,24 +946,25 @@ namespace IBS.Repositories
                             RegionCode = T17.RegionCode,
                         };
             }
-            else if (ActionType == "POAC")
-            {
-                query = from T80 in context.ViewPomasterlists
-                        where T80.RealCaseNo == null
-                        && T80.Isdeleted != Convert.ToByte(true)
-                        && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
-                        select new VenderCallRegisterModel
-                        {
-                            CaseNo = T80.CaseNo,
-                            PoNo = T80.PoNo,
-                            PoDt = Convert.ToDateTime(T80.PoDt),
-                            Rly = T80.RlyCd,
-                            Vendor = T80.VendName,
-                            Consignee = T80.ConsigneeSName,
-                            Remarks = T80.Remarks,
-                            RegionCode = T80.RegionCode,
-                        };
-            }
+            //else if (ActionType == "POAC")
+            //{
+            //    query = from T80 in context.ViewPomasterlists
+            //            where T80.RegionCode == Region
+            //            && T80.RealCaseNo == null
+            //            && T80.Isdeleted != Convert.ToByte(true)
+            //            && (T80.PoDt >= Convert.ToDateTime(FromDate) && T80.PoDt <= Convert.ToDateTime(ToDate))
+            //            select new VenderCallRegisterModel
+            //            {
+            //                CaseNo = T80.CaseNo,
+            //                PoNo = T80.PoNo,
+            //                PoDt = Convert.ToDateTime(T80.PoDt),
+            //                Rly = T80.RlyCd,
+            //                Vendor = T80.VendName,
+            //                Consignee = T80.ConsigneeSName,
+            //                Remarks = T80.Remarks,
+            //                RegionCode = T80.RegionCode,
+            //            };
+            //}
             else if (ActionType == "PCR")
             {
                 query = from t108 in context.T108RemarkedCalls
@@ -1053,6 +1055,19 @@ namespace IBS.Repositories
                 orderCriteria = "pDatetime";
                 orderAscendingDirection = true;
             }
+
+            //List<PO_MasterModel> model = new();
+            //OracleParameter[] par = new OracleParameter[1];
+            //par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            //var ds = DataAccessDB.GetDataSet("SP_CM_DASHBOARD_POMASTERLIST", par, 1);
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            //    model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //}
+            //query = model.AsQueryable();
+            //dTResult.recordsTotal = query.Count();
+
             query = from POMaster in context.ViewDashboardPomasterlists
                     select new PO_MasterModel
                     {
@@ -1065,10 +1080,9 @@ namespace IBS.Repositories
                         Remarks = POMaster.Remarks,
                         RlyNonrly = POMaster.RlyNonrly,
                         MainrlyCd = POMaster.MainrlyCd,
-                        pDatetime = POMaster.Datetime,
+                        pDatetime=POMaster.Pdatetime
                     };
             dTResult.recordsTotal = query.Count();
-
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())

@@ -9,7 +9,7 @@ public partial class ViewDashboardPomasterlist
 
     public string? PoNo { get; set; }
 
-    public DateTime? PoDt { get; set; }
+    public string? PoDt { get; set; }
 
     public string? RlyCd { get; set; }
 
@@ -29,5 +29,5 @@ public partial class ViewDashboardPomasterlist
 
     public string? RegionCode { get; set; }
 
-    public DateTime? Datetime { get; set; }
+    public DateTime? Pdatetime { get; set; }
 }
