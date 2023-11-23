@@ -1080,7 +1080,7 @@ namespace IBS.Repositories
                         Remarks = POMaster.Remarks,
                         RlyNonrly = POMaster.RlyNonrly,
                         MainrlyCd = POMaster.MainrlyCd,
-                        pDatetime=POMaster.Pdatetime
+                        pDatetime = POMaster.Pdatetime
                     };
             dTResult.recordsTotal = query.Count();
             if (!string.IsNullOrEmpty(searchBy))
@@ -1136,6 +1136,79 @@ namespace IBS.Repositories
             model.ComplaintStatusSummary += "['Not on Rites A/C'," + model.complaintStatusSummaryModel.NOT_ON_RITES + "],";
             model.ComplaintStatusSummary += "['Deleted'," + model.complaintStatusSummaryModel.DELETED + "]";
             model.ComplaintStatusSummary += "]";
+        }
+
+        public DTResult<VendorDetailListModel> GetDataVendorListing(DTParameters dtParameters, string Vend_Cd)
+        {
+            DTResult<VendorDetailListModel> dTResult = new() { draw = 0 };
+            IQueryable<VendorDetailListModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CASE_NO";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CASE_NO";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            //string VEND_CD = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Vend_CD"]) ? Convert.ToString(dtParameters.AdditionalValues["Vend_CD"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Status"]) ? Convert.ToString(dtParameters.AdditionalValues["Status"]) : null;
+
+            Status = Status == "TC" ? null : Status;
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_VENDCD", OracleDbType.Varchar2, Vend_Cd.Substring(0, 8), ParameterDirection.Input);
+            par[3] = new OracleParameter("P_STATUS", OracleDbType.Varchar2, Status, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DASHBOARD_COUNT_LISTING", par, 1);
+            DataTable dt = ds.Tables[0];
+            List<VendorDetailListModel> list = new List<VendorDetailListModel>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                list = dt.AsEnumerable().Select(row => new VendorDetailListModel
+                {
+                    CASE_NO = Convert.ToString(row["CASE_NO"]),
+                    CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                    CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                    IE_NAME = Convert.ToString(row["IE_NAME"]),
+                    CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                    PO_NO = Convert.ToString(row["PO_NO"])
+                }).ToList();
+            }
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.IE_NAME).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CLIENT_NAME).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
         }
     }
 }

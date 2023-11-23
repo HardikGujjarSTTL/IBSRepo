@@ -213,4 +213,14 @@
         public string REGION { get; set; }
         public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
     }
+
+    public class VendorDetailListModel
+    {
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string CLIENT_NAME { get; set; }
+        public string IE_NAME { get; set; }
+        public string PO_NO { get; set; }
+    }
 }

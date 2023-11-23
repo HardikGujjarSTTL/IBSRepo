@@ -21,5 +21,7 @@ namespace IBS.Interfaces
         DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
 
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
+
+        DTResult<VendorDetailListModel> GetDataVendorListing(DTParameters dtParameters, string Vend_Cd);
     }
 }

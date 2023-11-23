@@ -201,7 +201,7 @@ namespace IBS.Controllers
         public IActionResult NOOfRegisterCount()
         {
             LabSampleInfoModel model = new LabSampleInfoModel();
-           
+
             try
             {
                 string Regin = GetRegionCode;
@@ -212,6 +212,19 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "NOOfRegisterCount", 1, GetIPAddress());
             }
             return Json(model);
+        }
+
+        public IActionResult VendorDetail(string Type)
+        {
+            ViewBag.Type = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VendorDetailListModel> dTResult = dashboardRepository.GetDataVendorListing(dtParameters, GetUserInfo.UserName);
+            return Json(dTResult);
         }
     }
 }
