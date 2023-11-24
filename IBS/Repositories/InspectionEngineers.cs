@@ -209,7 +209,7 @@ namespace IBS.Repositories
                     obj.AltIeThree = model.AltIeThree;
                     obj.ContAltIe = model.ContAltIe;
                     obj.IeCallMarking = model.IeCallMarking;
-                    obj.IePwd = model.IeEmpNo;
+                    obj.IePwd = "Rites123";
                     obj.UserId = model.UserId;
                     obj.Datetime = DateTime.Now.Date;
                     obj.CallMarkingStoppingDt = model.CallMarkingStoppingDt;
@@ -251,7 +251,7 @@ namespace IBS.Repositories
                     IE.IeType = model.IeType;
                     IE.IeRegion = model.IeRegion;
                     IE.IeJoinDt = model.IeJoinDt;
-                    IE.IePwd = model.IeEmpNo;
+                    IE.IePwd = "Rites123";
                     IE.UserId = model.UserId;
                     IE.Datetime = DateTime.Now.Date;
                     IE.IeEmail = model.IeEmail;

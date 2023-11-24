@@ -741,7 +741,7 @@ namespace IBS.Repositories
             if (ActionType == "TC")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
                         {
@@ -762,7 +762,7 @@ namespace IBS.Repositories
             else
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
                               && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new VenderCallRegisterModel
