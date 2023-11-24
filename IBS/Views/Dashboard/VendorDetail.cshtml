@@ -1,23 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "IEPerCM";
+    ViewData["Title"] = "VendorDetail";
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+        @*<h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>*@
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
     </div>
     <div>
-        <a asp-action="Index" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+        <a asp-action="Vendor" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
     </div>
 </div>
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <div class="col-md-6 mb-3">
-            <div class="reference">
-                <label for="Reference">Controlling Officer</label>
-                @Html.DropDownList("ddlCM", new SelectList(IBS.Models.Common.GetAllIeControllingOfficers() , "Value", "Text"),"--Select--")
-            </div>
-        </div>
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
@@ -50,8 +45,8 @@
                         <th>Call Date</th>
                         <th>Call SNo</th>
                         <th>IE</th>
-                        <th>Vendor</th>
-                        <th>Status</th>
+                        <th>Client</th>
+                        <th>PO NO</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,27 +61,42 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
         $(function () {
             // Get the current date
-            var currentDate = new Date();
-
-            // Determine the start date of the financial year (April 1st)
-            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
-
-            // If the current date is before April 1st, subtract a year
-            if (currentDate < financialYearStartDate) {
-                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
-            }
-            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
+            var FromDate = GetFinalcialStartDate();
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", FromDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-            //$("#ToDate").val(new Date());
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "TC") {
+                $("#spnHeading").text("No. of Total Calls.");
+            }
+            else if (type == "M") {
+                $("#spnHeading").text("No. of Pending Calls.");
+            }
+            else if (type == "A") {
+                $("#spnHeading").text("No. of Accepted Calls.");
+            }
+            else if (type == "C") {
+                $("#spnHeading").text("No. of Cancelled Calls.");
+            }
+            else if (type == "U") {
+                $("#spnHeading").text("No. of Under Lab Testing.");
+            }
+            else if (type == "S") {
+                $("#spnHeading").text("No. of Still Under Inspection.");
+            }
+            else if (type == "T") {
+                $("#spnHeading").text("No. of Stage Rejection.");
+            }
+            InitializeDatatable(type);
         });
 
-        function InitializeDatatable() {
+        function InitializeDatatable(type) {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
-            var CO_CD = $("#ddlCM").val();
+            var Status = type;
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -98,13 +108,13 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("GetIEPerCM", "Dashboard")",
+                    url: "@Url.Action("LoadVendorDetail", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, CO_CD
+                            FromDate, ToDate, Status
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -129,12 +139,27 @@
                     },
                     { data: "CALL_SNO" },
                     { data: "IE_NAME" },
-                    { data: "VEND_NAME" },
-                    { data: "CALL_STATUS" },
+                    { data: "CLIENT_NAME" },
+                    { data: "PO_NO" },
                 ],
                 "order": [[0, "asc"]]
             });
         }
+
+        function GetFinalcialStartDate() {
+            var currentDate = new Date();
+
+            // Determine the start date of the financial year (April 1st)
+            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+
+            // If the current date is before April 1st, subtract a year
+            if (currentDate < financialYearStartDate) {
+                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            return financialYearStartDate;
+        }
     </script>
 }
+
+
 

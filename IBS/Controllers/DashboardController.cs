@@ -22,28 +22,31 @@ namespace IBS.Controllers
 
         public IActionResult Index()
         {
-            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.UserID);
+            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
             return View(model);
         }
 
         public IActionResult Client()
         {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
             string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
-            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation);
+            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode);
             return View(model);
         }
 
         public IActionResult Vendor()
         {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
-            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd);
+            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode);
             return View(model);
         }
 
         public IActionResult IE()
         {
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd);
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode);
             return View(model);
         }
 
@@ -194,14 +197,14 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
         {
-            DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
-            return Json(dTResult);
+            DTResult<IEList> model = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            return Json(model);
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult NOOfRegisterCount()
         {
             LabSampleInfoModel model = new LabSampleInfoModel();
-           
+
             try
             {
                 string Regin = GetRegionCode;
@@ -212,6 +215,19 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "NOOfRegisterCount", 1, GetIPAddress());
             }
             return Json(model);
+        }
+
+        public IActionResult VendorDetail(string Type)
+        {
+            ViewBag.Type = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VendorDetailListModel> dTResult = dashboardRepository.GetDataVendorListing(dtParameters, GetUserInfo.UserName);
+            return Json(dTResult);
         }
     }
 }

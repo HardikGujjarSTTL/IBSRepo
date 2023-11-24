@@ -141,8 +141,8 @@
     function Count() {
 
         $.ajax({
-            url: '/Dashboard/NOOfRegisterCount',
-            type: "POST",
+            url: '@Url.Action("NOOfRegisterCount","Dashboard")',
+            type: "GET",
             dataType: "JSON",
 
             success: function (success) {
