@@ -71,6 +71,7 @@
         public List<PendingOrJICaseListModel> lstJiCase { get; set; } = new List<PendingOrJICaseListModel>();
 
         public List<InstructionsIE> lstInstructionsIE { get; set; }
+        public List<AdminViewAllList> lstAdminViewAllList  { get; set; }
     }
 
     public class IEList
@@ -238,5 +239,50 @@
 
         public DateTime? MessageDt { get; set; }
 
+    }
+
+    public class AdminViewAllList
+    {
+        public string ClientName { get; set; }
+        public string CaseNo { get; set; }
+        public int NoofBills { get; set; }
+        public decimal Value { get; set; }
+        public string PONO { get; set; }
+        public string Region { get; set; }
+        public int NoofConComp { get; set; }
+        public DateTime CallDate { get; set; }
+    }
+    
+    public class VendorViewAllList
+    {
+        public string CallSno { get; set; }
+        public string Details { get; set; }
+        public string CaseNo { get; set; }
+        public string Client { get; set; }
+        public string IE { get; set; }
+        public string IEContactNo { get; set; }
+        public string CM { get; set; }
+        public string CmContactNo { get; set; }
+        public string PONO { get; set; }
+        public string Status { get; set; }
+        public string PurchaseOrder { get; set; }
+        public DateTime CallDate { get; set; }
+    }
+    
+    public class IEViewAllList
+    {
+        public int MessageID { get; set; }
+        public DateTime? MessageDt { get; set; }
+        public string Message { get; set; }
+        public string LetterNo { get; set; }
+        public DateTime? LetterDt { get; set; }
+        public string CaseNo { get; set; }
+        public DateTime CallDate { get; set; }
+        public string CallSno { get; set; }
+        public DateTime InspDate { get; set; }
+        public string Client { get; set; }
+        public string Vendor { get; set; }
+        public string ContactPerson { get; set; }
+        public string ContactNo { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -1192,6 +1193,274 @@ namespace IBS.Repositories
                 query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.IE_NAME).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.CLIENT_NAME).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters, string RegionCode)
+        {
+            DTResult<AdminViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<AdminViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "ClientName";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "ClientName";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_TODate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_ACTION_TYPE", OracleDbType.Varchar2, Status, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_VIEWALL_LIST", par, 1);
+            DataTable dt = ds.Tables[0];
+            List<AdminViewAllList> list = new List<AdminViewAllList>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                if (Status == "CHP" || Status == "CHO")
+                {
+                    list = dt.AsEnumerable().Select(row => new AdminViewAllList
+                    {
+                        ClientName = Convert.ToString(row["CLIENT_NAME"]),
+                        NoofBills = Convert.ToInt32(row["NO_OF_BILL"]),
+                        Value = Convert.ToDecimal(row["AMOUNT"]),
+                    }).ToList();
+                }
+                else if (Status == "OPC" || Status == "OJC")
+                {
+                    list = dt.AsEnumerable().Select(row => new AdminViewAllList
+                    {
+                        PONO = Convert.ToString(row["PO_NO"]),
+                        CaseNo = Convert.ToString(row["CASE_NO"]),
+                        CallDate = Convert.ToDateTime(row["CALL_DATE"])
+                    }).ToList();
+                }
+            }
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<VendorViewAllList> Dashboard_Vendor_ViewAll_List(DTParameters dtParameters, string RegionCode, int Vend_Cd)
+        {
+            DTResult<VendorViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<VendorViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CaseNo";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+
+            OracleParameter[] par1 = new OracleParameter[5];
+
+            par1[0] = new OracleParameter("P_VEND_CD", OracleDbType.NVarchar2, Vend_Cd, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
+            par1[2] = new OracleParameter("P_TODATE", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
+            par1[3] = new OracleParameter("P_ACTION_TYPE", OracleDbType.NVarchar2, Status, ParameterDirection.Input);
+            par1[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_VENDOR_DASHBOARD_VIEWALL_LIST", par1);
+
+            List<VendorViewAllList> listVend = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (Status == "RCS")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            CallSno = Convert.ToString(row["CALL_SNO"]),
+                            Details = Convert.ToString(row["DETAILS"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            IE = Convert.ToString(row["IE_NAME"]),
+                            IEContactNo = Convert.ToString(row["IE_PHONE_NO"]),
+                            CM = Convert.ToString(row["CO_NAME"]),
+                            CmContactNo = Convert.ToString(row["CO_PHONE_NO"])
+                        }).ToList();
+                    }
+                }else if (Status == "RPO")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            Details = Convert.ToString(row["DETAILS"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            PONO = Convert.ToString(row["PO_NO"]),
+                            PurchaseOrder = Convert.ToString(row["PURCHASE_ORDER"]),
+                            Status = Convert.ToString(row["CALL_STATUS"])
+                        }).ToList();
+                    }
+                }
+            }
+
+            query = listVend.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters,int IE_CD,string RegionCode)
+        {
+            DTResult<IEViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<IEViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CaseNo";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+
+            OracleParameter[] par1 = new OracleParameter[4];
+
+            par1[0] = new OracleParameter("P_IE_CD", OracleDbType.Int32, IE_CD, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
+            par1[2] = new OracleParameter("P_TODATE", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
+            par1[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_IE_DASHBOARD_VIEWALL_LIST", par1);
+
+            List<IEViewAllList> listIE = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (Status == "IFI")
+                {
+                   
+                        var query1 = from l in context.T72IeMessages
+                                     where l.RegionCode == RegionCode && (l.Isdeleted == 0 || l.Isdeleted == null)
+                                     select new IEViewAllList
+                                     {
+                                         MessageID = l.MessageId,
+                                         LetterNo = l.LetterNo,
+                                         LetterDt = l.LetterDt,
+                                         Message = l.Message,
+                                         MessageDt = l.MessageDt,
+                                     };
+                        listIE = query1.ToList();
+                }
+                else if (Status == "PC")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listIE = dt.AsEnumerable().Select(row => new IEViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            CallSno = Convert.ToString(row["CALL_SNO"]),
+                            InspDate = Convert.ToDateTime(row["INSP_DESIRE_DT"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            Vendor = Convert.ToString(row["VEND_NAME"]),
+                            ContactPerson = Convert.ToString(row["CONTACT_PER"]),
+                            ContactNo = Convert.ToString(row["CONTACT_NO"])
+                        }).ToList();
+                    }
+                    
+                }
+            }
+
+            query = listIE.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
