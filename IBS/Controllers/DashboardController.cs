@@ -22,8 +22,56 @@ namespace IBS.Controllers
 
         public IActionResult Index()
         {
-            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
-            return View(model);
+            if (SessionHelper.UserModelDTO.RoleName.ToLower() == "admin")
+            {
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                return View(model);
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "inspection engineer (ie)")
+            {
+                return RedirectToAction("IE", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
+            {
+                return RedirectToAction("Vendor", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "client")
+            {
+                return RedirectToAction("Client", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "liasioning officer (lo)")
+            {
+                return RedirectToAction("LO", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "lab user")
+            {
+                return RedirectToAction("LAB", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-call desk incharge")
+            {
+                return RedirectToAction("CM", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-d&a incharge")
+            {
+                return RedirectToAction("CMDAR", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-dfo")
+            {
+                return RedirectToAction("CMDFO", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-ji incharge")
+            {
+                return RedirectToAction("CMJIIncharge", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-general")
+            {
+                return RedirectToAction("CMGeneral", "Dashboard");
+            }
+            else
+            {
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                return View(model);
+            }
         }
 
         public IActionResult Client()
@@ -56,6 +104,7 @@ namespace IBS.Controllers
             DashboardModel model = dashboardRepository.GetCMDashBoardCount(SessionHelper.UserModelDTO.CoCd);
             return View(model);
         }
+
         public IActionResult AwaitingForCaseNo()
         {
             return View();
@@ -103,11 +152,13 @@ namespace IBS.Controllers
         {
             return View();
         }
+
         public IActionResult TotalInvoice(int Flag)
         {
             ViewBag.Flag = Flag;
             return View();
         }
+
         [HttpPost]
         public IActionResult LoadTableInvoice([FromBody] DTParameters dtParameters)
         {
@@ -123,11 +174,13 @@ namespace IBS.Controllers
             }
             return Json(dTResult);
         }
+
         public IActionResult TotalReportUploaded()
         {
 
             return View();
         }
+
         [HttpPost]
         public IActionResult LoadTableReportU([FromBody] DTParameters dtParameters)
         {
@@ -143,6 +196,7 @@ namespace IBS.Controllers
             }
             return Json(dTResult);
         }
+
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
