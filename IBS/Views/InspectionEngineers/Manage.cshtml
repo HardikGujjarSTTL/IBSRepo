@@ -522,6 +522,10 @@
                             window.location.href = '@Url.Action("Index", "InspectionEngineers")';
                         }, 2000);
                 }
+                else
+                {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
             });
             return false;
         });

@@ -22,28 +22,79 @@ namespace IBS.Controllers
 
         public IActionResult Index()
         {
-            DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
-            return View(model);
+            if (SessionHelper.UserModelDTO.RoleName.ToLower() == "admin")
+            {
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                return View(model);
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "inspection engineer (ie)")
+            {
+                return RedirectToAction("IE", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "vendor")
+            {
+                return RedirectToAction("Vendor", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "client")
+            {
+                return RedirectToAction("Client", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "liasioning officer (lo)")
+            {
+                return RedirectToAction("LO", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "lab user")
+            {
+                return RedirectToAction("LAB", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-call desk incharge")
+            {
+                return RedirectToAction("CM", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-d&a incharge")
+            {
+                return RedirectToAction("CMDAR", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-dfo")
+            {
+                return RedirectToAction("CMDFO", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-ji incharge")
+            {
+                return RedirectToAction("CMJIIncharge", "Dashboard");
+            }
+            else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "cm-general")
+            {
+                return RedirectToAction("CMGeneral", "Dashboard");
+            }
+            else
+            {
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                return View(model);
+            }
         }
 
         public IActionResult Client()
         {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
             string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
-            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation);
+            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode);
             return View(model);
         }
 
         public IActionResult Vendor()
         {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
-            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd);
+            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode);
             return View(model);
         }
 
         public IActionResult IE()
         {
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd);
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode);
             return View(model);
         }
 
@@ -53,6 +104,7 @@ namespace IBS.Controllers
             DashboardModel model = dashboardRepository.GetCMDashBoardCount(SessionHelper.UserModelDTO.CoCd);
             return View(model);
         }
+
         public IActionResult AwaitingForCaseNo()
         {
             return View();
@@ -103,11 +155,13 @@ namespace IBS.Controllers
             DashboardModel model = dashboardRepository.GetDashBoardLabCount(userid,Regin);
             return View(model);
         }
+
         public IActionResult TotalInvoice(int Flag)
         {
             ViewBag.Flag = Flag;
             return View();
         }
+
         [HttpPost]
         public IActionResult LoadTableInvoice([FromBody] DTParameters dtParameters)
         {
@@ -123,11 +177,13 @@ namespace IBS.Controllers
             }
             return Json(dTResult);
         }
+
         public IActionResult TotalReportUploaded()
         {
 
             return View();
         }
+
         [HttpPost]
         public IActionResult LoadTableReportU([FromBody] DTParameters dtParameters)
         {
@@ -143,6 +199,7 @@ namespace IBS.Controllers
             }
             return Json(dTResult);
         }
+
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
@@ -189,7 +246,7 @@ namespace IBS.Controllers
         public IActionResult IE_Dashboard_Detail(string Type)
         {
             DashboardModel model = new();
-            model.Type = Type;
+            model.ActionType = Type;
             ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
             return View(model);
         }
@@ -197,14 +254,14 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult GetIEDashboardDetailsList([FromBody] DTParameters dtParameters)
         {
-            DTResult<DashboardModel> dTResult = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
-            return Json(dTResult);
+            DTResult<IEList> model = dashboardRepository.Get_IE_Dashboard_Details_List(dtParameters);
+            return Json(model);
         }
         [HttpGet]
         public IActionResult NOOfRegisterCount()
         {
             LabSampleInfoModel model = new LabSampleInfoModel();
-           
+
             try
             {
                 string Regin = GetRegionCode;
@@ -215,6 +272,19 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "NOOfRegisterCount", 1, GetIPAddress());
             }
             return Json(model);
+        }
+
+        public IActionResult VendorDetail(string Type)
+        {
+            ViewBag.Type = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
+        {
+            DTResult<VendorDetailListModel> dTResult = dashboardRepository.GetDataVendorListing(dtParameters, GetUserInfo.UserName);
+            return Json(dTResult);
         }
     }
 }

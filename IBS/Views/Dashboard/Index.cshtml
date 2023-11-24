@@ -340,7 +340,7 @@
                 var Srno = 0;
                 if(Model.lstHightPayment.Count() > 0)
                 {                    
-                    foreach(var item in Model.lstHightPayment)
+                    foreach(var item in Model.lstHightPayment.Take(5))
                     {
                         Srno = Srno + 1;
                         <tr>
@@ -361,7 +361,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -382,8 +382,8 @@
             @{
                 var No = 0;
                 if (Model.lstHightOutstanding.Count() > 0)
-                {                    
-                    foreach (var item in Model.lstHightOutstanding)
+                {
+                    foreach (var item in Model.lstHightOutstanding.Take(5))
                     {
                         No = No + 1;
                         <tr>
@@ -404,7 +404,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstHightOutstanding.Count()</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightOutstanding.Count()</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -426,13 +426,13 @@
                 var P_SrNo = 0;
                 if (Model.lstPendingCase.Count() > 0)
                 {
-                    foreach (var item in Model.lstPendingCase)
+                    foreach (var item in Model.lstPendingCase.Take(5))
                     {
                         P_SrNo = P_SrNo + 1;
                         <tr>
                             <td>@P_SrNo</td>
                             <td>@item.CASE_NO</td>
-                            <td>@item.DATE.ToString("dd/MM/yyyy")</td>
+                            <td>@item.CALL_DATE.ToString("dd/MM/yyyy")</td>
                             <td>@item.PO_NO</td>
                         </tr>
                     }
@@ -447,7 +447,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPendingCase.Count()</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPendingCase.Count()</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -469,13 +469,13 @@
                 var J_SrNo = 0;
                 if (Model.lstJiCase.Count() > 0)
                 {
-                    foreach (var item in Model.lstJiCase)
+                    foreach (var item in Model.lstJiCase.Take(5))
                     {
                         J_SrNo = J_SrNo + 1;
                         <tr>
                             <td>@J_SrNo</td>
                             <td>@item.CASE_NO</td>
-                            <td>@item.DATE.ToString("dd/MM/yyyy")</td>
+                            <td>@item.CALL_DATE.ToString("dd/MM/yyyy")</td>
                             <td>@item.PO_NO</td>
                         </tr>
                     }
@@ -490,7 +490,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstJiCase.Count()</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstJiCase.Count()</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -533,8 +533,8 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRegionConsComp.Count()</span> records</div>
-        <a class="viewall" href="#">View All</a>
+        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRegionConsComp.Count()</span> records</div>*@
+        @*<a class="viewall" href="#">View All</a>*@
     </div>
 </section>
 @*<section class="graph-section">

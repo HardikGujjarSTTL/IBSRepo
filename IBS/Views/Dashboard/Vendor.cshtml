@@ -13,104 +13,118 @@
             <div class="admindashboard-wrap">
                 <div class="row ie-dashboard">
                     <div class="col-lg-3">
-                        <div class="dashboard-box das1Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.TotalCallsCount</div>
+                        <a class="totalcall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "TC" })">
+                            <div class="dashboard-box das1Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.TotalCallsCount</div>
+                                        <div class="total-inner">
+                                            Total<br />
+                                            Calls
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="total-icons"><img src="~/images/total-calls-icon.svg" alt="Inspection Requests"> </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3">
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "M" })">
+                            <div class="dashboard-box das2Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.PendingCallsCount</div>
+                                    </div>
                                     <div class="total-inner">
-                                        Total<br />
+                                        Pending<br />
                                         Calls
                                     </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/pending-calls-icon.svg" alt="Inspection Completed"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/total-calls-icon.svg" alt="Inspection Requests"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das2Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.PendingCallsCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "A" })">
+                            <div class="dashboard-box das3Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.AcceptedCallsCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Accepted <br />
+                                        Calls
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Pending<br />
-                                    Calls
-                                </div>
+                                <div class="total-icons"><img src="~/images/accepted-calls-icon.svg" alt="Inspection Assigned"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/pending-calls-icon.svg" alt="Inspection Completed"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das3Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.AcceptedCallsCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "C" })">
+                            <div class="dashboard-box das4Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.CancelledCallsCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Cancelled<br />
+                                        Calls
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Accepted <br />
-                                    Calls
-                                </div>
+                                <div class="total-icons"><img src="~/images/cancelled-calls-icon.svg" alt="Request Cancel"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/accepted-calls-icon.svg" alt="Inspection Assigned"> </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="dashboard-box das4Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.CancelledCallsCount</div>
-                                </div>
-                                <div class="total-inner">
-                                    Cancelled<br />
-                                    Calls
-                                </div>
-                            </div>
-                            <div class="total-icons"><img src="~/images/cancelled-calls-icon.svg" alt="Request Cancel"> </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="row ie-dashboard">
                     <div class="col-lg-3">
-                        <div class="dashboard-box das5Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.UnderLabTestingCount</div>
-                                    <div class="total-inner">
-                                        Under Lab<br />
-                                        Testing
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "U" })">
+                            <div class="dashboard-box das5Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.UnderLabTestingCount</div>
+                                        <div class="total-inner">
+                                            Under Lab<br />
+                                            Testing
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="total-icons"><img src="~/images/under-lab-testing-icon.svg" alt="Inspection Requests"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/under-lab-testing-icon.svg" alt="Inspection Requests"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das6Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                        <a class="PendingCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "S" })">
+                            <div class="dashboard-box das6Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Still Under<br />
+                                        Inspection
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Still Under<br />
-                                    Inspection
-                                </div>
+                                <div class="total-icons"><img src="~/images/still-under-inspection-icon.svg" alt="Inspection Assigned"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/still-under-inspection-icon.svg" alt="Inspection Assigned"> </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-3">
-                        <div class="dashboard-box das7Client">
-                            <div class="dash-total">
-                                <div class="dash-count">
-                                    <div class="total-amount">@Model.StageRejectionCount</div>
+                        <a class="StageRejectionCall" href="@Url.Action("VendorDetail", "Dashboard", new { Type = "T" })">
+                            <div class="dashboard-box das7Client">
+                                <div class="dash-total">
+                                    <div class="dash-count">
+                                        <div class="total-amount">@Model.StageRejectionCount</div>
+                                    </div>
+                                    <div class="total-inner">
+                                        Stage<br />
+                                        Rejection
+                                    </div>
                                 </div>
-                                <div class="total-inner">
-                                    Stage<br />
-                                    Rejection
-                                </div>
+                                <div class="total-icons"><img src="~/images/stage-rejection-icon.svg" alt="Inspection Completed"> </div>
                             </div>
-                            <div class="total-icons"><img src="~/images/stage-rejection-icon.svg" alt="Inspection Completed"> </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -208,27 +222,42 @@
             @if (Model != null && Model.lstPOCallStatus != null && Model.lstPOCallStatus.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstPOCallStatus.Take(5))
+                if (Model.lstPOCallStatus.Count() > 0)
                 {
-                    SrNo = SrNo + 1;
+                    @foreach (var item in Model.lstPOCallStatus.Take(5))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                        <td colspan="10">No Data Found</td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -246,29 +275,44 @@
                 <th>Details</th>
                 <th>Purchase Order</th>
                 <th>Status</th>
-                <th class="action center">Action</th>
+                @*<th class="action center">Action</th>*@
             </tr>
             @if (Model != null && Model.lstRecentPO != null && Model.lstRecentPO.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstRecentPO.Take(5))
+                if (Model.lstRecentPO.Count() > 0)
                 {
-                    SrNo = SrNo + 1;
+                    @foreach (var item in Model.lstRecentPO.Take(5))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                            @*<td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>*@
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                        <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                        <td colspan="10">No Data Found</td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>

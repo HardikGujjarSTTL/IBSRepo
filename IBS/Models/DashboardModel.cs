@@ -42,7 +42,7 @@
 
         public string IE_NAME { get; set; }
 
-        public string Type { get; set; }
+        public string ActionType { get; set; }
 
         public List<DashboardModel> IEWisePerformance { get; set; }
 
@@ -73,6 +73,8 @@
         public List<RegionConsigneeComplaintsListModel> lstRegionConsComp { get; set; } = new List<RegionConsigneeComplaintsListModel>();
         public List<PendingOrJICaseListModel> lstPendingCase { get; set; } = new List<PendingOrJICaseListModel>();
         public List<PendingOrJICaseListModel> lstJiCase { get; set; } = new List<PendingOrJICaseListModel>();
+
+        public List<InstructionsIE> lstInstructionsIE { get; set; }
     }
 
     public class IEList
@@ -207,7 +209,7 @@
     public class PendingOrJICaseListModel
     {
         public string CASE_NO { get; set; }
-        public DateTime DATE { get; set; }
+        public DateTime CALL_DATE { get; set; }
         public string CALL_SNO { get; set; }
         public string PO_NO { get; set; }
     }
@@ -216,5 +218,29 @@
     {
         public string REGION { get; set; }
         public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
+    }
+
+    public class VendorDetailListModel
+    {
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string CLIENT_NAME { get; set; }
+        public string IE_NAME { get; set; }
+        public string PO_NO { get; set; }
+    }
+
+    public class InstructionsIE
+    {
+        public int MessageId { get; set; }
+
+        public string? LetterNo { get; set; }
+
+        public DateTime? LetterDt { get; set; }
+
+        public string? Message { get; set; }
+
+        public DateTime? MessageDt { get; set; }
+
     }
 }

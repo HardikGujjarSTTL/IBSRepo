@@ -222,19 +222,6 @@
                         @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--")
                     </div>
                 </div>
-                <div class="col-md-1 mb-3">
-                    <label for="Reference btnAlign">AU Code : </label>
-                    <input type="text" class="input" asp-for="Au" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
-                    @*<label class="darkRedBoldText">@Model.Au</label>*@
-                </div>
-                <div class="col-md-7 mb-3">
-                    <label for="Reference btnAlign">Bill Paying Officer : </label>
-                    <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
-                    @*<label class="darkRedBoldText">@Model.BpoName</label>*@
-                </div>
-            </div>
-
-            <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="BillNo">Bill No. for which Credit Note is biegn prepared</label>
@@ -249,6 +236,20 @@
                             <button type="button" class="save-btn active" id="btnBillVerify" style="display:none;">Verify</button>
                         </div>
                     </div>
+                </div>
+                
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-1 mb-3">
+                    <label for="Reference btnAlign">AU Code : </label>
+                    <input type="text" class="input" asp-for="Au" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
+                    @*<label class="darkRedBoldText">@Model.Au</label>*@
+                </div>
+                <div class="col-md-11 mb-3">
+                    <label for="Reference btnAlign">Bill Paying Officer : </label>
+                    <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
+                    @*<label class="darkRedBoldText">@Model.BpoName</label>*@
                 </div>
             </div>
 
@@ -439,15 +440,15 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Min Fee Payble (if any) <span style="color:#d52127;">*</span></label>
-                        <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                        <label for="Reference">Min Fee Payble (if any) </label>
+                        <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                         <span id="spnMinFee" style="color:#d52127;"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Max Fee Allowed (if any) <span style="color:#d52127;">*</span></label>
-                        <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                        <label for="Reference">Max Fee Allowed (if any) </label>
+                        <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                         <span id="spnMaxFee" style="color:#d52127;"></span>
                     </div>
                 </div>
@@ -456,14 +457,16 @@
 
                 <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
                     <div class="reference">
-                        <label for="Reference">Rly BPO Fee</label>
+                        <label for="Reference">Rly BPO Fee <span style="color:#d52127;">*</span></label>
                         @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"))
+                        <span id="spnRlyBpoFee" style="color:#d52127;"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3 BpoFee" style="display:none;">
                     <div class="reference">
-                        <label for="Reference">FEE</label>
+                        <label for="Reference">FEE <span style="color:#d52127;">*</span></label>
                         <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;">
+                        <span id="spnBpoFee" style="color:#d52127;"></span>
                     </div>
                 </div>
                 @*@if (Model.BpoType == "R" && Model.BpoFeeType == "P" && Model.IcTypeId == 1)
@@ -486,16 +489,18 @@
                 }*@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">FEE Type</label>
+                        <label for="Reference">FEE Type <span style="color:#d52127;">*</span></label>
                         @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()"})
+                        <span id="spnBpoFeeType" style="color:#d52127;"></span>
                     </div>
                 </div>
                 @if (@Convert.ToInt32(Convert.ToDateTime(@Model.CertDt).ToString("yyyyMMdd")) >= @Convert.ToInt32(20170701))
                 {
                     <div class="col-md-4 mb-3">
                         <div class="reference">
-                            <label for="Reference">TAX GST Type</label>
+                            <label for="Reference">TAX GST Type <span style="color:#d52127;">*</span></label>
                             @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"),"--Select--")
+                            <span id="spnTaxType" style="color:#d52127;"></span>
                         </div>
                     </div>
                 }
@@ -503,46 +508,45 @@
                 {
                     <div class="col-md-4 mb-3">
                         <div class="reference">
-                            <label for="Reference">TAX Type</label>
+                            <label for="Reference">TAX Type <span style="color:#d52127;">*</span></label>
                             @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"),"--Select--")
+                            <span id="spnBpoTaxType" style="color:#d52127;"></span>
                         </div>
                     </div>
                 }
             </div>
 
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-1 mb-3">
                     <div class="reference">
                         <label for="Reference">BPO.</label>
                         <input type="text" class="input" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-11 mb-3">
                     <div class="reference">
                         <label for="Reference"><span style="color:#d52127;">Only For Display in Invoice</span></label>
                         @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                
+            </div>
+
+            <div class="row my-0">
+                <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Cancellation OR Rejection Fee Bills</label>
-                        @Html.DropDownListFor(model => model.CanOrRejctionFee, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"))
+                        @Html.DropDownListFor(model => model.CanOrRejctionFee, new SelectList(IBS.Models.Common.OnlineCallStatus(), "Value", "Text"))
                     </div>
                 </div>
-            </div>
-
-            <div class="row my-0">
-            </div>
-
-            <div class="row my-0">
-                <div class="col-md-8 mb-3">
+                <div class="col-md-6 mb-3">
                     <div class="reference">
-                        <label for="Reference">Remarks (if any) <span style="color:#d52127;">*</span></label>
+                        <label for="Reference">Remarks (if any) </label>
                         <textarea class="input" asp-for="Remarks"></textarea>
-                        <span id="spnRemarks" style="color:#d52127;"></span>
+                        @* <span id="spnRemarks" style="color:#d52127;"></span> *@
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <div class="reference">
                         <div class="custom-control custom-checkbox" id="OuterDivOrBody">
                             <label class="custom-checkbox">
@@ -677,6 +681,8 @@
             }
 
             ConsigneeGSTChanged();
+            $('input[type=radio][name=ConsigneeGST]').change();
+
             if ($("#BillDt").val() != "") {
                 $("#btnBillDtUpdate").show();
             }
@@ -713,7 +719,7 @@
                     $("#BillNo").text("Update Bill");
                     ShowHideMsgNew(true, "The bill has been generated for this IC Vide Bill No : " + $("#BillNo").val());
                 }
-
+                $("#btnSave").hide();
             }
             if (actiontype == "D") {
                 $("#btnDelete").show();
@@ -805,7 +811,6 @@
         }
 
         function ConsigneeGSTChanged() {
-
             $('input[type=radio][name=ConsigneeGST]').change(function () {
                 var ConsigneeCd = $("#Consignee").val();
                 if ($("#IrfcFunded").val() == "Y") {
@@ -865,8 +870,6 @@
                     }
                 }
             });
-
-
         }
 
         function OnBillNoChanged() {
@@ -1232,25 +1235,66 @@
                 $("#chkABill").val('X');
             }
 
-            $("#spnMinFee").html("");
-            $("#spnMaxFee").html("");
+             $("#spnMinFee").html("");
+             $("#spnMaxFee").html("");
+
+            $("#spnRlyBpoFee").html("");
+            $("#spnBpoFee").html("");
+            $("#spnBpoFeeType").html("");
+            $("#spnTaxType").html("");
+            $("#spnBpoTaxType").html("");
+            
+            
             $("#spnBillDt").html("");
             if ($("#BillDt").val() == "") {
                 $("#spnBillDt").html("Please add Bill Date.");
                 return;
             }
+            if ($("#BpoType").val() == "R" && $("#BpoFeeType").val() == "P" && $("#IcTypeId").val() == 1) {
+                if ($("#RlyBpoFee").val() == "") {
+                    $("#spnRlyBpoFee").html("FEE are required.");
+                    return;
+                }
+            }
+            else {
+                if ($("#BpoFee").val() == "") {
+                    $("#spnBpoFee").html("FEE are required.");
+                    return;
+                }
+            }
+            if ($("#BpoFeeType").val() == "") {
+                $("#spnBpoFeeType").html("FEE Type are required.");
+                return;
+            }
+            debugger
+            var CertDt = $("#CertDt").val();
+            if(CertDt >= "01/07/2017")
+            {
+                if ($("#TaxType").val() == "") {
+                    $("#spnTaxType").html("Tax Type are required.");
+                    return;
+                }
+            }
+            else
+            {
+                if ($("#BpoTaxType").val() == "") {
+                    $("#spnBpoTaxType").html("Tax Type are required.");
+                    return;
+                }
+            }
+
             if ($("#MinFee").val() == null) {
-                $("#spnMinFee").html("Please Minimum fees.");
+                $("#spnMinFee").html("Please Minimum 0 fees required.");
                 return;
             }
             if ($("#MaxFee").val() == null) {
-                $("#spnMaxFee").html("Please Maximum fees.");
+                $("#spnMaxFee").html("Please Maximum 0 fees required.");
                 return;
             }
-            if ($("#Remarks").val() == "") {
-                $("#spnRemarks").html("Please add Remarks.");
-                return;
-            }
+            // if ($("#Remarks").val() == "") {
+            //     $("#spnRemarks").html("Please add Remarks.");
+            //     return;
+            // }
 
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
