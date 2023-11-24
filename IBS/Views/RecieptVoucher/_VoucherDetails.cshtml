@@ -50,12 +50,11 @@
             <textarea class="input" id="txtNarration" maxlength="50"></textarea>
         </div>
         <div class="savenext-btn">
-            <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add</button>
+        <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add Cheque</button>
             <a href="#clear" class="reset-btn">Clear</a>
             <button id="btnUploadExcel" type="button" class="save-btn active" onclick="onclickUploadExcel();">Upload Excel</button>
         </div>
     </div>
-    
     <div class="task-listinput" style="margin-top: 10px;">
         <div class="dash-table" style="max-height: 500px; overflow: auto">
             <table id="dtVoucherDetails" class="table-responsive">
@@ -94,10 +93,16 @@
                                         <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
                                     </div>
                                 </td>
-                            </tr>
-                        }
+                        </tr>
                     }
-                </tbody>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" style="text-align: center;">No Data Found</td>
+                    </tr>
+                }
+            </tbody>
             </table>
         </div>
     </div>

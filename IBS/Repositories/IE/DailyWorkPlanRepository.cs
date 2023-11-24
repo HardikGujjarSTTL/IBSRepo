@@ -125,7 +125,7 @@ namespace IBS.Repositories.IE
                                where t17.CaseNo == t47.CaseNo
                                      && t17.CallRecvDt == t47.CallRecvDt
                                      && t17.CallSno == t47.CallSno
-                                     && t47.VisitDt == DateTime.ParseExact(PlanDt, "dd/MM/yyyy", null)
+                                     && t47.VisitDt.Date == DateTime.ParseExact(PlanDt, "dd/MM/yyyy", null).Date
                                select t47).Any()
                     //orderby t03.City, t05.VendName, t17.CallRecvDt, t17.CallSno ascending
                     orderby t03.City ascending
@@ -179,7 +179,7 @@ namespace IBS.Repositories.IE
             query = from t47 in context.T47IeWorkPlans
                     join t05 in context.T05Vendors on t47.MfgCd equals t05.VendCd
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
-                    where t47.IeCd == GetIeCd && t47.VisitDt == Convert.ToDateTime(PlanDt)
+                    where t47.IeCd == GetIeCd && t47.VisitDt.Date == Convert.ToDateTime(PlanDt).Date
                     join t17 in context.T17CallRegisters on new { t47.CaseNo, t47.CallRecvDt, t47.CallSno } equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } into t17Group
                     from t17 in t17Group.DefaultIfEmpty()
                     orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno

@@ -235,7 +235,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.BpoCd = query1.b.BpoCd;
                     model.BpoType = query1.b.BpoType;
                     model.BpoRly = query1.b.BpoRly;
-                    model.BpoFee = query1.b.BpoFee;
+                    model.BpoFee = Convert.ToDecimal(query1.b.BpoFee);
                     model.BpoFeeType = query1.b.BpoFeeType;
                     model.BpoTaxType = query1.b.BpoTaxType == null ? "X" : query1.b.BpoTaxType;
                     //model.BpoName = query1.b.BpoCd + "-" + query1.b.BpoName + "/";
@@ -769,7 +769,7 @@ namespace IBS.Repositories.InspectionBilling
                             }
                             else
                             {
-                                model.BpoFee = query1.BpoFee;
+                                model.BpoFee = Convert.ToDecimal(query1.BpoFee);
                             }
                             model.BpoFeeType = query1.BpoFeeType;
                             model.TaxType = query1.BpoTaxType;

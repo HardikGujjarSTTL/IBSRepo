@@ -211,24 +211,26 @@ namespace IBSAPI.Controllers
                             aPP.UniqueFileName = newGuid.ToString()+ fileExtension;
                             aPP.DocName = "IC Image " + i;
                             aPP.FileName = photo.FileName;
+                            aPP.formFile = photo;
                             DocumentsList.Add(aPP);
                             
-                            string WebRootPath = "";
-                            if (Convert.ToBoolean(IsStaging) == true)
-                            {
-                                WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
-                                //WebRootPath = env.WebRootPath.Replace("IBSAPI", "IBS");
-                            }
-                            else
-                            {
-                                WebRootPath = env.WebRootPath;
-                            }
-                            string TempFilePath = WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.TempFilePath);
-                            string TempPath = Path.Combine(TempFilePath, aPP.UniqueFileName+ fileExtension);
-                            using (var fileStream = System.IO.File.Create(TempPath))
-                            {
-                                photo.CopyTo(fileStream);
-                            }
+                            //string WebRootPath = "";
+                            //if (Convert.ToBoolean(IsStaging) == true)
+                            //{
+                            //    WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
+                            //    //WebRootPath = env.WebRootPath.Replace("IBSAPI", "IBS");
+                            //}
+                            //else
+                            //{
+                            //    WebRootPath = env.WebRootPath;
+                            //}
+                            //string TempFilePath = WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.TempFilePath);
+                            //string TempPath = Path.Combine(TempFilePath, aPP.UniqueFileName+ fileExtension);
+                            //using (var fileStream = System.IO.File.Create(TempPath))
+                            //{
+                            //    photo.CopyTo(fileStream);
+                            //}
+                            //Common.AddException(TempPath, TempPath, "Call", "UploadAPI", 1, string.Empty);
                         }
                         i++;
                     }

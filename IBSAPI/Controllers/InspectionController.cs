@@ -123,7 +123,7 @@ namespace IBSAPI.Controllers
                     //{
                     //    WebRootPath = env.WebRootPath;
                     //}
-                    result.photosModel = inspectionRepository.GetDocRecordsList(DocumentCategoryID, Case_No, WebRootPath);
+                    result.photosModel = inspectionRepository.GetDocRecordsList(DocumentCategoryID, Case_No, WebRootPath).OrderBy(x=>x.OtherDocumentName).ToList();
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,

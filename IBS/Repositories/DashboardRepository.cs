@@ -23,7 +23,37 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
+        public DashboardModel GetDashBoardLabCount(int userid, string Regin)
+        {
+            DashboardModel model = new();
 
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, userid, ParameterDirection.Input);
+            par[1] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_RESULT_CURSOR1", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_LAB_DASHBOARD", par, 3);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TOTAL_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_INVOICE"]);
+                    model.FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["FINALIZED_INVOICE"]);
+                    model.PENDING_FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_FINALIZED_INVOICE"]);
+                }
+                if (ds.Tables[1].Rows.Count > 0)
+                {
+                    model.TotalUploaded = Convert.ToInt32(ds.Tables[1].Rows[0]["REPORTS_GENERATED"]);
+                    
+                }
+
+            }
+           
+
+            return model;
+        }
         public DashboardModel GetDashBoardCount(string Region)
         {
             DashboardModel model = new();

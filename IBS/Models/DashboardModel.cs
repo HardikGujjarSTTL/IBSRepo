@@ -2,6 +2,10 @@
 {
     public class DashboardModel
     {
+        public int TOTAL_INVOICE { get; set; }
+        public int FINALIZED_INVOICE { get; set; }
+        public int PENDING_FINALIZED_INVOICE { get; set; }
+        public int TotalUploaded { get; set; }
         public int TotalCallsCount { get; set; }
 
         public int PendingCallsCount { get; set; }

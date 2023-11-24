@@ -39,6 +39,18 @@ namespace IBS.Models
         public string REMARKS { get; set; }
         public string SAMPLE_DISPATCH_DATE { get; set; }
         public string Region { get; set; }
+        public int SumTesting { get; set; }
+        public int SumService { get; set; }
+        public int SumHandling { get; set; }
+        public int SumAmtR { get; set; }
+        public int SumTDS { get; set; }
+        public int SumAMtD { get; set; }
+        public int SumT { get; set; }
+        public int SumS { get; set; }
+        public int SumH { get; set; }
+        public int SumAR { get; set; }
+        public int SumTds { get; set; }
+        public int SumAD { get; set; }
 
         public string LAB { get; set; }
         public string NO_OF_TEST { get; set; }
@@ -123,5 +135,6 @@ namespace IBS.Models
         public string from { get; set; }
         public string to { get; set; }
         public List<LabReportsModel> lstLabReport { get; set; }
+        public List<LabReportsModel> lstsum { get; set; }
     }
 }

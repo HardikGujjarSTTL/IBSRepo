@@ -102,7 +102,7 @@ namespace IBS.Models
 
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Fee required.")]
-        public decimal? BpoFee { get; set; }
+        public decimal BpoFee { get; set; }
 
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Adjustment Fee required.")]
@@ -157,11 +157,11 @@ namespace IBS.Models
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
-        public DateTime FirstInspDt { get; set; }
+        public DateTime? FirstInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
-        public DateTime LastInspDt { get; set; }
+        public DateTime? LastInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -173,7 +173,7 @@ namespace IBS.Models
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
-        public DateTime ICSubmitDt { get; set; }
+        public DateTime? ICSubmitDt { get; set; }
 
         public string StampPatternCd { get; set; }
 
@@ -187,9 +187,9 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
 
-        public int? MinFee { get; set; }
+        public int MinFee { get; set; }
 
-        public int? MaxFee { get; set; }
+        public int MaxFee { get; set; }
 
         public string TaxType { get; set; }
 
