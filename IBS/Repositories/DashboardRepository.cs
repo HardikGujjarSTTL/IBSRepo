@@ -27,18 +27,18 @@ namespace IBS.Repositories
         {
             DashboardModel model = new();
 
-            OracleParameter[] par = new OracleParameter[2]; //[7];
+            OracleParameter[] par = new OracleParameter[7]; //[7];
             par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            //par[2] = new OracleParameter("P_RESUT_HIGH_PAYMENT", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[3] = new OracleParameter("P_RESUT_HIGH_OUTSTANDING", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[4] = new OracleParameter("P_RESULT_PENDING_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[5] = new OracleParameter("P_RESULT_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[6] = new OracleParameter("P_RESULT_REGION_CONSINEE_COMPLAINTS", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("P_RESUT_HIGH_PAYMENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_RESUT_HIGH_OUTSTANDING", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_PENDING_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_REGION_CONSINEE_COMPLAINTS", OracleDbType.RefCursor, ParameterDirection.Output);
 
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par, 1); //6
+            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par, 6); //6
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -54,71 +54,71 @@ namespace IBS.Repositories
                     model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
                 }
 
-                if (ds.Tables.Count > 1)
+                //if (ds.Tables.Count > 1)
+                //{
+                if (ds.Tables[1].Rows.Count > 0)
                 {
-                    if (ds.Tables[1].Rows.Count > 0)
+                    DataTable dt = ds.Tables[1];
+                    List<ClientDetailListModel> lstHighPayment = dt.AsEnumerable().Select(row => new ClientDetailListModel
                     {
-                        DataTable dt = ds.Tables[1];
-                        List<ClientDetailListModel> lstHighPayment = dt.AsEnumerable().Select(row => new ClientDetailListModel
-                        {
-                            CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
-                            NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
-                            AMOUNT = Convert.ToDecimal(row["AMOUNT"])
-                        }).ToList();
-                        model.lstHightPayment = lstHighPayment;
-                    }
-
-                    if (ds.Tables[2].Rows.Count > 0)
-                    {
-                        DataTable dt = ds.Tables[2];
-                        List<ClientDetailListModel> lstHighOutstanding = dt.AsEnumerable().Select(row => new ClientDetailListModel
-                        {
-                            CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
-                            NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
-                            AMOUNT = Convert.ToDecimal(row["AMOUNT"])
-                        }).ToList();
-                        model.lstHightOutstanding = lstHighOutstanding;
-                    }
-
-                    // Oldest Pending Cases
-                    if (ds.Tables[3].Rows.Count > 0)
-                    {
-                        DataTable dt = ds.Tables[3];
-                        List<PendingOrJICaseListModel> lstPendingCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
-                        {
-                            CASE_NO = Convert.ToString(row["CASE_NO"]),
-                            CALL_DATE = Convert.ToDateTime(row["CALL_DATE"]),
-                            CALL_SNO = Convert.ToString(row["CALL_SNO"]),
-                            PO_NO = Convert.ToString(row["PO_NO"])
-                        }).ToList();
-                        model.lstPendingCase = lstPendingCase;
-                    }
-
-                    //// Oldest JI Cases
-                    if (ds.Tables[4].Rows.Count > 0)
-                    {
-                        DataTable dt = ds.Tables[4];
-                        List<PendingOrJICaseListModel> lstJiCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
-                        {
-                            CASE_NO = Convert.ToString(row["CASE_NO"]),
-                            CALL_DATE = Convert.ToDateTime(row["CALL_DATE"]),
-                            PO_NO = Convert.ToString(row["PO_NO"])
-                        }).ToList();
-                        model.lstJiCase = lstJiCase;
-                    }
-
-                    // Region Wise Consignee complaints
-                    if (ds.Tables[5].Rows.Count > 0)
-                    {
-                        DataTable dt = ds.Tables[5];
-                        List<RegionConsigneeComplaintsListModel> lstRegionConsComp = dt.AsEnumerable().Select(row => new RegionConsigneeComplaintsListModel
-                        {
-                            REGION = Convert.ToString(row["REGION"]),
-                            NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
-                        }).ToList();
-                        model.lstRegionConsComp = lstRegionConsComp;
-                    }
+                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                        NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstHightPayment = lstHighPayment;
                 }
+
+                if (ds.Tables[2].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[2];
+                    List<ClientDetailListModel> lstHighOutstanding = dt.AsEnumerable().Select(row => new ClientDetailListModel
+                    {
+                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                        NO_OF_BILL = Convert.ToInt32(row["NO_OF_BILL"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstHightOutstanding = lstHighOutstanding;
+                }
+
+                // Oldest Pending Cases
+                if (ds.Tables[3].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[3];
+                    List<PendingOrJICaseListModel> lstPendingCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
+                    {
+                        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        CALL_DATE = Convert.ToDateTime(row["CALL_DATE"]),
+                        CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                        PO_NO = Convert.ToString(row["PO_NO"])
+                    }).ToList();
+                    model.lstPendingCase = lstPendingCase;
+                }
+
+                //// Oldest JI Cases
+                if (ds.Tables[4].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[4];
+                    List<PendingOrJICaseListModel> lstJiCase = dt.AsEnumerable().Select(row => new PendingOrJICaseListModel
+                    {
+                        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        CALL_DATE = Convert.ToDateTime(row["CALL_DATE"]),
+                        PO_NO = Convert.ToString(row["PO_NO"])
+                    }).ToList();
+                    model.lstJiCase = lstJiCase;
+                }
+
+                // Region Wise Consignee complaints
+                if (ds.Tables[5].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[5];
+                    List<RegionConsigneeComplaintsListModel> lstRegionConsComp = dt.AsEnumerable().Select(row => new RegionConsigneeComplaintsListModel
+                    {
+                        REGION = Convert.ToString(row["REGION"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.lstRegionConsComp = lstRegionConsComp;
+                }
+                //}
             }
             ComplaintStatusDetails(model, Region);
 
@@ -191,7 +191,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode)
+        public DashboardModel GetVendorDashBoardCount(int Vend_Cd, string RegionCode)
         {
             DashboardModel model = new();
 
@@ -275,7 +275,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation,string RegionCode)
+        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation, string RegionCode)
         {
             DashboardModel model = new();
 
@@ -364,7 +364,7 @@ namespace IBS.Repositories
 
             model.lstClientVendConComp = lstClientVendConComp;
 
-            ComplaintStatusDetails(model,RegionCode);
+            ComplaintStatusDetails(model, RegionCode);
             return model;
         }
 
@@ -1087,7 +1087,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public void ComplaintStatusDetails(DashboardModel model,string Region)
+        public void ComplaintStatusDetails(DashboardModel model, string Region)
         {
             DataSet ds2 = ComplaintStatusSummary(Region);
 
