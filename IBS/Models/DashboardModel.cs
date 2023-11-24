@@ -205,7 +205,7 @@
     public class PendingOrJICaseListModel
     {
         public string CASE_NO { get; set; }
-        public DateTime DATE { get; set; }
+        public DateTime CALL_DATE { get; set; }
         public string CALL_SNO { get; set; }
         public string PO_NO { get; set; }
     }
