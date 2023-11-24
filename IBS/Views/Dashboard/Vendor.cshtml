@@ -222,27 +222,42 @@
             @if (Model != null && Model.lstPOCallStatus != null && Model.lstPOCallStatus.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstPOCallStatus.Take(5))
+                if (Model.lstPOCallStatus.Count() > 0)
                 {
-                    SrNo = SrNo + 1;
+                    @foreach (var item in Model.lstPOCallStatus.Take(5))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                        <td colspan="10">No Data Found</td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>
@@ -260,29 +275,44 @@
                 <th>Details</th>
                 <th>Purchase Order</th>
                 <th>Status</th>
-                <th class="action center">Action</th>
+                @*<th class="action center">Action</th>*@
             </tr>
             @if (Model != null && Model.lstRecentPO != null && Model.lstRecentPO.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.lstRecentPO.Take(5))
+                if (Model.lstRecentPO.Count() > 0)
                 {
-                    SrNo = SrNo + 1;
+                    @foreach (var item in Model.lstRecentPO.Take(5))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
+                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                            @*<td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>*@
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                        <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
-                        <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
-                        <td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>
+                        <td colspan="10">No Data Found</td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        <div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records</div>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records*@</div>
         <a class="viewall" href="#">View All</a>
     </div>
 </section>

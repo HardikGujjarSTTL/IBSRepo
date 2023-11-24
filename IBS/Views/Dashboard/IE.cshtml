@@ -311,9 +311,15 @@
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="10">No Data Found</td>
                 </tr>
             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">No Data Found</td>
+            </tr>
         }
     </table>
 </section>
@@ -336,30 +342,36 @@
         @if (Model != null && Model.lstIE != null && Model.lstIE.Count > 0)
         {
             var SrNo = 0;
-            if (Model.lstInstructionsIE.Count() > 0)
+            if (Model.lstIE.Count() > 0)
             {
                 @foreach (var item in Model.lstIE.Take(5))
                 {
                     SrNo = SrNo + 1;
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
+                        <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
                     </tr>
                 }
             }
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="10">No Data Found</td>
                 </tr>
             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">No Data Found</td>
+            </tr>
         }
     </table>
 </section>

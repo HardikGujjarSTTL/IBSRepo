@@ -28,7 +28,7 @@ namespace IBS.Controllers
 
         public IActionResult Client()
         {
-            var RegionCode = Region;
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
             string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
             DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode);
@@ -37,7 +37,7 @@ namespace IBS.Controllers
 
         public IActionResult Vendor()
         {
-            var RegionCode = Region;
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
             DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode);
             return View(model);
@@ -45,7 +45,7 @@ namespace IBS.Controllers
 
         public IActionResult IE()
         {
-            var RegionCode = Region;
+            string RegionCode = SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode);
             return View(model);
         }
@@ -189,7 +189,7 @@ namespace IBS.Controllers
         public IActionResult IE_Dashboard_Detail(string Type)
         {
             DashboardModel model = new();
-            model.Type = Type;
+            model.ActionType = Type;
             ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
             return View(model);
         }
