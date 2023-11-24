@@ -31,8 +31,9 @@ namespace IBS.Repositories
 
             LabReportsModel model = new();
             List<LabReportsModel> lstlab = new();
+            List<LabReportsModel> lstsum = new();
 
-
+            //model = calculate(wFrmDtO, wToDt, Regin);
             OracleParameter[] par = new OracleParameter[18];
             par[0] = new OracleParameter("p_region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[1] = new OracleParameter("p_wFrmDtO", OracleDbType.Date, wFrmDtO, ParameterDirection.Input);
@@ -51,47 +52,46 @@ namespace IBS.Repositories
             par[14] = new OracleParameter("p_rdbLabWise", OracleDbType.Boolean, rdbLabWise, ParameterDirection.Input);
             par[15] = new OracleParameter("p_rdbPLab", OracleDbType.Boolean, rdbPLab, ParameterDirection.Input);
             par[16] = new OracleParameter("p_lstLab", OracleDbType.NVarchar2, lstLab, ParameterDirection.Input);
+           // par[17] = new OracleParameter("p_total_testing_fee", OracleDbType.Int32, ParameterDirection.Output);
             par[17] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("LabRegisterReport", par, 17);
-
-            if (ds.Tables[0].Rows.Count != 0)
+            //int totalTestingFee = Convert.ToInt32(par[17].Value);
+            DataTable dt = ds.Tables[0];
+            
+            lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
             {
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    lstlab = JsonConvert.DeserializeObject<List<LabReportsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
-
-                    model.SAMPLE_REG_NO = Convert.ToString(ds.Tables[0].Rows[0]["SAMPLE_REG_NO"]);
-                    model.SAMPLE_REG_DATE = Convert.ToString(ds.Tables[0].Rows[0]["SAMPLE_REG_DATE"]);
-                    model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
-                    model.CALL_RECV_DATE = Convert.ToString(ds.Tables[0].Rows[0]["CALL_RECV_DATE"]);
-                    model.CALL_SNO = Convert.ToString(ds.Tables[0].Rows[0]["CALL_SNO"]);
-                    model.T_TYPE = Convert.ToString(ds.Tables[0].Rows[0]["T_TYPE"]);
-                    model.CODE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CODE_NO"]);
-                    model.CODE_DATE = Convert.ToString(ds.Tables[0].Rows[0]["CODE_DATE"]);
-                    model.VENDOR = Convert.ToString(ds.Tables[0].Rows[0]["VENDOR"]);
-                    model.IE_NAME = Convert.ToString(ds.Tables[0].Rows[0]["IE_NAME"]);
-                    model.LAB = Convert.ToString(ds.Tables[0].Rows[0]["LAB"]);
-                    model.TEST_REPORT_REC_DATE = Convert.ToString(ds.Tables[0].Rows[0]["TEST_REPORT_REC_DATE"]);
-                    model.TEST_STATUS = Convert.ToString(ds.Tables[0].Rows[0]["TEST_STATUS"]);
-                    model.TESTING_FEE = Convert.ToString(ds.Tables[0].Rows[0]["TESTING_FEE"]);
-                    model.SERVICE_TAX = Convert.ToString(ds.Tables[0].Rows[0]["SERVICE_TAX"]);
-                    model.HANDLING_CHARGES = Convert.ToString(ds.Tables[0].Rows[0]["HANDLING_CHARGES"]);
-                    model.AMOUNT_RECIEVED = Convert.ToString(ds.Tables[0].Rows[0]["AMOUNT_RECIEVED"]);
-                    model.TDS_AMT = Convert.ToString(ds.Tables[0].Rows[0]["TDS_AMT"]);
-                    model.TDS_DATE = Convert.ToString(ds.Tables[0].Rows[0]["TDS_DATE"]);
-                    model.AMT_DUE = Convert.ToString(ds.Tables[0].Rows[0]["AMT_DUE"]);
-                    model.TEST = Convert.ToString(ds.Tables[0].Rows[0]["TEST"]);
-                    model.ITEM_DESC = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC"]);
-                    model.REMARKS = Convert.ToString(ds.Tables[0].Rows[0]["REMARKS"]);
-                    model.SAMPLE_DISPATCH_DATE = Convert.ToString(ds.Tables[0].Rows[0]["SAMPLE_DISPATCH_DATE"]);
-                }
-                model.lstLabReport = lstlab;
-            }
+                SAMPLE_REG_NO = row["SAMPLE_REG_NO"].ToString(),
+                SAMPLE_REG_DATE = row["SAMPLE_REG_DATE"].ToString(),
+                CASE_NO = row["CASE_NO"].ToString(),
+                CALL_RECV_DATE = row["CALL_RECV_DATE"].ToString(),
+                CALL_SNO = row["CALL_SNO"].ToString(),
+                T_TYPE = row["T_TYPE"].ToString(),
+                CODE_NO = row["CODE_NO"].ToString(),
+                CODE_DATE = row["CODE_DATE"].ToString(),
+                VENDOR = row["VENDOR"].ToString(),
+                IE_NAME = row["IE_NAME"].ToString(),
+                LAB = row["LAB"].ToString(),
+                TEST_REPORT_REC_DATE = row["TEST_REPORT_REC_DATE"].ToString(),
+                TEST_STATUS = row["TEST_STATUS"].ToString(),
+                TESTING_FEE = row["TESTING_FEE"].ToString(),
+                SERVICE_TAX = row["SERVICE_TAX"].ToString(),
+                HANDLING_CHARGES = row["HANDLING_CHARGES"].ToString(),
+                AMOUNT_RECIEVED = row["AMOUNT_RECIEVED"].ToString(),
+                TDS_AMT = row["TDS_AMT"].ToString(),
+                TDS_DATE = row["TDS_DATE"].ToString(),
+                AMT_DUE = row["AMT_DUE"].ToString(),
+                TEST = row["TEST"].ToString(),
+                ITEM_DESC = row["ITEM_DESC"].ToString(),
+                REMARKS = row["REMARKS"].ToString(),
+                SAMPLE_DISPATCH_DATE = row["SAMPLE_DISPATCH_DATE"].ToString(),
+                
+            }).ToList();
+            model.lstLabReport = lstlab;
+            
             return model;
         }
+        
         public LabReportsModel LabPerformanceReport(string ReportType, string wFrmDtO, string wToDt, string Regin)
         {
 
@@ -117,7 +117,7 @@ namespace IBS.Repositories
                 MAXM_DAYS = row["MAXM_DAYS"].ToString(),
                 MIN_DAYS = row["MIN_DAYS"].ToString(),
                 AVG_DAYS = row["AVG_DAYS"].ToString(),
-                TOTAL_FEE = row["TOTAL_FEE"].ToString(),                
+                TOTAL_FEE = row["TOTAL_FEE"].ToString(),
             }).ToList();
             model.lstLabReport = lstlab;
             //if (ds.Tables[0].Rows.Count != 0)

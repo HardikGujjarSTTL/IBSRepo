@@ -112,7 +112,7 @@ a.registerLink:hover { color:#646464; text-decoration:underline; }
 .mainLogo img { width: 204px; margin-bottom:10px; }
 .mainLogo a { float: left; text-decoration:none; font-size:11px; line-height:14px; }
 .brandDetail span { display: block; color: #323232; }
-.brandDetail span.firstTitle { font-weight: 600; font-size:1.6em; transition:all 0.2s ease; }
+.brandDetail span.firstTitle { font-weight: 600; font-size:1.8em; transition:all 0.2s ease; }
 .brandDetail span.secondTitle { font-weight:400; font-size:13px; }
 .otherLogo { float: right; display: flex; align-items: center; padding: 10px 0 0; }
 ul.rightLinks { list-style: none; padding: 15px 0 10px; margin: 0; }

@@ -6,6 +6,8 @@ namespace IBS.Interfaces
     {
         public DashboardModel GetDashBoardCount(string Region);
         public DashboardModel GetIEDDashBoardCount(int IeCd,string RegionCode);
+        public DashboardModel GetDashBoardLabCount(int userid, string Regin);
+        
         public DashboardModel GetCMDashBoardCount(int CoCd);
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode);
         public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);

@@ -2,6 +2,10 @@
 {
     public class DashboardModel
     {
+        public int TOTAL_INVOICE { get; set; }
+        public int FINALIZED_INVOICE { get; set; }
+        public int PENDING_FINALIZED_INVOICE { get; set; }
+        public int TotalUploaded { get; set; }
         public int TotalCallsCount { get; set; }
 
         public int PendingCallsCount { get; set; }
@@ -38,7 +42,7 @@
 
         public string IE_NAME { get; set; }
 
-        public string Type { get; set; }
+        public string ActionType { get; set; }
 
         public List<DashboardModel> IEWisePerformance { get; set; }
 

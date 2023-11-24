@@ -5,13 +5,13 @@
 
 
     <h3 class="center">Lab Register Report For The Period: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
-    
+
     <br>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    
+
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">S.No.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Reg No.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Reg Date</font></b></th>
@@ -170,6 +170,43 @@
                         </tr>
                         serialNumber++;
                     }
+
+                    int sumTesting = Model.lstLabReport.Sum(item => int.TryParse(item.TESTING_FEE, out int fee) ? fee : 0);
+                    int sumService = Model.lstLabReport.Sum(item => int.TryParse(item.SERVICE_TAX, out int tax) ? tax : 0);
+                    int sumHandling = Model.lstLabReport.Sum(item => int.TryParse(item.HANDLING_CHARGES, out int charges) ? charges : 0);
+                    int sumAmtRec = Model.lstLabReport.Sum(item => int.TryParse(item.AMOUNT_RECIEVED, out int received) ? received : 0);
+                    int sumTDS = Model.lstLabReport.Sum(item => int.TryParse(item.TDS_AMT, out int tds) ? tds : 0);
+                    int sumAmtDue = Model.lstLabReport.Sum(item => int.TryParse(item.AMT_DUE, out int due) ? due : 0);
+
+                    <tr class="reportTotal">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td width="15%" valign="top" align="center" colspan="1"><font size="1" face="Verdana"><b>Total</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumTesting</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumService</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumHandling</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumAmtRec</b></font></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumTDS</b></font></td>
+                        <td></td>
+                        <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumAmtDue</b></font></td>
+
+                    </tr>
+
 
                 }
                 else
