@@ -138,7 +138,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     else
                     {
-                        model.BpoFee = query2.BpoFee;
+                        model.BpoFee = Convert.ToDecimal(query2.BpoFee);
                     }
                     //model.AdjustmentFee = query2.BpoFee;
                     model.BpoFeeType = query2.BpoFeeType;
