@@ -1067,7 +1067,14 @@ namespace IBS.Repositories.InspectionBilling
                         var GetReg = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == Convert.ToInt32(model.Callsno)).FirstOrDefault();
                         if (GetReg != null)
                         {
-                            GetReg.CallStatus = Cstatus;
+                            if(GetReg.CallStatus == "PR")
+                            {
+                                GetReg.CallStatus = "PR";
+                            }
+                            else
+                            {
+                                GetReg.CallStatus = GetReg.CallStatus;
+                            }
 
                             GetReg.Updatedby = model.UserId;
                             GetReg.Updateddate = DateTime.Now.Date;
@@ -1125,7 +1132,15 @@ namespace IBS.Repositories.InspectionBilling
                     #region Details update
                     if (T17 != null)
                     {
-                        T17.CallStatus = Cstatus;
+                        if(T17.CallStatus == "PR")
+                        {
+                            T17.CallStatus = T17.CallStatus;
+                        }
+                        else
+                        {
+                            T17.CallStatus = T17.CallStatus;
+                        }
+                        
                         T17.UpdateAllowed = "N";
                         T17.Datetime = DateTime.Now.Date;
                         T17.UserId = model.UserId;
@@ -2033,6 +2048,20 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     str_ic.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"]);
 
+                    context.SaveChanges();
+                }
+                var T17 = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
+                
+                if (T17 != null)
+                {
+                    if (T17.CallStatus == "PR")
+                    {
+                        T17.CallStatus = "PRB";
+                    }
+                    else
+                    {
+                        T17.CallStatus = "B";
+                    }
                     context.SaveChanges();
                 }
             }
