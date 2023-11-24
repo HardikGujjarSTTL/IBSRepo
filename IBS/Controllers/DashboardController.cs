@@ -145,7 +145,8 @@ namespace IBS.Controllers
 
         public IActionResult LO()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetLODashBoardCount(SessionHelper.UserModelDTO.UserName.Trim());
+            return View(model);
         }
 
         public IActionResult LAB()
@@ -281,6 +282,18 @@ namespace IBS.Controllers
         public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
         {
             DTResult<VendorDetailListModel> dTResult = dashboardRepository.GetDataVendorListing(dtParameters, GetUserInfo.UserName);
+            return Json(dTResult);
+        }
+
+        public IActionResult LoCallListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetLoCallListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
     }

@@ -40,6 +40,16 @@
 
         public string ActionType { get; set; }
 
+        #region "LO"
+        public int TotalBillCount { get; set; }
+
+        public int TotalOutstandingCount { get; set; }
+
+        public int TotalPassedCount { get; set; }
+
+        public decimal TotalBillRupees { get; set; }
+        #endregion
+
         public List<DashboardModel> IEWisePerformance { get; set; }
 
         public string ComplaintStatusSummary { get; set; }
@@ -238,5 +248,20 @@
 
         public DateTime? MessageDt { get; set; }
 
+    }
+
+    public class LoListingModel
+    {
+        public string BillNo { get; set; }
+
+        public string CaseNo { get; set;}
+
+        public string BillAmount { get; set; }
+
+        public string AmountReceived { get; set;}
+
+        public string PassedOutst { get; set; }
+
+        public string ActionType { get; set;}
     }
 }
