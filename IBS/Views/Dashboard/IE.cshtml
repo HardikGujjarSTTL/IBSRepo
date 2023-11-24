@@ -311,9 +311,15 @@
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="10">No Data Found</td>
                 </tr>
             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">No Data Found</td>
+            </tr>
         }
     </table>
 </section>
@@ -336,36 +342,43 @@
         @if (Model != null && Model.lstIE != null && Model.lstIE.Count > 0)
         {
             var SrNo = 0;
-            if (Model.lstInstructionsIE.Count() > 0)
+            if (Model.lstIE.Count() > 0)
             {
                 @foreach (var item in Model.lstIE.Take(5))
                 {
                     SrNo = SrNo + 1;
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
+                        <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                        <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.INSP_DESIRE_DT</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_PER</font></td>
+                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CONTACT_NO</font></td>
                     </tr>
                 }
             }
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="10">No Data Found</td>
                 </tr>
             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">No Data Found</td>
+            </tr>
         }
     </table>
 </section>
 <div class="chatIcon">
     <span class="fa fa-commenting-o"></span>
 </div>
+<!--  Chat 1st step -->
 <div class="overlay">
     <div class="chatBox chat1stOpen">
         <div class="chatBoxHeader">
@@ -374,7 +387,7 @@
         </div>
         <div class="chatBoxBody">
             <ul>
-                <li>
+                <li class="userSelect">
                     <div class="chatBoxIcon chatBoxIconBg1">DR</div>
                     <div class="chatBoxInfo">
                         <h4>Deep Ravrani</h4>
@@ -432,6 +445,7 @@
             </ul>
         </div>
     </div>
+    <!--  Chat 2nd step -->
     <div class="chatBox broadcastBox">
         <div class="chatBoxHeader">
             <h2><span class="fa fa-angle-left"></span> Broadcast</h2>
@@ -439,7 +453,7 @@
         </div>
         <div class="chatBoxBody">
             <ul>
-                <li>
+                <li class="userSelect">
                     <div class="chatBoxIcon chatBoxIconBg1">DR</div>
                     <div class="chatBoxInfo">
                         <h4>Deep Ravrani</h4>
@@ -510,11 +524,77 @@
             </div>
         </div>
     </div>
+    <!--  Chat 3rd step -->
+    <div class="chatBox userChatBox">
+        <div class="chatBoxHeader">
+           <div class="chatBoxHeadBody">
+                <ul>
+                    <li>
+                        <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                        <div class="chatBoxInfo">
+                            <h4>Deep Ravrani</h4>
+                            <p>Inspection Engineer | Rajasthan</p>
+                        </div>
+                    </li>
+                    </ul>
+           </div>
+        </div>
+        <div class="chatBoxBody">
+            <ul class="chatBodyText">
+                <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+
+            </ul>
+            <div class="chatInputArea">
+                <div class="chatInputHolder">
+                    <input type="text" />
+                    <div class="chatSubmit">
+                        <a href="javascript:void(0);"><span class="fa fa-paperclip"></span></a>
+                        <button><span class="fa fa-paper-plane"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script>
         $(document).ready(function(){
-            $(".overlay, .broadcastBox").hide();
+            $(".overlay, .broadcastBox, .userChatBox").hide();
             if ($(".chatIcon").length) {
                 $(".chatIcon").click(function () {
                     if ($(this).next().is(":visible")) {
@@ -538,6 +618,20 @@
                     else {
                         $(".chat1stOpen").hide();
                         $(".broadcastBox").show();
+                        return false;
+                    }
+
+                });
+            }
+            if ($(".userSelect").length) {
+                $(".userSelect").click(function () {
+                    if ($(".userChatBox").is(":visible")) {
+                        $(this).hide();
+                        return false;
+                    }
+                    else {
+                        $(".chat1stOpen, .broadcastBox").hide();
+                        $(".userChatBox").show();
                         return false;
                     }
 

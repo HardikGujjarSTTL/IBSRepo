@@ -440,14 +440,14 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Min Fee Payble (if any) <span style="color:#d52127;">*</span></label>
-                        <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                         <span id="spnMinFee" style="color:#d52127;"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Max Fee Allowed (if any) <span style="color:#d52127;">*</span></label>
-                        <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                         <span id="spnMaxFee" style="color:#d52127;"></span>
                     </div>
                 </div>
@@ -713,7 +713,7 @@
                     $("#BillNo").text("Update Bill");
                     ShowHideMsgNew(true, "The bill has been generated for this IC Vide Bill No : " + $("#BillNo").val());
                 }
-
+                $("#btnSave").hide();
             }
             if (actiontype == "D") {
                 $("#btnDelete").show();

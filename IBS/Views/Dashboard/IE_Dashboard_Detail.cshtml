@@ -5,15 +5,18 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">NC Isuued Against IE Details</label></h2>
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
     </div>
+   @* <div class="tast-list">
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">NC Isuued Against IE Details</label></h2>
+    </div>*@
     <div>
         <a asp-action="IE" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
     </div>
 </div>
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="Type" hidden />
+        <input asp-for="ActionType" hidden />
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">IE Name</label>
@@ -85,7 +88,38 @@
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-
+            debugger
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            $("#ActionType").val(type);
+            if (type == "TC") {
+                $("#spnHeading").text("No. of Total Calls.");
+            }
+            else if (type == "M") {
+                $("#spnHeading").text("No. of Pending Calls.");
+            }
+            else if (type == "A") {
+                $("#spnHeading").text("No. of Accepted Calls.");
+            }
+            else if (type == "C") {
+                $("#spnHeading").text("No. of Cancelled Calls.");
+            }
+            else if (type == "U") {
+                $("#spnHeading").text("No. of Under Lab Testing.");
+            }
+            else if (type == "S") {
+                $("#spnHeading").text("No. of Still Under Inspection.");
+            }
+            else if (type == "T") {
+                $("#spnHeading").text("No. of Stage Rejection.");
+            } else if (type == "NCI") {
+                $("#spnHeading").text("No. of NC Issued Against IE.");
+            } else if (type == "CC") {
+                $("#spnHeading").text("Total Consignee Complaint.");
+            }else if (type == "ICIE") {
+                $("#spnHeading").text("No. of IC Issued By IE But Not Recieved In Office.");
+            }
             InitializeDatatable();
             // BindDatatable();
         });
@@ -114,7 +148,7 @@
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var IE_CD = $("#IENAME").val();
-            var TypeOfList = $("#Type").val();
+            var TypeOfList = $("#ActionType").val();
 
             $("#dtList").DataTable({
                 stateSave: false,

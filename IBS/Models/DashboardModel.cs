@@ -38,7 +38,7 @@
 
         public string IE_NAME { get; set; }
 
-        public string Type { get; set; }
+        public string ActionType { get; set; }
 
         public List<DashboardModel> IEWisePerformance { get; set; }
 
