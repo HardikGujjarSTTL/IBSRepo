@@ -25,7 +25,7 @@ namespace IBSAPI.Controllers
                 string msg = "";
                 if (CaseNo != null)
                 {
-                    model = vendorRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, Convert.ToInt32(userID));
+                    model = vendorRepository.FindByAddDetails(CaseNo, CallRecvDt, CallStage, userID);
                     if (model.OnlineCallStatus == "Y")
                     {
                         if (model.InspectingAgency == "R")
