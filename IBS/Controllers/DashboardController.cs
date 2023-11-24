@@ -98,7 +98,10 @@ namespace IBS.Controllers
 
         public IActionResult LAB()
         {
-            return View();
+            int userid = UserId;
+            string Regin = GetRegionCode;
+            DashboardModel model = dashboardRepository.GetDashBoardLabCount(userid,Regin);
+            return View(model);
         }
         public IActionResult TotalInvoice(int Flag)
         {

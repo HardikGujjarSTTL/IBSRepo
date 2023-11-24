@@ -15,12 +15,14 @@
                     <div class="row my-0">
                         <div id="BankNameDropdown" class="col-md-4 mb-4">
                             <label for="Reference">Bank</label>
-                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { id = "BankNameDropdown" })
+                            <label for="Reference"><i class="text-danger">*</i></label>
+                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), "--SELECT--" ,new { id = "BankNameDropdown" })
                       
                         </div>
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Instrument No.</label>
+                             <label for="Reference"><i class="text-danger">*</i></label>
                             <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
                           
                         </div>
@@ -29,12 +31,14 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Instrument Date</label>
+                           <label for="Reference"><i class="text-danger">*</i></label>
                             <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT">
                            
                         </div>
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Instrument Amount<span class="text-danger"></label>
+                            <label for="Reference"><i class="text-danger">*</i></label>
                             <input type="text" id="AMOUNT" class="input" asp-for="AMOUNT" mode maxlength="300" />
                            @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
                         </div>
@@ -43,12 +47,14 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Case No.</label>
+                             <label for="Reference"><i class="text-danger">*</i></label>
                             <input type="text" id="CASE_NO" class="input" asp-for="CASE_NO" maxlength="300" />
                            @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
                         </div>
 
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Narration/Vendor Name</label>
+                             <label for="Reference"><i class="text-danger">*</i></label>
                             <input type="text" id="NARRATION" class="input" asp-for="NARRATION" maxlength="300">
                            
 
@@ -115,14 +121,14 @@
         });
 
        function Save(){
-            if ($('#CASE_NO').val() == null || $('#CASE_NO').val() == "") {
-               alert('Pleae fill Case No');
+            //if ($('#CASE_NO').val() == null || $('#CASE_NO').val() == "") {
+            //   alert('Pleae fill Case No');
                
-            }
-            else
-            {
+            //}
+          //  else
+         //   {
                 SearchPayment();
-            }
+         //   }
        }
 
         function SearchPayment() {

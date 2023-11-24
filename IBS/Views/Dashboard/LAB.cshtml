@@ -1,9 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DashboardModel
 @{
+    ViewData["Title"] = "Dashboard";
 }
-
 
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">
@@ -17,7 +15,7 @@
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">@Model.TOTAL_INVOICE</div>
                             <div class="total-inner">
                                No. of <br />total Invoices
                             </div>
@@ -30,7 +28,7 @@
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">15</div>
+                            <div class="total-amount">@Model.FINALIZED_INVOICE</div>
                         </div>
                         <div class="total-inner">
                             No. of <br />Finalized Invoices	
@@ -43,7 +41,7 @@
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">12</div>
+                            <div class="total-amount">@Model.PENDING_FINALIZED_INVOICE</div>
                         </div>
                         <div class="total-inner">
                             No. of Pending<br /> Invoices for finalization	
@@ -71,7 +69,7 @@
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">@Model.TotalUploaded</div>
                             <div class="total-inner">
                                 Total No. of <br />Reports generated
                             </div>
@@ -84,7 +82,7 @@
                 <div class="dashboard-box das6Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">15</div>
+                            <div class="total-amount">@Model.TotalUploaded</div>
                         </div>
                         <div class="total-inner">
                             Total No. of<br /> Reports Uploaded

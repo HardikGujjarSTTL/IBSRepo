@@ -5,6 +5,7 @@ namespace IBS.Interfaces
     public interface IDashboardRepository
     {
         public DashboardModel GetDashBoardCount(string Region);
+        public DashboardModel GetDashBoardLabCount(int userid, string Regin);
         public DashboardModel GetIEDDashBoardCount(int IeCd);
         public DashboardModel GetCMDashBoardCount(int CoCd);
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd);
