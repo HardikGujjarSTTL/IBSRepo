@@ -189,7 +189,7 @@ namespace IBS.Controllers
         public IActionResult IE_Dashboard_Detail(string Type)
         {
             DashboardModel model = new();
-            model.Type = Type;
+            model.ActionType = Type;
             ViewBag.IeCdCode = SessionHelper.UserModelDTO.IeCd;
             return View(model);
         }

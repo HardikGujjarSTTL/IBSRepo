@@ -378,6 +378,7 @@
 <div class="chatIcon">
     <span class="fa fa-commenting-o"></span>
 </div>
+<!--  Chat 1st step -->
 <div class="overlay">
     <div class="chatBox chat1stOpen">
         <div class="chatBoxHeader">
@@ -386,7 +387,7 @@
         </div>
         <div class="chatBoxBody">
             <ul>
-                <li>
+                <li class="userSelect">
                     <div class="chatBoxIcon chatBoxIconBg1">DR</div>
                     <div class="chatBoxInfo">
                         <h4>Deep Ravrani</h4>
@@ -444,6 +445,7 @@
             </ul>
         </div>
     </div>
+    <!--  Chat 2nd step -->
     <div class="chatBox broadcastBox">
         <div class="chatBoxHeader">
             <h2><span class="fa fa-angle-left"></span> Broadcast</h2>
@@ -451,7 +453,7 @@
         </div>
         <div class="chatBoxBody">
             <ul>
-                <li>
+                <li class="userSelect">
                     <div class="chatBoxIcon chatBoxIconBg1">DR</div>
                     <div class="chatBoxInfo">
                         <h4>Deep Ravrani</h4>
@@ -522,11 +524,77 @@
             </div>
         </div>
     </div>
+    <!--  Chat 3rd step -->
+    <div class="chatBox userChatBox">
+        <div class="chatBoxHeader">
+           <div class="chatBoxHeadBody">
+                <ul>
+                    <li>
+                        <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                        <div class="chatBoxInfo">
+                            <h4>Deep Ravrani</h4>
+                            <p>Inspection Engineer | Rajasthan</p>
+                        </div>
+                    </li>
+                    </ul>
+           </div>
+        </div>
+        <div class="chatBoxBody">
+            <ul class="chatBodyText">
+                <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+                 <li class="reciveTextHolder">
+                    <div class="recieveText">Hello</div>
+                </li>
+                <li class="sendTextHolder">
+                    <div class="sendText">Hi</div>
+                </li>
+
+            </ul>
+            <div class="chatInputArea">
+                <div class="chatInputHolder">
+                    <input type="text" />
+                    <div class="chatSubmit">
+                        <a href="javascript:void(0);"><span class="fa fa-paperclip"></span></a>
+                        <button><span class="fa fa-paper-plane"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script>
         $(document).ready(function(){
-            $(".overlay, .broadcastBox").hide();
+            $(".overlay, .broadcastBox, .userChatBox").hide();
             if ($(".chatIcon").length) {
                 $(".chatIcon").click(function () {
                     if ($(this).next().is(":visible")) {
@@ -550,6 +618,20 @@
                     else {
                         $(".chat1stOpen").hide();
                         $(".broadcastBox").show();
+                        return false;
+                    }
+
+                });
+            }
+            if ($(".userSelect").length) {
+                $(".userSelect").click(function () {
+                    if ($(".userChatBox").is(":visible")) {
+                        $(this).hide();
+                        return false;
+                    }
+                    else {
+                        $(".chat1stOpen, .broadcastBox").hide();
+                        $(".userChatBox").show();
                         return false;
                     }
 
