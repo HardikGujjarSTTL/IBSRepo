@@ -135,7 +135,8 @@ namespace IBS.Controllers
 
         public IActionResult CMJIIncharge()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMJIDDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMGeneral()
@@ -145,7 +146,8 @@ namespace IBS.Controllers
 
         public IActionResult LO()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetLODashBoardCount(SessionHelper.UserModelDTO.UserName.Trim());
+            return View(model);
         }
 
         public IActionResult LAB()
@@ -331,6 +333,18 @@ namespace IBS.Controllers
             string RegionCode = SessionHelper.UserModelDTO.Region;
             int IE_CD = SessionHelper.UserModelDTO.IeCd;
             DTResult<IEViewAllList> dTResult = dashboardRepository.Dashboard_IE_ViewAll_List(dtParameters, IE_CD, RegionCode);
+            return Json(dTResult);
+        }
+
+        public IActionResult LoCallListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetLoCallListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
     }

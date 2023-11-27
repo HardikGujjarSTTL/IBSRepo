@@ -1,745 +1,583 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DashboardModel
 @{
+    ViewData["Title"] = "CM JI Incharge Dashboard";
 }
 
 <div class="dashHeader justify-content-between">
-  <h2 class="alignLeft">CM/JI Incharge Dashboard</h2>
+    <h2 class="alignLeft">CM/JI Incharge Dashboard</h2>
 </div>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">IE wise performance</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th>Sr. No.</th>
-      <th>Name of IE</th>
-      <th>Total Calls</th>
-      <th>Pending Calls</th>
-      <th>Accepted Calls</th>
-      <th>Cancelled Calls</th>
-      <th>Under Lab Testing</th>
-      <th>Still Under Inspection</th>
-      <th>Stage Rejection</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>6</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>9</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>10</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
-</section>
-<section>
-  <div class="graph-section iePieGraphGrid">
-    <div class="row my-0">
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">No. of JI</h3>
-        </div>
-        <div class="graph">
-          <div id="region-wise-pie" style="height:200px;"></div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Region Data</h3>
-        </div>
-        <table class="borderGrid">
-          <tr>
-            <th class="textLeft">Region</th>
-            <th class="text-center">No. of JI</th>
-          </tr>
-          <tr>
-            <td class="textLeft">NR </td>
-            <td class="text-center">23 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">WR </td>
-            <td class="text-center">12 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">SR </td>
-            <td class="text-center">34 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">ER </td>
-            <td class="text-center">10 </td>
-          </tr>
-        </table>
-        <div class="gridNote"><strong>Note:</strong> All region data for current FY.</div>
-      </div>
+    <div class="table-title">
+        <h3 class="headingh3">IE wise performance</h3>
     </div>
-  </div>
-</section>
-<section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Top 5 Oldest Pending JI Cases</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th class="srNo">Sr. No.</th>
-      <th>Consignee</th>
-      <th>IE</th>
-      <th>Region</th>
-      <th>Case No.</th>
-      <th>Call Date</th>
-      <th>Call Sno.</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
-</section>
-<section>
-  <div class="graph-section iePieGraphGrid">
-    <div class="row my-0">
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Sector wise Billing comparison of Last three Years</h3>
-        </div>
-        <div class="graph">
-          <div id="defect-code-wise-JI"></div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Defect Code Status</h3>
-        </div>
+    <div class="iePieGraphGrid">
         <table class="borderGrid">
-          <tr>
-            <th class="textLeft">Defect Code </th>
-            <th></th>
-            <th class="text-center">Defect Description</th>
-
-          </tr>
-          <tr>
-            <td class="textLeft">V</td>
-            <td class="text-center">5</td>
-            <td class="text-center">Visual </td>
-
-          </tr>
-          <tr>
-            <td class="textLeft">D</td>
-              <td class="text-center">15</td>
-            <td class="text-center">Dimensional </td>
-
-          </tr>
-          <tr>
-            <td class="textLeft">C </td>
-             <td class="text-center">20</td>
-            <td class="text-center">Chemical </td>
-
-          </tr>
-          <tr>
-            <td class="textLeft">P </td>
-             <td class="text-center">5</td>
-            <td class="text-center">Physical </td>
-
-          </tr>
-          <tr>
-            <td class="textLeft">S </td>
-             <td class="text-center">5</td>
-            <td class="text-center">Surface </td>
-
-          </tr>
-           <tr>
-            <td class="textLeft">L </td>
-             <td class="text-center">10</td>
-            <td class="text-center">Load/Performance </td>
-
-          </tr>
             <tr>
-            <td class="textLeft">N </td>
-             <td class="text-center">10</td>
-            <td class="text-center">NDT </td>
-
-          </tr>
-              <tr>
-            <td class="textLeft">M </td>
-             <td class="text-center">10</td>
-            <td class="text-center">Macro/Micro Examination </td>
-
-          </tr>
-                <tr>
-            <td class="textLeft">E </td>
-             <td class="text-center">5</td>
-            <td class="text-center">Electrical</td>
-
-          </tr>
-                <tr>
-            <td class="textLeft">W </td>
-             <td class="text-center">10 </td>
-            <td class="text-center">Welding</td>
-
-          </tr>
-                <tr>
-            <td class="textLeft">O </td>
-             <td class="text-center">5</td>
-            <td class="text-center">Other</td>
-
-          </tr>
-                <tr>
-            <td class="text-center bold">Total</td>
-             <td class="text-center">100</td>
-             <td></td>
-          </tr>
+                <th>Sr. No.</th>
+                <th>Name of IE</th>
+                <th>Total Calls</th>
+                <th>Pending Calls</th>
+                <th>Accepted Calls</th>
+                <th>Cancelled Calls</th>
+                <th>Under Lab Testing</th>
+                <th>Still Under Inspection</th>
+                <th>Stage Rejection</th>
+            </tr>
+            @{
+                var IE_SrNo = 0;
+                if (Model.IEWisePerformance.Count() > 0)
+                {
+                    foreach (var item in Model.IEWisePerformance)
+                    {
+                        IE_SrNo = IE_SrNo + 1;
+                        <tr>
+                            <td>@IE_SrNo</td>
+                            <td>@item.IE_NAME</td>
+                            <td>@item.TotalCallsCount</td>
+                            <td>@item.PendingCallsCount</td>
+                            <td>@item.AcceptedCallsCount</td>
+                            <td>@item.CancelledCallsCount</td>
+                            <td>@item.UnderLabTestingCount</td>
+                            <td>@item.StillUnderInspectionCount</td>
+                            <td>@item.StageRejectionCount</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9">No Data Found</td>
+                    </tr>
+                }
+            }
         </table>
-        <div class="gridNote"> <strong>Note:</strong> CM's region wise data </div>
-      </div>
     </div>
-  </div>
+</section>
+<section>
+    <div class="graph-section iePieGraphGrid">
+        <div class="row my-0">
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">No. of JI</h3>
+                </div>
+                <div class="graph">
+                    <div id="region-wise-pie" style="height:200px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Region Data</h3>
+                </div>
+                <table class="borderGrid">
+                    <tr>
+                        <th class="textLeft">Region</th>
+                        <th class="text-center">No. of JI</th>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">NR </td>
+                        <td class="text-center">23 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">WR </td>
+                        <td class="text-center">12 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">SR </td>
+                        <td class="text-center">34 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">ER </td>
+                        <td class="text-center">10 </td>
+                    </tr>
+                </table>
+                <div class="gridNote"><strong>Note:</strong> All region data for current FY.</div>
+            </div>
+        </div>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Top 5 Oldest Consignee Complaints against Inspection Engineers</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th class="srNo">Sr. No.</th>
-      <th>Consignee</th>
-      <th>IE</th>
-      <th>Region</th>
-      <th>Case No.</th>
-      <th>Call Date</th>
-      <th>Call Sno.</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3">Top 5 Oldest Pending JI Cases</h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>Consignee</th>
+                <th>IE</th>
+                <th>Region</th>
+                <th>Case No.</th>
+                <th>Call Date</th>
+                <th>Call Sno.</th>
+                <th>JI No.</th>
+                <th>JI Date</th>
+            </tr>
+            @{
+                var JI_SrNo = 0;
+                if (Model.oldestPendingJICases.Count() > 0)
+                {
+                    foreach (var item in Model.oldestPendingJICases.Take(5))
+                    {
+                        JI_SrNo = JI_SrNo + 1;
+                        <tr>
+                            <td>@JI_SrNo</td>
+                            <td>@item.CONSIGNEE</td>
+                            <td>@item.IE_NAME</td>
+                            <td>@item.JI_REGION</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy")</td>
+                            <td>@item.CALL_SNO</td>
+                            <td>@item.JI_SNO</td>
+                            @if (@item.JI_DT == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@Convert.ToDateTime(item.JI_DT).ToString("dd/MM/yyyy")</td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</section>
+<section>
+    <div class="graph-section iePieGraphGrid">
+        <div class="row my-0">
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Sector wise Billing comparison of Last three Years</h3>
+                </div>
+                <div class="graph">
+                    <div id="defect-code-wise-JI"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Defect Code Status</h3>
+                </div>
+                <table class="borderGrid">
+                    <tr>
+                        <th class="textLeft">Defect Code </th>
+                        <th></th>
+                        <th class="text-center">Defect Description</th>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">V</td>
+                        <td class="text-center">@Model.defectCodeJIComp.VISUAL</td>
+                        <td class="text-center">Visual </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">D</td>
+                        <td class="text-center">@Model.defectCodeJIComp.DIAMENSIONAL</td>
+                        <td class="text-center">Dimensional </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">C </td>
+                        <td class="text-center">@Model.defectCodeJIComp.CHEMICAL_COMPOSITION</td>
+                        <td class="text-center">Chemical </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">P </td>
+                        <td class="text-center">@Model.defectCodeJIComp.PHYSICAL</td>
+                        <td class="text-center">Physical </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">S </td>
+                        <td class="text-center">@Model.defectCodeJIComp.SURFACE</td>
+                        <td class="text-center">Surface </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">L </td>
+                        <td class="text-center">@Model.defectCodeJIComp.LOAD_PERFORMANCE</td>
+                        <td class="text-center">Load/Performance </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">N </td>
+                        <td class="text-center">@Model.defectCodeJIComp.NDT</td>
+                        <td class="text-center">NDT </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">M </td>
+                        <td class="text-center">@Model.defectCodeJIComp.MACRO_MICRO</td>
+                        <td class="text-center">Macro/Micro Examination </td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">E </td>
+                        <td class="text-center">@Model.defectCodeJIComp.ELECTRICAL</td>
+                        <td class="text-center">Electrical</td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">W </td>
+                        <td class="text-center">@Model.defectCodeJIComp.WELDING</td>
+                        <td class="text-center">Welding</td>
+
+                    </tr>
+                    <tr>
+                        <td class="textLeft">O </td>
+                        <td class="text-center">@Model.defectCodeJIComp.OTHER</td>
+                        <td class="text-center">Other</td>
+
+                    </tr>
+                    <tr>
+                        <td class="text-center bold">Total</td>
+                        <td class="text-center">@Model.defectCodeJIComp.TOTAL</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <div class="gridNote"> <strong>Note:</strong> CM's region wise data </div>
+            </div>
+        </div>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Top 5 Oldest Consignee Complaints against Vendor</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th class="srNo">Sr. No.</th>
-      <th>Consignee</th>
-      <th>Vendor</th>
-      <th>Case No.</th>
-      <th>Case No.</th>
-      <th>Call Date</th>
-      <th>Call Sno.</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3">Top 5 IEs with the Highest Consignee Complaints</h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>IE</th>
+                <th>No. of Complaints</th>
+            </tr>
+            @{
+                var O_SrNo = 0;
+                if (Model.ieNoOfComp.Count() > 0)
+                {
+                    foreach (var item in Model.ieNoOfComp.Take(5))
+                    {
+                        O_SrNo = O_SrNo + 1;
+                        <tr>
+                            <td>@O_SrNo</td>
+                            <td>@item.NAME</td>
+                            <td>@item.NO_OF_CONSINEE_COMPLAINTS</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Top 5 Oldest Consignee Complaints against Client</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th class="srNo">Sr. No.</th>
-      <th>Consignee</th>
-      <th>Client</th>
-      <th>Case No.</th>
-      <th>Case No.</th>
-      <th>Call Date</th>
-      <th>Call Sno.</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3">Top 5 Vendors with the Highest Consignee Complaints</h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>Vendor</th>
+                <th>No. of Complaints</th>
+            </tr>
+            @{
+                var V_SrNo = 0;
+                if (Model.vendorNoOfComp.Count() > 0)
+                {
+                    foreach (var item in Model.vendorNoOfComp.Take(5))
+                    {
+                        V_SrNo = V_SrNo + 1;
+                        <tr>
+                            <td>@V_SrNo</td>
+                            <td>@item.NAME</td>
+                            <td>@item.NO_OF_CONSINEE_COMPLAINTS</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</section>
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">Top 5 Clients with the Most Complaints Raised</h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>Client</th>
+                <th>No. of Complaints</th>
+            </tr>
+            @{
+                var C_SrNo = 0;
+                if (Model.clientNoOfComp.Count() > 0)
+                {
+                    foreach (var item in Model.clientNoOfComp.Take(5))
+                    {
+                        C_SrNo = C_SrNo + 1;
+                        <tr>
+                            <td>@C_SrNo</td>
+                            <td>@item.NAME</td>
+                            <td>@item.NO_OF_CONSINEE_COMPLAINTS</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
 </section>
 <section class="table-section">
     <div class="row my-0">
-        <div class="col-lg-8">
-            <div class="table-title">
-    <h3 class="headingh3">CM Proposed chargesheet D & AR not imposed penalty</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th class="srNo">Sr. No.</th>
-      <th>Name of IE</th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td></td>
-    </tr>
-  </table>
-  </div>
-
+        @*<div class="col-lg-8">
+        <div class="table-title">
+        <h3 class="headingh3">CM Proposed chargesheet D & AR not imposed penalty</h3>
         </div>
+        <div class="iePieGraphGrid">
+        <table class="borderGrid">
+        <tr>
+        <th class="srNo">Sr. No.</th>
+        <th>Name of IE</th>
+        </tr>
+        <tr>
+        <td>1</td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>2</td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>3</td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>4</td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>5</td>
+        <td></td>
+        </tr>
+        </table>
+        </div>
+
+        </div>*@
         <div class="col-lg-4">
             <div class="table-title">
-    <h3 class="headingh3">No. of Inter Region JI Complaints</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-    <tr>
-      <th>Inter Region</th>
-      <th class="text-center">No. of JI</th>
-    </tr>
-    <tr>
-      <td>NW</td>
-      <td class="text-center">1</td>
-    </tr>
-    <tr>
-      <td>NS</td>
-      <td class="text-center">5</td>
-    </tr>
-    <tr>
-      <td>NN</td>
-      <td class="text-center">6</td>
-    </tr>
-    <tr>
-      <td>NE</td>
-      <td class="text-center">3</td>
-    </tr>
-  </table>
-  </div>
+                <h3 class="headingh3">No. of Inter Region JI Complaints</h3>
+            </div>
+            <div class="iePieGraphGrid">
+                <table class="borderGrid">
+                    <tr>
+                        <th>Inter Region</th>
+                        <th class="text-center">No. of JI</th>
+                    </tr>
+                    <tr>
+                        <td>NN</td>
+                        <td class="text-center">@Model.interRegionJIComp.NN</td>
+                    </tr>
+                    <tr>
+                        <td>NS</td>
+                        <td class="text-center">@Model.interRegionJIComp.NS</td>
+                    </tr>
+                    <tr>
+                        <td>NW</td>
+                        <td class="text-center">@Model.interRegionJIComp.NW</td>
+                    </tr>
+                    <tr>
+                        <td>NE</td>
+                        <td class="text-center">@Model.interRegionJIComp.NE</td>
+                    </tr>
+
+                    <tr>
+                        <td>SN</td>
+                        <td class="text-center">@Model.interRegionJIComp.SN</td>
+                    </tr>
+                    <tr>
+                        <td>SS</td>
+                        <td class="text-center">@Model.interRegionJIComp.SS</td>
+                    </tr>
+                    <tr>
+                        <td>SW</td>
+                        <td class="text-center">@Model.interRegionJIComp.SW</td>
+                    </tr>
+                    <tr>
+                        <td>SE</td>
+                        <td class="text-center">@Model.interRegionJIComp.SE</td>
+                    </tr>
+
+                    <tr>
+                        <td>WN</td>
+                        <td class="text-center">@Model.interRegionJIComp.WN</td>
+                    </tr>
+                    <tr>
+                        <td>WS</td>
+                        <td class="text-center">@Model.interRegionJIComp.WS</td>
+                    </tr>
+                    <tr>
+                        <td>WW</td>
+                        <td class="text-center">@Model.interRegionJIComp.WW</td>
+                    </tr>
+                    <tr>
+                        <td>WE</td>
+                        <td class="text-center">@Model.interRegionJIComp.WE</td>
+                    </tr>
+
+                    <tr>
+                        <td>EN</td>
+                        <td class="text-center">@Model.interRegionJIComp.EN</td>
+                    </tr>
+                    <tr>
+                        <td>ES</td>
+                        <td class="text-center">@Model.interRegionJIComp.ES</td>
+                    </tr>
+                    <tr>
+                        <td>EW</td>
+                        <td class="text-center">@Model.interRegionJIComp.EW</td>
+                    </tr>
+                    <tr>
+                        <td>EE</td>
+                        <td class="text-center">@Model.interRegionJIComp.EE</td>
+                    </tr>
+                </table>
+            </div>
 
         </div>
-    </div>  
+    </div>
 </section>
 
 @section scripts{
-<script>
-Highcharts.chart('region-wise-pie', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: '',
-        align: 'left'
-    },
-    tooltip: {
-        pointFormat: '{name}'
-    },
-
-    tooltip: {
-        valueSuffix: ''
-    },
-    filter: {
-        operator: '>',
-        property: 'percentage',
-        value: 10
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: false,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: false
+    <script>
+        Highcharts.chart('region-wise-pie', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
             },
-            showInLegend: true
-        }
-    },
-    legend: {
-            align: 'right',
-            layout: 'vertical',
-            verticalAlign: 'middle',
-    },
-    series: [{
-        //name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'NR',
-            y: 23,
-            sliced: false,
-            selected: false
-        }, {
-            name: 'WR',
-            y: 12
-        }, {
-            name: 'SR',
-            y: 34
-        }, {
-            name: 'ER',
-            y: 10
-        }]
-    }]
-});
+            title: {
+                text: '',
+                align: 'left'
+            },
+            tooltip: {
+                pointFormat: '{name}'
+            },
 
-    // Defect Code Wise JI Complaints
+            tooltip: {
+                valueSuffix: ''
+            },
+            filter: {
+                operator: '>',
+                property: 'percentage',
+                value: 10
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'middle',
+            },
+            series: [{
+                //name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'NR',
+                    y: 23,
+                    sliced: false,
+                    selected: false
+                }, {
+                    name: 'WR',
+                    y: 12
+                }, {
+                    name: 'SR',
+                    y: 34
+                }, {
+                    name: 'ER',
+                    y: 10
+                }]
+            }]
+        });
 
-Highcharts.chart('defect-code-wise-JI', {
-chart: {
-    plotBackgroundColor: null,
-    plotBorderWidth: null,
-    plotShadow: false,
-    type: 'pie'
-},
-title: {
-    text: '',
-    align: 'left'
-},
-tooltip: {
-    pointFormat: '{name}'
-},
+        // Defect Code Wise JI Complaints
 
-tooltip: {
-    valueSuffix: ''
-},
-filter: {
-    operator: '>',
-    property: 'percentage',
-    value: 10
-},
-plotOptions: {
-    pie: {
-        allowPointSelect: false,
-        cursor: 'pointer',
-        dataLabels: {
-            enabled: false
-        },
-        showInLegend: true
-    }
-},
-legend: {
-        align: 'right',
-        layout: 'vertical',
-        verticalAlign: 'middle',
-},
-series: [{
-    //name: 'Brands',
-    colorByPoint: true,
-    data: [{
-        name: 'V',
-        y: 5,
-        sliced: false,
-        selected: false
-    }, {
-        name: 'D',
-        y: 15
-    }, {
-        name: 'C',
-        y: 20
-    }, {
-        name: 'P',
-        y: 5
-    }, {
-        name: 'S',
-        y: 5
-    }, {
-        name: 'L',
-        y: 10
-    }, {
-        name: 'N',
-        y: 10
-    }, {
-        name: 'M',
-        y: 10
-    }, {
-        name: 'E',
-        y: 5
-    }, {
-        name: 'W',
-        y: 10
-    }, {
-        name: 'O',
-        y: 5
-    }]
-}]
-});
-</script>
+        Highcharts.chart('defect-code-wise-JI', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '',
+                align: 'left'
+            },
+            tooltip: {
+                pointFormat: '{name}'
+            },
+
+            tooltip: {
+                valueSuffix: ''
+            },
+            filter: {
+                operator: '>',
+                property: 'percentage',
+                value: 10
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'middle',
+            },
+            series: [{
+                name: '',
+                data: @Html.Raw(Model.DefectCodeJISummary),
+            }],
+        });
+    </script>
 }

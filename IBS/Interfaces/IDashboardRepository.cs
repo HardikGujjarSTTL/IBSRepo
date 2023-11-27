@@ -28,5 +28,13 @@ namespace IBS.Interfaces
         DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters,string RegionCode);
         DTResult<VendorViewAllList> Dashboard_Vendor_ViewAll_List(DTParameters dtParameters,string RegionCode,int Vend_Cd);
         DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters,int IE_CD,string RegionCode);
+
+        public DashboardModel GetLODashBoardCount(string UserName);
+
+        DTResult<LoListingModel> GetLoCallListingDetails(DTParameters dtParameters, string UserName);
+
+        #region CM JI Dashboard
+        DashboardModel GetCMJIDDashBoard(int CO_CD);
+        #endregion
     }
 }
