@@ -1,4 +1,4 @@
-﻿@model IBS.Models.VenderCallRegisterModel
+﻿@model IBS.Models.AdminCountListing
 @{
     ViewData["Title"] = "No. of Total Calls";
 }
@@ -39,18 +39,6 @@
             <table id="dtList" class="table-responsive">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Case No.</th>
-                        <th>PO No.</th>
-                        <th>PO Date</th>
-                        <th>Call Date</th>
-                        <th>Call SNo.</th>
-                        <th>Call Install No.</th>
-                        <th>IE SName</th>
-                        <th>Vendor</th>
-                        <th>Status</th>
-                        <th>Call Letter No/Dispatch Ref No.</th>
-                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,7 +53,9 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+        var Columns = [];
         $(function () {
+            debugger
             $("#FromDate").val("01/04/2023");
             $("#ToDate").val("31/03/2024");
             const urlParams = new URLSearchParams(window.location.search);
@@ -92,11 +82,98 @@
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection.");
             }
+
+            if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "PoNo", title: "PO NO" },
+                    {
+                        data: "PoDt", title: "PO DT", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CallRecvDt", title: "Call Recv Dt", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno", title: "Call SNo" },
+                    { data: "CallInstallNo", title: "Call Install No" },
+                    { data: "CallStatus", title: "Call Status" },
+                    { data: "CallLetterNo", title: "Call Letter No" },
+                    { data: "Remarks", title: "Remarks" },
+                    { data: "IeSname", title: "IE SName" },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "RegionCode", title: "Region" },
+                ]
+            } else if (type == "TB") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    {
+                        data: "BILLDT", title: "Bill Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "billamount", title: "Bill Amount" },
+                    { data: "BILLNO", title: "Bill No." },
+                    { data: "Remarks", title: "Remarks" },
+                ]
+            } else if (type == "ICNR" || type == "ICRNB") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    {
+                        data: "CallRecvDt", title: "Call Recv Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno", title: "Call Sno" },
+                    { data: "IC_NO", title: "IC NO." },
+                    {
+                        data: "IC_DT", title: "IC Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "BKNO", title: "Book No." },
+                    { data: "SETNO", title: "Set No." },
+                ]
+            }
             InitializeDatatable();
         });
 
-        function Search()
-        {
+        function Search() {
             InitializeDatatable();
         }
 
@@ -104,67 +181,31 @@
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var ActionType = $("#ActionType").val();
+
             $("#dtList").DataTable({
-                stateSave: false,// Design Assets
+                stateSave: false,
                 autoWidth: true,
                 scrollX: true,
                 scrollCollapse: true,
-                processing: true, // ServerSide Setups
+                processing: true,
                 serverSide: true,
                 destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
-                ajax: {// Ajax Filter
+                paging: true,
+                searching: true,
+                ajax: {
                     url: "@Url.Action("LoadDTotalCallListing", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            "FromDate": FromDate,
-                            "ToDate": ToDate,
-                            "ActionType": ActionType
+                            FromDate, ToDate, ActionType
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
                     }
                 },
-
-                columns: [// Columns Setups
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "CaseNo" },
-                    { data: "PoNo" },
-                    {
-                        data: "PoDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: "CallRecvDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CallSno" },
-                    { data: "CallInstallNo" },
-                    { data: "IeSname" },
-                    { data: "Vendor" },
-                    { data: "CallStatus" },
-                    { data: "CallLetterNo" },
-                    { data: "Remarks" },
-                ],
+                columns: Columns,
                 "order": [[0, "asc"]]
             });
         }
