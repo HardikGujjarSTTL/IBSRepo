@@ -44,6 +44,16 @@
 
         public string ActionType { get; set; }
 
+        #region "LO"
+        public int TotalBillCount { get; set; }
+
+        public int TotalOutstandingCount { get; set; }
+
+        public int TotalPassedCount { get; set; }
+
+        public decimal TotalBillRupees { get; set; }
+        #endregion
+
         public List<DashboardModel> IEWisePerformance { get; set; }
 
         public string ComplaintStatusSummary { get; set; }
@@ -298,6 +308,21 @@
         public string Vendor { get; set; }
         public string ContactPerson { get; set; }
         public string ContactNo { get; set; }
+    }
+
+    public class LoListingModel
+    {
+        public string BillNo { get; set; }
+
+        public string CaseNo { get; set;}
+
+        public string BillAmount { get; set; }
+
+        public string AmountReceived { get; set;}
+
+        public string PassedOutst { get; set; }
+
+        public string ActionType { get; set;}
     }
 
     public class CM_Odlest_Pending_JI_Cases_Model

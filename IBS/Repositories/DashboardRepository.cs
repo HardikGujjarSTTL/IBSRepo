@@ -1500,6 +1500,111 @@ namespace IBS.Repositories
             return dTResult;
         }
 
+        public DashboardModel GetLODashBoardCount(string UserName)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_mobile", OracleDbType.Varchar2, UserName, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_LO_DASHBOARD", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalBillCount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_BILL"]);
+                    model.TotalOutstandingCount = Convert.ToInt32(ds.Tables[0].Rows[0]["OUTST_COUNT"]);
+                    model.TotalPassedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["PASSED_COUNT"]);
+                    model.TotalBillRupees = Convert.ToDecimal(ds.Tables[0].Rows[0]["AMOUNT_RECEIVED"]);
+                }
+            }
+            return model;
+        }
+
+        public DTResult<LoListingModel> GetLoCallListingDetails(DTParameters dtParameters, string UserName)
+        {
+            DTResult<LoListingModel> dTResult = new() { draw = 0 };
+            IQueryable<LoListingModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "CaseNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", ActionType = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ActionType"]))
+            {
+                ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
+            }
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_mobile", OracleDbType.Varchar2, UserName, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_start_date", OracleDbType.Date, Convert.ToDateTime(FromDate), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_end_date", OracleDbType.Date, Convert.ToDateTime(ToDate), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_flag", OracleDbType.Varchar2, ActionType, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_LO_DASHBOARD_LIST", par);
+
+            List<LoListingModel> modelList = new List<LoListingModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    LoListingModel model = new LoListingModel
+                    {
+                        BillNo = row["BILL_NO"].ToString(),
+                        CaseNo = row["CASE_NO"].ToString(),
+                        BillAmount = Convert.ToString(row["BILL_AMOUNT"]),
+                        AmountReceived = Convert.ToString(row["AMOUNT_RECEIVED"]),
+                        PassedOutst = Convert.ToString(row["PASSED_OUTST"]),
+                    };
+                    modelList.Add(model);
+                }
+            }
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
         public DashboardModel GetCMJIDDashBoard(int CO_CD)
         {
             DashboardModel model = new DashboardModel();
