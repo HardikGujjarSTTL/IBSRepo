@@ -40,6 +40,12 @@
 
         public int PendingOnlineCallAwaitingMark { get; set; }
 
+        public int NOofBill { get; set; }
+
+        public int ICISSUERECEIVEOFFICENOTBILL { get; set; }
+
+        public int NOOFIEPERCM { get; set; }
+
         public string IE_NAME { get; set; }
 
         public string ActionType { get; set; }
@@ -76,6 +82,8 @@
 
         public List<InstructionsIE> lstInstructionsIE { get; set; }
         public List<AdminViewAllList> lstAdminViewAllList  { get; set; }
+        public List<AdminCountListing> lstAdminCountListing { get; set; }
+        
     }
 
     public class IEList
@@ -288,5 +296,29 @@
         public string Vendor { get; set; }
         public string ContactPerson { get; set; }
         public string ContactNo { get; set; }
+    }
+
+    public class AdminCountListing
+    {
+        public string CaseNo { get; set; }  
+        public DateTime CallRecvDt { get; set; }  
+        public DateTime? PoDt { get; set; }  
+        public byte? CallInstallNo { get; set; }  
+        public int CallSno { get; set; }  
+        public string CallStatus { get; set; }  
+        public string CallLetterNo { get; set; }  
+        public string Remarks { get; set; }  
+        public string PoNo { get; set; }  
+        public string IeSname { get; set; }  
+        public string Vendor { get; set; }  
+        public string RegionCode { get; set; }
+        public DateTime? BILLDT { get; set; }
+        public string BILLNO { get; set; }
+        public decimal? billamount { get; set; }
+        public string BKNO { get; set; }
+        public string SETNO { get; set; }
+        public string IC_NO { get; set; }
+        public string ActionType { get; set; }
+        public DateTime? IC_DT { get; set; }
     }
 }

@@ -17,6 +17,7 @@
 <div class="task-listinput">
     <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatus" id="frmCallStatus">
         <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="IeCd" />
         <div class="accordion-body" style="overflow-x: auto;">
             <table>
                 @*<col style="width: 20%;" />
@@ -611,6 +612,7 @@
                     $('#frmcancelled').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                 } else if (selectedValue == "S") {
@@ -627,6 +629,7 @@
                     $('#frmcancelled').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                 } else if (selectedValue == "U") {
@@ -642,6 +645,7 @@
                     $('#Remarksval').show();
                     $('#Holograms').show();
                     $('#uploadfile').hide();
+                    $('#AcceptReject').hide();
                     $('#RefreshAll').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
@@ -658,6 +662,7 @@
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
                     $('#ViewPrintIC').hide();
+                    $('#AcceptReject').hide();
                     $('#uploadcancel').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
@@ -673,6 +678,7 @@
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#ReasonFIFOdv').show();
+                    $('#AcceptReject').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#Remarksval').show();
                     $('#Holograms').show();
@@ -691,6 +697,7 @@
                     $('#RefreshAll').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
+                    $('#AcceptReject').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
                 } else if (selectedValue == "C") {
@@ -707,6 +714,7 @@
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#Holograms').hide();
+                    $('#AcceptReject').hide();
                     $('#frmcancelled').show();
                     $('#CallCancelStatusdrp').show();
                     $('#MatValue').show();
@@ -740,6 +748,7 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#ViewPrintIC').hide();
+                $('#AcceptReject').hide();
                 $('#uploadcancel').hide();
             } else if (CallStatusdrp == "A") {
                 $('#CallStatusdrp').prop('disabled', true);
@@ -818,6 +827,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -834,6 +844,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -849,6 +860,7 @@
                 $('#Holograms').show();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#CallCancelStatusdrp').hide();
@@ -866,6 +878,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -882,6 +895,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -899,6 +913,7 @@
                 $('#frmcancelled').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
             } else if (CallStatusdrp == "C") {
@@ -916,6 +931,7 @@
                 $('#MatValue').show();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
             }
@@ -1057,12 +1073,12 @@
         }
         function Accepted() {
             var formData = AjaxModel();
-
+            debugger
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
 
-            if (bknoaccpted != "" || setnoaccpted != "") {
+            //if (bknoaccpted != "" || setnoaccpted != "") {
                 $.ajax({
                     url: '@Url.Action("CallStatusAcceptRej", "CallRegisterIB")',
                     type: 'POST',
@@ -1089,17 +1105,17 @@
                         console.error('Error: ' + textStatus, errorThrown);
                     }
                 });
-            } else {
-                alert("BKNO & SetNo Is Required.");
-                return;
-            }
+            //} else {
+            //    alert("BKNO & SetNo Is Required.");
+            //    return;
+            //}
 
         }
 
         function Save() {
 
             var formData = new FormData();
-
+            debugger
             SaveSingleDocuments("tab-2");
             var bknoaccpted = $('#BkNo').val();
             var setnoaccpted = $('#SetNo').val();
@@ -1108,7 +1124,8 @@
             //if (bknoaccpted != "" && setnoaccpted != "") {
             var ajaxData = AjaxModel();
 
-            if (CallStatus == "G" && CallStatus == "T") {
+            if (CallStatus == "G" || CallStatus == "T") {
+                debugger
                 var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
 
                 if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
@@ -1338,6 +1355,7 @@
             var BkNo = $('#BkNo').val();
             var PoDt = $('#PoDt').val();
             var RejectionCharge = $('#RejectionCharge').val();
+            var IeCd = $('#IeCd').val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1357,7 +1375,8 @@
                 PoDt: PoDt,
                 DocBkNo: DocBkNo,
                 DocSetNo: DocSetNo,
-                RejectionCharge: RejectionCharge
+                RejectionCharge: RejectionCharge,
+                IeCd: IeCd
             };
 
             return formData;

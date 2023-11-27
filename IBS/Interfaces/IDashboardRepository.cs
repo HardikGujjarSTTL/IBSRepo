@@ -12,7 +12,7 @@ namespace IBS.Interfaces
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode);
         public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
-        DTResult<VenderCallRegisterModel> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
+        DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
 

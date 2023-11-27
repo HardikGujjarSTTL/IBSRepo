@@ -215,7 +215,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
         {
-            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
+            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
             return Json(dTResult);
         }
 
