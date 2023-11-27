@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
+﻿@model DashboardModel
 
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">
@@ -17,7 +12,7 @@
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">0</div>
                             <div class="total-inner">
                                 No. of Major<br /> Charge Sheets
                             </div>
@@ -30,7 +25,7 @@
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">15</div>
+                            <div class="total-amount">0</div>
                         </div>
                         <div class="total-inner">
                             No. of Minor<br /> Charge sheets
@@ -43,7 +38,7 @@
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">12</div>
+                            <div class="total-amount">@Model.ConsigneeCompaintCount</div>
                         </div>
                         <div class="total-inner">
                             No. of Consignee Complaints<br /> Closed at RITES' End
@@ -58,7 +53,7 @@
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">07</div>
+                            <div class="total-amount">0</div>
                         </div>
                         <div class="total-inner">
                             No. of POs,<br /> Awaiting for  Case No.
@@ -72,7 +67,7 @@
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">35</div>
+                            <div class="total-amount">0</div>
                             <div class="total-inner">
                                 No. Pending<br /> Charge sheets
                             </div>
@@ -85,7 +80,7 @@
         </div>
     </div>
 </div>
-<section class="table-section">
+@*<section class="table-section">
     <div class="table-title">
         <h3 class="headingh3">
             Penalty fixes on IE
@@ -129,6 +124,62 @@
                 <td></td>
                 <td class="action center"><a href="#"><span class="fa fa-thumbs-o-up"></span></a> <a href="#" class="deney"><span class="fa fa-ban"></span></a></td>
             </tr>
+        </table>
+    </div>
+</section>*@
+<section class="table-section">
+    <div class="table-title">
+        <h3 class="headingh3">
+            IE wise performance
+        </h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th>Sr. No.</th>
+                <th>Name of IE</th>
+                <th>Total Calls</th>
+                <th>Pending Calls</th>
+                <th>Accepted Calls</th>
+                <th>Cancelled Calls</th>
+                <th>Under Lab Testing</th>
+                <th>Still Under Inspection</th>
+                <th>Stage Rejection</th>
+            </tr>
+            @if (Model != null && Model.IEWisePerformance != null && Model.IEWisePerformance.Count > 0)
+            {
+                var SrNo = 0;
+                if (Model.IEWisePerformance.Count() > 0)
+                {
+                    @foreach (var item in Model.IEWisePerformance.Take(10))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.TotalCallsCount</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PendingCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.AcceptedCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CancelledCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.UnderLabTestingCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StillUnderInspectionCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StageRejectionCount</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10">No Data Found</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
+            }
         </table>
     </div>
 </section>

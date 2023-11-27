@@ -118,6 +118,22 @@
                 </a>
             </div>
             <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB" })">
+                <div class="dashboard-box das9">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.ICISSUERECEIVEOFFICENOTBILL</div>
+                            <div class="total-inner">
+                                Issued IC and
+                                received in office Not billed<br /> IC
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/not-billed-IC-icon-sml.svg" width="46" height="54" alt="Not billed IC"> </div>
+                </div>
+                </a>
+            </div>
+            @*<div class="col-lg-3">
                 <div class="dashboard-box das8">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -129,27 +145,15 @@
                     </div>
                     <div class="total-icons"><img src="images/dash-icon-2-sml.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
                 </div>
-            </div>
+            </div>*@
         </div>
         <div class="row admin-dashboard">
             <div class="col-lg-3">
-                <div class="dashboard-box das9">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">12</div>
-                            <div class="total-inner">
-                                Not billed<br /> IC
-                            </div>
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/not-billed-IC-icon-sml.svg" width="46" height="54" alt="Not billed IC"> </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB" })">
                 <div class="dashboard-box das10">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">68,140</div>
+                            <div class="total-amount">@Model.NOofBill</div>
                         </div>
                         <div class="total-inner">
                             No. of<br /> Bills
@@ -157,12 +161,13 @@
                     </div>
                     <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
                 <a class="dashboard-box das11" href="@Url.Action("IEPerCM","Dashboard")">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">56,422</div>
+                            <div class="total-amount">@Model.NOOFIEPERCM</div>
                         </div>
                         <div class="total-inner">
                             No. of IEs<br /> per CMs
@@ -172,32 +177,19 @@
                 </a>
             </div>
             <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
                 <div class="dashboard-box das12">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">100</div>
-                        </div>
-                        <div class="total-inner">
-                            Issued<br /> IC
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
-                </div>
-            </div>
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
-                <div class="dashboard-box das13">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.NotRecievedCount</div>
                             <div class="total-inner">
-                                Not received<br /> in office
+                                Issued IC Not received<br /> in office
                             </div>
                         </div>
                     </div>
                     <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
                 <div class="dashboard-box das14">
@@ -212,6 +204,22 @@
                     <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
                 </div>
             </div>
+           @* <div class="col-lg-3">
+                <div class="dashboard-box das12">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">100</div>
+                        </div>
+                        <div class="total-inner">
+                            Issued<br /> IC
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
+                </div>
+            </div>*@
+        </div>
+        <div class="row admin-dashboard">
+            
             <div class="col-lg-3">
                 <div class="dashboard-box das15">
                     <div class="dash-total">
@@ -225,7 +233,7 @@
                     <div class="total-icons"><img src="images/AVG-fees-icon.svg" width="46" height="54" alt="Avg fees"> </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            @*<div class="col-lg-3">
                 <div class="dashboard-box das16">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -237,7 +245,7 @@
                     </div>
                     <div class="total-icons"><img src="images/issued-IC-icon.svg" width="46" height="54" alt="Issued IC"> </div>
                 </div>
-            </div>
+            </div>*@
         </div>
 
         @* <div class="row admin-dashboard">
@@ -362,7 +370,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHP" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -405,7 +413,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightOutstanding.Count()</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHO" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -448,7 +456,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPendingCase.Count()</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OPC" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -491,7 +499,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstJiCase.Count()</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OJC" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -533,8 +541,7 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstRegionConsComp.Count()</span> records</div>*@
-        @*<a class="viewall" href="#">View All</a>*@
+        
     </div>
 </section>
 @*<section class="graph-section">

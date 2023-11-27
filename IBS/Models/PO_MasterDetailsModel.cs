@@ -36,7 +36,7 @@ namespace IBS.Models
 
         public decimal? SalesTax { get; set; }
 
-        [Required(ErrorMessage = "Excise Type is required")]
+        //[Required(ErrorMessage = "Excise Type is required")]
         public string? ExciseType { get; set; }
 
         [Required(ErrorMessage = "Excise Per is required")]
@@ -44,7 +44,7 @@ namespace IBS.Models
 
         public decimal? Excise { get; set; }
 
-        [Required(ErrorMessage = "Discount Type is required")]
+        //[Required(ErrorMessage = "Discount Type is required")]
         public string? DiscountType { get; set; }
 
         [Required(ErrorMessage = "Discount Per is required")]

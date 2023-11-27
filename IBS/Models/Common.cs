@@ -3370,6 +3370,27 @@ namespace IBS.Models
             return objdata;
         }
 
+        public static List<SelectListItem> GetConsigneeUsingConsigneeLike(string ConsigneeSearch)
+        {
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (ConsigneeSearch != null && ConsigneeSearch != "")
+            {
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                var obj = (from of in context.V06Consignees
+                           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
+                           select of).ToList();
+
+                objdata = (from a in obj
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.ConsigneeCd + "-" + a.Consignee,
+                          Value = Convert.ToString(a.ConsigneeCd)
+                      }).ToList();
+            }
+            return objdata;
+        }
+
         public static List<SelectListItem> GetEditConsigneeUsingConsignee(string ConsigneeCd)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -3650,6 +3671,20 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.T02Users
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.UserName,
+                                        Value = Convert.ToString(a.UserId)
+                                    }).ToList();
+            return city;
+        }
+
+        public static List<SelectListItem> GetUsersgetbyName(string name)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T02Users
+                                         where a.UserName.Trim().ToUpper().StartsWith(name.Trim().ToUpper())
                                          select
                                     new SelectListItem
                                     {

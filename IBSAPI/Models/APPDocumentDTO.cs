@@ -54,5 +54,6 @@ namespace IBSAPI.Models
         public string? Couchdbdocid { get; set; }
 
         public virtual IbsDocument? Document { get; set; }
+        public IFormFile formFile { get; set; }
     }
 }

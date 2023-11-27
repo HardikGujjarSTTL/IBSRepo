@@ -3194,7 +3194,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document != "IC Image 1")
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document == "")
                 {
                     model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
                 }
@@ -3211,7 +3211,7 @@ namespace IBS.Repositories.InspectionBilling
                                   .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
                 }
 
-                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document == "IC Image 1")
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
                 {
                     var t17Detail = from a in context.T17CallRegisters
                                     where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
@@ -3230,13 +3230,14 @@ namespace IBS.Repositories.InspectionBilling
                             row.FifoVoilateReason = wFifoVoilateReason;
                             context.SaveChanges();
                         }
+                        model.AlertMsg = "Success";
                     }
                 }
                 else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && document != "IC Image 1")
+                else if (string.IsNullOrEmpty(model.BkNo) || string.IsNullOrEmpty(model.SetNo) || document != " ")
                 {
                     model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
                 }

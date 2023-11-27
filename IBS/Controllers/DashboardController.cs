@@ -125,7 +125,8 @@ namespace IBS.Controllers
 
         public IActionResult CMDAR()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMDARDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMDFO()
@@ -135,7 +136,8 @@ namespace IBS.Controllers
 
         public IActionResult CMJIIncharge()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMJIDDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMGeneral()
@@ -145,7 +147,8 @@ namespace IBS.Controllers
 
         public IActionResult LO()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetLODashBoardCount(SessionHelper.UserModelDTO.UserName.Trim());
+            return View(model);
         }
 
         public IActionResult LAB()
@@ -215,7 +218,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
         {
-            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
+            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -278,12 +281,71 @@ namespace IBS.Controllers
         {
             ViewBag.Type = Type;
             return View();
-        }
+        }                                                                                                                                       
 
         [HttpPost]
         public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
         {
             DTResult<VendorDetailListModel> dTResult = dashboardRepository.GetDataVendorListing(dtParameters, GetUserInfo.UserName);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Admin_ViewAll_List(string Type)
+        {
+            DashboardModel model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Admin_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            DTResult<AdminViewAllList> dTResult = dashboardRepository.Dashboard_Admin_ViewAll_List(dtParameters, RegionCode);
+            return Json(dTResult);
+        }
+        
+        public IActionResult Dashboard_Vendor_ViewAll_List(string Type)
+        {
+            DashboardModel model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Vendor_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
+            DTResult<VendorViewAllList> dTResult = dashboardRepository.Dashboard_Vendor_ViewAll_List(dtParameters, RegionCode, Vend_Cd);
+            return Json(dTResult);
+        }
+        
+        public IActionResult Dashboard_IE_ViewAll_List(string Type)
+        {
+            DashboardModel model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_IE_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            int IE_CD = SessionHelper.UserModelDTO.IeCd;
+            DTResult<IEViewAllList> dTResult = dashboardRepository.Dashboard_IE_ViewAll_List(dtParameters, IE_CD, RegionCode);
+            return Json(dTResult);
+        }
+
+        public IActionResult LoCallListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetLoCallListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
     }
