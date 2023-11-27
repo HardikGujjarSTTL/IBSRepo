@@ -35,7 +35,7 @@ namespace IBSAPI.Controllers
                 if (requestCaseDetailsforvendorModel.CaseNo != null)
                 {
                     PODetailsModel model1 = vendorRepository.GetPODetailsforvendor(requestCaseDetailsforvendorModel.CaseNo, requestCaseDetailsforvendorModel.CallRecvDt, requestCaseDetailsforvendorModel.CallStage, requestCaseDetailsforvendorModel.UserID);
-                    model = vendorRepository.FindByAddDetails(requestCaseDetailsforvendorModel.CaseNo, requestCaseDetailsforvendorModel.CallRecvDt, requestCaseDetailsforvendorModel.CallStage, requestCaseDetailsforvendorModel.UserID);
+                    model = vendorRepository.FindByAddDetails(requestCaseDetailsforvendorModel.CaseNo, requestCaseDetailsforvendorModel.CallRecvDt, requestCaseDetailsforvendorModel.CallStage,Convert.ToString(requestCaseDetailsforvendorModel.UserID));
                     if (model.OnlineCallStatus == "Y")
                     {
                         if (model.InspectingAgency == "R")
@@ -322,6 +322,12 @@ namespace IBSAPI.Controllers
                 List<VenderCallRegisterModel> models = vendorRepository.GetVenderListM(model);
                 if (models.Count() > 0)
                 {
+                    models.ForEach(x =>
+                    {
+                        x.CaseNo = CaseNo;
+                        x.CallSno = Convert.ToInt32(CallSno);
+                        x.CallRecvDt = CallRecvDt;
+                    });
                     var response = new
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,

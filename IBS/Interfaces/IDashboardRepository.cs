@@ -6,6 +6,8 @@ namespace IBS.Interfaces
     {
         public DashboardModel GetDashBoardCount(string Region);
         public DashboardModel GetIEDDashBoardCount(int IeCd,string RegionCode);
+        public DashboardModel GetDashBoardLabCount(int userid, string Regin);
+        
         public DashboardModel GetCMDashBoardCount(int CoCd);
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode);
         public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);
@@ -23,6 +25,9 @@ namespace IBS.Interfaces
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
 
         DTResult<VendorDetailListModel> GetDataVendorListing(DTParameters dtParameters, string Vend_Cd);
+        DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters,string RegionCode);
+        DTResult<VendorViewAllList> Dashboard_Vendor_ViewAll_List(DTParameters dtParameters,string RegionCode,int Vend_Cd);
+        DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters,int IE_CD,string RegionCode);
 
         public DashboardModel GetLODashBoardCount(string UserName);
 
