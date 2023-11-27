@@ -509,14 +509,24 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .servicesList li, .kipList li{ width:33%; background:#e9fbff; box-shadow:2px 2px 4px 2px #d1d1d1; margin-bottom:10px; padding:20px; border-radius:2px; text-align:center; min-height:85px; align-items:center; font-weight:600; display:flex; justify-content:space-between;}
 .servicesList li{ text-align:left; display:flex; justify-content:space-between;}
 .servicesList li .subText{ font-size:13px;}
+.servicesList li .icons{ position:relative;}
+.servicesList li .icons img{ width:85%; position:relative; z-index:1;}
+.servicesList li .icons:before{content: ""; width: 70px; height: 70px; border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; background:rgba(165,201,209,0.2);}
+
 .awardImageBox span, .certificateImageBox span{background: rgb(255,255,255); background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%); bottom:0; padding:10px 0; width:100%;}
 
 .kipSection{ padding:20px 0;}
-.kipSection li{ color:#fff; margin:0; border-radius:4px;}
+.kipSection li{ color:#000; margin:0; border-radius:4px;}
 .kipSection li .counts{ display:block; width:100%; font-size:32px;}
-.kipSection li:first-child{background: rgb(28,236,245); background: linear-gradient(60deg, rgb(65 159 163) 0%, rgba(44,71,157,1) 100%);}
-.kipSection li:nth-child(2){background: rgb(246,158,62); background: linear-gradient(60deg, rgb(213 116 11) 0%, rgba(213,27,88,1) 100%);}
-.kipSection li:last-child{background: rgb(233,231,35); background: linear-gradient(60deg, rgb(173 171 28) 0%, rgba(9,149,67,1) 100%);}
+.kipSection li:first-child{background: #9ED5C2; background: linear-gradient(60deg, #9ED5C2 0%, #7fc0aa 100%);}
+.kipSection li:nth-child(2){background: #BDD999; background: linear-gradient(60deg, #BDD999 0%, #a7c87d 100%);}
+.kipSection li:last-child{background: #AEDAD5; background: linear-gradient(60deg, #AEDAD5 0%, #93c7c1 100%);}
+.kipSection li .icons{ position:relative;}
+.kipSection li .icons img{ width:85%; position:relative; z-index:1;}
+.kipSection li .icons:before{content: ""; width: 70px; height: 70px; border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;}
+.kipSection li:first-child .icons:before {background: #219D77;}
+.kipSection li:nth-child(2) .icons:before {background: #66A900;}
+.kipSection li:last-child .icons:before {background: #59A69B;}
 
 .footerAddress{ background:#05541d; padding:20px 0;}
 .mapHolder{ background:#fff; padding:8px; border:1px solid #d1d1d1;}
@@ -654,4 +664,6 @@ ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-righ
 .kipSection li{ margin-bottom:10px;}
 .homeGalleryWrap h2, .overViewSection h2, .servicesContent h2, .kipSection h2, .overViewSection h2, .certificationWrap h2, .awardWrap h2, .ourClientWrap h2{ font-size:20px; margin-bottom:15px;}
 .homeGalleryWrap a.mt-2{ margin-top:0!important;}
+.footerLogoSlider .footerLogoSlider-prev { left: 0px;}
+.footerLogoSlider .footerLogoSlider-next { right:0px;}
 }
