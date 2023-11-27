@@ -3,70 +3,77 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="dashHeader justify-content-between">
-    <h2 class="alignLeft">
-        LAB Dashboard
-    </h2>
+
+<div class="dashHeader cf">
+<h2 class="alignLeft">LAB Dashboard</h2>
 </div>
 <div class="admindashboard-section">
-    <div class="admindashboard-wrap cmDash">
+    <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-4">
-                <div class="dashboard-box das1Client">
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "1" })">
+                <div class="dashboard-box das1">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.TOTAL_INVOICE</div>
                             <div class="total-inner">
-                               No. of <br />total Invoices
+                                No. of <br />total Invoices
                             </div>
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
-            <div class="col-lg-4">
-                <div class="dashboard-box das2Client">
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "2" })">
+                <div class="dashboard-box das2">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.FINALIZED_INVOICE</div>
                         </div>
                         <div class="total-inner">
-                            No. of <br />Finalized Invoices	
+                            No. of <br />Finalized Invoices
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
             </div>
-            <div class="col-lg-4">
-                <div class="dashboard-box das3Client">
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "3" })">
+                <div class="dashboard-box das3">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.PENDING_FINALIZED_INVOICE</div>
                         </div>
                         <div class="total-inner">
-                            No. of Pending<br /> Invoices for finalization	
+                            No. of Pending<br /> Invoices for finalization
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                 </div>
+                </a>
             </div>
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-4">
-                <div class="dashboard-box das4Client">
+            <div class="col-lg-3">
+                <div class="dashboard-box das4">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount" id="nocount">&nbsp;</div>
                         </div>
                         <div class="total-inner">
-                           No. of sample <br />registered per day	
+                            No. of sample <br />registered per day
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="dashboard-box das5Client">
+        </div>
+        <div class="row admin-dashboard">
+            
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
+                <div class="dashboard-box das5">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.TotalUploaded</div>
@@ -77,9 +84,11 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
-            <div class="col-lg-4">
-                <div class="dashboard-box das6Client">
+            <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
+                <div class="dashboard-box das6">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.TotalUploaded</div>
@@ -90,51 +99,151 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das7">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.TotalBillAmount</div>
+                        </div>
+                        <div class="total-inner">
+                            Billing Amount<br /> (Current Month)
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Assigned"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das8">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.Total_Number_Of_Samples</div>
+                            <div class="total-inner">
+                                Total No. of <br />Samples
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="row admin-dashboard">
+
+            
+            <div class="col-lg-3">
+                <div class="dashboard-box das9">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.Internal</div>
+                        </div>
+                        <div class="total-inner">
+                            Internal 
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das10">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.External</div>
+                        </div>
+                        <div class="total-inner">
+                            External
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<section class="table-section">
+@* <section class="table-section">
     <div class="table-title">
         <h3 class="headingh3">
-            Billing Amount/October <span class="subTitle">(Current Month)</span>
+            Billing Amount/October <span class="subTitle">(Current Month):(@Model.TotalBillAmount)</span>
         </h3>
     </div>
     <div class="iePieGraphGrid">
-<table class="borderGrid">
-    <tr>
-      <td>Total Number of Samples (2023) </td>
-      <td>500</td>
-    </tr>
-    <tr>
-      <td>Internal (2023)</td>
-      <td>300</td>
-    </tr>
-    <tr>
-      <td>External (2023)</td>
-      <td>200</td>
-    </tr>
-</table>
+        <table class="borderGrid">
+            <tr>
+                <td>Total Number of Samples (2023) </td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>Internal (2023)</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>External (2023)</td>
+                <td>200</td>
+            </tr>
+        </table>
+    </div>
+</section> *@
+<section class="table-section">
+    <div class="iePieGraphGrid">
+        <h3 class="headingh3">
+            Five oldest cases for which reports have not been generated
+        </h3>
+    <table class="borderGrid">
+        <tr>
+            <th class="srNo">Sr. No.</th>
+            <th>Case No.</th>
+            <th>IE</th>
+            <th>Date</th>
+            <th>Vendor</th>
+            <th>Lab Registration No.</th>
+            <th>Sample Recv Date</th>
+        </tr>
+        @{
+            var Srno = 0;
+            if (Model.lstsampledata.Count() > 0)
+            {
+                foreach (var item in Model.lstsampledata.Take(5))
+                {
+                    Srno = Srno + 1;
+                    <tr>
+                        <td>@Srno</td>
+                        <td>@item.CASE_NO</td>
+                        <td>@item.IE</td>
+                        <td>@item.Date</td>
+                        <td>@item.Vendor</td>
+                        <td>@item.SampleRegNo</td>
+                        <td>@item.SampleRecDt</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No Data Found</td>
+                </tr>
+            }
+        }
+    </table>
     </div>
 </section>
 <script>
     $(document).ready(function () {
         Count();
-        $('.dashboard-box.das1Client').on('click', function () {
-            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 1;
-        });
-        $('.dashboard-box.das2Client').on('click', function () {
-            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 2;
-        });
-        $('.dashboard-box.das3Client').on('click', function () {
-            window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 3;
-        });
-        $('.dashboard-box.das5Client').on('click', function () {
-            window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
-        });
-        $('.dashboard-box.das6Client').on('click', function () {
-            window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
-        });
+        // $('.dashboard-box.das1').on('click', function () {
+        //     window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 1;
+        // });
+        // $('.dashboard-box.das2').on('click', function () {
+        //     window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 2;
+        // });
+        // $('.dashboard-box.das3').on('click', function () {
+        //     window.location.href = '@Url.Action("TotalInvoice", "Dashboard")?Flag=' + 3;
+        // });
+        // $('.dashboard-box.das5').on('click', function () {
+        //     window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
+        // });
+        // $('.dashboard-box.das6').on('click', function () {
+        //     window.location.href = '@Url.Action("TotalReportUploaded", "Dashboard")';
+        // });
     });
     function Count() {
 
@@ -147,5 +256,52 @@
                 $("#nocount").html(success.NO_OF_Register_Per_Day);
             }
         });
+    }
+    function InitializeDatatable(wFrmDtO, wToDt, Flag) {
+        
+        $("#dttotalinvoice").DataTable({
+            stateSave: false,
+            autoWidth: true,
+            scrollX: true,
+            scrollCollapse: true,
+            processing: true, 
+            serverSide: true,
+            destroy: true,
+            paging: true,
+            searching: true,
+            ajax: {
+                url: "@Url.Action("LoadTableInvoice")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: function (d) {
+                    var AdditionalValues = {
+                       
+                    };
+                    d.AdditionalValues = AdditionalValues;
+                    return JSON.stringify(d);
+                }
+            },
+
+            columns: [// Columns Setups
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+
+                { data: "CASE_NO" },
+                { data: "IE" },
+                { data: "Date" },
+                { data: "Vendor" },
+                { data: "SampleRegNo" },
+                { data: "SampleRecDt" }
+                
+            ],
+
+            "order": [[0, "asc"]]
+        });
+
     }
 </script>

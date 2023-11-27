@@ -6,6 +6,11 @@
         public int FINALIZED_INVOICE { get; set; }
         public int PENDING_FINALIZED_INVOICE { get; set; }
         public int TotalUploaded { get; set; }
+        public string TotalBillAmount { get; set; }
+
+        public int Total_Number_Of_Samples { get; set; }
+        public int Internal { get; set; }
+        public int External { get; set; }
         public int TotalCallsCount { get; set; }
 
         public int PendingCallsCount { get; set; }
@@ -73,7 +78,7 @@
         public List<RegionConsigneeComplaintsListModel> lstRegionConsComp { get; set; } = new List<RegionConsigneeComplaintsListModel>();
         public List<PendingOrJICaseListModel> lstPendingCase { get; set; } = new List<PendingOrJICaseListModel>();
         public List<PendingOrJICaseListModel> lstJiCase { get; set; } = new List<PendingOrJICaseListModel>();
-
+        public List<LABREGISTERModel> lstsampledata { get; set; } = new List<LABREGISTERModel>();
         public List<InstructionsIE> lstInstructionsIE { get; set; }
     }
 

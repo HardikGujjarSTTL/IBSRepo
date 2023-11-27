@@ -26,13 +26,18 @@ namespace IBS.Repositories
         {
             DashboardModel model = new();
 
-            OracleParameter[] par = new OracleParameter[4];
+            OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, userid, ParameterDirection.Input);
             par[1] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             par[3] = new OracleParameter("P_RESULT_CURSOR1", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_CURSOR2", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_CURSOR3", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_CURSOR4", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("P_RESULT_CURSOR5", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("P_RESULT_CURSOR6", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_LAB_DASHBOARD", par, 3);
+            DataSet ds = DataAccessDB.GetDataSet("GET_LAB_DASHBOARD", par, 8);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -46,6 +51,40 @@ namespace IBS.Repositories
                 {
                     model.TotalUploaded = Convert.ToInt32(ds.Tables[1].Rows[0]["REPORTS_GENERATED"]);
                     
+                }
+                if (ds.Tables[2].Rows.Count > 0)
+                {
+                    model.TotalBillAmount = Convert.ToString(ds.Tables[2].Rows[0]["Bill_Amount"]);
+
+                }
+                if (ds.Tables[3].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[3];
+                    List<LABREGISTERModel> lst = dt.AsEnumerable().Select(row => new LABREGISTERModel
+                    {
+                        CASE_NO = Convert.ToString(row["case_no"]),
+                        IE = Convert.ToString(row["ie_name"]),
+                        Date = Convert.ToString(row["datetime"]),
+                        Vendor = Convert.ToString(row["vend_name"]),
+                        SampleRegNo = Convert.ToString(row["sample_reg_no"]),
+                         SampleRecDt = Convert.ToString(row["sample_recv_dt"])
+                    }).ToList();
+                    model.lstsampledata = lst;
+                }
+                if (ds.Tables[4].Rows.Count > 0)
+                {
+                    model.Total_Number_Of_Samples = Convert.ToInt32(ds.Tables[4].Rows[0]["Total_Number_Of_Samples"]);
+
+                }
+                if (ds.Tables[5].Rows.Count > 0)
+                {
+                    model.Internal = Convert.ToInt32(ds.Tables[5].Rows[0]["Internal"]);
+
+                }
+                if (ds.Tables[6].Rows.Count > 0)
+                {
+                    model.External = Convert.ToInt32(ds.Tables[6].Rows[0]["External"]);
+
                 }
 
             }
