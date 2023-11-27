@@ -322,6 +322,10 @@
             </tr>
         }
     </table>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_IE_ViewAll_List", "Dashboard", new { Type = "IFI" })">View All</a>
+    </div>
 </section>
 <section class="table-section iePieGraphGrid">
     <div class="table-title">
@@ -374,6 +378,10 @@
             </tr>
         }
     </table>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_IE_ViewAll_List", "Dashboard", new { Type = "PC" })">View All</a>
+    </div>
 </section>
 <div class="chatIcon">
     <span class="fa fa-commenting-o"></span>

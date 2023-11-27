@@ -258,7 +258,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPOCallStatus.Count</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Vendor_ViewAll_List", "Dashboard", new { Type = "RCS" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -313,7 +313,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstRecentPO.Count</span> records*@</div>
-        <a class="viewall" href="#">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Vendor_ViewAll_List", "Dashboard", new { Type = "RPO" })">View All</a>
     </div>
 </section>
 @section scripts{

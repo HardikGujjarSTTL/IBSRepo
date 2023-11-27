@@ -149,7 +149,7 @@ namespace IBSAPI.Repositories
             return lst;
         }
 
-        public VenderCallRegisterModel FindByAddDetails(string CaseNo, DateTime? CallRecvDt, string CallStage, int UserId)
+        public VenderCallRegisterModel FindByAddDetails(string CaseNo, DateTime? CallRecvDt, string CallStage, string UserId)
         {
             VenderCallRegisterModel model = new();
             var T13 = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
@@ -171,6 +171,9 @@ namespace IBSAPI.Repositories
                 model.RlyNonrly = T13.RlyNonrly;
                 model.PoOrLetter = T13.PoOrLetter;
                 model.PendingCharges = Convert.ToInt32(T13.PendingCharges);
+                model.PoNo=T13.PoNo;
+                model.PoDt = T13.PoDt;
+                model.CallRecvDt = T13.RecvDt;
             }
             var count = context.T17CallRegisters.Where(call => call.CaseNo == CaseNo && call.CallStatus == "M" && call.FinalOrStage == CallStage).Select(call => call.CaseNo).Count();
 
@@ -254,7 +257,7 @@ namespace IBSAPI.Repositories
             
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo1, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt1), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, model.CallRecvDt, ParameterDirection.Input);
             par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno1, ParameterDirection.Input);
             par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 

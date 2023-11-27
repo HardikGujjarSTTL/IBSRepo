@@ -291,6 +291,12 @@
             AddRemoveValidation($("#DiscountType").val(), 'DiscountPer');
             AddRemoveValidation($("#ExciseType").val(), 'ExcisePer');
             AddRemoveValidation($("#OtChargeType").val(), 'OtChargePer');
+            if ('@Model.BpoCd') {
+                SearchBPO('@Model.BpoCd');
+            }
+            if ('@Model.ConsigneeCd') {
+                SearchConsignee('@Model.ConsigneeCd');
+            }
         });
 
         function AddRemoveValidation(selectedValue,fieldName) {
@@ -358,6 +364,9 @@
 
         function SearchBPO() {
             var SBPO = $("#SBPO").val();
+            if (id != null) {
+                SBPO = id;
+            }
             $.ajax({
                 url: '@Url.Action("GetBillPayingOfficer", "ClientPurchaseOrder")?SBPO=' + SBPO,
                 type: 'GET',
@@ -378,6 +387,9 @@
         }
         function SearchConsignee() {
             var ConsigneeSearch = $("#ConsigneeSearch").val();
+            if (id != null) {
+                ConsigneeSearch = id;
+            }
             $.ajax({
                 url: '@Url.Action("GetConsigneeUsingConsignee", "ClientPurchaseOrder")?ConsigneeSearch=' + ConsigneeSearch,
                 type: 'GET',

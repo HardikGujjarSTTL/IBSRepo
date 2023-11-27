@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -50,7 +51,7 @@ namespace IBS.Repositories
                 if (ds.Tables[1].Rows.Count > 0)
                 {
                     model.TotalUploaded = Convert.ToInt32(ds.Tables[1].Rows[0]["REPORTS_GENERATED"]);
-                    
+
                 }
                 if (ds.Tables[2].Rows.Count > 0)
                 {
@@ -88,7 +89,7 @@ namespace IBS.Repositories
                 }
 
             }
-           
+
 
             return model;
         }
@@ -121,6 +122,9 @@ namespace IBS.Repositories
                     model.StillUnderInspectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STILL_UNDER_INSPECTION"]);
                     model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
                     model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
+                    model.NOofBill = Convert.ToInt32(ds.Tables[0].Rows[0]["NO_OF_BILL"]);
+                    model.ICISSUERECEIVEOFFICENOTBILL = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_RECEIVE_OFFICE_NOT_BILL"]);
+                    model.NOOFIEPERCM = Convert.ToInt32(ds.Tables[0].Rows[0]["NO_OF_IE_PER_CM"]);
                 }
 
                 //if (ds.Tables.Count > 1)
@@ -827,10 +831,10 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<VenderCallRegisterModel> GetDataListTotalCallListing(DTParameters dtParameters, string Region)
+        public DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region)
         {
-            DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
-            IQueryable<VenderCallRegisterModel>? query = null;
+            DTResult<AdminCountListing> dTResult = new() { draw = 0 };
+            IQueryable<AdminCountListing>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -871,7 +875,7 @@ namespace IBS.Repositories
                 query = from l in context.ViewGetCallRegCancellations
                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
                         orderby l.CaseNo, l.CallRecvDt
-                        select new VenderCallRegisterModel
+                        select new AdminCountListing
                         {
                             CaseNo = l.CaseNo,
                             CallRecvDt = l.CallRecvDt,
@@ -887,13 +891,13 @@ namespace IBS.Repositories
                             RegionCode = l.RegionCode,
                         };
             }
-            else
+            else if (ActionType == "M" || ActionType == "A" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
             {
                 query = from l in context.ViewGetCallRegCancellations
                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
                               && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
-                        select new VenderCallRegisterModel
+                        select new AdminCountListing
                         {
                             CaseNo = l.CaseNo,
                             CallRecvDt = l.CallRecvDt,
@@ -908,9 +912,77 @@ namespace IBS.Repositories
                             Vendor = l.Vendor,
                             RegionCode = l.RegionCode,
                         };
+
             }
+            else if (ActionType == "TB")
+            {
+                query = from l in context.T22Bills
+                        where (l.BillDt >= Convert.ToDateTime(FromDate) && l.BillDt <= Convert.ToDateTime(ToDate)) && l.CaseNo.StartsWith(Region)
+                        select new AdminCountListing
+                        {
+                            CaseNo = l.CaseNo,
+                            BILLDT = l.BillDt,
+                            billamount = l.BillAmount,
+                            BILLNO = l.BillNo,
+                            Remarks = l.Remarks,
+                        };
 
+            }
+            else if (ActionType == "ICNR")
+            {
+                query = from t20 in context.T20Ics
+                        join t30 in context.T30IcReceiveds
+                        on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                        from t30 in t30Group.DefaultIfEmpty()
+                        where t20.CaseNo.StartsWith(Region) &&
+                                   t20.CallRecvDt >= Convert.ToDateTime(FromDate) &&
+                                   t20.CallRecvDt <= Convert.ToDateTime(ToDate) //&& t30 == null
+                        select new AdminCountListing
+                        {
+                            CaseNo = t20.CaseNo,
+                            CallRecvDt = t20.CallRecvDt,
+                            CallSno = t20.CallSno,
+                            IC_NO = t20.IcNo,
+                            IC_DT = t20.IcDt,
+                            BKNO = t20.BkNo,
+                            SETNO = t20.SetNo,
+                        };
 
+                //var query = from t20 in dbContext.T20_IC
+                //            join t30 in dbContext.T30_IC_RECEIVED
+                //            on new { t20.BK_NO, t20.SET_NO } equals new { t30.BK_NO, t30.SET_NO } into t30Group
+                //            from t30 in t30Group.DefaultIfEmpty()
+                //            where t20.CASE_NO.Substring(0, 1) == "N" &&
+                //                  t20.CALL_RECV_DT >= DateTime.ParseExact("01/04/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                //                  t20.CALL_RECV_DT <= DateTime.ParseExact("31/03/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                //                  t30 == null // Not equal condition
+                //            select new { Flag = "N", t20 };
+
+                //var distinctQuery = query.Distinct();
+
+                query.Distinct();
+
+            }
+            else if (ActionType == "ICRNB")
+            {
+                query = from t20 in context.T20Ics
+                        join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
+                        join t22 in context.T22Bills on t20.CaseNo equals t22.CaseNo into t22Group
+                        from t22 in t22Group.DefaultIfEmpty()
+                        where t30.Region == Region &&
+                             (t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        select new AdminCountListing
+                        {
+                            CaseNo = t20.CaseNo,
+                            CallRecvDt = t20.CallRecvDt,
+                            CallSno = t20.CallSno,
+                            IC_NO = t20.IcNo,
+                            IC_DT = t20.IcDt,
+                            BKNO = t20.BkNo,
+                            SETNO = t20.SetNo,
+                        };
+
+            }
 
             dTResult.recordsTotal = query.Count();
 
@@ -925,6 +997,7 @@ namespace IBS.Repositories
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+
         }
 
         public DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region)
@@ -1267,6 +1340,585 @@ namespace IBS.Repositories
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters, string RegionCode)
+        {
+            DTResult<AdminViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<AdminViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "ClientName";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "ClientName";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_TODate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_ACTION_TYPE", OracleDbType.Varchar2, Status, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_VIEWALL_LIST", par, 1);
+            DataTable dt = ds.Tables[0];
+            List<AdminViewAllList> list = new List<AdminViewAllList>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                if (Status == "CHP" || Status == "CHO")
+                {
+                    list = dt.AsEnumerable().Select(row => new AdminViewAllList
+                    {
+                        ClientName = Convert.ToString(row["CLIENT_NAME"]),
+                        NoofBills = Convert.ToInt32(row["NO_OF_BILL"]),
+                        Value = Convert.ToDecimal(row["AMOUNT"]),
+                    }).ToList();
+                }
+                else if (Status == "OPC" || Status == "OJC")
+                {
+                    list = dt.AsEnumerable().Select(row => new AdminViewAllList
+                    {
+                        PONO = Convert.ToString(row["PO_NO"]),
+                        CaseNo = Convert.ToString(row["CASE_NO"]),
+                        CallDate = Convert.ToDateTime(row["CALL_DATE"])
+                    }).ToList();
+                }
+            }
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<VendorViewAllList> Dashboard_Vendor_ViewAll_List(DTParameters dtParameters, string RegionCode, int Vend_Cd)
+        {
+            DTResult<VendorViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<VendorViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CaseNo";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+
+            OracleParameter[] par1 = new OracleParameter[5];
+
+            par1[0] = new OracleParameter("P_VEND_CD", OracleDbType.NVarchar2, Vend_Cd, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
+            par1[2] = new OracleParameter("P_TODATE", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
+            par1[3] = new OracleParameter("P_ACTION_TYPE", OracleDbType.NVarchar2, Status, ParameterDirection.Input);
+            par1[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_VENDOR_DASHBOARD_VIEWALL_LIST", par1);
+
+            List<VendorViewAllList> listVend = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (Status == "RCS")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            CallSno = Convert.ToString(row["CALL_SNO"]),
+                            Details = Convert.ToString(row["DETAILS"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            IE = Convert.ToString(row["IE_NAME"]),
+                            IEContactNo = Convert.ToString(row["IE_PHONE_NO"]),
+                            CM = Convert.ToString(row["CO_NAME"]),
+                            CmContactNo = Convert.ToString(row["CO_PHONE_NO"])
+                        }).ToList();
+                    }
+                }
+                else if (Status == "RPO")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            Details = Convert.ToString(row["DETAILS"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            PONO = Convert.ToString(row["PO_NO"]),
+                            PurchaseOrder = Convert.ToString(row["PURCHASE_ORDER"]),
+                            Status = Convert.ToString(row["CALL_STATUS"])
+                        }).ToList();
+                    }
+                }
+            }
+
+            query = listVend.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters, int IE_CD, string RegionCode)
+        {
+            DTResult<IEViewAllList> dTResult = new() { draw = 0 };
+            IQueryable<IEViewAllList>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CaseNo";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+
+
+
+            OracleParameter[] par1 = new OracleParameter[4];
+
+            par1[0] = new OracleParameter("P_IE_CD", OracleDbType.Int32, IE_CD, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
+            par1[2] = new OracleParameter("P_TODATE", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
+            par1[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_IE_DASHBOARD_VIEWALL_LIST", par1);
+
+            List<IEViewAllList> listIE = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (Status == "IFI")
+                {
+
+                    var query1 = from l in context.T72IeMessages
+                                 where l.RegionCode == RegionCode && (l.Isdeleted == 0 || l.Isdeleted == null)
+                                 select new IEViewAllList
+                                 {
+                                     MessageID = l.MessageId,
+                                     LetterNo = l.LetterNo,
+                                     LetterDt = l.LetterDt,
+                                     Message = l.Message,
+                                     MessageDt = l.MessageDt,
+                                 };
+                    listIE = query1.ToList();
+                }
+                else if (Status == "PC")
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dt = ds1.Tables[0];
+                        listIE = dt.AsEnumerable().Select(row => new IEViewAllList
+                        {
+                            CaseNo = Convert.ToString(row["CASE_NO"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                            CallSno = Convert.ToString(row["CALL_SNO"]),
+                            InspDate = Convert.ToDateTime(row["INSP_DESIRE_DT"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            Vendor = Convert.ToString(row["VEND_NAME"]),
+                            ContactPerson = Convert.ToString(row["CONTACT_PER"]),
+                            ContactNo = Convert.ToString(row["CONTACT_NO"])
+                        }).ToList();
+                    }
+
+                }
+            }
+
+            query = listIE.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
+        }
+
+        public DashboardModel GetLODashBoardCount(string UserName)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("p_mobile", OracleDbType.Varchar2, UserName, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_LO_DASHBOARD", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.TotalBillCount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_BILL"]);
+                    model.TotalOutstandingCount = Convert.ToInt32(ds.Tables[0].Rows[0]["OUTST_COUNT"]);
+                    model.TotalPassedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["PASSED_COUNT"]);
+                    model.TotalBillRupees = Convert.ToDecimal(ds.Tables[0].Rows[0]["AMOUNT_RECEIVED"]);
+                }
+            }
+            return model;
+        }
+
+        public DTResult<LoListingModel> GetLoCallListingDetails(DTParameters dtParameters, string UserName)
+        {
+            DTResult<LoListingModel> dTResult = new() { draw = 0 };
+            IQueryable<LoListingModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "" || orderCriteria == null)
+                {
+                    orderCriteria = "CaseNo";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                orderCriteria = "CaseNo";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", ActionType = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ActionType"]))
+            {
+                ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
+            }
+
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("p_mobile", OracleDbType.Varchar2, UserName, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_start_date", OracleDbType.Date, Convert.ToDateTime(FromDate), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_end_date", OracleDbType.Date, Convert.ToDateTime(ToDate), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_flag", OracleDbType.Varchar2, ActionType, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_LO_DASHBOARD_LIST", par);
+
+            List<LoListingModel> modelList = new List<LoListingModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    LoListingModel model = new LoListingModel
+                    {
+                        BillNo = row["BILL_NO"].ToString(),
+                        CaseNo = row["CASE_NO"].ToString(),
+                        BillAmount = Convert.ToString(row["BILL_AMOUNT"]),
+                        AmountReceived = Convert.ToString(row["AMOUNT_RECEIVED"]),
+                        PassedOutst = Convert.ToString(row["PASSED_OUTST"]),
+                    };
+                    modelList.Add(model);
+                }
+            }
+            query = modelList.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public DashboardModel GetCMJIDDashBoard(int CO_CD)
+        {
+            DashboardModel model = new DashboardModel();
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
+            List<DashboardModel> lstIEPer = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    lstIEPer = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList();
+                }
+            }
+            model.IEWisePerformance = lstIEPer;
+
+
+            OracleParameter[] par2 = new OracleParameter[6];
+            par2[0] = new OracleParameter("P_RESULT_PENDING_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_RESULT_IE_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[2] = new OracleParameter("P_RESULT_VENDOR_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[3] = new OracleParameter("P_RESULT_CLIENT_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[4] = new OracleParameter("P_RESULT_INTER_REGION_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[5] = new OracleParameter("P_RESULT_DEFECT_CODE_WISE_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds2 = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD", par2, 6);
+
+            if (ds2 != null && ds2.Tables.Count > 0)
+            {
+                if (ds2.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt1 = ds2.Tables[0];
+                    List<CM_Odlest_Pending_JI_Cases_Model> oldestPendingJICases = dt1.AsEnumerable().Select(row => new CM_Odlest_Pending_JI_Cases_Model
+                    {
+                        CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        JI_REGION = Convert.ToString(row["JI_REGION"]),
+                        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        CALL_RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["CALL_RECV_DT"])) ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
+                        CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
+                        JI_SNO = Convert.ToString(row["JI_SNO"]),
+                        JI_DT = string.IsNullOrEmpty(Convert.ToString(row["JI_DT"])) ? null : Convert.ToDateTime(row["JI_DT"])
+                    }).ToList();
+                    model.oldestPendingJICases = oldestPendingJICases;
+                }
+
+                if (ds2.Tables[1].Rows.Count > 0)
+                {
+                    DataTable dt2 = ds2.Tables[1];
+                    List<CM_NO_OF_Cons_Comp_Model> ieNoOfComp = dt2.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.ieNoOfComp = ieNoOfComp;
+                }
+
+                if (ds2.Tables[2].Rows.Count > 0)
+                {
+                    DataTable dt3 = ds2.Tables[2];
+                    List<CM_NO_OF_Cons_Comp_Model> vendorNoOfComp = dt3.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.vendorNoOfComp = vendorNoOfComp;
+                }
+
+                if (ds2.Tables[3].Rows.Count > 0)
+                {
+                    DataTable dt4 = ds2.Tables[3];
+                    List<CM_NO_OF_Cons_Comp_Model> clientNoOfComp = dt4.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.clientNoOfComp = clientNoOfComp;
+                }
+
+                if (ds2.Tables[4].Rows.Count > 0)
+                {
+                    DataTable dt5 = ds2.Tables[4];
+
+                    Inter_Region_JI_Cons_Comp_Model interRegionJIComp = dt5.AsEnumerable().Select(row => new Inter_Region_JI_Cons_Comp_Model
+                    {
+                        EE = Convert.ToInt32(row["EE"]),
+                        EN = Convert.ToInt32(row["EN"]),
+                        ES = Convert.ToInt32(row["ES"]),
+                        EW = Convert.ToInt32(row["EW"]),
+                        NE = Convert.ToInt32(row["NE"]),
+                        NN = Convert.ToInt32(row["NN"]),
+                        NS = Convert.ToInt32(row["NS"]),
+                        NW = Convert.ToInt32(row["NW"]),
+                        SE = Convert.ToInt32(row["SE"]),
+                        SN = Convert.ToInt32(row["SN"]),
+                        SS = Convert.ToInt32(row["SS"]),
+                        SW = Convert.ToInt32(row["SW"]),
+                        WE = Convert.ToInt32(row["WE"]),
+                        WN = Convert.ToInt32(row["WN"]),
+                        WS = Convert.ToInt32(row["WS"]),
+                        WW = Convert.ToInt32(row["WW"])
+                    }).FirstOrDefault();
+                    model.interRegionJIComp = interRegionJIComp;
+                }
+
+                if (ds2.Tables[5].Rows.Count > 0)
+                {
+                    DataTable dt6 = ds2.Tables[5];
+
+                    CM_Defect_Code_JI_Comp_Model defectCodeJIComp = dt6.AsEnumerable().Select(row => new CM_Defect_Code_JI_Comp_Model
+                    {
+                        VISUAL = Convert.ToInt32(row["VISUAL"]),
+                        DIAMENSIONAL = Convert.ToInt32(row["DIAMENSIONAL"]),
+                        CHEMICAL_COMPOSITION = Convert.ToInt32(row["CHEMICAL_COMPOSITION"]),
+                        PHYSICAL = Convert.ToInt32(row["PHYSICAL"]),
+                        SURFACE = Convert.ToInt32(row["SURFACE"]),
+                        LOAD_PERFORMANCE = Convert.ToInt32(row["LOAD_PERFORMANCE"]),
+                        NDT = Convert.ToInt32(row["NDT"]),
+                        MACRO_MICRO = Convert.ToInt32(row["MACRO_MICRO"]),
+                        ELECTRICAL = Convert.ToInt32(row["ELECTRICAL"]),
+                        WELDING = Convert.ToInt32(row["WELDING"]),
+                        OTHER = Convert.ToInt32(row["OTHER"]),
+                        //TOTAL = VISUAL + DIAMENSIONAL + CHEMICAL_COMPOSITION + PHYSICAL + SURFACE + LOAD_PERFORMANCE + NDT + MACRO_MICRO + ELECTRICAL + WELDING + OTHER
+                    }).FirstOrDefault();
+                    model.defectCodeJIComp = defectCodeJIComp;
+                }
+
+                model.DefectCodeJISummary = "[";
+                model.DefectCodeJISummary += "['V'," + model.defectCodeJIComp.VISUAL + "],";
+                model.DefectCodeJISummary += "['D'," + model.defectCodeJIComp.DIAMENSIONAL + "],";
+                model.DefectCodeJISummary += "['C'," + model.defectCodeJIComp.CHEMICAL_COMPOSITION + "],";
+                model.DefectCodeJISummary += "['P'," + model.defectCodeJIComp.PHYSICAL + "],";
+                model.DefectCodeJISummary += "['S'," + model.defectCodeJIComp.SURFACE + "],";
+                model.DefectCodeJISummary += "['L'," + model.defectCodeJIComp.LOAD_PERFORMANCE + "],";
+                model.DefectCodeJISummary += "['N'," + model.defectCodeJIComp.NDT + "],";
+                model.DefectCodeJISummary += "['M'," + model.defectCodeJIComp.MACRO_MICRO + "],";
+                model.DefectCodeJISummary += "['E'," + model.defectCodeJIComp.ELECTRICAL + "],";
+                model.DefectCodeJISummary += "['W'," + model.defectCodeJIComp.WELDING + "],";
+                model.DefectCodeJISummary += "['O'," + model.defectCodeJIComp.OTHER + "]";
+                model.DefectCodeJISummary += "]";
+            }
+            return model;
+        }
+
+        public DashboardModel GetCMDARDashBoard(int CO_CD)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[1]; //[7];
+            par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1); 
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.ConsigneeCompaintCount = Convert.ToInt32(ds.Tables[0].Rows[0]["CONS_COMP_CLOSE_RITES"]);
+                }
+            }
+
+            OracleParameter[] par2 = new OracleParameter[2];
+
+            par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
+            List<DashboardModel> listVend = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    listVend = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList();
+                }
+            }
+            model.IEWisePerformance = listVend;
+
+            return model;
         }
     }
 }

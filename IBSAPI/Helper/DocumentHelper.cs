@@ -175,12 +175,16 @@ namespace IBSAPI.Helpers
                 }
 
                 string DestinationPath = Path.Combine(path, Filepath);
-                if (File.Exists(TempPath) && !File.Exists(DestinationPath))
+                using (var fileStream = System.IO.File.Create(DestinationPath))
                 {
-                    File.Copy(TempPath, DestinationPath, true);
+                    item.formFile.CopyTo(fileStream);
                 }
-                FileInfo newfile = new FileInfo(DestinationPath);
+                //if (File.Exists(TempPath) && !File.Exists(DestinationPath))
+                //{
+                //    File.Copy(TempPath, DestinationPath, true);
+                //}
 
+                FileInfo newfile = new FileInfo(DestinationPath);
                 item.DocumentCategoryID = DocumentIds;
                 item.Documentid = Documentid;
                 item.Applicationid = ApplicationID + "_" + AppID;
