@@ -125,7 +125,8 @@ namespace IBS.Controllers
 
         public IActionResult CMDAR()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMDARDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMDFO()

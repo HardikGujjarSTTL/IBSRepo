@@ -56,8 +56,11 @@
         var Columns = [];
         $(function () {
             debugger
-            $("#FromDate").val("01/04/2023");
-            $("#ToDate").val("31/03/2024");
+            var currentDate = new Date();
+            var financialYearDates = calculateFinancialYearDates(currentDate);
+
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
@@ -172,6 +175,18 @@
             }
             InitializeDatatable();
         });
+
+        function calculateFinancialYearDates(currentDate) {
+            var currentYear = currentDate.getFullYear();
+
+            var financialYearStartDate = new Date(currentYear, 3, 1);
+            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+            return {
+                start: financialYearStartDate,
+                end: financialYearEndDate
+            };
+        }
 
         function Search() {
             InitializeDatatable();

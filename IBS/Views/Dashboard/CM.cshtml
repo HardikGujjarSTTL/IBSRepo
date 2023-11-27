@@ -134,21 +134,36 @@
             @if (Model != null && Model.IEWisePerformance != null && Model.IEWisePerformance.Count > 0)
             {
                 var SrNo = 0;
-                @foreach (var item in Model.IEWisePerformance.Take(10))
+                if (Model.IEWisePerformance.Count() > 0)
                 {
-                    SrNo = SrNo + 1;
+                    @foreach (var item in Model.IEWisePerformance.Take(10))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.TotalCallsCount</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PendingCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.AcceptedCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CancelledCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.UnderLabTestingCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StillUnderInspectionCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StageRejectionCount</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.TotalCallsCount</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PendingCallsCount</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.AcceptedCallsCount</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CancelledCallsCount</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.UnderLabTestingCount</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StillUnderInspectionCount</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StageRejectionCount</font></td>
+                        <td colspan="10">No Data Found</td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
             }
         </table>
     </div>

@@ -833,50 +833,51 @@ namespace IBS.Repositories
             }
             if (ActionType == "TC")
             {
-                 query = from l in context.ViewGetCallRegCancellations
-                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
-                         orderby l.CaseNo, l.CallRecvDt
-                         select new AdminCountListing
-                         {
-                             CaseNo = l.CaseNo,
-                             CallRecvDt = l.CallRecvDt,
-                             CallInstallNo = l.CallInstallNo,
-                             CallSno = Convert.ToInt16(l.CallSno),
-                             CallStatus = l.CallStatus,
-                             CallLetterNo = l.CallLetterNo,
-                             Remarks = l.Remarks,
-                             PoNo = l.PoNo,
-                             PoDt = l.PoDt,
-                             IeSname = l.IeSname,
-                             Vendor = l.Vendor,
-                             RegionCode = l.RegionCode,
-                         };
+                query = from l in context.ViewGetCallRegCancellations
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
+                        orderby l.CaseNo, l.CallRecvDt
+                        select new AdminCountListing
+                        {
+                            CaseNo = l.CaseNo,
+                            CallRecvDt = l.CallRecvDt,
+                            CallInstallNo = l.CallInstallNo,
+                            CallSno = Convert.ToInt16(l.CallSno),
+                            CallStatus = l.CallStatus,
+                            CallLetterNo = l.CallLetterNo,
+                            Remarks = l.Remarks,
+                            PoNo = l.PoNo,
+                            PoDt = l.PoDt,
+                            IeSname = l.IeSname,
+                            Vendor = l.Vendor,
+                            RegionCode = l.RegionCode,
+                        };
             }
-            else if(ActionType == "M" ||ActionType == "A" ||ActionType == "C" ||ActionType == "U" ||ActionType == "S" ||ActionType == "T")
+            else if (ActionType == "M" || ActionType == "A" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
             {
-                 query = from l in context.ViewGetCallRegCancellations
-                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
-                               && l.CStatus == ActionType
-                         orderby l.CaseNo, l.CallRecvDt
-                         select new AdminCountListing
-                         {
-                             CaseNo = l.CaseNo,
-                             CallRecvDt = l.CallRecvDt,
-                             CallInstallNo = l.CallInstallNo,
-                             CallSno = Convert.ToInt16(l.CallSno),
-                             CallStatus = l.CallStatus,
-                             CallLetterNo = l.CallLetterNo,
-                             Remarks = l.Remarks,
-                             PoNo = l.PoNo,
-                             PoDt = l.PoDt,
-                             IeSname = l.IeSname,
-                             Vendor = l.Vendor,
-                             RegionCode = l.RegionCode,
-                         };
+                query = from l in context.ViewGetCallRegCancellations
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
+                              && l.CStatus == ActionType
+                        orderby l.CaseNo, l.CallRecvDt
+                        select new AdminCountListing
+                        {
+                            CaseNo = l.CaseNo,
+                            CallRecvDt = l.CallRecvDt,
+                            CallInstallNo = l.CallInstallNo,
+                            CallSno = Convert.ToInt16(l.CallSno),
+                            CallStatus = l.CallStatus,
+                            CallLetterNo = l.CallLetterNo,
+                            Remarks = l.Remarks,
+                            PoNo = l.PoNo,
+                            PoDt = l.PoDt,
+                            IeSname = l.IeSname,
+                            Vendor = l.Vendor,
+                            RegionCode = l.RegionCode,
+                        };
 
-            }else if (ActionType == "TB")
+            }
+            else if (ActionType == "TB")
             {
-                 query = from l in context.T22Bills
+                query = from l in context.T22Bills
                         where (l.BillDt >= Convert.ToDateTime(FromDate) && l.BillDt <= Convert.ToDateTime(ToDate)) && l.CaseNo.StartsWith(Region)
                         select new AdminCountListing
                         {
@@ -887,35 +888,50 @@ namespace IBS.Repositories
                             Remarks = l.Remarks,
                         };
 
-            }else if(ActionType == "ICNR")
+            }
+            else if (ActionType == "ICNR")
             {
                 query = from t20 in context.T20Ics
-                             join t30 in context.T30IcReceiveds
-                             on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
-                             where t20.CaseNo.StartsWith(Region) &&
+                        join t30 in context.T30IcReceiveds
+                        on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                        from t30 in t30Group.DefaultIfEmpty()
+                        where t20.CaseNo.StartsWith(Region) &&
                                    t20.CallRecvDt >= Convert.ToDateTime(FromDate) &&
-                                   t20.CallRecvDt <= Convert.ToDateTime(ToDate)
-                             select new AdminCountListing
-                             {
-                                 CaseNo = t20.CaseNo,
-                                 CallRecvDt = t20.CallRecvDt,
-                                 CallSno = t20.CallSno,
-                                 IC_NO = t20.IcNo,
-                                 IC_DT = t20.IcDt,
-                                 BKNO = t20.BkNo,
-                                 SETNO = t20.SetNo,
-                             };
+                                   t20.CallRecvDt <= Convert.ToDateTime(ToDate) //&& t30 == null
+                        select new AdminCountListing
+                        {
+                            CaseNo = t20.CaseNo,
+                            CallRecvDt = t20.CallRecvDt,
+                            CallSno = t20.CallSno,
+                            IC_NO = t20.IcNo,
+                            IC_DT = t20.IcDt,
+                            BKNO = t20.BkNo,
+                            SETNO = t20.SetNo,
+                        };
+
+                //var query = from t20 in dbContext.T20_IC
+                //            join t30 in dbContext.T30_IC_RECEIVED
+                //            on new { t20.BK_NO, t20.SET_NO } equals new { t30.BK_NO, t30.SET_NO } into t30Group
+                //            from t30 in t30Group.DefaultIfEmpty()
+                //            where t20.CASE_NO.Substring(0, 1) == "N" &&
+                //                  t20.CALL_RECV_DT >= DateTime.ParseExact("01/04/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                //                  t20.CALL_RECV_DT <= DateTime.ParseExact("31/03/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                //                  t30 == null // Not equal condition
+                //            select new { Flag = "N", t20 };
+
+                //var distinctQuery = query.Distinct();
 
                 query.Distinct();
 
-            }else if (ActionType == "ICRNB")
+            }
+            else if (ActionType == "ICRNB")
             {
                 query = from t20 in context.T20Ics
-                             join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
-                             join t22 in context.T22Bills on t20.CaseNo equals t22.CaseNo into t22Group
-                             from t22 in t22Group.DefaultIfEmpty()
-                             where t30.Region == Region &&
-                                  (t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate))
+                        join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
+                        join t22 in context.T22Bills on t20.CaseNo equals t22.CaseNo into t22Group
+                        from t22 in t22Group.DefaultIfEmpty()
+                        where t30.Region == Region &&
+                             (t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate))
                         select new AdminCountListing
                         {
                             CaseNo = t20.CaseNo,
@@ -1816,6 +1832,53 @@ namespace IBS.Repositories
                 model.DefectCodeJISummary += "['O'," + model.defectCodeJIComp.OTHER + "]";
                 model.DefectCodeJISummary += "]";
             }
+            return model;
+        }
+
+        public DashboardModel GetCMDARDashBoard(int CO_CD)
+        {
+            DashboardModel model = new();
+
+            OracleParameter[] par = new OracleParameter[1]; //[7];
+            par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1); 
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.ConsigneeCompaintCount = Convert.ToInt32(ds.Tables[0].Rows[0]["CONS_COMP_CLOSE_RITES"]);
+                }
+            }
+
+            OracleParameter[] par2 = new OracleParameter[2];
+
+            par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
+            List<DashboardModel> listVend = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    listVend = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList();
+                }
+            }
+            model.IEWisePerformance = listVend;
+
             return model;
         }
     }
