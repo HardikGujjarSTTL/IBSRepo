@@ -135,7 +135,8 @@ namespace IBS.Controllers
 
         public IActionResult CMJIIncharge()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMJIDDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMGeneral()

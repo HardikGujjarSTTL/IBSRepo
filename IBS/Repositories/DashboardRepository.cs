@@ -46,11 +46,11 @@ namespace IBS.Repositories
                 if (ds.Tables[1].Rows.Count > 0)
                 {
                     model.TotalUploaded = Convert.ToInt32(ds.Tables[1].Rows[0]["REPORTS_GENERATED"]);
-                    
+
                 }
 
             }
-           
+
 
             return model;
         }
@@ -1373,7 +1373,8 @@ namespace IBS.Repositories
                             CmContactNo = Convert.ToString(row["CO_PHONE_NO"])
                         }).ToList();
                     }
-                }else if (Status == "RPO")
+                }
+                else if (Status == "RPO")
                 {
                     if (ds1.Tables[0].Rows.Count > 0)
                     {
@@ -1406,7 +1407,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters,int IE_CD,string RegionCode)
+        public DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters, int IE_CD, string RegionCode)
         {
             DTResult<IEViewAllList> dTResult = new() { draw = 0 };
             IQueryable<IEViewAllList>? query = null;
@@ -1451,18 +1452,18 @@ namespace IBS.Repositories
             {
                 if (Status == "IFI")
                 {
-                   
-                        var query1 = from l in context.T72IeMessages
-                                     where l.RegionCode == RegionCode && (l.Isdeleted == 0 || l.Isdeleted == null)
-                                     select new IEViewAllList
-                                     {
-                                         MessageID = l.MessageId,
-                                         LetterNo = l.LetterNo,
-                                         LetterDt = l.LetterDt,
-                                         Message = l.Message,
-                                         MessageDt = l.MessageDt,
-                                     };
-                        listIE = query1.ToList();
+
+                    var query1 = from l in context.T72IeMessages
+                                 where l.RegionCode == RegionCode && (l.Isdeleted == 0 || l.Isdeleted == null)
+                                 select new IEViewAllList
+                                 {
+                                     MessageID = l.MessageId,
+                                     LetterNo = l.LetterNo,
+                                     LetterDt = l.LetterDt,
+                                     Message = l.Message,
+                                     MessageDt = l.MessageDt,
+                                 };
+                    listIE = query1.ToList();
                 }
                 else if (Status == "PC")
                 {
@@ -1481,7 +1482,7 @@ namespace IBS.Repositories
                             ContactNo = Convert.ToString(row["CONTACT_NO"])
                         }).ToList();
                     }
-                    
+
                 }
             }
 
@@ -1497,6 +1498,164 @@ namespace IBS.Repositories
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
             return dTResult;
+        }
+
+        public DashboardModel GetCMJIDDashBoard(int CO_CD)
+        {
+            DashboardModel model = new DashboardModel();
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
+            List<DashboardModel> lstIEPer = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    lstIEPer = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList();
+                }
+            }
+            model.IEWisePerformance = lstIEPer;
+
+
+            OracleParameter[] par2 = new OracleParameter[6];
+            par2[0] = new OracleParameter("P_RESULT_PENDING_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_RESULT_IE_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[2] = new OracleParameter("P_RESULT_VENDOR_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[3] = new OracleParameter("P_RESULT_CLIENT_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[4] = new OracleParameter("P_RESULT_INTER_REGION_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[5] = new OracleParameter("P_RESULT_DEFECT_CODE_WISE_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds2 = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD", par2, 6);
+
+            if (ds2 != null && ds2.Tables.Count > 0)
+            {
+                if (ds2.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt1 = ds2.Tables[0];
+                    List<CM_Odlest_Pending_JI_Cases_Model> oldestPendingJICases = dt1.AsEnumerable().Select(row => new CM_Odlest_Pending_JI_Cases_Model
+                    {
+                        CONSIGNEE = Convert.ToString(row["CONSIGNEE"]),
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        JI_REGION = Convert.ToString(row["JI_REGION"]),
+                        CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        //CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
+                        //CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
+                        JI_SNO = Convert.ToString(row["JI_SNO"]),
+                        //JI_DT = Convert.ToDateTime(row["JI_DT"])
+                    }).ToList();
+                    model.oldestPendingJICases = oldestPendingJICases;
+                }
+
+                if (ds2.Tables[1].Rows.Count > 0)
+                {
+                    DataTable dt2 = ds2.Tables[1];
+                    List<CM_NO_OF_Cons_Comp_Model> ieNoOfComp = dt2.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.ieNoOfComp = ieNoOfComp;
+                }
+
+                if (ds2.Tables[2].Rows.Count > 0)
+                {
+                    DataTable dt3 = ds2.Tables[2];
+                    List<CM_NO_OF_Cons_Comp_Model> vendorNoOfComp = dt3.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.vendorNoOfComp = vendorNoOfComp;
+                }
+
+                if (ds2.Tables[3].Rows.Count > 0)
+                {
+                    DataTable dt4 = ds2.Tables[3];
+                    List<CM_NO_OF_Cons_Comp_Model> clientNoOfComp = dt4.AsEnumerable().Select(row => new CM_NO_OF_Cons_Comp_Model
+                    {
+                        NAME = Convert.ToString(row["NAME"]),
+                        NO_OF_CONSINEE_COMPLAINTS = Convert.ToInt32(row["NO_OF_CONSINEE_COMPLAINTS"])
+                    }).ToList();
+                    model.clientNoOfComp = clientNoOfComp;
+                }
+
+                if (ds2.Tables[4].Rows.Count > 0)
+                {
+                    DataTable dt5 = ds2.Tables[4];
+
+                    Inter_Region_JI_Cons_Comp_Model interRegionJIComp = dt5.AsEnumerable().Select(row => new Inter_Region_JI_Cons_Comp_Model
+                    {
+                        EE = Convert.ToInt32(row["EE"]),
+                        EN = Convert.ToInt32(row["EN"]),
+                        ES = Convert.ToInt32(row["ES"]),
+                        EW = Convert.ToInt32(row["EW"]),
+                        NE = Convert.ToInt32(row["NE"]),
+                        NN = Convert.ToInt32(row["NN"]),
+                        NS = Convert.ToInt32(row["NS"]),
+                        NW = Convert.ToInt32(row["NW"]),
+                        SE = Convert.ToInt32(row["SE"]),
+                        SN = Convert.ToInt32(row["SN"]),
+                        SS = Convert.ToInt32(row["SS"]),
+                        SW = Convert.ToInt32(row["SW"]),
+                        WE = Convert.ToInt32(row["WE"]),
+                        WN = Convert.ToInt32(row["WN"]),
+                        WS = Convert.ToInt32(row["WS"]),
+                        WW = Convert.ToInt32(row["WW"])
+                    }).FirstOrDefault();
+                    model.interRegionJIComp = interRegionJIComp;
+                }
+
+                if (ds2.Tables[5].Rows.Count > 0)
+                {
+                    DataTable dt6 = ds2.Tables[5];
+
+                    CM_Defect_Code_JI_Comp_Model defectCodeJIComp = dt6.AsEnumerable().Select(row => new CM_Defect_Code_JI_Comp_Model
+                    {
+                        VISUAL = Convert.ToInt32(row["VISUAL"]),
+                        DIAMENSIONAL = Convert.ToInt32(row["DIAMENSIONAL"]),
+                        CHEMICAL_COMPOSITION = Convert.ToInt32(row["CHEMICAL_COMPOSITION"]),
+                        PHYSICAL = Convert.ToInt32(row["PHYSICAL"]),
+                        SURFACE = Convert.ToInt32(row["SURFACE"]),
+                        LOAD_PERFORMANCE = Convert.ToInt32(row["LOAD_PERFORMANCE"]),
+                        NDT = Convert.ToInt32(row["NDT"]),
+                        MACRO_MICRO = Convert.ToInt32(row["MACRO_MICRO"]),
+                        ELECTRICAL = Convert.ToInt32(row["ELECTRICAL"]),
+                        WELDING = Convert.ToInt32(row["WELDING"]),
+                        OTHER = Convert.ToInt32(row["OTHER"]),
+                        //TOTAL = VISUAL + DIAMENSIONAL + CHEMICAL_COMPOSITION + PHYSICAL + SURFACE + LOAD_PERFORMANCE + NDT + MACRO_MICRO + ELECTRICAL + WELDING + OTHER
+                    }).FirstOrDefault();
+                    model.defectCodeJIComp = defectCodeJIComp;
+                }
+
+                model.DefectCodeJISummary = "[";
+                model.DefectCodeJISummary += "['V'," + model.defectCodeJIComp.VISUAL + "],";
+                model.DefectCodeJISummary += "['D'," + model.defectCodeJIComp.DIAMENSIONAL + "],";
+                model.DefectCodeJISummary += "['C'," + model.defectCodeJIComp.CHEMICAL_COMPOSITION + "],";
+                model.DefectCodeJISummary += "['P'," + model.defectCodeJIComp.PHYSICAL + "],";
+                model.DefectCodeJISummary += "['S'," + model.defectCodeJIComp.SURFACE + "],";
+                model.DefectCodeJISummary += "['L'," + model.defectCodeJIComp.LOAD_PERFORMANCE + "],";
+                model.DefectCodeJISummary += "['N'," + model.defectCodeJIComp.NDT + "],";
+                model.DefectCodeJISummary += "['M'," + model.defectCodeJIComp.MACRO_MICRO + "],";
+                model.DefectCodeJISummary += "['E'," + model.defectCodeJIComp.ELECTRICAL + "],";
+                model.DefectCodeJISummary += "['W'," + model.defectCodeJIComp.WELDING + "],";
+                model.DefectCodeJISummary += "['O'," + model.defectCodeJIComp.OTHER + "]";
+                model.DefectCodeJISummary += "]";
+            }
+            return model;
         }
     }
 }
