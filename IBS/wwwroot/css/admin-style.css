@@ -1143,7 +1143,7 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 .savenext-btn button:hover, .savenext-btn a:hover{background: #008B29; color:#fff; border: 1px solid #008B29;}
 .savenext-btn .reset-btn{ margin-right:10px;}
 
-#sidebar { width:314px; height:calc(100% - 87px); z-index:3; position:absolute; left:0; top:87px; color:#fff; }
+#sidebar { width:314px; height:calc(100% - 95px); z-index:3; position:absolute; left:0; top:95px; color:#fff; }
 .nav { margin-bottom:0; padding-left:0; list-style:none }
 .nav>li { position:relative; display:block }
 .nav>li>a { position:relative; display:block; padding:10px 15px; text-decoration:none; font-size:13px; }
