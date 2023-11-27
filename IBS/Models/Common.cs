@@ -3680,6 +3680,20 @@ namespace IBS.Models
             return city;
         }
 
+        public static List<SelectListItem> GetUsersgetbyName(string name)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.T02Users
+                                         where a.UserName.Trim().ToUpper().StartsWith(name.Trim().ToUpper())
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.UserName,
+                                        Value = Convert.ToString(a.UserId)
+                                    }).ToList();
+            return city;
+        }
+
         public static List<SelectListItem> GetRoles()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
