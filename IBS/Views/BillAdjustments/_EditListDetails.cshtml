@@ -3,7 +3,7 @@
     <input type="hidden" asp-for="Caseno" />
     <input type="hidden" asp-for="Callrecvdt" />
     <input type="hidden" asp-for="Callsno" />
-    <input type="hidden" asp-for="ItemSrnoPo" />
+    @* <input type="hidden" asp-for="ItemSrnoPo" /> *@
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Edit/Update Item Description </h5>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="Reference"><span class="text-danger"> New Rate For Supplimentory </span> </label>
-                    <input type="text" class="input" asp-for="SuppNewRate">
+                    <input type="text" class="input" asp-for="SuppNewRate" onkeypress="return isNumber(event)">
                     <span class="text-danger" id="spnSuppNewRate"></span>
                 </div>
             </div>
