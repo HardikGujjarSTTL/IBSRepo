@@ -328,8 +328,10 @@ namespace IBS.Controllers.Reports
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true,
-                DefaultViewport = null
-            });
+                DefaultViewport = null,
+                ExecutablePath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            }).ConfigureAwait(false);
+
             await using var page = await browser.NewPageAsync();
             await page.EmulateMediaTypeAsync(MediaType.Screen);
             await page.SetContentAsync(htmlContent);
