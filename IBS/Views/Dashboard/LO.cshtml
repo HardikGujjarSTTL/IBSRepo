@@ -10,60 +10,68 @@
     <div class="admindashboard-wrap cmDash">
         <div class="row admin-dashboard">
             <div class="col-lg-3">
-                <div class="dashboard-box das1Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalBillCount</div>
-                            <div class="total-inner">
-                                Total No. of Bills<br />
-                                submitted to Railways
+                <a class="totalcall" href="@Url.Action("LoCallListing", "Dashboard", new { Type = "TB" })">
+                    <div class="dashboard-box das1Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalBillCount</div>
+                                <div class="total-inner">
+                                    Total No. of Bills<br />
+                                    submitted to Railways
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/total-no-of-bills-submitted-railways-icon.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/total-no-of-bills-submitted-railways-icon.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das2Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalOutstandingCount</div>
+                <a class="totalcall" href="@Url.Action("LoCallListing", "Dashboard", new { Type = "TOB" })">
+                    <div class="dashboard-box das2Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalOutstandingCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Total No. of<br />
+                                Outstanding Bills
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Total No. of<br />
-                            Outstanding Bills
-                        </div>
+                        <div class="total-icons"><img src="~/images/total-no-of-outstanding-bills-icon.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/total-no-of-outstanding-bills-icon.svg" alt="Inspection Assigned"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das3Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalPassedCount</div>
+                <a class="totalcall" href="@Url.Action("LoCallListing", "Dashboard", new { Type = "TPB" })">
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalPassedCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Total No. of<br />
+                                Passed Bills
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Total No. of<br />
-                            Passed Bills
-                        </div>
+                        <div class="total-icons"><img src="~/images/total-no-of-passed-bills-icon.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/total-no-of-passed-bills-icon.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das4Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalBillRupees</div>
+                <a class="totalcall" href="@Url.Action("LoCallListing", "Dashboard", new { Type = "TBR" })">
+                    <div class="dashboard-box das4Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalBillRupees</div>
+                            </div>
+                            <div class="total-inner">
+                                Total Value of<br />
+                                Bills in Rupees
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Total Value of<br />
-                            Bills in Rupees
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

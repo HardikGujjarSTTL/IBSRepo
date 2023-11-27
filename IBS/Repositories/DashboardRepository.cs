@@ -1263,11 +1263,12 @@ namespace IBS.Repositories
                 ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
             }
 
-            OracleParameter[] par = new OracleParameter[4];
+            OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("p_mobile", OracleDbType.Varchar2, UserName, ParameterDirection.Input);
             par[1] = new OracleParameter("p_start_date", OracleDbType.Date, Convert.ToDateTime(FromDate), ParameterDirection.Input);
             par[2] = new OracleParameter("p_end_date", OracleDbType.Date, Convert.ToDateTime(ToDate), ParameterDirection.Input);
-            par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_flag", OracleDbType.Varchar2, ActionType, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_LO_DASHBOARD_LIST", par);
 

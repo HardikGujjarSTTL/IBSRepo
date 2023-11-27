@@ -42,7 +42,9 @@
                         <th>#</th>
                         <th>Bill No.</th>
                         <th>Case No.</th>
+                        <th>Bill Amount</th>
                         <th>Amount Received</th>
+                        <th>Passed/Outstanding Bill Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,8 +62,22 @@
         $(function () {
             $("#FromDate").val("01/04/2023");
             $("#ToDate").val("31/03/2024");
-            
-            //InitializeDatatable();
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "TB") {
+                $("#spnHeading").text("Total No. of Bills submitted to Railways/Client");
+            }
+            else if (type == "TOB") {
+                $("#spnHeading").text("Total No. of Outstanding Bills");
+            }
+            else if (type == "TPB") {
+                $("#spnHeading").text("Total No. of Passed Bills");
+            }
+            else if (type == "TBR") {
+                $("#spnHeading").text("Total Value of Bills in Rupees");
+            }
+            InitializeDatatable();
         });
 
         function Search() {
@@ -107,7 +123,9 @@
                     },
                     { data: "BillNo" },
                     { data: "CaseNo" },
+                    { data: "BillAmount" },
                     { data: "AmountReceived" },
+                    { data: "PassedOutst" },
                     
                 ],
                 "order": [[0, "asc"]]
