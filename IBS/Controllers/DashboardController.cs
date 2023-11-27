@@ -135,7 +135,8 @@ namespace IBS.Controllers
 
         public IActionResult CMJIIncharge()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMJIDDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMGeneral()
@@ -216,7 +217,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
         {
-            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
+            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
             return Json(dTResult);
         }
 

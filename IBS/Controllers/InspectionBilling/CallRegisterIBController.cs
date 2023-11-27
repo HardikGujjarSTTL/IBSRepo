@@ -629,6 +629,8 @@ namespace IBS.Controllers.InspectionBilling
             ViewBag.Cancellation_Document = FileUploaderlstDocumentCancellationDocument;
             #endregion
 
+            model.IeCd = SessionHelper.UserModelDTO.IeCd.ToString();
+
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
@@ -782,6 +784,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                 }
+                model.IeCd = SessionHelper.UserModelDTO.IeCd.ToString();
                 if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
                 {
                     model.Updatedby = Convert.ToString(UserId);
