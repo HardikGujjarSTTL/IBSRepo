@@ -24,12 +24,30 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">User Name</label>
-                        @Html.DropDownListFor(model => model.User_ID, new SelectList(IBS.Models.Common.GetUsers() , "Value", "Text"),"--Select--", new { @class = "select2" })
+                        @* @Html.DropDownListFor(model => model.User_ID, new SelectList(IBS.Models.Common.GetUsers() , "Value", "Text"),"--Select--", new { @class = "select2" }) *@
+                        @if (Model.User_ID != null)
+                        {
+                            @Html.DropDownListFor(
+                                     model => model.User_ID,
+                                     new SelectList(Common.GetUsersgetbyName(Model.User_ID), "Value", "Text", Model.User_ID),
+                                     "--Select--",
+                                     new { @class = "select2", id = "User_ID" }
+                                     )
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(
+                                     model => model.User_ID,
+                                     new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"),
+                                     "--Select--",
+                                     new { @class = "select2", id = "User_ID" }
+                                     )
+                        }
                         <span asp-validation-for="Rolename" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Role Name</label>
-                        @Html.DropDownListFor(model => model.RoleId, new SelectList(IBS.Models.Common.GetRoles() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.RoleId, new SelectList(IBS.Models.Common.GetRoles(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="Roledescription" class="text-danger"></span>
                     </div>
                 </div>
@@ -41,14 +59,14 @@
         </form>
     </div>
 </section>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         //$(".select2").select2();
-        $('.select2).select2({
-                  minimumInputLength: 3
-         });
+        // $('.select2).select2({
+        //           minimumInputLength: 3
+        //  });
         function Save() {
             if ($("#frmUserRole").valid()) {
                 $("#frmUserRole").submit();
@@ -61,5 +79,27 @@
                 window.location.href = '@Url.Action("Index", "UserRole")';
             }
         };
+
+        $(document).ready(function () {
+            $('#User_ID').select2({
+                ajax: {
+                    url: '@Url.Action("SearchUsers", "UserRole")',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            searchTerm: params.term || ''
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+        });
     </script>
 }

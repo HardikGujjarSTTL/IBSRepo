@@ -257,7 +257,7 @@ namespace IBSAPI.Repositories
             
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_CNO", OracleDbType.Varchar2, CaseNo1, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_DT", OracleDbType.Date, Convert.ToDateTime(CallRecvDt1), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_DT", OracleDbType.Date, model.CallRecvDt, ParameterDirection.Input);
             par[2] = new OracleParameter("p_CSNO", OracleDbType.Int32, CallSno1, ParameterDirection.Input);
             par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 

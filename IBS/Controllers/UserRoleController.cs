@@ -84,5 +84,17 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        public ActionResult SearchUsers(string searchTerm)
+        {
+            var filteredUsers = Common.GetUsersgetbyName(searchTerm);
+
+            var result = filteredUsers.Select(u => new
+            {
+                id = u.Value,
+                text = u.Text
+            });
+            return Json(new { data = result });
+        }
     }
 }
