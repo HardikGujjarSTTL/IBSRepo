@@ -1,0 +1,135 @@
+﻿@model IBS.Models.LoListingModel
+@{
+    ViewData["Title"] = "No. of Total Calls";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        @*<h3 class="heading3">@ViewData["Title"] </h3>*@
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+</div>
+<input type="hidden" asp-for="ActionType" />
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="savenext-btn btnAlign">
+                <button type="button" class="save-btn active" onclick="Search();">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Bill No.</th>
+                        <th>Case No.</th>
+                        <th>Bill Amount</th>
+                        <th>Amount Received</th>
+                        <th>Outstanding Bill Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $("#FromDate").val("01/04/2023");
+            $("#ToDate").val("31/03/2024");
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "TB") {
+                $("#spnHeading").text("Total No. of Bills submitted to Railways/Client");
+            }
+            else if (type == "TOB") {
+                $("#spnHeading").text("Total No. of Outstanding Bills");
+            }
+            else if (type == "TPB") {
+                $("#spnHeading").text("Total No. of Passed Bills");
+            }
+            else if (type == "TBR") {
+                $("#spnHeading").text("Total Value of Bills in Rupees");
+            }
+            InitializeDatatable();
+        });
+
+        function Search() {
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("GetLoCallListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BillNo" },
+                    { data: "CaseNo" },
+                    { data: "BillAmount" },
+                    { data: "AmountReceived" },
+                    { data: "PassedOutst" },
+                    
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}
