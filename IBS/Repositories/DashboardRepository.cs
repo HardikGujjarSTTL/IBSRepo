@@ -1657,10 +1657,10 @@ namespace IBS.Repositories
                         IE_NAME = Convert.ToString(row["IE_NAME"]),
                         JI_REGION = Convert.ToString(row["JI_REGION"]),
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
-                        //CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                        //CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
+                        CALL_RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["CALL_RECV_DT"])) ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
+                        CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
                         JI_SNO = Convert.ToString(row["JI_SNO"]),
-                        //JI_DT = Convert.ToDateTime(row["JI_DT"])
+                        JI_DT = string.IsNullOrEmpty(Convert.ToString(row["JI_DT"])) ? null : Convert.ToDateTime(row["JI_DT"])
                     }).ToList();
                     model.oldestPendingJICases = oldestPendingJICases;
                 }

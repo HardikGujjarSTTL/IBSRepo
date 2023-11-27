@@ -125,10 +125,17 @@
                             <td>@item.IE_NAME</td>
                             <td>@item.JI_REGION</td>
                             <td>@item.CASE_NO</td>
-                            <td>@item.CALL_RECV_DT</td>
+                            <td>@Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy")</td>
                             <td>@item.CALL_SNO</td>
                             <td>@item.JI_SNO</td>
-                            <td>@item.JI_DT</td>
+                            @if (@item.JI_DT == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@Convert.ToDateTime(item.JI_DT).ToString("dd/MM/yyyy")</td>
+                            }
                         </tr>
                     }
                 }
@@ -571,46 +578,6 @@
                 name: '',
                 data: @Html.Raw(Model.DefectCodeJISummary),
             }],
-            //series: [{
-            //    //name: 'Brands',
-            //    colorByPoint: true,
-            //    data: [{
-            //        name: 'V',
-            //        y: 5,
-            //        sliced: false,
-            //        selected: false
-            //    }, {
-            //        name: 'D',
-            //        y: 15
-            //    }, {
-            //        name: 'C',
-            //        y: 20
-            //    }, {
-            //        name: 'P',
-            //        y: 5
-            //    }, {
-            //        name: 'S',
-            //        y: 5
-            //    }, {
-            //        name: 'L',
-            //        y: 10
-            //    }, {
-            //        name: 'N',
-            //        y: 10
-            //    }, {
-            //        name: 'M',
-            //        y: 10
-            //    }, {
-            //        name: 'E',
-            //        y: 5
-            //    }, {
-            //        name: 'W',
-            //        y: 10
-            //    }, {
-            //        name: 'O',
-            //        y: 5
-            //    }]
-            //}]
         });
     </script>
 }
