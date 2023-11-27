@@ -410,4 +410,14 @@
         public string ActionType { get; set; }
         public DateTime? IC_DT { get; set; }
     }
+
+    public class CMDARListing
+    {
+        public string Complaint_ID { get; set;}
+        public DateTime? Complaint_DT { get; set;}
+        public string Case_No { get; set;}
+        public string Rej_Memo_No { get; set;}
+        public DateTime? Rej_Memo_Dt { get; set;}
+        public decimal? RATE { get; set;}
+    }
 }

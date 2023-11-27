@@ -348,5 +348,17 @@ namespace IBS.Controllers
             DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
+        
+        public IActionResult CMDARListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetCMDARListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CMDARListing> dTResult = dashboardRepository.CMDARListing(dtParameters);
+            return Json(dTResult);
+        }
     }
 }

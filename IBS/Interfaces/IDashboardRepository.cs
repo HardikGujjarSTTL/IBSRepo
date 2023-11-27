@@ -32,6 +32,7 @@ namespace IBS.Interfaces
         public DashboardModel GetLODashBoardCount(string UserName);
 
         DTResult<LoListingModel> GetLoCallListingDetails(DTParameters dtParameters, string UserName);
+        DTResult<CMDARListing> CMDARListing(DTParameters dtParameters);
 
         #region CM JI Dashboard
         DashboardModel GetCMJIDDashBoard(int CO_CD);

@@ -1842,7 +1842,7 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[1]; //[7];
             par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1); 
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -1880,6 +1880,72 @@ namespace IBS.Repositories
             model.IEWisePerformance = listVend;
 
             return model;
+        }
+
+        public DTResult<CMDARListing> CMDARListing(DTParameters dtParameters)
+        {
+            DTResult<CMDARListing> dTResult = new() { draw = 0 };
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "Case_No";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "Case_No";
+                orderAscendingDirection = true;
+            }
+
+            string FromDate = "", ToDate = "", ActionType = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
+            }
+
+            IQueryable<CMDARListing>? query = null;
+
+            query = context.T40ConsigneeComplaints
+                .Where(t40 => t40.JiStatusCd == 1 || t40.JiStatusCd == 2)
+                .Where(t40 => t40.JiDt >= Convert.ToDateTime(FromDate) && t40.JiDt <= Convert.ToDateTime(ToDate))
+                .Select(t40 => new CMDARListing
+                {
+                    Complaint_ID = t40.ComplaintId,
+                    Complaint_DT = t40.ComplaintDt,
+                    Case_No = t40.CaseNo,
+                    Rej_Memo_No = t40.RejMemoNo,
+                    Rej_Memo_Dt = t40.RejMemoDt,
+                    RATE = t40.Rate,
+                });
+
+
+            dTResult.recordsTotal = query.Count();
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Case_No).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
     }
 }
