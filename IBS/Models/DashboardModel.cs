@@ -6,6 +6,11 @@
         public int FINALIZED_INVOICE { get; set; }
         public int PENDING_FINALIZED_INVOICE { get; set; }
         public int TotalUploaded { get; set; }
+        public string TotalBillAmount { get; set; }
+
+        public int Total_Number_Of_Samples { get; set; }
+        public int Internal { get; set; }
+        public int External { get; set; }
         public int TotalCallsCount { get; set; }
 
         public int PendingCallsCount { get; set; }
@@ -39,6 +44,12 @@
         public int PendingCallRemarks { get; set; }
 
         public int PendingOnlineCallAwaitingMark { get; set; }
+
+        public int NOofBill { get; set; }
+
+        public int ICISSUERECEIVEOFFICENOTBILL { get; set; }
+
+        public int NOOFIEPERCM { get; set; }
 
         public string IE_NAME { get; set; }
 
@@ -83,9 +94,21 @@
         public List<RegionConsigneeComplaintsListModel> lstRegionConsComp { get; set; } = new List<RegionConsigneeComplaintsListModel>();
         public List<PendingOrJICaseListModel> lstPendingCase { get; set; } = new List<PendingOrJICaseListModel>();
         public List<PendingOrJICaseListModel> lstJiCase { get; set; } = new List<PendingOrJICaseListModel>();
-
+        public List<LABREGISTERModel> lstsampledata { get; set; } = new List<LABREGISTERModel>();
         public List<InstructionsIE> lstInstructionsIE { get; set; }
-        public List<AdminViewAllList> lstAdminViewAllList  { get; set; }
+        public List<AdminViewAllList> lstAdminViewAllList { get; set; }
+
+        #region CM JI Dashboard
+        public List<CM_Odlest_Pending_JI_Cases_Model> oldestPendingJICases { get; set; } = new List<CM_Odlest_Pending_JI_Cases_Model>();
+        public List<CM_NO_OF_Cons_Comp_Model> ieNoOfComp { get; set; } = new List<CM_NO_OF_Cons_Comp_Model>();
+        public List<CM_NO_OF_Cons_Comp_Model> vendorNoOfComp { get; set; } = new List<CM_NO_OF_Cons_Comp_Model>();
+        public List<CM_NO_OF_Cons_Comp_Model> clientNoOfComp { get; set; } = new List<CM_NO_OF_Cons_Comp_Model>();
+        public Inter_Region_JI_Cons_Comp_Model interRegionJIComp { get; set; } = new Inter_Region_JI_Cons_Comp_Model();
+        public string DefectCodeJISummary { get; set; }
+        public CM_Defect_Code_JI_Comp_Model defectCodeJIComp { get; set; } = new CM_Defect_Code_JI_Comp_Model();
+        #endregion
+        public List<AdminCountListing> lstAdminCountListing { get; set; }
+        
     }
 
     public class IEList
@@ -266,7 +289,7 @@
         public int NoofConComp { get; set; }
         public DateTime CallDate { get; set; }
     }
-    
+
     public class VendorViewAllList
     {
         public string CallSno { get; set; }
@@ -282,7 +305,7 @@
         public string PurchaseOrder { get; set; }
         public DateTime CallDate { get; set; }
     }
-    
+
     public class IEViewAllList
     {
         public int MessageID { get; set; }
@@ -313,5 +336,83 @@
         public string PassedOutst { get; set; }
 
         public string ActionType { get; set;}
+    }
+
+    public class CM_Odlest_Pending_JI_Cases_Model
+    {
+        public string CONSIGNEE { get; set; }
+        public string IE_NAME { get; set; }
+        public string JI_REGION { get; set; }
+        public string CASE_NO { get; set; }
+        public DateTime? CALL_RECV_DT { get; set; }
+        public int CALL_SNO { get; set; }
+        public string JI_SNO { get; set; }
+        public DateTime? JI_DT { get; set; }
+    }
+
+    public class CM_NO_OF_Cons_Comp_Model
+    {
+        public string NAME { get; set; }
+        public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
+    }
+
+    public class Inter_Region_JI_Cons_Comp_Model
+    {
+        public int EE { get; set; }
+        public int EN { get; set; }
+        public int ES { get; set; }
+        public int EW { get; set; }
+        public int NE { get; set; }
+        public int NN { get; set; }
+        public int NS { get; set; }
+        public int NW { get; set; }
+        public int SE { get; set; }
+        public int SN { get; set; }
+        public int SS { get; set; }
+        public int SW { get; set; }
+        public int WE { get; set; }
+        public int WN { get; set; }
+        public int WS { get; set; }
+        public int WW { get; set; }
+    }
+
+    public class CM_Defect_Code_JI_Comp_Model
+    {
+        public int VISUAL { get; set; }
+        public int DIAMENSIONAL { get; set; }
+        public int CHEMICAL_COMPOSITION { get; set; }
+        public int PHYSICAL { get; set; }
+        public int SURFACE { get; set; }
+        public int LOAD_PERFORMANCE { get; set; }
+        public int NDT { get; set; }
+        public int MACRO_MICRO { get; set; }
+        public int ELECTRICAL { get; set; }
+        public int WELDING { get; set; }
+        public int OTHER { get; set; }
+        public int TOTAL => VISUAL + DIAMENSIONAL + CHEMICAL_COMPOSITION + PHYSICAL + SURFACE + LOAD_PERFORMANCE + NDT + MACRO_MICRO + ELECTRICAL + WELDING + OTHER;
+    }
+
+    public class AdminCountListing
+    {
+        public string CaseNo { get; set; }  
+        public DateTime CallRecvDt { get; set; }  
+        public DateTime? PoDt { get; set; }  
+        public byte? CallInstallNo { get; set; }  
+        public int CallSno { get; set; }  
+        public string CallStatus { get; set; }  
+        public string CallLetterNo { get; set; }  
+        public string Remarks { get; set; }  
+        public string PoNo { get; set; }  
+        public string IeSname { get; set; }  
+        public string Vendor { get; set; }  
+        public string RegionCode { get; set; }
+        public DateTime? BILLDT { get; set; }
+        public string BILLNO { get; set; }
+        public decimal? billamount { get; set; }
+        public string BKNO { get; set; }
+        public string SETNO { get; set; }
+        public string IC_NO { get; set; }
+        public string ActionType { get; set; }
+        public DateTime? IC_DT { get; set; }
     }
 }

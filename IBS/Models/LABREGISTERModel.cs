@@ -8,6 +8,7 @@ namespace IBS.Models
         public string UName { get; set; }
         public string Region { get; set; }
         public string SampleRegNo { get; set; }
+        public string SampleRecDt { get; set; }
         public string SampleRegDate { get; set; }
         public string CaseNo { get; set; }
         public string CallRecDt { get; set; }
@@ -70,6 +71,7 @@ namespace IBS.Models
         public string SUSPENSE_AMT { get; set; }
         public string BANK_NAME { get; set; }
         public string CASE_NO { get; set; }
+        public string Date { get; set; }
         public string NARRATION { get; set; }
         public string BANK_CD { get; set; }
         public string Flag { get; set; }
