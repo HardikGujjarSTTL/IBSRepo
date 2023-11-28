@@ -300,8 +300,9 @@ a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .certificateImageBox { padding: 5px; border: 1px solid #ccc; background: #fff; margin: 5px; text-align:center; position: relative; }
 .certificateImageBox span, .awardImageBox span { position: absolute; bottom: 10px; left: 0; color: #fff; font-size: 14px; padding: 0 15px; }
 .certificationSlider { position: relative; /*padding: 0 40px;*/ }
-.certificationSlider .swiper-slide a { display: block; text-align: center; }
-.certificationSlider .swiper-slide a img { width: auto; max-width: 100%; }
+.certificationSlider .swiper-slide a { display: block; text-align: center; overflow:hidden; }
+.certificationSlider .swiper-slide a img { width: auto; max-width: 100%; transition:all 0.2s ease; }
+.certificationSlider .swiper-slide a:hover img{transform:scale(1.1);}
 .certificationSlider .certificationSlider-prev { left: -30px; }
 .certificationSlider .certificationSlider-next { right: -30px; }
 .certificationSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
@@ -313,7 +314,8 @@ a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .awardImageBox { padding: 5px; border: 1px solid #ccc; background: #fff; margin: 5px; text-align:center; position: relative; }
 .awardsSlider { position: relative; /*padding: 0 40px;*/ }
 .awardsSlider .swiper-slide a { display: block; text-align: center; overflow:hidden; }
-.awardsSlider .swiper-slide a img { width: auto; max-width: 100%; }
+.awardsSlider .swiper-slide a img { width: auto; max-width: 100%; transition:all 0.2s ease; }
+.awardsSlider .swiper-slide a:hover img{transform:scale(1.1);}
 .awardsSlider .awardsSlider-prev { left: -30px; }
 .awardsSlider .awardsSlider-next { right: -30px; }
 .awardsSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
