@@ -1189,45 +1189,31 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            //List<PO_MasterModel> model = new();
-            //OracleParameter[] par = new OracleParameter[1];
-            //par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //var ds = DataAccessDB.GetDataSet("SP_CM_DASHBOARD_POMASTERLIST", par, 1);
-            //if (ds != null && ds.Tables.Count > 0)
-            //{
-            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-            //    model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            //}
-            //query = model.AsQueryable();
-            //dTResult.recordsTotal = query.Count();
-
-            query = from POMaster in context.ViewDashboardPomasterlists
-                    select new PO_MasterModel
-                    {
-                        VendCd = POMaster.VendCd,
-                        PoNo = POMaster.PoNo,
-                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
-                        RlyCd = POMaster.RlyCd,
-                        VendorName = POMaster.VendName,
-                        ConsigneeSName = POMaster.ConsigneeSName,
-                        Remarks = POMaster.Remarks,
-                        RlyNonrly = POMaster.RlyNonrly,
-                        MainrlyCd = POMaster.MainrlyCd,
-                        pDatetime = POMaster.Pdatetime
-                    };
-            dTResult.recordsTotal = query.Count();
+            List<PO_MasterModel> model = new();
+            OracleParameter[] par = new OracleParameter[1];
+            par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_POMASTERLIST", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
-                );
+            {
+                model = model
+                    .Where(w =>
+                        w.VendorName != null && w.VendorName.ToLower().Contains(searchBy.ToLower()) ||
+                        w.ConsigneeSName != null && w.ConsigneeSName.ToLower().Contains(searchBy.ToLower()) ||
+                        w.Remarks != null && w.Remarks.ToLower().Contains(searchBy.ToLower())
+                    )
+                    .ToList();
+            }
 
+            query = model.AsQueryable();
+            dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
-
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 

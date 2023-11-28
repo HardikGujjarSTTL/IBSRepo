@@ -4269,78 +4269,96 @@ ALTER TABLE t02_users
 ADD CO_CD NUMBER(6,0);
 
 ALTER TABLE t02_users MODIFY MIGTYPE VARCHAR2(10 BYTE);
-================
-CREATE OR REPLACE VIEW VIEW_DASHBOARD_POMASTERLIST AS
-WITH TempResult AS (
-    SELECT
-        m.VEND_CD,
-        m.PO_NO,
-        to_char(m.PO_DT,'dd/mm/yyyy') PO_DT,
-        (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RLY_CD,
-        m.REAL_CASE_NO,
-        (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VEND_NAME,
-        (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
-            NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME,
-        m.REMARKS,
-        m.RLY_NONRLY,
-        m.RLY_CD AS MAINRLY_CD,
-        m.RLY_CD AS RLY_CDS,
-        m.region_code,
-        m.datetime as Pdatetime
-    FROM
-        T80_PO_MASTER m
-        JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
-        LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
-        LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
-    WHERE
-        (m.ISDELETED IS NULL OR m.ISDELETED = 0) AND
-        m.REAL_CASE_NO IS NULL
-       
-
-    UNION
-
-    SELECT
-        m.VEND_CD,
-        m.PO_NO,
-        to_char(m.PO_DT,'dd/mm/yyyy') PO_DT,
-        (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RLY_CD,
-        m.RITES_CASE_NO,
-        (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VEND_NAME,
-        (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
-            NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME,
-        m.REMARKS,
-        m.RLY_NONRLY,
-        m.RLY_CD AS MAINRLY_CD,
-        m.RLY_CD AS RLY_CDS,
-        m.region_code,
-        m.datetime as Pdatetime
-    FROM
-        IMMS_RITES_PO_HDR m
-        JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
-        LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
-        LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
-    WHERE
-        m.RITES_CASE_NO IS NULL
-        
-)
--- Now apply the ORDER BY to the entire result set
-SELECT 
-    VEND_CD,
-    PO_NO,
-    PO_DT,
-    RLY_CD,
-    REAL_CASE_NO,
-    VEND_NAME,
-    CONSIGNEE_S_NAME,
-    REMARKS,
-    RLY_NONRLY,
-    MAINRLY_CD,
-    RLY_CDS,
-    REGION_CODE,
-    Pdatetime
-FROM TempResult
-ORDER BY Pdatetime DESC;
-
 
 ========================
 
+create or replace PROCEDURE GET_CM_DASHBOARD_POMASTERLIST(
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
+    P_FROMDATE VARCHAR2(12);
+    P_TODATE VARCHAR2(12);
+BEGIN
+    -- Initialize the parameters
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    --P_FROMDATE := TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'DD/MM/YYYY');
+    P_TODATE := TO_CHAR(SYSDATE, 'DD/MM/YYYY');
+
+DBMS_OUTPUT.PUT_LINE('Start date: ' || P_FROMDATE);
+    DBMS_OUTPUT.PUT_LINE('End date: ' || P_TODATE);
+    
+    OPEN P_RESULT_CURSOR FOR
+    WITH TempResult AS (
+        SELECT
+            m.VEND_CD AS VendCd,
+            m.PO_NO AS PoNo,
+            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
+            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+            m.REAL_CASE_NO,
+            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+            m.REMARKS,
+            m.RLY_NONRLY,
+            m.RLY_CD AS MainrlyCd,
+            m.RLY_CD AS RlyCds,
+            m.REGION_CODE,
+            m.DATETIME AS pDatetime
+        FROM
+            T80_PO_MASTER m
+            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+        WHERE
+            (m.ISDELETED IS NULL OR m.ISDELETED = 0) AND
+            m.REAL_CASE_NO IS NULL
+            AND m.PO_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+
+        UNION
+
+        SELECT
+            m.VEND_CD AS VendCd,
+            m.PO_NO AS PoNo,
+            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
+            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+            m.RITES_CASE_NO AS REAL_CASE_NO,
+            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+            m.REMARKS,
+            m.RLY_NONRLY,
+            m.RLY_CD AS MainrlyCd,
+            m.RLY_CD AS RlyCds,
+            m.REGION_CODE,
+            m.DATETIME AS pDatetime
+        FROM
+            IMMS_RITES_PO_HDR m
+            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+        WHERE
+            m.RITES_CASE_NO IS NULL
+             AND m.PO_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+    )
+
+    SELECT 
+        VendCd,
+        PoNo,
+        PoDtDate,
+        RlyCd,
+        REAL_CASE_NO AS RealCaseNo,
+        VendorName,
+        ConsigneeSName,
+        Remarks,
+        RLY_NONRLY AS RlyNonrly,
+        MainrlyCd,
+        RlyCds,
+        REGION_CODE AS RegionCode,
+        pDatetime
+    FROM TempResult
+    ORDER BY pDatetime DESC;
+
+END GET_CM_DASHBOARD_POMASTERLIST;
+
+=========================
