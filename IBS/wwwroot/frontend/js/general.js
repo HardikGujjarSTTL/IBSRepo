@@ -187,7 +187,7 @@ $(document).ready( function(){
 	if($(".ourClientSlider").length){
 		var ourClientSlider = new Swiper('.ourClientSlider .swiper-container', {
 		speed: 2000,
-    	spaceBetween:10,
+    	spaceBetween:0,
 		slidesPerView: 8,
 		lazy: true,
 		loop:true,
