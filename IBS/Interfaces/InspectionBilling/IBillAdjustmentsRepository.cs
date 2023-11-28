@@ -8,7 +8,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         DTResult<InspectionCertModel> GetLoadTableDetails(DTParameters dtParameters, string Region);
 
-        public InspectionCertModel FindByItemID(InspectionCertModel model);
+        public InspectionCertModel FindByItemID(string Caseno, DateTime Callrecvdt, int Callsno, int ItemSrnoPo);
 
         string UpdateCallDetails(InspectionCertModel model, int ItemSrnoPo);
 

@@ -493,11 +493,11 @@ namespace IBS.Repositories
             model.IEWisePerformance = listVend;
             return model;
         }
-        public DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin)
+        public DTResult<DashboardLabData> LoadTableInvoice(DTParameters dtParameters, string Regin, int userid)
         {
 
-            DTResult<LabReportsModel> dTResult = new() { draw = 0 };
-            IQueryable<LabReportsModel>? query = null;
+            DTResult<DashboardLabData> dTResult = new() { draw = 0 };
+            IQueryable<DashboardLabData>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -520,42 +520,44 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[5];
+            OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("wFrmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
             par[1] = new OracleParameter("wToDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
             par[2] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[3] = new OracleParameter("Flag", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("Flag"), ParameterDirection.Input);
-            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_USER_ID", OracleDbType.NVarchar2, userid, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("Dashboard_TotalInvoice", par, 4);
+            var ds = DataAccessDB.GetDataSet("Dashboard_TotalInvoice", par, 5);
 
-            List<LabReportsModel> modelList = new List<LabReportsModel>();
+            List<DashboardLabData> modelList = new List<DashboardLabData>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
 
 
-                    LabReportsModel model = new LabReportsModel
+                    DashboardLabData model = new DashboardLabData
                     {
                         BPO_NAME = row["BPO_NAME"].ToString(),
                         recipient_gstin_no = row["recipient_gstin_no"].ToString(),
                         St_cd = row["St_cd"].ToString(),
                         invoice_no = row["invoice_no"].ToString(),
                         invoice_dt = row["invoice_dt"].ToString(),
-                        Total_AMT = Convert.ToString(row["Total_AMT"]),
                         INV_TYPE = row["INV_TYPE"].ToString(),
                         HSN_CD = row["HSN_CD"].ToString(),
+                        INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
+                        Total_AMT = Convert.ToString(row["Total_AMT"]),
                         INV_amount = Convert.ToString(row["INV_amount"]),
                         INV_sgst = Convert.ToString(row["INV_sgst"]),
                         INV_cgst = Convert.ToString(row["INV_cgst"]),
                         INV_igst = Convert.ToString(row["INV_igst"]),
-                        INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
-                        INC_TYPE = row["INC_TYPE"].ToString(),
                         Total_GST = Convert.ToString(row["Total_GST"]),
-                        IRN_NO = row["IRN_NO"].ToString(),
                         BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
                         BILL_SENT = row["BILL_SENT"].ToString(),
+                        //INC_TYPE = row["INC_TYPE"].ToString(),
+                        //IRN_NO = row["IRN_NO"].ToString(),
+                        
                     };
 
                     modelList.Add(model);
@@ -1187,45 +1189,31 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            //List<PO_MasterModel> model = new();
-            //OracleParameter[] par = new OracleParameter[1];
-            //par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //var ds = DataAccessDB.GetDataSet("SP_CM_DASHBOARD_POMASTERLIST", par, 1);
-            //if (ds != null && ds.Tables.Count > 0)
-            //{
-            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-            //    model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            //}
-            //query = model.AsQueryable();
-            //dTResult.recordsTotal = query.Count();
-
-            query = from POMaster in context.ViewDashboardPomasterlists
-                    select new PO_MasterModel
-                    {
-                        VendCd = POMaster.VendCd,
-                        PoNo = POMaster.PoNo,
-                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
-                        RlyCd = POMaster.RlyCd,
-                        VendorName = POMaster.VendName,
-                        ConsigneeSName = POMaster.ConsigneeSName,
-                        Remarks = POMaster.Remarks,
-                        RlyNonrly = POMaster.RlyNonrly,
-                        MainrlyCd = POMaster.MainrlyCd,
-                        pDatetime = POMaster.Pdatetime
-                    };
-            dTResult.recordsTotal = query.Count();
+            List<PO_MasterModel> model = new();
+            OracleParameter[] par = new OracleParameter[1];
+            par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_POMASTERLIST", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.Remarks).ToLower().Contains(searchBy.ToLower())
-                );
+            {
+                model = model
+                    .Where(w =>
+                        w.VendorName != null && w.VendorName.ToLower().Contains(searchBy.ToLower()) ||
+                        w.ConsigneeSName != null && w.ConsigneeSName.ToLower().Contains(searchBy.ToLower()) ||
+                        w.Remarks != null && w.Remarks.ToLower().Contains(searchBy.ToLower())
+                    )
+                    .ToList();
+            }
 
+            query = model.AsQueryable();
+            dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
-
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 
@@ -1918,6 +1906,132 @@ namespace IBS.Repositories
             }
             model.IEWisePerformance = listVend;
 
+            return model;
+        }
+
+        public DashboardModel GetCMDFODashBoard(int CO_CD)
+        {
+            DashboardModel model = new DashboardModel();
+
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("P_CO_CD", OracleDbType.Varchar2, Convert.ToString(CO_CD), ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("P_RESULT_BILLING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_RESULT_OUTSTANDING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_BULLING_COMPARISON", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_SECTOR_BILLING", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            //par[7] = new OracleParameter("P_RESULT_SECTOR_BILLING_PREV_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[8] = new OracleParameter("P_RESULT_SECTOR_BILLING_LAST_PREV_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DFO_DASHBOARD", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[0];
+                    model = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        TotalOutstandingAmount = Convert.ToDecimal(row["OUTSTANDING_AMOUNT"]),
+                        SuspenseAmount = Convert.ToDecimal(row["SUSPENSE_AMT"]),
+                        NoOfOutstandingBillCount = Convert.ToInt32(row["OUTSTANDING_BILL"]),
+                        TotalInvoiceCount = Convert.ToInt32(row["TOTAL_INVOICE"]),
+                        FinalizedInvoiceCount = Convert.ToInt32(row["FINALIZED_INVOICE"]),
+                        PendingInvoiceFinalizeCount = Convert.ToInt32(row["PENDING_FINALIZED_INVOICE"]),
+                    }).FirstOrDefault();
+                }
+
+                if (ds.Tables[1].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[1];
+                    List<ClientDetailListModel> lstBillingClient = dt.AsEnumerable().Select(row => new ClientDetailListModel
+                    {
+                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstBillingClient = lstBillingClient;
+                }
+
+                if (ds.Tables[2].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[2];
+                    List<ClientDetailListModel> lstOutstandingClient = dt.AsEnumerable().Select(row => new ClientDetailListModel
+                    {
+                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstOutstandingClient = lstOutstandingClient;
+                }
+
+                if (ds.Tables[3].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[3];
+                    List<Billing_Comparison_Model> lstBillingCompare = dt.AsEnumerable().Select(row => new Billing_Comparison_Model
+                    {
+                        FINALCIAL_YEAR = Convert.ToString(row["FINALCIAL_YEAR"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstBillingCompare = lstBillingCompare;
+                }
+
+                if (ds.Tables[4].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[4];
+                    List<Sector_Billing_Model> lstCurrYearSectorBilling = dt.AsEnumerable().Select(row => new Sector_Billing_Model
+                    {
+                        SECTOR = Convert.ToString(row["SECTOR"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstCurrYearSectorBilling = lstCurrYearSectorBilling;
+                }
+
+                model.CurrYearSectorBillingSummary = "[";
+                model.CurrYearSectorBillingSummary += "['PSU'," + model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "PSU").Select(x => x.AMOUNT).FirstOrDefault() + "],";
+                model.CurrYearSectorBillingSummary += "['Railway'," + model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "RAILWAY").Select(x => x.AMOUNT).FirstOrDefault() + "],";
+                model.CurrYearSectorBillingSummary += "['Non-Railway'," + model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY").Select(x => x.AMOUNT).FirstOrDefault() + "],";
+                model.CurrYearSectorBillingSummary += "['Private'," + model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "PRIVATE").Select(x => x.AMOUNT).FirstOrDefault() + "],";
+                model.CurrYearSectorBillingSummary += "['Lab'," + model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "LAB").Select(x => x.AMOUNT).FirstOrDefault() + "],";
+                model.CurrYearSectorBillingSummary += "]";
+
+                if (ds.Tables[5].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[5];
+                    List<Sector_Billing_Model> lstLastThreeYearSectorBilling = dt.AsEnumerable().Select(row => new Sector_Billing_Model
+                    {
+                        YEAR = Convert.ToString(row["YRS"]),
+                        SECTOR = Convert.ToString(row["SECTOR"]),
+                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
+                    }).ToList();
+                    model.lstLastThreeYearSectorBilling = lstLastThreeYearSectorBilling;
+                }
+                var Years = model.lstLastThreeYearSectorBilling.Select(x => x.YEAR).Distinct().ToList();
+
+                model.LastYearSectorBillingSummary1 = "[";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary1 += "]";
+
+                model.LastYearSectorBillingSummary2 = "[";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary2 += "]";
+
+                model.LastYearSectorBillingSummary3 = "[";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary3 += "]";
+            }
             return model;
         }
     }

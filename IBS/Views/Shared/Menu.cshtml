@@ -57,7 +57,14 @@
                         }
                         else
                         {
-                            <a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a>
+                            @if (cp.ParentId == 14 && cp.Title == "Contracts")
+                            {
+                                <a href="../ReadWriteData/contracts.pdf" target="_blank"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a>
+                            }
+                            else
+                            {
+                                <a href="@Html.Raw(@HttpUtility.UrlDecode(url))"> <i class="fa fa-angle-double-right"></i><span class="submenu-title">@cp.Title</span></a>
+                            }
                         }
                         @:</li>
                     }

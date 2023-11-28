@@ -340,7 +340,12 @@
                         }
                         else
                         {
-                            ShowHideMsgNew(false, "Please Your Call are Register in Offline.");
+                            if (response.responseText != null) {
+                                ShowHideMsgNew(response.status, response.responseText);
+                            }
+                            else {
+                                ShowHideMsgNew(false, "Please Your Call are Register in Offline.");
+                            }
                         }
                     }
                     else {

@@ -109,6 +109,27 @@
         #endregion
         public List<AdminCountListing> lstAdminCountListing { get; set; }
         
+
+        #region CM DFO Dashboard
+        public decimal TotalOutstandingAmount { get; set; }
+        public decimal SuspenseAmount { get; set; }
+        public int NoOfOutstandingBillCount { get; set; }
+        public int TotalInvoiceCount { get; set; }
+        public int FinalizedInvoiceCount { get; set; }
+        public int PendingInvoiceFinalizeCount { get; set; }
+
+        public List<ClientDetailListModel> lstBillingClient { get; set; } = new List<ClientDetailListModel>();
+        public List<ClientDetailListModel> lstOutstandingClient { get; set; } = new List<ClientDetailListModel>();
+        public List<Billing_Comparison_Model> lstBillingCompare { get; set; } = new List<Billing_Comparison_Model>();
+
+        public string CurrYearSectorBillingSummary { get; set; }
+        public List<Sector_Billing_Model> lstCurrYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();
+
+        public string LastYearSectorBillingSummary1 { get; set; }
+        public string LastYearSectorBillingSummary2 { get; set; }
+        public string LastYearSectorBillingSummary3 { get; set; }
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();                
+        #endregion
     }
 
     public class IEList
@@ -415,4 +436,18 @@
         public string ActionType { get; set; }
         public DateTime? IC_DT { get; set; }
     }
+
+    public class Billing_Comparison_Model
+    {
+        public string FINALCIAL_YEAR { get; set; }
+        public decimal AMOUNT { get; set; }
+    }
+
+    public class Sector_Billing_Model
+    {
+        public string YEAR { get; set; }
+        public string SECTOR { get; set; }
+        public decimal AMOUNT { get; set; }
+    }
+    
 }
