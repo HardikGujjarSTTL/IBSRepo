@@ -225,7 +225,7 @@ namespace IBSAPI.Repositories
             {
                 test = "0";
             }
-            else if (item.VendCd == Convert.ToInt32(UserName))
+            else if (item.VendCd.ToString() ==UserName.ToString())
             {
                 test = "2";
             }
@@ -994,17 +994,17 @@ namespace IBSAPI.Repositories
             return ID;
         }
 
-        public string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo)
+        public string UpdateCallDetails(VenderCallRegisterModel model)
         {
             string ID = "";
-            var Details = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && x.CallSno == Convert.ToInt32(model.CallSno) && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            var Details = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(model.CallRecvDt).Date && x.CallSno == Convert.ToInt32(model.CallSno) && x.ItemSrnoPo == model.ItemSrnoPo).FirstOrDefault();
             if (Details == null)
             {
                 T18CallDetail T18 = new T18CallDetail();
                 T18.CaseNo = model.CaseNo;
                 T18.CallRecvDt = Convert.ToDateTime(model.CallRecvDt);
                 T18.CallSno = Convert.ToInt32(model.CallSno);
-                T18.ItemSrnoPo = ItemSrnoPo;
+                T18.ItemSrnoPo = model.ItemSrnoPo;
                 T18.ItemDescPo = model.ItemDescPo;
                 T18.CumQtyPrevOffered = 0;
                 T18.CumQtyPrevPassed = 0;

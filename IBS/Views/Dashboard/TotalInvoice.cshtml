@@ -46,7 +46,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dttotalinvoicegrid" class="table-responsive">
+            <table id="dtList1" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>S.NO.</th>
@@ -65,8 +65,7 @@
                             <th>IGST</th>
                             <th>Total GST</th>
                             <th>Bill Finalised</th>
-                            <th>Sent to Sap</th>
-                            
+                            <th>Sent to Sap</th>                            
                         </tr>
                     </thead>
                     <tbody>
@@ -94,35 +93,92 @@
                 return false;
             }
 
-            var wFrmDtO = $("#dtfrom").val();
-            var wToDt = $("#dtto").val();
-            var Flag = '@ViewBag.Flag';
+            // var wFrmDtO = $("#dtfrom").val();
+            // var wToDt = $("#dtto").val();
+            // var Flag = '@ViewBag.Flag';
             //var parts = from.split('/');
             //var wFrmDtO = parts[2] + '/' + parts[1] + '/' + parts[0];
 
             //var parts1 = to.split('/');
             //var wToDt = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
 
-            InitializeDatatableInvoice(wFrmDtO, wToDt, Flag);
+            // InitializeDatatableInvoice();
+            InitializeDatatable1();
             // $("#hide").css("display", "block");
         }
 
-        $(function () {
-            var wFrmDtO = $("#dtfrom").val();
-            var wToDt = $("#dtto").val();
-            var Flag = '@ViewBag.Flag';
-            InitializeDatatableInvoice(wFrmDtO, wToDt, Flag);
+        $(function () {            
+            // InitializeDatatableInvoice();
+             InitializeDatatable1();
         });
 
-        function InitializeDatatableInvoice(wFrmDtO, wToDt, Flag) {
-            // var _title = '\n LAB INVOICE REPORT;
-            // if (wFrmDtO != "" || wToDt != "") {
-            //     _title = '\n LAB INVOICE REPORT For the Period :' + wFrmDtO + ' To ' + wToDt
-            // }
-            $("#dttotalinvoicegrid").DataTable({
+        // function InitializeDatatableInvoice() {
+        //     debugger;
+        //     var FromDate = $("#dtfrom").val();
+        //     var ToDate = $("#dtto").val();
+        //     var Flg = '@ViewBag.Flag';
+        //     $("#dtList").DataTable({
+        //         stateSave: false,// Design Assets
+        //         autoWidth: true,
+        //         scrollX: true,
+        //         scrollCollapse: true,
+        //         processing: true, // ServerSide Setups
+        //         serverSide: true,
+        //         destroy: true,
+        //         paging: true,// Paging Setups
+        //         searching: true,// Searching Setups
+        //         ajax: {// Ajax Filter
+        //             url: "@Url.Action("LoadTableInvoice","Dashboard")",
+        //             type: "POST",
+        //             contentType: "application/json; charset=utf-8",
+        //             dataType: "json",
+        //             data: function (d) {
+        //                 var AdditionalValues = {
+        //                     wFrmDtO: FromDate,
+        //                     wToDt: ToDate,
+        //                     Flag: Flg
+        //                 };
+        //                 d.AdditionalValues = AdditionalValues;
+        //                 return JSON.stringify(d);
+        //             }
+        //         },
+        //         columns: [// Columns Setups
+        //             {
+        //                 data: '', orderable: false, width: '5%',
+        //                 render: function (data, type, row, meta) {
+        //                     return meta.row + meta.settings._iDisplayStart + 1;
+        //                 }
+        //             },
+        //             { data: "BPO_NAME" },
+        //             { data: "recipient_gstin_no" },
+        //             { data: "St_cd" },
+        //             { data: "invoice_no" },
+        //             { data: "invoice_dt" },
+        //             { data: "INV_TYPE" },
+        //             { data: "HSN_CD" },
+        //             { data: "INVOICE_TYPE" },
+        //             { data: "Total_AMT" },
+        //             { data: "INV_amount" },
+        //             { data: "INV_sgst" },
+        //             { data: "INV_cgst" },
+        //             { data: "INV_igst" },
+        //             { data: "Total_GST" },
+        //             { data: "BILL_FINALIZE" },
+        //             { data: "BILL_SENT" },                    
+        //         ],
+        //         "order": [[0, "asc"]]
+        //     });
+        // }
+
+        function InitializeDatatable1() {
+           // debugger;
+            var FromDate = $("#dtfrom").val();
+            var ToDate = $("#dtto").val();
+            var Flg = '@ViewBag.Flag';
+            $("#dtList1").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+                //scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -130,21 +186,20 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTableInvoice", "Dashboard")",
+                    url: "@Url.Action("LoadTableInvoice","Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            wFrmDtO: wFrmDtO,
-                            wToDt: wToDt,
-                            Flag: Flag
+                            "wFrmDtO": FromDate,
+                            "wToDt": ToDate,
+                            "Flag": Flg                                    
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
                     }
                 },
-
                 columns: [// Columns Setups
                     {
                         data: '', orderable: false, width: '5%',
@@ -152,7 +207,6 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-
                     { data: "BPO_NAME" },
                     { data: "recipient_gstin_no" },
                     { data: "St_cd" },
@@ -168,14 +222,13 @@
                     { data: "INV_igst" },
                     { data: "Total_GST" },
                     { data: "BILL_FINALIZE" },
-                    { data: "BILL_SENT" }
-                    
-
+                    { data: "BILL_SENT" },
                 ],
-
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList1").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
-
         }
        
     </script>

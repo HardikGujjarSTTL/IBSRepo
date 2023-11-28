@@ -39,7 +39,6 @@ namespace IBSAPI.Controllers
                                 else
                                 {
                                     //string check = model.VendCd;
-
                                     string check = vendorRepository.GetMatch(CaseNo, userID);
                                     if (check == "2")
                                     {

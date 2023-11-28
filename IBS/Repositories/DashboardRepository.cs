@@ -493,11 +493,11 @@ namespace IBS.Repositories
             model.IEWisePerformance = listVend;
             return model;
         }
-        public DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin)
+        public DTResult<DashboardLabData> LoadTableInvoice(DTParameters dtParameters, string Regin, int userid)
         {
 
-            DTResult<LabReportsModel> dTResult = new() { draw = 0 };
-            IQueryable<LabReportsModel>? query = null;
+            DTResult<DashboardLabData> dTResult = new() { draw = 0 };
+            IQueryable<DashboardLabData>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -520,42 +520,44 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[5];
+            OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("wFrmDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
             par[1] = new OracleParameter("wToDt", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
             par[2] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[3] = new OracleParameter("Flag", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("Flag"), ParameterDirection.Input);
-            par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_USER_ID", OracleDbType.NVarchar2, userid, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("Dashboard_TotalInvoice", par, 4);
+            var ds = DataAccessDB.GetDataSet("Dashboard_TotalInvoice", par, 5);
 
-            List<LabReportsModel> modelList = new List<LabReportsModel>();
+            List<DashboardLabData> modelList = new List<DashboardLabData>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
 
 
-                    LabReportsModel model = new LabReportsModel
+                    DashboardLabData model = new DashboardLabData
                     {
                         BPO_NAME = row["BPO_NAME"].ToString(),
                         recipient_gstin_no = row["recipient_gstin_no"].ToString(),
                         St_cd = row["St_cd"].ToString(),
                         invoice_no = row["invoice_no"].ToString(),
                         invoice_dt = row["invoice_dt"].ToString(),
-                        Total_AMT = Convert.ToString(row["Total_AMT"]),
                         INV_TYPE = row["INV_TYPE"].ToString(),
                         HSN_CD = row["HSN_CD"].ToString(),
+                        INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
+                        Total_AMT = Convert.ToString(row["Total_AMT"]),
                         INV_amount = Convert.ToString(row["INV_amount"]),
                         INV_sgst = Convert.ToString(row["INV_sgst"]),
                         INV_cgst = Convert.ToString(row["INV_cgst"]),
                         INV_igst = Convert.ToString(row["INV_igst"]),
-                        INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
-                        INC_TYPE = row["INC_TYPE"].ToString(),
                         Total_GST = Convert.ToString(row["Total_GST"]),
-                        IRN_NO = row["IRN_NO"].ToString(),
                         BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
                         BILL_SENT = row["BILL_SENT"].ToString(),
+                        //INC_TYPE = row["INC_TYPE"].ToString(),
+                        //IRN_NO = row["IRN_NO"].ToString(),
+                        
                     };
 
                     modelList.Add(model);

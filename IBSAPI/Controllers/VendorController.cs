@@ -359,7 +359,7 @@ namespace IBSAPI.Controllers
         }
 
         [HttpPost("UpdateItemDetails", Name = "UpdateItemDetails")]
-        public IActionResult UpdateItemDetails(RequestUpdateItemModel models)
+        public IActionResult UpdateItemDetails([FromBody] RequestUpdateItemModel models)
         {
             try
             {
@@ -375,14 +375,16 @@ namespace IBSAPI.Controllers
                     model.QtyOrdered = models.QtyOrdered;
                     model.ConsigneeCd = models.ConsigneeCd;
                     model.ItemDescPo = models.ItemDescPo;
+                    model.ItemSrnoPo = models.ItemSrnoPo;
+                    model.UserId = models.UserID;
 
-                    id = vendorRepository.UpdateCallDetails(model, model.ItemSrnoPo);
+                    id = vendorRepository.UpdateCallDetails(model);
                     if (id != null)
                     {
                         var response1 = new
                         {
                             resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                            message = "Item Description Updated Successfully."
+                            message = "Item Updated Successfully."
                         };
                         return Ok(response1);
                     }
