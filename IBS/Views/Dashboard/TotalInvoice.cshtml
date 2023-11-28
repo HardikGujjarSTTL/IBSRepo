@@ -1,4 +1,4 @@
-﻿@model IBS.Models.LabInvoiceReportModel
+﻿@model IBS.Models.LabReportsModel
 @{
     ViewData["Title"] = "LAB INVOICE";
 }
@@ -46,7 +46,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="dttotalinvoice" class="table-responsive">
+                <table id="dttotalinvoicegrid" class="table-responsive">
                     <thead>
                         <tr>
                             <th>S.NO.</th>
@@ -66,8 +66,7 @@
                             <th>Total GST</th>
                             <th>Bill Finalised</th>
                             <th>Sent to Sap</th>
-                            @* <th>IRN_NO</th> *@
-
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -104,7 +103,7 @@
             //var parts1 = to.split('/');
             //var wToDt = parts1[2] + '/' + parts1[1] + '/' + parts1[0];
 
-            InitializeDatatable(wFrmDtO, wToDt, Flag);
+            InitializeDatatableInvoice(wFrmDtO, wToDt, Flag);
             // $("#hide").css("display", "block");
         }
 
@@ -112,15 +111,15 @@
             var wFrmDtO = $("#dtfrom").val();
             var wToDt = $("#dtto").val();
             var Flag = '@ViewBag.Flag';
-            InitializeDatatable(wFrmDtO, wToDt, Flag);
+            InitializeDatatableInvoice(wFrmDtO, wToDt, Flag);
         });
 
-        function InitializeDatatable(wFrmDtO, wToDt, Flag) {
+        function InitializeDatatableInvoice(wFrmDtO, wToDt, Flag) {
             // var _title = '\n LAB INVOICE REPORT;
             // if (wFrmDtO != "" || wToDt != "") {
             //     _title = '\n LAB INVOICE REPORT For the Period :' + wFrmDtO + ' To ' + wToDt
             // }
-            $("#dttotalinvoice").DataTable({
+            $("#dttotalinvoicegrid").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
                 scrollX: true,
@@ -131,7 +130,7 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTableInvoice")",
+                    url: "@Url.Action("LoadTableInvoice", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -139,7 +138,7 @@
                         var AdditionalValues = {
                             wFrmDtO: wFrmDtO,
                             wToDt: wToDt,
-                                    Flag: Flag
+                            Flag: Flag
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -170,7 +169,7 @@
                     { data: "Total_GST" },
                     { data: "BILL_FINALIZE" },
                     { data: "BILL_SENT" }
-                    // { data: "IRN_NO" }
+                    
 
                 ],
 
