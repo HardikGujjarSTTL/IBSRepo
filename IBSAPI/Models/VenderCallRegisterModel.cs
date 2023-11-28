@@ -47,7 +47,7 @@ namespace IBSAPI.Models
 
         public string? UserId { get; set; }
 
-        public DateTime? Datetime { get; set; }
+        //public DateTime? Datetime { get; set; }
 
         public string? UpdateAllowed { get; set; }
 
@@ -67,9 +67,9 @@ namespace IBSAPI.Models
 
         public string? VendRdso { get; set; }
 
-        public DateTime? VendApprovalFr { get; set; }
+        //public DateTime? VendApprovalFr { get; set; }
 
-        public DateTime? VendApprovalTo { get; set; }
+        //public DateTime? VendApprovalTo { get; set; }
 
         public string? StaggeredDp { get; set; }
 
@@ -79,7 +79,7 @@ namespace IBSAPI.Models
 
         public string? Hologram { get; set; }
 
-        public DateTime? ExpInspDt { get; set; }
+        //public DateTime? ExpInspDt { get; set; }
 
         public string? RejCanCall { get; set; }
 
@@ -155,7 +155,7 @@ namespace IBSAPI.Models
 
         public int ConsigneeCd { get; set; }
 
-        public DateTime? DelvDt { get; set; }
+        //public DateTime? DelvDt { get; set; }
 
         public string? DelvDate { get; set; }
 
