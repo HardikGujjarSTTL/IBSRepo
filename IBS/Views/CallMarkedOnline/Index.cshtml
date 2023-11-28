@@ -168,7 +168,15 @@
                     data: null, orderable: false,
                     render: function (data, type, row) {
                         var CaseNo = data.CASE_NO;
-                        var html = '<div align=\"center\" class=\"reportIcon center\"> <a onclick="GetDetail(\'' + row.CASE_NO + '\',\'' + row.CALL_RECV_DT + '\',\'' + row.CALL_SNO + '\',\'' + chk_val + '\',\'' + Date + '\');" id=\"' + row.CASE_NO + '\" class=\"edit\""><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
+                        var IE_NAME = data.IE_NAME;
+                        var html = '';
+                        if (IE_NAME != '') {
+                            html += '<div align=\"center\" class=\"reportIcon center\">';
+                        }
+                        else { 
+                            html += '<div align=\"center\" class=\"reportIcon center\"> <a onclick="GetDetail(\'' + row.CASE_NO + '\',\'' + row.CALL_RECV_DT + '\',\'' + row.CALL_SNO + '\',\'' + chk_val + '\',\'' + Date + '\');" id=\"' + row.CASE_NO + '\" class=\"edit\""><i class=\"fa fa-eye Permission_EditView\" title="Edit"></i></a>';
+                        }
+                        
                         html += '</div>';
                         return html;
                     }
