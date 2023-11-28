@@ -300,8 +300,9 @@ a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .certificateImageBox { padding: 5px; border: 1px solid #ccc; background: #fff; margin: 5px; text-align:center; position: relative; }
 .certificateImageBox span, .awardImageBox span { position: absolute; bottom: 10px; left: 0; color: #fff; font-size: 14px; padding: 0 15px; }
 .certificationSlider { position: relative; /*padding: 0 40px;*/ }
-.certificationSlider .swiper-slide a { display: block; text-align: center; }
-.certificationSlider .swiper-slide a img { width: auto; max-width: 100%; }
+.certificationSlider .swiper-slide a { display: block; text-align: center; overflow:hidden; }
+.certificationSlider .swiper-slide a img { width: auto; max-width: 100%; transition:all 0.2s ease; }
+.certificationSlider .swiper-slide a:hover img{transform:scale(1.1);}
 .certificationSlider .certificationSlider-prev { left: -30px; }
 .certificationSlider .certificationSlider-next { right: -30px; }
 .certificationSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
@@ -313,12 +314,13 @@ a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .awardImageBox { padding: 5px; border: 1px solid #ccc; background: #fff; margin: 5px; text-align:center; position: relative; }
 .awardsSlider { position: relative; /*padding: 0 40px;*/ }
 .awardsSlider .swiper-slide a { display: block; text-align: center; overflow:hidden; }
-.awardsSlider .swiper-slide a img { width: auto; max-width: 100%; }
+.awardsSlider .swiper-slide a img { width: auto; max-width: 100%; transition:all 0.2s ease; }
+.awardsSlider .swiper-slide a:hover img{transform:scale(1.1);}
 .awardsSlider .awardsSlider-prev { left: -30px; }
 .awardsSlider .awardsSlider-next { right: -30px; }
 .awardsSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
 .awardsSlider .sliderSmallArrow { width: 25px; height: 25px; border: 1px solid #ccc; text-align: center; color: #6d6d6d; margin-left: 7px; border-radius:0; font-size: 19px; cursor: pointer; transition: all 350ms ease 0s; -webkit-transition: all 350ms ease 0s; line-height: 23px; background: #1a377b; }
-.awardsSlider .sliderSmallArrow:hover { background-color: #118133; border-color: #ccc; color: #2b304e; }
+.awardsSlider .sliderSmallArrow:hover { color: #2b304e; }
 .awardsSlider .sliderSmallArrow img { width: 17px; }
 /*Awards Slider End*/
 /*Our Clients Slider Start*/
@@ -326,11 +328,11 @@ a.knowMoreButton:hover { background: #118133; border: 1px solid #fff; }
 .ourClientSlider { position: relative; /*padding: 0 40px;*/ }
 .ourClientSlider .swiper-slide a { display: block; text-align: center; }
 .ourClientSlider .swiper-slide a img { width: auto; max-width: 100%; }
-.ourClientSlider .ourClientSlider-prev { left: 0; z-index:1; }
-.ourClientSlider .ourClientSlider-next { right: 0; z-index:1; }
+.ourClientSlider .ourClientSlider-prev { left: -15px; z-index:1; }
+.ourClientSlider .ourClientSlider-next { right: -15px; z-index:1; }
 .ourClientSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
-.ourClientSlider .sliderSmallArrow { width: 25px; height: 25px; border: 1px solid #ccc; text-align: center; color: #6d6d6d; margin-left: 7px; border-radius:0; font-size: 19px; cursor: pointer; transition: all 350ms ease 0s; -webkit-transition: all 350ms ease 0s; line-height: 23px; background: #1a377b; }
-.ourClientSlider .sliderSmallArrow:hover { background-color:#118133; border-color: #ccc; color: #2b304e; }
+.ourClientSlider .sliderSmallArrow { width: 25px; height: 25px; text-align: center; color: #6d6d6d; border-radius:0; font-size: 19px; cursor: pointer; transition: all 350ms ease 0s; -webkit-transition: all 350ms ease 0s; line-height: 23px; }
+.ourClientSlider .sliderSmallArrow:hover {color: #f69e3e; }
 .ourClientImageBox { text-align: center; }
 .ourClientImageBox img { padding: 5px; border: 1px solid #ccc; background: #fff; text-align: center; width: auto; }
 /*Our Clients Slider End*/
@@ -551,6 +553,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .homeGallerySlider .sliderSmallArrow:hover { background-color:#118133; border-color: #ccc; color: rgb(246,158,62); }
 .homeGalleryImageBox { text-align: center; }
 .homeGalleryImageBox img { padding: 5px; border: 1px solid #ccc; background: #fff; text-align: center; width: auto; }
+.homeGalleryWrap a:hover{ color:#f69e3e;}
 #backToTop:before {font-family: "FontAwesome"; position: absolute; left: 50%; top: 50%; margin-left: -8px; margin-top: -13px;  content: "\f077";  color: #fff;}
 #backToTop a {display: block; width: 35px; height: 35px; text-indent: -999px; overflow: hidden; position: relative; z-index: 11; color: #fff; border-radius: 50%;}
 #backToTop { background: #FC5518; cursor: pointer; display: none; height: 35px; width: 35px; overflow: hidden; position: fixed; right: 10px; bottom: 55px; text-indent: -99999px; z-index: 999; display: none; border-radius: 50%; animation: bounce 4s ease infinite;   transition: all 0.3s ease-in-out;    -webkit-transition: all 0.3s ease-in-out;}
@@ -579,7 +582,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .footerLogoSlider .footerLogoSlider-prev { left: -30px; z-index:1; }
 .footerLogoSlider .footerLogoSlider-next { right: -30px; z-index:1; }
 .footerLogoSlider .sliderSmallArrow { position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); margin: 0; padding:0; }
-.footerLogoSlider .sliderSmallArrow { width: 45px; height: 45px; border: none; text-align: center; color: #323232; border-radius:0; font-size: 24px; cursor: pointer; transition: all 350ms ease 0s; -webkit-transition: all 350ms ease 0s; line-height: 45px; /*background: #118133;*/ }
+.footerLogoSlider .sliderSmallArrow { width: 45px; height: 45px; border: none; text-align: center; color: #323232; border-radius:0; font-size: 19px; cursor: pointer; transition: all 350ms ease 0s; -webkit-transition: all 350ms ease 0s; line-height: 45px;}
 .footerLogoSlider .sliderSmallArrow:hover { /*background-color:#118133; border-color: #ccc;*/ color: rgb(246,158,62); }
 .footerLogoImageBox { text-align: center; }
 .footerLogoImageBox img { padding: 5px; border: 1px solid #ccc; background: #fff; text-align: center; width: auto; }
