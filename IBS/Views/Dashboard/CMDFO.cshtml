@@ -1,449 +1,441 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DashboardModel
 @{
+    var Year1 = Model.lstLastThreeYearSectorBilling1.Select(x => x.YEAR).Distinct().FirstOrDefault();
+    var Year2 = Model.lstLastThreeYearSectorBilling2.Select(x => x.YEAR).Distinct();
+    var Year3 = Model.lstLastThreeYearSectorBilling3.Select(x => x.YEAR).Distinct();
 }
 <div class="dashHeader justify-content-between">
-  <h2 class="alignLeft">CM/DFO Dashboard </h2>
+    <h2 class="alignLeft">CM/DFO Dashboard </h2>
 </div>
 <div class="admindashboard-section">
-  <div class="admindashboard-wrap cmDash">
-    <div class="row admin-dashboard">
-      <div class="col-lg-3">
-        <div class="dashboard-box das1Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">35</div>
-              <div class="total-inner"> Total Outstanding<br />
-                Amount </div>
-            </div>
-          </div>
+    <div class="admindashboard-wrap cmDash">
+        <div class="row admin-dashboard">
+            <div class="col-lg-3">
+                <div class="dashboard-box das1Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.TotalOutstandingAmount</div>
+                            <div class="total-inner">
+                                Total Outstanding<br />
+                                Amount
+                            </div>
+                        </div>
+                    </div>
                     <div class="total-icons"><img src="~/images/total-outstanding-amount-icon.svg" alt="Inspection Requests"> </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="dashboard-box das2Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">15</div>
+                </div>
             </div>
-            <div class="total-inner"> Suspense<br />
-              Amount </div>
-          </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das2Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.SuspenseAmount</div>
+                        </div>
+                        <div class="total-inner"> Suspense<br /> Amount </div>
+                    </div>
                     <div class="total-icons"><img src="~/images/suspense-amount-icon.svg" alt="Inspection Assigned"> </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="dashboard-box das3Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">12</div>
+                </div>
             </div>
-            <div class="total-inner"> No. of <br />
-              Total bills </div>
-          </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das3Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.NoOfOutstandingBillCount</div>
+                        </div>
+                        <div class="total-inner">
+                            No. of <br />
+                            Outstanding bills
+                        </div>
+                    </div>
                     <div class="total-icons"><img src="~/images/no-of-bills-icon.svg" alt="Inspection Completed"> </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="dashboard-box das4Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">07</div>
+                </div>
             </div>
-            <div class="total-inner"> No. of <br />
-              Pending Bills </div>
-          </div>
-                    <div class="total-icons"><img src="~/images/pending-invoice-for-finalization-icon.svg" alt="Inspection Pending"> </div>
+            @*<div class="col-lg-3">
+            <div class="dashboard-box das4Client">
+            <div class="dash-total">
+            <div class="dash-count">
+            <div class="total-amount">07</div>
+            </div>
+            <div class="total-inner">
+            No. of <br />
+            Pending Bills
+            </div>
+            </div>
+            <div class="total-icons"><img src="~/images/pending-invoice-for-finalization-icon.svg" alt="Inspection Pending"> </div>
+            </div>
+            </div>*@
         </div>
-      </div>
+        <div class="row admin-dashboard">
+            <div class="col-lg-3">
+                <div class="dashboard-box das5Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.TotalInvoiceCount</div>
+                        </div>
+                        <div class="total-inner">
+                            No. of <br />
+                            Total Invoices
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das6Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.FinalizedInvoiceCount</div>
+                            <div class="total-inner">
+                                No. of <br />
+                                Finalized Invoices
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="dashboard-box das7Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.PendingInvoiceFinalizeCount</div>
+                            <div class="total-inner">
+                                Pending Invoices<br />
+                                for Finalization
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row admin-dashboard">
-      <div class="col-lg-3">
-        <div class="dashboard-box das5Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">07</div>
-            </div>
-            <div class="total-inner"> No. of <br />
-              Total Invoices </div>
-          </div>
-          <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="dashboard-box das6Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">35</div>
-              <div class="total-inner"> No. of <br />
-                Finalized Invoices </div>
-            </div>
-          </div>
-          <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="dashboard-box das7Client">
-          <div class="dash-total">
-            <div class="dash-count">
-              <div class="total-amount">35</div>
-              <div class="total-inner"> Pending Invoices<br />
-                for Finalization </div>
-            </div>
-          </div>
-          <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 <section>
-  <div class="graph-section iePieGraphGrid">
-    <div class="row my-0">
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Sector Wise Billing</h3>
+    <div class="graph-section iePieGraphGrid">
+        <div class="row my-0">
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Sector Wise Billing</h3>
+                </div>
+                <div class="graph">
+                    <div id="region-wise-pie" style="height:250px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Sector Wise Status</h3>
+                </div>
+                <table class="borderGrid">
+                    <tr>
+                        <th class="textLeft">Sector </th>
+                        <th class="text-center">Amount</th>
+                    </tr>
+                    @{
+                        //var row = Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "PSU").Select(x => x.AMOUNT).FirstOrDefault()
+                        <tr>
+                            <td class="textLeft">PSU</td>
+                            <td class="text-center">@Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "PSU").Select(x => x.AMOUNT).FirstOrDefault()</td>
+                        </tr>
+                        <tr>
+                            <td class="textLeft">Railways</td>
+                            <td class="text-center">@Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "RAILWAY").Select(x => x.AMOUNT).FirstOrDefault()</td>
+                        </tr>
+                        <tr>
+                            <td class="textLeft">Non-Railways </td>
+                            <td class="text-center">@Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY").Select(x => x.AMOUNT).FirstOrDefault()</td>
+                        </tr>
+                        <tr>
+                            <td class="textLeft">Private</td>
+                            <td class="text-center">@Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "PRIVATE").Select(x => x.AMOUNT).FirstOrDefault()</td>
+                        </tr>
+                        <tr>
+                            <td class="textLeft">Lab </td>
+                            <td class="text-center">@Model.lstCurrYearSectorBilling.Where(x => x.SECTOR == "LAB").Select(x => x.AMOUNT).FirstOrDefault()</td>
+                        </tr>
+                    }
+                </table>
+                <div class="gridNote"><strong>Note:</strong> Current FY data</div>
+            </div>
         </div>
-        <div class="graph">
-          <div id="region-wise-pie" style="height:250px;"></div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Sector Wise Status</h3>
-        </div>
-        <table class="borderGrid">
-          <tr>
-            <th class="textLeft">Sector </th>
-            <th class="text-center">Amount</th>
-          </tr>
-          <tr>
-            <td class="textLeft">PSU </td>
-            <td class="text-center">50000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Railways </td>
-            <td class="text-center">500000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Non- Railways </td>
-            <td class="text-center">15000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Private </td>
-            <td class="text-center">7000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Lab </td>
-            <td class="text-center">60000000 </td>
-          </tr>
-        </table>
-        <div class="gridNote"><strong>Note:</strong> Current FY data</div>
-      </div>
     </div>
-  </div>
 </section>
 <section>
-  <div class="graph-section iePieGraphGrid">
-    <div class="row my-0">
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Sector wise Billing comparison of Last three Years</h3>
+    <div class="graph-section iePieGraphGrid">
+        <div class="row my-0">
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Sector wise Billing comparison of Last three Years</h3>
+                </div>
+                <div class="graph">
+                    <div id="sector-wise-billing" style="height:250px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="invoice">
+                    <h3 class="headingh3">Sector Wise Billing Status</h3>
+                </div>
+                <table class="borderGrid">
+                    <tr>
+                        <th class="textLeft">Sector </th>
+                        <th class="text-center">@Year1</th>
+                        <th class="text-center">Years2</th>
+                        <th class="text-center">Years3</th>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">PSU </td>
+                        <td class="text-center">50000000 </td>
+                        <td class="text-center">500000000 </td>
+                        <td class="text-center">7000000 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Railways </td>
+                        <td class="text-center">500000000 </td>
+                        <td class="text-center">15000000 </td>
+                        <td class="text-center">6000000 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Non- Railways </td>
+                        <td class="text-center">15000000 </td>
+                        <td class="text-center">7000000 </td>
+                        <td class="text-center">500000000 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Private </td>
+                        <td class="text-center">7000000 </td>
+                        <td class="text-center">60000000 </td>
+                        <td class="text-center">900000000 </td>
+                    </tr>
+                    <tr>
+                        <td class="textLeft">Lab </td>
+                        <td class="text-center">60000000 </td>
+                        <td class="text-center">80000000 </td>
+                        <td class="text-center">15000000 </td>
+                    </tr>
+                </table>
+                <div class="gridNote"> <strong>Note:</strong> FY wise, not using current date </div>
+            </div>
         </div>
-        <div class="graph">
-          <div id="sector-wise-billing" style="height:250px;"></div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="invoice">
-          <h3 class="headingh3">Sector Wise Billing Status</h3>
-        </div>
-        <table class="borderGrid">
-          <tr>
-            <th class="textLeft">Sector </th>
-            <th class="text-center">2023</th>
-            <th class="text-center">2022</th>
-            <th class="text-center">2021</th>
-          </tr>
-          <tr>
-            <td class="textLeft">PSU </td>
-            <td class="text-center">50000000 </td>
-            <td class="text-center">500000000 </td>
-            <td class="text-center">7000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Railways </td>
-            <td class="text-center">500000000 </td>
-            <td class="text-center">15000000 </td>
-            <td class="text-center">6000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Non- Railways </td>
-            <td class="text-center">15000000 </td>
-            <td class="text-center">7000000 </td>
-            <td class="text-center">500000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Private </td>
-            <td class="text-center">7000000 </td>
-            <td class="text-center">60000000 </td>
-            <td class="text-center">900000000 </td>
-          </tr>
-          <tr>
-            <td class="textLeft">Lab </td>
-            <td class="text-center">60000000 </td>
-            <td class="text-center">80000000 </td>
-            <td class="text-center">15000000 </td>
-          </tr>
-        </table>
-        <div class="gridNote"> <strong>Note:</strong> FY wise, not using current date </div>
-      </div>
     </div>
-  </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3"> Top 10 Biling Clients <span class="subTitle">(Current Financial year)</span> </h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-      <tr>
-        <th class="srNo">Sr. No.</th>
-        <th>Client Name</th>
-        <th>Amount</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>6</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>7</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>9</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>10</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3"> Top 10 Biling Clients <span class="subTitle">(Current Financial year)</span> </h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>Client Name</th>
+                <th>Amount</th>
+            </tr>
+            @{
+                var B_SrNo = 0;
+                if (Model.lstBillingClient.Count() > 0)
+                {
+                    foreach (var item in Model.lstBillingClient.Take(10))
+                    {
+                        B_SrNo = B_SrNo + 1;
+                        <tr>
+                            <td>@B_SrNo</td>
+                            <td>@item.CLIENT_NAME</td>
+                            <td>@item.AMOUNT</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Top 05 Outstanding Clients <span class="subTitle">(Current Financial year)</span></h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-      <tr>
-        <th class="srNo">Sr. No.</th>
-        <th>Client Name</th>
-        <th>Amount</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3">Top 05 Outstanding Clients <span class="subTitle">(Current Financial year)</span></h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="srNo">Sr. No.</th>
+                <th>Client Name</th>
+                <th>Amount</th>
+            </tr>
+            @{
+                var O_SrNo = 0;
+                if (Model.lstOutstandingClient.Count() > 0)
+                {
+                    foreach (var item in Model.lstOutstandingClient.Take(5))
+                    {
+                        O_SrNo = O_SrNo + 1;
+                        <tr>
+                            <td>@O_SrNo</td>
+                            <td>@item.CLIENT_NAME</td>
+                            <td>@item.AMOUNT</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No Data Found</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
 </section>
 <section class="table-section">
-  <div class="table-title">
-    <h3 class="headingh3">Billing Comparison for the Last Three Years</h3>
-  </div>
-  <div class="iePieGraphGrid">
-    <table class="borderGrid">
-      <tr>
-        <th class="text-left">Period</th>
-        <th>Total Amount</th>
-      </tr>
-      <tr>
-        <td class="text-left">1 Apr 2023 - current date</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-left">1 apr 2022 - current date 2022 </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-left">1 apr 2021 - current date 2021 </td>
-        <td></td>
-      </tr>
-    </table>
-  </div>
+    <div class="table-title">
+        <h3 class="headingh3">Billing Comparison for the Last Three Years</h3>
+    </div>
+    <div class="iePieGraphGrid">
+        <table class="borderGrid">
+            <tr>
+                <th class="text-left">Period</th>
+                <th>Total Amount</th>
+            </tr>
+            @{
+                foreach (var item in Model.lstBillingCompare)
+                {
+                    <tr>
+                        <td class="text-left">@item.FINALCIAL_YEAR</td>
+                        <td>@item.AMOUNT</td>
+                    </tr>
+                }
+            }
+            @*<tr>
+            <td class="text-left">1 Apr 2023 - current date</td>
+            <td></td>
+            </tr>
+            <tr>
+            <td class="text-left">1 apr 2022 - current date 2022 </td>
+            <td></td>
+            </tr>
+            <tr>
+            <td class="text-left">1 apr 2021 - current date 2021 </td>
+            <td></td>
+            </tr>*@
+        </table>
+    </div>
 </section>
 @section scripts{
     <script>
-    Highcharts.chart('region-wise-pie', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: '',
-            align: 'left'
-        },
-        tooltip: {
-            pointFormat: '{name}'
-        },
+        Highcharts.chart('region-wise-pie', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '',
+                align: 'left'
+            },
+            tooltip: {
+                pointFormat: '{name}'
+            },
 
-        tooltip: {
-            valueSuffix: ''
-        },
-        filter: {
-            operator: '>',
-            property: 'percentage',
-            value: 10
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: false,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        legend: {
-             align: 'right',
-             layout: 'vertical',
-             verticalAlign: 'middle',
-        },
-        series: [{
-            //name: 'Brands',
-            colorByPoint: true,
-            data: [{
-                name: 'PSU',
-                y: 2.0,
-                sliced: false,
-                selected: false
-            }, {
-                name: 'Railways',
-                y: 12.0
-            }, {
-                name: 'Non-Railways',
-                y: 25.0
-            }, {
-                name: 'Private',
-                y: 5.0
-            }, {
-                name: 'Lab',
-                y: 2.0
+            tooltip: {
+                valueSuffix: ''
+            },
+            filter: {
+                operator: '>',
+                property: 'percentage',
+                value: 10
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'middle',
+            },
+            series: [{
+                //name: 'Brands',
+                colorByPoint: true,
+                data: @Html.Raw(Model.CurrYearSectorBillingSummary),
+                //data: [{
+                //    name: 'PSU',
+                //    y: 2.0,
+                //    sliced: false,
+                //    selected: false
+                //}, {
+                //    name: 'Railways',
+                //    y: 12.0
+                //}, {
+                //    name: 'Non-Railways',
+                //    y: 25.0
+                //}, {
+                //    name: 'Private',
+                //    y: 5.0
+                //}, {
+                //    name: 'Lab',
+                //    y: 2.0
+                //}]
             }]
-        }]
-    });
+        });
 
-    // Bar chart
+        // Bar chart
 
-    Highcharts.chart('sector-wise-billing', {
-    chart: {
-        type: 'column'
-    },
-     title: {
-        text: '',
-    },
-    xAxis: {
-        categories: ['PSU', 'Railways', 'Non-Railways', 'Private', 'Lab'],
-        crosshair: true,
-        accessibility: {
-            description: 'Sector Wise'
-        }
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: ''
-        }
-    },
-    tooltip: {
-        valueSuffix: ''
-    },
-    legend: {
-        align: 'right',
-        layout: 'vertical',
-        verticalAlign: 'middle',
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series: [
-        {
-            name: '2021',
-            data: [50000000, 500000000, 15000000, 7000000, 60000000]
-        },
-        {
-            name: '2022',
-            data: [500000000, 15000000, 7000000, 60000000, 80000000]
-        },
-        {
-            name: '2023',
-            data: [7000000, 60000000, 500000000, 900000000, 15000000]
-        }
-    ]
-    });
+        Highcharts.chart('sector-wise-billing', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '',
+            },
+            xAxis: {
+                categories: ['PSU', 'Railways', 'Non-Railways', 'Private', 'Lab'],
+                crosshair: true,
+                accessibility: {
+                    description: 'Sector Wise'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                verticalAlign: 'middle',
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: '2021',
+                    data: [50000000, 500000000, 15000000, 7000000, 60000000]
+                },
+                {
+                    name: '2022',
+                    data: [500000000, 15000000, 7000000, 60000000, 80000000]
+                },
+                {
+                    name: '2023',
+                    data: [7000000, 60000000, 500000000, 900000000, 15000000]
+                }
+            ]
+        });
     </script>
 }

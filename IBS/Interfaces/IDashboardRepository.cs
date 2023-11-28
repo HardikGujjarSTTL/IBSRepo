@@ -36,5 +36,8 @@ namespace IBS.Interfaces
         #region CM JI Dashboard
         DashboardModel GetCMJIDDashBoard(int CO_CD);
         #endregion
+        #region CM DFO Dashboard
+        DashboardModel GetCMDFODashBoard(int CO_CD);
+        #endregion
     }
 }

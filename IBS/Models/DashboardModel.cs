@@ -96,6 +96,25 @@
         public string DefectCodeJISummary { get; set; }
         public CM_Defect_Code_JI_Comp_Model defectCodeJIComp { get; set; } = new CM_Defect_Code_JI_Comp_Model();
         #endregion
+
+        #region CM DFO Dashboard
+        public decimal TotalOutstandingAmount { get; set; }
+        public decimal SuspenseAmount { get; set; }
+        public int NoOfOutstandingBillCount { get; set; }
+        public int TotalInvoiceCount { get; set; }
+        public int FinalizedInvoiceCount { get; set; }
+        public int PendingInvoiceFinalizeCount { get; set; }
+
+        public List<ClientDetailListModel> lstBillingClient { get; set; } = new List<ClientDetailListModel>();
+        public List<ClientDetailListModel> lstOutstandingClient { get; set; } = new List<ClientDetailListModel>();
+        public List<Billing_Comparison_Model> lstBillingCompare { get; set; } = new List<Billing_Comparison_Model>();
+
+        public string CurrYearSectorBillingSummary { get; set; }
+        public List<Sector_Billing_Model> lstCurrYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling1 { get; set; } = new List<Sector_Billing_Model>();
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling2 { get; set; } = new List<Sector_Billing_Model>();
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling3 { get; set; } = new List<Sector_Billing_Model>();
+        #endregion
     }
 
     public class IEList
@@ -378,4 +397,18 @@
         public int OTHER { get; set; }
         public int TOTAL => VISUAL + DIAMENSIONAL + CHEMICAL_COMPOSITION + PHYSICAL + SURFACE + LOAD_PERFORMANCE + NDT + MACRO_MICRO + ELECTRICAL + WELDING + OTHER;
     }
+
+    public class Billing_Comparison_Model
+    {
+        public string FINALCIAL_YEAR { get; set; }
+        public decimal AMOUNT { get; set; }
+    }
+
+    public class Sector_Billing_Model
+    {
+        public string YEAR { get; set; }
+        public string SECTOR { get; set; }
+        public decimal AMOUNT { get; set; }
+    }
+    
 }
