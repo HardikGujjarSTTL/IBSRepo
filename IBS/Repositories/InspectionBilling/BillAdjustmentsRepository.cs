@@ -292,6 +292,9 @@ namespace IBS.Repositories.InspectionBilling
                            && c.ConsigneeCd == Convert.ToInt32(Consignee)
                     select new InspectionCertModel
                     {
+                        Caseno = c.CaseNo,
+                        Callrecvdt = c.CallRecvDt,
+                        Callsno = c.CallSno,
                         ItemSrnoPo = c.ItemSrnoPo,
                         ItemDescPo = c.ItemDescPo,
                         UomSDesc = u.UomSDesc,
@@ -378,12 +381,13 @@ namespace IBS.Repositories.InspectionBilling
             }
         }
 
-        public InspectionCertModel FindByItemID(InspectionCertModel model)
+        public InspectionCertModel FindByItemID(string Caseno, DateTime Callrecvdt, int Callsno, int ItemSrnoPo)
         {
+            InspectionCertModel model = new(); 
             var query = (from c in context.T18CallDetails
                          join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                          join u in context.T04Uoms on p.UomCd equals u.UomCd
-                         where c.CaseNo == model.Caseno && c.CallRecvDt == model.Callrecvdt && c.CallSno == model.Callsno && c.ItemSrnoPo == model.ItemSrnoPo
+                         where c.CaseNo == Caseno && c.CallRecvDt == Callrecvdt && c.CallSno == Callsno && c.ItemSrnoPo == ItemSrnoPo
 
                          select new
                          {

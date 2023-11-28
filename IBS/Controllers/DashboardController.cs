@@ -170,10 +170,11 @@ namespace IBS.Controllers
         public IActionResult LoadTableInvoice([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabReportsModel> dTResult = new DTResult<LabReportsModel>();
+            int userid = UserId;
+            DTResult<DashboardLabData> dTResult = new DTResult<DashboardLabData>();
             try
             {
-                dTResult = dashboardRepository.LoadTableInvoice(dtParameters, Regin);
+                dTResult = dashboardRepository.LoadTableInvoice(dtParameters, Regin, UserId);
             }
             catch (Exception ex)
             {

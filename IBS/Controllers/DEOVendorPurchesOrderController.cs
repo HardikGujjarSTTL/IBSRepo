@@ -419,11 +419,25 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetConsigneeUsingConsignee(int ConsigneeSearch)
+        public IActionResult GetConsigneeUsingConsignee(string ConsigneeSearch)
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetConsigneeUsingConsignee(ConsigneeSearch);
+                bool IsDigit = false;
+                if (ConsigneeSearch != null && ConsigneeSearch != "0")
+                {
+                    char characterToCheck = ConsigneeSearch[2];
+                    IsDigit = Char.IsDigit(characterToCheck);
+                }
+                List<SelectListItem> agencyClient = new List<SelectListItem>();
+                if (IsDigit)
+                {
+                    agencyClient = Common.GetConsigneeUsingConsignee(Convert.ToInt32(ConsigneeSearch));
+                }
+                else
+                {
+                    agencyClient = Common.GetConsigneeUsingConsigneeLike(ConsigneeSearch);
+                }
                 return Json(new { status = true, list = agencyClient });
             }
             catch (Exception ex)

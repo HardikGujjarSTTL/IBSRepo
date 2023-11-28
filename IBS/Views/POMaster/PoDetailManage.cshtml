@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
-                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))
+                        @Html.DropDownListFor(model => model.BpoCd, new SelectList(IBS.Models.Common.GetBillPayingOfficer(Model.RlyCd, Model.RlyNonrly), "Value", "Text"))
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference"></label>
-                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd,Model.RlyNonrly) , "Value", "Text"))
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.RlyCd, Model.RlyNonrly), "Value", "Text"))
                         <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -114,7 +114,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit Of Measurment</label>
-                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment() , "Value", "Text"),"--Select--",new { @onchange="GetUOMChanged()" })
+                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment(), "Value", "Text"), "--Select--", new { @onchange = "GetUOMChanged()" })
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="reference">Value</label>
@@ -136,7 +136,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Discount Type</label>
-                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'DiscountPer');"})
+                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'DiscountPer');" })
                         <span asp-validation-for="DiscountType" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
@@ -155,7 +155,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Excise Type</label>
-                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'ExcisePer');"})
+                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'ExcisePer');" })
                             <span asp-validation-for="ExciseType" class="text-danger"></span>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Other Charges Type</label>
-                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'OtChargePer');"})
+                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'OtChargePer');" })
                             <span asp-validation-for="OtChargeType" class="text-danger"></span>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
         </form>
     </div>
 </section>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -291,12 +291,18 @@
             AddRemoveValidation($("#DiscountType").val(), 'DiscountPer');
             AddRemoveValidation($("#ExciseType").val(), 'ExcisePer');
             AddRemoveValidation($("#OtChargeType").val(), 'OtChargePer');
+            if ('@Model.BpoCd') {
+                SearchBPO('@Model.BpoCd');
+            }
+            if ('@Model.ConsigneeCd') {
+                SearchConsignee('@Model.ConsigneeCd');
+            }
         });
 
-        function AddRemoveValidation(selectedValue,fieldName) {
+        function AddRemoveValidation(selectedValue, fieldName) {
             $("#" + fieldName).rules("remove", "required range");
             if (selectedValue == "P") {
-                $("#" +fieldName).rules("add", {
+                $("#" + fieldName).rules("add", {
                     required: true,
                     range: [0, 100],
                     messages: {
@@ -341,7 +347,7 @@
             }
         });
 
-        
+
 
         function GetUOMChanged() {
             var UomCd = $('#UomCd').val();
@@ -358,8 +364,11 @@
             });
         }
 
-        function SearchBPO() {
+        function SearchBPO(id) {
             var SBPO = $("#SBPO").val();
+            if (id != null) {
+                SBPO = id;
+            }
             $.ajax({
                 url: '@Url.Action("GetBillPayingOfficer", "POMaster")?SBPO=' + SBPO,
                 type: 'GET',
@@ -374,12 +383,16 @@
                     $.each(response.list, function (index, value) {
                         $("#BpoCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
-                    $("#BpoCd").append("<option value=''>Other</option>");
+                    // $("#BpoCd").append("<option value=''>Other</option>");
                 }
             });
         }
-        function SearchConsignee() {
+        function SearchConsignee(id) {
             var ConsigneeSearch = $("#ConsigneeSearch").val();
+            if (id != null)
+            {
+                ConsigneeSearch = id;
+            }
             $.ajax({
                 url: '@Url.Action("GetConsigneeUsingConsignee", "POMaster")?ConsigneeSearch=' + ConsigneeSearch,
                 type: 'GET',
@@ -393,7 +406,7 @@
                     $.each(response.list, function (index, value) {
                         $("#ConsigneeCd").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
-                    $("#ConsigneeCd").append("<option value=''>Other</option>");
+                    // $("#ConsigneeCd").append("<option value=''>Other</option>");
                 }
             });
         }
@@ -596,6 +609,6 @@
             window.location.href = '@Url.Action("PODetails", "POMaster")?CaseNo=' + '@Model.CaseNo';
         };
 
-        
+
     </script>
 }
