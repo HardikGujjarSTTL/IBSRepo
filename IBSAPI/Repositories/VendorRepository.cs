@@ -891,8 +891,8 @@ namespace IBSAPI.Repositories
                         obj.OnlineCall = "Y";
                         obj.ItemRdso = w_item_rdso;
                         obj.VendRdso = w_vend_rdso;
-                        obj.VendApprovalFr = model.VendApprovalFr;
-                        obj.VendApprovalTo = model.VendApprovalTo;
+                        //obj.VendApprovalFr = model.VendApprovalFr;
+                        //obj.VendApprovalTo = model.VendApprovalTo;
                         obj.StaggeredDp = w_stag;
                         obj.LotDp1 = model.LotDp1;
                         obj.LotDp2 = model.LotDp2;
@@ -936,8 +936,8 @@ namespace IBSAPI.Repositories
                         obj.OnlineCall = "Y";
                         obj.ItemRdso = w_item_rdso;
                         obj.VendRdso = w_vend_rdso;
-                        obj.VendApprovalFr = model.VendApprovalFr;
-                        obj.VendApprovalTo = model.VendApprovalTo;
+                        //obj.VendApprovalFr = model.VendApprovalFr;
+                        //obj.VendApprovalTo = model.VendApprovalTo;
                         obj.StaggeredDp = w_stag;
                         obj.LotDp1 = model.LotDp1;
                         obj.LotDp2 = model.LotDp2;

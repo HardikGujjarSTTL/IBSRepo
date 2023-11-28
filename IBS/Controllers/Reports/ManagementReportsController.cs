@@ -116,7 +116,12 @@ namespace IBS.Controllers.Reports
 
         public IActionResult IEPerformance(DateTime FromDate, DateTime ToDate)
         {
-            IEPerformanceModel model = managementReportsRepository.GetIEPerformanceData(FromDate, ToDate, Region);
+            int IeCd = 0;
+            if (SessionHelper.UserModelDTO.RoleName.ToLower() == "inspection engineer (ie)")
+            {
+                IeCd = SessionHelper.UserModelDTO.IeCd;
+            }
+            IEPerformanceModel model = managementReportsRepository.GetIEPerformanceData(FromDate, ToDate, Region, IeCd);
             GlobalDeclaration.IEPerformance = model;
             return PartialView(model);
         }
@@ -329,7 +334,7 @@ namespace IBS.Controllers.Reports
             {
                 Headless = true,
                 DefaultViewport = null,
-                ExecutablePath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+                //ExecutablePath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
             }).ConfigureAwait(false);
 
             await using var page = await browser.NewPageAsync();
@@ -357,5 +362,6 @@ namespace IBS.Controllers.Reports
         {
             return Json(Common.GetBPORailway(ClientType).ToList());
         }
+
     }
 }

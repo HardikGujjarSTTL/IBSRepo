@@ -18,7 +18,7 @@ namespace IBS.Repositories.Reports
             this.context = context;
         }
 
-        public IEPerformanceModel GetIEPerformanceData(DateTime FromDate, DateTime ToDate, string Region)
+        public IEPerformanceModel GetIEPerformanceData(DateTime FromDate, DateTime ToDate, string Region, int IeCd)
         {
             IEPerformanceModel model = new();
             List<IEPerformanceModel.IEPerformanceListModel> lstPerformance = new();
@@ -28,12 +28,13 @@ namespace IBS.Repositories.Reports
             model.ToDate = ToDate;
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
 
-            OracleParameter[] parameter = new OracleParameter[5];
+            OracleParameter[] parameter = new OracleParameter[6];
             parameter[0] = new OracleParameter("p_FROM_DT", OracleDbType.Date, FromDate, ParameterDirection.Input);
             parameter[1] = new OracleParameter("p_TO_DT", OracleDbType.Date, ToDate, ParameterDirection.Input);
             parameter[2] = new OracleParameter("p_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            parameter[3] = new OracleParameter("p_result_cursor1", OracleDbType.RefCursor, ParameterDirection.Output);
-            parameter[4] = new OracleParameter("p_result_cursor2", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[3] = new OracleParameter("p_IE_CD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
+            parameter[4] = new OracleParameter("p_result_cursor1", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[5] = new OracleParameter("p_result_cursor2", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds = DataAccessDB.GetDataSet("SP_GET_IE_PERFORMANCE_DETAILS", parameter);
 
@@ -66,6 +67,7 @@ namespace IBS.Repositories.Reports
                                                join t13 in context.T13PoMasters on t20.CaseNo equals t13.CaseNo
                                                join t22 in context.T22Bills on t20.BillNo equals t22.BillNo
                                                where t20.CaseNo.Substring(0, 1) == Region && (t22.BillDt >= FromDate && t22.BillDt <= ToDate)
+                                               && (IeCd == 0 || (IeCd > 0 && t20.IeCd == IeCd))
                                                select new IEPerformanceModel.IEPerformanceSummaryListModel
                                                {
                                                    RLY_NONRLY = t13.RlyNonrly == "R" ? "Railway Inspections" : "Non-Railway Inspections",
