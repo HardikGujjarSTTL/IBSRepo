@@ -46,7 +46,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-            <table id="dtList1" class="table-responsive">
+            <table id="dtList1" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>S.NO.</th>
@@ -178,7 +178,7 @@
             $("#dtList1").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-                scrollX: true,
+                //scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -224,7 +224,10 @@
                     { data: "BILL_FINALIZE" },
                     { data: "BILL_SENT" },
                 ],
-                "order": [[0, "asc"]]
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtList1").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
        
