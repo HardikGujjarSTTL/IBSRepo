@@ -425,4 +425,24 @@
         public DateTime? Rej_Memo_Dt { get; set;}
         public decimal? RATE { get; set;}
     }
+
+    public class CLientViewAllList
+    {
+        public string Vendor { get; set; }
+        public int TotalCalls { get; set; }
+        public int CallRejected { get; set; }
+        public int CallCancelled { get; set; }
+        public int CallSno { get; set; }
+        public string CaseNo { get; set; }
+        public DateTime CallDate { get; set; }
+        public DateTime? PODT { get; set; }
+        public string Details { get; set; }
+        public string IEName { get; set; }
+        public string Status { get; set; }
+        public string PONO { get; set; }
+        public decimal? Qty { get; set; }
+        public int NoOfComplaints { get; set; }
+        public string Issues { get; set; }
+        public string ActionType { get; set; }
+    }
 }

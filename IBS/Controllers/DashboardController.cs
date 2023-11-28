@@ -362,5 +362,36 @@ namespace IBS.Controllers
             DTResult<CMDARListing> dTResult = dashboardRepository.CMDARListing(dtParameters);
             return Json(dTResult);
         }
+
+        public IActionResult Dashboard_Client_ViewAll_List(string Type)
+        {
+            CLientViewAllList model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<CLientViewAllList> dTResult = dashboardRepository.Dashboard_Client_ViewAll_List(dtParameters, RegionCode, OrgnType, Organisation);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Client_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_List([FromBody] DTParameters dtParameters)
+        {
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_Client_List(dtParameters, Region, OrgnType, Organisation);
+            return Json(dTResult);
+        }
     }
 }

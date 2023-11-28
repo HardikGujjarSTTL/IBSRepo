@@ -13,6 +13,7 @@ namespace IBS.Interfaces
         public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
         DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
+        DTResult<AdminCountListing> Dashboard_Client_List(DTParameters dtParameters, string Region,string OrgnType,string Organisation);
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
 
@@ -32,6 +33,7 @@ namespace IBS.Interfaces
         public DashboardModel GetLODashBoardCount(string UserName);
 
         DTResult<LoListingModel> GetLoCallListingDetails(DTParameters dtParameters, string UserName);
+        DTResult<CLientViewAllList> Dashboard_Client_ViewAll_List(DTParameters dtParameters, string RegionCode,string OrgnType,string Organisation);
         DTResult<CMDARListing> CMDARListing(DTParameters dtParameters);
 
         #region CM JI Dashboard
