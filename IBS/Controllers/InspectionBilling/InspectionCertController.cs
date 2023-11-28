@@ -155,7 +155,8 @@ namespace IBS.Controllers.InspectionBilling
                     if (FinspCdtdiff == 1)
                     {
                         mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
-                        AlertDanger(mess);
+                        //AlertDanger(mess);
+                        return Json(new { status = false, responseText = mess, Id = i });
                     }
                     if (ICdtLinspdiff == 1)
                     {
@@ -167,7 +168,8 @@ namespace IBS.Controllers.InspectionBilling
                         {
                             mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
                         }
-                        AlertDanger(mess);
+                        //AlertDanger(mess);
+                        return Json(new { status = false, responseText = mess, Id = i });
                     }
 
                 }
