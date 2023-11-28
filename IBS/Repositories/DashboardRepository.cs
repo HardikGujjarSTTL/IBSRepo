@@ -909,18 +909,6 @@ namespace IBS.Repositories
                             SETNO = t20.SetNo,
                         };
 
-                //var query = from t20 in dbContext.T20_IC
-                //            join t30 in dbContext.T30_IC_RECEIVED
-                //            on new { t20.BK_NO, t20.SET_NO } equals new { t30.BK_NO, t30.SET_NO } into t30Group
-                //            from t30 in t30Group.DefaultIfEmpty()
-                //            where t20.CASE_NO.Substring(0, 1) == "N" &&
-                //                  t20.CALL_RECV_DT >= DateTime.ParseExact("01/04/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                //                  t20.CALL_RECV_DT <= DateTime.ParseExact("31/03/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
-                //                  t30 == null // Not equal condition
-                //            select new { Flag = "N", t20 };
-
-                //var distinctQuery = query.Distinct();
-
                 query.Distinct();
 
             }
@@ -1025,7 +1013,7 @@ namespace IBS.Repositories
                         join T09 in context.T09Ies on T17.IeCd equals T09.IeCd
                         join T05 in context.T05Vendors on T17.MfgCd equals T05.VendCd
                         where (T17.CallRecvDt >= Convert.ToDateTime(FromDate) && T17.CallRecvDt <= Convert.ToDateTime(ToDate))
-                        && T17.AutomaticCall != "Y"
+                        && T17.OnlineCall == "Y"
                         select new VenderCallRegisterModel
                         {
                             CaseNo = T17.CaseNo,
@@ -1677,6 +1665,39 @@ namespace IBS.Repositories
             return dTResult;
         }
 
+        public DashboardModel GetCMGeneralDashBoard(int CO_CD)
+        {
+            DashboardModel model = new DashboardModel();
+            OracleParameter[] par = new OracleParameter[2];
+
+            par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
+            List<DashboardModel> lstIEPer = new();
+            if (ds1 != null && ds1.Tables.Count > 0)
+            {
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds1.Tables[0];
+                    lstIEPer = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        IE_NAME = Convert.ToString(row["IE_NAME"]),
+                        TotalCallsCount = Convert.ToInt32(row["TOTAL_CALL"]),
+                        PendingCallsCount = Convert.ToInt32(row["PENDING_CALL"]),
+                        AcceptedCallsCount = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                        CancelledCallsCount = Convert.ToInt32(row["CANCELLED_CALL"]),
+                        UnderLabTestingCount = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                        StillUnderInspectionCount = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                        StageRejectionCount = Convert.ToInt32(row["STAGE_REJECTION_CALL"]),
+                    }).ToList();
+                }
+            }
+            model.IEWisePerformance = lstIEPer;
+
+            return model;
+        }
+
         public DashboardModel GetCMJIDDashBoard(int CO_CD)
         {
             DashboardModel model = new DashboardModel();
@@ -1892,7 +1913,6 @@ namespace IBS.Repositories
 
             if (dtParameters.Order != null)
             {
-                // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
                 if (orderCriteria == "")
@@ -1903,7 +1923,6 @@ namespace IBS.Repositories
             }
             else
             {
-                // if we have an empty search then just order the results by Id ascending
                 orderCriteria = "Case_No";
                 orderAscendingDirection = true;
             }

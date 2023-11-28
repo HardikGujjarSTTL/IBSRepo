@@ -84,6 +84,12 @@
             }
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection.");
+            } else if (type == "ICNR") {
+                $("#spnHeading").text("Issued IC Not Received in Office.");
+            } else if (type == "TB") {
+                $("#spnHeading").text("No. of Total Bills.");
+            } else if (type == "ICRNB") {
+                $("#spnHeading").text("Issued IC and Received in Office Not Billed IC.");
             }
 
             if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {

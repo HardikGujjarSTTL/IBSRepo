@@ -1,10 +1,11 @@
-﻿@{
+﻿@model IBS.Models.CMDARListing
+@{
     ViewData["Title"] = "IEPerCM";
 }
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">ONLINE CALL MARKING FORM</label></h2>
+        <h2><label id="lblTitle" style="font-weight:600;font-family:'Poppins', sans-serif;font-size:24px;">Consignee Complaint Closed at RITES End</label></h2>
     </div>
     <div>
         <a asp-action="CMDAR" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
@@ -63,15 +64,27 @@
 
         $(function () {
             var currentDate = new Date();
+            var financialYearDates = calculateFinancialYearDates(currentDate);
 
-            var financialYearStartDate = new Date(currentDate.getFullYear(), 3, 1);
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
 
-            if (currentDate < financialYearStartDate) {
-                financialYearStartDate.setFullYear(currentDate.getFullYear() - 1);
-            }
-            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
-            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
+            InitializeDatatable();
         });
+
+
+        function calculateFinancialYearDates(currentDate) {
+            var currentYear = currentDate.getFullYear();
+
+            var financialYearStartDate = new Date(currentYear, 3, 1);
+            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+            return {
+                start: financialYearStartDate,
+                end: financialYearEndDate
+            };
+        }
+
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
@@ -93,7 +106,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, CO_CD
+                            FromDate, ToDate
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

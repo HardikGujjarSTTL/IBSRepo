@@ -142,7 +142,8 @@ namespace IBS.Controllers
 
         public IActionResult CMGeneral()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMGeneralDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult LO()
