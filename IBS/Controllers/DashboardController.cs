@@ -126,7 +126,8 @@ namespace IBS.Controllers
 
         public IActionResult CMDAR()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMDARDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMDFO()
@@ -170,10 +171,11 @@ namespace IBS.Controllers
         public IActionResult LoadTableInvoice([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabReportsModel> dTResult = new DTResult<LabReportsModel>();
+            int userid = UserId;
+            DTResult<DashboardLabData> dTResult = new DTResult<DashboardLabData>();
             try
             {
-                dTResult = dashboardRepository.LoadTableInvoice(dtParameters, Regin);
+                dTResult = dashboardRepository.LoadTableInvoice(dtParameters, Regin, UserId);
             }
             catch (Exception ex)
             {
@@ -219,7 +221,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
         {
-            DTResult<VenderCallRegisterModel> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
+            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
             return Json(dTResult);
         }
 

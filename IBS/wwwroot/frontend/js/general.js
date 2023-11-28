@@ -187,7 +187,7 @@ $(document).ready( function(){
 	if($(".ourClientSlider").length){
 		var ourClientSlider = new Swiper('.ourClientSlider .swiper-container', {
 		speed: 2000,
-    	spaceBetween:10,
+    	spaceBetween:0,
 		slidesPerView: 8,
 		lazy: true,
 		loop:true,
@@ -228,7 +228,7 @@ $(document).ready( function(){
 		});
 	}
 
-	//Our Clients Slider
+	//home gallery Slider
 	if ($(".homeGallerySlider").length) {
 		var ourClientSlider = new Swiper('.homeGallerySlider .swiper-container', {
 			speed: 2000,
@@ -265,6 +265,51 @@ $(document).ready( function(){
 				},
 				1600: {
 					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				}
+			}
+
+		});
+	}
+
+	//footer logo Slider
+	if ($(".footerLogoSlider").length) {
+		var ourClientSlider = new Swiper('.footerLogoSlider .swiper-container', {
+			speed: 2000,
+			spaceBetween: 0,
+			slidesPerView: 8,
+			lazy: true,
+			loop: true,
+			simulateTouch: true,
+			autoplay: true,
+			navigation: {
+				nextEl: '.footerLogoSlider-next',
+				prevEl: '.footerLogoSlider-prev',
+			},
+			breakpoints: {
+				479: {
+					slidesPerView: 1,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				639: {
+					slidesPerView: 3,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1024: {
+					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1169: {
+					slidesPerView: 4,
+					simulateTouch: true,
+					centerSlide: true,
+				},
+				1600: {
+					slidesPerView: 6,
 					simulateTouch: true,
 					centerSlide: true,
 				}

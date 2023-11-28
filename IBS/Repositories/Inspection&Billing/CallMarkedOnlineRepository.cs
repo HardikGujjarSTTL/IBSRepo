@@ -348,16 +348,31 @@ namespace IBS.Repositories.Inspection_Billing
 
                     if (cl_exist == 0)
                     {
-                        T100VenderCluster insObj = new T100VenderCluster();
-                        insObj.VendorCode = Convert.ToInt32(model.MFG_CD);
-                        insObj.DepartmentName = model.DEPT_DROPDOWN;
-                        insObj.ClusterCode = Convert.ToInt32(model.IE_NAME);
-                        insObj.UserId = uModel.UserName.Substring(0, 8);
-                        insObj.Datetime = DateTime.Now;
-                        insObj.Createdby = uModel.UserID;
-                        insObj.Createddate = DateTime.Now;
-                        context.T100VenderClusters.Add(insObj);
-                        context.SaveChanges();
+                        var T100 = context.T100VenderClusters.Where(x => x.VendorCode == Convert.ToInt32(model.MFG_CD)).FirstOrDefault();
+                        if (T100 == null)
+                        {
+                            T100VenderCluster insObj = new T100VenderCluster();
+                            insObj.VendorCode = Convert.ToInt32(model.MFG_CD);
+                            insObj.DepartmentName = model.DEPT_DROPDOWN;
+                            insObj.ClusterCode = Convert.ToInt32(model.IE_NAME);
+                            insObj.UserId = uModel.UserName.Substring(0, 8);
+                            insObj.Datetime = DateTime.Now;
+                            insObj.Createdby = uModel.UserID;
+                            insObj.Createddate = DateTime.Now;
+                            context.T100VenderClusters.Add(insObj);
+                            context.SaveChanges();
+                        }
+                        else
+                        {
+                            T100.DepartmentName = model.DEPT_DROPDOWN;
+                            T100.ClusterCode = Convert.ToInt32(model.IE_NAME);
+                            T100.UserId = uModel.UserName.Substring(0, 8);
+                            T100.Datetime = DateTime.Now;
+                            T100.Updatedby = uModel.UserID;
+                            T100.Updateddate = DateTime.Now;
+                            context.SaveChanges();
+                        }
+
                     }
                     var ietopoicount = (from mapping in context.T60IePoiMappings
                                         where mapping.IeCd == model.IE_CD && mapping.PoiCd == Convert.ToInt32(model.MFG_CD)
@@ -447,7 +462,7 @@ namespace IBS.Repositories.Inspection_Billing
             //return dTResult;
         }
 
-        public List<CaseHistoryPoIREPSModel> Get_Case_History_PO_IREPS(DTParameters dtParameters,string PO_NO ,string PO_DT)//, string PO_DT
+        public List<CaseHistoryPoIREPSModel> Get_Case_History_PO_IREPS(DTParameters dtParameters, string PO_NO, string PO_DT)//, string PO_DT
         {
             //string PO_NO = "", PO_DT = "";
             var searchBy = dtParameters.Search?.Value;
@@ -553,7 +568,7 @@ namespace IBS.Repositories.Inspection_Billing
             //return dTResult;
         }
 
-        public List<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters,string CASE_NO)
+        public List<CaseHistoryPreviousCallModel> Get_Case_History_Previous_Call(DTParameters dtParameters, string CASE_NO)
         {
             DTResult<CaseHistoryPreviousCallModel> dTResult = new() { draw = 0 };
 
@@ -610,7 +625,7 @@ namespace IBS.Repositories.Inspection_Billing
             //return dTResult;
         }
 
-        public List<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters,string VEND_CD)
+        public List<CaseHistoryConsigneeComplaintModel> Get_Case_History_Consignee_Complaints(DTParameters dtParameters, string VEND_CD)
         {
             DTResult<CaseHistoryConsigneeComplaintModel> dTResult = new() { draw = 0 };
 
@@ -666,7 +681,7 @@ namespace IBS.Repositories.Inspection_Billing
             //return dTResult;
         }
 
-        public List<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters,string CASE_NO, string VEND_CD, string region)
+        public List<CaseHistoryRejectionVendorPlaceModel> Get_Case_History_Rejection_Vendor_Place(DTParameters dtParameters, string CASE_NO, string VEND_CD, string region)
         {
             DTResult<CaseHistoryRejectionVendorPlaceModel> dTResult = new() { draw = 0 };
 

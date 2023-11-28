@@ -44,7 +44,7 @@
 
 <div id="PopUp" class="modal" tabindex="-1" role="dialog">
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -86,6 +86,7 @@
             var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();
             var Consignee = $("#Consignee").val();
+
             $("#dtList").DataTable({
                 stateSave: false,
                 autoWidth: true,
@@ -118,7 +119,17 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var _ItemSrnoPo = data.ItemSrnoPo;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+
+                            var _Caseno = data.Caseno;
+                            var _Callrecvdt = data.Callrecvdt;
+                            var _Callsno = data.Callsno;
+                            
+                            //var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            var html = '<div align="center" class="reportIcon actionCenter">';
+                            html += '<a onclick="OpenEditCallDetailsModal(\'' + _Caseno + '\',\'' + _Callrecvdt + '\' ,\'' + _Callsno + '\',\'' + _ItemSrnoPo + '\'); return false;" href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+
+                            //var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + Caseno + '\',' + Callrecvdt + '\',' + Callsno + '\',' + _ItemSrnoPo + '); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -150,20 +161,36 @@
             });
         }
 
-        function OpenEditCallDetailsModal(ItemSrnoPo) {
+        function OpenEditCallDetailsModal(Caseno, Callrecvdt, Callsno, ItemSrnoPo) {
             $("#ItemSrnoPo").val(ItemSrnoPo);
-            event.preventDefault();
+            //event.preventDefault();
             $('select').prop('disabled', false);
-            var formData = $("#frmDetails").serialize();
+            //var formData = $("#frmDetails").serialize();
+            let myObject = { Caseno, Callrecvdt, Callsno, ItemSrnoPo };
 
-            $.post("@Url.Action("EditListDetails", "BillAdjustments")", formData, function (response) {
+            $.ajax({
+                url: "@Url.Action("EditListDetails", "BillAdjustments")",
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: $.param(myObject),
+            }).done(function (response) {
                 if (response != null) {
                     $("#EditCallDetailsModal").html("");
                     $("#EditCallDetailsModal").html(response);
                     $("#EditCallDetailsModal").modal('show');
                 }
-
             });
+
+            // $.post("@Url.Action("EditListDetails", "BillAdjustments")", formData, function (response) {
+            //     alert(JSON.stringify(response));
+            //     if (response != null) {
+            //         $("#EditCallDetailsModal").html("");
+            //         $("#EditCallDetailsModal").html(response);
+            //         $("#EditCallDetailsModal").modal('show');
+            //     }
+            // });
         }
 
         function UpdateCallDetails() {
@@ -386,6 +413,6 @@
             AdjustCalculation();
         }
 
-        
+
     </script>
 }

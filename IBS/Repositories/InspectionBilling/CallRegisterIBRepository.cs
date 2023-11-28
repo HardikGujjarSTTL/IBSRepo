@@ -1574,14 +1574,14 @@ namespace IBS.Repositories.InspectionBilling
 
             var result2 = query2.FirstOrDefault();
 
-            if(result2  != null)
+            if (result2 != null)
             {
                 ie_phone = result2.IE_PHONE_NO;
                 ie_name = result2.IE_NAME;
                 ie_email = result2.IE_EMAIL;
                 ie_co_email = result2.CO_Email;
             }
-            
+
 
             string call_letter_dt = "";
             if (Convert.ToString(model.CallLetterDt) == "")
@@ -2131,23 +2131,48 @@ namespace IBS.Repositories.InspectionBilling
             var CallDetails = context.T18CallDetails.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
             var CallReg = context.T17CallRegisters.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
 
+            //int T47Count = context.T47IeWorkPlans.Count(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+            var T47 = context.T47IeWorkPlans.FirstOrDefault(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno);
+
             int delstatus = context.T20Ics.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).Count();
 
             if (delstatus == 0)
             {
-                context.T19CallCancels.Remove(CallCancalltion);
-                context.SaveChanges();
+                if (CallCancalltion != null)
+                {
+                    context.T19CallCancels.Remove(CallCancalltion);
+                    context.SaveChanges();
 
-                context.T18CallDetails.Remove(CallDetails);
-                context.SaveChanges();
+                    msg = CallCancalltion.CaseNo;
+                }
+                if (CallDetails != null)
+                {
+                    //context.T18CallDetails.Remove(CallDetails);
+                    //context.SaveChanges();
+                    if (context.T18CallDetails.Any(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno))
+                    {
+                        context.T18CallDetails.RemoveRange(context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).ToList());
+                        context.SaveChanges();
+                    }
+                }
+                if (T47 != null)
+                {
+                    if (context.T47IeWorkPlans.Any(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno))
+                    {
+                        context.T47IeWorkPlans.RemoveRange(context.T47IeWorkPlans.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).ToList());
+                        context.SaveChanges();
+                    }
+                    //context.T47IeWorkPlans.Remove(T47);
+                    //context.SaveChanges();
+                }
+                if (CallReg != null)
+                {
+                    context.T17CallRegisters.Remove(CallReg);
+                    context.SaveChanges();
 
-                context.T17CallRegisters.Remove(CallReg);
-                context.SaveChanges();
-
-                msg = CallCancalltion.CaseNo;
+                    msg = CallReg.CaseNo;
+                }
             }
-
-
             return msg;
         }
 
@@ -2233,7 +2258,7 @@ namespace IBS.Repositories.InspectionBilling
         public int show2(string CaseNo)
         {
             int val = 0;
-            string ext_delv_dt = "";
+            string ext_delv_dt = null;
             string INSP_DATE = "";
             var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).ToList() // Retrieve data from the database into memory
                         .Select(l => new
@@ -2241,8 +2266,15 @@ namespace IBS.Repositories.InspectionBilling
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-
-            ext_delv_dt = result.ExtDelvDt;
+            if(result == null)
+            {
+                ext_delv_dt = "01/01/2001";
+            }
+            else
+            {
+                ext_delv_dt = result.ExtDelvDt;
+            }
+            
             INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
             {
@@ -3194,7 +3226,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!'";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document != "IC Image 1")
+                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(model.Hologram) && document == "")
                 {
                     model.AlertMsg = "Book No. , Set No., Holograms OR IC Photo cannot be left blank!!!";
                 }
@@ -3211,7 +3243,7 @@ namespace IBS.Repositories.InspectionBilling
                                   .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
                 }
 
-                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document == "IC Image 1")
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
                 {
                     var t17Detail = from a in context.T17CallRegisters
                                     where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
@@ -3230,13 +3262,14 @@ namespace IBS.Repositories.InspectionBilling
                             row.FifoVoilateReason = wFifoVoilateReason;
                             context.SaveChanges();
                         }
+                        model.AlertMsg = "Success";
                     }
                 }
                 else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                 }
-                else if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo) && document != "IC Image 1")
+                else if (string.IsNullOrEmpty(model.BkNo) || string.IsNullOrEmpty(model.SetNo) || document != " ")
                 {
                     model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
                 }
@@ -4595,7 +4628,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
                     return model;
                 }
-               // send_Vendor_Email(model);
+                // send_Vendor_Email(model);
             }
             return model;
         }
@@ -4666,7 +4699,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
                 return model;
             }
-            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == ""&& model.RejectionCharge == null)
+            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == "" && model.RejectionCharge == null)
             {
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;

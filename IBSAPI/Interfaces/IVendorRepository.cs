@@ -12,7 +12,7 @@ namespace IBSAPI.Interfaces
         List<VenderCallRegisterModel> GetVenderListM(RequestVenderCallRegisterModel model);
         public VenderCallRegisterModel GetValidate(VenderCallRegisterModel model);
         string RegiserCallSave(VenderCallRegisterModel model);
-        string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo);
+        string UpdateCallDetails(VenderCallRegisterModel model);
         int DetailsInsertUpdate(RequestUpdateManufacturerDetailsModel model);
     }
 }

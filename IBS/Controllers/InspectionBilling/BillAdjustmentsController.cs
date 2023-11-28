@@ -30,7 +30,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     model = billRepository.FindByBillDetails(BillNo, Region);
                 }
-                if(model.BillNo != null)
+                if (model.BillNo != null)
                 {
                     return PartialView("_BillDetails", model);
                 }
@@ -53,15 +53,15 @@ namespace IBS.Controllers.InspectionBilling
             return Json(dTResult);
         }
 
-        [HttpPost]
-        public IActionResult EditListDetails(InspectionCertModel model)
+        public IActionResult EditListDetails(string Caseno, DateTime Callrecvdt, int Callsno, int ItemSrnoPo)
         {
             try
             {
+                InspectionCertModel model = new();
                 model.Regioncode = Region;
-                if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0 && model.ItemSrnoPo > 0)
+                if (Caseno != null && Callrecvdt != null && Callsno > 0 && ItemSrnoPo > 0)
                 {
-                    model = billRepository.FindByItemID(model);
+                    model = billRepository.FindByItemID(Caseno, Callrecvdt, Callsno, ItemSrnoPo);
                 }
                 return PartialView("_EditListDetails", model);
             }
@@ -233,7 +233,7 @@ namespace IBS.Controllers.InspectionBilling
         //    return Json(dTResult);
         //}
 
-        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee,int ConsigneeCd)
+        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd)
         {
             InspectionCertModel model = new();
             try

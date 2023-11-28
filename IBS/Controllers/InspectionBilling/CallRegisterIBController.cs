@@ -272,7 +272,7 @@ namespace IBS.Controllers.InspectionBilling
                                 {
                                     var w_itemBlocked = GetData.VendInspStopped;
                                     msg = "Some Items of the Vendor have been blocked due to following reasons :\\n" + GetData.VendRemarks + "\\nDo You Still Want to Register/Update This Call?";
-                                    return Json(new { status = true, responseText = msg, code, dt, w_itemBlocked, Client = Client });
+                                    return Json(new { status = false, responseText = msg, code, dt, w_itemBlocked, Client = Client });
                                 }
                                 else
                                 {
@@ -282,12 +282,12 @@ namespace IBS.Controllers.InspectionBilling
                                         if (dp == 0)
                                         {
                                             msg = "Please ensure Inspection Call is submitted at least five(5) working days before the expiry of the delivery period , otherwise Call shall not be accepted.";
-                                            return Json(new { status = true, responseText = msg, code, dt, Client = Client });
+                                            return Json(new { status = false, responseText = msg, code, dt, Client = Client });
                                         }
                                         else if (dp == 2)
                                         {
                                             msg = "Delivery Period not available, so Call shall not be accepted.";
-                                            return Json(new { status = true, responseText = msg, code, dt, Client = Client });
+                                            return Json(new { status = false, responseText = msg, code, dt, Client = Client });
                                         }
                                         else
                                         {
@@ -629,6 +629,8 @@ namespace IBS.Controllers.InspectionBilling
             ViewBag.Cancellation_Document = FileUploaderlstDocumentCancellationDocument;
             #endregion
 
+            model.IeCd = SessionHelper.UserModelDTO.IeCd.ToString();
+
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
                 model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
@@ -782,6 +784,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
                 }
+                model.IeCd = SessionHelper.UserModelDTO.IeCd.ToString();
                 if (!string.IsNullOrEmpty(model.CaseNo) && model.CallRecvDt != null && model.CallSno > 0)
                 {
                     model.Updatedby = Convert.ToString(UserId);

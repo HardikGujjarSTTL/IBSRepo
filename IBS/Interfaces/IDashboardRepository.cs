@@ -12,14 +12,14 @@ namespace IBS.Interfaces
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode);
         public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
-        DTResult<VenderCallRegisterModel> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
+        DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
 
         DTResult<IEList> Get_IE_Dashboard_Details_List(DTParameters dtParameters);
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
-        DTResult<LabReportsModel> LoadTableInvoice(DTParameters dtParameters, string Regin);
+        DTResult<DashboardLabData> LoadTableInvoice(DTParameters dtParameters, string Regin, int userid);
         DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
 
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
@@ -35,6 +35,7 @@ namespace IBS.Interfaces
 
         #region CM JI Dashboard
         DashboardModel GetCMJIDDashBoard(int CO_CD);
+        DashboardModel GetCMDARDashBoard(int CO_CD);
         #endregion
         #region CM DFO Dashboard
         DashboardModel GetCMDFODashBoard(int CO_CD);

@@ -207,6 +207,30 @@
                         <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS5</font></b></td>
                     </tr>
                 }
+
+                @if (Model != null && Model.lstBill.Count > 0)
+                {
+                    int TotalINSP_FEE1 = 0;
+                    int TotalTAX1 = 0;
+                    int TotalBILL_AMOUNT1 = 0;
+                    int TotalNO_OF_BILLS1 = 0;
+                    @foreach (var item in Model.lstBill)
+                    {
+
+                        TotalINSP_FEE1 += Convert.ToInt32(@item.INSP_FEE);
+                        TotalTAX1 += Convert.ToInt32(@item.TAX);
+                        TotalBILL_AMOUNT1 += Convert.ToInt32(@item.BILL_AMOUNT);
+                        TotalNO_OF_BILLS1 += Convert.ToInt32(@item.NO_OF_BILLS);
+
+                    }
+                    <tr class="reportTotal">
+                        <td align="center"><b><font size="1" face="Verdana">Grand Total:</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalINSP_FEE1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalTAX1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalBILL_AMOUNT1</font></b></td>
+                        <td align="right"><b><font size="1" face="Verdana">@TotalNO_OF_BILLS1</font></b></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -290,6 +314,6 @@
             element.style.width = "100%";
         }, 1000);
     }
-    
+
 
 </script>

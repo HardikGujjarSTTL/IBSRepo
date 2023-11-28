@@ -1,17 +1,21 @@
 ﻿
 @{
     string Title = "";
+    string ButtonTitle = "";
     if (ViewBag.Type == "C")
     {
         Title = "Clients Contact List";
+        ButtonTitle = "Add New Clients Contact";
     }
     else if (ViewBag.Type == "B")
     {
         Title = "BD Efforts List";
+        ButtonTitle = "Add New BD Efforts";
     }
     else
     {
         Title = "DFO Visit List";
+        ButtonTitle = "Add New DFO Visit";
     }
     ViewData["Title"] = Title;
 }
@@ -23,7 +27,7 @@
             <h2>@Title</h2>
         </div>
         <div class="list-btn">
-            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Clients Contact</a>
+            <a asp-area="" asp-controller="ClientContract" asp-action="Manage" asp-route-id="0" asp-route-Type="@ViewBag.Type" class="formBtn Permission_Add"><span class="fa fa-plus"></span> @ButtonTitle</a>
         </div>
     </div>
     <section class="table-section">
