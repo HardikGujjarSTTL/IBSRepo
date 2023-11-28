@@ -28,7 +28,7 @@ namespace IBS.Repositories
         }
         public LabReportsModel LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string Regin)
         {
-
+            string reg = "";
             LabReportsModel model = new();
             List<LabReportsModel> lstlab = new();
             List<LabReportsModel> lstsum = new();
@@ -87,8 +87,36 @@ namespace IBS.Repositories
                 SAMPLE_DISPATCH_DATE = row["SAMPLE_DISPATCH_DATE"].ToString(),
                 
             }).ToList();
+            foreach (var item in lstlab)
+            {
+                
+                
+                if (reg == item.SAMPLE_REG_NO)
+                {
+                    item.AMOUNT_RECIEVED = "";
+                    item.TDS_AMT = "";
+                    item.AMT_DUE = "";
+                }
+                reg = item.SAMPLE_REG_NO;
+            }
+            //lstlab = lstlab.Where(row => row.AMOUNT_RECIEVED != null).ToList();
+
+
+            //lstlab = lstlab.GroupBy(row => row.SAMPLE_REG_NO)
+            //               .Select(group => group.First())
+            //               .ToList();
+            //model.lstLabReport = lstlab;
+            //var filteredList = lstlab.Where(row => row.AMOUNT_RECIEVED != null);
+
+
+            //var grouped = filteredList.GroupBy(row => row.SAMPLE_REG_NO)
+            //                          .Select(group => group.OrderBy(r => r.AMOUNT_RECIEVED != null ? 0 : 1)
+            //                                               .ThenBy(r => r.AMOUNT_RECIEVED)
+            //                                               .First())
+            //                          .ToList();
+
             model.lstLabReport = lstlab;
-            
+
             return model;
         }
         

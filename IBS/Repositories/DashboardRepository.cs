@@ -45,8 +45,12 @@ namespace IBS.Repositories
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     model.TOTAL_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_INVOICE"]);
-                    model.FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["FINALIZED_INVOICE"]);
-                    model.PENDING_FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_FINALIZED_INVOICE"]);
+                    //model.FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["FINALIZED_INVOICE"]);
+                    object finalizedInvoiceValue = ds.Tables[0].Rows[0]["FINALIZED_INVOICE"];
+                    model.FINALIZED_INVOICE = (finalizedInvoiceValue != DBNull.Value) ? Convert.ToInt32(finalizedInvoiceValue) : 0;
+                    object finalizedFinalizedValue = ds.Tables[0].Rows[0]["PENDING_FINALIZED_INVOICE"];
+                    model.PENDING_FINALIZED_INVOICE = (finalizedFinalizedValue != DBNull.Value) ? Convert.ToInt32(finalizedFinalizedValue) : 0;
+                    //model.PENDING_FINALIZED_INVOICE = Convert.ToInt32(ds.Tables[0].Rows[0]["PENDING_FINALIZED_INVOICE"]);
                 }
                 if (ds.Tables[1].Rows.Count > 0)
                 {
