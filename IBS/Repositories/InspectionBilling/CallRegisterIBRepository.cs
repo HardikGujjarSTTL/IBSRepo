@@ -2258,7 +2258,7 @@ namespace IBS.Repositories.InspectionBilling
         public int show2(string CaseNo)
         {
             int val = 0;
-            string ext_delv_dt = "";
+            string ext_delv_dt = null;
             string INSP_DATE = "";
             var result = context.T15PoDetails.Where(x => x.CaseNo == CaseNo).ToList() // Retrieve data from the database into memory
                         .Select(l => new
@@ -2266,8 +2266,15 @@ namespace IBS.Repositories.InspectionBilling
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-
-            ext_delv_dt = result.ExtDelvDt;
+            if(result == null)
+            {
+                ext_delv_dt = "01/01/2001";
+            }
+            else
+            {
+                ext_delv_dt = result.ExtDelvDt;
+            }
+            
             INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
             {

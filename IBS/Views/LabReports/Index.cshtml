@@ -379,7 +379,7 @@
             }
         });
         $('input[name="inforadioGroup"]').change(function () {
-
+            
             var selectedId = $(this).attr('id');
             if (selectedId == "inforb1") {
                 sessionStorage.removeItem("infor1");
@@ -388,7 +388,7 @@
             }
             else {
                 sessionStorage.removeItem("infor1");
-                sessionStorage.setItem("infor1", true);
+                sessionStorage.setItem("infor2", true);
                 
             }
             
@@ -397,7 +397,8 @@
 
         $(function () {
             $("#r1").prop("checked", true);
-            $("#inforb1").prop("checked", true);
+             $("#inforb1").prop("checked", true);
+            sessionStorage.setItem("infor1", true);
             if ('@ReportType' == 'LabReg') {
                 $(".report1").css("display", "");
             }
