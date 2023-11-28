@@ -111,9 +111,11 @@
 
         public string CurrYearSectorBillingSummary { get; set; }
         public List<Sector_Billing_Model> lstCurrYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();
-        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling1 { get; set; } = new List<Sector_Billing_Model>();
-        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling2 { get; set; } = new List<Sector_Billing_Model>();
-        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling3 { get; set; } = new List<Sector_Billing_Model>();
+
+        public string LastYearSectorBillingSummary1 { get; set; }
+        public string LastYearSectorBillingSummary2 { get; set; }
+        public string LastYearSectorBillingSummary3 { get; set; }
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();                
         #endregion
     }
 

@@ -1767,14 +1767,14 @@ namespace IBS.Repositories
         {
             DashboardModel model = new DashboardModel();
 
-            OracleParameter[] par = new OracleParameter[4];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("P_CO_CD", OracleDbType.Varchar2, Convert.ToString(CO_CD), ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             par[2] = new OracleParameter("P_RESULT_BILLING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
             par[3] = new OracleParameter("P_RESULT_OUTSTANDING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[4] = new OracleParameter("P_RESULT_BULLING_COMPARISON", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[5] = new OracleParameter("P_RESULT_SECTOR_BILLING", OracleDbType.RefCursor, ParameterDirection.Output);
-            //par[6] = new OracleParameter("P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_BULLING_COMPARISON", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_SECTOR_BILLING", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
 
             //par[7] = new OracleParameter("P_RESULT_SECTOR_BILLING_PREV_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
             //par[8] = new OracleParameter("P_RESULT_SECTOR_BILLING_LAST_PREV_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -1852,38 +1852,39 @@ namespace IBS.Repositories
                 if (ds.Tables[5].Rows.Count > 0)
                 {
                     DataTable dt = ds.Tables[5];
-                    List<Sector_Billing_Model> lstLastThreeYearSectorBilling1 = dt.AsEnumerable().Select(row => new Sector_Billing_Model
+                    List<Sector_Billing_Model> lstLastThreeYearSectorBilling = dt.AsEnumerable().Select(row => new Sector_Billing_Model
                     {
                         YEAR = Convert.ToString(row["YRS"]),
                         SECTOR = Convert.ToString(row["SECTOR"]),
                         AMOUNT = Convert.ToDecimal(row["AMOUNT"])
                     }).ToList();
-                    model.lstLastThreeYearSectorBilling1 = lstLastThreeYearSectorBilling1;
+                    model.lstLastThreeYearSectorBilling = lstLastThreeYearSectorBilling;
                 }
+                var Years = model.lstLastThreeYearSectorBilling.Select(x => x.YEAR).Distinct().ToList();
 
-                if (ds.Tables[6].Rows.Count > 0)
-                {
-                    DataTable dt = ds.Tables[6];
-                    List<Sector_Billing_Model> lstLastThreeYearSectorBilling2 = dt.AsEnumerable().Select(row => new Sector_Billing_Model
-                    {
-                        YEAR = Convert.ToString(row["YEARS"]),
-                        SECTOR = Convert.ToString(row["SECTOR"]),
-                        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
-                    }).ToList();
-                    model.lstLastThreeYearSectorBilling2 = lstLastThreeYearSectorBilling2;
-                }
+                model.LastYearSectorBillingSummary1 = "[";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary1 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[0]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary1 += "]";
 
-                //if (ds.Tables[7].Rows.Count > 0)
-                //{
-                //    DataTable dt = ds.Tables[7];
-                //    List<Sector_Billing_Model> lstLastThreeYearSectorBilling3 = dt.AsEnumerable().Select(row => new Sector_Billing_Model
-                //    {
-                //        YEAR = Convert.ToString(row["YEARS"]),
-                //        SECTOR = Convert.ToString(row["SECTOR"]),
-                //        AMOUNT = Convert.ToDecimal(row["AMOUNT"])
-                //    }).ToList();
-                //    model.lstLastThreeYearSectorBilling3 = lstLastThreeYearSectorBilling3;
-                //}
+                model.LastYearSectorBillingSummary2 = "[";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary2 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[1]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary2 += "]";
+
+                model.LastYearSectorBillingSummary3 = "[";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PSU" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "RAILWAY" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "NONRAILWAY" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "PRIVATE" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault() + ",";
+                model.LastYearSectorBillingSummary3 += model.lstLastThreeYearSectorBilling.Where(x => x.SECTOR == "LAB" && x.YEAR == Years[2]).Select(x => x.AMOUNT).FirstOrDefault();
+                model.LastYearSectorBillingSummary3 += "]";
             }
             return model;
         }
