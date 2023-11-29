@@ -156,13 +156,13 @@
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
-        public int CALL_SNO { get; set; }
-        public string DETAILS { get; set; }
+        public int CALL_SNO { get; set; }        
         public string CLIENT_NAME { get; set; }
         public string IE_NAME { get; set; }
         public string IE_PHONE_NO { get; set; }
         public string CO_NAME { get; set; }
         public string CO_PHONE_NO { get; set; }
+        public string STATUS { get; set; }
     }
 
     public class RecentPOList
@@ -170,9 +170,10 @@
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
         public string PO_NO { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
         public string CLIENT_NAME { get; set; }
-        public string DETAILS { get; set; }
-        public string PURCHASE_ORDER { get; set; }
         public string CALL_STATUS { get; set; }
     }
 
@@ -322,17 +323,18 @@
     public class VendorViewAllList
     {
         public string CallSno { get; set; }
-        public string Details { get; set; }
         public string CaseNo { get; set; }
         public string Client { get; set; }
         public string IE { get; set; }
         public string IEContactNo { get; set; }
         public string CM { get; set; }
         public string CmContactNo { get; set; }
-        public string PONO { get; set; }
+        public string PONO { get; set; }           
         public string Status { get; set; }
-        public string PurchaseOrder { get; set; }
         public DateTime CallDate { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
     }
 
     public class IEViewAllList

@@ -310,12 +310,12 @@ namespace IBS.Repositories
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
                         CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
                         CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
-                        DETAILS = Convert.ToString(row["DETAILS"]),
                         CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
                         IE_NAME = Convert.ToString(row["IE_NAME"]),
                         IE_PHONE_NO = Convert.ToString(row["IE_PHONE_NO"]),
                         CO_NAME = Convert.ToString(row["CO_NAME"]),
-                        CO_PHONE_NO = Convert.ToString(row["CO_PHONE_NO"])
+                        CO_PHONE_NO = Convert.ToString(row["CO_PHONE_NO"]),
+                        STATUS = Convert.ToString(row["CALL_STATUS"])
                     }).ToList();
                 }
             }
@@ -337,10 +337,11 @@ namespace IBS.Repositories
                     {
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
                         CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                        DETAILS = Convert.ToString(row["DETAILS"]),
-                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
                         PO_NO = Convert.ToString(row["PO_NO"]),
-                        PURCHASE_ORDER = Convert.ToString(row["PURCHASE_ORDER"]),
+                        PO_DT = string.IsNullOrEmpty(Convert.ToString(row["PO_DT"])) ? null : Convert.ToDateTime(row["PO_DT"]),
+                        RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["RECV_DT"])) ? null : Convert.ToDateTime(row["RECV_DT"]),
+                        PO_OR_LETTER = Convert.ToString(row["PO_OR_LETTER"]),
+                        CLIENT_NAME = Convert.ToString(row["CLIENT_NAME"]),
                         CALL_STATUS = Convert.ToString(row["CALL_STATUS"])
                     }).ToList();
                 }
@@ -616,30 +617,30 @@ namespace IBS.Repositories
 
             string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
             string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
-            
+
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, userid, ParameterDirection.Input);
             par[1] = new OracleParameter("P_REGION", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[2] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_TODate", OracleDbType.NVarchar2, ToDate,ParameterDirection.Input);
+            par[3] = new OracleParameter("P_TODate", OracleDbType.NVarchar2, ToDate, ParameterDirection.Input);
             par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            
+
             var ds = DataAccessDB.GetDataSet("GET_LAB_DASHBOARD_VIEWALL_LIST", par, 4);
             DataTable dt = ds.Tables[0];
             List<DashboardModel> list = new List<DashboardModel>();
             if (dt != null && dt.Rows.Count > 0)
             {
-                
-                    list = dt.AsEnumerable().Select(row => new DashboardModel
-                    {
-                        CASE_NO = Convert.ToString(row["case_no"]),
-                        IE = Convert.ToString(row["ie_name"]),
-                        Date = Convert.ToString(row["datetime"]),
-                        Vendor = Convert.ToString(row["vend_name"]),
-                        SampleRegNo = Convert.ToString(row["sample_reg_no"]),
-                        SampleRecDt = Convert.ToString(row["sample_recv_dt"]),
-                    }).ToList();
-                
+
+                list = dt.AsEnumerable().Select(row => new DashboardModel
+                {
+                    CASE_NO = Convert.ToString(row["case_no"]),
+                    IE = Convert.ToString(row["ie_name"]),
+                    Date = Convert.ToString(row["datetime"]),
+                    Vendor = Convert.ToString(row["vend_name"]),
+                    SampleRegNo = Convert.ToString(row["sample_reg_no"]),
+                    SampleRecDt = Convert.ToString(row["sample_recv_dt"]),
+                }).ToList();
+
             }
 
             query = list.AsQueryable();
@@ -1497,7 +1498,7 @@ namespace IBS.Repositories
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            var orderAscendingDirection = false;
 
             if (dtParameters.Order != null)
             {
@@ -1507,12 +1508,12 @@ namespace IBS.Repositories
 
             if (orderCriteria == "" || orderCriteria == null)
             {
-                orderCriteria = "CaseNo";
+                orderCriteria = "CallDate";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CaseNo";
+                orderCriteria = "CallDate";
                 orderAscendingDirection = true;
             }
 
@@ -1546,12 +1547,12 @@ namespace IBS.Repositories
                             CaseNo = Convert.ToString(row["CASE_NO"]),
                             CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
                             CallSno = Convert.ToString(row["CALL_SNO"]),
-                            Details = Convert.ToString(row["DETAILS"]),
                             Client = Convert.ToString(row["CLIENT_NAME"]),
                             IE = Convert.ToString(row["IE_NAME"]),
                             IEContactNo = Convert.ToString(row["IE_PHONE_NO"]),
                             CM = Convert.ToString(row["CO_NAME"]),
-                            CmContactNo = Convert.ToString(row["CO_PHONE_NO"])
+                            CmContactNo = Convert.ToString(row["CO_PHONE_NO"]),
+                            Status = Convert.ToString(row["CALL_STATUS"])
                         }).ToList();
                     }
                 }
@@ -1563,11 +1564,12 @@ namespace IBS.Repositories
                         listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
                         {
                             CaseNo = Convert.ToString(row["CASE_NO"]),
-                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                            Details = Convert.ToString(row["DETAILS"]),
-                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),                            
                             PONO = Convert.ToString(row["PO_NO"]),
-                            PurchaseOrder = Convert.ToString(row["PURCHASE_ORDER"]),
+                            PO_DT = string.IsNullOrEmpty(Convert.ToString(row["PO_DT"])) ? null : Convert.ToDateTime(row["PO_DT"]),
+                            RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["RECV_DT"])) ? null : Convert.ToDateTime(row["RECV_DT"]),
+                            PO_OR_LETTER = Convert.ToString(row["PO_OR_LETTER"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
                             Status = Convert.ToString(row["CALL_STATUS"])
                         }).ToList();
                     }
@@ -1681,7 +1683,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-       
+
         public DashboardModel GetLODashBoardCount(string UserName)
         {
             DashboardModel model = new();
