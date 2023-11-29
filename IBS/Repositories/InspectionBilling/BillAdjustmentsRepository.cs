@@ -1091,7 +1091,7 @@ namespace IBS.Repositories.InspectionBilling
         //    return dTResult;
         //}
 
-        public InspectionCertModel FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd)
+        public InspectionCertModel FindByFeesDetails(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd, string BillAdType)
         {
             //DTResult<InspectionCertItemListModel> dTResult = new() { draw = 0 };
             InspectionCertModel model = new();
@@ -1200,7 +1200,29 @@ namespace IBS.Repositories.InspectionBilling
                         discountamount += 0;
                     }
                     //Exise Calculation
-                    if (qtyOffNow == qty)
+                    if(BillAdType == "Credit")
+                    {
+                        if (qtyOffNow == qty)
+                        {
+                            if (ExciseTypeP == "P")
+                            {
+                                exciseamount += Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                            }
+                            else if (ExciseTypeP == "L")
+                            {
+                                exciseamount += Convert.ToDecimal(ExcisePerP);
+                            }
+                            else
+                            {
+                                exciseamount += 0;
+                            }
+                        }
+                        else
+                        {
+                            exciseamount += 0;
+                        }
+                    }
+                    else
                     {
                         if (ExciseTypeP == "P")
                         {
@@ -1214,10 +1236,6 @@ namespace IBS.Repositories.InspectionBilling
                         {
                             exciseamount += 0;
                         }
-                    }
-                    else
-                    {
-                        exciseamount += 0;
                     }
 
                     //Salse Tax
