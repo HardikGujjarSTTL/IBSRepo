@@ -329,10 +329,12 @@
         public string IEContactNo { get; set; }
         public string CM { get; set; }
         public string CmContactNo { get; set; }
-        public string PONO { get; set; }
+        public string PONO { get; set; }           
         public string Status { get; set; }
-        public string PurchaseOrder { get; set; }
         public DateTime CallDate { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
     }
 
     public class IEViewAllList

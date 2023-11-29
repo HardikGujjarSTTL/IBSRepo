@@ -1498,7 +1498,7 @@ namespace IBS.Repositories
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            var orderAscendingDirection = false;
 
             if (dtParameters.Order != null)
             {
@@ -1508,12 +1508,12 @@ namespace IBS.Repositories
 
             if (orderCriteria == "" || orderCriteria == null)
             {
-                orderCriteria = "CaseNo";
+                orderCriteria = "CallDate";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "CaseNo";
+                orderCriteria = "CallDate";
                 orderAscendingDirection = true;
             }
 
@@ -1564,10 +1564,12 @@ namespace IBS.Repositories
                         listVend = dt.AsEnumerable().Select(row => new VendorViewAllList
                         {
                             CaseNo = Convert.ToString(row["CASE_NO"]),
-                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),
-                            Client = Convert.ToString(row["CLIENT_NAME"]),
+                            CallDate = Convert.ToDateTime(row["CALL_RECV_DT"]),                            
                             PONO = Convert.ToString(row["PO_NO"]),
-                            PurchaseOrder = Convert.ToString(row["PURCHASE_ORDER"]),
+                            PO_DT = string.IsNullOrEmpty(Convert.ToString(row["PO_DT"])) ? null : Convert.ToDateTime(row["PO_DT"]),
+                            RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["RECV_DT"])) ? null : Convert.ToDateTime(row["RECV_DT"]),
+                            PO_OR_LETTER = Convert.ToString(row["PO_OR_LETTER"]),
+                            Client = Convert.ToString(row["CLIENT_NAME"]),
                             Status = Convert.ToString(row["CALL_STATUS"])
                         }).ToList();
                     }
