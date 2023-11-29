@@ -300,12 +300,22 @@
             var selectedId = $(this).attr('id');
             if (selectedId == "rbc1") {
                 sessionStorage.removeItem("ch1");
-                sessionStorage.setItem("ch1", true);
+                sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.setItem("ch5", true);
                 $("#dd1").css("display", "none");
             }
             else {
+                sessionStorage.removeItem("ch1");
                 sessionStorage.removeItem("ch2");
-                sessionStorage.setItem("ch2", true);
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.setItem("ch6", true);
                 $("#dd1").css("display", "block");
             }
         });
@@ -313,12 +323,22 @@
             var selectedId = $(this).attr('id');
             if (selectedId == "rbc3") {
                 sessionStorage.removeItem("ch1");
-                sessionStorage.setItem("ch1", true);
+                sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.setItem("ch3", true);
                 $("#dd2").css("display", "none");
             }
             else {
+                sessionStorage.removeItem("ch1");
                 sessionStorage.removeItem("ch2");
-                sessionStorage.setItem("ch2", true);
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.setItem("ch4", true);
                 $("#dd2").css("display", "block");
             }
         });
@@ -326,11 +346,21 @@
             var selectedId = $(this).attr('id');
             if (selectedId == "rbc5") {
                 sessionStorage.removeItem("ch1");
+                sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
                 sessionStorage.setItem("ch1", true);
                 $("#dd3").css("display", "none");
             }
             else {
+                sessionStorage.removeItem("ch1");
                 sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
                 sessionStorage.setItem("ch2", true);
                 $("#dd3").css("display", "block");
             }
@@ -399,6 +429,9 @@
             $("#r1").prop("checked", true);
              $("#inforb1").prop("checked", true);
             sessionStorage.setItem("infor1", true);
+            sessionStorage.setItem("rbb1", false);
+            sessionStorage.setItem("rbb2", false);
+            sessionStorage.setItem("rbb3", false);
             if ('@ReportType' == 'LabReg') {
                 $(".report1").css("display", "");
             }
@@ -454,19 +487,27 @@
             var wFrmDtO = dtfrom;
             var wToDt = dtto;
             var rdbIEWise = sessionStorage.getItem("rbb1");
-            var rdbPIE = sessionStorage.getItem("ch2");
+            var rdbPIE = sessionStorage.getItem("ch6");
+            if (sessionStorage.getItem("ch6") == "true") {
+                var lstIE = $("#ddl1p").val();
+            }
             var rdbVendWise = sessionStorage.getItem("rbb2");
             var rdbPVend = sessionStorage.getItem("ch4");
+            if (sessionStorage.getItem("ch4") == "true"){
+                var ddlVender = $("#ddl2p").val();
+            }
             var rdbLabWise = sessionStorage.getItem("rbb3");
-            var rdbPLab = sessionStorage.getItem("ch6");
+            var rdbPLab = sessionStorage.getItem("ch2");
+            if (sessionStorage.getItem("ch2") == "true") {
+                var lstLab = $("#ddl3p").val();
+            }
+           
             var rdbPending = sessionStorage.getItem("rr2");
             var rdbPaid = sessionStorage.getItem("rr3");
             var rdbDue = sessionStorage.getItem("rr4");
             var rdbPartlyPaid = sessionStorage.getItem("rr5");
             var lstTStatus = $("#ddlstatus").val();
-            var lstIE = $("#ddl1p").val();
-            var ddlVender = $("#ddl2p").val();
-            var lstLab = $("#ddl3p").val();
+            
             var from = $("#dtfrom").val();
             var to = $("#dtto").val();
             let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab,from,to };
