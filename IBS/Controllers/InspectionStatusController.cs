@@ -33,9 +33,20 @@ namespace IBS.Controllers
             ViewBag.Region = Region;
             return View();
         }
-        public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular, string TextPurchaser,string rdbGIE,string rdbForMonth,string ForGPer,string ddlVender,string PO_NO,string PO_DT,string RLY_NONRLY,string RLY_CD)
+        public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular, string HFromDate, string HToDate, string TextPurchaser,string rdbGIE,string rdbForMonth,string ForGPer,string ddlVender,string PO_NO,string PO_DT,string RLY_NONRLY,string RLY_CD)
         {
-            DateTime originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            //DateTime originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime originalDate;
+
+            if (PO_DT != null)
+            {
+                originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                
+                originalDate = DateTime.MinValue; 
+            }
             string formattedDate = originalDate.ToString("MM/dd/yyyy");
             InspectionStatusModel model = new() 
             { 
@@ -48,7 +59,9 @@ namespace IBS.Controllers
                 ForGPer = ForGPer,
                 ddlVender = ddlVender,PO_NO = PO_NO,PO_DT = formattedDate,
                 RLY_NONRLY = RLY_NONRLY,
-                RLY_CD = RLY_CD
+                RLY_CD = RLY_CD,
+                HFromDate = HFromDate,
+                HToDate = HToDate
             };
             if (ReportType == "ConInsp") model.ReportTitle = "Summary of Consignee Wise Inspections";
             else if (ReportType == "VenInsp") model.ReportTitle = "Summary of Vendor Wise Inspections";
@@ -57,10 +70,10 @@ namespace IBS.Controllers
             else if (ReportType == "ICPO") model.ReportTitle = "IC DETAILS FOR SPECIFIC PO";
             return View(model);
         }
-        public IActionResult SummaryConsigneeWiseInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular)
+        public IActionResult SummaryConsigneeWiseInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular, string HFromDate, string HToDate)
         {
-            ViewBag.From = FromDate;
-            ViewBag.To = ToDate;
+            ViewBag.From = HFromDate;
+            ViewBag.To = HToDate;
             ViewBag.ReportType = ReportType;
             
             ViewBag.year = Year;

@@ -783,6 +783,8 @@
             $("#rb1").prop("checked", true);
             $("#rb3").prop("checked", true);
             $("#rb5").prop("checked", true);
+            sessionStorage.setItem("rbb1", true);
+            sessionStorage.setItem("rbb2", false);
             sessionStorage.setItem("rbb5", true);
             sessionStorage.setItem("rbb4", false);
             $("#rb7").prop("checked", true);
@@ -855,6 +857,7 @@
             $("#hdnPDropdown").css("display", "block");
         }
         function ViewReport1() {
+            
             var ReportType = '@ReportType';
             var ForGiven = sessionStorage.getItem("rbb4");
             var ReportBasedon = sessionStorage.getItem("rbb5");
@@ -868,12 +871,19 @@
                 var FromDate = parts[1] + '/' + parts[0] + '/' + parts[2];
                 var parts2 = $("#dtto").val().split('/');
                 var ToDate = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
+                var parts3 = $("#dtfrom").val().split('/');
+                var HFromDate = parts3[0] + '/' + parts3[1] + '/' + parts3[2];
+                var parts4 = $("#dtto").val().split('/');
+                var HToDate = parts4[0] + '/' + parts4[1] + '/' + parts4[2];
 
             }
-
             var ForParticular = sessionStorage.getItem("rbb2");
-            var lstParticular = sessionStorage.getItem("con");
-            let myObject = { ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
+            if(sessionStorage.getItem("rbb2") == "true"){
+                var lstParticular = sessionStorage.getItem("con");
+            }
+
+
+            let myObject = { ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular, HFromDate, HToDate };
 
             var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);
             window.open(url, '_blank');
