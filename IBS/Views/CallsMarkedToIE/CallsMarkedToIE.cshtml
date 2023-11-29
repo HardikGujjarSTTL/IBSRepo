@@ -76,7 +76,7 @@
                     </tr>
                     @if (Model != null && Model.ReportLstNew != null && Model.ReportLstNew.Count > 0)
                     {
-                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", CallStausF = "";
+                        string NewVendor = "", ItemDescPo = "", wVendor = "", wSelect = "", wPrint = "", wHistory = "", callDocAny = "", CasePODoc = "", CallStausF = "", DocU = "", PaymentU = "", D1 = "", D2 = "";
                         @foreach (var item in Model.ReportLstNew)
                         {
                             wSelect = Url.Action("CallStatus", "CallRegisterIB") + "?CaseNo=" + @item.CASE_NO + "&CallSno=" + @item.CALL_SNO + "&CallRecvDt=" + Convert.ToDateTime(@item.CALL_RECV_DT).ToString("yyyy-MM-dd") + "&IeCd=" + @item.IE_CD + "&ActionType=C&type=C";
@@ -85,16 +85,19 @@
 
                             wHistory = Url.Action("CaseHistory", "CallMarkedOnline") + "?CASE_NO=" + @item.CASE_NO + "&ActionType=CHI&type=C";
 
-                            callDocAny = $"/IBS/Vendor/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.PDF";
+                            callDocAny = $"../ReadWriteData/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.PDF";
                             CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.PDF";
 
-                            CallStausF = $"{item.CALL_STATUS_FULL}";
+                            DocU = $"../ReadWriteData/LAB/{item.CASE_NO}_{item.CALL_SNO}_{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}.PDF";
 
+                            CallStausF = $"{item.CALL_STATUS_FULL}";
+                            D1 = $"{item.CALL_STATUS_FULL}";
                             if (item.CALL_STATUS == "U")
                             {
                                 if (item.LAB_STATUS != null)
                                 {
                                     CallStausF += $"{item.LAB_STATUS}";
+                                    D1 += $"{item.LAB_STATUS}";
                                 }
                                 else
                                 {
@@ -104,11 +107,13 @@
                                 {
                                     CallStausF += "\n";
                                     CallStausF += "\nPayment Reciept Uploaded By Vendor.";
+                                    D2 = "\nPayment Reciept Uploaded By Vendor.";
                                 }
                                 else
                                 {
                                     CallStausF += "\n";
                                     CallStausF += "\nPayment Reciept Not Uploaded By Vendor.";
+                                    D2 = "\nPayment Reciept Not Uploaded By Vendor.";
                                 }
                             }
                             if (item.NEWVENDOR == "Y")
@@ -177,23 +182,32 @@
                                 <td align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
                                 @if (System.IO.File.Exists(@callDocAny))
                                 {
-                                <td align="center"><font size="2" face="Verdana"><a href=@callDocAny>Call Documents</a></font></td>
+                                    <td align="center"><font size="2" face="Verdana"><a href=@callDocAny target="_blank">Call Documents</a></font></td>
                                 }
                                 else
                                 {
-                                <td align="center"><font size="2" face="Verdana"></font></td>
+                                    <td align="center"><font size="2" face="Verdana"></font></td>
                                 }
 
                                 @if (item.PO_SOURCE == "C")
                                 {
-                                <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
+                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
                                 }
                                 else
                                 {
-                                <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                    <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
                                 }
                                 <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
-                                <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
+
+                                @* <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
+                                @if (item.CALL_STATUS == "U")
+                                {
+                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit">Lab Report</a><br/>@D2</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
+                                }
                                 <td align="center"><font size="1" face="Verdana">@item.REMARKS</font></td>
                                 <td align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
                                 <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>

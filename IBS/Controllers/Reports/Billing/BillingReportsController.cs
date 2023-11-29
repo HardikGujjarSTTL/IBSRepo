@@ -9,10 +9,12 @@ namespace IBS.Controllers.Reports.Billing
     {
         #region Variables
         private readonly IBillRaisedRepository billraisedRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public BillingReportsController(IBillRaisedRepository _billraisedRepository)
+        public BillingReportsController(IBillRaisedRepository _billraisedRepository, IWebHostEnvironment _env)
         {
             billraisedRepository = _billraisedRepository;
+            this.env = _env;
         }
         
         #region Main
@@ -98,6 +100,8 @@ namespace IBS.Controllers.Reports.Billing
         #region Railway Online Report
         public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType,string chkRegion)
         {
+            string filePath = Path.Combine(env.WebRootPath, "ReadWriteData", "");
+            
             BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType,Region, chkRegion);
             return View(model);
         }

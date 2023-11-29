@@ -19,10 +19,12 @@ namespace IBS.Repositories.Reports.Billing
     public class BillRaisedRepository : IBillRaisedRepository
     {
         private readonly ModelContext context;
+        private readonly IWebHostEnvironment env;
 
-        public BillRaisedRepository(ModelContext context)
+        public BillRaisedRepository(ModelContext context, IWebHostEnvironment _env)
         {
             this.context = context;
+            this.env = _env;
         }
 
         public List<BillRaisedModel> GetReportList(BillRaisedModel model)
@@ -232,6 +234,7 @@ namespace IBS.Repositories.Reports.Billing
         {
             BillRaisedModel model = new();
             List<RailwayOnlineListModel> lstBillRailway = new();
+            string filePath = Path.Combine(env.WebRootPath, "ReadWriteData", "");
             model.ClientType = ClientType;
             model.BillSummary = rdoSummary;
             model.BpoRly = BpoRly;
@@ -322,6 +325,7 @@ namespace IBS.Repositories.Reports.Billing
                     
                 }
             }
+            model.FilePath = Convert.ToString(filePath);
             model.lstBillRailway = lstBillRailway;
 
             return model;
