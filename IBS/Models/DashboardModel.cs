@@ -2,6 +2,12 @@
 {
     public class DashboardModel
     {
+        public string CASE_NO { get; set; }
+        public string IE { get; set; }
+        public string Date { get; set; }
+        public string Vendor { get; set; }
+        public string SampleRegNo { get; set; }
+        public string SampleRecDt { get; set; }
         public int TOTAL_INVOICE { get; set; }
         public int FINALIZED_INVOICE { get; set; }
         public int PENDING_FINALIZED_INVOICE { get; set; }

@@ -354,5 +354,26 @@ namespace IBS.Controllers
             DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
+        public IActionResult Dashboard_Lab_ViewAll_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Lab_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string Regin = GetRegionCode;
+            int userid = UserId;
+            DTResult<DashboardModel> dTResult = new DTResult<DashboardModel>();
+            try
+            {
+                dTResult = dashboardRepository.Dashboard_Lab_ViewAll_List(dtParameters, Regin, UserId);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "Dashboard_Lab_ViewAll_List", 1, GetIPAddress());
+            }
+            return Json(dTResult);
+        }
     }
 }
