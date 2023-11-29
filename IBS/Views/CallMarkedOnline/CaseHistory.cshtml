@@ -62,8 +62,8 @@
             {
                 @*var tifpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".tif");
             var pdfpath = System.IO.Path.Combine("/RBS/CASE_NO/" + Model.CASE_NO + ".pdf");*@
-                var tifpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".tif");
-                var pdfpath = System.IO.Path.Combine("/ReadWriteData/CASE_NO/" + Model.CASE_NO + ".pdf");
+                var tifpath = System.IO.Path.Combine("../ReadWriteData/CASE_NO/" + Model.CASE_NO + ".tif");
+                var pdfpath = System.IO.Path.Combine("../ReadWriteData/CASE_NO/" + Model.CASE_NO + ".pdf");
                 if (System.IO.File.Exists(tifpath) == true)
                 {
                     <a href="@tifpath" target="_blank">VIEW PO</a>
