@@ -9,6 +9,7 @@
     <div class="admindashboard-wrap cmDash">
         <div class="row admin-dashboard">
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OSA" })">
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -21,8 +22,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/total-outstanding-amount-icon.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "SA" })">
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -32,8 +35,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/suspense-amount-icon.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OB" })">
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -46,6 +51,7 @@
                     </div>
                     <div class="total-icons"><img src="~/images/no-of-bills-icon.svg" alt="Inspection Completed"> </div>
                 </div>
+                </a>
             </div>
             @*<div class="col-lg-3">
             <div class="dashboard-box das4Client">
@@ -64,6 +70,7 @@
         </div>
         <div class="row admin-dashboard">
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "TOTI" })">
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -76,8 +83,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "FI" })">
                 <div class="dashboard-box das6Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -90,8 +99,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "PIF" })">
                 <div class="dashboard-box das7Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -104,6 +115,7 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
         </div>
     </div>

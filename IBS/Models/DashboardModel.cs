@@ -479,5 +479,22 @@
         public string SECTOR { get; set; }
         public decimal AMOUNT { get; set; }
     }
+
+    public class CMDFOListing
+    {
+        public string CaseNo { get; set; }
+        public DateTime CHQ_DT { get; set; }
+        public string CHQ_NO { get; set; }
+        public string NARRATION { get; set; }
+        public decimal SUSPENSE_AMT { get; set; }
+        public string VCHR_NO { get; set; }
+        public string BILL_NO { get; set; }
+        public DateTime BILL_DT { get; set; }
+        public decimal MATERIAL_VALUE { get; set; }
+        public decimal BILL_AMOUNT { get; set; }
+        public string BILL_STATUS { get; set; }
+        public string ActionType { get; set; }
+        public string REMARKS { get; set; }
+    }
     
 }

@@ -395,5 +395,19 @@ namespace IBS.Controllers
             DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_Client_List(dtParameters, Region, OrgnType, Organisation);
             return Json(dTResult);
         }
+
+        public IActionResult CMDFO_List(string Type)
+        {
+            CMDFOListing model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadCMDFO_List([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
+            return Json(dTResult);
+        }
     }
 }

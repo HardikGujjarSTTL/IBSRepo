@@ -1,0 +1,184 @@
+﻿@model IBS.Models.CMDFOListing
+@{
+    ViewData["Title"] = "No. of Total Calls";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        @*<h3 class="heading3">@ViewData["Title"] </h3>*@
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+</div>
+<input type="hidden" asp-for="ActionType" />
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrortodt"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="savenext-btn btnAlign">
+                <button type="button" class="save-btn active" onclick="Search();">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        var Columns = [];
+        $(function () {
+            debugger
+            var currentDate = new Date();
+            var financialYearDates = calculateFinancialYearDates(currentDate);
+
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "OSA") {
+                $("#spnHeading").text("Total Outstanding Amount");
+            }
+            else if (type == "SA") {
+                $("#spnHeading").text("Suspense Amount");
+            }
+            else if (type == "OB") {
+                $("#spnHeading").text("No. of Outstanding bills");
+            }
+            else if (type == "TOTI") {
+                $("#spnHeading").text("No. of Total Invoices");
+            }
+            else if (type == "FI") {
+                $("#spnHeading").text("No. of Finalized Invoices");
+            }
+            else if (type == "PIF") {
+                $("#spnHeading").text("Pending Invoices for Finalization");
+            }
+
+            if (type == "SA") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    {
+                        data: "CHQ_DT", title: "CHQ DT", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CHQ_NO", title: "CHQ No" },
+                    { data: "NARRATION", title: "Narration" },
+                    { data: "SUSPENSE_AMT", title: "Suspense Amount" },
+                    { data: "VCHR_NO", title: "Vouchar No" },
+                ]
+            } else if (type == "TOTI" || type == "FI" || type == "PIF") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BILL_NO", title: "Bill NO" },
+                    {
+                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "MATERIAL_VALUE", title: "Material Value" },
+                    { data: "BILL_AMOUNT", title: "Bill Amount" },
+                    { data: "BILL_STATUS", title: "Bill Status" },
+                    { data: "REMARKS", title: "Remarks" },
+                ]
+            }
+            InitializeDatatable();
+        });
+
+        function calculateFinancialYearDates(currentDate) {
+            var currentYear = currentDate.getFullYear();
+
+            var financialYearStartDate = new Date(currentYear, 3, 1);
+            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+            return {
+                start: financialYearStartDate,
+                end: financialYearEndDate
+            };
+        }
+
+        function Search() {
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadCMDFO_List", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate, ToDate, ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: Columns,
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}
