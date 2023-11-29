@@ -62,7 +62,7 @@
         var Columns = [];
         $(function () {
 
-            var currentDate = new Date("01/03/2025");
+            var currentDate = new Date();
             var financialYearDates = calculateFinancialYearDates(currentDate);
 
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
@@ -85,12 +85,12 @@
                     { data: "CallSno", title: "Call Sno" },
                     { data: "CaseNo", title: "Case No" },
                     { data: "CallDate", title: "Call Date" },
-                    { data: "Details", title: "Details " },
                     { data: "Client", title: "Client " },
                     { data: "IE", title: "IE" },
                     { data: "IEContactNo", title: "IE contact No." },
                     { data: "CM", title: "CM" },
                     { data: "CmContactNo", title: "CM Contact no." },
+                    { data: "Status", title: "Status " },
                 ]
             } else if (type == "RPO") {
                 $("#spnHeading").text("Recent Purchase Order ");
@@ -103,7 +103,6 @@
                     },
                     { data: "PONO", title: "PO No." },
                     { data: "Client", title: "Client" },
-                    { data: "Details", title: "Details" },
                     { data: "PurchaseOrder", title: "Purchase Order" },
                     { data: "Status", title: "Status" },
                 ]
