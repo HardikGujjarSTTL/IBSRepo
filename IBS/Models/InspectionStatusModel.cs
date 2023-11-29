@@ -52,6 +52,8 @@ namespace IBS.Models
         public string TextPurchase { get; set; }
         public string ForParticular { get; set; }
         public string lstParticular { get; set; }
+        public string HFromDate { get; set; }
+        public string HToDate { get; set; }
 
         public string rdbGIE { get; set; }
         public string rdbForMonth { get; set; }
