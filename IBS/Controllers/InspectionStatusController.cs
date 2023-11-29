@@ -35,7 +35,18 @@ namespace IBS.Controllers
         }
         public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular, string TextPurchaser,string rdbGIE,string rdbForMonth,string ForGPer,string ddlVender,string PO_NO,string PO_DT,string RLY_NONRLY,string RLY_CD)
         {
-            DateTime originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            //DateTime originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime originalDate;
+
+            if (PO_DT != null)
+            {
+                originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                
+                originalDate = DateTime.MinValue; 
+            }
             string formattedDate = originalDate.ToString("MM/dd/yyyy");
             InspectionStatusModel model = new() 
             { 

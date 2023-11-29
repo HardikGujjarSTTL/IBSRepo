@@ -2058,6 +2058,14 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         T17.CallStatus = "PRB";
                     }
+                    else if (T17.CallStatus == "C")
+                    {
+                        T17.CallStatus = "CB";
+                    }
+                    else if (T17.CallStatus == "R")
+                    {
+                        T17.CallStatus = "RB";
+                    }
                     else
                     {
                         T17.CallStatus = "B";

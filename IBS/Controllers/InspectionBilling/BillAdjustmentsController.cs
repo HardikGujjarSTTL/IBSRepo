@@ -233,12 +233,12 @@ namespace IBS.Controllers.InspectionBilling
         //    return Json(dTResult);
         //}
 
-        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd)
+        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd,string BillAdType)
         {
             InspectionCertModel model = new();
             try
             {
-                model = billRepository.FindByFeesDetails(Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd);
+                model = billRepository.FindByFeesDetails(Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd, BillAdType);
                 return Json(new { status = true, responseText = model });
             }
 

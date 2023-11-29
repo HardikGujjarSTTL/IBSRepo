@@ -9,6 +9,7 @@ using System.Dynamic;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class DashboardController : BaseController
     {
         private readonly IIEMessageRepository userRepository;
@@ -131,7 +132,8 @@ namespace IBS.Controllers
 
         public IActionResult CMDFO()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMDFODashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult CMJIIncharge()

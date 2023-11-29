@@ -783,6 +783,8 @@
             $("#rb1").prop("checked", true);
             $("#rb3").prop("checked", true);
             $("#rb5").prop("checked", true);
+            sessionStorage.setItem("rbb1", true);
+            sessionStorage.setItem("rbb2", false);
             sessionStorage.setItem("rbb5", true);
             sessionStorage.setItem("rbb4", false);
             $("#rb7").prop("checked", true);
@@ -855,6 +857,7 @@
             $("#hdnPDropdown").css("display", "block");
         }
         function ViewReport1() {
+            
             var ReportType = '@ReportType';
             var ForGiven = sessionStorage.getItem("rbb4");
             var ReportBasedon = sessionStorage.getItem("rbb5");
@@ -870,9 +873,12 @@
                 var ToDate = parts2[1] + '/' + parts2[0] + '/' + parts2[2];
 
             }
-
             var ForParticular = sessionStorage.getItem("rbb2");
-            var lstParticular = sessionStorage.getItem("con");
+            if(sessionStorage.getItem("rbb2") == "true"){
+                var lstParticular = sessionStorage.getItem("con");
+            }
+           
+            
             let myObject = { ReportType, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, Month, Year, ForParticular, lstParticular };
 
             var url = '@Url.Action("Manage", "InspectionStatus")?' + $.param(myObject);

@@ -14,7 +14,7 @@
         <input type="hidden" asp-for="UpdateStatus" />
         <input type="hidden" asp-for="ItemSrnoPo" />
         <input type="hidden" asp-for="BpoType" />
-        @*<input type="hidden" asp-for="IcTypeId" />*@
+        <input type="hidden" asp-for="BillAdType" />
 
         <div class="accordion-body" style="overflow-x: auto;">
             <div class="row my-0">
@@ -49,7 +49,8 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-
+            debugger
+            
         });
 
         function BillSearch() {
@@ -74,11 +75,17 @@
                     onBpoFeeType();
                     AdjustCalculation();
                     $("#IcTypeId").val("9");
+                    
+                    $('input[type=radio][name=BillAdType]').change(function () {
+                        var BillAdType = $('input[type=radio][name=BillAdType]:checked').val();
+                        $('#BillAdType').val(BillAdType);
+                        AdjustCalculation();
+                    });
+
+                    //$('input[type=radio][name=BillAdType]').change();
                 }
-
+                
             });
-
-
         }
 
         function InitializeDatatable() {
@@ -164,7 +171,6 @@
         function OpenEditCallDetailsModal(Caseno, Callrecvdt, Callsno, ItemSrnoPo) {
             $("#ItemSrnoPo").val(ItemSrnoPo);
             //event.preventDefault();
-            alert(1);
             $('select').prop('disabled', false);
             //var formData = $("#frmDetails").serialize();
             let myObject = { Caseno, Callrecvdt, Callsno, ItemSrnoPo };
@@ -295,8 +301,9 @@
             var BillNo = $('#BillNo').val();
             var ConsigneeCd = $('#ConsigneeCd').val();
 
+            var BillAdType = $('#BillAdType').val();
 
-            let myObject = { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd };
+            let myObject = { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd, BillAdType };
             $.get("@Url.Action("GetFeeCalculation", "BillAdjustments")", $.param(myObject), function (response) {
                 debugger
                 if (response.status) {
