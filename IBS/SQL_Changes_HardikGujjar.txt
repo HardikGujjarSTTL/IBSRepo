@@ -4362,3 +4362,32 @@ DBMS_OUTPUT.PUT_LINE('Start date: ' || P_FROMDATE);
 END GET_CM_DASHBOARD_POMASTERLIST;
 
 =========================
+create or replace PROCEDURE GetBPOData (
+    p_searchTerm VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT BPO_CD as Value, BPO_CD || '-' || BPO AS Text
+    FROM V12_BILL_PAYING_OFFICER
+    WHERE UPPER(TRIM(BPO)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+       OR BPO_CD = p_searchTerm
+    ORDER BY V12_BILL_PAYING_OFFICER.BPO;
+END GetBPOData;
+
+=================
+create or replace PROCEDURE GetConsigneeData (
+    p_searchTerm VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
+    FROM V06_CONSIGNEE
+    WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+    ORDER BY V06_CONSIGNEE.CONSIGNEE;
+END GetConsigneeData;
+
+=================

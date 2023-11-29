@@ -319,11 +319,11 @@ namespace IBSAPI.Controllers
 
         #region CM Methods
         [HttpGet("Get_CM_RecentInspection", Name = "Get_CM_RecentInspection")]
-        public IActionResult Get_CM_RecentInspection(int Co_Cd)
+        public IActionResult Get_CM_RecentInspection(int Co_Cd,DateTime CurrDate)
         {
             try
             {
-                var CurrDate = DateTime.Now;
+                //var CurrDate = DateTime.Now;
                 var result = inspectionRepository.Get_CM_RecentInspection(Co_Cd, CurrDate);
                 if (result.Count() > 0)
                 {

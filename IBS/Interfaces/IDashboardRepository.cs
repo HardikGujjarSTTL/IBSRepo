@@ -4,13 +4,13 @@ namespace IBS.Interfaces
 {
     public interface IDashboardRepository
     {
-        public DashboardModel GetDashBoardCount(string Region);
-        public DashboardModel GetIEDDashBoardCount(int IeCd,string RegionCode);
+        public DashboardModel GetDashBoardCount(string Region, string RoleName);
+        public DashboardModel GetIEDDashBoardCount(int IeCd,string RegionCode, string RoleName);
         public DashboardModel GetDashBoardLabCount(int userid, string Regin);
         
         public DashboardModel GetCMDashBoardCount(int CoCd);
-        public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode);
-        public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode);
+        public DashboardModel GetVendorDashBoardCount(int Vend_Cd,string RegionCode, string RoleName);
+        public DashboardModel GetClientDashBoardCount(string OrgnType,string Organisation,string RegionCode, string RoleName);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
         DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
@@ -20,6 +20,7 @@ namespace IBS.Interfaces
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
         DTResult<DashboardLabData> LoadTableInvoice(DTParameters dtParameters, string Regin, int userid);
+        DTResult<DashboardModel> Dashboard_Lab_ViewAll_List(DTParameters dtParameters, string Regin, int userid);
         DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
 
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);

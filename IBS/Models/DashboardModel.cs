@@ -2,6 +2,12 @@
 {
     public class DashboardModel
     {
+        public string CASE_NO { get; set; }
+        public string IE { get; set; }
+        public string Date { get; set; }
+        public string Vendor { get; set; }
+        public string SampleRegNo { get; set; }
+        public string SampleRecDt { get; set; }
         public int TOTAL_INVOICE { get; set; }
         public int FINALIZED_INVOICE { get; set; }
         public int PENDING_FINALIZED_INVOICE { get; set; }
@@ -106,6 +112,8 @@
         public Inter_Region_JI_Cons_Comp_Model interRegionJIComp { get; set; } = new Inter_Region_JI_Cons_Comp_Model();
         public string DefectCodeJISummary { get; set; }
         public CM_Defect_Code_JI_Comp_Model defectCodeJIComp { get; set; } = new CM_Defect_Code_JI_Comp_Model();
+        public string NoOfJISummary { get; set; }
+        public No_Of_JI_Model noOfJI { get; set; } = new No_Of_JI_Model();
         #endregion
         public List<AdminCountListing> lstAdminCountListing { get; set; }
         
@@ -449,5 +457,13 @@
         public string SECTOR { get; set; }
         public decimal AMOUNT { get; set; }
     }
-    
+
+    public class No_Of_JI_Model
+    {
+        public int NR { get; set; }
+        public int WR { get; set; }
+        public int SR { get; set; }
+        public int ER { get; set; }
+    }
+
 }

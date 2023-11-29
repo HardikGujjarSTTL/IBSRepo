@@ -72,7 +72,7 @@ namespace IBS.Repositories
                         Date = Convert.ToString(row["datetime"]),
                         Vendor = Convert.ToString(row["vend_name"]),
                         SampleRegNo = Convert.ToString(row["sample_reg_no"]),
-                         SampleRecDt = Convert.ToString(row["sample_recv_dt"])
+                        SampleRecDt = Convert.ToString(row["sample_recv_dt"])
                     }).ToList();
                     model.lstsampledata = lst;
                 }
@@ -97,7 +97,7 @@ namespace IBS.Repositories
 
             return model;
         }
-        public DashboardModel GetDashBoardCount(string Region)
+        public DashboardModel GetDashBoardCount(string Region, string RoleName)
         {
             DashboardModel model = new();
 
@@ -197,12 +197,12 @@ namespace IBS.Repositories
                 }
                 //}
             }
-            ComplaintStatusDetails(model, Region);
+            ComplaintStatusDetails(model, Region, null, RoleName);
 
             return model;
         }
 
-        public DashboardModel GetIEDDashBoardCount(int IeCd, string RegionCode)
+        public DashboardModel GetIEDDashBoardCount(int IeCd, string RegionCode, string RoleName)
         {
             DashboardModel model = new();
 
@@ -263,12 +263,12 @@ namespace IBS.Repositories
 
             model.lstInstructionsIE = query.ToList();
 
-            ComplaintStatusDetails(model, RegionCode);
+            ComplaintStatusDetails(model, Convert.ToString(IeCd), null, RoleName);
 
             return model;
         }
 
-        public DashboardModel GetVendorDashBoardCount(int Vend_Cd, string RegionCode)
+        public DashboardModel GetVendorDashBoardCount(int Vend_Cd, string RegionCode, string RoleName)
         {
             DashboardModel model = new();
 
@@ -347,12 +347,12 @@ namespace IBS.Repositories
             }
             model.lstRecentPO = lstRecentPO;
 
-            ComplaintStatusDetails(model, RegionCode);
+            ComplaintStatusDetails(model, Convert.ToString(Vend_Cd), null, RoleName);
 
             return model;
         }
 
-        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation, string RegionCode)
+        public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation, string RegionCode, string RoleName)
         {
             DashboardModel model = new();
 
@@ -441,7 +441,7 @@ namespace IBS.Repositories
 
             model.lstClientVendConComp = lstClientVendConComp;
 
-            ComplaintStatusDetails(model, RegionCode);
+            ComplaintStatusDetails(model, Organisation, OrgnType, RoleName);
             return model;
         }
 
@@ -561,7 +561,7 @@ namespace IBS.Repositories
                         BILL_SENT = row["BILL_SENT"].ToString(),
                         //INC_TYPE = row["INC_TYPE"].ToString(),
                         //IRN_NO = row["IRN_NO"].ToString(),
-                        
+
                     };
 
                     modelList.Add(model);
@@ -586,6 +586,74 @@ namespace IBS.Repositories
             return dTResult;
 
 
+        }
+        public DTResult<DashboardModel> Dashboard_Lab_ViewAll_List(DTParameters dtParameters, string Regin, int userid)
+        {
+            DTResult<DashboardModel> dTResult = new() { draw = 0 };
+            IQueryable<DashboardModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+            }
+
+            if (orderCriteria == "" || orderCriteria == null)
+            {
+                orderCriteria = "CASE_NO";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "CASE_NO";
+                orderAscendingDirection = true;
+            }
+
+
+            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
+            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
+            
+            OracleParameter[] par = new OracleParameter[5];
+            par[0] = new OracleParameter("P_USER_ID", OracleDbType.Varchar2, userid, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_FROMDATE", OracleDbType.NVarchar2, FromDate, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_TODate", OracleDbType.NVarchar2, ToDate,ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            
+            var ds = DataAccessDB.GetDataSet("GET_LAB_DASHBOARD_VIEWALL_LIST", par, 4);
+            DataTable dt = ds.Tables[0];
+            List<DashboardModel> list = new List<DashboardModel>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                
+                    list = dt.AsEnumerable().Select(row => new DashboardModel
+                    {
+                        CASE_NO = Convert.ToString(row["case_no"]),
+                        IE = Convert.ToString(row["ie_name"]),
+                        Date = Convert.ToString(row["datetime"]),
+                        Vendor = Convert.ToString(row["vend_name"]),
+                        SampleRegNo = Convert.ToString(row["sample_reg_no"]),
+                        SampleRecDt = Convert.ToString(row["sample_recv_dt"]),
+                    }).ToList();
+                
+            }
+
+            query = list.AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.IE).ToLower().Contains(searchBy.ToLower())
+                );
+
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+            return dTResult;
         }
 
         public DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin)
@@ -1155,12 +1223,22 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DataSet ComplaintStatusSummary(string Region)
+        public DataSet ComplaintStatusSummary(string Value1, string Value2, string RoleName)
         {
-            OracleParameter[] par = new OracleParameter[2];
-
-            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            string Region = null, Rly_CD = null, Rly_NonRly = null;
+            int Ie_Cd = 0, Vend_Cd = 0;
+            if (RoleName == "admin") { Region = Value1; }
+            else if (RoleName == "inspection engineer (ie)") { Ie_Cd = Convert.ToInt32(Value1); }
+            else if (RoleName == "vendor") { Vend_Cd = Convert.ToInt32(Value1); }
+            else if (RoleName == "client") { Rly_CD = Value1; Rly_NonRly = Value2; }
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("P_ROLE_NAME", OracleDbType.Varchar2, RoleName, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_IE_CD", OracleDbType.Int32, Ie_Cd, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_VEND_CD", OracleDbType.Int32, Vend_Cd, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Rly_CD, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, Rly_NonRly, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             return DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COMPLAINT_STATUS", par);
         }
@@ -1221,9 +1299,9 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public void ComplaintStatusDetails(DashboardModel model, string Region)
+        public void ComplaintStatusDetails(DashboardModel model, string Value1, string Value2, string RoleName)
         {
-            DataSet ds2 = ComplaintStatusSummary(Region);
+            DataSet ds2 = ComplaintStatusSummary(Value1, Value2, RoleName);
 
             model.complaintStatusSummaryModel = new();
 
@@ -1231,7 +1309,7 @@ namespace IBS.Repositories
             {
                 if (ds2.Tables[0].Rows.Count > 0)
                 {
-                    model.complaintStatusSummaryModel.REGION = Convert.ToString(ds2.Tables[0].Rows[0]["REGION"]);
+                    //model.complaintStatusSummaryModel.REGION = Convert.ToString(ds2.Tables[0].Rows[0]["REGION"]);
                     model.complaintStatusSummaryModel.PENDING = Convert.ToInt32(ds2.Tables[0].Rows[0]["PENDING"]);
                     model.complaintStatusSummaryModel.ACCEPTED = Convert.ToInt32(ds2.Tables[0].Rows[0]["ACCEPTED"]);
                     model.complaintStatusSummaryModel.UPHELD = Convert.ToInt32(ds2.Tables[0].Rows[0]["UPHELD"]);
@@ -1603,6 +1681,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
+       
         public DashboardModel GetLODashBoardCount(string UserName)
         {
             DashboardModel model = new();
@@ -1739,15 +1818,16 @@ namespace IBS.Repositories
             model.IEWisePerformance = lstIEPer;
 
 
-            OracleParameter[] par2 = new OracleParameter[6];
+            OracleParameter[] par2 = new OracleParameter[7];
             par2[0] = new OracleParameter("P_RESULT_PENDING_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
             par2[1] = new OracleParameter("P_RESULT_IE_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
             par2[2] = new OracleParameter("P_RESULT_VENDOR_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
             par2[3] = new OracleParameter("P_RESULT_CLIENT_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
             par2[4] = new OracleParameter("P_RESULT_INTER_REGION_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
             par2[5] = new OracleParameter("P_RESULT_DEFECT_CODE_WISE_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[6] = new OracleParameter("P_RESULT_NO_OF_JI", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds2 = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD", par2, 6);
+            DataSet ds2 = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD", par2);
 
             if (ds2 != null && ds2.Tables.Count > 0)
             {
@@ -1862,6 +1942,26 @@ namespace IBS.Repositories
                 model.DefectCodeJISummary += "['W'," + model.defectCodeJIComp.WELDING + "],";
                 model.DefectCodeJISummary += "['O'," + model.defectCodeJIComp.OTHER + "]";
                 model.DefectCodeJISummary += "]";
+
+                if (ds2.Tables[6].Rows.Count > 0)
+                {
+                    DataTable dt = ds2.Tables[6];
+                    No_Of_JI_Model noOfJI = dt.AsEnumerable().Select(row => new No_Of_JI_Model
+                    {
+                        NR = Convert.ToInt32(row["NR"]),
+                        WR = Convert.ToInt32(row["WR"]),
+                        SR = Convert.ToInt32(row["SR"]),
+                        ER = Convert.ToInt32(row["ER"])
+                    }).FirstOrDefault();
+                    model.noOfJI = noOfJI;
+                }
+
+                model.NoOfJISummary = "[";
+                model.NoOfJISummary += "['NR'," + model.noOfJI.NR + "],";
+                model.NoOfJISummary += "['WR'," + model.noOfJI.WR + "],";
+                model.NoOfJISummary += "['SR'," + model.noOfJI.SR + "],";
+                model.NoOfJISummary += "['ER'," + model.noOfJI.ER + "]";
+                model.NoOfJISummary += "]";
             }
             return model;
         }
@@ -1873,7 +1973,7 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[1]; //[7];
             par[0] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1); 
+            DataSet ds = DataAccessDB.GetDataSet("GET_CM_DAR_DASHBOARD", par, 1);
 
             if (ds != null && ds.Tables.Count > 0)
             {
