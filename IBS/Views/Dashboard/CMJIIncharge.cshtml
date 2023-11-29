@@ -75,19 +75,19 @@
                     </tr>
                     <tr>
                         <td class="textLeft">NR </td>
-                        <td class="text-center">23 </td>
+                        <td class="text-center">@Model.noOfJI.NR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">WR </td>
-                        <td class="text-center">12 </td>
+                        <td class="text-center">@Model.noOfJI.WR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">SR </td>
-                        <td class="text-center">34 </td>
+                        <td class="text-center">@Model.noOfJI.SR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">ER </td>
-                        <td class="text-center">10 </td>
+                        <td class="text-center">@Model.noOfJI.ER</td>
                     </tr>
                 </table>
                 <div class="gridNote"><strong>Note:</strong> All region data for current FY.</div>
@@ -516,21 +516,22 @@
             series: [{
                 //name: 'Brands',
                 colorByPoint: true,
-                data: [{
-                    name: 'NR',
-                    y: 23,
-                    sliced: false,
-                    selected: false
-                }, {
-                    name: 'WR',
-                    y: 12
-                }, {
-                    name: 'SR',
-                    y: 34
-                }, {
-                    name: 'ER',
-                    y: 10
-                }]
+                data: @Html.Raw(Model.NoOfJISummary),
+                //data: [{
+                //    name: 'NR',
+                //    y: 23,
+                //    sliced: false,
+                //    selected: false
+                //}, {
+                //    name: 'WR',
+                //    y: 12
+                //}, {
+                //    name: 'SR',
+                //    y: 34
+                //}, {
+                //    name: 'ER',
+                //    y: 10
+                //}]
             }]
         });
 
