@@ -668,6 +668,6 @@ ul.rightLinks li.langSelectBoxIn {background: none; padding-left:0; padding-righ
 .kipSection li{ margin-bottom:10px;}
 .homeGalleryWrap h2, .overViewSection h2, .servicesContent h2, .kipSection h2, .overViewSection h2, .certificationWrap h2, .awardWrap h2, .ourClientWrap h2{ font-size:20px; margin-bottom:15px;}
 .homeGalleryWrap a.mt-2{ margin-top:0!important;}
-.footerLogoSlider .footerLogoSlider-prev { left: 0px;}
-.footerLogoSlider .footerLogoSlider-next { right:0px;}
+.footerLogoSlider .footerLogoSlider-prev, .ourClientSlider .ourClientSlider-prev { left: 0px;}
+.footerLogoSlider .footerLogoSlider-next, .ourClientSlider .ourClientSlider-next { right:0px;}
 }
