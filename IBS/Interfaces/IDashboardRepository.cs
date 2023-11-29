@@ -20,6 +20,7 @@ namespace IBS.Interfaces
         DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters);
 
         DTResult<DashboardLabData> LoadTableInvoice(DTParameters dtParameters, string Regin, int userid);
+        DTResult<DashboardModel> Dashboard_Lab_ViewAll_List(DTParameters dtParameters, string Regin, int userid);
         DTResult<LabSampleInfoModel> LoadTableReportU(DTParameters dtParameters, string Regin);
 
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
