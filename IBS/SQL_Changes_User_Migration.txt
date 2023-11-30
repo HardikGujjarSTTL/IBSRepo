@@ -386,3 +386,143 @@ SELECT
         CO_CD as CO_CD
 FROM
     T08_IE_CONTROLL_OFFICER where co_cd is not null 
+
+
+
+
+
+
+    ==============================29Nov2023===================================
+
+    insert into t02_users ( user_id,
+    user_name,
+    rites_emp,
+    emp_no,
+    region,
+    password,
+    auth_levl,
+    status,
+    allow_po,
+    allow_up_chksht,
+    allow_dn_chksht,
+    call_marking,
+    call_remarking,
+    user_type,
+    createddate,
+    createdby,
+    updateddate,
+    updatedby,
+    isdeleted,
+    MigType,
+    CO_CD)
+SELECT 
+        'CM' || TRIM(CO_PHONE_NO),
+        CO_NAME,
+        'Y' as rites_emp,
+        null as emp_no,
+        CO_REGION as region,
+        'Rites123' as pwd,
+        null as auth_levl,
+        null as status,
+        null as allow_po,
+        null as allow_up_chksht,
+        null as allow_dn_chksht,
+        null as call_marking,
+        null as call_remarking,
+        null as user_type,
+        sysdate as createddate,
+        1 as createdby,
+        null as updateddate,
+        null as updatedby,
+        null as isdeleted,
+        'CM' as  MigType,
+        CO_CD as CO_CD
+FROM
+    t08_ie_controll_officer where co_status is NULL and CO_PHONE_NO is not null and co_cd not in (148,189) ;
+    
+
+
+    =====================
+    insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id,
+    id)
+    
+Select 125,null,1,sysdate, null,null,0,user_id ,70437
+from t02_users where MigType ='CM' and createddate  >  cast('28-11-2023' as date)
+and user_id='CM9836764585'
+
+    insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id,
+    id)
+    
+Select 126,null,1,sysdate, null,null,0,user_id ,70438
+from t02_users where MigType ='CM' and createddate  >  cast('28-11-2023' as date)
+and user_id='CM9999984692'
+
+    insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id,
+    id)
+    
+Select 127,null,1,sysdate, null,null,0,user_id ,70439
+from t02_users where MigType ='CM' and createddate  >  cast('28-11-2023' as date)
+and user_id='CM9425297232'
+
+
+    insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id,
+    id)
+    
+Select 128,null,1,sysdate, null,null,0,user_id ,70440
+from t02_users where MigType ='CM' and createddate  >  cast('28-11-2023' as date)
+and user_id='CM9176344017'
+
+
+=================
+insert into USERROLES 
+    (role_id,
+    usertype,
+    createdby,
+    createddate,
+    updatedby,
+    updateddate,
+    isdeleted,
+    user_id,
+    id)
+    
+Select 129,null,1,sysdate, null,null,0,user_id ,USERROLESSeq.nextval
+from t02_users where MigType ='CM' and createddate  >  cast('28-11-2023' as date)
+and user_id not in ('CM9836764585','CM9999984692','CM9425297232','CM9176344017')
+
+==================================
+insert into menurolemapping (ID,ROLEID,	MENUID,	ISACTIVE,CREATEDBY,CREATEDDATE,UPDATEDBY,UPDATEDDATE,ISDELETED,ISADD,ISEDIT,PISDELETE,ISVIEW)
+Select menurolemapping_seq.nextval,<New Role Id> ROLEID,	MENUID,	ISACTIVE,CREATEDBY,CREATEDDATE,UPDATEDBY,UPDATEDDATE,ISDELETED,ISADD,ISEDIT,PISDELETE,ISVIEW 
+from menurolemapping where roleid =129 <Old Role Id>
+===================================

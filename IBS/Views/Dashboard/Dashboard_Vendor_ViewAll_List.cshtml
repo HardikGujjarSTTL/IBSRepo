@@ -43,7 +43,6 @@
             <table id="dtList" class="table-responsive">
                 <thead>
                     <tr>
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -62,7 +61,7 @@
         var Columns = [];
         $(function () {
 
-            var currentDate = new Date("01/03/2025");
+            var currentDate = new Date();
             var financialYearDates = calculateFinancialYearDates(currentDate);
 
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
@@ -82,15 +81,23 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CallSno", title: "Call Sno" },
                     { data: "CaseNo", title: "Case No" },
-                    { data: "CallDate", title: "Call Date" },
-                    { data: "Details", title: "Details " },
+                    {
+                        data: "CallDate", title: "Call Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno", title: "Call Sno" },
                     { data: "Client", title: "Client " },
                     { data: "IE", title: "IE" },
                     { data: "IEContactNo", title: "IE contact No." },
                     { data: "CM", title: "CM" },
                     { data: "CmContactNo", title: "CM Contact no." },
+                    { data: "Status", title: "Status " },
                 ]
             } else if (type == "RPO") {
                 $("#spnHeading").text("Recent Purchase Order ");
@@ -101,13 +108,29 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    { data: "CaseNo", title: "Case No" },
                     { data: "PONO", title: "PO No." },
+                    {
+                        data: "PO_DT", title: "PO Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "RECV_DT", title: "Recv Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "PO_OR_LETTER", title: "PO/LETTER" },
                     { data: "Client", title: "Client" },
-                    { data: "Details", title: "Details" },
-                    { data: "PurchaseOrder", title: "Purchase Order" },
                     { data: "Status", title: "Status" },
                 ]
-            } 
+            }
             InitializeDatatable();
         });
 
