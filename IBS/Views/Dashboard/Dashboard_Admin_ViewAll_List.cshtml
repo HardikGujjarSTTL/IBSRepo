@@ -76,7 +76,6 @@
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
-            $("#ActionType").val(type);
             if (type == "CHP" || type == "CHO") {
                 $("#spnHeading").text("No. of Clients with Highest Payments. ");
                 Columns = [
