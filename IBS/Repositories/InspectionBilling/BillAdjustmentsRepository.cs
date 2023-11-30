@@ -1142,6 +1142,7 @@ namespace IBS.Repositories.InspectionBilling
             decimal totalvalue2 = 0;
             decimal totalvalue3 = 0;
             decimal totalvalue = 0;
+            decimal totalvalueFinal = 0;
 
             decimal w_insp_fee = 0;
 
@@ -1181,23 +1182,23 @@ namespace IBS.Repositories.InspectionBilling
                 if (err == 1)
                 {
                     //Base value Calculation
-                    basevalue += Convert.ToDecimal((qtyOffNow * SuppNewRateP) / uom);
+                    basevalue = Convert.ToDecimal((qtyOffNow * SuppNewRateP) / uom);
                     //DisCount Calculation
                     if (DiscountTypeP == "P")
                     {
-                        discountamount += Convert.ToDecimal((basevalue * DiscountPerP) / 100);
+                        discountamount = Convert.ToDecimal((basevalue * DiscountPerP) / 100);
                     }
                     else if (DiscountTypeP == "L")
                     {
-                        discountamount += DiscountPerP;
+                        discountamount = DiscountPerP;
                     }
                     else if (DiscountTypeP == "N")
                     {
-                        discountamount += Convert.ToDecimal(DiscountPerP * qtyOffNow);
+                        discountamount = Convert.ToDecimal(DiscountPerP * qtyOffNow);
                     }
                     else
                     {
-                        discountamount += 0;
+                        discountamount = 0;
                     }
                     //Exise Calculation
                     if(BillAdType == "Credit")
@@ -1206,35 +1207,35 @@ namespace IBS.Repositories.InspectionBilling
                         {
                             if (ExciseTypeP == "P")
                             {
-                                exciseamount += Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                                exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
                             }
                             else if (ExciseTypeP == "L")
                             {
-                                exciseamount += Convert.ToDecimal(ExcisePerP);
+                                exciseamount = Convert.ToDecimal(ExcisePerP);
                             }
                             else
                             {
-                                exciseamount += 0;
+                                exciseamount = 0;
                             }
                         }
                         else
                         {
-                            exciseamount += 0;
+                            exciseamount = 0;
                         }
                     }
                     else
                     {
                         if (ExciseTypeP == "P")
                         {
-                            exciseamount += Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                            exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
                         }
                         else if (ExciseTypeP == "L")
                         {
-                            exciseamount += Convert.ToDecimal(ExcisePerP);
+                            exciseamount = Convert.ToDecimal(ExcisePerP);
                         }
                         else
                         {
-                            exciseamount += 0;
+                            exciseamount = 0;
                         }
                     }
 
@@ -1242,12 +1243,12 @@ namespace IBS.Repositories.InspectionBilling
                     if (SalesTaxPerP > 0)
                     {
                         //stamount += Convert.ToDecimal((qtyOffNow / qty) * SalesTaxP);
-                        stamount += Convert.ToDecimal((((basevalue - discountamount) + exciseamount) * SalesTaxPerP) / 100);
+                        stamount = Convert.ToDecimal((((basevalue - discountamount) + exciseamount) * SalesTaxPerP) / 100);
                     }
                     else
                     {
                         //stamount += Convert.ToDecimal(((basevalue - discountamount) * SalesTaxPerP) / 100);
-                        stamount += 0;
+                        stamount = 0;
                     }
 
                     //Other Charges
@@ -1257,15 +1258,15 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     else if (OtChargeTypeP == "L")
                     {
-                        otheramount += Convert.ToDecimal(OtChargePerP);
+                        otheramount = Convert.ToDecimal(OtChargePerP);
                     }
                     else if (OtChargeTypeP == "N")
                     {
-                        otheramount += Convert.ToDecimal((qtyOffNow * OtChargePerP) / 100);
+                        otheramount = Convert.ToDecimal((qtyOffNow * OtChargePerP) / 100);
                     }
                     else
                     {
-                        otheramount += 0;
+                        otheramount = 0;
                     }
 
                     //Total Calculation
@@ -1273,7 +1274,8 @@ namespace IBS.Repositories.InspectionBilling
                     totalvalue2 = Convert.ToDecimal(totalvalue1 + exciseamount);
                     totalvalue3 = Convert.ToDecimal(totalvalue2 + stamount);
                     totalvalue = Convert.ToDecimal(totalvalue3 + otheramount);
-                    model.TMValueNew = totalvalue;
+                    totalvalueFinal += totalvalue;
+                    model.TMValueNew = totalvalueFinal;
                 }
             }
 
