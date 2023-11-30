@@ -104,7 +104,7 @@
                     { data: "CallDate", title: "Call Date",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
@@ -124,18 +124,29 @@
                         }
                     },
                     { data: "CaseNo", title: "Case No" },
-                    { data: "Qty", title: "Quantity" },
+                    { data: "Value", title: "Value" },
                     { data: "PONO", title: "PO No" },
                     {
                         data: "PODT", title: "PO Date",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
                     },
+                    {
+                        data: "RECV_DT", title: "Recv Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Po_Or_Letter", title: "Po / Letter" },
                     { data: "Vendor", title: "Vendor" },
+                    { data: "Qty", title: "Quantity" },
                 ]
             } else if (type == "RCC") {
                 $("#spnHeading").text("Recent Consignee Complaints  ");

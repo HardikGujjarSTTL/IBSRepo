@@ -204,7 +204,10 @@
         public decimal VALUE { get; set; }
         public string VEND_NAME { get; set; }
         public string PO_NO { get; set; }
-        public DateTime PO_DT { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
+        public int QTY { get; set; }
     }
 
     public class ClientVendConCompList
@@ -471,10 +474,13 @@
         public string IEName { get; set; }
         public string Status { get; set; }
         public string PONO { get; set; }
-        public decimal? Qty { get; set; }
+        public int Qty { get; set; }
         public int NoOfComplaints { get; set; }
         public string Issues { get; set; }
         public string ActionType { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public Decimal? Value { get; set; }
+        public  string Po_Or_Letter { get; set; }
     }
 
     public class Billing_Comparison_Model
