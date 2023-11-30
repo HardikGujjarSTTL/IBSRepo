@@ -50,156 +50,134 @@
 
 
 @section scripts{
-    <partial name="_DataTablesScriptsPartial" />
-    <partial name="_ValidationScriptsPartial" />
-    <script type="text/javascript">
-        var Columns = [];
-        $(function () {
-            debugger
-            var currentDate = new Date();
-            var financialYearDates = calculateFinancialYearDates(currentDate);
+        <partial name="_DataTablesScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
+        <script type="text/javascript">
+            var Columns = [];
+            $(function () {
+                debugger
+                var currentDate = new Date();
+                var financialYearDates = calculateFinancialYearDates(currentDate);
 
-            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
-            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
-            const urlParams = new URLSearchParams(window.location.search);
-            const type = urlParams.get('Type');
-            $("#ActionType").val(type);
-            if (type == "OSA") {
-                $("#spnHeading").text("Total Outstanding Amount");
-            }
-            else if (type == "SA") {
-                $("#spnHeading").text("Suspense Amount");
-            }
-            else if (type == "OB") {
-                $("#spnHeading").text("No. of Outstanding bills");
-            }
-            else if (type == "TOTI") {
-                $("#spnHeading").text("No. of Total Invoices");
-            }
-            else if (type == "FI") {
-                $("#spnHeading").text("No. of Finalized Invoices");
-            }
-            else if (type == "PIF") {
-                $("#spnHeading").text("Pending Invoices for Finalization");
-            }
+                $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+                $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+                const urlParams = new URLSearchParams(window.location.search);
+                const type = urlParams.get('Type');
+                $("#ActionType").val(type);
+                if (type == "OSA") {
+                    $("#spnHeading").text("Total Outstanding Amount");
+                }
+                else if (type == "SA") {
+                    $("#spnHeading").text("Suspense Amount");
+                }
+                else if (type == "OB") {
+                    $("#spnHeading").text("No. of Outstanding bills");
+                }
+                else if (type == "TOTI") {
+                    $("#spnHeading").text("No. of Total Invoices");
+                }
+                else if (type == "FI") {
+                    $("#spnHeading").text("No. of Finalized Invoices");
+                }
+                else if (type == "PIF") {
+                    $("#spnHeading").text("Pending Invoices for Finalization");
+                }
 
-            if (type == "SA") {
-                Columns = [
-                    {
-                        data: '', title: "#", orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "CaseNo", title: "Case No" },
-                    {
-                        data: "CHQ_DT", title: "CHQ DT", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                if (type == "SA") {
+                    Columns = [
+                        {
+                            data: '', title: "#", orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
                             }
-                            return data;
-                        }
-                    },
-                    { data: "CHQ_NO", title: "CHQ No" },
-                    { data: "NARRATION", title: "Narration" },
-                    { data: "SUSPENSE_AMT", title: "Suspense Amount" },
-                    { data: "VCHR_NO", title: "Vouchar No" },
-                ]
-            } else if (type == "FI" || type == "PIF") {
-                Columns = [
-                    {
-                        data: '', title: "#", orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "BILL_NO", title: "Bill NO" },
-                    {
-                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                        },
+                        { data: "CaseNo", title: "Case No" },
+                        {
+                            data: "CHQ_DT", title: "CHQ DT", render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
                             }
-                            return data;
-                        }
-                    },
-                    { data: "CaseNo", title: "Case No" },
-                    { data: "MATERIAL_VALUE", title: "Material Value" },
-                    { data: "BILL_AMOUNT", title: "Bill Amount" },
-                    { data: "REMARKS", title: "Remarks" },
-                ]
-            } else if (type == "OB" || type == "TOTI") {
-                Columns = [
-                    {
-                        data: '', title: "#", orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "BILL_NO", title: "Bill NO" },
-                    {
-                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                        },
+                        { data: "CHQ_NO", title: "CHQ No" },
+                        { data: "NARRATION", title: "Narration" },
+                        { data: "SUSPENSE_AMT", title: "Suspense Amount" },
+                        { data: "VCHR_NO", title: "Vouchar No" },
+                    ]
+                }  else if (type == "OB" || type == "TOTI" || type == "OSA" || type == "FI" || type == "PIF") {
+                    Columns = [
+                        {
+                            data: '', title: "#", orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
                             }
-                            return data;
-                        }
-                    },
-                    { data: "CaseNo", title: "Case No" },
-                    { data: "MATERIAL_VALUE", title: "Material Value" },
-                    { data: "BILL_AMOUNT", title: "Bill Amount" },
-                    { data: "REMARKS", title: "Remarks" },
-                ]
-            }
-            InitializeDatatable();
-        });
-
-        function calculateFinancialYearDates(currentDate) {
-            var currentYear = currentDate.getFullYear();
-
-            var financialYearStartDate = new Date(currentYear, 3, 1);
-            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
-
-            return {
-                start: financialYearStartDate,
-                end: financialYearEndDate
-            };
-        }
-
-        function Search() {
-            InitializeDatatable();
-        }
-
-        function InitializeDatatable() {
-            var FromDate = $("#FromDate").val();
-            var ToDate = $("#ToDate").val();
-            var ActionType = $("#ActionType").val();
-
-            $("#dtList").DataTable({
-                stateSave: false,
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                paging: true,
-                searching: true,
-                ajax: {
-                    url: "@Url.Action("LoadCMDFO_List", "Dashboard")",
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            FromDate, ToDate, ActionType
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    }
-                },
-                columns: Columns,
-                "order": [[0, "asc"]]
+                        },
+                        { data: "BILL_NO", title: "Bill NO" },
+                        {
+                            data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                                }
+                                return data;
+                            }
+                        },
+                        { data: "CaseNo", title: "Case No" },
+                        { data: "MATERIAL_VALUE", title: "Material Value" },
+                        { data: "BILL_AMOUNT", title: "Bill Amount" },
+                        { data: "REMARKS", title: "Remarks" },
+                    ]
+                }
+                InitializeDatatable();
             });
-        }
-    </script>
+
+            function calculateFinancialYearDates(currentDate) {
+                var currentYear = currentDate.getFullYear();
+
+                var financialYearStartDate = new Date(currentYear, 3, 1);
+                var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+                return {
+                    start: financialYearStartDate,
+                    end: financialYearEndDate
+                };
+            }
+
+            function Search() {
+                InitializeDatatable();
+            }
+
+            function InitializeDatatable() {
+                var FromDate = $("#FromDate").val();
+                var ToDate = $("#ToDate").val();
+                var ActionType = $("#ActionType").val();
+
+                $("#dtList").DataTable({
+                    stateSave: false,
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true,
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,
+                    searching: true,
+                    ajax: {
+                        url: "@Url.Action("LoadCMDFO_List", "Dashboard")",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                FromDate, ToDate, ActionType
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        }
+                    },
+                    columns: Columns,
+                    "order": [[0, "asc"]]
+                });
+            }
+        </script>
 }

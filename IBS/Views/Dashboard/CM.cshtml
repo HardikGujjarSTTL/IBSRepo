@@ -167,4 +167,8 @@
             }
         </table>
     </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
+    </div>
 </section>

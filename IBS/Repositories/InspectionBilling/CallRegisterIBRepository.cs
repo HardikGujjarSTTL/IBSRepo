@@ -4131,14 +4131,29 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     else
                     {
-                        using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                        //using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                        //{
+                        //    conn.Open();
+                        //    using (var cmd = conn.CreateCommand())
+                        //    {
+                        //        cmd.CommandType = CommandType.Text;
+                        //        cmd.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                        //        cmd.ExecuteNonQuery();
+                        //    }
+                        //}
+
+                        using (var command = context.Database.GetDbConnection().CreateCommand())
                         {
-                            conn.Open();
-                            using (var cmd = conn.CreateCommand())
+                            bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
+                            if (!wasOpen) command.Connection.Open();
+                            try
                             {
-                                cmd.CommandType = CommandType.Text;
-                                cmd.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = '" + CallRecvDate + "' AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
-                                cmd.ExecuteNonQuery();
+                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                                command.ExecuteNonQuery();
+                            }
+                            finally
+                            {
+                                if (!wasOpen) command.Connection.Close();
                             }
                         }
                     }
