@@ -43,5 +43,7 @@ namespace IBS.Interfaces.Vendor
         string UpdateCallDetails(VenderCallRegisterModel model, int ItemSrnoPo);
 
         int GetItemList(string CaseNo, DateTime CallRecvDt, int CallSno);
+
+        int GetPODetails(string CaseNo, string Region);
     }
 }
