@@ -9,7 +9,7 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TC" })">
                     <div class="dashboard-box das1">
                         <div class="dash-total">
@@ -24,7 +24,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="PendingCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "M" })">
                     <div class="dashboard-box das2">
                         <div class="dash-total">
@@ -39,7 +39,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="AcceptedCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "A" })">
                     <div class="dashboard-box das3">
                         <div class="dash-total">
@@ -54,7 +54,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="CancelleCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "C" })">
                     <div class="dashboard-box das4">
                         <div class="dash-total">
@@ -69,10 +69,7 @@
                     </div>
                 </a>
             </div>
-
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="UnderLabCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "U" })">
                     <div class="dashboard-box das5">
                         <div class="dash-total">
@@ -87,7 +84,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StillUnderInspCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "S" })">
                     <div class="dashboard-box das6">
                         <div class="dash-total">
@@ -102,7 +99,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "T" })">
                     <div class="dashboard-box das7">
                         <div class="dash-total">
@@ -117,7 +114,106 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+           
+            @*<div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="dashboard-box das8">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">100</div>
+                        </div>
+                        <div class="total-inner">
+                            Issued IC and<br /> received in office
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/dash-icon-2-sml.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
+                </div>
+            </div>*@
+        
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB" })">
+                    <div class="dashboard-box das10">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NOofBill</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of<br /> Bills
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a class="dashboard-box das11" href="@Url.Action("IEPerCM","Dashboard")">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.NOOFIEPERCM</div>
+                        </div>
+                        <div class="total-inner">
+                            No. of IEs<br /> per CMs
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
+                </div>
+            </div>
+           
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="dashboard-box das14">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">20</div>
+                        </div>
+                        <div class="total-inner">
+                            No. of Calls<br /> per IE
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
+                </div>
+            </div>
+           @* <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="dashboard-box das12">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">100</div>
+                        </div>
+                        <div class="total-inner">
+                            Issued<br /> IC
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
+                </div>
+            </div>*@
+           
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="dashboard-box das15">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">7000/-</div>
+                        </div>
+                        <div class="total-inner">
+                            Avg<br /> fees
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="images/AVG-fees-icon.svg" width="46" height="54" alt="Avg fees"> </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
+                    <div class="dashboard-box das12">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NotRecievedCount</div>
+                                <div class="total-inner">
+                                    Issued IC Not received<br /> in office
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB" })">
                     <div class="dashboard-box das9">
                         <div class="dash-total">
@@ -133,118 +229,18 @@
                     </div>
                 </a>
             </div>
-            @*<div class="col-lg-3">
-            <div class="dashboard-box das8">
-            <div class="dash-total">
-            <div class="dash-count">
-            <div class="total-amount">100</div>
-            </div>
-            <div class="total-inner">
-            Issued IC and<br /> received in office
-            </div>
-            </div>
-            <div class="total-icons"><img src="images/dash-icon-2-sml.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
-            </div>
-            </div>*@
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB" })">
-                    <div class="dashboard-box das10">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">@Model.NOofBill</div>
-                            </div>
-                            <div class="total-inner">
-                                No. of<br /> Bills
-                            </div>
-                        </div>
-                        <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3">
-                <div class="dashboard-box das11"> @*href="@Url.Action("IEPerCM","Dashboard")"*@
+            @*<div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="dashboard-box das16">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">@Model.NOOFIEPERCM</div>
+                            <div class="total-amount">100</div>
                         </div>
                         <div class="total-inner">
-                            No. of IEs<br /> per CMs
+                            Issued<br /> IC
                         </div>
                     </div>
-                    <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
+                    <div class="total-icons"><img src="images/issued-IC-icon.svg" width="46" height="54" alt="Issued IC"> </div>
                 </div>
-            </div>
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
-                    <div class="dashboard-box das12">
-                        <div class="dash-total">
-                            <div class="dash-count">
-                                <div class="total-amount">@Model.NotRecievedCount</div>
-                                <div class="total-inner">
-                                    Issued IC Not received<br /> in office
-                                </div>
-                            </div>
-                        </div>
-                        <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3">
-                <div class="dashboard-box das14">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">20</div>
-                        </div>
-                        <div class="total-inner">
-                            No. of Calls<br /> per IE
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
-                </div>
-            </div>
-            @* <div class="col-lg-3">
-            <div class="dashboard-box das12">
-            <div class="dash-total">
-            <div class="dash-count">
-            <div class="total-amount">100</div>
-            </div>
-            <div class="total-inner">
-            Issued<br /> IC
-            </div>
-            </div>
-            <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
-            </div>
-            </div>*@
-        </div>
-        <div class="row admin-dashboard">
-
-            <div class="col-lg-3">
-                <div class="dashboard-box das15">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">7000/-</div>
-                        </div>
-                        <div class="total-inner">
-                            Avg<br /> fees
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/AVG-fees-icon.svg" width="46" height="54" alt="Avg fees"> </div>
-                </div>
-            </div>
-            @*<div class="col-lg-3">
-            <div class="dashboard-box das16">
-            <div class="dash-total">
-            <div class="dash-count">
-            <div class="total-amount">100</div>
-            </div>
-            <div class="total-inner">
-            Issued<br /> IC
-            </div>
-            </div>
-            <div class="total-icons"><img src="images/issued-IC-icon.svg" width="46" height="54" alt="Issued IC"> </div>
-            </div>
             </div>*@
         </div>
 

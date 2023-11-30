@@ -10,7 +10,7 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "1" })">
                 <div class="dashboard-box das1">
                     <div class="dash-total">
@@ -25,7 +25,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "2" })">
                 <div class="dashboard-box das2">
                     <div class="dash-total">
@@ -40,7 +40,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "3" })">
                 <div class="dashboard-box das3">
                     <div class="dash-total">
@@ -55,7 +55,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das4">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -68,10 +68,9 @@
                     <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                 </div>
             </div>
-        </div>
-        <div class="row admin-dashboard">
+       
             
-            @* <div class="col-lg-3">
+            @* <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
                 <div class="dashboard-box das5">
                     <div class="dash-total">
@@ -86,7 +85,7 @@
                 </div>
                 </a>
             </div> *@
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
                 <div class="dashboard-box das6">
                     <div class="dash-total">
@@ -101,7 +100,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das7">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -114,7 +113,7 @@
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Assigned"> </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das8">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -127,7 +126,7 @@
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das9">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -140,12 +139,7 @@
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
             </div>
-        </div>
-        <div class="row admin-dashboard">
-
-            
-            
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das10">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -220,7 +214,7 @@
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="7">No Data Found</td>
                 </tr>
             }
         }
