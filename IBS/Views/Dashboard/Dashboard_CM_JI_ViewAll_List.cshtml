@@ -1,0 +1,186 @@
+﻿@model CM_JI_ViewAll_Model
+@{
+    ViewData["Title"] = "Dashboard_CM_JI_ViewAll_List";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+    <div>
+        <a asp-action="CMJIIncharge" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+    </div>
+</div>
+
+<div class="accordion-body" id="body">
+    <div class="row my-0">
+        <input asp-for="Type" hidden />
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        @* <th>#</th>
+                        <th>Name of Client</th>
+                        <th>No. of bills</th>
+                        <th>Value (₹)</th>
+                        <th>PO No.</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        var Columns = [];
+        $(function () {
+
+            var currentDate = new Date();
+            var financialYearDates = calculateFinancialYearDates(currentDate);
+
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            $("#ActionType").val(type);
+            if (type == "OPJC") {
+                $("#spnHeading").text("Oldest Pending Cases");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CONSIGNEE", title: "Consignee" },
+                    { data: "IE_NAME", title: "IE" },
+                    { data: "JI_REGION", title: "Region" },
+                    { data: "CASE_NO", title: "Case No" },
+                    { data: "CALL_RECV_DT", title: "Call Date" },
+                    { data: "CALL_SNO", title: "Call Sno" },
+                    { data: "JI_SNO", title: "JI SNo" },
+                    { data: "JI_DT", title: "JI Date" },
+                ]
+            } else if (type == "ICC") {
+                $("#spnHeading").text("IE Wise Consignee Complaints");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "NAME", title: "IE" },
+                    { data: "NO_OF_CONSINEE_COMPLAINTS", title: "Number of complaints" }
+                ]
+            } else if (type == "VCC") {
+                $("#spnHeading").text("Vendor Wise Consignee Complaints");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "NAME", title: "Vendor" },
+                    { data: "NO_OF_CONSINEE_COMPLAINTS", title: "Number of complaints" }
+                ]
+            } else if (type == "CCC") {
+                $("#spnHeading").text("Client Wise Consignee Complaints");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "NAME", title: "Client" },
+                    { data: "NO_OF_CONSINEE_COMPLAINTS", title: "Number of complaints" },
+                ]
+            }
+            InitializeDatatable();
+        });
+
+        function calculateFinancialYearDates(currentDate) {
+            var currentYear = currentDate.getFullYear();
+
+            var financialYearStartDate = new Date(currentYear, 3, 1);
+            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+            return {
+                start: financialYearStartDate,
+                end: financialYearEndDate
+            };
+        }
+
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var Type = $("#Type").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                        url: "@Url.Action("LoadDashboard_CM_JI_ViewAll_List", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate, ToDate, Type
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: Columns,
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}
+
+

@@ -522,4 +522,25 @@
         public int ER { get; set; }
     }
 
+    public class CM_JI_ViewAll_Model
+    {
+        public  string Type { get; set; }
+
+        #region Oldest Pending JI
+        public string CONSIGNEE { get; set; }
+        public string IE_NAME { get; set; }
+        public string JI_REGION { get; set; }
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string JI_SNO { get; set; }
+        public DateTime? JI_DT { get; set; }
+        public DateTime? COMPLAINT_DT { get; set; }
+        #endregion
+
+        #region IE,Vendor and Client Wise Consignee Complaints
+        public string NAME { get; set; }
+        public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
+        #endregion
+    }
 }

@@ -5,6 +5,7 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Dynamic;
 
 namespace IBS.Controllers
@@ -412,5 +413,20 @@ namespace IBS.Controllers
             DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
             return Json(dTResult);
         }
+
+        public IActionResult Dashboard_CM_JI_ViewAll_List(string Type)
+        {
+            CM_JI_ViewAll_Model model = new CM_JI_ViewAll_Model();
+            model.Type = Type;  
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CM_JI_ViewAll_List([FromBody] DTParameters dtParameters)
+        {            
+            DTResult<CM_JI_ViewAll_Model> dTResult = dashboardRepository.Dashboard_CM_JI_ViewAll_List(dtParameters);
+            return Json(dTResult);
+        }
+
     }
 }
