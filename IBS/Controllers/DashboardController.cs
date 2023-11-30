@@ -413,6 +413,33 @@ namespace IBS.Controllers
             DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
             return Json(dTResult);
         }
+        
+        public IActionResult Dashboard_CMGeneral_ViewAll_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CMGeneral_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string COCD = SessionHelper.UserModelDTO.CoCd.ToString();
+            DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_CMGeneral_ViewAll_List(dtParameters, COCD);
+            return Json(dTResult);
+        }
+        
+        public IActionResult Dashboard_CMDFO_ViewAll_List(string Type)
+        {
+            AdminViewAllList model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CMDFO_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            DTResult<AdminViewAllList> dTResult = dashboardRepository.Dashboard_CMDFO_ViewAll_List(dtParameters);
+            return Json(dTResult);
+        }
 
         public IActionResult Dashboard_CM_JI_ViewAll_List(string Type)
         {

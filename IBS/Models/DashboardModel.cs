@@ -319,6 +319,7 @@
         public decimal Value { get; set; }
         public string PONO { get; set; }
         public string Region { get; set; }
+        public string ActionType { get; set; }
         public int NoofConComp { get; set; }
         public DateTime CallDate { get; set; }
     }
@@ -435,6 +436,7 @@
         public int CallSno { get; set; }  
         public string CallStatus { get; set; }  
         public string CallLetterNo { get; set; }  
+        public DateTime? CallLetterDt { get; set; }  
         public string Remarks { get; set; }  
         public string PoNo { get; set; }  
         public string IeSname { get; set; }  

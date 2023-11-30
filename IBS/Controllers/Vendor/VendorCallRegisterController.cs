@@ -572,6 +572,26 @@ namespace IBS.Controllers.Vendor
             return PartialView("_TermsCondition");
         }
 
+        public IActionResult GetPODetails(string CaseNo)
+        {
+            try
+            {
+                if (CaseNo != null)
+                {
+                    int Isstageinspection = venderRepository.GetPODetails(CaseNo, Region);
+                    return Json(new { status = true, responseText = Isstageinspection });
+                }
+                else
+                {
+                    return Json(new { status = false, responseText = "No Record Found!!!." });
+                }
 
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillAdjustments", "GetBillDetails", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
     }
 }

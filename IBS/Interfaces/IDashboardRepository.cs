@@ -15,6 +15,8 @@ namespace IBS.Interfaces
         DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
         DTResult<AdminCountListing> Dashboard_Client_List(DTParameters dtParameters, string Region, string OrgnType, string Organisation);
         DTResult<CMDFOListing> CMDFO_List(DTParameters dtParameters);
+        DTResult<AdminCountListing> Dashboard_CMGeneral_ViewAll_List(DTParameters dtParameters,string COCD);
+        DTResult<AdminViewAllList> Dashboard_CMDFO_ViewAll_List(DTParameters dtParameters);
         DTResult<VenderCallRegisterModel> GetDataCallDeskInfoListing(DTParameters dtParameters, string Region);
 
 
