@@ -98,26 +98,47 @@
                             {
                                 <td align="left"><b><font size="1" face="Verdana"></font></b></td>
                             }
-                            <td align="left"><font size="1" face="Verdana">@item.IC_PHOTO</font></td>
+                            @if (@item.IC_PHOTO != null)
+                            {
+                                var fpath1 = Model.FilePath3 + "/" + @item.IC_PHOTO + ".pdf";
+                                var Fpath2 = Model.FilePath3 + "/ReadWriteData/BILL_IC/" + @item.IC_PHOTO + ".pdf";
+                                if (System.IO.File.Exists(fpath1) == true)
+                                {
+                                    <td align="left">
+                                        <font size="1" face="Verdana">
+                                            <a href=@Fpath2 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>IC</font></h5></a>
+                                        </font>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td align="left"><font size="1" face="Verdana"></font></td>
+                                }
+                            }
+                            else
+                            {
+                                <td align="left"><font size="1" face="Verdana"></font></td>
+                            }
+
+                            
                             @if (@item.PO_SOURCE == "C")
                             {
                                 string po_source = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + @item.PO_YR + "/" + @item.IMMS_RLY_CD + "/" + @item.PO_NO + ".pdf";
                                 <td align="left">
                                     <font size="1" face="Verdana">
-                                        <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>PO</font></h5></a>
+                                        <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>VIEW PO</font></h5></a>
                                     </font>
                                 </td>
                             }
                             else
                             {
-                                //string fpath_po = $"../ReadWriteData/CASE_NO/{@item.CASE_NO}.pdf";
-                                var fpath_po = System.IO.Path.Combine("../ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf");
-                                var FilePath = item.FilePath;
+                                var fpath_po = Model.FilePath2 + "/" + @item.CASE_NO + ".pdf";
+                                var Fpath = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf";
                                 if (System.IO.File.Exists(fpath_po) == true)
                                 {
                                     <td align="left">
                                         <font size="1" face="Verdana">
-                                            <a href=@fpath_po target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>VIEW PO</font></h5></a>
+                                            <a href=@Fpath target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>VIEW PO</font></h5></a>
                                         </font>
                                     </td>
                                 }
