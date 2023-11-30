@@ -89,10 +89,24 @@
                     { data: "IE_NAME", title: "IE" },
                     { data: "JI_REGION", title: "Region" },
                     { data: "CASE_NO", title: "Case No" },
-                    { data: "CALL_RECV_DT", title: "Call Date" },
+                    {
+                        data: "CALL_RECV_DT", title: "Call Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "CALL_SNO", title: "Call Sno" },
                     { data: "JI_SNO", title: "JI SNo" },
-                    { data: "JI_DT", title: "JI Date" },
+                    {
+                        data: "JI_DT", title: "JI Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                 ]
             } else if (type == "ICC") {
                 $("#spnHeading").text("IE Wise Consignee Complaints");
