@@ -155,7 +155,9 @@ namespace IBS.Models
 
         public List<BillSubmittedCrisModel> lstBillCrisSubmitted { get; set; }
 
-        public string FilePath { get; set; }
+        public string FilePath1 { get; set; }
+        public string FilePath2 { get; set; }
+        public string FilePath3 { get; set; }
 
     }
 
