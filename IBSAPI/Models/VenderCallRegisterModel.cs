@@ -125,9 +125,9 @@ namespace IBSAPI.Models
 
         public string? VendStatus { get; set; }
 
-        public DateTime? VendStatusDtFr { get; set; }
+        //public DateTime? VendStatusDtFr { get; set; }
 
-        public DateTime? VendStatusDtTo { get; set; }
+        //public DateTime? VendStatusDtTo { get; set; }
 
         public string? VendEmail { get; set; }
 

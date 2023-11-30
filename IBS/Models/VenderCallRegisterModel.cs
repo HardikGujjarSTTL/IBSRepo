@@ -228,6 +228,8 @@ namespace IBS.Models
 
         //public string IsFinalizedStatus { get; set; }
         public bool IsFinalizedStatus { get; set; }
+        
+        public int Isstageinspection { get; set; }
 
         public string? Createdby { get; set; }
 

@@ -405,8 +405,7 @@ namespace IBS.Repositories
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
                         CALL_RECV_DT = Convert.ToDateTime(row["CALL_RECV_DT"]),
                         CALL_SNO = Convert.ToInt32(row["CALL_SNO"]),
-                        VEND_NAME = Convert.ToString(row["VEND_NAME"]),
-                        DETAILS = Convert.ToString(row["DETAILS"]),
+                        VEND_NAME = Convert.ToString(row["VEND_NAME"]),                        
                         IE_NAME = Convert.ToString(row["IE_NAME"]),
                         CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
                     }).ToList();
@@ -417,10 +416,13 @@ namespace IBS.Repositories
                     lstClientRecentPO = dt.AsEnumerable().Select(row => new ClientRecentPOList
                     {
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
-                        PO_DT = Convert.ToDateTime(row["PO_DT"]),
                         VALUE = Convert.ToDecimal(row["VALUE"]),
-                        VEND_NAME = Convert.ToString(row["VEND_NAME"]),
                         PO_NO = Convert.ToString(row["PO_NO"]),
+                        PO_DT = string.IsNullOrEmpty(Convert.ToString(row["PO_DT"])) ? null : Convert.ToDateTime(row["PO_DT"]),
+                        RECV_DT = string.IsNullOrEmpty(Convert.ToString(row["RECV_DT"])) ? null : Convert.ToDateTime(row["RECV_DT"]),
+                        PO_OR_LETTER = Convert.ToString(row["PO_OR_LETTER"]),
+                        VEND_NAME = Convert.ToString(row["VEND_NAME"]),
+                        QTY = Convert.ToInt32(row["QTY"])
                     }).ToList();
                 }
                 if (ds.Tables[4].Rows.Count > 0)
@@ -2312,16 +2314,21 @@ namespace IBS.Repositories
                              t13.CaseNo,
                              t13.PoNo,
                              t13.PoDt,
+                             t13.RecvDt,
+                             t13.PoOrLetter,
                              t05.VendName
                          } into grouped
                          orderby grouped.Key.PoDt descending
                          select new CLientViewAllList
                          {
                              CaseNo = grouped.Key.CaseNo,
-                             Qty = grouped.Sum(x => x.Value),
+                             Value = grouped.Sum(x => x.Value),
                              PONO = grouped.Key.PoNo,
                              PODT = grouped.Key.PoDt,
-                             Vendor = grouped.Key.VendName
+                             RECV_DT = grouped.Key.RecvDt,
+                             Po_Or_Letter = grouped.Key.PoOrLetter,
+                             Vendor = grouped.Key.VendName,
+                             Qty = Convert.ToInt32(grouped.Sum(x => x.Qty))
                          });
             }
             else if (ActionType == "RCC")
