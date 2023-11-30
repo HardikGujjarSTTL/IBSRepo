@@ -2266,7 +2266,7 @@ namespace IBS.Repositories.InspectionBilling
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            if(result == null)
+            if (result == null)
             {
                 ext_delv_dt = "01/01/2001";
             }
@@ -2274,7 +2274,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 ext_delv_dt = result.ExtDelvDt;
             }
-            
+
             INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
             {
@@ -4097,7 +4097,7 @@ namespace IBS.Repositories.InspectionBilling
                                           item.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
                                     select item).FirstOrDefault();
 
-                    if (IcDetail == null)
+                    if (IcDetail.BkNo == null && IcDetail.BkNo == "")
                     {
                         var CallDetails = (from c in context.T18CallDetails
                                            where c.CaseNo == model.CaseNo && c.CallRecvDt == CallRecvDate
@@ -4131,11 +4131,17 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     else
                     {
-                        IcDetail.BkNo = model.DocBkNo;
-                        IcDetail.SetNo = model.DocSetNo;
-                        context.SaveChanges();
+                        using (var conn = (OracleConnection)context.Database.GetDbConnection())
+                        {
+                            conn.Open();
+                            using (var cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandType = CommandType.Text;
+                                cmd.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = '" + CallRecvDate + "' AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
                     }
-                    // Execute the query                    
 
                     var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
 

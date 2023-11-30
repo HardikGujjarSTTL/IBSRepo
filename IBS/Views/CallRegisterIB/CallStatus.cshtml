@@ -193,10 +193,10 @@
                         <label for="Reference">BK & Set No : </label>
                     </td>
                     <td>
-                        <input type="text" class="input" id="BkNo" asp-for="BkNo" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="BkNo" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" class="input" id="SetNo" asp-for="SetNo" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="SetNo" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
                     </td>
                 </tr>
                 @if (Model.ActionType != "C")
@@ -244,13 +244,13 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
-                                <input type="text" id="bknoaccpted" maxlength="100">
+                                <input type="text" id="bknoaccpted" maxlength="4">
                                 <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Set No : </label>
-                                <input type="text" id="setnoaccpted" maxlength="100">
+                                <input type="text" id="setnoaccpted" maxlength="3">
                                 <span asp-validation-for="DocSetNo" class="text-danger"></span>
 
                             </div>

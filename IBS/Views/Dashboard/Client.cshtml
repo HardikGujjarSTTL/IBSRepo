@@ -11,6 +11,7 @@
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
             <div class="col-lg-3">
+                <a class="totalcall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "TC" })">
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -23,8 +24,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="PendingCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "M" })">
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -37,8 +40,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="AcceptedCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "A" })">
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -51,8 +56,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="CancelleCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "C" })">
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -65,10 +72,12 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                 </div>
+                </a>
             </div>
         </div>
         <div class="row admin-dashboard">
             <div class="col-lg-3">
+                <a class="UnderLabCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "U" })">
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -81,8 +90,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="StillUnderInspCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "S" })">
                 <div class="dashboard-box das6Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -95,8 +106,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
+                </a>
             </div>
             <div class="col-lg-3">
+                <a class="StageRejectionCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "T" })">
                 <div class="dashboard-box das7Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -109,6 +122,7 @@
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                 </div>
+                </a>
             </div>
         </div>
     </div>
@@ -214,8 +228,8 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "VWP" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -245,7 +259,7 @@
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
                         <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT.ToString("dd/MM/yyyy")</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
@@ -256,8 +270,8 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientRecentReq.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientRecentReq.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RRS" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -304,8 +318,8 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span> @Model.lstClientRecentPO.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span> @Model.lstClientRecentPO.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RPO" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -345,8 +359,8 @@
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVendConComp.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVendConComp.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RCC" })">View All</a>
     </div>
 </section>
 @section scripts{

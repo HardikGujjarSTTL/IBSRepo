@@ -1,53 +1,44 @@
-﻿@model DashboardModel
+﻿@model IBS.Models.AdminCountListing
 @{
-    ViewData["Title"] = "IE_Dashboard_Detail";
+    ViewData["Title"] = "No. of Total Calls";
 }
 
 <div class="list-inner">
     <div class="tast-list">
+        @*<h3 class="heading3">@ViewData["Title"] </h3>*@
         <h3 class="heading3"><span id="spnHeading"></span> </h3>
     </div>
-    <div>
-        <a asp-action="Index" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
-    </div>
 </div>
-
-<div class="accordion-body" id="body">
+<input type="hidden" asp-for="ActionType" />
+<div class="accordion-body">
     <div class="row my-0">
-        <input asp-for="ActionType" hidden />
-        <div class="col-md-3 mb-3">
-            <div class="reference">
-                <label for="Reference">From</label>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="FromDate">For The Period From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="reference">
-                <label for="Reference">To</label>
+        <div class="col-md-3">
+            <div class="input-search">
+                <label for="ToDate">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                <span class="text-danger field-validation-error" id="spnErrortodt"></span>
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+        <div class="col-md-3">
+            <div class="savenext-btn btnAlign">
+                <button type="button" class="save-btn active" onclick="Search();">Search</button>
             </div>
         </div>
     </div>
 </div>
-
 <section class="table-section">
     <div class="task-listinput">
         <div class="dash-table">
             <table id="dtList" class="table-responsive">
                 <thead>
                     <tr>
-                        @* <th>#</th>
-                        <th>Name of Client</th>
-                        <th>No. of bills</th>
-                        <th>Value (₹)</th>
-                        <th>PO No.</th>*@
                     </tr>
                 </thead>
                 <tbody>
@@ -57,40 +48,45 @@
     </div>
 </section>
 
-@section scripts{
 
+@section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
-
     <script type="text/javascript">
         var Columns = [];
         $(function () {
-
+            debugger
             var currentDate = new Date();
             var financialYearDates = calculateFinancialYearDates(currentDate);
 
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
-
-            debugger
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
-            if (type == "CHP" || type == "CHO") {
-                $("#spnHeading").text("No. of Clients with Highest Payments. ");
-                Columns = [
-                    {
-                        data: '', title: "#", orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "ClientName", title: "Client Name" },
-                    { data: "NoofBills", title: "No. of Bills" },
-                    { data: "Value", title: " Value (₹)" },
-                ]
-            } else if (type == "OPC" || type == "OJC") {
-                $("#spnHeading").text("No. of Oldest Pending Cases. ");
+            if (type == "TC") {
+                $("#spnHeading").text("No. of Total Calls.");
+            }
+            else if (type == "M") {
+                $("#spnHeading").text("No. of Pending Calls.");
+            }
+            else if (type == "A") {
+                $("#spnHeading").text("No. of Accepted Calls.");
+            }
+            else if (type == "C") {
+                $("#spnHeading").text("No. of Cancelled Calls.");
+            }
+            else if (type == "U") {
+                $("#spnHeading").text("No. of Under Lab Testing.");
+            }
+            else if (type == "S") {
+                $("#spnHeading").text("No. of Still Under Inspection.");
+            }
+            else if (type == "T") {
+                $("#spnHeading").text("No. of Stage Rejection.");
+            } 
+
+            if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -99,18 +95,31 @@
                         }
                     },
                     { data: "CaseNo", title: "Case No" },
+                    { data: "PoNo", title: "PO NO" },
                     {
-                        data: "CallDate", title: "Call Date",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                        data: "PoDt", title: "PO DT", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
                             }
                             return data;
                         }
                     },
-                    { data: "PONO", title: "PO NO" },
+                    {
+                        data: "CallRecvDt", title: "Call Recv Dt", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno", title: "Call SNo" },
+                    { data: "CallInstallNo", title: "Call Install No" },
+                    { data: "CallStatus", title: "Call Status" },
+                    { data: "CallLetterNo", title: "Call Letter No" },
+                    { data: "Remarks", title: "Remarks" },
+                    { data: "RegionCode", title: "Region" },
                 ]
-            }
+            } 
             InitializeDatatable();
         });
 
@@ -126,11 +135,14 @@
             };
         }
 
+        function Search() {
+            InitializeDatatable();
+        }
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
-            var TypeOfList = $("#ActionType").val();
+            var ActionType = $("#ActionType").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -143,13 +155,13 @@
                 paging: true,
                 searching: true,
                 ajax: {
-                    url: "@Url.Action("LoadDashboard_Admin_ViewAll_List", "Dashboard")",
+                    url: "@Url.Action("LoadDashboard_Client_List", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, TypeOfList
+                            FromDate, ToDate, ActionType
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -159,6 +171,5 @@
                 "order": [[0, "asc"]]
             });
         }
-
     </script>
 }

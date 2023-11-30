@@ -1,4 +1,4 @@
-﻿@model IBS.Models.AdminCountListing
+﻿@model IBS.Models.CMDFOListing
 @{
     ViewData["Title"] = "No. of Total Calls";
 }
@@ -64,35 +64,26 @@
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
-            if (type == "TC") {
-                $("#spnHeading").text("No. of Total Calls.");
+            if (type == "OSA") {
+                $("#spnHeading").text("Total Outstanding Amount");
             }
-            else if (type == "M") {
-                $("#spnHeading").text("No. of Pending Calls.");
+            else if (type == "SA") {
+                $("#spnHeading").text("Suspense Amount");
             }
-            else if (type == "A") {
-                $("#spnHeading").text("No. of Accepted Calls.");
+            else if (type == "OB") {
+                $("#spnHeading").text("No. of Outstanding bills");
             }
-            else if (type == "C") {
-                $("#spnHeading").text("No. of Cancelled Calls.");
+            else if (type == "TOTI") {
+                $("#spnHeading").text("No. of Total Invoices");
             }
-            else if (type == "U") {
-                $("#spnHeading").text("No. of Under Lab Testing.");
+            else if (type == "FI") {
+                $("#spnHeading").text("No. of Finalized Invoices");
             }
-            else if (type == "S") {
-                $("#spnHeading").text("No. of Still Under Inspection.");
-            }
-            else if (type == "T") {
-                $("#spnHeading").text("No. of Stage Rejection.");
-            } else if (type == "ICNR") {
-                $("#spnHeading").text("Issued IC Not Received in Office.");
-            } else if (type == "TB") {
-                $("#spnHeading").text("No. of Total Bills.");
-            } else if (type == "ICRNB") {
-                $("#spnHeading").text("Issued IC and Received in Office Not Billed IC.");
+            else if (type == "PIF") {
+                $("#spnHeading").text("Pending Invoices for Finalization");
             }
 
-            if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {
+            if (type == "SA") {
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -101,33 +92,20 @@
                         }
                     },
                     { data: "CaseNo", title: "Case No" },
-                    { data: "PoNo", title: "PO NO" },
                     {
-                        data: "PoDt", title: "PO DT", render: function (data, type, row) {
+                        data: "CHQ_DT", title: "CHQ DT", render: function (data, type, row) {
                             if (type === "display" || type === "filter") {
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
                             }
                             return data;
                         }
                     },
-                    {
-                        data: "CallRecvDt", title: "Call Recv Dt", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CallSno", title: "Call SNo" },
-                    { data: "CallInstallNo", title: "Call Install No" },
-                    { data: "CallStatus", title: "Call Status" },
-                    { data: "CallLetterNo", title: "Call Letter No" },
-                    { data: "Remarks", title: "Remarks" },
-                    { data: "IeSname", title: "IE SName" },
-                    { data: "Vendor", title: "Vendor" },
-                    { data: "RegionCode", title: "Region" },
+                    { data: "CHQ_NO", title: "CHQ No" },
+                    { data: "NARRATION", title: "Narration" },
+                    { data: "SUSPENSE_AMT", title: "Suspense Amount" },
+                    { data: "VCHR_NO", title: "Vouchar No" },
                 ]
-            } else if (type == "TB") {
+            } else if (type == "FI" || type == "PIF") {
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -135,20 +113,21 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CaseNo", title: "Case No" },
+                    { data: "BILL_NO", title: "Bill NO" },
                     {
-                        data: "BILLDT", title: "Bill Date", render: function (data, type, row) {
+                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
                             if (type === "display" || type === "filter") {
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
                             }
                             return data;
                         }
                     },
-                    { data: "billamount", title: "Bill Amount" },
-                    { data: "BILLNO", title: "Bill No." },
-                    { data: "Remarks", title: "Remarks" },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "MATERIAL_VALUE", title: "Material Value" },
+                    { data: "BILL_AMOUNT", title: "Bill Amount" },
+                    { data: "REMARKS", title: "Remarks" },
                 ]
-            } else if (type == "ICNR" || type == "ICRNB") {
+            } else if (type == "OB" || type == "TOTI") {
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -156,27 +135,19 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    { data: "BILL_NO", title: "Bill NO" },
+                    {
+                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "CaseNo", title: "Case No" },
-                    {
-                        data: "CallRecvDt", title: "Call Recv Date", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "CallSno", title: "Call Sno" },
-                    { data: "IC_NO", title: "IC NO." },
-                    {
-                        data: "IC_DT", title: "IC Date", render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "BKNO", title: "Book No." },
-                    { data: "SETNO", title: "Set No." },
+                    { data: "MATERIAL_VALUE", title: "Material Value" },
+                    { data: "BILL_AMOUNT", title: "Bill Amount" },
+                    { data: "REMARKS", title: "Remarks" },
                 ]
             }
             InitializeDatatable();
@@ -214,7 +185,7 @@
                 paging: true,
                 searching: true,
                 ajax: {
-                    url: "@Url.Action("LoadDTotalCallListing", "Dashboard")",
+                    url: "@Url.Action("LoadCMDFO_List", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",

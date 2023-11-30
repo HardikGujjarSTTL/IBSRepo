@@ -209,15 +209,15 @@
         <table class="borderGrid">
             <tr>
                 <th>Sr. No.</th>
-                <th>Call S.No</th>
-                <th>Case no</th>
+                <th>Case no</th>                                
                 <th>Call Date</th>
-                <th>Details </th>
+                <th>Call S.No</th>
                 <th>Client </th>
                 <th>IE </th>
                 <th>IE contact No.</th>
                 <th>CM</th>
                 <th>CM Contact no.</th>
+                <th>Status</th>
             </tr>
             @if (Model != null && Model.lstPOCallStatus != null && Model.lstPOCallStatus.Count > 0)
             {
@@ -229,15 +229,15 @@
                         SrNo = SrNo + 1;
                         <tr>
                             <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
+                            <td width="10%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>                                                        
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT.ToString("dd/MM/yyyy")</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>                            
                             <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
                             <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
                             <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
                             <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_NAME</font></td>
                             <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.CO_PHONE_NO</font></td>
+                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.STATUS</font></td>
                         </tr>
                     }
                 }
@@ -270,10 +270,13 @@
         <table class="borderGrid">
             <tr>
                 <th>S. No.</th>
+
+                <th>Case No</th>
                 <th>PO No.</th>
-                <th>Client</th>
-                <th>Details</th>
-                <th>Purchase Order</th>
+                <th>PO Date</th>
+                <th>Recv Date</th>
+                <th>Po/Letter</th>
+                <th>Client</th>                
                 <th>Status</th>
                 @*<th class="action center">Action</th>*@
             </tr>
@@ -287,10 +290,12 @@
                         SrNo = SrNo + 1;
                         <tr>
                             <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
                             <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
-                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.PURCHASE_ORDER</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@(item.PO_DT == null ? "" : Convert.ToDateTime(item.PO_DT).ToString("dd/MM/yyyy"))</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@(item.RECV_DT == null ? "" : Convert.ToDateTime(item.RECV_DT).ToString("dd/MM/yyyy"))</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_OR_LETTER</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>                            
                             <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
                             @*<td class="action center"><a href="#"><span class="fa fa-eye"></span></a> <a href="#"><span class="fa fa-pencil-square-o"></span></a></td>*@
                         </tr>

@@ -147,7 +147,8 @@ namespace IBS.Controllers
 
         public IActionResult CMGeneral()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMGeneralDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult LO()
@@ -354,25 +355,61 @@ namespace IBS.Controllers
             DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
-        public IActionResult Dashboard_Lab_ViewAll_List()
+        
+        public IActionResult CMDARListing()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult LoadDashboard_Lab_ViewAll_List([FromBody] DTParameters dtParameters)
+        public IActionResult GetCMDARListing([FromBody] DTParameters dtParameters)
         {
-            string Regin = GetRegionCode;
-            int userid = UserId;
-            DTResult<DashboardModel> dTResult = new DTResult<DashboardModel>();
-            try
-            {
-                dTResult = dashboardRepository.Dashboard_Lab_ViewAll_List(dtParameters, Regin, UserId);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "Dashboard", "Dashboard_Lab_ViewAll_List", 1, GetIPAddress());
-            }
+            DTResult<CMDARListing> dTResult = dashboardRepository.CMDARListing(dtParameters);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Client_ViewAll_List(string Type)
+        {
+            CLientViewAllList model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<CLientViewAllList> dTResult = dashboardRepository.Dashboard_Client_ViewAll_List(dtParameters, RegionCode, OrgnType, Organisation);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Client_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_List([FromBody] DTParameters dtParameters)
+        {
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_Client_List(dtParameters, Region, OrgnType, Organisation);
+            return Json(dTResult);
+        }
+
+        public IActionResult CMDFO_List(string Type)
+        {
+            CMDFOListing model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadCMDFO_List([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
             return Json(dTResult);
         }
     }

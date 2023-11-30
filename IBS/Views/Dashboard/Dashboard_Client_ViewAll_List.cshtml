@@ -1,4 +1,4 @@
-﻿@model DashboardModel
+﻿@model CLientViewAllList
 @{
     ViewData["Title"] = "IE_Dashboard_Detail";
 }
@@ -8,7 +8,7 @@
         <h3 class="heading3"><span id="spnHeading"></span> </h3>
     </div>
     <div>
-        <a asp-action="Index" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+        <a asp-action="Client" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
     </div>
 </div>
 
@@ -76,21 +76,23 @@
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
-            if (type == "CHP" || type == "CHO") {
-                $("#spnHeading").text("No. of Clients with Highest Payments. ");
+            $("#ActionType").val(type);
+            if (type == "VWP") {
+                $("#spnHeading").text("Vendor wise performance ");
                 Columns = [
                     {
-                        data: '', title: "#", orderable: false, width: '5%',
+                        data: '',title:"#", orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "ClientName", title: "Client Name" },
-                    { data: "NoofBills", title: "No. of Bills" },
-                    { data: "Value", title: " Value (₹)" },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "TotalCalls", title: "Total Calls" },
+                    { data: "CallRejected", title: "Call Rejected" },
+                    { data: "CallCancelled", title: "Call Cancelled" },
                 ]
-            } else if (type == "OPC" || type == "OJC") {
-                $("#spnHeading").text("No. of Oldest Pending Cases. ");
+            } else if (type == "RRS") {
+                $("#spnHeading").text("Recent Request Status  ");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -99,8 +101,7 @@
                         }
                     },
                     { data: "CaseNo", title: "Case No" },
-                    {
-                        data: "CallDate", title: "Call Date",
+                    { data: "CallDate", title: "Call Date",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
@@ -108,7 +109,46 @@
                             return data;
                         }
                     },
-                    { data: "PONO", title: "PO NO" },
+                    { data: "CallSno", title: "Call Sno" },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "IEName", title: "IE Name" },
+                    { data: "Status", title: "Status" },
+                ]
+            } else if (type == "RPO") {
+                $("#spnHeading").text("Recent Purchase order  ");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "Qty", title: "Quantity" },
+                    { data: "PONO", title: "PO No" },
+                    {
+                        data: "PODT", title: "PO Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Vendor", title: "Vendor" },
+                ]
+            } else if (type == "RCC") {
+                $("#spnHeading").text("Recent Consignee Complaints  ");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "NoOfComplaints", title: "Number of complaints" },
                 ]
             }
             InitializeDatatable();
@@ -130,7 +170,7 @@
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
-            var TypeOfList = $("#ActionType").val();
+            var ActionType = $("#ActionType").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -143,13 +183,13 @@
                 paging: true,
                 searching: true,
                 ajax: {
-                    url: "@Url.Action("LoadDashboard_Admin_ViewAll_List", "Dashboard")",
+                    url: "@Url.Action("LoadDashboard_Client_ViewAll_List", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, TypeOfList
+                            FromDate, ToDate, ActionType
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
