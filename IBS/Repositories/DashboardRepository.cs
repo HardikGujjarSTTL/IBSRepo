@@ -1241,7 +1241,7 @@ namespace IBS.Repositories
             par[5] = new OracleParameter("P_RLY_NONRLY", OracleDbType.Varchar2, Rly_NonRly, ParameterDirection.Input);
             par[6] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            return DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COMPLAINT_STATUS", par);
+            return DataAccessDB.GetDataSet("GET_DASHBOARD_COMPLAINT_STATUS", par);
         }
 
         public DTResult<PO_MasterModel> GetPOMasterList(DTParameters dtParameters)
