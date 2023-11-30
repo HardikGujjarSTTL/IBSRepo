@@ -105,7 +105,7 @@
                     { data: "SUSPENSE_AMT", title: "Suspense Amount" },
                     { data: "VCHR_NO", title: "Vouchar No" },
                 ]
-            } else if (type == "TOTI" || type == "FI" || type == "PIF") {
+            } else if (type == "FI" || type == "PIF") {
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -125,7 +125,28 @@
                     { data: "CaseNo", title: "Case No" },
                     { data: "MATERIAL_VALUE", title: "Material Value" },
                     { data: "BILL_AMOUNT", title: "Bill Amount" },
-                    { data: "BILL_STATUS", title: "Bill Status" },
+                    { data: "REMARKS", title: "Remarks" },
+                ]
+            } else if (type == "OB" || type == "TOTI") {
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BILL_NO", title: "Bill NO" },
+                    {
+                        data: "BILL_DT", title: "Bill Date", render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "MATERIAL_VALUE", title: "Material Value" },
+                    { data: "BILL_AMOUNT", title: "Bill Amount" },
                     { data: "REMARKS", title: "Remarks" },
                 ]
             }

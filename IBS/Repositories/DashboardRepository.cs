@@ -984,11 +984,10 @@ namespace IBS.Repositories
                     list = dt.AsEnumerable().Select(row => new CMDFOListing
                     {
                         BILL_NO = Convert.ToString(row["BILL_NO"]),
-                        BILL_DT = Convert.ToDateTime(row["BILL_DT"]),
+                        BILL_DT = Convert.ToDateTime(row["BILLDT"]),
                         CaseNo = Convert.ToString(row["CASE_NO"]),
-                        MATERIAL_VALUE = Convert.ToDecimal(row["MATERIAL_VALUE"]),
-                        BILL_AMOUNT = Convert.ToDecimal(row["BILL_AMOUNT"]),
-                        BILL_STATUS = Convert.ToString(row["BILL_STATUS"]),
+                        MATERIAL_VALUE = Convert.ToDecimal(row["MATVAL"]),
+                        BILL_AMOUNT = Convert.ToDecimal(row["AMOUNT_OUTSTANDING"]),
                         REMARKS = Convert.ToString(row["REMARKS"])
                     }).ToList();
                 }
@@ -997,11 +996,10 @@ namespace IBS.Repositories
                     list = dt.AsEnumerable().Select(row => new CMDFOListing
                     {
                         BILL_NO = Convert.ToString(row["BILL_NO"]),
-                        BILL_DT = Convert.ToDateTime(row["BILL_DT"]),
+                        BILL_DT = Convert.ToDateTime(row["BILLDT"]),
                         CaseNo = Convert.ToString(row["CASE_NO"]),
-                        MATERIAL_VALUE = Convert.ToDecimal(row["MATERIAL_VALUE"]),
-                        BILL_AMOUNT = Convert.ToDecimal(row["BILL_AMOUNT"]),
-                        BILL_STATUS = Convert.ToString(row["BILL_STATUS"]),
+                        MATERIAL_VALUE = Convert.ToDecimal(row["MATVAL"]),
+                        BILL_AMOUNT = Convert.ToDecimal(row["AMOUNT_OUTSTANDING"]),
                         REMARKS = Convert.ToString(row["REMARKS"])
                     }).ToList();
                 }
@@ -1274,25 +1272,40 @@ namespace IBS.Repositories
             }
             else if (ActionType == "ICNR")
             {
-                query = from t20 in context.T20Ics
-                        join t30 in context.T30IcReceiveds
-                        on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
-                        from t30 in t30Group.DefaultIfEmpty()
-                        where t20.CaseNo.StartsWith(Region) &&
-                                   t20.CallRecvDt >= Convert.ToDateTime(FromDate) &&
-                                   t20.CallRecvDt <= Convert.ToDateTime(ToDate) //&& t30 == null
-                        select new AdminCountListing
-                        {
-                            CaseNo = t20.CaseNo,
-                            CallRecvDt = t20.CallRecvDt,
-                            CallSno = t20.CallSno,
-                            IC_NO = t20.IcNo,
-                            IC_DT = t20.IcDt,
-                            BKNO = t20.BkNo,
-                            SETNO = t20.SetNo,
-                        };
+                 query = from t20 in context.T20Ics
+                            join t30 in context.T30IcReceiveds
+                            on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                            from t30 in t30Group.DefaultIfEmpty()
+                            where t20.CaseNo.StartsWith(Region) &&
+                                  t20.CallRecvDt >= Convert.ToDateTime(FromDate) &&
+                                  t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                                  (t30 == null || t20.BkNo != t30.BkNo || t20.SetNo != t30.SetNo)
+                            select new AdminCountListing
+                            {
+                                CaseNo = t20.CaseNo,
+                                CallRecvDt = t20.CallRecvDt,
+                                CallSno = t20.CallSno,
+                                IC_NO = t20.IcNo,
+                                IC_DT = t20.IcDt,
+                                BKNO = t20.BkNo,
+                                SETNO = t20.SetNo,
+                            };
 
                 query.Distinct();
+
+                // query = from t20 in context.T20Ics
+                //            join t30 in context.T30IcReceiveds
+                //            on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                //            from t30 in t30Group.DefaultIfEmpty()
+                //            where t20.CaseNo.StartsWith(Region) && t20.CallRecvDt >= Convert.ToDateTime(FromDate) &&
+                //                                   t20.CallRecvDt <= Convert.ToDateTime(ToDate) && 
+                //                  t30 == null
+                //            select new AdminCountListing
+                //            {
+                //                Indicator = "N", t20.BillNo
+                //            };
+
+                //query.Distinct();
 
             }
             else if (ActionType == "ICRNB")
@@ -1686,7 +1699,7 @@ namespace IBS.Repositories
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            var orderAscendingDirection = false;
 
             string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
             string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;

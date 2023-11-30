@@ -43,7 +43,7 @@
             <table id="dtList" class="table-responsive">
                 <thead>
                     <tr>
-                       @* <th>#</th>
+                        @* <th>#</th>
                         <th>Name of Client</th>
                         <th>No. of bills</th>
                         <th>Value (₹)</th>
@@ -77,63 +77,31 @@
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
             $("#ActionType").val(type);
-            if (type == "CHP") {
+            if (type == "CHP" || type == "CHO") {
                 $("#spnHeading").text("No. of Clients with Highest Payments. ");
                 Columns = [
                     {
-                        data: '',orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "ClientName" ,title:"Client Name"},
-                    { data: "NoofBills", title: "No. of Bills" },
-                    { data: "Value", title: " Value (₹)" },
-                ]
-            } else if (type == "CHO") {
-                $("#spnHeading").text("No. of Clients with Highest Outstanding. ");
-                Columns = [
-                    {
-                        data: '', orderable: false, width: '5%',
+                        data: '', title: "#", orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
                     { data: "ClientName", title: "Client Name" },
-                    { data: "NoofBills" , title: "No. of Bills"},
+                    { data: "NoofBills", title: "No. of Bills" },
                     { data: "Value", title: " Value (₹)" },
                 ]
-            } else if (type == "OPC") {
+            } else if (type == "OPC" || type == "OJC") {
                 $("#spnHeading").text("No. of Oldest Pending Cases. ");
                 Columns = [
                     {
-                        data: '', orderable: false, width: '5%',
+                        data: '', title: "#", orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
                     { data: "CaseNo", title: "Case No" },
-                    { data: "CallDate", title: "Call Date",
-                                     render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
-                    { data: "PONO", title: "PO NO" },
-                ]
-            } else if (type == "OJC") {
-                $("#spnHeading").text("No. of Oldest JI Cases.  ");
-                Columns = [
                     {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    { data: "CaseNo", title: "Case No" },
-                    { data: "CallDate", title: "Call Date",
+                        data: "CallDate", title: "Call Date",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
@@ -159,7 +127,7 @@
             };
         }
 
-       
+
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
@@ -182,7 +150,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate,TypeOfList
+                            FromDate, ToDate, TypeOfList
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
