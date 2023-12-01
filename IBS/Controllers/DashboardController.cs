@@ -423,7 +423,7 @@ namespace IBS.Controllers
         public IActionResult LoadDashboard_CMGeneral_ViewAll_List([FromBody] DTParameters dtParameters)
         {
             string COCD = SessionHelper.UserModelDTO.CoCd.ToString();
-            DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_CMGeneral_ViewAll_List(dtParameters, COCD);
+            DTResult<DashboardModel> dTResult = dashboardRepository.Dashboard_CMGeneral_ViewAll_List(dtParameters, COCD);
             return Json(dTResult);
         }
         
