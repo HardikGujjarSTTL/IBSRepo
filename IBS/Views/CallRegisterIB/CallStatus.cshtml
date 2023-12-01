@@ -533,6 +533,12 @@
                                 $("#ViewPrintIC").css("cursor", "pointer");
                             }
                         }
+                        else{
+                            $('#bknoaccpted').val("");
+                            $('#setnoaccpted').val("");
+                            $('#ViewPrintIC').prop('disabled', true);
+                            $("#ViewPrintIC").css("cursor", "auto");
+                        }
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
