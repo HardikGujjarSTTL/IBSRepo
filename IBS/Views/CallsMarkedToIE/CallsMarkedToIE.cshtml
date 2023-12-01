@@ -195,14 +195,38 @@
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                    var fpath1 = Model.FilePath2 + "/" + @item.CASE_NO + ".TIF";
+                                    var fpath2 = Model.FilePath2 + "/" + @item.CASE_NO + ".pdf";
+                                    var Fpath11 = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".TIF";
+                                    var Fpath22 = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf";
+                                    if (System.IO.File.Exists(fpath1) == true)
+                                    {
+                                        <td align="center">
+                                            <font size="1" face="Verdana">
+                                                <a href=@Fpath11 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                            </font>
+                                        </td>
+                                    }
+                                    else if (System.IO.File.Exists(fpath2) == true)
+                                    {
+                                        <td align="center">
+                                            <font size="1" face="Verdana">
+                                                <a href=@Fpath22 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                            </font>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                    }
+
                                 }
                                 <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
 
                                 @* <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
                                 @if (item.CALL_STATUS == "U")
                                 {
-                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit">Lab Report</a><br/>@D2</font></td>
+                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit">Lab Report</a><br />@D2</font></td>
                                 }
                                 else
                                 {

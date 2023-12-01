@@ -112,9 +112,9 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
+                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. </label>
                         <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
-                        <span asp-validation-for="CallLetterNo" class="text-danger"></span>
+                        @* <span asp-validation-for="CallLetterNo" class="text-danger"></span> *@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -532,17 +532,15 @@
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
 
-            alert(actiontype);
-
             $("#ActionType").val(actiontype);
 
 
             if ($("#ClusterCode").val() == "") {
                 ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
-            else if ($("#CallLetterNo").val() == "") {
-                ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
-            }
+            // else if ($("#CallLetterNo").val() == "") {
+            //     ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
+            // }
             else if ($("#MfgCd").is(":hidden")) {
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
