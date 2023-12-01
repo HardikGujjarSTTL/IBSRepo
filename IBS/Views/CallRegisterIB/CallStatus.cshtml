@@ -524,7 +524,6 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        debugger
                         if(selectedValue == data.Consignee){
                             $('#bknoaccpted').val(data.DocBkNo);
                             $('#setnoaccpted').val(data.DocSetNo);
@@ -1126,7 +1125,6 @@
         function Save() {
 
             var formData = new FormData();
-            debugger
             SaveSingleDocuments("tab-2");
             var bknoaccpted = $('#BkNo').val();
             var setnoaccpted = $('#SetNo').val();
@@ -1136,7 +1134,6 @@
             var ajaxData = AjaxModel();
 
             if (CallStatus == "G" || CallStatus == "T") {
-                debugger
                 var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
 
                 if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {

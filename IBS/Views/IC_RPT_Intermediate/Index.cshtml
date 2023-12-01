@@ -760,7 +760,6 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-                    debugger
                     if (response != null) {
                         Flag_Consignee = response.DP_CONSIGNEE_CD;
                         FillItemDropDown();
@@ -834,7 +833,6 @@
         }
 
         function FillItemDropDown() {
-            debugger
             var Consignee_Cd = $('select#CONSIGNEE_CD option:selected').val();;
             $.get("@Url.Action("FillItemDropDown", "IC_RPT_Intermediate")", { Case_No: Case_No, Call_Recv_Dt: Call_Recv_Dt, Call_SNo: Call_SNo, Consignee_Cd: Consignee_Cd }, function (response) {
                 if (response.length != null) {
