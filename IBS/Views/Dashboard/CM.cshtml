@@ -10,9 +10,9 @@
     </h2>
 </div>
 <div class="admindashboard-section">
-    <div class="admindashboard-wrap cmDash">
-        <div class="row admin-dashboard">
-            <div class="col-lg-4">
+    <div class="admindashboard-wrap">
+        <div class="row ie-dashboard">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CallDeskInfo", "Dashboard", new { Type = "TC" })">
                     <div class="dashboard-box das1Client">
                         <div class="dash-total">
@@ -28,7 +28,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CallDeskInfo", "Dashboard", new { Type = "MCM" })">
                     <div class="dashboard-box das2Client">
                         <div class="dash-total">
@@ -43,7 +43,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CallDeskInfo", "Dashboard", new { Type = "ACM" })">
                     <div class="dashboard-box das3Client">
                         <div class="dash-total">
@@ -58,10 +58,8 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row admin-dashboard">
-
-            <div class="col-lg-4">
+        
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a asp-area="" asp-controller="Dashboard" asp-action="AwaitingForCaseNo">
                     <div class="dashboard-box das4Client">
                         <div class="dash-total">
@@ -78,7 +76,7 @@
                 </a>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CallDeskInfo", "Dashboard", new { Type = "PCR" })">
                     <div class="dashboard-box das5Client">
                         <div class="dash-total">
@@ -93,7 +91,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CallDeskInfo", "Dashboard", new { Type = "POCAM" })">
                     <div class="dashboard-box das6Client">
                         <div class="dash-total">
@@ -166,5 +164,9 @@
                 </tr>
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>

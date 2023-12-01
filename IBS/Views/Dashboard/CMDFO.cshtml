@@ -7,8 +7,8 @@
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap cmDash">
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
+        <div class="row ie-dashboard">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OSA" })">
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
@@ -24,7 +24,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "SA" })">
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
@@ -37,7 +37,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OB" })">
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
@@ -53,7 +53,7 @@
                 </div>
                 </a>
             </div>
-            @*<div class="col-lg-3">
+            @*<div class="col-md-6 col-lg-4 col-xxl-4">
             <div class="dashboard-box das4Client">
             <div class="dash-total">
             <div class="dash-count">
@@ -67,9 +67,8 @@
             <div class="total-icons"><img src="~/images/pending-invoice-for-finalization-icon.svg" alt="Inspection Pending"> </div>
             </div>
             </div>*@
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
+       
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "TOTI" })">
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
@@ -85,7 +84,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "FI" })">
                 <div class="dashboard-box das6Client">
                     <div class="dash-total">
@@ -101,7 +100,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "PIF" })">
                 <div class="dashboard-box das7Client">
                     <div class="dash-total">
@@ -261,6 +260,10 @@
             }
         </table>
     </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMDFO_ViewAll_List", "Dashboard", new { Type = "BILLC" })">View All</a>
+    </div>
 </section>
 <section class="table-section">
     <div class="table-title">
@@ -295,6 +298,10 @@
                 }
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMDFO_ViewAll_List", "Dashboard", new { Type = "OC" })">View All</a>
     </div>
 </section>
 <section class="table-section">

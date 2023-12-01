@@ -48,19 +48,20 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .menuCollepase.menuDisplayNone { margin-left: 0; visibility: visible; opacity: 1; }
 .left-side-collapsed #sidebar, .ipadView #sidebar { display: none; }
 .mobi_logoSection { display: block; position: absolute; top: 8px; left: 15px; z-index: 2; }
-.topLinksAndSearch { background:#081e40; height: 75px; padding: 9px 0; }
+.topLinksAndSearch {padding: 9px 0; }
 .navbar-toggle { height: 33px; width: 33px;line-height: 37px;font-size: 34px; }
 .navBtn, .left-side-collapsed .navBtn{ right:0;left: 208px; top:21px;  }
-#sidebar{ top: 75px; z-index: 22; }
+#sidebar{ z-index: 22; }
 .logoSection { }
 #header { padding: 0px; display:inherit; }
-.userDetail h4, a.openDrpPopup i, .userDetail p{ color: #fff; }
+.userDetail h4, a.openDrpPopup i, .userDetail p{}
 .topLinksAndSearch .userTopLinks{  padding: 4px 0; }
 .left-side-opend #sidebar { display: block; }
 .left-side-collapsed.nav-hover #sidebar, .left-side-collapsed.ipad #sidebar { display: block; left: -89px; }
 .navbar-toggle{ background: transparent; }
 .search input { background: transparent;border: 1px solid #c7c7c7; }
 .search .fa{ color: #c7c7c7; }
+.userTopLinks{ display:none;}
 }
 @media only screen and (max-width:991px) {
     .tab-content>.tab-pane { display: block; opacity: 1; }
@@ -158,7 +159,7 @@ tast-date{ margin-top:15px; }
 }
 @media only screen and (max-width:479px) {
 .dropPopup { margin-right: 0; top: 56px; width: 95%; margin: 0 2.5%; }
-.topLinksAndSearch{ padding: 0 7px;height: 55px; }
+.topLinksAndSearch{ padding:10px; justify-content:space-between;}
 .topLinksAndSearch .userTopLinks li { position: static;  padding: 0;}
 .topLinksAndSearch li{ padding: 0; }
 .topLinksAndSearch .userTopLinks{ margin-left: 0;padding: 0; }
@@ -176,8 +177,8 @@ tast-date{ margin-top:15px; }
 .list-inner .tast-list h2 { margin: 15px 0; }
 .mobi_logoSection img { width: 124px;height: 37px; }
 .userDetail{ margin-left: 0; padding: 0; width:auto; }
-.userDetail .dropPopup { top: 22px; right: 0; }
-.dropPopup::before{ right:15px;}
+.userDetail .dropPopup { top: 52px; left: 0; right:inherit; }
+.dropPopup::before{ left:5px; right:inherit;}
 .logoSection a{ padding:5px 0; display:block;}
 .graph-section .datefrom .from-celender, .table-section .datefrom .from-celender{ margin-right:0!important}
 .countBlock, .radioListForm, .savenext-btn{flex-direction:column}

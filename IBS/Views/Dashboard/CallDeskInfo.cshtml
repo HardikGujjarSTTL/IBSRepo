@@ -86,12 +86,11 @@
                         <th>#</th>
                         <th>Case No.</th>
                         <th>Call Date</th>
-                        <th>Call SNo.</th>
+                        <th>Call Letter No.</th>
+                        <th>Call Letter Date</th>
+                        <th>Call Sno.</th>
+                        <th>Remarks</th>
                         <th>Call Status</th>
-                        <th>From IE</th>
-                        <th>To IE</th>
-                        <th>Initiated By</th>
-                        <th>Initiated Datetime</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -352,21 +351,18 @@
                             return data;
                         }
                     },
-                    { data: "CallSno" },
-                    { data: "CallRemarkStatus" },
-                    { data: "FrIeName" },
-                    { data: "ToIeName" },
-                    { data: "UserName" },
-                    {
-                        data: "RemInitDatetime",
+                    { data: "CallLetterNo" },
+                    { data: "CallLetterDt",
                         render: function (data, type, row) {
                             if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "";
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
                             return data;
                         }
                     },
-
+                    { data: "CallSno" },
+                    { data: "Remarks" },
+                    { data: "CallStatus" },
                 ],
                 "order": [[0, "asc"]]
             });
