@@ -9,7 +9,7 @@
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
-        <div class="row admin-dashboard">
+        <div class="row ie-dashboard">
             <div class="col-lg-3">
                 <a class="totalcall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "TC" })">
                     <div class="dashboard-box das1Client">
@@ -74,8 +74,6 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row admin-dashboard">
             <div class="col-lg-3">
                 <a class="UnderLabCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "U" })">
                     <div class="dashboard-box das5Client">
@@ -109,7 +107,7 @@
                 </a>
             </div>
             <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "T" })">
+                <a href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "T" })">
                     <div class="dashboard-box das7Client">
                         <div class="dash-total">
                             <div class="dash-count">
