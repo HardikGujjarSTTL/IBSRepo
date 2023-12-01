@@ -27,7 +27,7 @@
                 var IE_SrNo = 0;
                 if (Model.IEWisePerformance.Count() > 0)
                 {
-                    foreach (var item in Model.IEWisePerformance)
+                    foreach (var item in Model.IEWisePerformance.Take(10))
                     {
                         IE_SrNo = IE_SrNo + 1;
                         <tr>
@@ -51,6 +51,10 @@
                 }
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "IEP" })">View All</a>
     </div>
 </section>
 <section>

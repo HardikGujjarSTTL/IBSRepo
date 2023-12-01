@@ -451,7 +451,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDashboard_CM_JI_ViewAll_List([FromBody] DTParameters dtParameters)
         {            
-            DTResult<CM_JI_ViewAll_Model> dTResult = dashboardRepository.Dashboard_CM_JI_ViewAll_List(dtParameters);
+            DTResult<CM_JI_ViewAll_Model> dTResult = dashboardRepository.Dashboard_CM_JI_ViewAll_List(dtParameters, SessionHelper.UserModelDTO.CoCd);
             return Json(dTResult);
         }
 
