@@ -44,7 +44,7 @@ namespace IBS.Interfaces
         DashboardModel GetCMJIDDashBoard(int CO_CD);
         DashboardModel GetCMGeneralDashBoard(int CO_CD);
         DashboardModel GetCMDARDashBoard(int CO_CD);
-        DTResult<CM_JI_ViewAll_Model> Dashboard_CM_JI_ViewAll_List(DTParameters dtParameters);
+        DTResult<CM_JI_ViewAll_Model> Dashboard_CM_JI_ViewAll_List(DTParameters dtParameters, int CO_CD);
         #endregion
         #region CM DFO Dashboard
         DashboardModel GetCMDFODashBoard(int CO_CD);

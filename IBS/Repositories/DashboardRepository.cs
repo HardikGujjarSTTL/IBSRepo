@@ -2902,7 +2902,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<CM_JI_ViewAll_Model> Dashboard_CM_JI_ViewAll_List(DTParameters dtParameters)
+        public DTResult<CM_JI_ViewAll_Model> Dashboard_CM_JI_ViewAll_List(DTParameters dtParameters, int CO_CD)
         {
             DTResult<CM_JI_ViewAll_Model> dTResult = new() { draw = 0 };
             IQueryable<CM_JI_ViewAll_Model>? query = null;
@@ -2933,9 +2933,9 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "" || orderCriteria == null)
                 {
-                    if (ActionType == "OPJC") { orderCriteria = "COMPLAINT_DT"; orderAscendingDirection = true; }
+                    if (ActionType == "OPJC") { orderCriteria = "COMPLAINT_DT"; }
                     else if (ActionType == "ICC" || ActionType == "VCC" || ActionType == "CCC") { orderCriteria = "NO_OF_CONSINEE_COMPLAINTS"; }
-
+                    else if (ActionType == "IEP") { orderCriteria = "TOTAL_CALL"; }                    
                 }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
@@ -2943,20 +2943,36 @@ namespace IBS.Repositories
             {
                 if (ActionType == "OPJC") { orderCriteria = "COMPLAINT_DT"; }
                 else if (ActionType == "ICC" || ActionType == "VCC" || ActionType == "CCC") { orderCriteria = "NO_OF_CONSINEE_COMPLAINTS"; }
+                else if (ActionType == "IEP") { orderCriteria = "TOTAL_CALL"; }
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[4];
+            OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_TYPE", OracleDbType.Varchar2, ActionType, ParameterDirection.Input);
             par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Date, FromDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_TODATE", OracleDbType.Date, ToDate, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD_VIEWALL_LIST", par);
             DataTable dt = ds.Tables[0];
             List<CM_JI_ViewAll_Model> list = new List<CM_JI_ViewAll_Model>();
 
-            if (ActionType == "OPJC")
+            if(ActionType == "IEP")
+            {
+                list = dt.AsEnumerable().Select(row => new CM_JI_ViewAll_Model
+                {
+                    IE_NAME = Convert.ToString(row["IE_NAME"]),
+                    TOTAL_CALL = Convert.ToInt32(row["TOTAL_CALL"]),
+                    PENDING_CALL = Convert.ToInt32(row["PENDING_CALL"]),
+                    ACCEPTED_CALL = Convert.ToInt32(row["ACCEPTED_CALL"]),
+                    CANCELLED_CALL = Convert.ToInt32(row["CANCELLED_CALL"]),
+                    UNDER_LAB_CALL = Convert.ToInt32(row["UNDER_LAB_CALL"]),
+                    STILL_INSP_CALL = Convert.ToInt32(row["STILL_INSP_CALL"]),
+                    STAGE_REJECTION_CALL = Convert.ToInt32(row["STAGE_REJECTION_CALL"])
+                }).ToList();
+            }
+            else if (ActionType == "OPJC")
             {
                 list = dt.AsEnumerable().Select(row => new CM_JI_ViewAll_Model
                 {

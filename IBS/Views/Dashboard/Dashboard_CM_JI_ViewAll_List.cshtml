@@ -76,7 +76,26 @@
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
             $("#ActionType").val(type);
-            if (type == "OPJC") {
+            if (type == "IEP") {
+                $("#spnHeading").text("IE Wise Perfomance");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "IE_NAME", title: "IE" },
+                    { data: "TOTAL_CALL", title: "Total Call" },
+                    { data: "PENDING_CALL", title: "Pending Call" },
+                    { data: "ACCEPTED_CALL", title: "Accepted Call" },
+                    { data: "CANCELLED_CALL", title: "Cancelled Call" },
+                    { data: "UNDER_LAB_CALL", title: "Under Lab Testing Call" },
+                    { data: "STILL_INSP_CALL", title: "Still Under Inspection Call" },
+                    { data: "STAGE_REJECTION_CALL", title: "Stage Rejection Call" },
+                ]
+            }
+            else if (type == "OPJC") {
                 $("#spnHeading").text("Oldest Pending Cases");
                 Columns = [
                     {

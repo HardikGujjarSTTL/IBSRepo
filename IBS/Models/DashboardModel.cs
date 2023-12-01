@@ -544,5 +544,15 @@
         public string NAME { get; set; }
         public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
         #endregion
+
+        #region IE Wise Performance        
+        public int TOTAL_CALL { get; set; }
+        public int PENDING_CALL { get; set; }
+        public int ACCEPTED_CALL { get; set; }
+        public int CANCELLED_CALL { get; set; }
+        public int UNDER_LAB_CALL { get; set; }
+        public int STILL_INSP_CALL { get; set; }
+        public int STAGE_REJECTION_CALL { get; set; }
+        #endregion
     }
 }
