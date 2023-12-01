@@ -478,6 +478,7 @@ namespace IBS.Controllers.Vendor
             }
             catch (Exception ex)
             {
+                AlertDanger("Case Not found!!!");
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "VendorCallRegister", 1, GetIPAddress());
             }
             return View(model);

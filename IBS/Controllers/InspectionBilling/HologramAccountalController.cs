@@ -194,7 +194,7 @@ namespace IBS.Controllers.InspectionBilling
                 var userName = Convert.ToString(GetUserInfo.UserName);
                 var userID = Convert.ToInt32(GetUserInfo.UserID);
                 var region = Convert.ToString(GetUserInfo.Region);
-                Model.USER_NAME = userName;
+                Model.USER_NAME = userName.Substring(0,8);
                 Model.USER_ID = userID;
                 Model.HG_REGION = region;
                 message = hologramaccountRepository.CheckDuplicateHologram(Model);

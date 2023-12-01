@@ -169,12 +169,11 @@
             $.get("@Url.Action("GetPODetails", "VendorCallRegister")", $.param(myObject), function (response) {
                 if (response.status) {
                     if (response.responseText == "0") {
+                        $('input[name=CallStage]').attr("disabled", true);
                         $("#CallStage_F").prop('checked', true);
                         $('input[name="CallStage"]:checked').val("F");
-                        $('input[name=CallStage]').attr("disabled", true);
                     }
-                    else
-                    {
+                    else {
                         $("#CallStage_F").prop('checked', true);
                         $('input[name=CallStage]').attr("disabled", false);
                     }

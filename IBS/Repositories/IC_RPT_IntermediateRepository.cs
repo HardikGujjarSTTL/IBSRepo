@@ -321,7 +321,8 @@ namespace IBS.Repositories
                          LAB_TST_RECT_DT = ic.LabTstRectDt == null ? "" : Convert.ToDateTime(ic.LabTstRectDt).ToString("dd/MM/yyyy"),
                          PASSED_INST_NO = ic.PassedInstNo,
                          REMARK = ic.Remark,
-                         HOLOGRAM = ic.Hologram
+                         HOLOGRAM = ic.Hologram,
+                         DP_CONSIGNEE_CD = Convert.ToString(ic.ConsigneeCd)
                      }).FirstOrDefault();
             // Execute the query and retrieve the results
             //var results = query.ToList();
