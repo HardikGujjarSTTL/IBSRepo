@@ -19,6 +19,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
+using NuGet.Protocol.Plugins;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -3241,6 +3242,17 @@ namespace IBS.Repositories.InspectionBilling
                                   && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
                                   && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
                                   .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+
+                    var ICTYPE = context.T10IcBooksets
+                                .Where(item => item.BkNo == model.BkNo && item.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                .Select(item => item.Ictype)
+                                .FirstOrDefault();
+
+                    if(ICTYPE == "F")
+                    {
+                        model.AlertMsg = "This Book number and Set number are Finalized.";
+                        return model.AlertMsg;
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
@@ -4097,8 +4109,9 @@ namespace IBS.Repositories.InspectionBilling
                                           item.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
                                     select item).FirstOrDefault();
 
-                    if (IcDetail.BkNo == null && IcDetail.BkNo == "")
+                    if (IcDetail == null)
                     {
+
                         var CallDetails = (from c in context.T18CallDetails
                                            where c.CaseNo == model.CaseNo && c.CallRecvDt == CallRecvDate
                                            && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
@@ -4128,20 +4141,11 @@ namespace IBS.Repositories.InspectionBilling
 
                             }
                         }
+
+
                     }
                     else
                     {
-                        //using (var conn = (OracleConnection)context.Database.GetDbConnection())
-                        //{
-                        //    conn.Open();
-                        //    using (var cmd = conn.CreateCommand())
-                        //    {
-                        //        cmd.CommandType = CommandType.Text;
-                        //        cmd.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
-                        //        cmd.ExecuteNonQuery();
-                        //    }
-                        //}
-
                         using (var command = context.Database.GetDbConnection().CreateCommand())
                         {
                             bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
@@ -5089,7 +5093,7 @@ namespace IBS.Repositories.InspectionBilling
             using (var command = cont.Database.GetDbConnection().CreateCommand())
             {
                 var trans = cont.Database.BeginTransaction();
-                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
                 if (!wasOpen) command.Connection.Open();
                 try
                 {
