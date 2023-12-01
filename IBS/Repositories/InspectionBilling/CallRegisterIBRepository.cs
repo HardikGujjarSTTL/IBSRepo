@@ -3248,7 +3248,7 @@ namespace IBS.Repositories.InspectionBilling
                                 .Select(item => item.Ictype)
                                 .FirstOrDefault();
 
-                    if(ICTYPE == "F")
+                    if (ICTYPE == "F")
                     {
                         model.AlertMsg = "This Book number and Set number are Finalized.";
                         return model.AlertMsg;
@@ -4853,7 +4853,8 @@ namespace IBS.Repositories.InspectionBilling
             var queryResult = context.IcIntermediates
                          .Where(ici => ici.CaseNo == CaseNo &&
                                        ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                       ici.CallSno == CallSno)
+                                       ici.CallSno == CallSno && 
+                                       ici.ConsigneeCd == selectedConsigneeCd)
                          .OrderByDescending(ici => ici.Datetime)
                          .FirstOrDefault();
 
@@ -4861,13 +4862,13 @@ namespace IBS.Repositories.InspectionBilling
             {
                 model.DocBkNo = queryResult.BkNo;
                 model.DocSetNo = queryResult.SetNo;
-
+                model.Consignee = Convert.ToString(queryResult.ConsigneeCd);
             }
             else
             {
                 model.DocBkNo = "";
                 model.DocSetNo = "";
-
+                model.Consignee = "";
             }
             return model;
         }

@@ -524,11 +524,14 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#bknoaccpted').val(data.DocBkNo);
-                        $('#setnoaccpted').val(data.DocSetNo);
-                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
-                            $('#ViewPrintIC').prop('disabled', false);
-                            $("#ViewPrintIC").css("cursor", "pointer");
+                        debugger
+                        if(selectedValue == data.Consignee){
+                            $('#bknoaccpted').val(data.DocBkNo);
+                            $('#setnoaccpted').val(data.DocSetNo);
+                            if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                                $('#ViewPrintIC').prop('disabled', false);
+                                $("#ViewPrintIC").css("cursor", "pointer");
+                            }
                         }
                     },
                     error: function () {
