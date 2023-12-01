@@ -1,0 +1,1093 @@
+----------------------------------------------------- Start ALL Dashboard COMPLAINTS STATUS SP -----------------------------------------------------
+create or replace PROCEDURE GET_DASHBOARD_COMPLAINT_STATUS
+(
+  P_ROLE_NAME IN VARCHAR2,
+  P_REGION IN VARCHAR2,  
+  P_IE_CD IN NUMBER,
+  P_VEND_CD IN NUMBER,
+  P_RLY_CD IN VARCHAR2,
+  P_RLY_NONRLY IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR  
+) AS 
+    str VARCHAR2(4000);
+    strParam VARCHAR2(50);
+    strJoin VARCHAR2(100);
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --TO_CHAR(SYSDATE,'DD/MM/YYYY');
+    
+    strJoin := '';
+    IF P_ROLE_NAME = 'admin' THEN
+        strParam := '''' || P_REGION || ''' REGION, ';
+    ELSIF P_ROLE_NAME = 'inspection engineer (ie)' THEN
+        strParam := P_IE_CD || ' IECD, ';
+    ELSIF P_ROLE_NAME = 'vendor' THEN
+        strParam := P_VEND_CD || ' VENDOR, ';
+    ELSIF P_ROLE_NAME = 'client' THEN
+        strParam := '''' || P_RLY_CD || ''' RLY_CD,'''|| P_RLY_NONRLY ||''' RLY_NONRLY, ';
+        strJoin := 'JOIN T13_PO_MASTER T13 ON T40.CASE_NO = T13.CASE_NO';
+    END IF;
+    DBMS_OUTPUT.PUT_LINE(strParam);
+    DBMS_OUTPUT.PUT_LINE('-----------');
+    str := 'SELECT '||strParam||''  ||
+                'NVL(SUM(CASE WHEN NVL(T40.JI_STATUS_CD,0) = 0 THEN 1 ELSE 0 END),0) PENDING, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 1 THEN 1 ELSE 0 END),0) ACCEPTED, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 2 THEN 1 ELSE 0 END),0) UPHELD, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 3 THEN 1 ELSE 0 END),0) SORTING, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 4 THEN 1 ELSE 0 END),0) RECTIFICATION, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 5 THEN 1 ELSE 0 END),0) PRICE_REDUCTION, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 6 THEN 1 ELSE 0 END),0) LIFTED_BEFORE_JI, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 7 THEN 1 ELSE 0 END),0) TRANSIT_DEMANGE, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 8 THEN 1 ELSE 0 END),0) UNSTAMPED, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 9 THEN 1 ELSE 0 END),0) NOT_ON_RITES, ' ||
+                'NVL(SUM(CASE WHEN T40.JI_STATUS_CD = 10 THEN 1 ELSE 0 END),0) DELETED ' ||
+            'FROM T40_CONSIGNEE_COMPLAINTS T40 ' ||
+            'JOIN T39_JI_STATUS_CODES T39 ON NVL(T40.JI_STATUS_CD,0) = T39.JI_STATUS_CD ' ||
+            '' ||strJoin || '' || ' ' ||
+            'WHERE T40.COMPLAINT_DT BETWEEN '''||P_FROMDATE||''' AND '''||P_TODATE||''' ';
+    IF P_ROLE_NAME = 'admin' THEN
+        str := str || 'AND T40.JI_REGION =  ''' || P_REGION || ''' ';    
+    ELSIF P_ROLE_NAME = 'inspection engineer (ie)' THEN
+        str := str || 'AND T40.IE_CD =  ' || P_IE_CD || ' ';
+    ELSIF P_ROLE_NAME = 'vendor' THEN
+        str := str || 'AND T40.VEND_CD =  ' || P_VEND_CD || ' ';
+    ELSIF P_ROLE_NAME = 'client' THEN
+        str := str || 'AND T13.RLY_CD = ''' || P_RLY_CD || ''' AND T13.RLY_NONRLY = ''' || P_RLY_NONRLY || ''' ';
+    END IF;
+    DBMS_OUTPUT.PUT_LINE(str);
+    OPEN P_RESULT_CURSOR FOR str;    
+END;
+----------------------------------------------------- End ALL Dashboard COMPLAINTS STATUS SP -----------------------------------------------------
+
+
+----------------------------------------------------- Start Client Dashboard SP -----------------------------------------------------
+create or replace PROCEDURE GET_CLIENT_DASHBOARD
+(
+  P_RLY_CD IN VARCHAR2,
+  P_RLY_NONRLY IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR,
+  P_RESULT_VND_WISE_PER OUT SYS_REFCURSOR,
+  P_RESULT_REC_REQ OUT SYS_REFCURSOR,
+  P_RESULT_REC_PO OUT SYS_REFCURSOR,
+  P_RESULT_VND_CONS_COMP OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE;
+    
+    -- Get Client Dashboard Count
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  RLY_CD,
+            RLY_NONRLY,
+            SUM(TOTAL_CALL) TOTAL_CALL,
+            SUM(PENDING_CALL) PENDING_CALL,
+            SUM(ACCEPTED_CALL) ACCEPTED_CALL,
+            SUM(CANCELLED_CALL) CANCELLED_CALL, 
+            SUM(UNDER_LAB_TESTING) UNDER_LAB_TESTING, 
+            SUM(STILL_UNDER_INSPECTION) STILL_UNDER_INSPECTION, 
+            SUM(STAGE_REJECTION) STAGE_REJECTION           
+    FROM (
+        SELECT  P_RLY_CD RLY_CD,
+                P_RLY_NONRLY RLY_NONRLY,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION                
+        FROM T17_CALL_REGISTER t17
+        JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+        WHERE t13.RLY_CD = P_RLY_CD 
+        AND t13.RLY_NONRLY = P_RLY_NONRLY
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+--        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+--        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
+        GROUP BY t13.RLY_CD, t13.RLY_NONRLY 
+        UNION
+        SELECT  P_RLY_CD RLY_CD,
+                P_RLY_NONRLY RLY_NONRLY,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                COUNT(t17.CASE_NO) ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION                
+        FROM T47_IE_WORK_PLAN t47
+        JOIN T17_CALL_REGISTER t17 ON t47.CASE_NO = t17.CASE_NO AND t47.CALL_RECV_DT = t17.CALL_RECV_DT AND t47.CALL_SNO = t17.CALL_SNO
+        JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+        WHERE TRIM(t17.CALL_STATUS) = 'A'
+        AND t13.RLY_CD = P_RLY_CD 
+        AND t13.RLY_NONRLY = P_RLY_NONRLY
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+--        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+--        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')        
+        GROUP BY t13.RLY_CD, t13.RLY_NONRLY
+    ) A
+    GROUP BY A.RLY_CD, A.RLY_NONRLY;
+    
+    -- Get Vendor wise Performance Data
+    OPEN P_RESULT_VND_WISE_PER FOR
+    SELECT  RLY_CD,
+            RLY_NONRLY,
+            VEND_NAME,
+            TOTAL_CALL,
+            REJECTED_CALL,
+            CANCELLED_CALL
+    FROM (
+        SELECT
+            P_RLY_CD AS RLY_CD,
+            P_RLY_NONRLY AS RLY_NONRLY,
+            t05.VEND_NAME,
+            COUNT(t17.CASE_NO) AS TOTAL_CALL,
+            SUM(CASE WHEN (t17.CALL_STATUS = 'T' OR t17.CALL_STATUS = 'R') THEN 1 ELSE 0 END) AS REJECTED_CALL,
+            SUM(CASE WHEN t17.CALL_STATUS = 'C' THEN 1 ELSE 0 END) AS CANCELLED_CALL                        
+        FROM T17_CALL_REGISTER t17
+        JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+        JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD 
+        WHERE t13.RLY_CD = P_RLY_CD
+        AND t13.RLY_NONRLY = P_RLY_NONRLY
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY P_RLY_CD, P_RLY_NONRLY, t05.VEND_NAME
+    ) VP
+    ORDER BY VP.TOTAL_CALL DESC;
+    
+    -- Get Recent Request Data
+    OPEN P_RESULT_REC_REQ FOR
+    SELECT  t17.CASE_NO,
+            t17.CALL_RECV_DT,
+            t17.CALL_SNO,
+            t05.VEND_NAME,
+            '' DETAILS,
+            t09.IE_NAME,
+            t21.CALL_STATUS_DESC CALL_STATUS
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+    JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+    JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t13.RLY_CD = P_RLY_CD
+    AND t13.RLY_NONRLY = P_RLY_NONRLY
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY t17.CALL_RECV_DT DESC;
+    
+    -- Get Recent Purchase Order Data
+    OPEN P_RESULT_REC_PO FOR
+    SELECT  t13.CASE_NO,
+            SUM(t15.VALUE) VALUE ,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.VEND_NAME
+    FROM  T13_PO_MASTER t13 
+    JOIN T15_PO_DETAIL t15 ON t13.CASE_NO = t15.CASE_NO
+    JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD
+    WHERE t13.RLY_CD = P_RLY_CD
+    AND t13.RLY_NONRLY = P_RLY_NONRLY
+    AND t13.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+    GROUP BY t13.CASE_NO,        
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.VEND_NAME
+    ORDER BY t13.PO_DT DESC;
+    
+    -- Get Vendor With Consignee Compalints Data
+    OPEN P_RESULT_VND_CONS_COMP FOR
+    SELECT VEND_NAME,NO_OF_COMPLAINTS
+    FROM (
+        SELECT
+            t05.VEND_NAME,
+            COUNT(c.CASE_NO) NO_OF_COMPLAINTS    
+        FROM T13_PO_MASTER t13
+        JOIN T20_IC t20 ON t13.CASE_NO = t20.CASE_NO
+        JOIN T40_CONSIGNEE_COMPLAINTS c ON t20.CASE_NO = c.CASE_NO
+        JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD
+        WHERE t13.RLY_CD = P_RLY_CD
+        AND t13.RLY_NONRLY = P_RLY_NONRLY       
+        AND t13.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY t05.VEND_NAME
+    ) VCM
+    ORDER BY VCM.NO_OF_COMPLAINTS DESC;
+END;
+
+create or replace PROCEDURE GET_CLIENT_DASHBOARD_RECENT_PO 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONRLY IN VARCHAR2, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE;
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t13.CASE_NO,
+            SUM(t15.VALUE) VALUE ,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.VEND_NAME
+    FROM  T13_PO_MASTER t13 
+    JOIN T15_PO_DETAIL t15 ON t13.CASE_NO = t15.CASE_NO
+    JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD
+    WHERE t13.RLY_CD = P_RLY_CD
+    AND t13.RLY_NONRLY = P_RLY_NONRLY
+    AND t13.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+    GROUP BY t13.CASE_NO,        
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.VEND_NAME
+    ORDER BY t13.PO_DT DESC;
+END;
+
+create or replace PROCEDURE GET_CLIENT_DASHBOARD_RECENT_REQUEST 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONRLY IN VARCHAR2, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE;
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t17.CASE_NO,
+            t17.CALL_RECV_DT,
+            t17.CALL_SNO,
+            t05.VEND_NAME,
+            '' DETAILS,
+            t09.IE_NAME,
+            t21.CALL_STATUS_DESC CALL_STATUS
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+    JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+    JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t13.RLY_CD = P_RLY_CD
+    AND t13.RLY_NONRLY = P_RLY_NONRLY
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY t17.CALL_RECV_DT DESC;
+END;
+
+create or replace PROCEDURE GET_CLIENT_DASHBOARD_VENDOR_CONSIGNEE_COMPLAINTS 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONRLY IN VARCHAR2, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE;
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT VEND_NAME,NO_OF_COMPLAINTS
+    FROM (
+        SELECT
+            t05.VEND_NAME,
+            COUNT(c.CASE_NO) NO_OF_COMPLAINTS    
+        FROM T13_PO_MASTER t13
+        JOIN T20_IC t20 ON t13.CASE_NO = t20.CASE_NO
+        JOIN T40_CONSIGNEE_COMPLAINTS c ON t20.CASE_NO = c.CASE_NO
+        JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD
+        WHERE t13.RLY_CD = P_RLY_CD
+        AND t13.RLY_NONRLY = P_RLY_NONRLY       
+        AND t13.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY t05.VEND_NAME
+    ) VCM
+    ORDER BY VCM.NO_OF_COMPLAINTS DESC;
+--    ORDER BY c.CASE_NO, c.COMPLAINT_ID ASC;
+END;
+
+create or replace PROCEDURE GET_CLIENT_DASHBOARD_VENDOR_WISE_PERFORMANCE 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONRLY IN VARCHAR2, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE;
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  RLY_CD,
+            RLY_NONRLY,
+            VEND_NAME,
+            TOTAL_CALL,
+            REJECTED_CALL,
+            CANCELLED_CALL
+    FROM (
+        SELECT
+            P_RLY_CD AS RLY_CD,
+            P_RLY_NONRLY AS RLY_NONRLY,
+            t05.VEND_NAME,
+            COUNT(t17.CASE_NO) AS TOTAL_CALL,
+            SUM(CASE WHEN (t17.CALL_STATUS = 'T' OR t17.CALL_STATUS = 'R') THEN 1 ELSE 0 END) AS REJECTED_CALL,
+            SUM(CASE WHEN t17.CALL_STATUS = 'C' THEN 1 ELSE 0 END) AS CANCELLED_CALL                        
+        FROM T17_CALL_REGISTER t17
+        JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+        JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD 
+        WHERE t13.RLY_CD = P_RLY_CD
+        AND t13.RLY_NONRLY = P_RLY_NONRLY
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY P_RLY_CD, P_RLY_NONRLY, t05.VEND_NAME
+    ) VP
+    ORDER BY VP.TOTAL_CALL DESC;
+END;
+----------------------------------------------------- End Client Dashboard SP -----------------------------------------------------
+
+----------------------------------------------------- Start CM DFO Dashboard SP -----------------------------------------------------
+create or replace PROCEDURE GET_CM_DFO_DASHBOARD 
+(
+  P_CO_CD IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR,
+  P_RESULT_BILLING_CLIENT OUT SYS_REFCURSOR,
+  P_RESULT_OUTSTANDING_CLIENT OUT SYS_REFCURSOR,
+  P_RESULT_BULLING_COMPARISON OUT SYS_REFCURSOR,
+  P_RESULT_SECTOR_BILLING OUT SYS_REFCURSOR,
+  P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE OUT SYS_REFCURSOR
+) AS
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+    
+    P_FY2_STARTDATE DATE;
+    P_FY2_ENDDATE DATE;
+    P_FY3_STARTDATE DATE;
+    P_FY3_ENDDATE DATE;
+    
+    P_CURR_FY_ENDDATE  DATE;
+    P_CURR_FY2_ENDDATE  DATE;
+    P_CURR_FY3_ENDDATE  DATE;
+BEGIN
+    
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := SYSDATE;    
+    P_CURR_FY_ENDDATE := GET_FINANCIAL_YEAR_END_DATE(); --TO_CHAR(ADD_MONTHS( TO_DATE('31/03/' || TO_CHAR(TRUNC(SYSDATE, 'YYYY'), 'YYYY'),'DD/MM/YYYY'),12),'DD/MM/YYYY');
+
+    -- START GET CURRENT PREVIOUSE DATES   
+    SELECT ADD_MONTHS(GET_FINANCIAL_YEAR_START_DATE(), -12) 
+    INTO P_FY2_STARTDATE
+    FROM DUAL;    
+
+    SELECT ADD_MONTHS(SYSDATE, -12) 
+    INTO P_FY2_ENDDATE 
+    FROM DUAL;
+
+    SELECT ADD_MONTHS(GET_FINANCIAL_YEAR_END_DATE(), -12)
+    INTO P_CURR_FY2_ENDDATE 
+    FROM DUAL;    
+--    -- END GET CURRENT PREVIOUSE DATES
+--    
+--    -- START GET PREVIOUSE TO PREVIOUSE DATES
+    SELECT ADD_MONTHS(GET_FINANCIAL_YEAR_START_DATE(), -24)
+    INTO P_FY3_STARTDATE 
+    FROM DUAL;
+--    
+    SELECT ADD_MONTHS(SYSDATE, -24)
+    INTO P_FY3_ENDDATE 
+    FROM DUAL;
+--    
+    SELECT ADD_MONTHS(GET_FINANCIAL_YEAR_END_DATE(), -24)
+    INTO P_CURR_FY3_ENDDATE 
+    FROM DUAL;
+--    -- END GET PREVIOUSE TO PREVIOUSE DATES
+
+    -- Get Dashboard Count
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  SUM(A.amount_outstanding) OUTSTANDING_AMOUNT,
+            SUM(A.SUSPENSE_AMT) SUSPENSE_AMT,
+            SUM(case when A.amount_outstanding > 0 then 1 else 0 end) OUTSTANDING_BILL,
+            SUM(CASE WHEN A.bill_no IS NOT NULL THEN 1 ELSE 0 END) TOTAL_INVOICE,
+--            COUNT(A.bill_no) TOTAL_INVOICE,
+            SUM(A.FINALIZED_INVOICE) FINALIZED_INVOICE,
+            SUM(A.PENDING_FINALIZED_INVOICE) PENDING_FINALIZED_INVOICE
+    FROM (
+        SELECT  bill_no,                    
+                (bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount )) amount_outstanding,
+                0 SUSPENSE_AMT,
+                0 FINALIZED_INVOICE,
+                0 PENDING_FINALIZED_INVOICE
+        FROM(
+            SELECT  t22.bill_no bill_no,
+                    nvl(t22.bill_amount, 0) bill_amount,
+                    t25.narration || '/' || t25.chq_no AS narration,
+                    nvl(t22.tds, 0) tds,
+                    nvl(t22.tds_sgst, 0) tds_sgst,
+                    nvl(t22.tds_cgst, 0) tds_cgst,
+                    nvl(t22.tds_igst, 0) tds_igst,
+                    nvl(t22.retention_money, 0) retention_money,
+                    nvl(t22.cnote_amount, 0) cnote_amount,
+                    nvl(t22.write_off_amt, 0) write_off_amt,
+                    SUM(nvl(t26.amount_cleared, 0)) amount_posted
+            FROM    t22_bill t22, t20_ic t20, t12_bill_paying_officer t12, t03_city t031, t13_po_master t13, t03_city t032,
+                    t03_city t033, t05_vendor t05, t06_consignee t06, t26_cheque_posting t26, t25_rv_details t25, au_cris au
+            WHERE   t22.bill_no = t20.bill_no
+                    AND t20.bpo_cd = t12.bpo_cd
+                    AND t22.case_no = t25.case_no
+                    AND t12.au = au.au
+                    AND t12.bpo_city_cd = t031.city_cd (+)
+                    AND t22.case_no = t13.case_no
+                    AND t13.vend_cd = t05.vend_cd
+                    AND t05.vend_city_cd = t032.city_cd (+)
+                    AND t20.consignee_cd = t06.consignee_cd
+                    AND t06.consignee_city = t033.city_cd (+)
+                    AND t22.bill_no = t26.bill_no (+)
+                    AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
+                    and SUBSTR(T22.BILL_NO, 1, 1) not in ( 'O', 'T', 'X', 'F', 'D','R' )
+                    AND t22.bill_dt BETWEEN P_FROMDATE AND P_TODATE
+                    --AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+            GROUP BY t22.bill_no,
+                    nvl(t22.bill_amount, 0),
+                    t25.narration || '/' || t25.chq_no,
+                    nvl(t22.tds, 0),
+                    nvl(t22.tds_sgst, 0),
+                    nvl(t22.tds_cgst, 0),
+                    nvl(t22.tds_igst, 0),
+                    nvl(t22.retention_money, 0),
+                    nvl(t22.cnote_amount, 0),
+                    nvl(t22.write_off_amt, 0)
+        ) TEMP
+        
+        UNION ALL
+        
+        SELECT  '' bill_no,
+                0 amount_outstanding,
+                SUM(T25.SUSPENSE_AMT) SUSPENSE_AMT,
+                0 FINALIZED_INVOICE,
+                0 PENDING_FINALIZED_INVOICE
+        FROM T25_RV_DETAILS T25
+        JOIN T24_RV T24 ON T24.VCHR_NO = T25.VCHR_NO
+        WHERE T24.VCHR_DT BETWEEN P_FROMDATE AND P_TODATE
+        UNION     
+        SELECT  '' bill_no,
+                0 amount_outstanding,
+                0 SUSPENSE_AMT,
+                SUM(CASE WHEN T22.BILL_FINALISED  = 'Y' THEN 1 ELSE 0 END) FINALIZED_INVOICE,
+                SUM(CASE WHEN (T22.BILL_FINALISED  <> 'Y' AND T22.BILL_FINALISED IS NULL) THEN 1 ELSE 0 END) PENDING_FINALIZED_INVOICE
+        FROM T22_BILL T22 
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE and P_TODATE
+        --WHERE T22.BILL_DT BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+    ) A;
+    
+    -- Get Top 10 Billing Clients (Current Financial year)
+    OPEN P_RESULT_BILLING_CLIENT FOR
+    SELECT  BCL.CLIENT_NAME,
+            SUM(BCL.BILL_AMOUNT) AMOUNT
+    FROM (
+        SELECT  
+                NVL((
+                        select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                        union
+                        select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+                ),'Other')  CLIENT_NAME, T22.BILL_AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T13.CASE_NO = T22.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_TODATE  
+    ) BCL
+    GROUP BY BCL.CLIENT_NAME
+    ORDER BY AMOUNT DESC
+    FETCH FIRST 10 ROWS ONLY;
+    
+        -- Get Top 05 Outstanding Clients (Current Financial year)
+    OPEN P_RESULT_OUTSTANDING_CLIENT FOR
+    SELECT  CLIENT_NAME,
+            SUM(amount_outstanding) AMOUNT
+    FROM (
+        SELECT  CLIENT_NAME,
+                bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount ) amount_outstanding
+        FROM(
+            SELECT  t22.bill_no bill_no,
+                    nvl(t22.bill_amount, 0) bill_amount,
+                    t25.narration || '/' || t25.chq_no AS narration,
+                    nvl(t22.tds, 0) tds,
+                    nvl(t22.tds_sgst, 0) tds_sgst,
+                    nvl(t22.tds_cgst, 0) tds_cgst,
+                    nvl(t22.tds_igst, 0) tds_igst,
+                    nvl(t22.retention_money, 0) retention_money,
+                    nvl(t22.cnote_amount, 0) cnote_amount,
+                    nvl(t22.write_off_amt, 0) write_off_amt,
+                    SUM(nvl(t26.amount_cleared, 0)) amount_posted,
+                    t13.RLY_CD,
+                    t13.RLY_NONRLY,
+                    NVL((
+                        select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                        union
+                        select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+                    ),'Other')  CLIENT_NAME
+            FROM t22_bill t22, t20_ic t20, t12_bill_paying_officer t12, t03_city t031, t13_po_master t13, t03_city t032,
+                 t03_city t033, t05_vendor t05, t06_consignee t06, t26_cheque_posting t26, t25_rv_details t25, au_cris au
+            WHERE   t22.bill_no = t20.bill_no
+                    AND t20.bpo_cd = t12.bpo_cd
+                    AND t22.case_no = t25.case_no
+                    AND t12.au = au.au
+                    AND t12.bpo_city_cd = t031.city_cd (+)
+                    AND t22.case_no = t13.case_no
+                    AND t13.vend_cd = t05.vend_cd
+                    AND t05.vend_city_cd = t032.city_cd (+)
+                    AND t20.consignee_cd = t06.consignee_cd
+                    AND t06.consignee_city = t033.city_cd (+)
+                    AND t22.bill_no = t26.bill_no (+)
+                    AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
+                    AND substr(t22.bill_no, 1, 1) NOT IN ( 'O', 'T', 'X', 'F', 'D','R' )
+                    AND t22.bill_dt BETWEEN P_FROMDATE AND P_TODATE
+            GROUP BY t22.bill_no,
+                     nvl(t22.bill_amount, 0),
+                     t25.narration || '/' || t25.chq_no,
+                     nvl(t22.tds, 0),
+                     nvl(t22.tds_sgst, 0),
+                     nvl(t22.tds_cgst, 0),
+                     nvl(t22.tds_igst, 0),
+                     nvl(t22.retention_money, 0),
+                     nvl(t22.cnote_amount, 0),
+                     nvl(t22.write_off_amt, 0),
+                     t13.RLY_CD,
+                     t13.RLY_NONRLY
+        ) TEMP
+    )
+    GROUP BY CLIENT_NAME
+    ORDER BY AMOUNT DESC
+    FETCH FIRST 5 ROWS ONLY;
+
+    -- Get Billing Comparison for the Last Three Years
+    OPEN P_RESULT_BULLING_COMPARISON FOR
+    SELECT  ROWNO,
+            FINALCIAL_YEAR,
+            AMOUNT
+    FROM (
+        SELECT  1 ROWNO,
+                P_FROMDATE || ' to ' || P_TODATE FINALCIAL_YEAR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_TODATE
+        UNION
+        SELECT  2 ROWNO,
+                P_FY2_STARTDATE || ' to ' || P_FY2_ENDDATE FINALCIAL_YEAR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_FY2_ENDDATE
+--        WHERE T22.BILL_DT BETWEEN TO_DATE(P_FY2_STARTDATE, 'DD/MM/YYYY') AND TO_DATE(P_FY2_ENDDATE, 'DD/MM/YYYY')
+        UNION
+        SELECT  3 ROWNO,
+                P_FY3_STARTDATE || ' to ' || P_FY3_ENDDATE FINALCIAL_YEAR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_FY3_ENDDATE
+--        WHERE T22.BILL_DT BETWEEN TO_DATE(P_FY3_STARTDATE, 'DD/MM/YYYY') AND TO_DATE(P_FY3_ENDDATE, 'DD/MM/YYYY')
+    ) ORDER BY ROWNO;
+    
+    OPEN P_RESULT_SECTOR_BILLING FOR
+    SELECT  ROWNO,
+            SECTOR,
+            NVL(AMOUNT,0) AMOUNT
+    FROM (
+        SELECT  1 ROWNO,
+                'PSU' SECTOR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+        AND T13.RLY_NONRLY = 'P'
+        UNION
+        SELECT  2 ROWNO,
+                'RAILWAY' SECTOR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+        AND T13.RLY_NONRLY = 'R'
+        UNION
+        SELECT  3 ROWNO,
+                'NONRAILWAY' SECTOR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+        AND T13.RLY_NONRLY = 'N'
+        UNION
+        SELECT  4 ROWNO,
+                'PRIVATE' SECTOR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+        AND T13.RLY_NONRLY = 'S'
+        UNION
+        SELECT  5 ROWNO,
+                'LAB' SECTOR,
+                SUM(T22.BILL_AMOUNT) AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+        AND T13.RLY_NONRLY = 'L'
+    ) SECTOR
+    ORDER BY ROWNO;
+    
+    OPEN P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE FOR
+    SELECT  YRS,
+            ROWNO,                    
+            SECTOR,
+            AMOUNT
+    FROM (
+        SELECT  TO_CHAR(TRUNC(P_FROMDATE, 'YYYY'), 'YYYY') YRS,
+                ROWNO,
+                SECTOR,
+                NVL(AMOUNT,0) AMOUNT
+        FROM (
+            SELECT  1 ROWNO,
+                    'PSU' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+            AND T13.RLY_NONRLY = 'P'
+            UNION
+            SELECT  2 ROWNO,
+                    'RAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+            AND T13.RLY_NONRLY = 'R'
+            UNION
+            SELECT  3 ROWNO,
+                    'NONRAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+            AND T13.RLY_NONRLY = 'N'
+            UNION
+            SELECT  4 ROWNO,
+                    'PRIVATE' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+            AND T13.RLY_NONRLY = 'S'
+            UNION
+            SELECT  5 ROWNO,
+                    'LAB' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_CURR_FY_ENDDATE
+            AND T13.RLY_NONRLY = 'L'
+        ) SECTOR
+        UNION
+        SELECT  TO_CHAR(TRUNC(P_FY2_STARTDATE, 'YYYY'), 'YYYY') YRS,
+                ROWNO,
+                SECTOR,
+                NVL(AMOUNT,0) AMOUNT
+        FROM (
+            SELECT  1 ROWNO,
+                    'PSU' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_CURR_FY2_ENDDATE
+--            WHERE T22.BILL_DT BETWEEN TO_DATE(TO_CHAR(ADD_MONTHS(P_FROMDATE, -12),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(TO_CHAR(ADD_MONTHS(P_CURR_FY_ENDDATE, -12),'DD/MM/YYYY'), 'DD/MM/YYYY')
+            AND T13.RLY_NONRLY = 'P'
+            UNION
+            SELECT  2 ROWNO,
+                    'RAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_CURR_FY2_ENDDATE
+            AND T13.RLY_NONRLY = 'R'
+            UNION
+            SELECT  3 ROWNO,
+                    'NONRAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_CURR_FY2_ENDDATE
+            AND T13.RLY_NONRLY = 'N'
+            UNION
+            SELECT  4 ROWNO,
+                    'PRIVATE' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_CURR_FY2_ENDDATE
+            AND T13.RLY_NONRLY = 'S'
+            UNION
+            SELECT  5 ROWNO,
+                    'LAB' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY2_STARTDATE AND P_CURR_FY2_ENDDATE
+            AND T13.RLY_NONRLY = 'L'
+        ) SECTOR
+        UNION
+        SELECT  TO_CHAR(TRUNC(P_FY3_STARTDATE, 'YYYY'), 'YYYY') YRS,
+                ROWNO,
+                SECTOR,
+                NVL(AMOUNT,0) AMOUNT
+        FROM (
+            SELECT  1 ROWNO,
+                    'PSU' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_CURR_FY3_ENDDATE
+--            WHERE T22.BILL_DT BETWEEN TO_DATE(TO_CHAR(ADD_MONTHS(P_FROMDATE, -24),'DD/MM/YYYY'), 'DD/MM/YYYY') AND TO_DATE(TO_CHAR(ADD_MONTHS(P_CURR_FY_ENDDATE, -24),'DD/MM/YYYY'), 'DD/MM/YYYY')
+            AND T13.RLY_NONRLY = 'P'
+            UNION
+            SELECT  2 ROWNO,
+                    'RAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_CURR_FY3_ENDDATE
+            AND T13.RLY_NONRLY = 'R'
+            UNION
+            SELECT  3 ROWNO,
+                    'NONRAILWAY' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_CURR_FY3_ENDDATE
+            AND T13.RLY_NONRLY = 'N'
+            UNION
+            SELECT  4 ROWNO,
+                    'PRIVATE' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_CURR_FY3_ENDDATE
+            AND T13.RLY_NONRLY = 'S'
+            UNION
+            SELECT  5 ROWNO,
+                    'LAB' SECTOR,
+                    SUM(T22.BILL_AMOUNT) AMOUNT
+            FROM T22_BILL T22
+            JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+            WHERE T22.BILL_DT BETWEEN P_FY3_STARTDATE AND P_CURR_FY3_ENDDATE
+            AND T13.RLY_NONRLY = 'L'
+        ) SECTOR
+    ) CURR_YEAR
+    ORDER BY YRS DESC, ROWNO;
+END;
+
+create or replace PROCEDURE GET_CM_DFO_DASHBOARD_List
+(
+    P_FROMDATE IN NVARCHAR2,
+    P_TODATE IN NVARCHAR2,
+    P_ACTION_TYPE IN NVARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    IF P_ACTION_TYPE = 'OSA' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT COUNT(*)
+        FROM t22_bill t22
+        JOIN t20_ic t20 ON t22.bill_no = t20.bill_no
+        JOIN t12_bill_paying_officer t12 ON t20.bpo_cd = t12.bpo_cd
+        JOIN t25_rv_details t25 ON t22.case_no = t25.case_no
+        LEFT JOIN t26_cheque_posting t26 ON t22.bill_no = t26.bill_no
+        WHERE SUBSTR(t22.bill_no, 1, 1) NOT IN ('O', 'T', 'X', 'F', 'D', 'R')
+        AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+        AND (t22.bill_amount - (t22.tds + t22.tds_sgst + t22.tds_cgst + t22.tds_igst + t22.retention_money + t22.write_off_amt +
+            NVL((SELECT SUM(amount_cleared) FROM t26_cheque_posting WHERE bill_no = t22.bill_no), 0) +
+            t22.cnote_amount)) > 0;
+    ELSIF P_ACTION_TYPE = 'SA' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT T25.CASE_NO,T25.CHQ_DT,T25.CHQ_NO,T25.NARRATION,T25.SUSPENSE_AMT,T25.VCHR_NO
+        FROM T25_RV_DETAILS T25
+        JOIN T24_RV T24 ON T24.VCHR_NO = T25.VCHR_NO
+        WHERE T24.VCHR_DT BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY');
+    ELSIF P_ACTION_TYPE = 'OB' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT  bill_no,
+                amount_outstanding,
+                BILLDT,
+                CASE_NO,
+                MATVAL,REMARKS 
+        FROM (
+            SELECT  bill_no,
+                    BILLDT,
+                    CASE_NO,
+                    MATVAL,REMARKS,
+                    (bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount )) amount_outstanding
+            FROM (
+                SELECT  t22.bill_no bill_no,t22.BILL_DT BILLDT,t22.CASE_NO CASE_NO,t22.MATERIAL_VALUE MATVAL,t22.REMARKS REMARKS,
+                        nvl(t22.bill_amount, 0) bill_amount,
+                        t25.narration || '/' || t25.chq_no AS narration,
+                        nvl(t22.tds, 0) tds,
+                        nvl(t22.tds_sgst, 0) tds_sgst,
+                        nvl(t22.tds_cgst, 0) tds_cgst,
+                        nvl(t22.tds_igst, 0) tds_igst,
+                        nvl(t22.retention_money, 0) retention_money,
+                        nvl(t22.cnote_amount, 0) cnote_amount,
+                        nvl(t22.write_off_amt, 0) write_off_amt,
+                        SUM(nvl(t26.amount_cleared, 0)) amount_posted
+                FROM t22_bill t22, t20_ic t20, t12_bill_paying_officer t12, t03_city t031, t13_po_master t13, t03_city t032,
+                     t03_city t033, t05_vendor t05, t06_consignee t06, t26_cheque_posting t26, t25_rv_details t25, au_cris au
+                WHERE   t22.bill_no = t20.bill_no
+                AND t20.bpo_cd = t12.bpo_cd
+                AND t22.case_no = t25.case_no
+                AND t12.au = au.au
+                AND t12.bpo_city_cd = t031.city_cd (+)
+                AND t22.case_no = t13.case_no
+                AND t13.vend_cd = t05.vend_cd
+                AND t05.vend_city_cd = t032.city_cd (+)
+                AND t20.consignee_cd = t06.consignee_cd
+                AND t06.consignee_city = t033.city_cd (+)
+                AND t22.bill_no = t26.bill_no (+)
+                AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
+                and SUBSTR(T22.BILL_NO, 1, 1) not in ( 'O', 'T', 'X', 'F', 'D','R' )
+                AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+                --AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+                GROUP BY t22.bill_no,t22.BILL_DT,t22.CASE_NO,t22.MATERIAL_VALUE,t22.REMARKS,
+                         nvl(t22.bill_amount, 0),
+                         t25.narration || '/' || t25.chq_no,
+                         nvl(t22.tds, 0),
+                         nvl(t22.tds_sgst, 0),
+                         nvl(t22.tds_cgst, 0),
+                         nvl(t22.tds_igst, 0),
+                         nvl(t22.retention_money, 0),
+                         nvl(t22.cnote_amount, 0),
+                         nvl(t22.write_off_amt, 0)
+            ) TEMP  
+            GROUP BY BILL_NO,BILLDT,CASE_NO,MATVAL,REMARKS,(bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount ))
+        ) TP
+        WHERE TP.amount_outstanding > 0;
+    ELSIF P_ACTION_TYPE = 'TOTI' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT  bill_no,BILLDT,CASE_NO,MATVAL,REMARKS,
+                (bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount )) amount_outstanding              
+        FROM (
+            SELECT  t22.bill_no bill_no,t22.BILL_DT BILLDT,t22.CASE_NO CASE_NO,t22.MATERIAL_VALUE MATVAL,t22.REMARKS REMARKS,
+                    nvl(t22.bill_amount, 0) bill_amount,
+                    t25.narration || '/' || t25.chq_no AS narration,
+                    nvl(t22.tds, 0) tds,
+                    nvl(t22.tds_sgst, 0) tds_sgst,
+                    nvl(t22.tds_cgst, 0) tds_cgst,
+                    nvl(t22.tds_igst, 0) tds_igst,
+                    nvl(t22.retention_money, 0) retention_money,
+                    nvl(t22.cnote_amount, 0) cnote_amount,
+                    nvl(t22.write_off_amt, 0) write_off_amt,
+                    SUM(nvl(t26.amount_cleared, 0)) amount_posted
+            FROM t22_bill t22, t20_ic t20, t12_bill_paying_officer t12, t03_city t031, t13_po_master t13, t03_city t032,
+                 t03_city t033, t05_vendor t05, t06_consignee t06, t26_cheque_posting t26, t25_rv_details t25, au_cris au
+            WHERE   t22.bill_no = t20.bill_no
+            AND t20.bpo_cd = t12.bpo_cd
+            AND t22.case_no = t25.case_no
+            AND t12.au = au.au
+            AND t12.bpo_city_cd = t031.city_cd (+)
+            AND t22.case_no = t13.case_no
+            AND t13.vend_cd = t05.vend_cd
+            AND t05.vend_city_cd = t032.city_cd (+)
+            AND t20.consignee_cd = t06.consignee_cd
+            AND t06.consignee_city = t033.city_cd (+)
+            AND t22.bill_no = t26.bill_no (+)
+            AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
+            and SUBSTR(T22.BILL_NO, 1, 1) not in ( 'O', 'T', 'X', 'F', 'D','R' )
+            AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+            --AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
+            GROUP BY  t22.bill_no,t22.BILL_DT,t22.CASE_NO,t22.MATERIAL_VALUE,t22.REMARKS,
+                      nvl(t22.bill_amount, 0),
+                      t25.narration || '/' || t25.chq_no,
+                      nvl(t22.tds, 0),
+                      nvl(t22.tds_sgst, 0),
+                      nvl(t22.tds_cgst, 0),
+                      nvl(t22.tds_igst, 0),
+                      nvl(t22.retention_money, 0),
+                      nvl(t22.cnote_amount, 0),
+                      nvl(t22.write_off_amt, 0)
+        ) TEMP  
+        GROUP BY BILL_NO,BILLDT,CASE_NO,MATVAL,REMARKS,(bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount ));              
+    ELSIF P_ACTION_TYPE = 'FI' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT T22.BILL_NO,T22.BILL_DT,T22.CASE_NO,T22.MATERIAL_VALUE,T22.BILL_AMOUNT,T22.BILL_STATUS,T22.REMARKS
+        FROM t22_bill T22
+        WHERE T22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+        AND T22.BILL_FINALISED='Y';
+    ELSIF P_ACTION_TYPE = 'PIF' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT T22.BILL_NO,T22.BILL_DT,T22.CASE_NO,T22.MATERIAL_VALUE,T22.BILL_AMOUNT,T22.BILL_STATUS,T22.REMARKS
+        FROM t22_bill T22
+        WHERE T22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+        and T22.BILL_FINALISED != 'Y' 
+        and T22.BILL_FINALISED IS NULL;
+    END IF;
+END;
+----------------------------------------------------- End CM DFO DASHBOARD SP -----------------------------------------------------
+
+----------------------------------------------------- START VENDOR DASHBOARD SP -----------------------------------------------------
+create or replace PROCEDURE GET_VENDOR_DASHBOARD_COUNT 
+(
+  P_VENDCD IN NUMBER ,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE();
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  VEND_CD,
+            SUM(TOTAL_CALL) TOTAL_CALL,
+            SUM(PENDING_CALL) PENDING_CALL,
+            SUM(ACCEPTED_CALL) ACCEPTED_CALL,
+            SUM(CANCELLED_CALL) CANCELLED_CALL, 
+            SUM(UNDER_LAB_TESTING) UNDER_LAB_TESTING, 
+            SUM(STILL_UNDER_INSPECTION) STILL_UNDER_INSPECTION, 
+            SUM(STAGE_REJECTION) STAGE_REJECTION           
+    FROM (
+        SELECT  P_VENDCD VEND_CD,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION                
+        FROM T17_CALL_REGISTER t17
+        WHERE t17.MFG_CD = P_VENDCD --670    
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+--        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+--        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
+        GROUP BY T17.MFG_CD
+        UNION
+        SELECT  P_VENDCD VEND_CD,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                COUNT(t17.CASE_NO) ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION                
+        FROM T47_IE_WORK_PLAN t47
+        JOIN T17_CALL_REGISTER t17 ON t47.CASE_NO = t17.CASE_NO AND t47.CALL_RECV_DT = t17.CALL_RECV_DT AND t47.CALL_SNO = t17.CALL_SNO
+        WHERE TRIM(t17.CALL_STATUS) = 'A'
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+--        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+--        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
+        AND t47.MFG_CD = P_VENDCD --670
+        GROUP BY t17.MFG_CD                    
+    ) A
+    GROUP BY A.VEND_CD;
+END;
+
+create or replace PROCEDURE GET_VENDOR_DASHBOARD_RECENR_CALL_STATUS 
+(
+  P_VEND_CD IN NUMBER, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT t17.Case_No,
+           t17.Call_Recv_Dt,
+           t17.Call_Sno,           
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+           t09.IE_NAME,
+           t09.IE_PHONE_NO,
+           t08.CO_NAME,
+           t08.CO_PHONE_NO,
+           T21.CALL_STATUS_DESC CALL_STATUS
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+    JOIN T08_IE_CONTROLL_OFFICER t08 ON t09.IE_CO_CD = t08.CO_CD
+    JOIN T21_CALL_STATUS_CODES T21 ON t17.CALL_STATUS = T21.CALL_STATUS_CD
+    WHERE t17.MFG_CD = P_VEND_CD
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY t17.CALL_RECV_DT DESC;
+END;
+
+create or replace PROCEDURE GET_VENDOR_DASHBOARD_RECENT_PO 
+(
+  P_VENDCD IN NUMBER ,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE(); --SYSDATE
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t17.CASE_NO,
+            t17.CALL_RECV_DT,
+            t13.PO_NO,
+            t13.PO_DT,
+            t13.RECV_DT,
+            t13.PO_OR_LETTER,
+            NVL((
+                SELECT RAILWAY Client FROM T91_RAILWAYS WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R' 
+                UNION
+                SELECT DISTINCT BPO_ORGN Client FROM T12_BILL_PAYING_OFFICER WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+            ),'Other')  CLIENT_NAME,            
+            t21.CALL_STATUS_DESC CALL_STATUS
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    join T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t17.MFG_CD = P_VENDCD --'84086'
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY t17.CALL_RECV_DT DESC;
+END GET_VENDOR_DASHBOARD_RECENT_PO;
+----------------------------------------------------- END VENDOR DASHBOARD SP -----------------------------------------------------
+
+------------- Create Funcations -------------
+create or replace FUNCTION GET_FINANCIAL_YEAR_START_DATE
+RETURN DATE 
+IS
+  v_start_date DATE;
+BEGIN
+  SELECT 
+      CASE 
+        WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'MM')) >= 4 
+        THEN TO_DATE('01-04-' || TO_CHAR(SYSDATE, 'YYYY'), 'DD-MM-YYYY') 
+        ELSE TO_DATE('01-04-' || TO_CHAR(SYSDATE - INTERVAL '1' YEAR, 'YYYY'), 'DD-MM-YYYY') 
+      END
+  INTO v_start_date
+  FROM dual;
+    --v_start_date := TO_DATE('01/04/2020', 'DD-MM-YYYY');
+  RETURN v_start_date;
+END;
+
+create or replace FUNCTION GET_FINANCIAL_YEAR_END_DATE
+RETURN DATE
+IS
+    current_date DATE := SYSDATE;
+    fiscal_start_month NUMBER := 4; -- April
+    FISCAL_YEAR_START date;
+    FISCAL_YEAR_END date;
+    TESTT date;
+BEGIN
+ if extract(month from current_date) < FISCAL_START_MONTH then
+        --FISCAL_YEAR_START := TO_DATE(extract(year from current_date) - 1 || '-' || FISCAL_START_MONTH || '-01', 'YYYY-MM-DD');
+        FISCAL_YEAR_START := TO_DATE('01/' || FISCAL_START_MONTH || '/' || extract(year from current_date) - 1,'DD/MM/YYYY');
+    else
+        --FISCAL_YEAR_START := TO_DATE(extract(year from current_date) || '-' || FISCAL_START_MONTH || '-01', 'YYYY-MM-DD');
+        FISCAL_YEAR_START := TO_DATE('01/' || FISCAL_START_MONTH || '/' || extract(year from current_date) ,'DD/MM/YYYY');
+    END IF;
+
+    fiscal_year_end := fiscal_year_start + INTERVAL '1' YEAR - INTERVAL '1' DAY;
+
+--    RETURN TO_DATE(fiscal_year_end, 'DD-MM-YYYY');
+    RETURN fiscal_year_end;
+end;

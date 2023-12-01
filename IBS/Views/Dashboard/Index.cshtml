@@ -9,7 +9,7 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TC" })">
                     <div class="dashboard-box das1">
                         <div class="dash-total">
@@ -24,7 +24,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="PendingCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "M" })">
                     <div class="dashboard-box das2">
                         <div class="dash-total">
@@ -39,7 +39,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="AcceptedCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "A" })">
                     <div class="dashboard-box das3">
                         <div class="dash-total">
@@ -54,7 +54,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="CancelleCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "C" })">
                     <div class="dashboard-box das4">
                         <div class="dash-total">
@@ -69,10 +69,7 @@
                     </div>
                 </a>
             </div>
-
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="UnderLabCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "U" })">
                     <div class="dashboard-box das5">
                         <div class="dash-total">
@@ -87,7 +84,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StillUnderInspCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "S" })">
                     <div class="dashboard-box das6">
                         <div class="dash-total">
@@ -102,7 +99,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "T" })">
                     <div class="dashboard-box das7">
                         <div class="dash-total">
@@ -117,23 +114,8 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB" })">
-                <div class="dashboard-box das9">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.ICISSUERECEIVEOFFICENOTBILL</div>
-                            <div class="total-inner">
-                                Issued IC and
-                                received in office Not billed<br /> IC
-                            </div>
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/not-billed-IC-icon-sml.svg" width="46" height="54" alt="Not billed IC"> </div>
-                </div>
-                </a>
-            </div>
-            @*<div class="col-lg-3">
+           
+            @*<div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das8">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -146,25 +128,25 @@
                     <div class="total-icons"><img src="images/dash-icon-2-sml.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
                 </div>
             </div>*@
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
+        
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB" })">
-                <div class="dashboard-box das10">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NOofBill</div>
+                    <div class="dashboard-box das10">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NOofBill</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of<br /> Bills
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            No. of<br /> Bills
-                        </div>
+                        <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/no-of-bills-icon.svg" width="46" height="54" alt="No. of Bills"> </div>
-                </div>
                 </a>
             </div>
-            <div class="col-lg-3">
-                <a class="dashboard-box das11" href="@Url.Action("IEPerCM","Dashboard")">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a href="@Url.Action("IEPerCM","Dashboard")">
+                <div class="dashboard-box das11">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.NOOFIEPERCM</div>
@@ -174,24 +156,11 @@
                         </div>
                     </div>
                     <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
-                </a>
-            </div>
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
-                <div class="dashboard-box das12">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NotRecievedCount</div>
-                            <div class="total-inner">
-                                Issued IC Not received<br /> in office
-                            </div>
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+           
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das14">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -204,7 +173,7 @@
                     <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
                 </div>
             </div>
-           @* <div class="col-lg-3">
+           @* <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das12">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -217,10 +186,8 @@
                     <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
                 </div>
             </div>*@
-        </div>
-        <div class="row admin-dashboard">
-            
-            <div class="col-lg-3">
+           
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das15">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -233,7 +200,38 @@
                     <div class="total-icons"><img src="images/AVG-fees-icon.svg" width="46" height="54" alt="Avg fees"> </div>
                 </div>
             </div>
-            @*<div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
+                    <div class="dashboard-box das12">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NotRecievedCount</div>
+                                <div class="total-inner">
+                                    Issued IC Not received<br /> in office
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="images/not-received-office-icon.svg" width="46" height="54" alt="Not received in office"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a class="StageRejectionCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB" })">
+                    <div class="dashboard-box das9">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.ICISSUERECEIVEOFFICENOTBILL</div>
+                                <div class="total-inner">
+                                    Issued IC and
+                                    received in office Not billed<br /> IC
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="images/not-billed-IC-icon-sml.svg" width="46" height="54" alt="Not billed IC"> </div>
+                    </div>
+                </a>
+            </div>
+            @*<div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das16">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -249,15 +247,15 @@
         </div>
 
         @* <div class="row admin-dashboard">
-            <div class="col-lg-12">
-                <div class="savenext-btn btnAlign">
-                    <button type="button" class="save-btn active" onclick="AutometicCallMark();">No. of Automatic Marked  calls</button>
-                    <button type="button" class="save-btn active" onclick="ManuallyCallMark();">No. of Manually Marked  Calls</button>
-                    <button type="button" class="save-btn active" onclick="POAwaitingcase();">No. of POs, Awaiting for  Case No.</button>
-                    <button type="button" class="save-btn active" onclick="PendingCallsRemark();">No. of Pending Calls to Remark</button>
-                    <button type="button" class="save-btn active" onclick="PendingOnlineCallsAwaiting();">No. of pending online calls awaiting marking</button>
-                </div>
-            </div>
+        <div class="col-lg-12">
+        <div class="savenext-btn btnAlign">
+        <button type="button" class="save-btn active" onclick="AutometicCallMark();">No. of Automatic Marked  calls</button>
+        <button type="button" class="save-btn active" onclick="ManuallyCallMark();">No. of Manually Marked  Calls</button>
+        <button type="button" class="save-btn active" onclick="POAwaitingcase();">No. of POs, Awaiting for  Case No.</button>
+        <button type="button" class="save-btn active" onclick="PendingCallsRemark();">No. of Pending Calls to Remark</button>
+        <button type="button" class="save-btn active" onclick="PendingOnlineCallsAwaiting();">No. of pending online calls awaiting marking</button>
+        </div>
+        </div>
         </div> *@
     </div>
 </div>
@@ -346,9 +344,9 @@
             </tr>
             @{
                 var Srno = 0;
-                if(Model.lstHightPayment.Count() > 0)
-                {                    
-                    foreach(var item in Model.lstHightPayment.Take(5))
+                if (Model.lstHightPayment.Count() > 0)
+                {
+                    foreach (var item in Model.lstHightPayment.Take(5))
                     {
                         Srno = Srno + 1;
                         <tr>
@@ -357,15 +355,15 @@
                             <td>@item.NO_OF_BILL</td>
                             <td>@item.AMOUNT</td>
                         </tr>
-                    }                
+                    }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="4">No Data Found</td>                        
+                        <td colspan="4">No Data Found</td>
                     </tr>
                 }
-            }                        
+            }
         </table>
     </div>
     <div class="tableBottomLink">
@@ -537,11 +535,10 @@
                     </tr>
                 }
             }
-            
+
         </table>
     </div>
     <div class="tableBottomLink">
-        
     </div>
 </section>
 @*<section class="graph-section">
@@ -865,154 +862,154 @@
             }],
         });
 
-        //Highcharts.chart('monthlychart', {
-        //    chart: {
-        //        type: 'column'
-        //    },
-        //    title: {
-        //        text: ''
-        //    },
-        //    subtitle: {
-        //        text: ''
-        //    },
-        //    xAxis: {
-        //        categories: [
-        //            'Jan',
-        //            'Feb',
-        //            'Mar',
-        //            'Apr',
-        //            'May',
-        //            'Jun',
-        //            'Jul',
-        //            'Aug',
-        //            'Sep',
-        //            'Oct',
-        //            'Nov',
-        //            'Dec'
-        //        ],
-        //        crosshair: true
-        //    },
-        //    yAxis: {
-        //        min: 0,
-        //        title: {
-        //            text: 'Number of Inspection Requests'
-        //        }
-        //    },
-        //    tooltip: {
-        //        headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
-        //        pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
-        //            '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
-        //        footerFormat: '</tr></table>',
-        //        shared: true,
-        //        useHTML: true
-        //    },
-        //    plotOptions: {
-        //        column: {
-        //            pointPadding: 0.2,
-        //            borderWidth: 0
-        //        }
-        //    },
-        //    exporting: {
-        //        enabled: false
-        //    },
-        //    series: [{
-        //        name: 'Inspection Assigned',
-        //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
-        //            194.1, 95.6, 54.4]
+                        //Highcharts.chart('monthlychart', {
+                        //    chart: {
+                        //        type: 'column'
+                        //    },
+                        //    title: {
+                        //        text: ''
+                        //    },
+                        //    subtitle: {
+                        //        text: ''
+                        //    },
+                        //    xAxis: {
+                        //        categories: [
+                        //            'Jan',
+                        //            'Feb',
+                        //            'Mar',
+                        //            'Apr',
+                        //            'May',
+                        //            'Jun',
+                        //            'Jul',
+                        //            'Aug',
+                        //            'Sep',
+                        //            'Oct',
+                        //            'Nov',
+                        //            'Dec'
+                        //        ],
+                        //        crosshair: true
+                        //    },
+                        //    yAxis: {
+                        //        min: 0,
+                        //        title: {
+                        //            text: 'Number of Inspection Requests'
+                        //        }
+                        //    },
+                        //    tooltip: {
+                        //        headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
+                        //        pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
+                        //            '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
+                        //        footerFormat: '</tr></table>',
+                        //        shared: true,
+                        //        useHTML: true
+                        //    },
+                        //    plotOptions: {
+                        //        column: {
+                        //            pointPadding: 0.2,
+                        //            borderWidth: 0
+                        //        }
+                        //    },
+                        //    exporting: {
+                        //        enabled: false
+                        //    },
+                        //    series: [{
+                        //        name: 'Inspection Assigned',
+                        //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
+                        //            194.1, 95.6, 54.4]
 
-        //    }, {
-        //        name: 'Inspection Completed',
-        //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
-        //            106.6, 92.3]
+                        //    }, {
+                        //        name: 'Inspection Completed',
+                        //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
+                        //            106.6, 92.3]
 
-        //    }, {
-        //        name: 'Inspection Pending',
-        //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
-        //            51.2]
+                        //    }, {
+                        //        name: 'Inspection Pending',
+                        //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
+                        //            51.2]
 
-        //    }]
-        //});
+                        //    }]
+                        //});
 
 
-        //// Pie Chart
+                        //// Pie Chart
 
-        //Highcharts.chart('region-wise-pie', {
-        //    colors: ['#7ab971', '#f16a6b', '#5fb8e2', '#6c82e2', '#1962c1', '#e89b00'],
-        //    chart: {
-        //        type: 'pie',
-        //        height: '250',
-        //    },
-        //    title: {
-        //        text: ''
-        //    },
-        //    tooltip: {
-        //        valueSuffix: '%'
-        //    },
-        //    legend: {
-        //        layout: 'vertical',
-        //        align: 'right',
-        //        verticalAlign: 'middle',
-        //        itemMarginTop: 10,
-        //        itemMarginBottom: 10
-        //    },
-        //    plotOptions: {
-        //        pie: {
-        //            allowPointSelect: true,
-        //            cursor: 'pointer',
+                        //Highcharts.chart('region-wise-pie', {
+                        //    colors: ['#7ab971', '#f16a6b', '#5fb8e2', '#6c82e2', '#1962c1', '#e89b00'],
+                        //    chart: {
+                        //        type: 'pie',
+                        //        height: '250',
+                        //    },
+                        //    title: {
+                        //        text: ''
+                        //    },
+                        //    tooltip: {
+                        //        valueSuffix: '%'
+                        //    },
+                        //    legend: {
+                        //        layout: 'vertical',
+                        //        align: 'right',
+                        //        verticalAlign: 'middle',
+                        //        itemMarginTop: 10,
+                        //        itemMarginBottom: 10
+                        //    },
+                        //    plotOptions: {
+                        //        pie: {
+                        //            allowPointSelect: true,
+                        //            cursor: 'pointer',
 
-        //            dataLabels: {
-        //                distance: -20,
-        //                enabled: true,
-        //                //format: '{point.name}: {y} %'
-        //                format: '{y} %'
-        //            },
-        //            showInLegend: true
-        //        }
-        //    },
-        //    series: [{
-        //        name: 'Percentage',
-        //        colorByPoint: true,
-        //        innerSize: '45%',
-        //        data: [{
-        //            name: 'Northern Region (NR)',
-        //            y: 13
-        //        }, {
-        //            name: 'Southern Region (SR)',
-        //            y: 22
-        //        }, {
-        //            name: 'Western Region (WR)',
-        //            y: 19
-        //        }, {
-        //            name: 'Eastern Region (ER)',
-        //            y: 17
-        //        }, {
-        //            name: 'Central Region (CR)',
-        //            y: 15
-        //        }, {
-        //            name: 'QA Corporate',
-        //            y: 14
-        //        }]
-        //    }]
-        //});
-        
-        // function TotalCall() {
-        //     window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
-        // }
-        // function AutometicCallMark() {
-        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=ACM';
-        // }
-        // function ManuallyCallMark() {
-        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=MCM';
-        // }
-        // function POAwaitingcase() {
-        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POAC';
-        // }
-        // function PendingCallsRemark() {
-        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=PCR';
-        // }
-        // function PendingOnlineCallsAwaiting() {
-        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POCAM';
-        // }
+                        //            dataLabels: {
+                        //                distance: -20,
+                        //                enabled: true,
+                        //                //format: '{point.name}: {y} %'
+                        //                format: '{y} %'
+                        //            },
+                        //            showInLegend: true
+                        //        }
+                        //    },
+                        //    series: [{
+                        //        name: 'Percentage',
+                        //        colorByPoint: true,
+                        //        innerSize: '45%',
+                        //        data: [{
+                        //            name: 'Northern Region (NR)',
+                        //            y: 13
+                        //        }, {
+                        //            name: 'Southern Region (SR)',
+                        //            y: 22
+                        //        }, {
+                        //            name: 'Western Region (WR)',
+                        //            y: 19
+                        //        }, {
+                        //            name: 'Eastern Region (ER)',
+                        //            y: 17
+                        //        }, {
+                        //            name: 'Central Region (CR)',
+                        //            y: 15
+                        //        }, {
+                        //            name: 'QA Corporate',
+                        //            y: 14
+                        //        }]
+                        //    }]
+                        //});
+
+                        // function TotalCall() {
+                        //     window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
+                        // }
+                        // function AutometicCallMark() {
+                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=ACM';
+                        // }
+                        // function ManuallyCallMark() {
+                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=MCM';
+                        // }
+                        // function POAwaitingcase() {
+                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POAC';
+                        // }
+                        // function PendingCallsRemark() {
+                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=PCR';
+                        // }
+                        // function PendingOnlineCallsAwaiting() {
+                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POCAM';
+                        // }
 
     </script>
 }

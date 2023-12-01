@@ -55,7 +55,6 @@
     <script type="text/javascript">
         var Columns = [];
         $(function () {
-            debugger
             var currentDate = new Date();
             var financialYearDates = calculateFinancialYearDates(currentDate);
 
@@ -65,31 +64,34 @@
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
             if (type == "TC") {
-                $("#spnHeading").text("No. of Total Calls.");
+                $("#spnHeading").text("No. of Total Calls");
             }
             else if (type == "M") {
-                $("#spnHeading").text("No. of Pending Calls.");
+                $("#spnHeading").text("No. of Pending Calls");
             }
             else if (type == "A") {
-                $("#spnHeading").text("No. of Accepted Calls.");
+                $("#spnHeading").text("No. of Accepted Calls");
             }
             else if (type == "C") {
-                $("#spnHeading").text("No. of Cancelled Calls.");
+                $("#spnHeading").text("No. of Cancelled Calls");
             }
             else if (type == "U") {
-                $("#spnHeading").text("No. of Under Lab Testing.");
+                $("#spnHeading").text("No. of Under Lab Testing");
             }
             else if (type == "S") {
-                $("#spnHeading").text("No. of Still Under Inspection.");
+                $("#spnHeading").text("No. of Still Under Inspection");
             }
             else if (type == "T") {
-                $("#spnHeading").text("No. of Stage Rejection.");
-            } else if (type == "ICNR") {
-                $("#spnHeading").text("Issued IC Not Received in Office.");
-            } else if (type == "TB") {
-                $("#spnHeading").text("No. of Total Bills.");
-            } else if (type == "ICRNB") {
-                $("#spnHeading").text("Issued IC and Received in Office Not Billed IC.");
+                $("#spnHeading").text("No. of Stage Rejection");
+            } 
+            else if (type == "ICNR") {
+                $("#spnHeading").text("Issued IC Not Received in Office");
+            } 
+            else if (type == "TB") {
+                $("#spnHeading").text("No. of Total Bills");
+            } 
+            else if (type == "ICRNB") {
+                $("#spnHeading").text("Issued IC and Received in Office Not Billed IC");
             }
 
             if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {
