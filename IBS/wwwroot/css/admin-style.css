@@ -1078,8 +1078,8 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .recently-inner { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); margin-bottom: 20px; padding: 20px; height: 95%; }
 .recently-inner h3 { font-size: 20px; font-weight: 600; margin: 0; }
 .recently-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.viewall { text-decoration: none; color: #F66A2F; font-size: 14px; transition: all 0.4s; }
-.viewall:hover { color: #000; }
+.viewall { text-decoration: none; color: #F66A2F; font-size: 14px; transition: all 0.4s; font-weight:500; }
+.viewall:hover { color: #000; text-decoration:underline; }
 .sb01-box .sb01-date p { margin: 0; }
 .sb01-box .sb01-date p span { color: #008CA6; font-size: 14px; font-weight: 500; }
 .kimberley .kim-title { font-size: 16px; font-weight: 600; color: #000000; }
