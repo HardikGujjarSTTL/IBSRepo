@@ -199,6 +199,8 @@ namespace IBSAPI.Helpers
                     item.Isotherdoc = Convert.ToByte(true);
                 }
 
+                item.Latitude = item.Latitude;
+                item.Longitude = item.Longitude;
                 NewDocumentsList.Add(item);
             }
             id = SaveDocument(NewDocumentsList);
@@ -233,7 +235,9 @@ namespace IBSAPI.Helpers
                         Filedisplayname = item.FileDisplayName,
                         Isotherdoc = item.Isotherdoc,
                         Otherdocumentname = item.DocName,
-                        Documentcategory = item.DocumentCategoryID
+                        Documentcategory = item.DocumentCategoryID,
+                        Latitude = item.Latitude,
+                        Longitude = item.Longitude
                     });
                 }
                 context.IbsAppdocuments.AddRange(objSaveData);

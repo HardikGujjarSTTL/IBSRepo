@@ -186,7 +186,7 @@ namespace IBSAPI.Controllers
 
         [HttpPost("ICPhotoUpload")]
         [Consumes("multipart/form-data")]
-        public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, List<IFormFile> photos)
+        public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude, List<IFormFile> photos)
         {
             try
             {
@@ -212,6 +212,8 @@ namespace IBSAPI.Controllers
                             aPP.DocName = "IC Image " + i;
                             aPP.FileName = photo.FileName;
                             aPP.formFile = photo;
+                            aPP.Latitude = Latitude;
+                            aPP.Longitude = Longitude;
                             DocumentsList.Add(aPP);
                             
                             //string WebRootPath = "";
