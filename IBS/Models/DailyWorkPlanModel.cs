@@ -88,6 +88,8 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string IsUrgency { get; set; }
+
+        public int PlanDHours { get; set; }
     }
 
     public class DeSerializeDailyWorkModel

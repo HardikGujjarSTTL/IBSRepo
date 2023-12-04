@@ -458,6 +458,20 @@
             $("#ActionType").val("S");
             var PlanDt = $('input[name="PlanDt"]:checked').val();
             var InspWorkType = $('input[name="InspWorkType"]:checked').val();
+
+            // var d = new Date();
+            // var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+            
+            // var month = d.getMonth() + 1;
+            // var day = d.getDate();
+            // var CDate = (day < 10 ? '0' : '') + day + '/' +
+            //     (month < 10 ? '0' : '') + month + '/' +
+            //     d.getFullYear();
+            // if (PlanDt == CDate)
+            // {
+
+            // }
+
             $("#PlanDt").val(PlanDt);
             $("#InspWorkType").val(InspWorkType);
             $("#checkedWork").val(JSON.stringify(checkedWork));
