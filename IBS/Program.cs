@@ -92,6 +92,7 @@ builder.Services.AddScoped<IICPhotoEnclosedRepository, IBS.Repositories.IE.ICPho
 builder.Services.AddScoped<IIEJIRemarksPendingRepository, IBS.Repositories.IE.IEJIRemarksPendingRepository>();
 builder.Services.AddScoped<IComplaintApprovalRepository, IBS.Repositories.ComplaintApprovalRepository>();
 builder.Services.AddScoped<ITransactionQAVideosRepository, IBS.Repositories.IE.TransactionQAVideosRepository>();
+builder.Services.AddScoped<IQuality_Manual_ProceduresRepository, IBS.Repositories.IE.Quality_Manual_ProceduresRepository>();
 
 builder.Services.AddScoped<ICMDailyWorkPlanRepository, IBS.Repositories.CMDailyWorkPlanRepository>();
 
