@@ -21,17 +21,19 @@ namespace IBSAPI.Controllers
         private readonly ICallRepository callRepository;
         private readonly IInspectionRepository inspectionRepository;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
         //private readonly IDocument iDocument;
         public IConfiguration Configuration { get; }
         #endregion
 
-        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment,  IConfiguration configuration, IInspectionRepository _inspectionRepository)
+        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment,  IConfiguration configuration, IInspectionRepository _inspectionRepository, IConfiguration _config)
         {
             callRepository = _callRepository;
             env = _environment;
             //iDocument = _iDocumentRepository;
             Configuration = configuration;
             inspectionRepository = _inspectionRepository;
+            config = _config;
         }
 
         [HttpGet("GetCallList", Name = "GetCallList")]
@@ -77,24 +79,37 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                int id = callRepository.SheduleInspection(sheduleInspectionRequestModel);
-                if (id > 0)
+                int PlanDHours = Convert.ToInt32(config.GetSection("AppSettings")["PlanDHours"]);
+                int id = callRepository.SheduleInspection(sheduleInspectionRequestModel,PlanDHours);
+                if (id == 999)
                 {
                     var response = new
                     {
-                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                        message = "Successfully"
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "Your Work Plan Cannot be Saved due to today after 3:00 clock can't saved. ",
                     };
                     return Ok(response);
                 }
                 else
                 {
-                    var response = new
+                    if (id > 0)
                     {
-                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "No Data Found",
-                    };
-                    return Ok(response);
+                        var response = new
+                        {
+                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                            message = "Successfully"
+                        };
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        var response = new
+                        {
+                            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                            message = "No Data Found",
+                        };
+                        return Ok(response);
+                    }
                 }
             }
             catch (Exception ex)
