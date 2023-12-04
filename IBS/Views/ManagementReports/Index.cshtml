@@ -591,6 +591,9 @@
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
 
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
+
             $('#frmReport1').find("#hdnReportType").val(ReportType);
             $('#frmReport1').find("#hdnFromDate").val(FromDate);
             $('#frmReport1').find("#hdnToDate").val(ToDate);
@@ -707,6 +710,9 @@
             var FromDate = moment($('#FromDateSuperSurprise').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDateSuperSurprise').datepicker('getDate')).format("YYYY-MM-DD");
 
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
+
             var ParticularCM = '', ParticularSector = '';
 
             var _CM = $('input[name="CM"]:checked').val();
@@ -757,6 +763,9 @@
             var Status = $("#RegionStatus").val();
             var FromDate = moment($('#FromDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDateConsignReject').datepicker('getDate')).format("YYYY-MM-DD");
+
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
 
             $('#frmConsignReject').find("#hdnReportType").val(ReportType);
             $('#frmConsignReject').find("#hdnFromDate").val(FromDate);
@@ -855,6 +864,9 @@
             var ClientType = $("#ClientType_ClientWiseRejection").val();
             var BPORailway = $("#BPORailway_ClientWiseRejection").val();
 
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
+
             $('#frmClientWiseRejection').find("#hdnReportType").val(ReportType);
             $('#frmClientWiseRejection').find("#hdnFromDate").val(FromDate);
             $('#frmClientWiseRejection').find("#hdnToDate").val(ToDate);
@@ -939,6 +951,9 @@
             var FromDate = moment($('#FromDateTentativeInspection').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDateTentativeInspection').datepicker('getDate')).format("YYYY-MM-DD");
 
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
+
             var ParticularCM = '', SortedOn = '';
 
             var _CM = $('input[name="TentativeInspectionCM"]:checked').val();
@@ -988,6 +1003,9 @@
             var CallRemarkingDate = $('input[name="CallRemarkingDate"]:checked').val();
             var CallsStatus = $("#CallsStatus").val();
 
+            var res = FromToDateGreaterValidation(FromDate, ToDate);
+            if (!res) { return; }
+
             let myObject = { ReportType, FromDate, ToDate, CallRemarkingDate, CallsStatus };
 
             $('#frmCallRemarking').find("#hdnReportType").val(ReportType);
@@ -998,6 +1016,5 @@
 
             $("#frmCallRemarking").submit();
         }
-
     </script>
 }
