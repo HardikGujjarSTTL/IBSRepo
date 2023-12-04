@@ -75,3 +75,39 @@ function getExportFileName(title) {
 
     return title + '_' + dd + '_' + mm + '_' + yyyy + '_' + hh + '_' + mi + '_' + sec;
 }
+
+function FromToDateGreaterValidation(FromDate, ToDate) {   
+    var result = true;
+    var FDT = new Date(FromDate);
+    var TDT = new Date(ToDate);
+
+    if (FDT > TDT) {
+        alert("FromDate should not be greater than ToDate.")
+        result = false;
+    }
+    return result;
+}
+
+function GetFinancialYearStartEndDate() {
+    var FISCAL_START_MONTH = 4;
+
+    // Get the current date
+    var currentDate = new Date();
+
+    // Check if the current month is less than the fiscal start month
+    if (currentDate.getMonth() + 1 < FISCAL_START_MONTH) {
+        // If true, set the fiscal year start date to the previous year's fiscal start month
+        var financialYearStartDate = new Date(currentDate.getFullYear() - 1, FISCAL_START_MONTH - 1, 1);
+    } else {
+        // If false, set the fiscal year start date to the current year's fiscal start month
+        var financialYearStartDate = new Date(currentDate.getFullYear(), FISCAL_START_MONTH - 1, 1);
+    }
+
+    // Calculate fiscal year end date
+    var financialYearEndDate = new Date(financialYearStartDate.getFullYear() + 1, FISCAL_START_MONTH - 1, 0);
+
+    return {
+        start: financialYearStartDate,
+        end: financialYearEndDate
+    };
+}

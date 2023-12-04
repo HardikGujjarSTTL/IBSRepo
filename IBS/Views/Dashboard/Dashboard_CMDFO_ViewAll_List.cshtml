@@ -54,10 +54,8 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         var Columns = [];
-        $(function () {
-            debugger
-            var currentDate = new Date();
-            var financialYearDates = calculateFinancialYearDates(currentDate);
+        $(function () {                        
+            var financialYearDates = GetFinancialYearStartEndDate();
 
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
@@ -84,19 +82,7 @@
                 ]
             } 
             InitializeDatatable();
-        });
-
-        function calculateFinancialYearDates(currentDate) {
-            var currentYear = currentDate.getFullYear();
-
-            var financialYearStartDate = new Date(currentYear, 3, 1);
-            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
-
-            return {
-                start: financialYearStartDate,
-                end: financialYearEndDate
-            };
-        }
+        });        
 
         function Search() {
             InitializeDatatable();

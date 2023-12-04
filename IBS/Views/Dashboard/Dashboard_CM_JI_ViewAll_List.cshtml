@@ -64,14 +64,13 @@
 
     <script type="text/javascript">
         var Columns = [];
-        $(function () {
-
+        $(function () {            
             var currentDate = new Date();
-            var financialYearDates = calculateFinancialYearDates(currentDate);
+            var financialYearDates = GetFinancialYearStartEndDate(); //calculateFinancialYearDates(currentDate);
 
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
-            
+
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);
@@ -165,20 +164,7 @@
                 ]
             }
             InitializeDatatable();
-        });
-
-        function calculateFinancialYearDates(currentDate) {
-            var currentYear = currentDate.getFullYear();
-
-            var financialYearStartDate = new Date(currentYear, 3, 1);
-            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
-
-            return {
-                start: financialYearStartDate,
-                end: financialYearEndDate
-            };
-        }
-
+        });        
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
@@ -196,7 +182,7 @@
                 paging: true,
                 searching: true,
                 ajax: {
-                        url: "@Url.Action("LoadDashboard_CM_JI_ViewAll_List", "Dashboard")",
+                    url: "@Url.Action("LoadDashboard_CM_JI_ViewAll_List", "Dashboard")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -211,8 +197,7 @@
                 columns: Columns,
                 "order": [[0, "asc"]]
             });
-        }
-
+        }                
     </script>
 }
 
