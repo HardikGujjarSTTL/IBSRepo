@@ -158,7 +158,7 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <label for="NIWorkType">Non Inspection Work Plan</label>
-                @Html.DropDownListFor(model => model.NIWorkType, Common.NIWorkType(), "--Select--",  new { @onChange="OnChangeOtherDesc();" })
+                @Html.DropDownListFor(model => model.NIWorkType, Common.NIWorkType(), "--Select--", new { @onChange = "OnChangeOtherDesc();" })
                 <span class="text-danger" id="spnErrorNIWorkType"></span>
             </div>
             <div class="col-md-8 mb-3 OtherDesc" style="display:none;">
@@ -211,7 +211,7 @@
     </div>
 
 </form>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
@@ -303,7 +303,7 @@
                     {
                         data: null, width: "5%", className: "dt-align-center",
                         render: function (data, type, row, meta) {
-                            return '<input type="checkbox" name="chkDWplan" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '"><label for="' + data.CallSno + '"></label>';
+                            return '<input type="checkbox" name="chkDWplan" CaseNo="' + data.CaseNo + '" CallRecvDt="' + data.CallRecvDt + '" CallSno="' + data.CallSno + '" MfgCd="' + data.MfgCd + '"><label for="' + data.CallSno + '"></label>';
                         }
                     },
                     {
@@ -393,15 +393,13 @@
                             var IsUrgency = data.IsUrgency;
                             var Desc = "";
                             var html = '<div>';
-                             if (IsUrgency == "A")
-                            {
+                            if (IsUrgency == "A") {
                                 Desc = "Approved";
                             }
                             else if (IsUrgency == "R") {
                                 Desc = "Rejected";
                             }
-                            else
-                            {
+                            else {
                                 Desc = "Pending";
                             }
 
@@ -439,14 +437,16 @@
         }
 
         function Save() {
+            debugger
             checkedWork = [];
             var dt = $('#dtList').DataTable();
             $(dt.$('input[name="chkDWplan"]:checked').each(function () {
                 var CaseNo = $(this).attr('CaseNo');
                 var CallRecvDt = $(this).attr('CallRecvDt');
                 var CallSno = $(this).attr('CallSno');
+                var MfgCd = $(this).attr('MfgCd');
                 //var caseNo = dt.cell($(this).closest('tr'), 2).data();
-                checkedWork.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno });
+                checkedWork.push({ CaseNo: CaseNo, CallRecvDt: CallRecvDt, CallSno: CallSno, MfgCd: MfgCd });
             }));
 
             if (checkedWork.length == 0) {
@@ -461,7 +461,7 @@
 
             // var d = new Date();
             // var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-            
+
             // var month = d.getMonth() + 1;
             // var day = d.getDate();
             // var CDate = (day < 10 ? '0' : '') + day + '/' +
@@ -471,7 +471,7 @@
             // {
 
             // }
-
+            
             $("#PlanDt").val(PlanDt);
             $("#InspWorkType").val(InspWorkType);
             $("#checkedWork").val(JSON.stringify(checkedWork));
@@ -555,8 +555,7 @@
             if (NIWorkType == "X") {
                 $(".OtherDesc").show();
             }
-            else
-            {
+            else {
                 $(".OtherDesc").hide();
             }
         }
@@ -657,4 +656,4 @@
             $("#Reason").val("");
         }
     </script>
-    }
+}

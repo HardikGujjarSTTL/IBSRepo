@@ -144,7 +144,7 @@
                                 wVendor = $"{item.VENDOR} At {item.MANUFACTURER}";
                             }
                             <tr>
-                                @if (item.CM_APPROVAL == "A")
+                                @if (item.CM_APPROVAL == "A" || item.CALL_STATUS != "M")
                                 {
                                     <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
                                     <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>

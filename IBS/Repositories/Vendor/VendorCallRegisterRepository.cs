@@ -63,7 +63,7 @@ namespace IBS.Repositories.Vendor
             {
                 T17CallRegister user = context.T17CallRegisters.Where(X => X.CaseNo == CaseNo && X.CallRecvDt == Convert.ToDateTime(CallRecvDt)).FirstOrDefault();
 
-                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt)).Count();
+                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
 
                 model.CallSno = count + 1;
 

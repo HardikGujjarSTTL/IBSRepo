@@ -3,6 +3,7 @@ using IBS.Interfaces.IE;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -227,40 +228,56 @@ namespace IBS.Repositories.IE
         public int DetailsInsertUpdate(DailyWorkPlanModel model, string Region, int GetIeCd)
         {
             int ID = 0;
-            int vend_count = 0, count = 0;
             List<DeSerializeDailyWorkModel> deserializedData = JsonConvert.DeserializeObject<List<DeSerializeDailyWorkModel>>(model.checkedWork);
-            var qryList = (from T47 in context.T47IeWorkPlans
-                           where T47.IeCd == GetIeCd && T47.VisitDt == Convert.ToDateTime(model.PlanDt)
-                           group T47 by T47.MfgCd into grouped
-                           select new
-                           {
-                               MfgCd = grouped.Key,
-                               Count = grouped.Count()
-                           }).ToList();
+
+            //int vend_count = 0, count = 0;
+            //var qryList = (from T47 in context.T47IeWorkPlans
+            //               where T47.IeCd == GetIeCd && T47.VisitDt == Convert.ToDateTime(model.PlanDt)
+            //               group T47 by T47.MfgCd into grouped
+            //               select new
+            //               {
+            //                   MfgCd = grouped.Key,
+            //                   Count = grouped.Count()
+            //               }).ToList();
 
 
-            foreach (var dt1 in deserializedData)
+            //foreach (var dt1 in deserializedData)
+            //{
+            //    var InsertRcrd = (from t17 in context.T17CallRegisters
+            //                      where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
+            //                      group t17 by t17.MfgCd into grouped
+            //                      select new
+            //                      {
+            //                          MfgCd = grouped.Key,
+            //                          Count = grouped.Count()
+            //                      }).FirstOrDefault();
+            //    foreach (var dtl in qryList)
+            //    {
+            //        if (InsertRcrd.MfgCd == dtl.MfgCd)
+            //        {
+            //            vend_count = vend_count + 1;
+            //        }
+            //    }
+            //}
+
+            //vend_count = vend_count + deserializedData.Count;
+            //count = count + deserializedData.Count + qryList.Count;
+
+            //if (vend_count > 3 || count > 5)
+            //{
+            //    ID = 0;
+            //}
+
+
+            int VendCount = 0, RecCount=0;
+            var distinctVCodes = deserializedData.Select(x => x.MfgCd).Distinct();
+            foreach (var VCode in distinctVCodes)
             {
-                var InsertRcrd = (from t17 in context.T17CallRegisters
-                                  where t17.CaseNo == dt1.CaseNo && t17.CallRecvDt == dt1.CallRecvDt && t17.CallSno == dt1.CallSno
-                                  group t17 by t17.MfgCd into grouped
-                                  select new
-                                  {
-                                      MfgCd = grouped.Key,
-                                      Count = grouped.Count()
-                                  }).FirstOrDefault();
-                foreach (var dtl in qryList)
-                {
-                    if (InsertRcrd.MfgCd == dtl.MfgCd)
-                    {
-                        vend_count = vend_count + 1;
-                    }
-                }
+                VendCount = VendCount + 1;
+                RecCount = Convert.ToInt32(deserializedData.Count);
             }
-            vend_count = vend_count + deserializedData.Count;
-            count = count + deserializedData.Count + qryList.Count;
 
-            if (vend_count > 3 || count > 5)
+            if (VendCount > 3 || RecCount > 5)
             {
                 ID = 0;
             }
@@ -481,7 +498,7 @@ namespace IBS.Repositories.IE
             return dTResult;
         }
 
-        public string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region,string UserName)
+        public string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region, string UserName)
         {
             string Dtl = "";
             int co_cd = 0;
@@ -490,7 +507,7 @@ namespace IBS.Repositories.IE
             {
                 co_cd = Convert.ToInt32(T09.IeCoCd);
             }
-            if(co_cd > 0)
+            if (co_cd > 0)
             {
                 NoIeWorkPlan plan = new NoIeWorkPlan();
                 plan.IeCd = GetIeCd;
