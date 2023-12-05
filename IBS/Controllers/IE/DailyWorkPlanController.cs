@@ -12,11 +12,13 @@ namespace IBS.Controllers.IE
     {
         #region Variables
         private readonly IDailyWorkPlanRepository dailyRepository;
+        private readonly IConfiguration config;
         #endregion
 
-        public DailyWorkPlanController(IDailyWorkPlanRepository _dailyRepository)
+        public DailyWorkPlanController(IDailyWorkPlanRepository _dailyRepository, IConfiguration _config)
         {
             dailyRepository = _dailyRepository;
+            this.config = _config;
         }
 
         public IActionResult DailyWorkPlan()
@@ -55,6 +57,7 @@ namespace IBS.Controllers.IE
                 {
                     model.checkedWork = formCollection["checkedWork"];
                 }
+                model.PlanDHours = Convert.ToInt32(config.GetSection("AppSettings")["PlanDHours"]);
                 int i = 0;
                 model.Createdby = Convert.ToString(UserName.Trim());
                 model.UserId = Convert.ToString(UserName.Trim());
@@ -63,7 +66,11 @@ namespace IBS.Controllers.IE
                 if (model.ActionType == "S")
                 {
                     i = dailyRepository.DetailsInsertUpdate(model, Region, GetIeCd);
-                    if (i == 0)
+                    if (i == 1)
+                    {
+                        AlertDanger("Your Work Plan Cannot be Saved due to today after 3:00 clock can't saved. ");
+                    }
+                    else if (i == 0)
                     {
                         AlertDanger("Your Work Plan Cannot be Saved due to  one or both of the following \n1. You have selected more then 3 different vendors. \n2. You have Selected more then 6 calls of a particular vendor.");
                     }

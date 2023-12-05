@@ -355,6 +355,9 @@
                         $("#PurchaserCd").val(ids);
                     }
                 }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
             });
         }
 

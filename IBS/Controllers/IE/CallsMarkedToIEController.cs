@@ -26,12 +26,14 @@ namespace IBS.Controllers.IE
             CallsMarkedToIEModel model = new();
             string Fpath = $"{Request.Scheme}://{Request.Host}";
             var CaseNoPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+            var LabPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.Lab);
             model = callmarksRepository.GetReport(GetIeCd, Convert.ToString(UserId), type);
             model.PType = type;
             model.IeName = IeName;
 
             model.FilePath1 = Fpath;
             model.FilePath2 = CaseNoPath;
+            model.FilePath3 = LabPath;
 
             return View(model);
         }

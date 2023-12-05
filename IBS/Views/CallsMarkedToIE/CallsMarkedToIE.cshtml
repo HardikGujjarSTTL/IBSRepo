@@ -92,6 +92,7 @@
 
                             CallStausF = $"{item.CALL_STATUS_FULL}";
                             D1 = $"{item.CALL_STATUS_FULL}";
+
                             if (item.CALL_STATUS == "U")
                             {
                                 if (item.LAB_STATUS != null)
@@ -102,6 +103,7 @@
                                 else
                                 {
                                     CallStausF += "\nSample Not Recieved in Lab.";
+                                        D1 += "\nSample Not Recieved in Lab.";
                                 }
                                 if (item.PAYMENT_RECIEPT != 0)
                                 {
@@ -116,6 +118,7 @@
                                     D2 = "\nPayment Reciept Not Uploaded By Vendor.";
                                 }
                             }
+
                             if (item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
@@ -223,14 +226,26 @@
                                 <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
 
                                 @* <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
+
                                 @if (item.CALL_STATUS == "U")
                                 {
-                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit">Lab Report</a><br />@D2</font></td>
+                                    var fpath123 = Model.FilePath3 + "/" + item.CASE_NO + "_" + item.CALL_SNO + "_" + Convert.ToDateTime(item.CALL_RECV_DT).ToString("yyyyddMM") + ".pdf";
+                                    var Fpath1 = Model.FilePath1 + "/ReadWriteData/LAB/" + item.CASE_NO + "_" + item.CALL_SNO + "_" + Convert.ToDateTime(item.CALL_RECV_DT).ToString("yyyyddMM") + ".pdf";
+                                    if (System.IO.File.Exists(fpath123) == true)
+                                    {
+                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit" target="_blank">Lab Report</a><br />@D2</font></td>
+                                    }
+                                    else
+                                    {
+                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
+                                    }
+                                    
                                 }
                                 else
                                 {
                                     <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
                                 }
+
                                 <td align="center"><font size="1" face="Verdana">@item.REMARKS</font></td>
                                 <td align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
                                 <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>

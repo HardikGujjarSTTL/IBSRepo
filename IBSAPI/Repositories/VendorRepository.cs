@@ -797,6 +797,10 @@ namespace IBSAPI.Repositories
             if (model.ActionType == "A")
             {
                 int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.RegionCode).Count();
+                
+                var count = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(model.CallRecvDt).Date).Count();
+                model.CallSno = count + 1;
+                
                 if (cmdCL == 0)
                 {
                     var w_item_rdso = "";
