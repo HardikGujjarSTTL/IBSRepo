@@ -447,9 +447,13 @@ namespace IBS.Controllers.Vendor
             try
             {
                 bool IsDigit = false;
+                if(ConsigneeSearch == null || ConsigneeSearch == "" || ConsigneeSearch.Length <= 1)
+                {
+                    return Json(new { status = false, responseText = "Please Enter Atleast 2 Charaters in Search Criteria!!!" });
+                }
                 if (ConsigneeSearch != null && ConsigneeSearch != "0")
                 {
-                    char characterToCheck = ConsigneeSearch[2];
+                    char characterToCheck = ConsigneeSearch[1];
                     IsDigit = Char.IsDigit(characterToCheck);
                 }
                 List<SelectListItem> agencyClient = new List<SelectListItem>();

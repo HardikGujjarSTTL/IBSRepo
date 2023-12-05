@@ -79,7 +79,7 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                int PlanDHours = Convert.ToInt32(config.GetSection("AppSettings")["PlanDHours"]);
+                int PlanDHours = Convert.ToInt32(config.GetSection("MyAppSettings")["PlanDHours"]);
                 int id = callRepository.SheduleInspection(sheduleInspectionRequestModel,PlanDHours);
                 if (id == 999)
                 {
