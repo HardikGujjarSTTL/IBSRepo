@@ -136,6 +136,10 @@ namespace IBSAPI.Controllers
                 UserModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName);
                 if (userMaster != null)
                 {
+                    if(userMaster.userId.Trim() == "84997")
+                    {
+                        userMaster.Email = "urvesh.modi@silvertouch.com";
+                    }
                     if (userMaster.Email != null && userMaster.Email != "")
                     {
                         string rootPath = Configuration["MyAppSettings:ResetPasswordPath"] + Common.EncryptQueryString(Convert.ToString(userMaster.userId));
