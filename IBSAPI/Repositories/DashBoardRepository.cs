@@ -135,7 +135,8 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
                                   select t13).Count();
@@ -149,7 +150,8 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && allowedStatuses.Contains(t17.CallStatus)
                                         && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
@@ -164,7 +166,8 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && allowedStatuses.Contains(t17.CallStatus)
                                         && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
