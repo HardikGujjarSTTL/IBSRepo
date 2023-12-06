@@ -6,7 +6,8 @@
     string ReportType = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) ? Convert.ToString(HttpContextAccessor.HttpContext.Request.Query["ReportType"]) : "";
     string ReportTitle = string.Empty;//EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
 
-    if(ReportType != "COIEWiseCalls"){
+    if (ReportType != "COIEWiseCalls")
+    {
         ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(ReportType);
     }
     if (ReportType == "COWISEIE") ReportTitle = "Controlling Officer Wise IE";
@@ -165,7 +166,7 @@
                     <div class="col-md-12 custom-readio">
                         <div class="company-checkbox">
                             <div class="remember">
-                                <label for="year">Status of CM's</label> &nbsp;&nbsp; &nbsp;&nbsp;
+                                <label for="year">Status of IE's</label> &nbsp;&nbsp; &nbsp;&nbsp;
                                 <div class="remecheckbox">
                                     <input type="radio" value="AllCM" id="AllCM" name="AllCM" checked="checked" />
                                     <label for="AllCM">All IE</label>
@@ -175,6 +176,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetIENameIsStatusNull(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
                     </div>
                 }
                 @if (ReportType == "C")
@@ -193,10 +197,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
+                    </div>
                 }
-                <div class="col-md-3">
-                    @Html.DropDownList("iecmname", new SelectList(IBS.Models.Common.GetCOData(@ViewBag.Regions) , "Value", "Text"),"--Select--", new { id = "iecmname" })
-                </div>
+
 
                 <div class="custom-readio">
                     <div class="company-checkbox">
@@ -348,8 +353,8 @@
             </form>
         </div>
 
-         <div class="task-inner row CONTRACT" style="display: none">
-            
+        <div class="task-inner row CONTRACT" style="display: none">
+
             <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmCONTRACT">
                 <input type="hidden" id="hdnReportType" name="hdnReportType" />
                 <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
@@ -357,41 +362,41 @@
                 <input type="hidden" id="hdnRegion" name="hdnRegion" />
                 <input type="hidden" id="hdnclientname" name="hdnclientname" />
                 <div class="row my-0">
-                <div class="col-md-3">
-                    <div class="input-search">
-                        <label for="FromDate">For The Period From</label>
-                        <input type="text" class="datepicker" id="FromDateCONTRACT" placeholder="DD/MM/YYYY" />
-                        <span class="text-danger field-validation-error" id="spnErrorFromDateCONTRACT"></span>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDateCONTRACT" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDateCONTRACT"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-search">
-                        <label for="ToDate">To</label>
-                        <input type="text" class="datepicker" id="ToDateCONTRACT" placeholder="DD/MM/YYYY" />
-                        <span class="text-danger field-validation-error" id="spnErrorToDateCONTRACT"></span>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDate">To</label>
+                            <input type="text" class="datepicker" id="ToDateCONTRACT" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDateCONTRACT"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-search">
-                        <label for="Region">Region</label>
-                        @Html.DropDownList("RegionCONTRACT", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--" ,new { id = "RegionCONTRACT" })
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="Region">Region</label>
+                            @Html.DropDownList("RegionCONTRACT", new SelectList(IBS.Models.Common.FeedBackRegion() , "Value", "Text"),"--Select--" ,new { id = "RegionCONTRACT" })
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-search">
-                        <label for="clientname">Client Wise</label>
-                        <input type="text" id="clientname" />
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="clientname">Client Wise</label>
+                            <input type="text" id="clientname" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="savenext-btn btnAlign">
-                        <button type="button" class="save-btn active" onclick="ViewReportfrmCONTRACT();">Generate Report</button>
-                        <button type="button" class="reset-btn" onclick="ClearControlsfrmCONTRACT();">Clear</button>
+                    <div class="col-md-5">
+                        <div class="savenext-btn btnAlign">
+                            <button type="button" class="save-btn active" onclick="ViewReportfrmCONTRACT();">Generate Report</button>
+                            <button type="button" class="reset-btn" onclick="ClearControlsfrmCONTRACT();">Clear</button>
+                        </div>
                     </div>
-                </div>
                 </div>
             </form>
-        
+
         </div>
 
         <div class="task-inner row CLUSVENDOR" style="display: none">
@@ -456,19 +461,19 @@
         </div>
 
         <div class="task-inner row VENDPER" style="display: none">
-            
-                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDPER">
-                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
-                    <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
-                    <input type="hidden" id="hdnToDate" name="hdnToDate" />
-                    <input type="hidden" id="hdnformonth" name="hdnformonth" />
-                    <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
-                    <input type="hidden" id="hdnmonth" name="hdnmonth" />
-                    <input type="hidden" id="hdnyear" name="hdnyear" />
-                    <input type="hidden" id="hdnvendor" name="hdnvendor" />
-                    <input type="hidden" id="hdnvendcd" name="hdnvendcd" />
-                    <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
-                    <div class="row my-0">
+
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDPER">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
+                <input type="hidden" id="hdnToDate" name="hdnToDate" />
+                <input type="hidden" id="hdnformonth" name="hdnformonth" />
+                <input type="hidden" id="hdnforperiod" name="hdnforperiod" />
+                <input type="hidden" id="hdnmonth" name="hdnmonth" />
+                <input type="hidden" id="hdnyear" name="hdnyear" />
+                <input type="hidden" id="hdnvendor" name="hdnvendor" />
+                <input type="hidden" id="hdnvendcd" name="hdnvendcd" />
+                <input type="hidden" id="hdnmonthtxt" name="hdnmonthtxt" />
+                <div class="row my-0">
                     <div class="col-md-6">
                         <div class="custom-readio">
                             <div class="company-checkbox">
@@ -531,17 +536,17 @@
                             <button type="button" class="reset-btn" onclick="ClearControlsVENDPER();">Clear</button>
                         </div>
                     </div>
-                    </div>
-               </form>
-        
-    </div>
+                </div>
+            </form>
+
+        </div>
 
         <div class="task-inner row VENDFEED" style="display: none">
             <div class="row my-0">
-                    <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDFEED">
-                         <input type="hidden" id="hdnReportType" name="hdnReportType" />
-                        <div class="col-md-5">
-                            <div class="savenext-btn">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmVENDFEED">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <div class="col-md-5">
+                        <div class="savenext-btn">
                             <button type="button" class="save-btn active" onclick="ViewReportVENDFEED();">Generate Report</button>
                         </div>
                     </div>
@@ -550,36 +555,36 @@
         </div>
 
         <div class="task-inner row CHECK" style="display: none">
-           
-                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmPWCHECK">
-                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
-                    <input type="hidden" id="hdnFromDatePWCHECK" name="hdnFromDatePWCHECK" />
-                    <input type="hidden" id="hdnToDatePWCHECK" name="hdnToDatePWCHECK" />
-                    <div class="row my-0">
-                        <div class="col-md-3">
-                            <div class="input-search">
-                                <label for="FromDate">For The Period From</label>
-                                <input type="text" class="datepicker" id="FromDatePWCHECK" placeholder="DD/MM/YYYY" />
-                                <span class="text-danger field-validation-error" id="spnErrorFromDatePWCHECK"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-search">
-                                <label for="ToDate">To</label>
-                                <input type="text" class="datepicker" id="ToDatePWCHECK" placeholder="DD/MM/YYYY" />
-                                <span class="text-danger field-validation-error" id="spnErrorToDatePWCHECK"></span>
-                            </div>
+
+            <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmPWCHECK">
+                <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                <input type="hidden" id="hdnFromDatePWCHECK" name="hdnFromDatePWCHECK" />
+                <input type="hidden" id="hdnToDatePWCHECK" name="hdnToDatePWCHECK" />
+                <div class="row my-0">
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="FromDate">For The Period From</label>
+                            <input type="text" class="datepicker" id="FromDatePWCHECK" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorFromDatePWCHECK"></span>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="savenext-btn btnAlign">
-                            <button type="button" class="save-btn active" onclick="ViewReportPWCHECK();">Generate Report</button>
-                            <button type="button" class="reset-btn" onclick="ClearControlsPWCHECK();">Clear</button>
+                    <div class="col-md-3">
+                        <div class="input-search">
+                            <label for="ToDate">To</label>
+                            <input type="text" class="datepicker" id="ToDatePWCHECK" placeholder="DD/MM/YYYY" />
+                            <span class="text-danger field-validation-error" id="spnErrorToDatePWCHECK"></span>
                         </div>
                     </div>
-                    </form>
-            
-         </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="savenext-btn btnAlign">
+                        <button type="button" class="save-btn active" onclick="ViewReportPWCHECK();">Generate Report</button>
+                        <button type="button" class="reset-btn" onclick="ClearControlsPWCHECK();">Clear</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
 
         <div class="task-inner row U" style="display: none">
             <div class="row my-0">
@@ -862,7 +867,7 @@
 
             BindlstIE();
             if ('@ReportType' == 'COWISEIE') {
-                $(".COWISEIE").css("display", "");               
+                $(".COWISEIE").css("display", "");
             }
             else if ('@ReportType' == "COIEWiseCalls") {
                 $(".COIEWiseCalls").css("display", "");
@@ -1092,7 +1097,7 @@
 
             $("#frmONGCON").submit();
         }
-        
+
         function ViewReportCOWISEIE() {
             var ReportType = '@ReportType';
             $('#frmCOWISEIE').find("#hdnReportType").val(ReportType);
@@ -1100,7 +1105,7 @@
         }
 
         function ViewReportCOIEWiseCalls(Case_No, Call_Recv_Date, Call_SNo) {
-            var ReportType = '@ReportType';            
+            var ReportType = '@ReportType';
             let myObject = { ReportType, Case_No, Call_Recv_Date, Call_SNo };
             var url = '@Url.Action("ManageCoIeWiseCalls", "OtherReports")?' + $.param(myObject);
             window.open(url, '_blank');
