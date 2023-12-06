@@ -37,6 +37,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -47,6 +48,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -76,6 +78,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -86,6 +89,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -166,6 +170,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -176,6 +181,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -205,6 +211,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -215,6 +222,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -245,6 +253,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -255,6 +264,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -289,6 +299,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -299,6 +310,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -331,6 +343,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -341,6 +354,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -376,6 +390,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -386,6 +401,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -418,6 +434,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -428,6 +445,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
