@@ -5,6 +5,9 @@
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string Allregion { get; set; }
+        public string JIInspRegion { get; set; }
+        public string InspRegion { get; set; }
+        public string JIInspReqRegion { get; set; }
         public string regionorth { get; set; }
         public string regionsouth { get; set; }
         public string regioneast { get; set; }

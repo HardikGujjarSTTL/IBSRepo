@@ -26,10 +26,10 @@
         <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdncompfromdt" name="hdncompfromdt" />
         <input type="hidden" id="hdncomptodt" name="hdncomptodt" />
-        <input type="hidden" id="hdnallRegions" name="hdnallRegions" />
-        <input type="hidden" id="hdnnorthern" name="hdnnorthern" />
-        <input type="hidden" id="hdnsouthern" name="hdnsouthern" />
-        <input type="hidden" id="hdneastern" name="hdneastern" />
+        <input type="hidden" id="hdnInspRegions" name="hdnInspRegions" />
+        <input type="hidden" id="hdnJIInspRegion" name="hdnJIInspRegion" />
+        <input type="hidden" id="hdnJIREQRegion" name="hdnJIREQRegion" />
+       @* <input type="hidden" id="hdneastern" name="hdneastern" />
         <input type="hidden" id="hdnwestern" name="hdnwestern" />
         <input type="hidden" id="hdnalljiRegions" name="hdnalljiRegions" />
         <input type="hidden" id="hdnnorthernji" name="hdnnorthernji" />
@@ -39,7 +39,7 @@
         <input type="hidden" id="hdncompallRegions" name="hdncompallRegions" />
         <input type="hidden" id="hdnYes" name="hdnYes" />
         <input type="hidden" id="hdnNo" name="hdnNo" />
-        <input type="hidden" id="hdnCancelled" name="hdnCancelled" />
+        <input type="hidden" id="hdnCancelled" name="hdnCancelled" />*@
         <input type="hidden" id="hdnUnderConsideration" name="hdnUnderConsideration" />
         <input type="hidden" id="hdnallaction" name="hdnallaction" />
         <input type="hidden" id="hdnParticularAction" name="hdnParticularAction" />
@@ -63,23 +63,23 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="allRegions" name="inspectionRegion" value="All Regions">
+                <input type="radio" id="allRegions" name="inspectionRegion" value="All">
                 <label for="allRegions">All Regions</label>
             </li>
             <li>
-                <input type="radio" id="northern" name="inspectionRegion" value="Northern">
+                <input type="radio" id="northern" name="inspectionRegion" value="N">
                 <label for="northern">Northern</label>
             </li>
             <li>
-                <input type="radio" id="southern" name="inspectionRegion" value="Southern">
+                <input type="radio" id="southern" name="inspectionRegion" value="S">
                 <label for="southern">Southern</label>
             </li>
             <li>
-                <input type="radio" id="eastern" name="inspectionRegion" value="Eastern">
+                <input type="radio" id="eastern" name="inspectionRegion" value="E">
                 <label for="eastern">Eastern</label>
             </li>
             <li>
-                <input type="radio" id="western" name="inspectionRegion" value="Western">
+                <input type="radio" id="western" name="inspectionRegion" value="W">
                 <label for="western">Western</label>
             </li>
         </ul>
@@ -90,27 +90,27 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="alljiRegions" name="jointinspectionRegion" value="All Regions">
+                <input type="radio" id="alljiRegions" name="jointinspectionRegion" value="All">
                 <label for="alljiRegions">All Regions</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="northernji" name="jointinspectionRegion" value="Northern">
+                <input type="radio" id="northernji" name="jointinspectionRegion" value="N">
                 <label for="northernji">Northern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="southernji" name="jointinspectionRegion" value="Southern">
+                <input type="radio" id="southernji" name="jointinspectionRegion" value="S">
                 <label for="southernji">Southern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="easternji" name="jointinspectionRegion" value="Eastern">
+                <input type="radio" id="easternji" name="jointinspectionRegion" value="E">
                 <label for="easternji">Eastern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="westernji" name="jointinspectionRegion" value="Western">
+                <input type="radio" id="westernji" name="jointinspectionRegion" value="W">
                 <label for="westernji">Western</label>
                 <br>
             </li>
@@ -127,22 +127,22 @@
                 <br>
             </li>
             <li>
-                <input type="radio" id="Yes" name="compinspectionRegion" value="Yes">
+                <input type="radio" id="Yes" name="compinspectionRegion" value="Y">
                 <label for="Yes">Yes</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="No" name="compinspectionRegion" value="No">
+                <input type="radio" id="No" name="compinspectionRegion" value="N">
                 <label for="No">No</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Cancelled" name="compinspectionRegion" value="Cancelled">
+                <input type="radio" id="Cancelled" name="compinspectionRegion" value="C">
                 <label for="Cancelled">Cancelled</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="UnderConsideration" name="compinspectionRegion" value="Under Consideration">
+                <input type="radio" id="UnderConsideration" name="compinspectionRegion" value="UC">
                 <label for="UnderConsideration">Under Consideration</label>
                 <br>
             </li>
@@ -421,20 +421,9 @@
         <input type="hidden" id="hdnReportType" name="hdnReportType" />
         <input type="hidden" id="hdncompfromdtcorp" name="hdncompfromdtcorp" />
         <input type="hidden" id="hdncomptodtcorp" name="hdncomptodtcorp" />
-        <input type="hidden" id="hdnallRegionscorp" name="hdnallRegionscorp" />
-        <input type="hidden" id="hdnnortherncorp" name="hdnnortherncorp" />
-        <input type="hidden" id="hdnsoutherncorp" name="hdnsoutherncorp" />
-        <input type="hidden" id="hdneasterncorp" name="hdneasterncorp" />
-        <input type="hidden" id="hdnwesterncorp" name="hdnwesterncorp" />
-        <input type="hidden" id="hdnalljiRegionscorp" name="hdnalljiRegionscorp" />
-        <input type="hidden" id="hdnnorthernjicorp" name="hdnnorthernjicorp" />
-        <input type="hidden" id="hdnsouthernjicorp" name="hdnsouthernjicorp" />
-        <input type="hidden" id="hdneasternjicorp" name="hdneasternjicorp" />
-        <input type="hidden" id="hdnwesternjicorp" name="hdnwesternjicorp" />
-        <input type="hidden" id="hdncompallRegionscorp" name="hdncompallRegionscorp" />
-        <input type="hidden" id="hdnYescorp" name="hdnYescorpcorp" />
-        <input type="hidden" id="hdnNocorp" name="hdnNocorpcorp" />
-        <input type="hidden" id="hdnCancelledcorp" name="hdnCancelledcorpcorp" />
+        <input type="hidden" id="hdnInspRegions" name="hdnInspRegions" />
+        <input type="hidden" id="hdnJIInspRegion" name="hdnJIInspRegion" />
+        <input type="hidden" id="hdnJIREQRegion" name="hdnJIREQRegion" />
         <input type="hidden" id="hdnUnderConsiderationcorp" name="hdnUnderConsiderationcorp" />
         <input type="hidden" id="hdnallactioncorp" name="hdnallactioncorp" />
         <input type="hidden" id="hdnParticularActioncorp" name="hdnParticularActioncorp" />
@@ -461,23 +450,23 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="allRegionscorp" name="inspectionRegion" value="All Regions">
+                <input type="radio" id="allRegionscorp" name="inspectionRegion" value="All">
                 <label for="allRegionscorp">All Regions</label>
             </li>
             <li>
-                <input type="radio" id="northerncorp" name="inspectionRegion" value="Northern">
+                <input type="radio" id="northerncorp" name="inspectionRegion" value="N">
                 <label for="northerncorp">Northern</label>
             </li>
             <li>
-                <input type="radio" id="southerncorp" name="inspectionRegion" value="Southern">
+                <input type="radio" id="southerncorp" name="inspectionRegion" value="S">
                 <label for="southerncorp">Southern</label>
             </li>
             <li>
-                <input type="radio" id="easterncorp" name="inspectionRegion" value="Eastern">
+                <input type="radio" id="easterncorp" name="inspectionRegion" value="E">
                 <label for="easterncorp">Eastern</label>
             </li>
             <li>
-                <input type="radio" id="westerncorp" name="inspectionRegion" value="Western">
+                <input type="radio" id="westerncorp" name="inspectionRegion" value="W">
                 <label for="westerncorp">Western</label>
             </li>
         </ul>
@@ -488,27 +477,27 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="alljiRegionscorp" name="jointinspectionRegion" value="All Regions">
+                <input type="radio" id="alljiRegionscorp" name="jointinspectionRegion" value="All">
                 <label for="alljiRegionscorp">All Regions</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="northernjicorp" name="jointinspectionRegion" value="Northern">
+                <input type="radio" id="northernjicorp" name="jointinspectionRegion" value="N">
                 <label for="northernjicorp">Northern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="southernjicorp" name="jointinspectionRegion" value="Southern">
+                <input type="radio" id="southernjicorp" name="jointinspectionRegion" value="S">
                 <label for="southernjicorp">Southern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="easternjicorp" name="jointinspectionRegion" value="Eastern">
+                <input type="radio" id="easternjicorp" name="jointinspectionRegion" value="E">
                 <label for="easternjicorp">Eastern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="westernjicorp" name="jointinspectionRegion" value="Western">
+                <input type="radio" id="westernjicorp" name="jointinspectionRegion" value="W">
                 <label for="westernjicorp">Western</label>
                 <br>
             </li>
@@ -525,22 +514,22 @@
                 <br>
             </li>
             <li>
-                <input type="radio" id="Yescorp" name="compinspectionRegion" value="Yes">
+                <input type="radio" id="Yescorp" name="compinspectionRegion" value="Y">
                 <label for="Yescorp">Yes</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Nocorp" name="compinspectionRegion" value="No">
+                <input type="radio" id="Nocorp" name="compinspectionRegion" value="N">
                 <label for="Nocorp">No</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Cancelledcorp" name="compinspectionRegion" value="Cancelled">
+                <input type="radio" id="Cancelledcorp" name="compinspectionRegion" value="C">
                 <label for="Cancelledcorp">Cancelled</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="UnderConsiderationcorp" name="compinspectionRegion" value="Under Consideration">
+                <input type="radio" id="UnderConsiderationcorp" name="compinspectionRegion" value="UC">
                 <label for="UnderConsiderationcorp">Under Consideration</label>
                 <br>
             </li>
@@ -1241,22 +1230,25 @@
 
             if (!IsValid) return;
             var ReportType = '@ReportType';
-            var FromDate = $('#compfromdt').val();;
-            var ToDate = $('#comptodt').val();;
-            var Allregion = $("#allRegions").is(":checked") == true ? "true" : "false";
-            var regionorth = $("#northern").is(":checked") == true ? "true" : "false";
-            var regionsouth = $("#southern").is(":checked") == true ? "true" : "false";
-            var regioneast = $("#eastern").is(":checked") == true ? "true" : "false";
-            var regionwest = $("#western").is(":checked") == true ? "true" : "false";
-            var jiallregion = $("#alljiRegions").is(":checked") == true ? "true" : "false";
-            var jinorth = $("#northernji").is(":checked") == true ? "true" : "false";
-            var jisourth = $("#southernji").is(":checked") == true ? "true" : "false";
-            var jieast = $("#easternji").is(":checked") == true ? "true" : "false";
-            var jiwest = $("#westernji").is(":checked") == true ? "true" : "false";
-            var compallregion = $("#compallRegions").is(":checked") == true ? "true" : "false";
-            var compyes = $("#Yes").is(":checked") == true ? "true" : "false";
-            var compno = $("#No").is(":checked") == true ? "true" : "false";
-            var cancelled = $("#Cancelled").is(":checked") == true ? "true" : "false";
+            var FromDate = $('#compfromdt').val();
+            var ToDate = $('#comptodt').val();
+            var InspRegion = $('input:radio[name=inspectionRegion]:checked').val();
+            var JIInspRegion = $('input:radio[name=jointinspectionRegion]:checked').val();
+            var JIInspReqRegion = $('input:radio[name=compinspectionRegion]:checked').val();
+            //var Allregion = $("#allRegions").is(":checked") == true ? "true" : "false";
+            //var regionorth = $("#northern").is(":checked") == true ? "true" : "false";
+            //var regionsouth = $("#southern").is(":checked") == true ? "true" : "false";
+            //var regioneast = $("#eastern").is(":checked") == true ? "true" : "false";
+            //var regionwest = $("#western").is(":checked") == true ? "true" : "false";
+            //var jiallregion = $("#alljiRegions").is(":checked") == true ? "true" : "false";
+            //var jinorth = $("#northernji").is(":checked") == true ? "true" : "false";
+            //var jisourth = $("#southernji").is(":checked") == true ? "true" : "false";
+            //var jieast = $("#easternji").is(":checked") == true ? "true" : "false";
+            //var jiwest = $("#westernji").is(":checked") == true ? "true" : "false";
+            //var compallregion = $("#compallRegions").is(":checked") == true ? "true" : "false";
+            //var compyes = $("#Yes").is(":checked") == true ? "true" : "false";
+            //var compno = $("#No").is(":checked") == true ? "true" : "false";
+            //var cancelled = $("#Cancelled").is(":checked") == true ? "true" : "false";
             var underconsider = $("#UnderConsideration").is(":checked") == true ? "true" : "false";
             var allaction = $("#allaction").is(":checked") == true ? "true" : "false";
             var particilaraction = $("#ParticularAction").is(":checked") == true ? "true" : "false";
@@ -1265,20 +1257,20 @@
             $('#frmCCU').find("#hdnReportType").val(ReportType);
             $('#frmCCU').find("#hdncompfromdt").val(FromDate);
             $('#frmCCU').find("#hdncomptodt").val(ToDate);
-            $('#frmCCU').find("#hdnallRegions").val(Allregion);
-            $('#frmCCU').find("#hdnnorthern").val(regionorth);
-            $('#frmCCU').find("#hdnsouthern").val(regionsouth);
-            $('#frmCCU').find("#hdneastern").val(regioneast);
-            $('#frmCCU').find("#hdnwestern").val(regionwest);
-            $('#frmCCU').find("#hdnalljiRegions").val(jiallregion);
-            $('#frmCCU').find("#hdnnorthernji").val(jinorth);
-            $('#frmCCU').find("#hdnsouthernji").val(jisourth);
-            $('#frmCCU').find("#hdneasternji").val(jieast);
-            $('#frmCCU').find("#hdnwesternji").val(jiwest);
-            $('#frmCCU').find("#hdncompallRegions").val(compallregion);
-            $('#frmCCU').find("#hdnYes").val(compyes);
-            $('#frmCCU').find("#hdnNo").val(compno);
-            $('#frmCCU').find("#hdnCancelled").val(cancelled);
+            $('#frmCCU').find("#hdnInspRegions").val(InspRegion);
+            $('#frmCCU').find("#hdnJIInspRegion").val(JIInspRegion);
+            $('#frmCCU').find("#hdnJIREQRegion").val(JIInspReqRegion);
+            //$('#frmCCU').find("#hdneastern").val(regioneast);
+            //$('#frmCCU').find("#hdnwestern").val(regionwest);
+            //$('#frmCCU').find("#hdnalljiRegions").val(jiallregion);
+            //$('#frmCCU').find("#hdnnorthernji").val(jinorth);
+            //$('#frmCCU').find("#hdnsouthernji").val(jisourth);
+            //$('#frmCCU').find("#hdneasternji").val(jieast);
+            //$('#frmCCU').find("#hdnwesternji").val(jiwest);
+            //$('#frmCCU').find("#hdncompallRegions").val(compallregion);
+            //$('#frmCCU').find("#hdnYes").val(compyes);
+            //$('#frmCCU').find("#hdnNo").val(compno);
+            //$('#frmCCU').find("#hdnCancelled").val(cancelled);
             $('#frmCCU').find("#hdnUnderConsideration").val(underconsider);
             $('#frmCCU').find("#hdnallaction").val(allaction);
             $('#frmCCU').find("#hdnParticularAction").val(particilaraction);
@@ -1418,7 +1410,7 @@
             $("#spnErrorFromDatecrop").html("");
             $("#spnErrorToDatecrop").html("");
             var IsValid = true;
-
+            debugger
             if ($("#compfromdtcrop").val() == "") {
                 $("#spnErrorFromDatecrop").html("The From Date field is required.");
                 IsValid = false;
@@ -1441,20 +1433,9 @@
             var ReportType = '@ReportType';
             var FromDate = $('#compfromdtcrop').val();;
             var ToDate = $('#comptodtcrop').val();;
-            var Allregion = $("#allRegionscorp").is(":checked") == true ? "true" : "false";
-            var regionorth = $("#northerncorp").is(":checked") == true ? "true" : "false";
-            var regionsouth = $("#southerncorp").is(":checked") == true ? "true" : "false";
-            var regioneast = $("#easterncorp").is(":checked") == true ? "true" : "false";
-            var regionwest = $("#westerncorp").is(":checked") == true ? "true" : "false";
-            var jiallregion = $("#alljiRegionscorp").is(":checked") == true ? "true" : "false";
-            var jinorth = $("#northernjicorp").is(":checked") == true ? "true" : "false";
-            var jisourth = $("#southernjicorp").is(":checked") == true ? "true" : "false";
-            var jieast = $("#easternjicorp").is(":checked") == true ? "true" : "false";
-            var jiwest = $("#westernjicorp").is(":checked") == true ? "true" : "false";
-            var compallregion = $("#compallRegionscorp").is(":checked") == true ? "true" : "false";
-            var compyes = $("#Yescorp").is(":checked") == true ? "true" : "false";
-            var compno = $("#Nocorp").is(":checked") == true ? "true" : "false";
-            var cancelled = $("#Cancelledcorp").is(":checked") == true ? "true" : "false";
+            var InspRegion = $('input:radio[name=inspectionRegion]:checked').val();
+            var JIInspRegion = $('input:radio[name=jointinspectionRegion]:checked').val();
+            var JIInspReqRegion = $('input:radio[name=compinspectionRegion]:checked').val();
             var underconsider = $("#UnderConsiderationcorp").is(":checked") == true ? "true" : "false";
             var allaction = $("#allactioncorp").is(":checked") == true ? "true" : "false";
             var particilaraction = $("#ParticularActioncorp").is(":checked") == true ? "true" : "false";
@@ -1467,20 +1448,9 @@
             $('#frmCORP').find("#hdnReportType").val(ReportType);
             $('#frmCORP').find("#hdncompfromdtcorp").val(FromDate);
             $('#frmCORP').find("#hdncomptodtcorp").val(ToDate);
-            $('#frmCORP').find("#hdnallRegionscorp").val(Allregion);
-            $('#frmCORP').find("#hdnnortherncorp").val(regionorth);
-            $('#frmCORP').find("#hdnsoutherncorp").val(regionsouth);
-            $('#frmCORP').find("#hdneasterncorp").val(regioneast);
-            $('#frmCORP').find("#hdnwesterncorp").val(regionwest);
-            $('#frmCORP').find("#hdnalljiRegionscorp").val(jiallregion);
-            $('#frmCORP').find("#hdnnorthernjicorp").val(jinorth);
-            $('#frmCORP').find("#hdnsouthernjicorp").val(jisourth);
-            $('#frmCORP').find("#hdneasternjicorp").val(jieast);
-            $('#frmCORP').find("#hdnwesternjicorp").val(jiwest);
-            $('#frmCORP').find("#hdncompallRegionscorp").val(compallregion);
-            $('#frmCORP').find("#hdnYescorp").val(compyes);
-            $('#frmCORP').find("#hdnNocorp").val(compno);
-            $('#frmCORP').find("#hdnCancelledcorp").val(cancelled);
+            $('#frmCORP').find("#hdnInspRegions").val(InspRegion);
+            $('#frmCORP').find("#hdnJIInspRegion").val(JIInspRegion);
+            $('#frmCORP').find("#hdnJIREQRegion").val(JIInspReqRegion);
             $('#frmCORP').find("#hdnUnderConsiderationcorp").val(underconsider);
             $('#frmCORP').find("#hdnallactioncorp").val(allaction);
             $('#frmCORP').find("#hdnParticularActioncorp").val(particilaraction);

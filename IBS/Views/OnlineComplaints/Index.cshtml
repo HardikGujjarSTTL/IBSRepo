@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Item">Item</label>
-                        <select id="Item" asp-for="Item" class="form-control" required></select>
+                        <select asp-for="Item" class="form-control"></select>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Qty. as per IC</label><i class="text-danger">*</i>
@@ -138,6 +138,7 @@
         });
 
         $("#InspRegionDropdown").change(function () {
+            debugger
             var InspRegionDropdown = $(this).val();
             var bkno = $("#bkno").val();
             var setno = $("#setno").val();
@@ -153,7 +154,9 @@
 
                     var items = JSON.parse(data);
 
-                    Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                    if(items.length != 0){
+                         Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                    }
                 }
             });
         });
@@ -190,6 +193,14 @@
         });
 
         function Save(){
+            debugger
+            var Item = $("#Item").val();
+
+            if(Item == ''){
+                alert("Item Is Not Exist For This Book No And Set No.");
+                return;
+            }
+
             if ($("#frmComplaints").valid()) {
                 SaveSingleDocuments("tab-1");
                 $("#frmComplaints").submit();
@@ -197,13 +208,12 @@
         }
 
         completed = function (response) {
-            debugger
             var res = response.responseJSON;
             var redirectUrl = '@Url.Action("Index", "OnlineComplaints")';
             ShowHideMsgNew(res.status, res.responseText);
             setTimeout(function () {
                 window.location.href = redirectUrl;
-            }, 1000);
+            }, 2000);
         };
 
     </script>
