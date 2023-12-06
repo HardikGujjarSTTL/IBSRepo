@@ -37,6 +37,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -47,6 +48,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -76,6 +78,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -86,6 +89,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -166,6 +170,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -176,6 +181,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -205,6 +211,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -215,6 +222,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -245,6 +253,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -255,6 +264,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -280,7 +290,7 @@ namespace IBSAPI.Controllers
             try
             {
                 DateTime currentDate = DateTime.Now;
-                DateTime FromDate = Common.GetFinancialYearStartDate(); //currentDate.AddMonths(-3);
+                DateTime FromDate = currentDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
                 var result = inspectionRepository.Get_Vendor_PendingInspection(Vend_Cd, FromDate, currentDate);
                 if (result.Count() > 0)
@@ -289,6 +299,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -299,6 +310,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -331,6 +343,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -341,6 +354,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -367,7 +381,7 @@ namespace IBSAPI.Controllers
             try
             {
                 DateTime ToDate = DateTime.Now;
-                DateTime FromDate = Common.GetFinancialYearStartDate();  //ToDate.AddMonths(-3);
+                DateTime FromDate = ToDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
                 var result = inspectionRepository.Get_Client_PendingInspection(Rly_CD, Rly_NonType, FromDate, ToDate);
                 if (result.Count() > 0)
@@ -376,6 +390,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -386,6 +401,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
@@ -409,7 +425,7 @@ namespace IBSAPI.Controllers
             try
             {
                 DateTime ToDate = DateTime.Now;
-                DateTime FromDate = Common.GetFinancialYearStartDate();  //ToDate.AddMonths(-3);
+                DateTime FromDate = ToDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
                 var result = inspectionRepository.Get_Client_Region_Wise_PendingInspection(Rly_CD, Rly_NonType, Region, FromDate, ToDate);
                 if (result.Count() > 0)
@@ -418,6 +434,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
                         message = "Data get successfully",
+                        totalRecord = result.Count(),
                         data = result,
                     };
                     return Ok(response);
@@ -428,6 +445,7 @@ namespace IBSAPI.Controllers
                     {
                         resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
                         message = "No Data Found",
+                        totalRecord = result.Count(),
                         data = result
                     };
                     return Ok(response);
