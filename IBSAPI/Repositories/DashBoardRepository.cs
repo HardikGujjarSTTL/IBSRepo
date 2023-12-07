@@ -1,6 +1,7 @@
 ﻿using IBSAPI.DataAccess;
 using IBSAPI.Interfaces;
 using IBSAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IBSAPI.Repositories
 {
@@ -17,9 +18,15 @@ namespace IBSAPI.Repositories
         {
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.IeCd == IeCd && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            where t17.IeCd == IeCd && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            select t17).Count();
             return totalCnt;
         }
 
@@ -29,10 +36,16 @@ namespace IBSAPI.Repositories
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.IeCd == IeCd && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            && allowedStatuses.Contains(x.CallStatus)
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            where t17.IeCd == IeCd && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            && allowedStatuses.Contains(t17.CallStatus)
+                            select t17).Count();
             return totalCnt;
         }
 
@@ -42,10 +55,16 @@ namespace IBSAPI.Repositories
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.IeCd == IeCd && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            && allowedStatuses.Contains(x.CallStatus)
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            where t17.IeCd == IeCd && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            && allowedStatuses.Contains(t17.CallStatus)
+                            select t17).Count();
             return totalCnt;
         }
         #endregion
@@ -55,9 +74,16 @@ namespace IBSAPI.Repositories
         {
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.MfgCd == Vendor_ID && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
+                            where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            select t17).Count();
             return totalCnt;
         }
 
@@ -67,10 +93,17 @@ namespace IBSAPI.Repositories
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.MfgCd == Vendor_ID && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            && allowedStatuses.Contains(x.CallStatus)
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
+                            where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            && allowedStatuses.Contains(t17.CallStatus)
+                            select t17).Count();
             return totalCnt;
         }
 
@@ -80,10 +113,17 @@ namespace IBSAPI.Repositories
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
-            var totalCnt = (from x in context.T17CallRegisters
-                            where x.MfgCd == Vendor_ID && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
-                            && allowedStatuses.Contains(x.CallStatus)
-                            select x).Count();
+            var totalCnt = (from t17 in context.T17CallRegisters
+                            join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                            from t13 in t13Group.DefaultIfEmpty() // Left Join
+                            join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
+                            from t09 in t09Group.DefaultIfEmpty() // Left Join
+                            join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
+                            from t05 in t05Group.DefaultIfEmpty() // Left Join
+                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()                            
+                            where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
+                            && allowedStatuses.Contains(t17.CallStatus)
+                            select t17).Count();
             return totalCnt;
         }
         #endregion
@@ -95,11 +135,12 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo  
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
                                   select t13).Count();
-            return totalInspCount;            
+            return totalInspCount;
         }
 
         public int GetClientCompletedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
@@ -109,7 +150,8 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && allowedStatuses.Contains(t17.CallStatus)
                                         && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
@@ -124,10 +166,11 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
 
             var totalInspCount = (from t17 in context.T17CallRegisters
-                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                                  join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                  from t13 in t13Group.DefaultIfEmpty() // Left Join
                                   where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
                                         && allowedStatuses.Contains(t17.CallStatus)
-                                        && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT 
+                                        && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
                                   select t13).Count();
             return totalInspCount;
         }

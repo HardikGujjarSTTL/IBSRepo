@@ -1,0 +1,143 @@
+﻿@model DashboardModel
+@{
+    ViewData["Title"] = "Lab_Dashboard_Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+    <div>
+        <a asp-action="Lab" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+    </div>
+</div>
+
+<div class="accordion-body" id="body">
+    <div class="row my-0">
+        <input asp-for="ActionType" hidden />
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        @* <th>#</th>
+                        <th>Name of Client</th>
+                        <th>No. of bills</th>
+                        <th>Value (₹)</th>
+                        <th>PO No.</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        var Columns = [];
+        $(function () {
+
+            var currentDate = new Date();
+            var financialYearDates = calculateFinancialYearDates(currentDate);
+
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+
+
+            $("#spnHeading").text("Oldest cases for which reports have not been uploaded ");
+            Columns = [
+                {
+                    data: '', orderable: false, width: '5%',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+
+                { data: "CASE_NO", title: "CASE NO" },
+                { data: "IE", title: "IE" },
+                { data: "Date", title: "Date" },
+                { data: "Vendor", title: "Vendor" },
+                { data: "SampleRegNo", title: "SampleRegNo" },
+                { data: "SampleRecDt", title: "SampleRecDt" },
+            ]
+
+            InitializeDatatable();
+        });
+
+        function calculateFinancialYearDates(currentDate) {
+            var currentYear = currentDate.getFullYear();
+
+            var financialYearStartDate = new Date(currentYear, 3, 1);
+            var financialYearEndDate = new Date(currentYear + 1, 2, 31);
+
+            return {
+                start: financialYearStartDate,
+                end: financialYearEndDate
+            };
+        }
+
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadDashboard_Lab_ViewAll_List", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate: FromDate,
+                            ToDate: ToDate
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: Columns,
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}

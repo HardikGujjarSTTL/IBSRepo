@@ -2,6 +2,12 @@
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Web;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using IBS.Helper;
 
 namespace IBS.Controllers.Reports.Billing
 {
@@ -9,12 +15,14 @@ namespace IBS.Controllers.Reports.Billing
     {
         #region Variables
         private readonly IBillRaisedRepository billraisedRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public BillingReportsController(IBillRaisedRepository _billraisedRepository)
+        public BillingReportsController(IBillRaisedRepository _billraisedRepository, IWebHostEnvironment _env)
         {
             billraisedRepository = _billraisedRepository;
+            this.env = _env;
         }
-        
+
         #region Main
         public IActionResult Index(string ActionType)
         {
@@ -96,9 +104,16 @@ namespace IBS.Controllers.Reports.Billing
         #endregion
 
         #region Railway Online Report
-        public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType,string chkRegion)
+        public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType, string chkRegion)
         {
-            BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType,Region, chkRegion);
+            string Fpath = $"{Request.Scheme}://{Request.Host}";
+            var CaseNoPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+            var BillICPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.BILLIC);
+            BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType, Region, chkRegion);
+
+            model.FilePath1 = Fpath;
+            model.FilePath2 = CaseNoPath;
+            model.FilePath3 = BillICPath;
             return View(model);
         }
         #endregion
@@ -121,9 +136,9 @@ namespace IBS.Controllers.Reports.Billing
         #endregion
 
         #region Bill Cris Reports
-        public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion,string ClientType, string lstAU, string actiontype,string rdbPRly, string rdbPAU)
+        public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string rdbPRly, string rdbPAU)
         {
-            BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype,Region, rdbPRly, rdbPAU);
+            BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, Region, rdbPRly, rdbPAU);
             return View(model);
         }
         #endregion

@@ -27,7 +27,7 @@
                 var IE_SrNo = 0;
                 if (Model.IEWisePerformance.Count() > 0)
                 {
-                    foreach (var item in Model.IEWisePerformance)
+                    foreach (var item in Model.IEWisePerformance.Take(10))
                     {
                         IE_SrNo = IE_SrNo + 1;
                         <tr>
@@ -52,6 +52,10 @@
             }
         </table>
     </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "IEP" })">View All</a>
+    </div>
 </section>
 <section>
     <div class="graph-section iePieGraphGrid">
@@ -75,19 +79,19 @@
                     </tr>
                     <tr>
                         <td class="textLeft">NR </td>
-                        <td class="text-center">23 </td>
+                        <td class="text-center">@Model.noOfJI.NR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">WR </td>
-                        <td class="text-center">12 </td>
+                        <td class="text-center">@Model.noOfJI.WR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">SR </td>
-                        <td class="text-center">34 </td>
+                        <td class="text-center">@Model.noOfJI.SR</td>
                     </tr>
                     <tr>
                         <td class="textLeft">ER </td>
-                        <td class="text-center">10 </td>
+                        <td class="text-center">@Model.noOfJI.ER</td>
                     </tr>
                 </table>
                 <div class="gridNote"><strong>Note:</strong> All region data for current FY.</div>
@@ -147,6 +151,10 @@
                 }
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "OPJC" })">View All</a>
     </div>
 </section>
 <section>
@@ -282,6 +290,10 @@
             }
         </table>
     </div>
+    <div class="tableBottomLink">
+        <div class="recordCount"></div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "ICC" })">View All</a>
+    </div>
 </section>
 <section class="table-section">
     <div class="table-title">
@@ -317,6 +329,10 @@
             }
         </table>
     </div>
+    <div class="tableBottomLink">
+        <div class="recordCount"></div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "VCC" })">View All</a>
+    </div>
 </section>
 <section class="table-section">
     <div class="table-title">
@@ -351,6 +367,10 @@
                 }
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount"></div>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "CCC" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -516,21 +536,22 @@
             series: [{
                 //name: 'Brands',
                 colorByPoint: true,
-                data: [{
-                    name: 'NR',
-                    y: 23,
-                    sliced: false,
-                    selected: false
-                }, {
-                    name: 'WR',
-                    y: 12
-                }, {
-                    name: 'SR',
-                    y: 34
-                }, {
-                    name: 'ER',
-                    y: 10
-                }]
+                data: @Html.Raw(Model.NoOfJISummary),
+                //data: [{
+                //    name: 'NR',
+                //    y: 23,
+                //    sliced: false,
+                //    selected: false
+                //}, {
+                //    name: 'WR',
+                //    y: 12
+                //}, {
+                //    name: 'SR',
+                //    y: 34
+                //}, {
+                //    name: 'ER',
+                //    y: 10
+                //}]
             }]
         });
 

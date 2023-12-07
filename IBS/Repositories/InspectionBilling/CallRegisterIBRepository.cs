@@ -19,6 +19,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
+using NuGet.Protocol.Plugins;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -459,7 +460,7 @@ namespace IBS.Repositories.InspectionBilling
 
             string ID = "";
             int CD = 0;
-            ie_cd = FindIeCODE(model);
+            //ie_cd = FindIeCODE(model);
             string department1 = model.DepartmentCode;
             if (department1 == "M")
             {
@@ -483,7 +484,6 @@ namespace IBS.Repositories.InspectionBilling
 
             var Co = context.T09Ies.Where(x => x.IeCd == Convert.ToInt32(IeCd)).Select(x => x.IeCoCd).FirstOrDefault();
             model.CoCd = Convert.ToByte(Co);
-
 
             if (model.ActionType == "A")
             {
@@ -526,7 +526,7 @@ namespace IBS.Repositories.InspectionBilling
                         w_irfc_funded = "N";
                     }
                     model.e_status = 1;
-                    if (ie_cd > 0)
+                    if (IeCd > 0)
                     {
                         try
                         {
@@ -2266,7 +2266,7 @@ namespace IBS.Repositories.InspectionBilling
                             ExtDelvDt = l.ExtDelvDt != null ? l.ExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001"
                         }).OrderByDescending(l => l.ExtDelvDt).FirstOrDefault();
 
-            if(result == null)
+            if (result == null)
             {
                 ext_delv_dt = "01/01/2001";
             }
@@ -2274,7 +2274,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 ext_delv_dt = result.ExtDelvDt;
             }
-            
+
             INSP_DATE = Convert.ToString(DateTime.Now.Date);
             if (ext_delv_dt == "01/01/2001")
             {
@@ -3241,6 +3241,17 @@ namespace IBS.Repositories.InspectionBilling
                                   && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
                                   && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
                                   .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+
+                    var ICTYPE = context.T10IcBooksets
+                                .Where(item => item.BkNo == model.BkNo && item.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                .Select(item => item.Ictype)
+                                .FirstOrDefault();
+
+                    if (ICTYPE == "F")
+                    {
+                        model.AlertMsg = "This Book number and Set number are Finalized.";
+                        return model.AlertMsg;
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
@@ -4099,6 +4110,7 @@ namespace IBS.Repositories.InspectionBilling
 
                     if (IcDetail == null)
                     {
+
                         var CallDetails = (from c in context.T18CallDetails
                                            where c.CaseNo == model.CaseNo && c.CallRecvDt == CallRecvDate
                                            && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm)
@@ -4128,14 +4140,26 @@ namespace IBS.Repositories.InspectionBilling
 
                             }
                         }
+
+
                     }
                     else
                     {
-                        IcDetail.BkNo = model.DocBkNo;
-                        IcDetail.SetNo = model.DocSetNo;
-                        context.SaveChanges();
+                        using (var command = context.Database.GetDbConnection().CreateCommand())
+                        {
+                            bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
+                            if (!wasOpen) command.Connection.Open();
+                            try
+                            {
+                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                                command.ExecuteNonQuery();
+                            }
+                            finally
+                            {
+                                if (!wasOpen) command.Connection.Close();
+                            }
+                        }
                     }
-                    // Execute the query                    
 
                     var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
 
@@ -4828,7 +4852,8 @@ namespace IBS.Repositories.InspectionBilling
             var queryResult = context.IcIntermediates
                          .Where(ici => ici.CaseNo == CaseNo &&
                                        ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                       ici.CallSno == CallSno)
+                                       ici.CallSno == CallSno && 
+                                       ici.ConsigneeCd == selectedConsigneeCd)
                          .OrderByDescending(ici => ici.Datetime)
                          .FirstOrDefault();
 
@@ -4836,13 +4861,13 @@ namespace IBS.Repositories.InspectionBilling
             {
                 model.DocBkNo = queryResult.BkNo;
                 model.DocSetNo = queryResult.SetNo;
-
+                model.Consignee = Convert.ToString(queryResult.ConsigneeCd);
             }
             else
             {
                 model.DocBkNo = "";
                 model.DocSetNo = "";
-
+                model.Consignee = "";
             }
             return model;
         }
@@ -5068,7 +5093,7 @@ namespace IBS.Repositories.InspectionBilling
             using (var command = cont.Database.GetDbConnection().CreateCommand())
             {
                 var trans = cont.Database.BeginTransaction();
-                bool wasOpen = command.Connection.State == ConnectionState.Open;
+                bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
                 if (!wasOpen) command.Connection.Open();
                 try
                 {

@@ -73,6 +73,10 @@
         public List<CallsMarkedToIEModelList> ReportLst { get; set; }
 
         public List<CallsMarkedToIEModelListNew> ReportLstNew { get; set; }
+
+        public string FilePath1 { get; set; }
+        public string FilePath2 { get; set; }
+        public string FilePath3 { get; set; }
     }
 
     public class CallsMarkedToIEModelList

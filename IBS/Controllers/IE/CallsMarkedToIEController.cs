@@ -4,7 +4,7 @@ using IBS.Models;
 using IBS.Models.Reports;
 using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using static IBS.Helper.Enums;
+using IBS.Helper;
 
 namespace IBS.Controllers.IE
 {
@@ -13,18 +13,27 @@ namespace IBS.Controllers.IE
         #region Variables
         private readonly ICallMarkedToIERepository callmarksRepository;
         public string PType = "";
+        private readonly IWebHostEnvironment env;
         #endregion
 
-        public CallsMarkedToIEController(ICallMarkedToIERepository _callmarksRepository)
+        public CallsMarkedToIEController(ICallMarkedToIERepository _callmarksRepository, IWebHostEnvironment _env)
         {
             callmarksRepository = _callmarksRepository;
+            this.env = _env;
         }
         public IActionResult CallsMarkedToIE(string type)
         {
             CallsMarkedToIEModel model = new();
+            string Fpath = $"{Request.Scheme}://{Request.Host}";
+            var CaseNoPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+            var LabPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.Lab);
             model = callmarksRepository.GetReport(GetIeCd, Convert.ToString(UserId), type);
             model.PType = type;
             model.IeName = IeName;
+
+            model.FilePath1 = Fpath;
+            model.FilePath2 = CaseNoPath;
+            model.FilePath3 = LabPath;
 
             return View(model);
         }

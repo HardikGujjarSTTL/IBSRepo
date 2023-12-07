@@ -2197,7 +2197,7 @@ namespace IBS.Models
         }
 
 
-        public static string GetClient(string RlyNonrly,string rly)
+        public static string GetClient(string RlyNonrly, string rly)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             string ClintName = "";
@@ -3166,16 +3166,40 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (SBPO != null && SBPO != "")
             {
-                var obj = (from of in context.V12BillPayingOfficers
-                           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                           select of).ToList();
-                objdata = (from a in obj
+                List<SelectListItem> model = new();
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, SBPO, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GetBPOData", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+
+                //var obj = (from of in context.V12BillPayingOfficers
+                //             where SqlMethods.Like(of.Bpo.ToUpper().Trim(), SBPO + "%") ||
+                //                    of.BpoCd == SBPO.Trim()
+                //             select of).ToList();
+                objdata = (from a in model
                            select
                       new SelectListItem
                       {
-                          Text = a.BpoCd + "-" + a.Bpo,
-                          Value = a.BpoCd
+                          Text = a.Text,
+                          Value = a.Value
                       }).ToList();
+
+
+                //var obj = (from of in context.V12BillPayingOfficers
+                //           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
+                //           select of).ToList();
+                //objdata = (from a in obj
+                //           select
+                //      new SelectListItem
+                //      {
+                //          Text = a.BpoCd + "-" + a.Bpo,
+                //          Value = a.BpoCd
+                //      }).ToList();
             }
             return objdata;
         }
@@ -3375,17 +3399,28 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (ConsigneeSearch != null && ConsigneeSearch != "")
             {
-                ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                var obj = (from of in context.V06Consignees
-                           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
-                           select of).ToList();
+                //ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                //var obj = (from of in context.V06Consignees
+                //           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
+                //           select of).ToList();
 
-                objdata = (from a in obj
+                List<SelectListItem> model = new();
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GetConsigneeData", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+
+                objdata = (from a in model
                            select
                       new SelectListItem
                       {
-                          Text = a.ConsigneeCd + "-" + a.Consignee,
-                          Value = Convert.ToString(a.ConsigneeCd)
+                          Text = a.Text,
+                          Value = a.Value
                       }).ToList();
             }
             return objdata;
@@ -4118,7 +4153,7 @@ namespace IBS.Models
                         Text = c.IeName
                     }).OrderBy(c => c.Text).ToList();
         }
-        
+
         public static IEnumerable<SelectListItem> GetIENameByIECD(int IeCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -4573,6 +4608,20 @@ namespace IBS.Models
                         Text = Convert.ToString(a.CoName),
                         Value = Convert.ToString(a.CoCd)
                     }).OrderBy(c => c.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetNewUserType()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.UserMasters
+                                         select new SelectListItem
+                                         {
+                                             Text = a.UserType,
+                                             Value = a.UserType
+                                         })
+                            .Distinct()
+                            .ToList();
+            return city;
         }
     }
 

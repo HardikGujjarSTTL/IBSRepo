@@ -10,7 +10,7 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "1" })">
                 <div class="dashboard-box das1">
                     <div class="dash-total">
@@ -25,7 +25,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "2" })">
                 <div class="dashboard-box das2">
                     <div class="dash-total">
@@ -40,7 +40,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalInvoice", "Dashboard", new { Flag = "3" })">
                 <div class="dashboard-box das3">
                     <div class="dash-total">
@@ -55,7 +55,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das4">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -68,10 +68,9 @@
                     <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                 </div>
             </div>
-        </div>
-        <div class="row admin-dashboard">
+       
             
-            <div class="col-lg-3">
+            @* <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
                 <div class="dashboard-box das5">
                     <div class="dash-total">
@@ -85,8 +84,8 @@
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
                 </a>
-            </div>
-            <div class="col-lg-3">
+            </div> *@
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("TotalReportUploaded", "Dashboard")">
                 <div class="dashboard-box das6">
                     <div class="dash-total">
@@ -101,7 +100,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das7">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -114,7 +113,7 @@
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Assigned"> </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das8">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -127,31 +126,27 @@
                     <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                 </div>
             </div>
-        </div>
-        <div class="row admin-dashboard">
-
-            
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das9">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.Internal</div>
                         </div>
                         <div class="total-inner">
-                            Internal 
+                            No. of Internal<br /> Samples
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das10">
                     <div class="dash-total">
                         <div class="dash-count">
                             <div class="total-amount">@Model.External</div>
                         </div>
                         <div class="total-inner">
-                            External
+                            No. of External<br /> Samples
                         </div>
                     </div>
                     <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
@@ -186,7 +181,7 @@
 <section class="table-section">
     <div class="iePieGraphGrid">
         <h3 class="headingh3">
-            Five oldest cases for which reports have not been generated
+            Five oldest cases for which reports have not been uploaded
         </h3>
     <table class="borderGrid">
         <tr>
@@ -219,11 +214,15 @@
             else
             {
                 <tr>
-                    <td colspan="4">No Data Found</td>
+                    <td colspan="7">No Data Found</td>
                 </tr>
             }
         }
     </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount"></div>
+        <a class="viewall" href="@Url.Action("Dashboard_Lab_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>
 <script>

@@ -195,7 +195,7 @@ namespace IBS.Controllers.Vendor
                             //msg = "Master data not entered.So please enter master data cluster/vender/ie";
                             msg = "Call can't be assigned to IE beyond the maximumn call limit.";
                             //return Json(new { status = false, responseText = msg, callval = model.callval });
-                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != null && model.RecipientGstinNo != null))
                             {
                                 i = venderRepository.RegiserCallSave(model);
                                 if (model.callval == 0)
@@ -210,7 +210,7 @@ namespace IBS.Controllers.Vendor
                             }
                             else
                             {
-                                if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                                if (model.RlyNonrly != "R" && model.Bpo == null && model.RecipientGstinNo == null)
                                 {
                                     msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
                                 }
@@ -227,7 +227,7 @@ namespace IBS.Controllers.Vendor
                         }
                         else
                         {
-                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != "" && model.RecipientGstinNo != ""))
+                            if ((model.RlyNonrly == "R" && model.wMat_value > 1000 && model.desire_dt == 0) || (model.RlyNonrly != "R" && model.wMat_value > 1000 && model.desire_dt == 0 && model.Bpo != null && model.RecipientGstinNo != null))
                             {
                                 i = venderRepository.RegiserCallSave(model);
                                 if (model.callval == 0)
@@ -242,7 +242,7 @@ namespace IBS.Controllers.Vendor
                             }
                             else
                             {
-                                if (model.RlyNonrly != "R" && model.Bpo == "" && model.RecipientGstinNo == "")
+                                if (model.RlyNonrly != "R" && model.Bpo == null && model.RecipientGstinNo == null)
                                 {
                                     msg = "Mention the Name, Address and GST No of the party in whose favour invoice is to be raised. It is mandatory in Case of Non Railways Calls!!!";
                                 }
@@ -478,6 +478,7 @@ namespace IBS.Controllers.Vendor
             }
             catch (Exception ex)
             {
+                AlertDanger("Case Not found!!!");
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "VendorCallRegister", "VendorCallRegister", 1, GetIPAddress());
             }
             return View(model);
@@ -572,6 +573,26 @@ namespace IBS.Controllers.Vendor
             return PartialView("_TermsCondition");
         }
 
+        public IActionResult GetPODetails(string CaseNo)
+        {
+            try
+            {
+                if (CaseNo != null)
+                {
+                    int Isstageinspection = venderRepository.GetPODetails(CaseNo, Region);
+                    return Json(new { status = true, responseText = Isstageinspection });
+                }
+                else
+                {
+                    return Json(new { status = false, responseText = "No Record Found!!!." });
+                }
 
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BillAdjustments", "GetBillDetails", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
     }
 }

@@ -5,7 +5,7 @@
     string clsView = "";
     clsView = "Permission_View";
     string ReportUrl = ViewBag.ReportUrl;
-    string gobackUrl = Url.Action("CallStatus", "CallRegisterIB") + "?CaseNo=" + Model.CASE_NO + "&CallSno=" + Model.Call_SNO + "&CallRecvDt="+Convert.ToDateTime(Model.Call_Recv_dt).ToString("yyyy-MM-dd")+"&IeCd=&ActionType=C&type=C";
+    string gobackUrl = Url.Action("CallStatus", "CallRegisterIB") + "?CaseNo=" + Model.CASE_NO + "&CallSno=" + Model.Call_SNO + "&CallRecvDt=" + Convert.ToDateTime(Model.Call_Recv_dt).ToString("yyyy-MM-dd") + "&IeCd=&ActionType=C&type=C";
 }
 
 <style>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="savenext-btn btnAlign">
-                        <button type="button" class="save-btn active" id="btnSavePOAmendment" onclick="SavePOAmendment()" data-id="">Save Ammendments</button>
+                        <button type="button" class="save-btn active" id="btnSavePOAmendment" onclick="SavePOAmendment()" data-id="">Save Amendments</button>
                     </div>
                 </div>
             </div>
@@ -317,6 +317,8 @@
         var Call_SNo = "@Model.Call_SNO";
         var Consignee_Cd = "@Model.CONSIGNEE_CD";
         var ActionAR = "@Model.ACTIONAR";
+
+        var Flag_Consignee = "0";
 
         $(document).ready(function () {
             if ("@Model.ACTIONAR" == "R") {
@@ -758,8 +760,8 @@
                 processData: false, // Prevent jQuery from converting the data to a string
                 contentType: false,
                 success: function (response) {
-
                     if (response != null) {
+                        Flag_Consignee = response.DP_CONSIGNEE_CD;
                         FillItemDropDown();
                         $("#BK_NO").val(response.BK_NO);
                         $("#SET_NO").val(response.SET_NO);
@@ -769,6 +771,7 @@
                         $("#PASSED_INST_NO").val(response.PASSED_INST_NO);
                         $("#REMARK").val(response.REMARK);
                         $("#HOLOGRAM").val(response.HOLOGRAM);
+
                         //setItemVal();
                     }
                     else {
@@ -830,9 +833,9 @@
         }
 
         function FillItemDropDown() {
-            var Consignee_Cd = $('#CONSIGNEE_CD').val();
+            var Consignee_Cd = $('select#CONSIGNEE_CD option:selected').val();;
             $.get("@Url.Action("FillItemDropDown", "IC_RPT_Intermediate")", { Case_No: Case_No, Call_Recv_Dt: Call_Recv_Dt, Call_SNo: Call_SNo, Consignee_Cd: Consignee_Cd }, function (response) {
-                if (response != null) {
+                if (response.length != null) {
                     $("#ITEM_SRNO_PO").empty();
                     //$("#ITEM_SRNO_PO").append($('<option value="">--Select--</option>'));
                     $.each(response, function (ind, val) {
@@ -841,7 +844,17 @@
                     if (response.length > 0) {
                         $("#ITEM_SRNO_PO").val(response[0].Value);
                     }
-                    setItemVal();
+                    if (Consignee_Cd == Flag_Consignee) {
+                        setItemVal();
+                    }
+                    else{
+                        $("#BK_NO").val("");
+                        $("#SET_NO").val("");
+                    }
+                }
+                else {
+                    $("#BK_NO").val("");
+                    $("#SET_NO").val("");
                 }
             });
         }

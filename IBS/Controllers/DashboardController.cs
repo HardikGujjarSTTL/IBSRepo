@@ -5,6 +5,7 @@ using IBS.Models;
 using IBS.Repositories;
 using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Dynamic;
 
 namespace IBS.Controllers
@@ -25,7 +26,7 @@ namespace IBS.Controllers
         {
             if (SessionHelper.UserModelDTO.RoleName.ToLower() == "admin")
             {
-                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region, SessionHelper.UserModelDTO.RoleName.ToLower());
                 return View(model);
             }
             else if (SessionHelper.UserModelDTO.RoleName.ToLower() == "inspection engineer (ie)")
@@ -70,7 +71,7 @@ namespace IBS.Controllers
             }
             else
             {
-                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region);
+                DashboardModel model = dashboardRepository.GetDashBoardCount(SessionHelper.UserModelDTO.Region, SessionHelper.UserModelDTO.RoleName.ToLower());
                 return View(model);
             }
         }
@@ -80,7 +81,8 @@ namespace IBS.Controllers
             string RegionCode = SessionHelper.UserModelDTO.Region;
             string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
             string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
-            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode);
+            string RoleName = SessionHelper.UserModelDTO.RoleName.Trim().ToLower();
+            DashboardModel model = dashboardRepository.GetClientDashBoardCount(OrgnType, Organisation, RegionCode, RoleName);
             return View(model);
         }
 
@@ -88,14 +90,16 @@ namespace IBS.Controllers
         {
             string RegionCode = SessionHelper.UserModelDTO.Region;
             int Vend_Cd = Convert.ToInt32(SessionHelper.UserModelDTO.UserName.Trim());
-            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode);
+            string RoleName = SessionHelper.UserModelDTO.RoleName.Trim().ToLower();
+            DashboardModel model = dashboardRepository.GetVendorDashBoardCount(Vend_Cd, RegionCode, RoleName);
             return View(model);
         }
 
         public IActionResult IE()
         {
             string RegionCode = SessionHelper.UserModelDTO.Region;
-            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode);
+            string RoleName = SessionHelper.UserModelDTO.RoleName.Trim().ToLower();
+            DashboardModel model = dashboardRepository.GetIEDDashBoardCount(SessionHelper.UserModelDTO.IeCd, RegionCode, RoleName);
             return View(model);
         }
 
@@ -144,7 +148,8 @@ namespace IBS.Controllers
 
         public IActionResult CMGeneral()
         {
-            return View();
+            DashboardModel model = dashboardRepository.GetCMGeneralDashBoard(SessionHelper.UserModelDTO.CoCd);
+            return View(model);
         }
 
         public IActionResult LO()
@@ -157,7 +162,7 @@ namespace IBS.Controllers
         {
             int userid = UserId;
             string Regin = GetRegionCode;
-            DashboardModel model = dashboardRepository.GetDashBoardLabCount(userid,Regin);
+            DashboardModel model = dashboardRepository.GetDashBoardLabCount(userid, Regin);
             return View(model);
         }
 
@@ -284,7 +289,7 @@ namespace IBS.Controllers
         {
             ViewBag.Type = Type;
             return View();
-        }                                                                                                                                       
+        }
 
         [HttpPost]
         public IActionResult LoadVendorDetail([FromBody] DTParameters dtParameters)
@@ -307,7 +312,7 @@ namespace IBS.Controllers
             DTResult<AdminViewAllList> dTResult = dashboardRepository.Dashboard_Admin_ViewAll_List(dtParameters, RegionCode);
             return Json(dTResult);
         }
-        
+
         public IActionResult Dashboard_Vendor_ViewAll_List(string Type)
         {
             DashboardModel model = new();
@@ -323,7 +328,7 @@ namespace IBS.Controllers
             DTResult<VendorViewAllList> dTResult = dashboardRepository.Dashboard_Vendor_ViewAll_List(dtParameters, RegionCode, Vend_Cd);
             return Json(dTResult);
         }
-        
+
         public IActionResult Dashboard_IE_ViewAll_List(string Type)
         {
             DashboardModel model = new();
@@ -351,5 +356,104 @@ namespace IBS.Controllers
             DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
+        
+        public IActionResult CMDARListing()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetCMDARListing([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CMDARListing> dTResult = dashboardRepository.CMDARListing(dtParameters);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Client_ViewAll_List(string Type)
+        {
+            CLientViewAllList model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string RegionCode = SessionHelper.UserModelDTO.Region;
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<CLientViewAllList> dTResult = dashboardRepository.Dashboard_Client_ViewAll_List(dtParameters, RegionCode, OrgnType, Organisation);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_Client_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_Client_List([FromBody] DTParameters dtParameters)
+        {
+            string OrgnType = SessionHelper.UserModelDTO.OrgnType.Trim();
+            string Organisation = SessionHelper.UserModelDTO.Organisation.Trim();
+            DTResult<AdminCountListing> dTResult = dashboardRepository.Dashboard_Client_List(dtParameters, Region, OrgnType, Organisation);
+            return Json(dTResult);
+        }
+
+        public IActionResult CMDFO_List(string Type)
+        {
+            CMDFOListing model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadCMDFO_List([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
+            return Json(dTResult);
+        }
+        
+        public IActionResult Dashboard_CMGeneral_ViewAll_List()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CMGeneral_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            string COCD = SessionHelper.UserModelDTO.CoCd.ToString();
+            DTResult<DashboardModel> dTResult = dashboardRepository.Dashboard_CMGeneral_ViewAll_List(dtParameters, COCD);
+            return Json(dTResult);
+        }
+        
+        public IActionResult Dashboard_CMDFO_ViewAll_List(string Type)
+        {
+            AdminViewAllList model = new();
+            model.ActionType = Type;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CMDFO_ViewAll_List([FromBody] DTParameters dtParameters)
+        {
+            DTResult<AdminViewAllList> dTResult = dashboardRepository.Dashboard_CMDFO_ViewAll_List(dtParameters);
+            return Json(dTResult);
+        }
+
+        public IActionResult Dashboard_CM_JI_ViewAll_List(string Type)
+        {
+            CM_JI_ViewAll_Model model = new CM_JI_ViewAll_Model();
+            model.Type = Type;  
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LoadDashboard_CM_JI_ViewAll_List([FromBody] DTParameters dtParameters)
+        {            
+            DTResult<CM_JI_ViewAll_Model> dTResult = dashboardRepository.Dashboard_CM_JI_ViewAll_List(dtParameters, SessionHelper.UserModelDTO.CoCd);
+            return Json(dTResult);
+        }
+
     }
 }

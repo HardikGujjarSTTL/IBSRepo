@@ -6,9 +6,9 @@
     </h2>
 </div>
 <div class="admindashboard-section">
-    <div class="admindashboard-wrap cmDash">
-        <div class="row admin-dashboard">
-            <div class="col-lg-4">
+    <div class="admindashboard-wrap">
+        <div class="row ie-dashboard">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <div class="dashboard-box das1Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -21,7 +21,7 @@
                     <div class="total-icons"><img src="~/images/no-of-major-charge-sheets-icon.svg" alt="Inspection Requests"> </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <div class="dashboard-box das2Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -34,7 +34,8 @@
                     <div class="total-icons"><img src="~/images/no-of-major-charge-sheets-icon.svg" alt="Inspection Assigned"> </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
+                <a class="viewall" href="@Url.Action("CMDARListing", "Dashboard", new { Type = "CCR" })">
                 <div class="dashboard-box das3Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -46,10 +47,10 @@
                     </div>
                     <div class="total-icons"><img src="~/images/no-of-consignee-complaints-closed-rites-icon.svg" alt="Inspection Completed"> </div>
                 </div>
+                </a>
             </div>
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-4">
+        
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -63,7 +64,7 @@
                     <div class="total-icons"><img src="~/images/no-of-POs-awaiting-for-case-no-icon.svg" alt="Inspection Pending"> </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-6 col-lg-4 col-xxl-4">
                 <div class="dashboard-box das5Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -181,5 +182,9 @@
                 </tr>
             }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>

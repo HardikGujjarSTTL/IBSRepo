@@ -41,9 +41,9 @@
                         <th>Case No.</th>
                         <th>Call Date</th>
                         <th>Call SNo.</th>
-                        <th>Call Mark Date</th>
-                        <th>IE Name</th>
-                        <th>Vendor</th>
+                        <th>Call Letter Date</th>
+                        <th>Call Letter Date</th>
+                        <th>Remarks</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -86,12 +86,11 @@
                         <th>#</th>
                         <th>Case No.</th>
                         <th>Call Date</th>
-                        <th>Call SNo.</th>
+                        <th>Call Letter No.</th>
+                        <th>Call Letter Date</th>
+                        <th>Call Sno.</th>
+                        <th>Remarks</th>
                         <th>Call Status</th>
-                        <th>From IE</th>
-                        <th>To IE</th>
-                        <th>Initiated By</th>
-                        <th>Initiated Datetime</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,268 +101,272 @@
 </section>
 
 @section scripts{
-            <partial name="_DataTablesScriptsPartial" />
-            <partial name="_ValidationScriptsPartial" />
-            <script type="text/javascript">
-                $(function () {
-                    $("#FromDate").val("01/04/2023");
-                    $("#ToDate").val("31/03/2024");
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const type = urlParams.get('Type');
-                    $("#ActionType").val(type);
-                    if (type == "ACM") {
-                        $("#spnHeading").text("No. of Automatic Marked  Calls.");
-                        InitializeCallMarked();
-                        $(".CallMarked").css("display", "block");
-                        $(".PoCase").css("display", "none");
-                            $(".PendingCallRemarks").css("display", "none");
-                    }
-                    else if (type == "MCM") {
-                        $("#spnHeading").text("No. of Manually Marked  Calls.");
-                        InitializeCallMarked();
-                        $(".CallMarked").css("display", "block");
-                        $(".PoCase").css("display", "none");
-                        $(".PendingCallRemarks").css("display", "none");
-                    }
-                    else if (type == "POAC") {
-                        $("#spnHeading").text("No. of POs, Awaiting for  Case No.");
-                        InitializePoCase();
-                        $(".CallMarked").css("display", "none");
-                        $(".PoCase").css("display", "block");
-                        $(".PendingCallRemarks").css("display", "none");
-                    }
-                   else if (type == "PCR") {
-                        $("#spnHeading").text("No. of Pending Calls to Remark.");
-                            InitializePendingCallRemarked();
-                            $(".CallMarked").css("display", "none");
-                        $(".PoCase").css("display", "none");
-                            $(".PendingCallRemarks").css("display", "block");
-                    }
-                    else if (type == "POCAM") {
-                        $("#spnHeading").text("No. of pending online calls awaiting marking.");
-                        InitializeCallMarked();
-                        $(".CallMarked").css("display", "block");
-                        $(".PoCase").css("display", "none");
-                        $(".PendingCallRemarks").css("display", "none");
-                     }
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(function () {
+            $("#FromDate").val("01/04/2023");
+            $("#ToDate").val("31/03/2024");
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "ACM") {
+                $("#spnHeading").text("No. of Automatic Marked  Calls.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+                $(".PendingCallRemarks").css("display", "none");
+            }
+            else if (type == "MCM") {
+                $("#spnHeading").text("No. of Manually Marked  Calls.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+                $(".PendingCallRemarks").css("display", "none");
+            }
+            else if (type == "POAC") {
+                $("#spnHeading").text("No. of POs, Awaiting for  Case No.");
+                InitializePoCase();
+                $(".CallMarked").css("display", "none");
+                $(".PoCase").css("display", "block");
+                $(".PendingCallRemarks").css("display", "none");
+            }
+            else if (type == "PCR") {
+                $("#spnHeading").text("No. of Pending Calls to Remark.");
+                InitializePendingCallRemarked();
+                $(".CallMarked").css("display", "none");
+                $(".PoCase").css("display", "none");
+                $(".PendingCallRemarks").css("display", "block");
+            }
+            else if (type == "POCAM") {
+                $("#spnHeading").text("No. of pending online calls awaiting marking.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+                $(".PendingCallRemarks").css("display", "none");
+            }else if (type == "TC") {
+                $("#spnHeading").text("No. of Total Call.");
+                InitializeCallMarked();
+                $(".CallMarked").css("display", "block");
+                $(".PoCase").css("display", "none");
+                $(".PendingCallRemarks").css("display", "none");
+            }
 
-                });
+        });
 
-                function Search()
-                {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const type = urlParams.get('Type');
-                    $("#ActionType").val(type);
-                    if (type == "ACM") {
-                        InitializeCallMarked();
+        function Search() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            if (type == "ACM") {
+                InitializeCallMarked();
+            }
+            else if (type == "MCM") {
+                InitializeCallMarked();
+            }
+            else if (type == "POAC") {
+                InitializePoCase();
+            }
+            else if (type == "PCR") {
+                InitializePendingCallRemarked();
+            }
+            else if (type == "POCAM") {
+                InitializeCallMarked();
+            }else if (type == "TC") {
+                InitializeCallMarked();
+            }
+        }
+
+        function InitializeCallMarked() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
                     }
-                    else if (type == "MCM") {
-                        InitializeCallMarked();
-                    }
-                    else if (type == "POAC") {
-                        InitializePoCase();
-                    }
-                    else if (type == "PCR") {
-                            InitializePendingCallRemarked();
-                    }
-                        else if (type == "POCAM") {
-                                InitializeCallMarked();
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
                         }
-                }
-
-                function InitializeCallMarked() {
-                    var FromDate = $("#FromDate").val();
-                    var ToDate = $("#ToDate").val();
-                    var ActionType = $("#ActionType").val();
-
-                    $("#dtList").DataTable({
-                        stateSave: false,// Design Assets
-                        autoWidth: true,
-                        scrollX: true,
-                        scrollCollapse: true,
-                        processing: true, // ServerSide Setups
-                        serverSide: true,
-                        destroy: true,
-                        paging: true,// Paging Setups
-                        searching: true,// Searching Setups
-                        ajax: {// Ajax Filter
-                            url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
-                            type: "POST",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            data: function (d) {
-                                var AdditionalValues = {
-                                    "FromDate": FromDate,
-                                    "ToDate": ToDate,
-                                    "ActionType": ActionType
-                                };
-                                d.AdditionalValues = AdditionalValues;
-                                return JSON.stringify(d);
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
-                        },
-
-                        columns: [// Columns Setups
-                            {
-                                data: '', orderable: false, width: '5%',
-                                render: function (data, type, row, meta) {
-                                    return meta.row + meta.settings._iDisplayStart + 1;
-                                }
-                            },
-                            { data: "CaseNo" },
-                            {
-                                data: "CallRecvDt",
-                                render: function (data, type, row) {
-                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                        return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                                    }
-                                    return data;
-                                }
-                            },
-                            { data: "CallSno" },
-                            {
-                                data: "CallMarkDt",
-                                render: function (data, type, row) {
-                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                        return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                                    }
-                                    return data;
-                                }
-                            },
-
-                            { data: "IE_name" },
-                            { data: "Vendor" },
-                            { data: "CallStatus" },
-                        ],
-                        "order": [[0, "asc"]]
-                    });
-                }
-
-                function InitializePoCase() {
-                    var FromDate = $("#FromDate").val();
-                    var ToDate = $("#ToDate").val();
-                    var ActionType = $("#ActionType").val();
-
-                    $("#dtListPoCase").DataTable({
-                        stateSave: false,// Design Assets
-                        autoWidth: true,
-                        scrollX: true,
-                        scrollCollapse: true,
-                        processing: true, // ServerSide Setups
-                        serverSide: true,
-                        destroy: true,
-                        paging: true,// Paging Setups
-                        searching: true,// Searching Setups
-                        ajax: {// Ajax Filter
-                            url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
-                            type: "POST",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            data: function (d) {
-                                var AdditionalValues = {
-                                    "FromDate": FromDate,
-                                    "ToDate": ToDate,
-                                    "ActionType": ActionType
-                                };
-                                d.AdditionalValues = AdditionalValues;
-                                return JSON.stringify(d);
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    {
+                        data: "CallLetterDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
                             }
-                        },
+                            return data;
+                        }
+                    },
 
-                        columns: [// Columns Setups
-                            {
-                                data: '', orderable: false, width: '5%',
-                                render: function (data, type, row, meta) {
-                                    return meta.row + meta.settings._iDisplayStart + 1;
-                                }
-                            },
-                            { data: "CaseNo" },
-                            { data: "PoNo" },
-                            {
-                                data: "PoDt",
-                                render: function (data, type, row) {
-                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                        return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                                    }
-                                    return data;
-                                }
-                            },
-                            { data: "Rly" },
-                            { data: "Vendor" },
-                            { data: "Consignee" },
-                            { data: "Remarks" },
-                        ],
-                        "order": [[0, "asc"]]
-                    });
-                }
+                    { data: "CallLetterNo" },
+                    { data: "Remarks" },
+                    { data: "CallStatus" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
 
+        function InitializePoCase() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
 
-                    function InitializePendingCallRemarked() {
-                        var FromDate = $("#FromDate").val();
-                        var ToDate = $("#ToDate").val();
-                        var ActionType = $("#ActionType").val();
-
-                            $("#dtListPendingCallRemarks").DataTable({
-                            stateSave: false,// Design Assets
-                            autoWidth: true,
-                            scrollX: true,
-                            scrollCollapse: true,
-                            processing: true, // ServerSide Setups
-                            serverSide: true,
-                            destroy: true,
-                            paging: true,// Paging Setups
-                            searching: true,// Searching Setups
-                            ajax: {// Ajax Filter
-                                url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
-                                type: "POST",
-                                contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                data: function (d) {
-                                    var AdditionalValues = {
-                                        "FromDate": FromDate,
-                                        "ToDate": ToDate,
-                                        "ActionType": ActionType
-                                    };
-                                    d.AdditionalValues = AdditionalValues;
-                                    return JSON.stringify(d);
-                                }
-                            },
-
-                            columns: [// Columns Setups
-                                {
-                                    data: '', orderable: false, width: '5%',
-                                    render: function (data, type, row, meta) {
-                                        return meta.row + meta.settings._iDisplayStart + 1;
-                                    }
-                                },
-                                { data: "CaseNo" },
-                                {
-                                    data: "CallRecvDt",
-                                    render: function (data, type, row) {
-                                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                                        }
-                                        return data;
-                                    }
-                                },
-                                { data: "CallSno" },
-                                        { data: "CallRemarkStatus" },
-                                        { data: "FrIeName" },
-                                                { data: "ToIeName" },
-                                { data: "UserName" },
-                                        {
-                                data: "RemInitDatetime",
-                                render: function (data, type, row) {
-                                    if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                        return data != null && data != "" ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "";
-                                    }
-                                    return data;
-                                }
-                            },
-
-                            ],
-                            "order": [[0, "asc"]]
-                        });
+            $("#dtListPoCase").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
                     }
+                },
 
-            </script>
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "PoNo" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Rly" },
+                    { data: "Vendor" },
+                    { data: "Consignee" },
+                    { data: "Remarks" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+
+        function InitializePendingCallRemarked() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtListPendingCallRemarks").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("CallDeskInfoListing", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "ActionType": ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallLetterNo" },
+                    { data: "CallLetterDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno" },
+                    { data: "Remarks" },
+                    { data: "CallStatus" },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
 }

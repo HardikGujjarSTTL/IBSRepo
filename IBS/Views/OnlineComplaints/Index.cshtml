@@ -25,7 +25,7 @@
                     <input type="text" asp-for="IE_CD"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CoCd"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <label id="datetimeLabel" asp-for="Registrationdt"></label>
+                    <label asp-for="Registrationdt">Registration Date: <span id="registrationDate"></span></label>
                     <h3 class="heading3 mb-4">Consignee Details</h3>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Name</label><i class="text-danger">*</i>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Item">Item</label>
-                        <select id="Item" asp-for="Item" class="form-control" required></select>
+                        <select asp-for="Item" class="form-control"></select>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Qty. as per IC</label><i class="text-danger">*</i>
@@ -119,13 +119,11 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".datepicker").datepicker();
             var currentDateTime = new Date();
             var formattedDate = currentDateTime.getDate().toString().padStart(2, '0') + "/" +
                 (currentDateTime.getMonth() + 1).toString().padStart(2, '0') + "/" +
                 currentDateTime.getFullYear();
-
-            $("#datetimeLabel").text("Registration Date  :  " + formattedDate);
+            $('#registrationDate').text(formattedDate);
         });
 
         $('#mobilenumber').on('keypress', function (event) {
@@ -138,6 +136,7 @@
         });
 
         $("#InspRegionDropdown").change(function () {
+            debugger
             var InspRegionDropdown = $(this).val();
             var bkno = $("#bkno").val();
             var setno = $("#setno").val();
@@ -153,7 +152,9 @@
 
                     var items = JSON.parse(data);
 
-                    Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                    if(items.length != 0){
+                         Item.append($('<option>').text(items[0].ITEM_DESC_PO).val(items[0].ITEM_SRNO_PO));
+                    }
                 }
             });
         });
@@ -190,6 +191,14 @@
         });
 
         function Save(){
+            debugger
+            var Item = $("#Item").val();
+
+            if(Item == ''){
+                alert("Item Is Not Exist For This Book No And Set No.");
+                return;
+            }
+
             if ($("#frmComplaints").valid()) {
                 SaveSingleDocuments("tab-1");
                 $("#frmComplaints").submit();
@@ -197,13 +206,12 @@
         }
 
         completed = function (response) {
-            debugger
             var res = response.responseJSON;
             var redirectUrl = '@Url.Action("Index", "OnlineComplaints")';
             ShowHideMsgNew(res.status, res.responseText);
             setTimeout(function () {
                 window.location.href = redirectUrl;
-            }, 1000);
+            }, 2000);
         };
 
     </script>

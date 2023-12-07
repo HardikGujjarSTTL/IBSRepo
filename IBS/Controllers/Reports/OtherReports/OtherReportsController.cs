@@ -84,9 +84,11 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnOutstanding") && !string.IsNullOrEmpty(formCollection["hdnOutstanding"])) model.Outstanding = Convert.ToString(formCollection["hdnOutstanding"]);
                 if (formCollection.Keys.Contains("hdnformonth") && !string.IsNullOrEmpty(formCollection["hdnformonth"])) model.formonth = Convert.ToString(formCollection["hdnformonth"]);
                 if (formCollection.Keys.Contains("hdnforperiod") && !string.IsNullOrEmpty(formCollection["hdnforperiod"])) model.forperiod = Convert.ToString(formCollection["hdnforperiod"]);
-                if (formCollection.Keys.Contains("hdniecmname") && !string.IsNullOrEmpty(formCollection["hdniecmname"])) model.IEName = Convert.ToString(formCollection["hdniecmname"]);
+                if (formCollection.Keys.Contains("hdniecmname") && !string.IsNullOrEmpty(formCollection["hdniecmname"])) model.iecmname = Convert.ToString(formCollection["hdniecmname"]);
                 if (formCollection.Keys.Contains("hdnCOName") && !string.IsNullOrEmpty(formCollection["hdnCOName"])) model.COName = Convert.ToString(formCollection["hdnCOName"]);
-            }else if(model.ReportType == "IEWISET")
+                if (formCollection.Keys.Contains("hdnIENametext") && !string.IsNullOrEmpty(formCollection["hdnIENametext"])) model.IENametext = Convert.ToString(formCollection["hdnIENametext"]);                
+            }
+            else if(model.ReportType == "IEWISET")
             {
                 if (formCollection.Keys.Contains("hdnIENAME") && !string.IsNullOrEmpty(formCollection["hdnIENAME"])) model.IEName = Convert.ToString(formCollection["hdnIENAME"]);
                 if (formCollection.Keys.Contains("hdnTrainingArea") && !string.IsNullOrEmpty(formCollection["hdnTrainingArea"])) model.TrainingArea = Convert.ToString(formCollection["hdnTrainingArea"]);

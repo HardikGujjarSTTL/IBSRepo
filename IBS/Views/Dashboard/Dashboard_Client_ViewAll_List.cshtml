@@ -1,0 +1,200 @@
+﻿@model CLientViewAllList
+@{
+    ViewData["Title"] = "IE_Dashboard_Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h3 class="heading3"><span id="spnHeading"></span> </h3>
+    </div>
+    <div>
+        <a asp-action="Client" asp-controller="Dashboard" class="formBtn viewall-btn" id="btnBack">Back</a>
+    </div>
+</div>
+
+<div class="accordion-body" id="body">
+    <div class="row my-0">
+        <input asp-for="ActionType" hidden />
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">From</label>
+                <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="reference">
+                <label for="Reference">To</label>
+                <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-3">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        @* <th>#</th>
+                        <th>Name of Client</th>
+                        <th>No. of bills</th>
+                        <th>Value (₹)</th>
+                        <th>PO No.</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        var Columns = [];
+        $(function () {            
+            var financialYearDates = GetFinancialYearStartEndDate();
+
+            $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
+            $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+
+            debugger
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('Type');
+            $("#ActionType").val(type);
+            $("#ActionType").val(type);
+            if (type == "VWP") {
+                $("#spnHeading").text("Vendor wise performance ");
+                Columns = [
+                    {
+                        data: '',title:"#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "TotalCalls", title: "Total Calls" },
+                    { data: "CallRejected", title: "Call Rejected" },
+                    { data: "CallCancelled", title: "Call Cancelled" },
+                ]
+            } else if (type == "RRS") {
+                $("#spnHeading").text("Recent Request Status  ");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "CallDate", title: "Call Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CallSno", title: "Call Sno" },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "IEName", title: "IE Name" },
+                    { data: "Status", title: "Status" },
+                ]
+            } else if (type == "RPO") {
+                $("#spnHeading").text("Recent Purchase order  ");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "Value", title: "Value" },
+                    { data: "PONO", title: "PO No" },
+                    {
+                        data: "PODT", title: "PO Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "RECV_DT", title: "Recv Date",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "Po_Or_Letter", title: "Po / Letter" },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "Qty", title: "Quantity" },
+                ]
+            } else if (type == "RCC") {
+                $("#spnHeading").text("Recent Consignee Complaints  ");
+                Columns = [
+                    {
+                        data: '', title: "#", orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Vendor", title: "Vendor" },
+                    { data: "CaseNo", title: "Case No" },
+                    { data: "NoOfComplaints", title: "Number of complaints" },
+                ]
+            }
+            InitializeDatatable();
+        });       
+
+        function InitializeDatatable() {
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var ActionType = $("#ActionType").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadDashboard_Client_ViewAll_List", "Dashboard")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            FromDate, ToDate, ActionType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: Columns,
+                "order": [[0, "asc"]]
+            });
+        }
+
+    </script>
+}

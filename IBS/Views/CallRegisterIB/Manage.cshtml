@@ -8,8 +8,8 @@
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
         <div class="list-inner">
             <div class="tast-list">
-                @*<h2>@ViewData["Title"] </h2>*@
-                <h3 class="heading3">@ViewData["Title"] </h3>
+                <h2>@ViewData["Title"] </h2>
+                @*<h3 class="heading3">@ViewData["Title"] </h3>*@
             </div>
             <input type="hidden" asp-for="CaseNo" />
             <input type="hidden" asp-for="CallRecvDt" />
@@ -112,9 +112,9 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
+                        <label for="CallLetterNo">Call Letter Number\ Dispatch Reference No. </label>
                         <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
-                        <span asp-validation-for="CallLetterNo" class="text-danger"></span>
+                        @* <span asp-validation-for="CallLetterNo" class="text-danger"></span> *@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -129,9 +129,9 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked) <i class="text-danger">*</i></label>
+                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
                         @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
+                        @* <span asp-validation-for="CallRemarkStatus" class="text-danger"></span> *@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -532,23 +532,21 @@
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
 
-            alert(actiontype);
-
             $("#ActionType").val(actiontype);
 
 
             if ($("#ClusterCode").val() == "") {
                 ShowHideMsgNew(false, "Please select Inspecting Engineer to whom Call is marked.");
             }
-            else if ($("#CallLetterNo").val() == "") {
-                ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
-            }
+            // else if ($("#CallLetterNo").val() == "") {
+            //     ShowHideMsgNew(false, "Please add Call Letter Number\ Dispatch Reference No.");
+            // }
             else if ($("#MfgCd").is(":hidden")) {
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
-            else if ($("#CallRemarkStatus").val() == "") {
-                ShowHideMsgNew(false, "Call Re-Mark Status.");
-            }
+            // else if ($("#CallRemarkStatus").val() == "") {
+            //     ShowHideMsgNew(false, "Call Re-Mark Status.");
+            // }
             else if ($("#DepartmentCode").val() == "") {
                 ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }

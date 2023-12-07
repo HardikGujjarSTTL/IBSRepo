@@ -8,8 +8,8 @@
 <form role="form" asp-controller="VendorCallRegister" asp-action="VendorCallRegisterDetail" id="frmDetails">
     <div class="list-inner">
         <div class="tast-list">
-            @*<h2>@ViewData["Title"] </h2>*@
-            <h3 class="heading3">@ViewData["Title"]</h3>
+            <h2>@ViewData["Title"] </h2>
+            @*<h3 class="heading3">@ViewData["Title"]</h3>*@
         </div>
         <input type="hidden" asp-for="CaseNo" />
         <input type="hidden" asp-for="CallRecvDt" />
@@ -114,16 +114,16 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Call Letter Number\ Dispatch Reference No. <i class="text-danger">*</i></label>
+                    <label for="Name">Call Letter Number\ Dispatch Reference No. </label>
                     <input type="text" class="input" asp-for="CallLetterNo" maxlength="30">
-                    <span asp-validation-for="CallLetterNo" class="text-danger" id="spnCallLetterNo"></span>
+                    @* <span asp-validation-for="CallLetterNo" class="text-danger" id="spnCallLetterNo"></span> *@
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Name">Call Letter Date (DD/MM/YYYY) <i class="text-danger">*</i></label>
+                    <label for="Name">Call Letter Date (DD/MM/YYYY) </label>
                     <input type="text" class="datepicker" asp-for="CallLetterDt" placeholder="DD/MM/YYYY">
-                    <span asp-validation-for="CallLetterDt" class="text-danger" id="spnCallLetterDt"></span>
+                    @* <span asp-validation-for="CallLetterDt" class="text-danger" id="spnCallLetterDt"></span> *@
                 </div>
             </div>
         </div>
@@ -1186,14 +1186,14 @@
                 $("#spnCallInstallNo").html("Please add Call Install No.");
                 IsValid = false;
             }
-            if ($("#CallLetterNo").val() == "") {
-                $("#spnCallLetterNo").html("Please add Call Letter Number\ Dispatch Reference No.");
-                IsValid = false;
-            }
-            if ($("#CallLetterDt").val() == "") {
-                $("#spnCallLetterDt").html("Please add Call Letter Date.");
-                IsValid = false;
-            }
+            // if ($("#CallLetterNo").val() == "") {
+            //     $("#spnCallLetterNo").html("Please add Call Letter Number\ Dispatch Reference No.");
+            //     IsValid = false;
+            // }
+            // if ($("#CallLetterDt").val() == "") {
+            //     $("#spnCallLetterDt").html("Please add Call Letter Date.");
+            //     IsValid = false;
+            // }
             if ($("#DepartmentCode").val() == "") {
                 $("#spnDepartmentCode").html("Please select Item to be inspected viz. Mechanical, Electrical, Civil etc.");
                 IsValid = false;
