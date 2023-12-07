@@ -10889,10 +10889,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T107LoLogginLog>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T107_LO_LOGGIN_LOG");
+            entity.HasKey(e => e.Id).HasName("T107_LO_LOGGIN_LOG_PK");
 
+            entity.ToTable("T107_LO_LOGGIN_LOG");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T107_LO_LOGGIN_LOG_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.LogginTime)
                 .HasColumnType("DATE")
                 .HasColumnName("LOGGIN_TIME");
@@ -25354,6 +25358,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T101_IE_CLUSTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
+        modelBuilder.HasSequence("T107_LO_LOGGIN_LOG_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");

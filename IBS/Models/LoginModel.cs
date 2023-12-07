@@ -17,6 +17,7 @@ namespace IBS.Models
         public string DecryptUserName { get; set; }
 
         public string UserType { get; set; }
+        public string DecryptUserType { get; set; }
 
     }
 
