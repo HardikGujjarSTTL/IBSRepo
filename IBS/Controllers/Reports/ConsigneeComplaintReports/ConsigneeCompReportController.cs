@@ -127,8 +127,8 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnconsignee") && !string.IsNullOrEmpty(formCollection["hdnconsignee"])) model.consignee = Convert.ToString(formCollection["hdnconsignee"]);
             }if (model.ReportType == "CORP")
             {
-                if (formCollection.Keys.Contains("hdncompfromdt") && !string.IsNullOrEmpty(formCollection["hdncompfromdt"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdt"]);
-                if (formCollection.Keys.Contains("hdncomptodt") && !string.IsNullOrEmpty(formCollection["hdncomptodt"])) model.ToDate = Convert.ToString(formCollection["hdncomptodt"]);
+                if (formCollection.Keys.Contains("hdncompfromdtcorp") && !string.IsNullOrEmpty(formCollection["hdncompfromdtcorp"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdtcorp"]);
+                if (formCollection.Keys.Contains("hdncomptodtcorp") && !string.IsNullOrEmpty(formCollection["hdncomptodtcorp"])) model.ToDate = Convert.ToString(formCollection["hdncomptodtcorp"]);
                 if (formCollection.Keys.Contains("hdnInspRegions") && !string.IsNullOrEmpty(formCollection["hdnInspRegions"])) model.InspRegion = Convert.ToString(formCollection["hdnInspRegions"]);
                 if (formCollection.Keys.Contains("hdnJIInspRegion") && !string.IsNullOrEmpty(formCollection["hdnJIInspRegion"])) model.JIInspRegion = Convert.ToString(formCollection["hdnJIInspRegion"]);
                 if (formCollection.Keys.Contains("hdnJIREQRegion") && !string.IsNullOrEmpty(formCollection["hdnJIREQRegion"])) model.JIInspReqRegion = Convert.ToString(formCollection["hdnJIREQRegion"]);
@@ -151,7 +151,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             if (model.ReportType == "TOPNHIGH")
             {
                 if (formCollection.Keys.Contains("hdnmonth") && !string.IsNullOrEmpty(formCollection["hdnmonth"])) model.month = Convert.ToString(formCollection["hdnmonth"]);
-                if (formCollection.Keys.Contains("hdnmonth") && !string.IsNullOrEmpty(formCollection["hdnmonth"])) model.monthChar = Convert.ToString(formCollection["hdnmonth"]);
+                if (formCollection.Keys.Contains("hdnmonthchar") && !string.IsNullOrEmpty(formCollection["hdnmonthchar"])) model.monthChar = Convert.ToString(formCollection["hdnmonthchar"]);
                 if (formCollection.Keys.Contains("hdnyear") && !string.IsNullOrEmpty(formCollection["hdnyear"])) model.year = Convert.ToString(formCollection["hdnyear"]);
                 if (formCollection.Keys.Contains("hdnvalinsp") && !string.IsNullOrEmpty(formCollection["hdnvalinsp"])) model.valinsp = Convert.ToString(formCollection["hdnvalinsp"]);
                 if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToString(formCollection["hdnFromDate"]);

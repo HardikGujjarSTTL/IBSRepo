@@ -5,7 +5,7 @@
 
     @if(@Model.formonth == "true")
     {
-        <h3 class="heading3">Top @Model.valinsp Inspections For The Month of : @Model.month , @Model.year ( @Model.BillDate @Model.ICDate)</h3>
+        <h3 class="heading3">Top @Model.valinsp Inspections For The Month of : @Model.monthChar , @Model.year ( @Model.BillDate @Model.ICDate)</h3>
     }else{
         <h3 class="heading3">Top @Model.valinsp Inspections For The Period : @Model.FromDate To @Model.ToDate ( @Model.BillDate @Model.ICDate)</h3>
     }
