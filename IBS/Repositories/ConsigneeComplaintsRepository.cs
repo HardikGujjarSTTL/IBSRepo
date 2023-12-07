@@ -153,8 +153,9 @@ namespace IBS.Repositories
                 model.ItemDesc = dt.Rows[0]["ITEM_DESC"].ToString();
                 model.QtyOffered = Convert.ToDecimal(dt.Rows[0]["QTY_OFFERED"]);
                 model.QtyRejected = Convert.ToDecimal(dt.Rows[0]["QTY_REJECTED"]);
-                model.rejectionValue = Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
-                model.Rate = Convert.ToDecimal(dt.Rows[0]["RATE"]);
+                model.rejectionValue = Convert.IsDBNull(dt.Rows[0]["REJECTION_VALUE"]) ? 0 : Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
+                //model.rejectionValue = Convert.ToDecimal(dt.Rows[0]["REJECTION_VALUE"]);
+                model.Rate = Convert.IsDBNull(dt.Rows[0]["RATE"]) ? 0 : Convert.ToDecimal(dt.Rows[0]["RATE"]);
                 model.RejectionReason = dt.Rows[0]["REJECTION_REASON"].ToString();
                 model.InspRegion = dt.Rows[0]["region_code"].ToString();
                 model.CoName = dt.Rows[0]["IE_CO_CD"].ToString();
@@ -164,8 +165,8 @@ namespace IBS.Repositories
                 model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"] is DBNull ? 0 : dt.Rows[0]["ie_cd"]);
                 model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"] is DBNull ? 0 : dt.Rows[0]["ie_co_cd"]);
                 model.UserId = dt.Rows[0]["user_id"].ToString();
-                model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
-                model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
+                //model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
+                //model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
                 model.Remarks = dt.Rows[0]["REMARKS"].ToString();
                 model.JiStatusCd = dt.Rows[0]["JI_STATUS_CD"].ToString();
                 model.COMP_RECV_REGION = dt.Rows[0]["COMP_RECV_REGION"].ToString();
