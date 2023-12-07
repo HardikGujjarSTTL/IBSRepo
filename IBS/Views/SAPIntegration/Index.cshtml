@@ -12,6 +12,7 @@
         <div class="col-md-4 mb-3">
             <label for="txtBPO_Cd">BPO Code (From)</label>
             <input type="text" class="input" id="txtBPO_Cd" />
+            <span class="text-danger field-validation-error" id="spnErrorBPO_Cd"></span>
         </div>
     </div>
     <div class="savenext-btn">
@@ -19,7 +20,6 @@
         <button type="button" class="save-btn active" onclick="SubmitExportExcelBPOData();">Export Excel</button>
     </div>
 </div>
-
 
 @section scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -33,10 +33,14 @@
 
             var BPO_Cd = $("#txtBPO_Cd").val();
 
-            $.post("@Url.Action("ExportExcelBPO", "SAPIntegration")", { BPO_Cd: BPO_Cd }, function (response) {
-                if (response != null) {
-                }
-            });
+            $("#spnErrorBPO_Cd").html("");
+
+            if ($('#txtBPO_Cd').val() == '') {
+                $("#spnErrorBPO_Cd").html("The BPO Code (From) field is required.");
+                return false;
+            }
+
+            window.open('@Url.Action("ExportExcelBPO", "SAPIntegration")' + '?BPO_Cd=' + BPO_Cd, '_blank');
         }
 
     </script>
