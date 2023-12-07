@@ -6,10 +6,6 @@ namespace IBS.DataAccess;
 
 public partial class ModelContext : DbContext
 {
-    public ModelContext()
-    {
-    }
-
     public ModelContext(DbContextOptions<ModelContext> options)
         : base(options)
     {
@@ -559,9 +555,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<UserMaster> UserMasters { get; set; }
 
+    public virtual DbSet<UserMasterTemp> UserMasterTemps { get; set; }
+
     public virtual DbSet<Userrole> Userroles { get; set; }
 
     public virtual DbSet<UserrolesHistory> UserrolesHistories { get; set; }
+
+    public virtual DbSet<Userrolestemp> Userrolestemps { get; set; }
 
     public virtual DbSet<V05Vendor> V05Vendors { get; set; }
 
@@ -670,10 +670,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<WriteOffDetail> WriteOffDetails { get; set; }
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21532,6 +21528,24 @@ public partial class ModelContext : DbContext
                 .HasColumnName("USER_TYPE");
         });
 
+        modelBuilder.Entity<UserMasterTemp>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("USER_MASTER_TEMP");
+
+            entity.Property(e => e.Roleid)
+                .HasPrecision(6)
+                .HasColumnName("ROLEID");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.UserMasterId)
+                .HasPrecision(13)
+                .HasColumnName("USER_MASTER_ID");
+        });
+
         modelBuilder.Entity<Userrole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("SYS_C008690");
@@ -21576,6 +21590,9 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
+            entity.Property(e => e.UserMasterId)
+                .HasPrecision(13)
+                .HasColumnName("USER_MASTER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -21604,6 +21621,45 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.RoleId)
+                .HasPrecision(6)
+                .HasColumnName("ROLE_ID");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.Usertype)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERTYPE");
+        });
+
+        modelBuilder.Entity<Userrolestemp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0010535");
+
+            entity.ToTable("USERROLESTEMP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
