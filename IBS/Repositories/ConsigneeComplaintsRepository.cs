@@ -542,10 +542,10 @@ namespace IBS.Repositories
 
             if(model.AcceptRejornot != "C")
             {
-                if ((model.AcceptRejornot == "Y") && (model.InspRegion != ""))
+                if ((model.AcceptRejornot == "Y") && (model.JIInspRegion != ""))
                 {
                     DataTable dt = new DataTable();
-                    string inspRegionFirstChar = model.InspRegion.Substring(0, 1);
+                    string inspRegionFirstChar = model.JIInspRegion.Substring(0, 1);
 
                     OracleParameter[] par = new OracleParameter[4];
                     par[0] = new OracleParameter("IN_INSP_REGION", OracleDbType.Varchar2, inspRegionFirstChar, ParameterDirection.Input);

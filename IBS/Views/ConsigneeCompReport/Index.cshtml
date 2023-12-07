@@ -450,23 +450,23 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="allRegionscorp" name="inspectionRegion" value="All">
+                <input type="radio" id="allRegionscorp" name="JIinspectionRegion" value="All">
                 <label for="allRegionscorp">All Regions</label>
             </li>
             <li>
-                <input type="radio" id="northerncorp" name="inspectionRegion" value="N">
+                <input type="radio" id="northerncorp" name="JIinspectionRegion" value="N">
                 <label for="northerncorp">Northern</label>
             </li>
             <li>
-                <input type="radio" id="southerncorp" name="inspectionRegion" value="S">
+                <input type="radio" id="southerncorp" name="JIinspectionRegion" value="S">
                 <label for="southerncorp">Southern</label>
             </li>
             <li>
-                <input type="radio" id="easterncorp" name="inspectionRegion" value="E">
+                <input type="radio" id="easterncorp" name="JIinspectionRegion" value="E">
                 <label for="easterncorp">Eastern</label>
             </li>
             <li>
-                <input type="radio" id="westerncorp" name="inspectionRegion" value="W">
+                <input type="radio" id="westerncorp" name="JIinspectionRegion" value="W">
                 <label for="westerncorp">Western</label>
             </li>
         </ul>
@@ -477,27 +477,27 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="alljiRegionscorp" name="jointinspectionRegion" value="All">
+                <input type="radio" id="alljiRegionscorp" name="JIjointinspectionRegion" value="All">
                 <label for="alljiRegionscorp">All Regions</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="northernjicorp" name="jointinspectionRegion" value="N">
+                <input type="radio" id="northernjicorp" name="JIjointinspectionRegion" value="N">
                 <label for="northernjicorp">Northern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="southernjicorp" name="jointinspectionRegion" value="S">
+                <input type="radio" id="southernjicorp" name="JIjointinspectionRegion" value="S">
                 <label for="southernjicorp">Southern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="easternjicorp" name="jointinspectionRegion" value="E">
+                <input type="radio" id="easternjicorp" name="JIjointinspectionRegion" value="E">
                 <label for="easternjicorp">Eastern</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="westernjicorp" name="jointinspectionRegion" value="W">
+                <input type="radio" id="westernjicorp" name="JIjointinspectionRegion" value="W">
                 <label for="westernjicorp">Western</label>
                 <br>
             </li>
@@ -509,27 +509,27 @@
         </div>
         <ul class="radioListForm">
             <li>
-                <input type="radio" id="compallRegionscorp" name="compinspectionRegion" value="All">
+                <input type="radio" id="compallRegionscorp" name="JIcompinspectionRegion" value="All">
                 <label for="compallRegionscorp">All</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Yescorp" name="compinspectionRegion" value="Y">
+                <input type="radio" id="Yescorp" name="JIcompinspectionRegion" value="Y">
                 <label for="Yescorp">Yes</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Nocorp" name="compinspectionRegion" value="N">
+                <input type="radio" id="Nocorp" name="JIcompinspectionRegion" value="N">
                 <label for="Nocorp">No</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="Cancelledcorp" name="compinspectionRegion" value="C">
+                <input type="radio" id="Cancelledcorp" name="JIcompinspectionRegion" value="C">
                 <label for="Cancelledcorp">Cancelled</label>
                 <br>
             </li>
             <li>
-                <input type="radio" id="UnderConsiderationcorp" name="compinspectionRegion" value="UC">
+                <input type="radio" id="UnderConsiderationcorp" name="JIcompinspectionRegion" value="UC">
                 <label for="UnderConsiderationcorp">Under Consideration</label>
                 <br>
             </li>
@@ -654,6 +654,7 @@
 <div class="accordion-body TOPNHIGH" style="display:none;">
     <form role="form" asp-controller="ConsigneeCompReport" asp-action="ManageReportData" id="frmTOPNHIGH">
         <input type="hidden" id="hdnReportType" name="hdnReportType" />
+        <input type="hidden" id="hdnmonthchar" name="hdnmonthchar" />
         <input type="hidden" id="hdnmonth" name="hdnmonth" />
         <input type="hidden" id="hdnyear" name="hdnyear" />
         <input type="hidden" id="hdnvalinsp" name="hdnvalinsp" />
@@ -684,15 +685,15 @@
         <div class="row my-0" id="forperioddt">
             <div class="col-md-3">
                 <div class="input-search">
-                    <label for="FromDate">For The Period From</label>
-                    <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                    <label for="FromDateTOPN">For The Period From</label>
+                    <input type="text" class="input datepicker" id="FromDateTOPN" placeholder="DD/MM/YYYY">
                     <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-search">
-                    <label for="ToDate">To</label>
-                    <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                    <label for="ToDateTOPN">To</label>
+                    <input type="text" class="input datepicker" id="ToDateTOPN" placeholder="DD/MM/YYYY" />
                     <span class="text-danger field-validation-error" id="spnErrortodt"></span>
                 </div>
             </div>
@@ -1433,9 +1434,9 @@
             var ReportType = '@ReportType';
             var FromDate = $('#compfromdtcrop').val();;
             var ToDate = $('#comptodtcrop').val();;
-            var InspRegion = $('input:radio[name=inspectionRegion]:checked').val();
-            var JIInspRegion = $('input:radio[name=jointinspectionRegion]:checked').val();
-            var JIInspReqRegion = $('input:radio[name=compinspectionRegion]:checked').val();
+            var InspRegion = $('input:radio[name=JIinspectionRegion]:checked').val();
+            var JIInspRegion = $('input:radio[name=JIjointinspectionRegion]:checked').val();
+            var JIInspReqRegion = $('input:radio[name=JIcompinspectionRegion]:checked').val();
             var underconsider = $("#UnderConsiderationcorp").is(":checked") == true ? "true" : "false";
             var allaction = $("#allactioncorp").is(":checked") == true ? "true" : "false";
             var particilaraction = $("#ParticularActioncorp").is(":checked") == true ? "true" : "false";
@@ -1549,39 +1550,49 @@
             if ($("#valinsp").val() == "") {
                 $("#spnErrorvalinsp").html("Enter No of Inspection show in Report");
                 IsValid = false;
+            } else {
+                $("#spnErrorvalinsp").html("");
             }
 
             if (formonth == "true") {
                 if ($("#month").val() == "") {
                     $("#spnErrormonth").html("Select Month");
                     IsValid = false;
+                }else{
+                    $("#spnErrormonth").html("");
                 }
                 if ($("#year").val() == "") {
                     $("#spnErroryear").html("Select Year");
                     IsValid = false;
+                } else {
+                    $("#spnErroryear").html("");
                 }
             }
 
             if (forperiod == "true") {
-                if ($("#FromDate").val() == "") {
+                if ($("#FromDateTOPN").val() == "") {
                     $("#spnErrorfromdt").html("Enter From Date.");
                     IsValid = false;
+                } else {
+                    $("#spnErrorfromdt").html("");
                 }
-                if ($("#ToDate").val() == "") {
+                if ($("#ToDateTOPN").val() == "") {
                     $("#spnErrortodt").html("Enter To Date.");
                     IsValid = false;
+                } else {
+                    $("#spnErrortodt").html("");
                 }
             }
 
             if (!IsValid) return;
-
+            debugger
             var IsValid = true;
             var monthChar = $('#month option:selected').text();
             var month = getMonthNumber(monthChar);
             var year = $('#year').val();
             var valinsp = $('#valinsp').val();
-            var FromDate = $('#FromDate').val();
-            var ToDate = $('#ToDate').val();
+            var FromDate = $('#FromDateTOPN').val();
+            var ToDate = $('#ToDateTOPN').val();
             var ICDate = $("#ICDate").is(":checked") == true ? "true" : "false";
             var BillDate = $("#BillDate").is(":checked") == true ? "true" : "false";
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
@@ -1589,7 +1600,7 @@
             var ReportType = '@ReportType';
 
             $('#frmTOPNHIGH').find("#hdnReportType").val(ReportType);
-            $('#frmTOPNHIGH').find("#hdnmonth").val(monthChar);
+            $('#frmTOPNHIGH').find("#hdnmonthchar").val(monthChar);
             $('#frmTOPNHIGH').find("#hdnmonth").val(month);
             $('#frmTOPNHIGH').find("#hdnyear").val(year);
             $('#frmTOPNHIGH').find("#hdnvalinsp").val(valinsp);
