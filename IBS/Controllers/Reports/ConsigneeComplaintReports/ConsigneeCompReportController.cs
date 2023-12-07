@@ -71,20 +71,20 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             {
                 if (formCollection.Keys.Contains("hdncompfromdt") && !string.IsNullOrEmpty(formCollection["hdncompfromdt"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdt"]);
                 if (formCollection.Keys.Contains("hdncomptodt") && !string.IsNullOrEmpty(formCollection["hdncomptodt"])) model.ToDate = Convert.ToString(formCollection["hdncomptodt"]);
-                if (formCollection.Keys.Contains("hdnallRegions") && !string.IsNullOrEmpty(formCollection["hdnallRegions"])) model.Allregion = Convert.ToString(formCollection["hdnallRegions"]);
-                if (formCollection.Keys.Contains("hdnnorthern") && !string.IsNullOrEmpty(formCollection["hdnnorthern"])) model.regionorth = Convert.ToString(formCollection["hdnnorthern"]);
-                if (formCollection.Keys.Contains("hdnsouthern") && !string.IsNullOrEmpty(formCollection["hdnsouthern"])) model.regionsouth = Convert.ToString(formCollection["hdnsouthern"]);
-                if (formCollection.Keys.Contains("hdneastern") && !string.IsNullOrEmpty(formCollection["hdneastern"])) model.regioneast = Convert.ToString(formCollection["hdneastern"]);
-                if (formCollection.Keys.Contains("hdnwestern") && !string.IsNullOrEmpty(formCollection["hdnwestern"])) model.regionwest = Convert.ToString(formCollection["hdnwestern"]);
-                if (formCollection.Keys.Contains("hdnalljiRegions") && !string.IsNullOrEmpty(formCollection["hdnalljiRegions"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegions"]);
-                if (formCollection.Keys.Contains("hdnnorthernji") && !string.IsNullOrEmpty(formCollection["hdnnorthernji"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernji"]);
-                if (formCollection.Keys.Contains("hdnsouthernji") && !string.IsNullOrEmpty(formCollection["hdnsouthernji"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernji"]);
-                if (formCollection.Keys.Contains("hdneasternji") && !string.IsNullOrEmpty(formCollection["hdneasternji"])) model.jieast = Convert.ToString(formCollection["hdneasternji"]);
-                if (formCollection.Keys.Contains("hdnwesternji") && !string.IsNullOrEmpty(formCollection["hdnwesternji"])) model.jiwest = Convert.ToString(formCollection["hdnwesternji"]);
-                if (formCollection.Keys.Contains("hdncompallRegions") && !string.IsNullOrEmpty(formCollection["hdncompallRegions"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegions"]);
-                if (formCollection.Keys.Contains("hdnYes") && !string.IsNullOrEmpty(formCollection["hdnYes"])) model.compyes = Convert.ToString(formCollection["hdnYes"]);
-                if (formCollection.Keys.Contains("hdnNo") && !string.IsNullOrEmpty(formCollection["hdnNo"])) model.compno = Convert.ToString(formCollection["hdnNo"]);
-                if (formCollection.Keys.Contains("hdnCancelled") && !string.IsNullOrEmpty(formCollection["hdnCancelled"])) model.cancelled = Convert.ToString(formCollection["hdnCancelled"]);
+                if (formCollection.Keys.Contains("hdnInspRegions") && !string.IsNullOrEmpty(formCollection["hdnInspRegions"])) model.InspRegion = Convert.ToString(formCollection["hdnInspRegions"]);
+                if (formCollection.Keys.Contains("hdnJIInspRegion") && !string.IsNullOrEmpty(formCollection["hdnJIInspRegion"])) model.JIInspRegion = Convert.ToString(formCollection["hdnJIInspRegion"]);
+                if (formCollection.Keys.Contains("hdnJIREQRegion") && !string.IsNullOrEmpty(formCollection["hdnJIREQRegion"])) model.JIInspReqRegion = Convert.ToString(formCollection["hdnJIREQRegion"]);
+                //if (formCollection.Keys.Contains("hdneastern") && !string.IsNullOrEmpty(formCollection["hdneastern"])) model.regioneast = Convert.ToString(formCollection["hdneastern"]);
+                //if (formCollection.Keys.Contains("hdnwestern") && !string.IsNullOrEmpty(formCollection["hdnwestern"])) model.regionwest = Convert.ToString(formCollection["hdnwestern"]);
+                //if (formCollection.Keys.Contains("hdnalljiRegions") && !string.IsNullOrEmpty(formCollection["hdnalljiRegions"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegions"]);
+                //if (formCollection.Keys.Contains("hdnnorthernji") && !string.IsNullOrEmpty(formCollection["hdnnorthernji"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernji"]);
+                //if (formCollection.Keys.Contains("hdnsouthernji") && !string.IsNullOrEmpty(formCollection["hdnsouthernji"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernji"]);
+                //if (formCollection.Keys.Contains("hdneasternji") && !string.IsNullOrEmpty(formCollection["hdneasternji"])) model.jieast = Convert.ToString(formCollection["hdneasternji"]);
+                //if (formCollection.Keys.Contains("hdnwesternji") && !string.IsNullOrEmpty(formCollection["hdnwesternji"])) model.jiwest = Convert.ToString(formCollection["hdnwesternji"]);
+                //if (formCollection.Keys.Contains("hdncompallRegions") && !string.IsNullOrEmpty(formCollection["hdncompallRegions"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegions"]);
+                //if (formCollection.Keys.Contains("hdnYes") && !string.IsNullOrEmpty(formCollection["hdnYes"])) model.compyes = Convert.ToString(formCollection["hdnYes"]);
+                //if (formCollection.Keys.Contains("hdnNo") && !string.IsNullOrEmpty(formCollection["hdnNo"])) model.compno = Convert.ToString(formCollection["hdnNo"]);
+                //if (formCollection.Keys.Contains("hdnCancelled") && !string.IsNullOrEmpty(formCollection["hdnCancelled"])) model.cancelled = Convert.ToString(formCollection["hdnCancelled"]);
                 if (formCollection.Keys.Contains("hdnUnderConsideration") && !string.IsNullOrEmpty(formCollection["hdnUnderConsideration"])) model.underconsider = Convert.ToString(formCollection["hdnUnderConsideration"]);
                 if (formCollection.Keys.Contains("hdnallaction") && !string.IsNullOrEmpty(formCollection["hdnallaction"])) model.allaction = Convert.ToString(formCollection["hdnallaction"]);
                 if (formCollection.Keys.Contains("hdnParticularAction") && !string.IsNullOrEmpty(formCollection["hdnParticularAction"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularAction"]);
@@ -127,29 +127,26 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnconsignee") && !string.IsNullOrEmpty(formCollection["hdnconsignee"])) model.consignee = Convert.ToString(formCollection["hdnconsignee"]);
             }if (model.ReportType == "CORP")
             {
-                if (formCollection.Keys.Contains("hdncompfromdtcorp") && !string.IsNullOrEmpty(formCollection["hdncompfromdtcorp"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdtcorp"]);
-                if (formCollection.Keys.Contains("hdncomptodtcorp") && !string.IsNullOrEmpty(formCollection["hdncomptodtcorp"])) model.ToDate = Convert.ToString(formCollection["hdncomptodtcorp"]);
-                if (formCollection.Keys.Contains("hdnallRegionscorp") && !string.IsNullOrEmpty(formCollection["hdnallRegionscorp"])) model.Allregion = Convert.ToString(formCollection["hdnallRegionscorp"]);
-                if (formCollection.Keys.Contains("hdnnortherncorp") && !string.IsNullOrEmpty(formCollection["hdnnortherncorp"])) model.regionorth = Convert.ToString(formCollection["hdnnortherncorp"]);
-                if (formCollection.Keys.Contains("hdnsoutherncorp") && !string.IsNullOrEmpty(formCollection["hdnsoutherncorp"])) model.regionsouth = Convert.ToString(formCollection["hdnsoutherncorp"]);
-                if (formCollection.Keys.Contains("hdneasterncorp") && !string.IsNullOrEmpty(formCollection["hdneasterncorp"])) model.regioneast = Convert.ToString(formCollection["hdneasterncorp"]);
-                if (formCollection.Keys.Contains("hdnwesterncorp") && !string.IsNullOrEmpty(formCollection["hdnwesterncorp"])) model.regionwest = Convert.ToString(formCollection["hdnwesterncorp"]);
-                if (formCollection.Keys.Contains("hdnalljiRegionscorp") && !string.IsNullOrEmpty(formCollection["hdnalljiRegionscorp"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegionscorp"]);
-                if (formCollection.Keys.Contains("hdnnorthernjicorp") && !string.IsNullOrEmpty(formCollection["hdnnorthernjicorp"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernjicorp"]);
-                if (formCollection.Keys.Contains("hdnsouthernjicorp") && !string.IsNullOrEmpty(formCollection["hdnsouthernjicorp"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernjicorp"]);
-                if (formCollection.Keys.Contains("hdneasternjicorp") && !string.IsNullOrEmpty(formCollection["hdneasternjicorp"])) model.jieast = Convert.ToString(formCollection["hdneasternjicorp"]);
-                if (formCollection.Keys.Contains("hdnwesternjicorp") && !string.IsNullOrEmpty(formCollection["hdnwesternjicorp"])) model.jiwest = Convert.ToString(formCollection["hdnwesternjicorp"]);
-                if (formCollection.Keys.Contains("hdncompallRegionscorp") && !string.IsNullOrEmpty(formCollection["hdncompallRegionscorp"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegionscorp"]);
-                if (formCollection.Keys.Contains("hdnYescorp") && !string.IsNullOrEmpty(formCollection["hdnYescorp"])) model.compyes = Convert.ToString(formCollection["hdnYescorp"]);
-                if (formCollection.Keys.Contains("hdnNocorp") && !string.IsNullOrEmpty(formCollection["hdnNocorp"])) model.compno = Convert.ToString(formCollection["hdnNocorp"]);
-                if (formCollection.Keys.Contains("hdnCancelledcorp") && !string.IsNullOrEmpty(formCollection["hdnCancelledcorp"])) model.cancelled = Convert.ToString(formCollection["hdnCancelledcorp"]);
-                if (formCollection.Keys.Contains("hdnUnderConsiderationcorp") && !string.IsNullOrEmpty(formCollection["hdnUnderConsiderationcorp"])) model.underconsider = Convert.ToString(formCollection["hdnUnderConsiderationcorp"]);
-                if (formCollection.Keys.Contains("hdnallactioncorp") && !string.IsNullOrEmpty(formCollection["hdnallactioncorp"])) model.allaction = Convert.ToString(formCollection["hdnallactioncorp"]);
-                if (formCollection.Keys.Contains("hdnParticularActioncorp") && !string.IsNullOrEmpty(formCollection["hdnParticularActioncorp"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularActioncorp"]);
-                if (formCollection.Keys.Contains("hdnDefectCodecorp") && !string.IsNullOrEmpty(formCollection["hdnDefectCodecorp"])) model.particilarcode = Convert.ToString(formCollection["hdnDefectCodecorp"]);
-                if (formCollection.Keys.Contains("hdnParticularjicodecorp") && !string.IsNullOrEmpty(formCollection["hdnParticularjicodecorp"])) model.particilarjicode = Convert.ToString(formCollection["hdnParticularjicodecorp"]);
-                if (formCollection.Keys.Contains("hdnParticularDefectCodecorp") && !string.IsNullOrEmpty(formCollection["hdnParticularDefectCodecorp"])) model.actioncodedrp = Convert.ToString(formCollection["hdnParticularDefectCodecorp"]);
-                if (formCollection.Keys.Contains("hdnParticularJIcorp") && !string.IsNullOrEmpty(formCollection["hdnParticularJIcorp"])) model.actionjidrp = Convert.ToString(formCollection["hdnParticularJIcorp"]);
+                if (formCollection.Keys.Contains("hdncompfromdt") && !string.IsNullOrEmpty(formCollection["hdncompfromdt"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdt"]);
+                if (formCollection.Keys.Contains("hdncomptodt") && !string.IsNullOrEmpty(formCollection["hdncomptodt"])) model.ToDate = Convert.ToString(formCollection["hdncomptodt"]);
+                if (formCollection.Keys.Contains("hdnInspRegions") && !string.IsNullOrEmpty(formCollection["hdnInspRegions"])) model.InspRegion = Convert.ToString(formCollection["hdnInspRegions"]);
+                if (formCollection.Keys.Contains("hdnJIInspRegion") && !string.IsNullOrEmpty(formCollection["hdnJIInspRegion"])) model.JIInspRegion = Convert.ToString(formCollection["hdnJIInspRegion"]);
+                if (formCollection.Keys.Contains("hdnJIREQRegion") && !string.IsNullOrEmpty(formCollection["hdnJIREQRegion"])) model.JIInspReqRegion = Convert.ToString(formCollection["hdnJIREQRegion"]);
+                //if (formCollection.Keys.Contains("hdneastern") && !string.IsNullOrEmpty(formCollection["hdneastern"])) model.regioneast = Convert.ToString(formCollection["hdneastern"]);
+                //if (formCollection.Keys.Contains("hdnwestern") && !string.IsNullOrEmpty(formCollection["hdnwestern"])) model.regionwest = Convert.ToString(formCollection["hdnwestern"]);
+                //if (formCollection.Keys.Contains("hdnalljiRegions") && !string.IsNullOrEmpty(formCollection["hdnalljiRegions"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegions"]);
+                //if (formCollection.Keys.Contains("hdnnorthernji") && !string.IsNullOrEmpty(formCollection["hdnnorthernji"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernji"]);
+                //if (formCollection.Keys.Contains("hdnsouthernji") && !string.IsNullOrEmpty(formCollection["hdnsouthernji"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernji"]);
+                //if (formCollection.Keys.Contains("hdneasternji") && !string.IsNullOrEmpty(formCollection["hdneasternji"])) model.jieast = Convert.ToString(formCollection["hdneasternji"]);
+                //if (formCollection.Keys.Contains("hdnwesternji") && !string.IsNullOrEmpty(formCollection["hdnwesternji"])) model.jiwest = Convert.ToString(formCollection["hdnwesternji"]);
+                //if (formCollection.Keys.Contains("hdncompallRegions") && !string.IsNullOrEmpty(formCollection["hdncompallRegions"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegions"]);
+                //if (formCollection.Keys.Contains("hdnYes") && !string.IsNullOrEmpty(formCollection["hdnYes"])) model.compyes = Convert.ToString(formCollection["hdnYes"]);
+                //if (formCollection.Keys.Contains("hdnNo") && !string.IsNullOrEmpty(formCollection["hdnNo"])) model.compno = Convert.ToString(formCollection["hdnNo"]);
+                //if (formCollection.Keys.Contains("hdnCancelled") && !string.IsNullOrEmpty(formCollection["hdnCancelled"])) model.cancelled = Convert.ToString(formCollection["hdnCancelled"]);
+                if (formCollection.Keys.Contains("hdnUnderConsideration") && !string.IsNullOrEmpty(formCollection["hdnUnderConsideration"])) model.underconsider = Convert.ToString(formCollection["hdnUnderConsideration"]);
+                if (formCollection.Keys.Contains("hdnallaction") && !string.IsNullOrEmpty(formCollection["hdnallaction"])) model.allaction = Convert.ToString(formCollection["hdnallaction"]);
+                if (formCollection.Keys.Contains("hdnParticularAction") && !string.IsNullOrEmpty(formCollection["hdnParticularAction"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularAction"]);
+                if (formCollection.Keys.Contains("hdnParticularActiondrp") && !string.IsNullOrEmpty(formCollection["hdnParticularActiondrp"])) model.actiondrp = Convert.ToString(formCollection["hdnParticularActiondrp"]);
             }
             if (model.ReportType == "TOPNHIGH")
             {
@@ -190,23 +187,23 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             return View("Manage", model);
         }
 
-        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest,
-            string compallregion, string compyes, string compno, string cancelled, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
+        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string InspRegion, string JIInspRegion,string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
-            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, actiondrp, actioncodedrp, actionjidrp);
+            int IeCd = SessionHelper.UserModelDTO.IeCd;
+            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, InspRegion, JIInspRegion, JIInspReqRegion, actiondrp, actioncodedrp, actionjidrp,IeCd);
 
-            region = (Allregion == "true") ? "AllRegion" :
-                     (regionorth == "true") ? "Northern Region" :
-                     (regionsouth == "true") ? "Southern Region" :
-                     (regioneast == "true") ? "Eastern Region" :
-                     (regionwest == "true") ? "Western Region" :
+            region = (InspRegion == "All") ? "AllRegion" :
+                     (InspRegion == "N") ? "Northern Region" :
+                     (InspRegion == "S") ? "Southern Region" :
+                     (InspRegion == "E") ? "Eastern Region" :
+                     (InspRegion == "W") ? "Western Region" :
                      "";
 
-            jirequired = (compallregion == "true") ? "" :
-                      (compyes == "true") ? "& JI Required" :
-                      (compno == "true") ? "& JI Not Required" :
-                      (cancelled == "true") ? " & JI Cancelled" :
+            jirequired = (JIInspReqRegion == "All") ? "" :
+                      (JIInspReqRegion == "Y") ? "& JI Required" :
+                      (JIInspReqRegion == "N") ? "& JI Not Required" :
+                      (JIInspReqRegion == "C") ? " & JI Cancelled" :
                       (underconsider == "true") ? "& JI Under Consideration" :
                       "";
 
@@ -254,23 +251,23 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             return PartialView(model);
         }
 
-        public IActionResult ComplaintsByCONJI(string FromDate, string ToDate, string Allregion, string regionorth, string regionsouth, string regioneast, string regionwest,
-           string compallregion, string compyes, string compno, string cancelled, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
+        public IActionResult ComplaintsByCONJI(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
-            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, actiondrp, actioncodedrp, actionjidrp);
+            int IeCd = SessionHelper.UserModelDTO.IeCd;
+            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, InspRegion, JIInspRegion, JIInspReqRegion, actiondrp, actioncodedrp, actionjidrp, IeCd);
 
-            region = (Allregion == "true") ? "AllRegion" :
-                     (regionorth == "true") ? "Northern Region" :
-                     (regionsouth == "true") ? "Southern Region" :
-                     (regioneast == "true") ? "Eastern Region" :
-                     (regionwest == "true") ? "Western Region" :
+            region = (InspRegion == "All") ? "AllRegion" :
+                     (InspRegion == "N") ? "Northern Region" :
+                     (InspRegion == "S") ? "Southern Region" :
+                     (InspRegion == "E") ? "Eastern Region" :
+                     (InspRegion == "W") ? "Western Region" :
                      "";
 
-            jirequired = (compallregion == "true") ? "" :
-                      (compyes == "true") ? "& JI Required" :
-                      (compno == "true") ? "& JI Not Required" :
-                      (cancelled == "true") ? " & JI Cancelled" :
+            jirequired = (JIInspReqRegion == "All") ? "" :
+                      (JIInspReqRegion == "Y") ? "& JI Required" :
+                      (JIInspReqRegion == "N") ? "& JI Not Required" :
+                      (JIInspReqRegion == "C") ? " & JI Cancelled" :
                       (underconsider == "true") ? "& JI Under Consideration" :
                       "";
 

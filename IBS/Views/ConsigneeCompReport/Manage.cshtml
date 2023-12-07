@@ -90,11 +90,8 @@
 
     function loadJICONComplaints() {
         $("#dvReportViewer").load("@Url.Action("ComplaintsByPeriod")", {
-            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Allregion: '@Model.Allregion', regionorth: '@Model.regionorth'
-            , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
-            , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
-            , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp',
-            particilarcode: '@Model.particilarcode', particilarjicode: '@Model.particilarjicode', actioncodedrp: '@Model.actioncodedrp', actionjidrp: '@Model.actionjidrp'
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', InspRegion: '@Model.InspRegion', JIInspRegion: '@Model.JIInspRegion'
+            , JIInspReqRegion: '@Model.JIInspReqRegion', underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
 
         }, function (response) {
             $("#dvReportViewer").empty();
@@ -104,10 +101,8 @@
 
     function loadComplaints() {
         $("#dvReportViewer").load("@Url.Action("ComplaintsByPeriod")", {
-            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', Allregion: '@Model.Allregion', regionorth: '@Model.regionorth'
-            , regionsouth: '@Model.regionsouth', regioneast: '@Model.regioneast', regionwest: '@Model.regionwest', jiallregion: '@Model.jiallregion', jinorth: '@Model.jinorth', jisourth: '@Model.jisourth'
-            , jieast: '@Model.jieast', jiwest: '@Model.jiwest', compallregion: '@Model.compallregion', compyes: '@Model.compyes', compno: '@Model.compno', cancelled: '@Model.cancelled'
-            , underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
+            FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', InspRegion: '@Model.InspRegion', JIInspRegion: '@Model.JIInspRegion'
+            , JIInspReqRegion: '@Model.JIInspReqRegion', underconsider: '@Model.underconsider', allaction: '@Model.allaction', particilaraction: '@Model.particilaraction', actiondrp: '@Model.actiondrp'
 
         }, function (response) {
             $("#dvReportViewer").empty();
