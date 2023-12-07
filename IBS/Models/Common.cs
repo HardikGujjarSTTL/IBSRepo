@@ -4610,18 +4610,23 @@ namespace IBS.Models
                     }).OrderBy(c => c.Text).ToList();
         }
 
-        public static List<SelectListItem> GetNewUserType()
+        //public static List<SelectListItem> GetNewUserType()
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    List<SelectListItem> city = (from a in context.UserMasters
+        //                                 select new SelectListItem
+        //                                 {
+        //                                     Text = a.UserType,
+        //                                     Value = a.UserType
+        //                                 })
+        //                    .Distinct()
+        //                    .ToList();
+        //    return city;
+        //}
+
+        public static List<TextValueDropDownDTO> GetUserTypeLogin()
         {
-            ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> city = (from a in context.UserMasters
-                                         select new SelectListItem
-                                         {
-                                             Text = a.UserType,
-                                             Value = a.UserType
-                                         })
-                            .Distinct()
-                            .ToList();
-            return city;
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserTypeLogin)).ToList();
         }
     }
 

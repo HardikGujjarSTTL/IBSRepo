@@ -49,7 +49,8 @@ namespace IBS.Controllers
                     loginModel.MOBILE = userMaster.MOBILE;
                     userRepository.SaveOTPDetails(loginModel);
                     string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
+                    string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
+                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
                 }
                 else
                 {
@@ -63,11 +64,13 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult OTPVerification(string UserName)
+        public ActionResult OTPVerification(string UserName, string UserType)
         {
             string DecryptUserName = Common.DecryptQueryString(UserName);
+            string DecryptUserType = Common.DecryptQueryString(UserType);
             LoginModel loginModel1 = new LoginModel();
             loginModel1.DecryptUserName = DecryptUserName;
+            loginModel1.DecryptUserType = DecryptUserType;
             return View(loginModel1);
         }
 
@@ -76,6 +79,7 @@ namespace IBS.Controllers
         public ActionResult OTPProceed(LoginModel loginModel)
         {
             loginModel.UserName = loginModel.DecryptUserName;
+            loginModel.UserType = loginModel.DecryptUserType;
             if (userRepository.VerifyOTP(loginModel))
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);

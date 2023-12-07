@@ -559,9 +559,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<UserMaster> UserMasters { get; set; }
 
+    public virtual DbSet<UserMasterTemp> UserMasterTemps { get; set; }
+
     public virtual DbSet<Userrole> Userroles { get; set; }
 
     public virtual DbSet<UserrolesHistory> UserrolesHistories { get; set; }
+
+    public virtual DbSet<Userrolestemp> Userrolestemps { get; set; }
 
     public virtual DbSet<V05Vendor> V05Vendors { get; set; }
 
@@ -10893,10 +10897,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T107LoLogginLog>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T107_LO_LOGGIN_LOG");
+            entity.HasKey(e => e.Id).HasName("T107_LO_LOGGIN_LOG_PK");
 
+            entity.ToTable("T107_LO_LOGGIN_LOG");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T107_LO_LOGGIN_LOG_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.LogginTime)
                 .HasColumnType("DATE")
                 .HasColumnName("LOGGIN_TIME");
@@ -21532,6 +21540,20 @@ public partial class ModelContext : DbContext
                 .HasColumnName("USER_TYPE");
         });
 
+        modelBuilder.Entity<UserMasterTemp>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("USER_MASTER_TEMP");
+
+            entity.Property(e => e.Masterid)
+                .HasPrecision(13)
+                .HasColumnName("MASTERID");
+            entity.Property(e => e.Roleid)
+                .HasPrecision(13)
+                .HasColumnName("ROLEID");
+        });
+
         modelBuilder.Entity<Userrole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("SYS_C008690");
@@ -21576,6 +21598,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
+            entity.Property(e => e.UserMasterId)
+                .HasPrecision(13)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("USER_MASTER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -21604,6 +21630,45 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.RoleId)
+                .HasPrecision(6)
+                .HasColumnName("ROLE_ID");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.Usertype)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERTYPE");
+        });
+
+        modelBuilder.Entity<Userrolestemp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0010535");
+
+            entity.ToTable("USERROLESTEMP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
@@ -25298,6 +25363,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T101_IE_CLUSTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
+        modelBuilder.HasSequence("T107_LO_LOGGIN_LOG_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");

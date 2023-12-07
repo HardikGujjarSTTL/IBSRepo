@@ -16,4 +16,6 @@ public partial class T107LoLogginLog
     public DateTime? LogginTime { get; set; }
 
     public string? Status { get; set; }
+
+    public int Id { get; set; }
 }
