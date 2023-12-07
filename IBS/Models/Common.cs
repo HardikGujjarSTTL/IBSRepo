@@ -4609,6 +4609,20 @@ namespace IBS.Models
                         Value = Convert.ToString(a.CoCd)
                     }).OrderBy(c => c.Text).ToList();
         }
+
+        public static List<SelectListItem> GetNewUserType()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.UserMasters
+                                         select new SelectListItem
+                                         {
+                                             Text = a.UserType,
+                                             Value = a.UserType
+                                         })
+                            .Distinct()
+                            .ToList();
+            return city;
+        }
     }
 
     public static class DbContextHelper

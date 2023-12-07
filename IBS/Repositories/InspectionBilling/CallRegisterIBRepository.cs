@@ -460,7 +460,7 @@ namespace IBS.Repositories.InspectionBilling
 
             string ID = "";
             int CD = 0;
-            ie_cd = FindIeCODE(model);
+            //ie_cd = FindIeCODE(model);
             string department1 = model.DepartmentCode;
             if (department1 == "M")
             {
@@ -484,7 +484,6 @@ namespace IBS.Repositories.InspectionBilling
 
             var Co = context.T09Ies.Where(x => x.IeCd == Convert.ToInt32(IeCd)).Select(x => x.IeCoCd).FirstOrDefault();
             model.CoCd = Convert.ToByte(Co);
-
 
             if (model.ActionType == "A")
             {
@@ -527,7 +526,7 @@ namespace IBS.Repositories.InspectionBilling
                         w_irfc_funded = "N";
                     }
                     model.e_status = 1;
-                    if (ie_cd > 0)
+                    if (IeCd > 0)
                     {
                         try
                         {

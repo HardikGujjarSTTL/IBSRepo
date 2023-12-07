@@ -7,6 +7,15 @@
 <div class="loginForm">
     <h2 class="heading1 bold">Login</h2>
     <form role="form" asp-controller="Home" asp-action="Login" id="frmLogin">
+
+        @* <div class="row">
+            <div class="col-md-12">
+                <div class="reference">
+                    <label for="Caseno">User Type</label>
+                    @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetNewUserType(), "Value", "Text"), "--Select--")
+                </div>
+            </div>
+        </div> *@
         <div class="row">
             <div class="col-md-12">
                 <label for="email">User Name</label>

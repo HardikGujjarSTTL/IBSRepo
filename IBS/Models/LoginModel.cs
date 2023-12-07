@@ -16,6 +16,8 @@ namespace IBS.Models
         public string MOBILE { get; set; }
         public string DecryptUserName { get; set; }
 
+        public string UserType { get; set; }
+
     }
 
     public class UserSessionModel
