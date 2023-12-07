@@ -658,5 +658,12 @@ Lo Dashboard
 
 GET_LO_DASHBOARD
 GET_LO_DASHBOARD_LIST
+
+
+=================USER TYPE Wise Migration================
+Store procedure
+===============
+1) GET_LOGINBYUSERPASS
+2) GET_LOGINDETAILS
 =============================================================================================================================================
 
