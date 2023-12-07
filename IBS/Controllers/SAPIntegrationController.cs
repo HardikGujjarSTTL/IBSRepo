@@ -1,5 +1,6 @@
 ﻿using IBS.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace IBS.Controllers
 {
@@ -17,11 +18,12 @@ namespace IBS.Controllers
             return View();
         }
 
-        [HttpPost]
         public IActionResult ExportExcelBPO(string BPO_Cd)
         {
-            sapIntegrationRepository.ExportExcelBPO(BPO_Cd);
-            return View();
+            DataSet ds = sapIntegrationRepository.ExportExcelBPO(BPO_Cd);
+
+            return File(Helpers.CreateExcelFile.ExportToExcelDownload(ds), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "YourFileName.xls");
+
         }
 
     }

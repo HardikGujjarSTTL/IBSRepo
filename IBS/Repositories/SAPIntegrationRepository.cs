@@ -17,7 +17,7 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public void ExportExcelBPO(string BPO_Cd)
+        public DataSet ExportExcelBPO(string BPO_Cd)
         {
             OracleConnection conn = (OracleConnection)context.Database.GetDbConnection();
             conn.Open();
@@ -39,10 +39,8 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("P_ID", OracleDbType.Int64, ID, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            DataSet ds = DataAccessDB.GetDataSet("SP_GET_SAP_QA_DATA", par);
-
+            return DataAccessDB.GetDataSet("SP_GET_SAP_QA_DATA", par);
         }
     }
-
 }
 
