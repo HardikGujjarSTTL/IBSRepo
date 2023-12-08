@@ -49,7 +49,8 @@ namespace IBS.Controllers
                     loginModel.MOBILE = userMaster.MOBILE;
                     userRepository.SaveOTPDetails(loginModel);
                     string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
+                    string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
+                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
                 }
                 else
                 {
@@ -63,11 +64,13 @@ namespace IBS.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult OTPVerification(string UserName)
+        public ActionResult OTPVerification(string UserName, string UserType)
         {
             string DecryptUserName = Common.DecryptQueryString(UserName);
+            string DecryptUserType = Common.DecryptQueryString(UserType);
             LoginModel loginModel1 = new LoginModel();
             loginModel1.DecryptUserName = DecryptUserName;
+            loginModel1.DecryptUserType = DecryptUserType;
             return View(loginModel1);
         }
 
@@ -76,6 +79,7 @@ namespace IBS.Controllers
         public ActionResult OTPProceed(LoginModel loginModel)
         {
             loginModel.UserName = loginModel.DecryptUserName;
+            loginModel.UserType = loginModel.DecryptUserType;
             if (userRepository.VerifyOTP(loginModel))
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
@@ -116,10 +120,11 @@ namespace IBS.Controllers
             return View(loginModel);
         }
 
-        public IActionResult RegenerateOTP(string UserName)
+        public IActionResult RegenerateOTP(string UserName, string UserType)
         {
             LoginModel loginModel = new LoginModel();
             loginModel.UserName = UserName;
+            loginModel.UserType = UserType;
             UserSessionModel userMaster = userRepository.LoginByUserName(loginModel);
             loginModel.MOBILE = userMaster.MOBILE;
 
@@ -147,9 +152,11 @@ namespace IBS.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult ForgotPassword()
+        public IActionResult ForgotPassword(string usertype)
         {
-            return View();
+            ForgotPasswordModel forgotPasswordModel = new ForgotPasswordModel();
+            forgotPasswordModel.UserType = usertype;
+            return View(forgotPasswordModel);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -157,12 +164,12 @@ namespace IBS.Controllers
         {
             if (ModelState.IsValid)
             {
-                T02User userMaster = userRepository.FindByUsernameOrEmail(loginModel.UserName);
+                UserSessionModel userMaster = userRepository.FindByUsernameOrEmail(loginModel.UserName, loginModel.UserType);
                 if (userMaster != null)
                 {
 
                     string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
-                    body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.UserId)) }));
+                    body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.FPUserID)), UserType = Common.EncryptQueryString(Convert.ToString(loginModel.UserType)) }));
                     EmailUtility emailUtility = new(Configuration);
                     string error = emailUtility.SendEmail(new EmailDetails
                     {
@@ -185,14 +192,14 @@ namespace IBS.Controllers
             return View(loginModel);
         }
 
-        public IActionResult ResetPassword(string id)
+        public IActionResult ResetPassword(string id,string UserType)
         {
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(UserType))
             {
                 id = Common.DecryptQueryString(id.ToString());
+                UserType = Common.DecryptQueryString(UserType.ToString());
             }
-            UserModel user = userRepository.FindByID(id);
-            ResetPasswordModel resetPassword = new() { UserId = id };
+            ResetPasswordModel resetPassword = new() { UserId = id , UserType = UserType };
             return View(resetPassword);
         }
 
@@ -204,10 +211,10 @@ namespace IBS.Controllers
                 var SaltedToken = Common.CreateRandomText(16);
                 resetPassword.NewPassword = resetPassword.NewPassword;
                 resetPassword.ConfirmPassword = resetPassword.ConfirmPassword;
-
-                UserModel user = userRepository.FindByID(Convert.ToString(resetPassword.UserId));
+                resetPassword.UserType = Common.DecryptQueryString(resetPassword.UserType);
+                UserModel user = userRepository.FindByIDForResetPass(Convert.ToString(resetPassword.UserId), resetPassword.UserType);
                 string UserId = formCollection["UserId"];
-                if (user.UserId.Trim() != resetPassword.UserName.Trim())
+                if (user.FPUserID.Trim() != resetPassword.UserName.Trim())
                 {
                     AlertDanger("User Name does not match.");
                     return View(resetPassword);
@@ -217,7 +224,6 @@ namespace IBS.Controllers
                     AlertDanger("New password must be different from your old password.");
                     return View(resetPassword);
                 }
-
                 userRepository.ChangePassword(resetPassword);
                 AlertUpdateSuccess("Password reset successfully.");
                 return RedirectToAction("Index", "Home");

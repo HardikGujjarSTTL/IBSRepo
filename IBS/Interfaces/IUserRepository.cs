@@ -19,7 +19,7 @@ namespace IBS.Interfaces
 
         public void ChangePassword(int UserId, String NewPassword);
 
-        public T02User FindByUsernameOrEmail(string UserName);
+        public UserSessionModel FindByUsernameOrEmail(string UserName, string UserType);
 
         public void ChangePassword(ResetPasswordModel resetPassword);
 
@@ -38,5 +38,7 @@ namespace IBS.Interfaces
         public bool SaveOTPDetails(LoginModel model);
 
         public bool VerifyOTP(LoginModel model);
+
+        public UserModel FindByIDForResetPass(string UserId, string UserType);
     }
 }

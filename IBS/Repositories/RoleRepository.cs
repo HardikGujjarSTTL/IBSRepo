@@ -155,7 +155,7 @@ namespace IBS.Repositories
             else
             {
                 model.RoleId = role.RoleId;
-                model.User_ID = role.UserId;
+                model.User_ID = Convert.ToString(role.UserMasterId);
                 return model;
             }
         }
@@ -188,15 +188,17 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Userroles
-                    join u in context.T02Users on l.UserId.ToString() equals u.UserId.ToString()
+                        //join u in context.T02Users on l.UserId.ToString() equals u.UserId.ToString()
+                    join u in context.UserMasters on l.UserId.ToString() equals u.UserId.ToString()
                     join r in context.Roles on l.RoleId equals r.RoleId
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RoleModel
                     {
                         RoleId = l.RoleId,
                         Rolename = r.Rolename,
-                        User_ID = l.UserId,
-                        UserName = u.UserName,
+                        //User_ID = l.UserId,
+                        User_ID =Convert.ToString(l.UserMasterId),
+                        UserName = u.Name,
                         Id = l.Id
                     };
 

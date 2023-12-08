@@ -237,6 +237,19 @@ namespace IBS.Helper
             [Description("Left/Repatriated")]
             L,
         }
+        public enum UserTypeLogin
+        {
+            [Description("Users")]
+            USERS,
+            [Description("Vendor")]
+            VENDOR,
+            [Description("Inspection Engineer (IE)")]
+            IE,
+            [Description("Client")]
+            CLIENT_LOGIN,
+            [Description("Liaisoning Officer (LO)")]
+            LO_LOGIN,
+        }
 
         public enum IEPosting
         {

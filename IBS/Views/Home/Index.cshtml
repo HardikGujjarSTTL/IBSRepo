@@ -7,6 +7,7 @@
 <div class="loginForm">
     <h2 class="heading1 bold">Login</h2>
     <form role="form" asp-controller="Home" asp-action="Login" id="frmLogin">
+
         <div class="row">
             <div class="col-md-12">
                 <label for="email">User Name</label>
@@ -26,12 +27,21 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                <div class="reference">
+                    <label for="Caseno">User Type</label>
+                    @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetUserTypeLogin(), "Value", "Text"), "--Select--", new { onchange = "UserTypeChange()" })
+                    <span asp-validation-for="UserType" id="valUserType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <div class="remember">
                     <div class="remecheckbox">
                         <input type="checkbox" class="input">
                         Remembered Me
                     </div>
-                    <a asp-controller="Home" asp-action="ForgotPassword" title="Forgot Password" class="link1">Forgot your password ?</a>
+                    <a id="forgotPasswordLink" href="#" title="Forgot Password" class="link1" onclick="checkValidation()">Forgot your password ?</a>
                 </div>
             </div>
         </div>
@@ -49,7 +59,6 @@
 
 @section scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -76,6 +85,17 @@
         function Loginsubmit() {
             if ($("#frmLogin").valid()) {
                 $("#frmLogin").submit();
+            }
+        }
+
+        function UserTypeChange() {
+            $("#forgotPasswordLink").attr("href", '@Url.Action("ForgotPassword", "Home")?usertype=' + $("#UserType").val());
+        }
+        function checkValidation() {
+            debugger;
+            if ($("#UserType").val() == "" || $("#UserType").val() == null) {
+                ShowHideMsgNew(false, "User Type is required.");
+                return;
             }
         }
     </script>

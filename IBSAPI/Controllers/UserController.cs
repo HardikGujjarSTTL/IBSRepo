@@ -9,6 +9,7 @@ using System.Collections;
 using System.Configuration;
 using System.Net;
 using System.Text;
+using static IBSAPI.Helper.Enums;
 
 namespace IBSAPI.Controllers
 {
@@ -34,7 +35,7 @@ namespace IBSAPI.Controllers
 
         [HttpPost("SignIn", Name = "SignIn")]
         public IActionResult SignIn([FromBody] LoginModel loginModel)
-        {            
+        {
             try
             {
                 //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
@@ -133,18 +134,20 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                UserModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName);
+                UserSessionModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName, forgotPasswordModel.UserType);
                 if (userMaster != null)
                 {
-                    if(userMaster.userId.Trim() == "84997")
+                    if (userMaster.FPUserID.Trim() == "84997")
                     {
                         userMaster.Email = "urvesh.modi@silvertouch.com";
                     }
                     if (userMaster.Email != null && userMaster.Email != "")
                     {
-                        string rootPath = Configuration["MyAppSettings:ResetPasswordPath"] + Common.EncryptQueryString(Convert.ToString(userMaster.userId));
+                        string RootHostName = HttpContext.Request.Host.Value;
+                        string WebRootPath = "https://"+ RootHostName + "/IBS2/Home/ResetPassword?id=";
+                        string rootPath = /*Configuration["MyAppSettings:ResetPasswordPath"]*/ WebRootPath + Common.EncryptQueryString(Convert.ToString(userMaster.FPUserID)) + "&UserType=" + Convert.ToString(forgotPasswordModel.UserType);
                         string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
-                        body = body.Replace("{{USERNAME}}", userMaster.userName).Replace("{{RESETPASSURL}}", rootPath);
+                        body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", rootPath);
 
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.To = userMaster.Email;
@@ -201,11 +204,33 @@ namespace IBSAPI.Controllers
                     message = ex.Message.ToString(),
                 };
                 return Ok(response);
-            }            
+            }
         }
 
-
-
+        [HttpGet("GetUserType", Name = "GetUserType")]
+        public IActionResult GetUserType()
+        {
+            try
+            {
+                List<TextValueDropDownDTO> model = Common.GetUserTypeLogin();
+                var response1 = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                    data = model
+                };
+                return Ok(response1);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "GetUserType", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
 
         private string GetErrorList(ModelStateDictionary modelState)
         {
@@ -215,6 +240,6 @@ namespace IBSAPI.Controllers
                 .ToList();
 
             return string.Join(", ", errors);
-        }       
+        }
     }
 }

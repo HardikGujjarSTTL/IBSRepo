@@ -221,6 +221,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T02UsersHistory> T02UsersHistories { get; set; }
 
+    public virtual DbSet<T02UsersTemp> T02UsersTemps { get; set; }
+
     public virtual DbSet<T03City> T03Cities { get; set; }
 
     public virtual DbSet<T04Uom> T04Uoms { get; set; }
@@ -551,9 +553,15 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserMaster> UserMasters { get; set; }
+
+    public virtual DbSet<UserMasterTemp> UserMasterTemps { get; set; }
+
     public virtual DbSet<Userrole> Userroles { get; set; }
 
     public virtual DbSet<UserrolesHistory> UserrolesHistories { get; set; }
+
+    public virtual DbSet<Userrolestemp> Userrolestemps { get; set; }
 
     public virtual DbSet<V05Vendor> V05Vendors { get; set; }
 
@@ -608,8 +616,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<ViewChequePostingEditDetail> ViewChequePostingEditDetails { get; set; }
 
     public virtual DbSet<ViewConsigneeDetail> ViewConsigneeDetails { get; set; }
-
-    public virtual DbSet<ViewDashboardPomasterlist> ViewDashboardPomasterlists { get; set; }
 
     public virtual DbSet<ViewGetBillregisterDtail> ViewGetBillregisterDtails { get; set; }
 
@@ -9070,9 +9076,112 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Migtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MIGTYPE");
+            entity.Property(e => e.Mobile)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("MOBILE");
+            entity.Property(e => e.Password)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("PASSWORD");
+            entity.Property(e => e.Region)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
+                .HasColumnName("REGION");
+            entity.Property(e => e.RitesEmp)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("RITES_EMP");
+            entity.Property(e => e.Status)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("STATUS");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("USER_NAME");
+            entity.Property(e => e.UserType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_TYPE");
+        });
+
+        modelBuilder.Entity<T02UsersTemp>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("T02_USERS_TEMP");
+
+            entity.Property(e => e.AllowDnChksht)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("ALLOW_DN_CHKSHT");
+            entity.Property(e => e.AllowPo)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("ALLOW_PO");
+            entity.Property(e => e.AllowUpChksht)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("ALLOW_UP_CHKSHT");
+            entity.Property(e => e.AuthLevl)
+                .HasPrecision(2)
+                .HasColumnName("AUTH_LEVL");
+            entity.Property(e => e.CallMarking)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALL_MARKING");
+            entity.Property(e => e.CallRemarking)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALL_REMARKING");
+            entity.Property(e => e.CoCd)
+                .HasPrecision(6)
+                .HasColumnName("CO_CD");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.EmpNo)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("EMP_NO");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Isdeleted)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Migtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
                 .HasColumnName("MIGTYPE");
             entity.Property(e => e.Mobile)
                 .HasMaxLength(10)
@@ -10780,10 +10889,14 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T107LoLogginLog>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T107_LO_LOGGIN_LOG");
+            entity.HasKey(e => e.Id).HasName("T107_LO_LOGGIN_LOG_PK");
 
+            entity.ToTable("T107_LO_LOGGIN_LOG");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T107_LO_LOGGIN_LOG_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
             entity.Property(e => e.LogginTime)
                 .HasColumnType("DATE")
                 .HasColumnName("LOGGIN_TIME");
@@ -21389,6 +21502,50 @@ public partial class ModelContext : DbContext
                 .HasColumnName("UPDATED_AT");
         });
 
+        modelBuilder.Entity<UserMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("USER_MASTER_PK");
+
+            entity.ToTable("USER_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(13)
+                .HasDefaultValueSql("\"IBSDEV\".\"USER_MASTER_SEQ\".\"NEXTVAL\"")
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.UserType)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USER_TYPE");
+        });
+
+        modelBuilder.Entity<UserMasterTemp>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("USER_MASTER_TEMP");
+
+            entity.Property(e => e.Masterid)
+                .HasPrecision(13)
+                .HasColumnName("MASTERID");
+            entity.Property(e => e.Roleid)
+                .HasPrecision(13)
+                .HasColumnName("ROLEID");
+        });
+
         modelBuilder.Entity<Userrole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("SYS_C008690");
@@ -21433,6 +21590,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
+            entity.Property(e => e.UserMasterId)
+                .HasPrecision(13)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("USER_MASTER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -21461,6 +21622,45 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ACTIONUSERID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.RoleId)
+                .HasPrecision(6)
+                .HasColumnName("ROLE_ID");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.Usertype)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERTYPE");
+        });
+
+        modelBuilder.Entity<Userrolestemp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0010535");
+
+            entity.ToTable("USERROLESTEMP");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
@@ -23529,66 +23729,6 @@ public partial class ModelContext : DbContext
                 .HasColumnName("CONSIGNEE_NAME");
         });
 
-        modelBuilder.Entity<ViewDashboardPomasterlist>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VIEW_DASHBOARD_POMASTERLIST");
-
-            entity.Property(e => e.ConsigneeSName)
-                .HasMaxLength(132)
-                .IsUnicode(false)
-                .HasColumnName("CONSIGNEE_S_NAME");
-            entity.Property(e => e.MainrlyCd)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("MAINRLY_CD");
-            entity.Property(e => e.Pdatetime)
-                .HasColumnType("DATE")
-                .HasColumnName("PDATETIME");
-            entity.Property(e => e.PoDt)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("PO_DT");
-            entity.Property(e => e.PoNo)
-                .HasMaxLength(75)
-                .IsUnicode(false)
-                .HasColumnName("PO_NO");
-            entity.Property(e => e.RealCaseNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("REAL_CASE_NO");
-            entity.Property(e => e.RegionCode)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("REGION_CODE");
-            entity.Property(e => e.Remarks)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasColumnName("REMARKS");
-            entity.Property(e => e.RlyCd)
-                .HasMaxLength(68)
-                .IsUnicode(false)
-                .HasColumnName("RLY_CD");
-            entity.Property(e => e.RlyCds)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("RLY_CDS");
-            entity.Property(e => e.RlyNonrly)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .HasColumnName("RLY_NONRLY");
-            entity.Property(e => e.VendCd)
-                .HasPrecision(6)
-                .HasColumnName("VEND_CD");
-            entity.Property(e => e.VendName)
-                .HasMaxLength(205)
-                .IsUnicode(false)
-                .HasColumnName("VEND_NAME");
-        });
-
         modelBuilder.Entity<ViewGetBillregisterDtail>(entity =>
         {
             entity
@@ -25195,6 +25335,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("LABTRAN");
         modelBuilder.HasSequence("LABTRANDTL");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");
+        modelBuilder.HasSequence("MENUROLEMAPPING_SEQ");
         modelBuilder.HasSequence("MICROSOFTSEQDTPROPERTIES");
         modelBuilder.HasSequence("REGIONALHRDATAOFIE_SEQ");
         modelBuilder.HasSequence("RETURNED_BILLS_BPO_CHANGE_HISTORY_SEQ");
@@ -25214,6 +25355,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T101_IE_CLUSTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");
         modelBuilder.HasSequence("T103_VEND_DOCS_SEQ");
+        modelBuilder.HasSequence("T107_LO_LOGGIN_LOG_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");
@@ -25271,6 +25413,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("TESTCAL");
         modelBuilder.HasSequence("TOKEN_SEQ");
         modelBuilder.HasSequence("TRANSACTION_NUMBER_SEQ");
+        modelBuilder.HasSequence("USER_MASTER_SEQ");
         modelBuilder.HasSequence("USERROLES_HISTORY_SEQ");
         modelBuilder.HasSequence("USERROLESSEQ");
         modelBuilder.HasSequence("VENDOR_FEEDBACK_SEQ");

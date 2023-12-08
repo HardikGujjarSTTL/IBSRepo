@@ -85,9 +85,9 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public ActionResult SearchUsers(string searchTerm)
+        public ActionResult SearchUsers(string searchTerm, string userType)
         {
-            var filteredUsers = Common.GetUsersgetbyName(searchTerm);
+            var filteredUsers = Common.GetUsersgetbyName(searchTerm, userType);
 
             var result = filteredUsers.Select(u => new
             {
