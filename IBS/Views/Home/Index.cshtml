@@ -25,14 +25,6 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="display:none;">
-            <div class="col-md-12">
-                <div class="reference">
-                    <label for="Caseno">User Type</label>
-                    @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetUserTypeLogin(), "Value", "Text"), "--Select--")
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="reference">
@@ -100,7 +92,6 @@
             $("#forgotPasswordLink").attr("href", '@Url.Action("ForgotPassword", "Home")?usertype=' + $("#UserType").val());
         }
         function checkValidation() {
-            debugger;
             if ($("#UserType").val() == "" || $("#UserType").val() == null) {
                 ShowHideMsgNew(false, "User Type is required.");
                 return;
