@@ -1,6 +1,7 @@
 ﻿using IBS.Models.Reports;
 using Microsoft.Build.Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
 
 namespace IBS.Models
 {
@@ -15,7 +16,7 @@ namespace IBS.Models
         public string? RlyBillSummary { get; set; }
 
         public int FromMn { get; set; }
-        
+
         public int FromYr { get; set; }
 
         public int ToMn { get; set; }
@@ -154,6 +155,10 @@ namespace IBS.Models
 
         public List<BillSubmittedCrisModel> lstBillCrisSubmitted { get; set; }
 
+        public string FilePath1 { get; set; }
+        public string FilePath2 { get; set; }
+        public string FilePath3 { get; set; }
+
     }
 
     public class BillRaisedListModel
@@ -171,6 +176,8 @@ namespace IBS.Models
         public decimal? BILL_AMOUNT { get; set; }
 
         public decimal? NO_OF_BILLS { get; set; }
+
+        public string FilePath { get; set; }
     }
 
     public class BillSectorListModel
@@ -198,6 +205,8 @@ namespace IBS.Models
         public decimal? BILL_AMOUNT { get; set; }
 
         public decimal? NO_OF_BILLS { get; set; }
+
+        public string FilePath { get; set; }
     }
 
     public class RailwayOnlineListModel
@@ -247,6 +256,8 @@ namespace IBS.Models
         public string? PO_YR { get; set; }
 
         public string? IMMS_RLY_CD { get; set; }
+
+        public string FilePath { get; set; }
     }
 
     public class BillsNotCrisListModel
@@ -272,6 +283,8 @@ namespace IBS.Models
         public string PO_OR_LETTER { get; set; }
 
         public string IRN_NO { get; set; }
+
+        public string FilePath { get; set; }
     }
 
     public class BillSubmittedCrisModel
@@ -297,5 +310,7 @@ namespace IBS.Models
         public string RETURN_REASON { get; set; }
 
         public string AU { get; set; }
+
+        public string FilePath { get; set; }
     }
 }

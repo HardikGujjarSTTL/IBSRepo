@@ -13,6 +13,8 @@ using System.Drawing;
 using System.Globalization;
 using static IBS.Helper.Enums;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.IO;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace IBS.Repositories.Reports.Billing
 {
@@ -322,6 +324,7 @@ namespace IBS.Repositories.Reports.Billing
                     
                 }
             }
+            
             model.lstBillRailway = lstBillRailway;
 
             return model;

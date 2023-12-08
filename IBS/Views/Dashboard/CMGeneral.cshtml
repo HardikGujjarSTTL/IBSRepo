@@ -1,4 +1,5 @@
-﻿
+﻿@model DashboardModel
+
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">CM General Dashboard</h2>
 </div>
@@ -19,116 +20,44 @@
                 <th>Still Under Inspection</th>
                 <th>Stage Rejection</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @if (Model != null && Model.IEWisePerformance != null && Model.IEWisePerformance.Count > 0)
+            {
+                var SrNo = 0;
+                if (Model.IEWisePerformance.Count() > 0)
+                {
+                    @foreach (var item in Model.IEWisePerformance.Take(10))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.TotalCallsCount</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PendingCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.AcceptedCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CancelledCallsCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.UnderLabTestingCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StillUnderInspectionCount</font></td>
+                            <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.StageRejectionCount</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10">No Data Found</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No Data Found</td>
+                </tr>
+            }
         </table>
+    </div>
+    <div class="tableBottomLink">
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>

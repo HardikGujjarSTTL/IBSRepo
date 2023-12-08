@@ -5,31 +5,31 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        @*<h2>Vendor Call Registration</h2>*@
-        <h3 class="heading3">@ViewData["Title"]</h3>
+        <h2>Vendor Call Registration</h2>
+        @*<h3 class="heading3">@ViewData["Title"]</h3>*@
     </div>
 </div>
 <div class="task-listinput">
     <form asp-controller="VendorCallRegister" asp-action="VendorCallRegister" id="frmVendor">
         <div class="accordion-body">
             <div class="row my-0">
-            <div class="col-lg-12">
-                <div class="alert alert-warning">
-            <span class="text-danger">
-                <b>Attention :</b>
-                <br />
-                * Please note that calls submitted on Sundays and on National Holidays shall be Registered only on next working day.
-                <br />
-                * Calls recieved upto 3 P.M. shall be marked on same day and calls recieved after 3 P.M. shall be marked on next working day except Saturday.
-            </span>
+                <div class="col-lg-12">
+                    <div class="alert alert-warning">
+                        <span class="text-danger">
+                            <b>Attention :</b>
+                            <br />
+                            * Please note that calls submitted on Sundays and on National Holidays shall be Registered only on next working day.
+                            <br />
+                            * Calls recieved upto 3 P.M. shall be marked on same day and calls recieved after 3 P.M. shall be marked on next working day except Saturday.
+                        </span>
                     </div>
-            </div>
+                </div>
             </div>
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Case No.</label>
-                        <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;" onchange=onCaseNo();>
                         @*<span asp-validation-for="CaseNo" class="text-danger"></span>*@
                     </div>
                 </div>
@@ -87,17 +87,17 @@
             </div>
             <div class="row my-0">
                 <div class="col-lg-12">
-                <div class="alert alert-info center">
-                    <span style="color:DarkMagenta;">
-                        * Select Stage in case of Stage Inspection/Raw Material Inspection.
-                    </span>
-                    <br />
-                    <span style="color:DarkMagenta;">
-                        To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button
-                        To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.
-                    </span>
+                    <div class="alert alert-info center">
+                        <span style="color:DarkMagenta;">
+                            * Select Stage in case of Stage Inspection/Raw Material Inspection.
+                        </span>
+                        <br />
+                        <span style="color:DarkMagenta;">
+                            To Search a Call-> Enter Case No. Or PO No. and Click on [Search] Button
+                            To Register New Call --> Enter Case No then Click on [New Call] Button, Kindly Search Before Registering Your Call.
+                        </span>
+                    </div>
                 </div>
-            </div>
             </div>
 
             <div class="savenext-btn">
@@ -136,13 +136,15 @@
         </section>
     </form>
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
         $(function () {
             $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
+
         });
 
         function NewCall() {
@@ -157,8 +159,26 @@
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
-
+            $('input[name=CallStage]').prop('disabled', false);
             $("#frmVendor").submit();
+        }
+
+        function onCaseNo() {
+            var CaseNo = $("#CaseNo").val();
+            let myObject = { CaseNo };
+            $.get("@Url.Action("GetPODetails", "VendorCallRegister")", $.param(myObject), function (response) {
+                if (response.status) {
+                    if (response.responseText == "0") {
+                        $('input[name=CallStage]').attr("disabled", true);
+                        $("#CallStage_F").prop('checked', true);
+                        $('input[name="CallStage"]:checked').val("F");
+                    }
+                    else {
+                        $("#CallStage_F").prop('checked', true);
+                        $('input[name=CallStage]').attr("disabled", false);
+                    }
+                }
+            });
         }
 
         function Search() {
@@ -264,4 +284,4 @@
             InitializeDatatable();
         }
     </script>
-    }
+}

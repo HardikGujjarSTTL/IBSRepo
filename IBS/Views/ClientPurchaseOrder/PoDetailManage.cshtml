@@ -405,6 +405,9 @@
                     });
                     $("#ConsigneeCd").append("<option value=''>Other</option>");
                 }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
             });
         }
 

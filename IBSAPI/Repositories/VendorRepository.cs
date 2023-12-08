@@ -560,7 +560,7 @@ namespace IBSAPI.Repositories
             query = (from t18 in context.T18CallDetails
                      join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
                      join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
-                     where t18.CaseNo == model.CaseNo && t18.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && t18.CallSno == Convert.ToInt16(model.CallSno)
+                     where t18.CaseNo == model.CaseNo && t18.CallRecvDt.Date == Convert.ToDateTime(model.CallRecvDt).Date && t18.CallSno == Convert.ToInt16(model.CallSno)
                      select new VenderCallRegisterModel
                      {
                          ItemSrnoPo = t18.ItemSrnoPo,
@@ -765,9 +765,14 @@ namespace IBSAPI.Repositories
             }
             else
             {
+                //System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(ext_delv_dt.Substring(6, 4)), Convert.ToInt32(ext_delv_dt.Substring(3, 2)), Convert.ToInt32(ext_delv_dt.Substring(0, 2)));
+                //System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(model.DtInspDesire.ToString().Substring(6, 4)), Convert.ToInt32(model.DtInspDesire.ToString().Substring(3, 2)), Convert.ToInt32(model.DtInspDesire.ToString().Substring(0, 2)));
+                //TimeSpan ts = w_dt1 - w_dt2;
+                string resultCallRecvDt = model.DtInspDesire != null ? model.DtInspDesire.Value.ToString("dd/MM/yyyy") : "01/01/2001";
                 System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(ext_delv_dt.Substring(6, 4)), Convert.ToInt32(ext_delv_dt.Substring(3, 2)), Convert.ToInt32(ext_delv_dt.Substring(0, 2)));
-                System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(model.DtInspDesire.ToString().Substring(6, 4)), Convert.ToInt32(model.DtInspDesire.ToString().Substring(3, 2)), Convert.ToInt32(model.DtInspDesire.ToString().Substring(0, 2)));
+                System.DateTime w_dt2 = new System.DateTime(Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(6, 4)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(3, 2)), Convert.ToInt32(Convert.ToString(resultCallRecvDt).Substring(0, 2)));
                 TimeSpan ts = w_dt1 - w_dt2;
+
                 int differenceInDays = ts.Days;
                 if (differenceInDays < 5)
                 {
@@ -792,6 +797,10 @@ namespace IBSAPI.Repositories
             if (model.ActionType == "A")
             {
                 int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.RegionCode).Count();
+                
+                var count = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(model.CallRecvDt).Date).Count();
+                model.CallSno = count + 1;
+                
                 if (cmdCL == 0)
                 {
                     var w_item_rdso = "";

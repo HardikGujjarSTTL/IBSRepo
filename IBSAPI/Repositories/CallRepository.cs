@@ -10,7 +10,7 @@ namespace IBSAPI.Repositories
 {
     public class CallRepository : ICallRepository
     {
-        
+
         private readonly ModelContext context;
         public CallRepository(ModelContext context)
         {
@@ -31,7 +31,7 @@ namespace IBSAPI.Repositories
             return lst;
         }
 
-        public int SheduleInspection(SheduleInspectionRequestModel sheduleInspectionRequestModel)
+        public int SheduleInspection(SheduleInspectionRequestModel sheduleInspectionRequestModel, int PlanDHours)
         {
             int ID = 0;
             string CallRecvDt = sheduleInspectionRequestModel.CallRecvDt.ToString("dd-MM-yy");
@@ -58,29 +58,64 @@ namespace IBSAPI.Repositories
             {
                 if (sheduleInspectionRequestModel.CaseNo != null && sheduleInspectionRequestModel.CallRecvDt != null && sheduleInspectionRequestModel.CallSno > 0)
                 {
-
-                    T47IeWorkPlan obj = new T47IeWorkPlan();
-                    obj.IeCd = query.IeCd;
-                    obj.CoCd = Convert.ToByte(query.CoCd);
+                    DateTime CDate = DateTime.Now;
                     if (sheduleInspectionRequestModel.InspectionDay == "TD")
                     {
-                        obj.VisitDt = Convert.ToDateTime(DateTime.Now);
+                        if (CDate.Hour > PlanDHours)
+                        {
+                            ID = 999;
+                        }
+                        else
+                        {
+                            T47IeWorkPlan obj = new T47IeWorkPlan();
+                            obj.IeCd = query.IeCd;
+                            obj.CoCd = Convert.ToByte(query.CoCd);
+                            if (sheduleInspectionRequestModel.InspectionDay == "TD")
+                            {
+                                obj.VisitDt = Convert.ToDateTime(DateTime.Now);
+                            }
+                            else if (sheduleInspectionRequestModel.InspectionDay == "TM")
+                            {
+                                obj.VisitDt = Convert.ToDateTime(DateTime.Now.AddDays(1));
+                            }
+                            obj.CaseNo = query.CaseNo;
+                            obj.CallRecvDt = query.CallRecvDt;
+                            obj.CallSno = query.CallSno;
+                            obj.MfgCd = query.MfgCd;
+                            obj.MfgPlace = query.MfgPlace;
+                            obj.RegionCode = sheduleInspectionRequestModel.RegionCode;
+                            obj.UserId = sheduleInspectionRequestModel.UserId;
+                            obj.Datetime = DateTime.Now;
+                            context.T47IeWorkPlans.Add(obj);
+                            context.SaveChanges();
+                            ID = Convert.ToInt32(obj.CallSno);
+                        }
                     }
-                    else if (sheduleInspectionRequestModel.InspectionDay == "TM")
+                    else
                     {
-                        obj.VisitDt = Convert.ToDateTime(DateTime.Now.AddDays(1));
+                        T47IeWorkPlan obj = new T47IeWorkPlan();
+                        obj.IeCd = query.IeCd;
+                        obj.CoCd = Convert.ToByte(query.CoCd);
+                        if (sheduleInspectionRequestModel.InspectionDay == "TD")
+                        {
+                            obj.VisitDt = Convert.ToDateTime(DateTime.Now);
+                        }
+                        else if (sheduleInspectionRequestModel.InspectionDay == "TM")
+                        {
+                            obj.VisitDt = Convert.ToDateTime(DateTime.Now.AddDays(1));
+                        }
+                        obj.CaseNo = query.CaseNo;
+                        obj.CallRecvDt = query.CallRecvDt;
+                        obj.CallSno = query.CallSno;
+                        obj.MfgCd = query.MfgCd;
+                        obj.MfgPlace = query.MfgPlace;
+                        obj.RegionCode = sheduleInspectionRequestModel.RegionCode;
+                        obj.UserId = sheduleInspectionRequestModel.UserId;
+                        obj.Datetime = DateTime.Now;
+                        context.T47IeWorkPlans.Add(obj);
+                        context.SaveChanges();
+                        ID = Convert.ToInt32(obj.CallSno);
                     }
-                    obj.CaseNo = query.CaseNo;
-                    obj.CallRecvDt = query.CallRecvDt;
-                    obj.CallSno = query.CallSno;
-                    obj.MfgCd = query.MfgCd;
-                    obj.MfgPlace = query.MfgPlace;
-                    obj.RegionCode = sheduleInspectionRequestModel.RegionCode;
-                    obj.UserId = sheduleInspectionRequestModel.UserId;
-                    obj.Datetime = DateTime.Now;
-                    context.T47IeWorkPlans.Add(obj);
-                    context.SaveChanges();
-                    ID = Convert.ToInt32(obj.CallSno);
                 }
             }
             return ID;
@@ -99,7 +134,7 @@ namespace IBSAPI.Repositories
                          }).ToList();
             return lstStatus;
         }
-        public int CancelInspection(int IeCd, string CaseNo,DateTime PlanDt, DateTime CallRecvDt, int CallSno)
+        public int CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno)
         {
             int ID = 0;
             var T47 = context.T47IeWorkPlans.Where(x => x.IeCd == IeCd && x.VisitDt.Date == PlanDt.Date && x.CaseNo == CaseNo && x.CallRecvDt.Date == CallRecvDt.Date && x.CallSno == CallSno).FirstOrDefault();

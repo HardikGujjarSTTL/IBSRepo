@@ -562,7 +562,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
                     //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
-                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt)? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
+                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -1067,7 +1067,7 @@ namespace IBS.Repositories.InspectionBilling
                         var GetReg = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == Convert.ToInt32(model.Callsno)).FirstOrDefault();
                         if (GetReg != null)
                         {
-                            if(GetReg.CallStatus == "PR")
+                            if (GetReg.CallStatus == "PR")
                             {
                                 GetReg.CallStatus = "PR";
                             }
@@ -1132,7 +1132,7 @@ namespace IBS.Repositories.InspectionBilling
                     #region Details update
                     if (T17 != null)
                     {
-                        if(T17.CallStatus == "PR")
+                        if (T17.CallStatus == "PR")
                         {
                             T17.CallStatus = T17.CallStatus;
                         }
@@ -1140,7 +1140,7 @@ namespace IBS.Repositories.InspectionBilling
                         {
                             T17.CallStatus = T17.CallStatus;
                         }
-                        
+
                         T17.UpdateAllowed = "N";
                         T17.Datetime = DateTime.Now.Date;
                         T17.UserId = model.UserId;
@@ -1253,15 +1253,23 @@ namespace IBS.Repositories.InspectionBilling
                         && x.SetNo.Trim() == model.Setno && x.Region == Region).Select(x => x.IssueToIecd)).FirstOrDefault();
 
             string bscheck2 = "";
+            string GstiNo = "";
             string State = model.State.Substring(0, 2);
-            string GstiNo = model.GstinNo.Substring(0, 2);
-            if (model.GstinNo.Substring(0, 1) == "0")
+            if (model.GstinNo == "X")
+            {
+                GstiNo = "XX";
+            }
+            else
+            {
+                GstiNo = model.GstinNo.Substring(0, 2);
+            }
+            if (GstiNo.Substring(0, 1) == "0")
             {
                 State = "0" + State;
                 model.State = "0" + model.State;
             }
 
-            if (model.GstinNo.Substring(0, 2) != model.State.Substring(0, 2))
+            if (GstiNo.Substring(0, 2) != model.State.Substring(0, 2))
             {
                 bscheck2 = "N";
             }
@@ -2051,7 +2059,7 @@ namespace IBS.Repositories.InspectionBilling
                     context.SaveChanges();
                 }
                 var T17 = context.T17CallRegisters.Where(x => x.CaseNo == model.Caseno && x.CallRecvDt == model.Callrecvdt && x.CallSno == model.Callsno).FirstOrDefault();
-                
+
                 if (T17 != null)
                 {
                     if (T17.CallStatus == "PR")

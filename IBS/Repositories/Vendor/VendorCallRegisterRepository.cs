@@ -63,7 +63,7 @@ namespace IBS.Repositories.Vendor
             {
                 T17CallRegister user = context.T17CallRegisters.Where(X => X.CaseNo == CaseNo && X.CallRecvDt == Convert.ToDateTime(CallRecvDt)).FirstOrDefault();
 
-                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt)).Count();
+                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
 
                 model.CallSno = count + 1;
 
@@ -820,11 +820,11 @@ namespace IBS.Repositories.Vendor
 
         public VenderCallRegisterModel GetValidate(VenderCallRegisterModel model)
         {
-            if(model.ActionType == "A")
+            if (model.ActionType == "A")
             {
                 model.callval = FindIeCODE(model);
             }
-            
+
             GetDtList(model);
             return model;
         }
@@ -839,30 +839,30 @@ namespace IBS.Repositories.Vendor
                               select a.ItemSrnoPo).FirstOrDefault();
 
             query = (from t18 in context.T18CallDetails
-                        join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
-                        join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
-                        where t18.CaseNo == model.CaseNo && t18.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && t18.CallSno == Convert.ToInt16(model.CallSno)
-                        select new VenderCallRegisterModel
-                        {
-                            ItemSrnoPo = t18.ItemSrnoPo,
-                            ItemDescPo = t18.ItemDescPo,
-                            QtyOrdered = t18.QtyOrdered,
-                            CumQtyPrevOffered = t18.CumQtyPrevOffered,
-                            CumQtyPrevPassed = t18.CumQtyPrevPassed,
-                            QtyToInsp = t18.QtyToInsp,
-                            QtyPassed = t18.QtyPassed,
-                            QtyRejected = t18.QtyRejected,
-                            QtyDue = t18.QtyDue,
-                            Consignee = t06.ConsigneeCd + "-" +
-                                                     t06.ConsigneeDesig + "/" +
-                                                     t06.ConsigneeDept + "/" +
-                                                     t06.ConsigneeFirm + "/" +
-                                                     t06.ConsigneeAdd1 + "/" +
-                                                     t03.Location + " : " + t03.City,
-                            CaseNo = t18.CaseNo,
-                            CallRecvDt = t18.CallRecvDt,
-                            CallSno = t18.CallSno
-                        }).ToList();
+                     join t06 in context.T06Consignees on t18.ConsigneeCd equals t06.ConsigneeCd
+                     join t03 in context.T03Cities on t06.ConsigneeCity equals t03.CityCd
+                     where t18.CaseNo == model.CaseNo && t18.CallRecvDt == Convert.ToDateTime(model.CallRecvDt) && t18.CallSno == Convert.ToInt16(model.CallSno)
+                     select new VenderCallRegisterModel
+                     {
+                         ItemSrnoPo = t18.ItemSrnoPo,
+                         ItemDescPo = t18.ItemDescPo,
+                         QtyOrdered = t18.QtyOrdered,
+                         CumQtyPrevOffered = t18.CumQtyPrevOffered,
+                         CumQtyPrevPassed = t18.CumQtyPrevPassed,
+                         QtyToInsp = t18.QtyToInsp,
+                         QtyPassed = t18.QtyPassed,
+                         QtyRejected = t18.QtyRejected,
+                         QtyDue = t18.QtyDue,
+                         Consignee = t06.ConsigneeCd + "-" +
+                                                  t06.ConsigneeDesig + "/" +
+                                                  t06.ConsigneeDept + "/" +
+                                                  t06.ConsigneeFirm + "/" +
+                                                  t06.ConsigneeAdd1 + "/" +
+                                                  t03.Location + " : " + t03.City,
+                         CaseNo = t18.CaseNo,
+                         CallRecvDt = t18.CallRecvDt,
+                         CallSno = t18.CallSno
+                     }).ToList();
 
             decimal wMat_value = 0;
             string ext_delv_dt = "";
@@ -1073,7 +1073,7 @@ namespace IBS.Repositories.Vendor
 
                 var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS", par, 1);
                 DataTable dt = ds.Tables[0];
-                
+
                 List<VenderCallRegisterModel> list = new();
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -2130,9 +2130,9 @@ namespace IBS.Repositories.Vendor
 
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_DETAILS_EDIT", par, 1);
             DataTable dt = ds.Tables[0];
-            if(dt != null)
+            if (dt != null)
             {
-                if(dt.Rows.Count >= 1)
+                if (dt.Rows.Count >= 1)
                 {
                     model.CaseNo = Convert.ToString(ds.Tables[0].Rows[0]["CaseNo"]);
                     model.ItemSrnoPo = Convert.ToInt32(ds.Tables[0].Rows[0]["ItemSrNoPo"]);
@@ -2144,10 +2144,10 @@ namespace IBS.Repositories.Vendor
                     model.CumQtyPrevPassed = Convert.ToDecimal(ds.Tables[0].Rows[0]["CumQtyPrevPassed"]);
                     model.QtyRejected = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyRejected"]);
                     model.QtyDue = Convert.ToDecimal(ds.Tables[0].Rows[0]["QtyDue"]);
-                    model.Consignee  = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
+                    model.Consignee = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
                     model.ConsigneeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["ConsigneeCd"]);
                 }
-                
+
             }
 
             return model;
@@ -2198,6 +2198,18 @@ namespace IBS.Repositories.Vendor
                 item = Convert.ToInt32(ItemsDet.QtyToInsp);
             }
             return item;
+        }
+
+        public int GetPODetails(string CaseNo, string Region)
+        {
+            int Isstageinspection = 0;
+            var T13 = context.T13PoMasters.Where(x => x.CaseNo == CaseNo).FirstOrDefault();
+
+            if (T13 != null)
+            {
+                Isstageinspection = Convert.ToInt16(T13.Isstageinspection);
+            }
+            return Isstageinspection;
         }
 
     }

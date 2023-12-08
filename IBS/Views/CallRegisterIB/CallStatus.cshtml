@@ -156,14 +156,14 @@
                         <label for="Reference">Case Status : </label>
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--",new { @id="CallStatusdrp"})
+                        @Html.DropDownListFor(model => model.CallStatus, new SelectList(IBS.Models.Common.CallStatus(), "Value", "Text"), "--Select--", new { @id = "CallStatusdrp" })
                         <input type="hidden" asp-for="CallStatus1" />
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus() , "Value", "Text"), "--Select--",new { @id="CallCancelStatusdrp"})
+                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus(), "Value", "Text"), "--Select--", new { @id = "CallCancelStatusdrp" })
                     </td>
                     <td>
-                        @Html.DropDownListFor(model => model.CallListByRly,new SelectList(Model.CallRlyFirmList, "Value", "Text"),"--Select--",new { @id = "CallCancelChargesdrp" })
+                        @Html.DropDownListFor(model => model.CallListByRly, new SelectList(Model.CallRlyFirmList, "Value", "Text"), "--Select--", new { @id = "CallCancelChargesdrp" })
                     </td>
                 </tr>
                 <tr id="ReasonFIFOdv">
@@ -193,10 +193,10 @@
                         <label for="Reference">BK & Set No : </label>
                     </td>
                     <td>
-                        <input type="text" class="input" id="BkNo" asp-for="BkNo" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="BkNo" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" class="input" id="SetNo" asp-for="SetNo" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="SetNo" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
                     </td>
                 </tr>
                 @if (Model.ActionType != "C")
@@ -206,7 +206,7 @@
                             <label for="Reference">Allow Updation of Call(Y/N) : </label>
                         </td>
                         <td colspan="4">
-                            @Html.DropDownListFor(model => model.UpdateAllowed, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"), "--Select--")
+                            @Html.DropDownListFor(model => model.UpdateAllowed, new SelectList(IBS.Models.Common.OnlineCallStatus(), "Value", "Text"), "--Select--")
                         </td>
                     </tr>
                 }
@@ -240,62 +240,76 @@
                         <div class="row my-0">
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Consignee : </label>
-                                @Html.DropDownList("consigneeFirmDropdown",new SelectList(Model.ConsigneeFirmList, "Value", "Text"),new { @id="consigneeFirmDropdown"})
+                                @Html.DropDownList("consigneeFirmDropdown", new SelectList(Model.ConsigneeFirmList, "Value", "Text"), new { @id = "consigneeFirmDropdown" })
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
-                                <input type="text" id="bknoaccpted" maxlength="100">
+                                <input type="text" id="bknoaccpted" maxlength="4">
                                 <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Set No : </label>
-                                <input type="text" id="setnoaccpted" maxlength="100">
+                                <input type="text" id="setnoaccpted" maxlength="3">
                                 <span asp-validation-for="DocSetNo" class="text-danger"></span>
 
                             </div>
                         </div>
-                        <div class="row my-0">
-                            <div class="col-md-4 mb-3">
-                                <partial name="_FileUploader" id="Img1" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <partial name="_FileUploader" id="Img2" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload2" />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <partial name="_FileUploader" id="Img3" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload3" />
+                        <div class="row my-0 ">
+                            <div class="col-md-12 mb-3">
+                                <label class="text-danger"><span style="color:red;"><b>Browse the Images to Upload (* Select Atleast 5 Images)</b></span></label>
                             </div>
                         </div>
                         <div class="row my-0">
-                            <div class="col-md-4 mb-3">
+
+                            <div class="col-md-6 mb-3">
+                                <partial name="_FileUploader" id="Img1" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <partial name="_FileUploader" id="Img2" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload2" />
+                            </div>
+
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-6 mb-3">
+                                <partial name="_FileUploader" id="Img3" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload3" />
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload4" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                        </div>
+
+                        <div class="row my-0">
+
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload5" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload6" />
                             </div>
                         </div>
                         <div class="row my-0">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload7" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload8" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload9" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload10" />
                             </div>
+                        </div>
+                        <div class="row my-0">
                             <div class="col-md-4 mb-3">
                                 <div class="savenext-btn" style="margin-top:30px;">
                                     <button type="button" class="save-btn active" id="savefiles" onclick="SaveImages();">Save Files</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </form>
@@ -329,21 +343,30 @@
                                 <label for="Reference">Holograms : </label>
                                 <input asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram">
                             </div>
-                            <div class="col-md-4 mb-3">
+                        </div>
+                        <div class="row my-0 ">
+                            <div class="col-md-12 mb-3">
+                                <label class="text-danger"><span style="color:red;"><b>Browse the Pdf to Upload</b></span></label>
+                            </div>
+                        </div>
+                        <div class="row my-0 ">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
                             </div>
                             <div class="col-md-4 mb-3" id="localdrp">
                                 <label for="Reference">Local or Outstation : </label>
-                                @Html.DropDownList("LocalOutstationdrp",new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"),new {@id="LocalOutstationdrp"})
+                                @Html.DropDownList("LocalOutstationdrp", new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"), new { @id = "LocalOutstationdrp" })
                             </div>
                             <div class="col-md-4 mb-3" id="rejvalue">
                                 <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
@@ -354,7 +377,8 @@
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
                             </div>
-                            <p style="color:red;"><b>RefreshAll:It will delete all the records which are not accepted or rejected!</b></p>
+                            <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
+                            <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
                         </div>
                         <div class="row my-0">
                             <div class="col-md-12 mb-5" style="align-content:center;">
@@ -482,7 +506,7 @@
 
 
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -524,11 +548,19 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#bknoaccpted').val(data.DocBkNo);
-                        $('#setnoaccpted').val(data.DocSetNo);
-                        if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
-                            $('#ViewPrintIC').prop('disabled', false);
-                            $("#ViewPrintIC").css("cursor", "pointer");
+                        if (selectedValue == data.Consignee) {
+                            $('#bknoaccpted').val(data.DocBkNo);
+                            $('#setnoaccpted').val(data.DocSetNo);
+                            if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                                $('#ViewPrintIC').prop('disabled', false);
+                                $("#ViewPrintIC").css("cursor", "pointer");
+                            }
+                        }
+                        else {
+                            $('#bknoaccpted').val("");
+                            $('#setnoaccpted').val("");
+                            $('#ViewPrintIC').prop('disabled', true);
+                            $("#ViewPrintIC").css("cursor", "auto");
                         }
                     },
                     error: function () {
@@ -555,6 +587,7 @@
                     $('#AcceptReject').text('Accepted');
                     $('#rejvalue').hide();
                     $('#Remarksval').hide();
+                    $('#AcceptReject').show();
                     $('#Holograms').hide();
                     $('#frmcancelled').hide();
                     $('#uploadfile').show();
@@ -570,6 +603,7 @@
                     $('#savedetails').hide();
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
+                    $('#AcceptReject').show();
                     $('#AcceptReject').text('Rejected');
                     $('#frmcancelled').hide();
                     $('#Remarksval').hide();
@@ -1073,38 +1107,37 @@
         }
         function Accepted() {
             var formData = AjaxModel();
-            debugger
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#bknoaccpted').val();
             var setnoaccpted = $('#setnoaccpted').val();
 
             //if (bknoaccpted != "" || setnoaccpted != "") {
-                $.ajax({
-                    url: '@Url.Action("CallStatusAcceptRej", "CallRegisterIB")',
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        if (response.Id == 1) {
-                            var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
-                            ShowHideMsgNew(true, response.responseText);
-                            $('#uploadfile').prop('disabled', true);
-                            $('#AcceptReject').prop('disabled', true);
-                            $('#savefiles').prop('disabled', true);
-                            $('#AcceptReject').addClass('disabled-button');
-                            setTimeout(function () {
-                                window.location.href = redirectUrl;
-                            }, 1000);
+            $.ajax({
+                url: '@Url.Action("CallStatusAcceptRej", "CallRegisterIB")',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.Id == 1) {
+                        var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
+                        ShowHideMsgNew(true, response.responseText);
+                        $('#uploadfile').prop('disabled', true);
+                        $('#AcceptReject').prop('disabled', true);
+                        $('#savefiles').prop('disabled', true);
+                        $('#AcceptReject').addClass('disabled-button');
+                        setTimeout(function () {
+                            window.location.href = redirectUrl;
+                        }, 1000);
 
-                        }
-                        else {
-
-                            ShowHideMsgNew(false, response.responseText);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('Error: ' + textStatus, errorThrown);
                     }
-                });
+                    else {
+
+                        ShowHideMsgNew(false, response.responseText);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error: ' + textStatus, errorThrown);
+                }
+            });
             //} else {
             //    alert("BKNO & SetNo Is Required.");
             //    return;
@@ -1115,7 +1148,6 @@
         function Save() {
 
             var formData = new FormData();
-            debugger
             SaveSingleDocuments("tab-2");
             var bknoaccpted = $('#BkNo').val();
             var setnoaccpted = $('#SetNo').val();
@@ -1125,7 +1157,6 @@
             var ajaxData = AjaxModel();
 
             if (CallStatus == "G" || CallStatus == "T") {
-                debugger
                 var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
 
                 if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {

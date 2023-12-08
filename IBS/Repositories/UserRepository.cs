@@ -83,7 +83,7 @@ namespace IBS.Repositories
             UserSessionModel userSessionModel = new UserSessionModel();
 
             userSessionModel = (from u in context.T02Users
-                                where u.UserId.Trim() == model.UserName.Trim() 
+                                where u.UserId.Trim() == model.UserName.Trim()
                                 select new UserSessionModel
                                 {
                                     MOBILE = u.Mobile
@@ -96,7 +96,26 @@ namespace IBS.Repositories
         public UserSessionModel LoginByUserPass(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
-            
+
+            //DataSet ds = new DataSet();
+            //OracleParameter[] parameter = new OracleParameter[4];
+            //parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
+            //parameter[1] = new OracleParameter("P_PASSWORD", OracleDbType.Varchar2, model.Password.Trim(), ParameterDirection.Input);
+            //parameter[2] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
+            //parameter[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            //ds = DataAccessDB.GetDataSet("GET_LOGINBYUSERPASS", parameter);
+            //if (ds != null && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
+            //    userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
+            //    userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
+            //    userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
+            //}
+            //else
+            //{
+            //    userSessionModel = null;
+            //}
+
             userSessionModel = (from u in context.T02Users
                                 where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
                                 select new UserSessionModel
@@ -115,9 +134,55 @@ namespace IBS.Repositories
         public UserSessionModel FindByLoginDetail(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
-            
+
+            //DataSet ds = new DataSet();
+            //OracleParameter[] parameter = new OracleParameter[3];
+            //parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
+            //parameter[1] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
+            //parameter[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            //ds = DataAccessDB.GetDataSet("GET_LOGINDETAILS", parameter);
+            //if (ds != null && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
+            //    userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
+            //    userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
+            //    userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
+            //    userSessionModel.Region = Convert.ToString(ds.Tables[0].Rows[0]["REGION"]).Trim();
+            //    userSessionModel.AuthLevl = Convert.ToString(ds.Tables[0].Rows[0]["AUTH_LEVL"]).Trim();
+            //    userSessionModel.RoleId = Convert.ToInt32(ds.Tables[0].Rows[0]["ROLE_ID"]);
+            //    userSessionModel.RoleName = Convert.ToString(ds.Tables[0].Rows[0]["ROLE_NAME"]).Trim();
+            //    userSessionModel.OrgnTypeL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
+            //    userSessionModel.OrganisationL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+            //    userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
+            //    userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+            //    userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
+            //    userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+            //}
+            //else
+            //{
+            //    userSessionModel = null;
+            //}
+
+            //if(model.UserType.Trim() == "LO_LOGIN")
+            //{
+            //    T107LoLogginLog T107 = new()
+            //    {
+            //        Mobile = model.UserName.Trim(),
+            //        Otp = Convert.ToByte(model.OTP),
+            //        OtpGenTime = DateTime.Now,
+            //        OtpExpTime = DateTime.Now,
+            //        //OtpGenTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second),
+            //        //OtpExpTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + (Convert.ToInt32(DateTime.Now.Minute) + 10) + ":" + DateTime.Now.Second),
+            //        LogginTime = DateTime.Now,
+            //        Status = "A"
+            //    };
+
+            //    context.T107LoLogginLogs.Add(T107);
+            //    context.SaveChanges();
+            //}
+
             userSessionModel = (from u in context.T02Users
-                                where u.UserId.Trim() == model.UserName.Trim() 
+                                where u.UserId.Trim() == model.UserName.Trim()
                                 //&& u.Password.Trim() == model.Password.Trim()
                                 join ur in context.Userroles on u.UserId equals ur.UserId into userRoles
                                 from ur in userRoles.DefaultIfEmpty()
@@ -451,15 +516,15 @@ namespace IBS.Repositories
         public bool VerifyOTP(LoginModel model)
         {
             var objOtp = (from o in context.IbsUsersOtps
-                          where o.UserId == model.UserName 
-                          select o).OrderByDescending(x=>x.Createddate).FirstOrDefault();
+                          where o.UserId == model.UserName
+                          select o).OrderByDescending(x => x.Createddate).FirstOrDefault();
             if (objOtp == null)
             {
                 return false;
             }
             else
             {
-                if(objOtp.Otp == model.OTP)
+                if (objOtp.Otp == model.OTP)
                 {
                     return true;
                 }

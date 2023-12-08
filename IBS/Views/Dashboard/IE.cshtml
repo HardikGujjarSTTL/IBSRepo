@@ -10,7 +10,7 @@
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row ie-dashboard">
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="totalcall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "TC" })">
                     <div class="dashboard-box das1Client">
                         <div class="dash-total">
@@ -26,7 +26,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="PendingCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "M" })">
                     <div class="dashboard-box das2Client">
                         <div class="dash-total">
@@ -42,7 +42,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="AcceptedCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "A" })">
                     <div class="dashboard-box das3Client">
                         <div class="dash-total">
@@ -58,7 +58,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="CancelleCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "C" })">
                     <div class="dashboard-box das4Client">
                         <div class="dash-total">
@@ -74,9 +74,8 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row ie-dashboard">
-            <div class="col-lg-3">
+      
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="UnderLabCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "U" })">
                     <div class="dashboard-box das5Client">
                         <div class="dash-total">
@@ -92,7 +91,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="StillUnderInspCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "S" })">
                     <div class="dashboard-box das6Client">
                         <div class="dash-total">
@@ -108,8 +107,8 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "T" })">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "T" })">
                     <div class="dashboard-box das7Client">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -124,7 +123,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das8Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -138,9 +137,8 @@
                     <div class="total-icons"><img src="~/images/DSC-expiry-date-icon.svg" alt="Request Cancel"> </div>
                 </div>
             </div>
-        </div>
-        <div class="row ie-dashboard">
-            <div class="col-lg-3">
+      
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="NCIssued" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "NCI" })">
                     @* <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
                     <div class="dashboard-box das9Client">
@@ -157,24 +155,9 @@
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3">
-                @*<a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
-                <div class="dashboard-box das10Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.OutstandingNCCount</div>
-                        </div>
-                        <div class="total-inner">
-                            Outstanding NC in the <br />
-                            current financial year
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="~/images/outstanding-NC-in-the-current-financial-year-icon.svg" alt="Inspection Completed"> </div>
-                </div>
-                @* </a>*@
-            </div>
-            <div class="col-lg-3">
-                <a class="StageRejectionCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "ICIE" })">
+            
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <a href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "ICIE" })">
                 <div class="dashboard-box das11Client">
                     <div class="dash-total">
                         <div class="dash-count">
@@ -189,7 +172,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="ConsigneeComp" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "CC" })">
                     <div class="dashboard-box das12Client">
                         <div class="dash-total">
@@ -204,6 +187,22 @@
                         <div class="total-icons"><img src="~/images/request-cancel.svg" alt="Request Cancel"> </div>
                     </div>
                 </a>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                @*<a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
+                <div class="dashboard-box das10Client">
+                    <div class="dash-total">
+                        <div class="dash-count">
+                            <div class="total-amount">@Model.OutstandingNCCount</div>
+                        </div>
+                        <div class="total-inner">
+                            Outstanding NC in the <br />
+                            current financial year
+                        </div>
+                    </div>
+                    <div class="total-icons"><img src="~/images/outstanding-NC-in-the-current-financial-year-icon.svg" alt="Inspection Completed"> </div>
+                </div>
+                @* </a>*@
             </div>
         </div>
     </div>

@@ -88,6 +88,8 @@ namespace IBS.Models
         public string ActionType { get; set; }
 
         public string IsUrgency { get; set; }
+
+        public int PlanDHours { get; set; }
     }
 
     public class DeSerializeDailyWorkModel
@@ -97,6 +99,9 @@ namespace IBS.Models
         public DateTime CallRecvDt { get; set; }
 
         public int CallSno { get; set; }
+
+        public int? MfgCd { get; set; }
+
         public string IsUrgency { get; set; }
     }
 }

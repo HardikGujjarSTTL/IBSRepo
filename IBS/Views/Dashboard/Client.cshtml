@@ -9,106 +9,118 @@
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
-        <div class="row admin-dashboard">
+        <div class="row ie-dashboard">
             <div class="col-lg-3">
-                <div class="dashboard-box das1Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalCallsCount</div>
+                <a class="totalcall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "TC" })">
+                    <div class="dashboard-box das1Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalCallsCount</div>
+                                <div class="total-inner">
+                                    Total<br />
+                                    Calls
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <a class="PendingCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "M" })">
+                    <div class="dashboard-box das2Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.PendingCallsCount</div>
+                            </div>
                             <div class="total-inner">
-                                Total<br />
+                                Pending<br />
                                 Calls
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das2Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.PendingCallsCount</div>
-                        </div>
-                        <div class="total-inner">
-                            Pending<br />
-                            Calls
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="dashboard-box das3Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.AcceptedCallsCount</div>
-                        </div>
-                        <div class="total-inner">
-                            Accepted<br />
-                            Calls
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="dashboard-box das4Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.CancelledCallsCount</div>
-                        </div>
-                        <div class="total-inner">
-                            Cancelled<br />
-                            Calls
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
-                </div>
-            </div>
-        </div>
-        <div class="row admin-dashboard">
-            <div class="col-lg-3">
-                <div class="dashboard-box das5Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.UnderLabTestingCount</div>
+                <a class="AcceptedCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "A" })">
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.AcceptedCallsCount</div>
+                            </div>
                             <div class="total-inner">
-                                Under Lab<br />
-                                Testing
+                                Accepted<br />
+                                Calls
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das6Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                <a class="CancelleCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "C" })">
+                    <div class="dashboard-box das4Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.CancelledCallsCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Cancelled<br />
+                                Calls
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Still Under<br />
-                            Inspection
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3">
-                <div class="dashboard-box das7Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.StageRejectionCount</div>
+                <a class="UnderLabCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "U" })">
+                    <div class="dashboard-box das5Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.UnderLabTestingCount</div>
+                                <div class="total-inner">
+                                    Under Lab<br />
+                                    Testing
+                                </div>
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            Stage<br />
-                            Rejection
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
-                </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <a class="StillUnderInspCall" href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "S" })">
+                    <div class="dashboard-box das6Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.StillUnderInspectionCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Still Under<br />
+                                Inspection
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-2.svg" alt="Inspection Assigned"> </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <a href="@Url.Action("Dashboard_Client_List", "Dashboard", new { Type = "T" })">
+                    <div class="dashboard-box das7Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.StageRejectionCount</div>
+                            </div>
+                            <div class="total-inner">
+                                Stage<br />
+                                Rejection
+                            </div>
+                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-3.svg" alt="Inspection Completed"> </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -211,11 +223,17 @@
                     </tr>
                 }
             }
+            else
+            {
+                <tr>
+                    <td colspan="5">No Data Found</td>
+                </tr>
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "VWP" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -227,11 +245,10 @@
         <table class="borderGrid">
             <tr>
                 <th>Sr. No.</th>
-                <th>Call S.No</th>
                 <th>Case no.</th>
                 <th>Call Date</th>
+                <th>Call S.No</th>                
                 <th>Vendor name </th>
-                <th>Details</th>
                 <th>Inspection Engineer</th>
                 <th>Status</th>
             </tr>
@@ -243,21 +260,26 @@
                     SrNo = SrNo + 1;
                     <tr>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
                         <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT.ToString("dd/MM/yyyy")</font></td>
+                        <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CALL_SNO</font></td>                        
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.DETAILS</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
                     </tr>
                 }
             }
+            else
+            {
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            }
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientRecentReq.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientRecentReq.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RRS" })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -274,13 +296,13 @@
             <tr>
                 <th>Sr. No.</th>
                 <th>Case no.</th>
-                <th>Call S.No</th>
-                <th>Call Date</th>
+                <th>Value</th>
                 <th>PO No.</th>
-                <th>Details</th>
+                <th>PO Date</th>
+                <th>Recv Date</th>
+                <th>Po/Letter</th>
                 <th>Vendor</th>
                 <th>Quantity</th>
-                <th>Status</th>
             </tr>
             @if (Model != null && Model.lstClientRecentPO != null && Model.lstClientRecentPO.Count > 0)
             {
@@ -291,27 +313,33 @@
                     <tr>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.VALUE</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@(item.PO_DT == null ? "" : Convert.ToDateTime(item.PO_DT).ToString("dd/MM/yyyy"))</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@(item.RECV_DT == null ? "" : Convert.ToDateTime(item.RECV_DT).ToString("dd/MM/yyyy"))</font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.PO_OR_LETTER</font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.VALUE</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.QTY</font></td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span> @Model.lstClientRecentPO.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span> @Model.lstClientRecentPO.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RPO" })">View All</a>
     </div>
 </section>
 <section class="table-section">
     <div class="table-title">
         <h3 class="headingh3">
-            Recent Consignee Complaints
+            Top five vendors with the most consignee complaints @*Recent Consignee Complaints*@
         </h3>
         <div class="gridNote">
             (<strong>Note:</strong> Top 5 Recent recent Consignee Complaints.)
@@ -322,9 +350,7 @@
             <tr>
                 <th class="srNo">Sr. No </th>
                 <th>Vendor</th>
-                <th>Case No.</th>
                 <th>Number of complaints</th>
-                <th>Issues</th>
             </tr>
             @if (Model != null && Model.lstClientVendConComp != null && Model.lstClientVendConComp.Count > 0)
             {
@@ -336,17 +362,21 @@
                     <tr>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
                         <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                        <td width="1%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
                         <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.NO_OF_COMPLAINTS</font></td>
-                        <td width="1%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No Data Found</td>
+                </tr>
             }
         </table>
     </div>
     <div class="tableBottomLink">
-        @*<div class="recordCount">Showing <span>5</span> out of <span>@Model.lstClientVendConComp.Count</span> records</div>*@
-        <a class="viewall" href="#">View All</a>
+        <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVendConComp.Count</span> records*@</div>
+        <a class="viewall" href="@Url.Action("Dashboard_Client_ViewAll_List", "Dashboard", new { Type = "RCC" })">View All</a>
     </div>
 </section>
 @section scripts{

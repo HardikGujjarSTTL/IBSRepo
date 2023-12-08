@@ -156,13 +156,13 @@
     {
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
-        public int CALL_SNO { get; set; }
-        public string DETAILS { get; set; }
+        public int CALL_SNO { get; set; }        
         public string CLIENT_NAME { get; set; }
         public string IE_NAME { get; set; }
         public string IE_PHONE_NO { get; set; }
         public string CO_NAME { get; set; }
         public string CO_PHONE_NO { get; set; }
+        public string STATUS { get; set; }
     }
 
     public class RecentPOList
@@ -170,9 +170,10 @@
         public string CASE_NO { get; set; }
         public DateTime CALL_RECV_DT { get; set; }
         public string PO_NO { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
         public string CLIENT_NAME { get; set; }
-        public string DETAILS { get; set; }
-        public string PURCHASE_ORDER { get; set; }
         public string CALL_STATUS { get; set; }
     }
 
@@ -203,7 +204,10 @@
         public decimal VALUE { get; set; }
         public string VEND_NAME { get; set; }
         public string PO_NO { get; set; }
-        public DateTime PO_DT { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
+        public int QTY { get; set; }
     }
 
     public class ClientVendConCompList
@@ -315,6 +319,7 @@
         public decimal Value { get; set; }
         public string PONO { get; set; }
         public string Region { get; set; }
+        public string ActionType { get; set; }
         public int NoofConComp { get; set; }
         public DateTime CallDate { get; set; }
     }
@@ -322,17 +327,18 @@
     public class VendorViewAllList
     {
         public string CallSno { get; set; }
-        public string Details { get; set; }
         public string CaseNo { get; set; }
         public string Client { get; set; }
         public string IE { get; set; }
         public string IEContactNo { get; set; }
         public string CM { get; set; }
         public string CmContactNo { get; set; }
-        public string PONO { get; set; }
+        public string PONO { get; set; }           
         public string Status { get; set; }
-        public string PurchaseOrder { get; set; }
         public DateTime CallDate { get; set; }
+        public DateTime? PO_DT { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public string PO_OR_LETTER { get; set; }
     }
 
     public class IEViewAllList
@@ -430,6 +436,7 @@
         public int CallSno { get; set; }  
         public string CallStatus { get; set; }  
         public string CallLetterNo { get; set; }  
+        public DateTime? CallLetterDt { get; set; }  
         public string Remarks { get; set; }  
         public string PoNo { get; set; }  
         public string IeSname { get; set; }  
@@ -445,6 +452,39 @@
         public DateTime? IC_DT { get; set; }
     }
 
+    public class CMDARListing
+    {
+        public string Complaint_ID { get; set;}
+        public DateTime? Complaint_DT { get; set;}
+        public string Case_No { get; set;}
+        public string Rej_Memo_No { get; set;}
+        public DateTime? Rej_Memo_Dt { get; set;}
+        public decimal? RATE { get; set;}
+    }
+
+    public class CLientViewAllList
+    {
+        public string Vendor { get; set; }
+        public int TotalCalls { get; set; }
+        public int CallRejected { get; set; }
+        public int CallCancelled { get; set; }
+        public int CallSno { get; set; }
+        public string CaseNo { get; set; }
+        public DateTime CallDate { get; set; }
+        public DateTime? PODT { get; set; }
+        public string Details { get; set; }
+        public string IEName { get; set; }
+        public string Status { get; set; }
+        public string PONO { get; set; }
+        public int Qty { get; set; }
+        public int NoOfComplaints { get; set; }
+        public string Issues { get; set; }
+        public string ActionType { get; set; }
+        public DateTime? RECV_DT { get; set; }
+        public Decimal? Value { get; set; }
+        public  string Po_Or_Letter { get; set; }
+    }
+
     public class Billing_Comparison_Model
     {
         public string FINALCIAL_YEAR { get; set; }
@@ -458,6 +498,24 @@
         public decimal AMOUNT { get; set; }
     }
 
+    public class CMDFOListing
+    {
+        public string CaseNo { get; set; }
+        public DateTime CHQ_DT { get; set; }
+        public string CHQ_NO { get; set; }
+        public string NARRATION { get; set; }
+        public decimal SUSPENSE_AMT { get; set; }
+        public string VCHR_NO { get; set; }
+        public string BILL_NO { get; set; }
+        public DateTime BILL_DT { get; set; }
+        public decimal MATERIAL_VALUE { get; set; }
+        public decimal BILL_AMOUNT { get; set; }
+        public string BILL_STATUS { get; set; }
+        public string ActionType { get; set; }
+        public string REMARKS { get; set; }
+    }
+    
+
     public class No_Of_JI_Model
     {
         public int NR { get; set; }
@@ -466,4 +524,35 @@
         public int ER { get; set; }
     }
 
+    public class CM_JI_ViewAll_Model
+    {
+        public  string Type { get; set; }
+
+        #region Oldest Pending JI
+        public string CONSIGNEE { get; set; }
+        public string IE_NAME { get; set; }
+        public string JI_REGION { get; set; }
+        public string CASE_NO { get; set; }
+        public DateTime CALL_RECV_DT { get; set; }
+        public string CALL_SNO { get; set; }
+        public string JI_SNO { get; set; }
+        public DateTime? JI_DT { get; set; }
+        public DateTime? COMPLAINT_DT { get; set; }
+        #endregion
+
+        #region IE,Vendor and Client Wise Consignee Complaints
+        public string NAME { get; set; }
+        public int NO_OF_CONSINEE_COMPLAINTS { get; set; }
+        #endregion
+
+        #region IE Wise Performance        
+        public int TOTAL_CALL { get; set; }
+        public int PENDING_CALL { get; set; }
+        public int ACCEPTED_CALL { get; set; }
+        public int CANCELLED_CALL { get; set; }
+        public int UNDER_LAB_CALL { get; set; }
+        public int STILL_INSP_CALL { get; set; }
+        public int STAGE_REJECTION_CALL { get; set; }
+        #endregion
+    }
 }
