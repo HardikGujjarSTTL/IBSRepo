@@ -3715,16 +3715,44 @@ namespace IBS.Models
             return city;
         }
 
-        public static List<SelectListItem> GetUsersgetbyName(string name)
+        //public static List<SelectListItem> GetUsersgetbyName(string name)
+        //{
+        //    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+        //    List<SelectListItem> city = (from a in context.T02Users
+        //                                 where a.UserName.Trim().ToUpper().StartsWith(name.Trim().ToUpper())
+        //                                 select
+        //                            new SelectListItem
+        //                            {
+        //                                Text = a.UserName,
+        //                                Value = Convert.ToString(a.UserId)
+        //                            }).ToList();
+        //    return city;
+        //}
+
+        public static List<SelectListItem> GetUsersgetbyID(string User_ID)
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> city = (from a in context.T02Users
-                                         where a.UserName.Trim().ToUpper().StartsWith(name.Trim().ToUpper())
+            List<SelectListItem> city = (from a in context.UserMasters
+                                         where a.Id == Convert.ToInt64(User_ID) 
                                          select
                                     new SelectListItem
                                     {
-                                        Text = a.UserName,
-                                        Value = Convert.ToString(a.UserId)
+                                        Text = a.Name,
+                                        Value = Convert.ToString(a.Id)
+                                    }).ToList();
+            return city;
+        }
+        public static List<SelectListItem> GetUsersgetbyName(string name, string userType)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.UserMasters
+                                         where a.Name.Trim().ToUpper().StartsWith(name.Trim().ToUpper())
+                                         && (userType == null || a.UserType == userType)
+                                         select
+                                    new SelectListItem
+                                    {
+                                        Text = a.Name,
+                                        Value = Convert.ToString(a.Id)
                                     }).ToList();
             return city;
         }
@@ -4627,6 +4655,20 @@ namespace IBS.Models
         public static List<TextValueDropDownDTO> GetUserTypeLogin()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserTypeLogin)).ToList();
+        }
+
+        public static List<SelectListItem> GetNewUserType()
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> city = (from a in context.UserMasters
+                                         select new SelectListItem
+                                         {
+                                             Text = a.UserType,
+                                             Value = a.UserType
+                                         })
+                            .Distinct()
+                            .ToList();
+            return city;
         }
     }
 

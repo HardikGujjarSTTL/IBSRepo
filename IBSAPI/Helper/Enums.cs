@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
+using static IBSAPI.Helper.Enums;
 
 namespace IBSAPI.Helper
 {
@@ -60,6 +61,23 @@ namespace IBSAPI.Helper
             [Description("/ReadWriteData/IC_PHOTOS")]
             ICPHOTOS = 30
         }
+        public enum UserTypeLogin
+        {
+            [Description("CM")]
+            USERS,
+            [Description("Vendor")]
+            VENDOR,
+            [Description("Inspection Engineer (IE)")]
+            IE,
+            [Description("Client")]
+            CLIENT_LOGIN
+        }
+        public class TextValueDropDownDTO
+        {
+            public string Value { get; set; }
+            public string Text { get; set; }
+        }
+
         public static string GetEnumDescription(object enumValue)
         {
             string defDesc = string.Empty;
@@ -110,7 +128,26 @@ namespace IBSAPI.Helper
             Enum e = (Enum)Enum.Parse(typeof(T), key);
             return e.Description();
         }
-        
+        public static IEnumerable<TextValueDropDownDTO> GetEnumDropDownStringValue(Type EnumerationType)
+        {
+            List<TextValueDropDownDTO> objDropDown = new();
+            Dictionary<string, string> RetVal = new();
+            var AllItems = Enum.GetValues(EnumerationType);
+
+            foreach (var CurrentItem in AllItems)
+            {
+                DescriptionAttribute[] DescAttribute = (DescriptionAttribute[])EnumerationType.GetField(CurrentItem.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+                string Description = DescAttribute.Length > 0 ? DescAttribute[0].Description : CurrentItem.ToString();
+                RetVal.Add(CurrentItem.ToString(), Description);
+            }
+            foreach (string Key in RetVal.Keys)
+            {
+                objDropDown.Add(new TextValueDropDownDTO() { Value = Key, Text = RetVal[Key] });
+            }
+
+            return objDropDown;
+        }
+
     }
     public static class EnumExtensions
     {

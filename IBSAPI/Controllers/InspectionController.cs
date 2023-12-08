@@ -117,7 +117,9 @@ namespace IBSAPI.Controllers
                 {
                     int DocumentCategoryID = (int)Enums.DocumentCategory.ICPHOTOS;
                     string IsStaging = Configuration["MyAppSettings:IsStaging"];
-                    string WebRootPath = "https://192.168.0.101/IBS2";
+                    string RootHostName = HttpContext.Request.Host.Value;
+                    //string WebRootPath = "https://192.168.0.101/IBS2";
+                    string WebRootPath = "https://"+ RootHostName + "/IBS2";
                     //if (Convert.ToBoolean(IsStaging) == true)
                     //{
                     //    //WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
