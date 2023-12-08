@@ -3,7 +3,7 @@
 <div>
     <h3 class="center">@Model.Regions</h3>
 
-    @if (@Model.COName != null)
+    @if (@Model.reporttype == "C")
     {
         @if (@Model.formonth == "true")
         {
@@ -81,9 +81,14 @@
                     @if (Model != null && Model.lstAllNCRCMIE.Count > 0)
                     {
                         var SrNo = 0;
+                        var Ncr_Number = 0;
                         @foreach (var item in Model.lstAllNCRCMIE)
                         {
                             SrNo = SrNo + 1;
+                            Ncr_Number = 0;
+                            Ncr_Number = Ncr_Number + Convert.ToInt32(item.Total_Minor);
+                            Ncr_Number = Ncr_Number + (2 * Convert.ToInt32(item.Total_Major));
+                            Ncr_Number = Ncr_Number + (4 * Convert.ToInt32(item.Total_Critical));
                             <tr>
                                 <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
                                 <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IECMName</font></td>
@@ -93,7 +98,7 @@
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Minor</font></td>
                                 <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Major</font></td>
                                 <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total_Critical</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.Total</font></td>
+                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@Ncr_Number</font></td>
                             </tr>
                         }
                     }
