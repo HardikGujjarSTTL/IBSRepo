@@ -20,8 +20,8 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Bank</label>
-                        @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(),"" ,new { id = "BankNameDropdown" })
-
+                        @* @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(),"" ,new { id = "BankNameDropdown" }) *@
+                        @Html.DropDownListFor(model => model.BANK_NAME, new SelectList(IBS.Models.Common.GetBank(), "Value", "Text"), "--Select--")
                     </div>
 
                     <div class="col-md-4 mb-4">
@@ -124,10 +124,10 @@
             var AMOUNT = $("#AMOUNT").val();
             var NARRATION = $('#NARRATION').val();
             var CASE_NO = $('#CASE_NO').val();
-            var BankNameDropdown = $('#BankNameDropdown').val();
+            var BANK_NAME = $('#BANK_NAME').val();
             var CHQ_NO = $('#CHQ_NO').val();
             var CHQ_DT = $('#CHQ_DT').val();
-            InitializeDatatable(AMOUNT, NARRATION, CASE_NO, BankNameDropdown, CHQ_NO, CHQ_DT);
+            InitializeDatatable(AMOUNT, NARRATION, CASE_NO, BANK_NAME, CHQ_NO, CHQ_DT);
         }
 
         function SearchPayment() {
@@ -136,7 +136,7 @@
             var AMOUNT = $("#AMOUNT").val();
             var NARRATION = $('#NARRATION').val();
             var CASE_NO = $('#CASE_NO').val();
-            var BankNameDropdown = $('#BankNameDropdown').val();
+            var BANK_NAME = $('#BANK_NAME').val();
             var CHQ_NO = $('#CHQ_NO').val();
             var CHQ_DT = $('#CHQ_DT').val();
             var VCHR_DT = $('#VCHR_DT').val();
@@ -149,7 +149,7 @@
                url:url,
                 type: 'POST',
                 dataType: 'json',
-                data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BankNameDropdown: BankNameDropdown, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
+                data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BANK_NAME: BANK_NAME, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
                 success: function (data) {
                     
                     // Once data is successfully received, populate the table
@@ -196,7 +196,7 @@
 
 
                                 var edit = event.currentTarget.id;
-                                var newURL = "/CheckPostingForm/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BankNameDropdown=' + BANK_CD;
+                                var newURL = "/CheckPostingForm/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BANK_NAME=' + BANK_CD;
                                 window.location.href = newURL;
                             });
                         })(CHQ_NO, CHQ_DT, BANK_CD);
@@ -254,7 +254,7 @@
         //            });
         //         }
 
-        function InitializeDatatable(AMOUNT, NARRATION, CASE_NO, BankNameDropdown, CHQ_NO, CHQ_DT) {
+        function InitializeDatatable(AMOUNT, NARRATION, CASE_NO, BANK_NAME, CHQ_NO, CHQ_DT) {
             var _title = '\n Search Payment';
             $("#searchpayment").DataTable({
                 stateSave: false,// Design Assets
@@ -276,7 +276,7 @@
                             AMOUNT: AMOUNT,
                             NARRATION: NARRATION,
                             CASE_NO: CASE_NO,
-                            BankNameDropdown: BankNameDropdown,
+                            BANK_NAME: BANK_NAME,
                             CHQ_NO: CHQ_NO,
                             CHQ_DT: CHQ_DT
                         };
