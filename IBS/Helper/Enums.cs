@@ -422,6 +422,20 @@ namespace IBS.Helper
             R,
         }
 
+        public enum UserTypeLogin
+        {
+            [Description("Users")]
+            USERS,
+            [Description("Vendor")]
+            VENDOR,
+            [Description("Inspection Engineer (IE)")]
+            IE,
+            [Description("Client")]
+            CLIENT_LOGIN,
+            [Description("Liaisoning Officer (LO)")]
+            LO_LOGIN,
+        }
+
         public enum OnlineCallStatus
         {
             [Description("No")]
@@ -665,7 +679,7 @@ namespace IBS.Helper
             [Description("Top N HIGH VALUE INSPECTIONS")] TOPNHIGH,
             [Description("Top JI Report")] TOPJI,
             [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
-            [Description("CONSIGNEE COMPLAINTS")] COCOMPJI,
+            [Description("JI CONSIGNEE COMPLAINTS")] COCOMPJI,
             [Description("Controlling Officer Wise IE")] COWISEIE,
         }
     }

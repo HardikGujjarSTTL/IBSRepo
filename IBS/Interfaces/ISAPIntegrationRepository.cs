@@ -1,7 +1,9 @@
-﻿namespace IBS.Interfaces
+﻿using System.Data;
+
+namespace IBS.Interfaces
 {
     public interface ISAPIntegrationRepository
     {
-        public void ExportExcelBPO(string BPO_Cd);
+        public DataSet ExportExcelBPO(string BPO_Cd);
     }
 }

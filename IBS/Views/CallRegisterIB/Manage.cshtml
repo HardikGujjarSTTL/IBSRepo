@@ -129,9 +129,9 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked) <i class="text-danger">*</i></label>
+                        <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
                         @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
-                        <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
+                        @* <span asp-validation-for="CallRemarkStatus" class="text-danger"></span> *@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -544,9 +544,9 @@
             else if ($("#MfgCd").is(":hidden")) {
                 ShowHideMsgNew(false, "Please select Manufacturer first and then save it");
             }
-            else if ($("#CallRemarkStatus").val() == "") {
-                ShowHideMsgNew(false, "Call Re-Mark Status.");
-            }
+            // else if ($("#CallRemarkStatus").val() == "") {
+            //     ShowHideMsgNew(false, "Call Re-Mark Status.");
+            // }
             else if ($("#DepartmentCode").val() == "") {
                 ShowHideMsgNew(false, "Please Select item to be inspected viz. Mechanical, Electrical, Civil etc.");
             }

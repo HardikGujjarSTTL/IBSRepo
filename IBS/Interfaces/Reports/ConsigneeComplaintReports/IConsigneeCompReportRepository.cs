@@ -5,7 +5,7 @@ namespace IBS.Interfaces.Reports.ConsigneeComplaintReports
 {
     public interface IConsigneeCompReportRepository
     {
-        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate, string actiondrp, string actioncodedrp, string actionjidrp);
+        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate,string InspRegion,string JIInspRegion,string JIInspReqRegion, string actiondrp, string actioncodedrp, string actionjidrp,int IeCd);
         string GetItems(string Clientwise);
         public JIRequiredReport GetJIRequiredList(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
            string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,

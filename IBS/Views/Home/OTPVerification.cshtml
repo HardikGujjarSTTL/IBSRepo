@@ -8,6 +8,8 @@
     <form data-ajax="true" asp-antiforgery="true" asp-controller="Home" asp-action="OTPProceed" data-ajax-method="post" data-ajax-complete="completed" id="frmOTP">
         <input type="hidden" asp-for="UserName" />
         <input type="hidden" asp-for="DecryptUserName" />
+        <input type="hidden" asp-for="UserType" />
+        <input type="hidden" asp-for="DecryptUserType" />
         <div class="row">
             <div class="col-md-12">
                 <label for="email">OTP</label>
