@@ -19,6 +19,9 @@ namespace IBS.Models
         public string UserType { get; set; }
         public string DecryptUserType { get; set; }
 
+        public string UserType { get; set; }
+        public string DecryptUserType { get; set; }
+
     }
 
     public class UserSessionModel

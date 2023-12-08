@@ -262,7 +262,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
             return model;
         }
 
-        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate, string actiondrp, string actioncodedrp, string actionjidrp)
+        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string actiondrp, string actioncodedrp, string actionjidrp,int IeCd)
         {
             ConsigneeCompReports model = new();
             List<ConsigneeComplaintsReportModel> lstConsigneeComplaints = new();
@@ -272,13 +272,17 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
 
             model.FromDate = FromDate; model.ToDate = ToDate; model.actiondrp = actiondrp; model.actioncodedrp = actioncodedrp; model.actionjidrp = actionjidrp;
 
-            OracleParameter[] parameter = new OracleParameter[6];
+            OracleParameter[] parameter = new OracleParameter[10];
             parameter[0] = new OracleParameter("p_Fromdate", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             parameter[1] = new OracleParameter("p_Todate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             parameter[2] = new OracleParameter("p_lstAction", OracleDbType.Varchar2, actiondrp, ParameterDirection.Input);
             parameter[3] = new OracleParameter("p_lstClassification", OracleDbType.Varchar2, actionjidrp, ParameterDirection.Input);
             parameter[4] = new OracleParameter("p_lstDefectCd", OracleDbType.Varchar2, actioncodedrp, ParameterDirection.Input);
-            parameter[5] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            parameter[5] = new OracleParameter("P_INSPREGION", OracleDbType.Varchar2, InspRegion, ParameterDirection.Input);
+            parameter[6] = new OracleParameter("P_JIREGION", OracleDbType.Varchar2, JIInspRegion, ParameterDirection.Input);
+            parameter[7] = new OracleParameter("P_JIREQREGION", OracleDbType.Varchar2, JIInspReqRegion, ParameterDirection.Input);
+            parameter[8] = new OracleParameter("P_IECD", OracleDbType.Varchar2, IeCd, ParameterDirection.Input);
+            parameter[9] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("compliants_Period_Report", parameter, 1);
 
             if (ds != null && ds.Tables.Count > 0)
