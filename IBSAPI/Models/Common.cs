@@ -5,6 +5,7 @@ using System.Text;
 using System;
 using System.Security.Cryptography;
 using IBSAPI.Helper;
+using static IBSAPI.Helper.Enums;
 
 namespace IBSAPI.Models
 {
@@ -197,6 +198,11 @@ namespace IBSAPI.Models
             DateTime financialYearStart = GetFinancialYearStartDate();
             DateTime financialYearEnd = financialYearStart.AddYears(1).AddDays(-1);
             return financialYearEnd;
+        }
+
+        public static List<TextValueDropDownDTO> GetUserTypeLogin()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserTypeLogin)).ToList();
         }
     }
     public static class DbContextHelper

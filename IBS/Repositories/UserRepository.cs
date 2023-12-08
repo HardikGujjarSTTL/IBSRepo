@@ -82,49 +82,142 @@ namespace IBS.Repositories
         {
             UserSessionModel userSessionModel = new UserSessionModel();
 
-            userSessionModel = (from u in context.T02Users
-                                where u.UserId.Trim() == model.UserName.Trim()
-                                select new UserSessionModel
-                                {
-                                    MOBILE = u.Mobile
-                                }).FirstOrDefault();
-
+            if (model.UserType == "USERS")
+            {
+                userSessionModel = (from u in context.T02Users
+                                    where u.UserId.Trim() == model.UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        MOBILE = u.Mobile
+                                    }).FirstOrDefault();
+            }
+            else if (model.UserType == "VENDOR")
+            {
+                userSessionModel = (from u in context.T05Vendors
+                                    where u.VendCd == Convert.ToInt32(model.UserName.Trim())
+                                    select new UserSessionModel
+                                    {
+                                        MOBILE = u.VendContactTel1
+                                    }).FirstOrDefault();
+            }
+            else if (model.UserType == "IE")
+            {
+                userSessionModel = (from u in context.T09Ies
+                                    where u.IeEmpNo.Trim() == model.UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        MOBILE = u.IePhoneNo
+                                    }).FirstOrDefault();
+            }
+            else if (model.UserType == "CLIENT_LOGIN")
+            {
+                userSessionModel = (from u in context.T32ClientLogins
+                                    where u.Mobile.Trim() == model.UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        MOBILE = u.Mobile
+                                    }).FirstOrDefault();
+            }
+            else if (model.UserType == "LO_LOGIN")
+            {
+                userSessionModel = (from u in context.T105LoLogins
+                                    where u.Mobile.Trim() == model.UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        MOBILE = u.Mobile
+                                    }).FirstOrDefault();
+            }
             return userSessionModel;
+        }
 
+        public UserModel FindByIDForResetPass(string UserId, string UserType)
+        {
+            UserModel model = new();
+            if (UserType == "USERS")
+            {
+                model = (from u in context.T02Users
+                         where u.UserId.Trim() == UserType.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.UserId,
+                             Password = u.Password
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "VENDOR")
+            {
+                model = (from u in context.T05Vendors
+                         where u.VendCd == Convert.ToInt32(UserType.Trim())
+                         select new UserModel
+                         {
+                             FPUserID = Convert.ToString(u.VendCd),
+                             Password = u.VendPwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "IE")
+            {
+                model = (from u in context.T09Ies
+                         where u.IeEmpNo.Trim() == UserType.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.IeEmpNo,
+                             Password = u.IePwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                model = (from u in context.T32ClientLogins
+                         where u.Mobile.Trim() == UserType.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                model = (from u in context.T105LoLogins
+                         where u.Mobile.Trim() == UserType.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).FirstOrDefault();
+            }
+            return model;
         }
 
         public UserSessionModel LoginByUserPass(LoginModel model)
         {
             UserSessionModel userSessionModel = new UserSessionModel();
 
-            //DataSet ds = new DataSet();
-            //OracleParameter[] parameter = new OracleParameter[4];
-            //parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
-            //parameter[1] = new OracleParameter("P_PASSWORD", OracleDbType.Varchar2, model.Password.Trim(), ParameterDirection.Input);
-            //parameter[2] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
-            //parameter[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //ds = DataAccessDB.GetDataSet("GET_LOGINBYUSERPASS", parameter);
-            //if (ds != null && ds.Tables[0].Rows.Count > 0)
-            //{
-            //    userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
-            //    userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
-            //    userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
-            //    userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
-            //}
-            //else
-            //{
-            //    userSessionModel = null;
-            //}
+            DataSet ds = new DataSet();
+            OracleParameter[] parameter = new OracleParameter[4];
+            parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
+            parameter[1] = new OracleParameter("P_PASSWORD", OracleDbType.Varchar2, model.Password.Trim(), ParameterDirection.Input);
+            parameter[2] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
+            parameter[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GET_LOGINBYUSERPASS", parameter);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
+                userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
+                userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
+                userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
+            }
+            else
+            {
+                userSessionModel = null;
+            }
 
-            userSessionModel = (from u in context.T02Users
-                                where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
-                                select new UserSessionModel
-                                {
-                                    MOBILE = u.Mobile,
-                                    UserID = Convert.ToInt32(u.Id),
-                                    Name = Convert.ToString(u.UserName),
-                                    UserName = Convert.ToString(u.UserId)
-                                }).FirstOrDefault();
+            //userSessionModel = (from u in context.T02Users
+            //                    where u.UserId.Trim() == model.UserName.Trim() && u.Password.Trim() == model.Password.Trim()
+            //                    select new UserSessionModel
+            //                    {
+            //                        MOBILE = u.Mobile,
+            //                        UserID = Convert.ToInt32(u.Id),
+            //                        Name = Convert.ToString(u.UserName),
+            //                        UserName = Convert.ToString(u.UserId)
+            //                    }).FirstOrDefault();
 
 
             return userSessionModel;
@@ -135,82 +228,82 @@ namespace IBS.Repositories
         {
             UserSessionModel userSessionModel = new UserSessionModel();
 
-            //DataSet ds = new DataSet();
-            //OracleParameter[] parameter = new OracleParameter[3];
-            //parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
-            //parameter[1] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
-            //parameter[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            //ds = DataAccessDB.GetDataSet("GET_LOGINDETAILS", parameter);
-            //if (ds != null && ds.Tables[0].Rows.Count > 0)
-            //{
-            //    userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
-            //    userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
-            //    userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
-            //    userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
-            //    userSessionModel.Region = Convert.ToString(ds.Tables[0].Rows[0]["REGION"]).Trim();
-            //    userSessionModel.AuthLevl = Convert.ToString(ds.Tables[0].Rows[0]["AUTH_LEVL"]).Trim();
-            //    userSessionModel.RoleId = Convert.ToInt32(ds.Tables[0].Rows[0]["ROLE_ID"]);
-            //    userSessionModel.RoleName = Convert.ToString(ds.Tables[0].Rows[0]["ROLE_NAME"]).Trim();
-            //    userSessionModel.OrgnTypeL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
-            //    userSessionModel.OrganisationL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
-            //    userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
-            //    userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
-            //    userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
-            //    userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
-            //}
-            //else
-            //{
-            //    userSessionModel = null;
-            //}
+            DataSet ds = new DataSet();
+            OracleParameter[] parameter = new OracleParameter[3];
+            parameter[0] = new OracleParameter("P_USER_NAME", OracleDbType.Varchar2, model.UserName.Trim(), ParameterDirection.Input);
+            parameter[1] = new OracleParameter("P_USERTYPE", OracleDbType.Varchar2, model.UserType.Trim(), ParameterDirection.Input);
+            parameter[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GET_LOGINDETAILS", parameter);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                userSessionModel.MOBILE = Convert.ToString(ds.Tables[0].Rows[0]["MOBILE"]).Trim();
+                userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
+                userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
+                userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
+                userSessionModel.Region = Convert.ToString(ds.Tables[0].Rows[0]["REGION"]).Trim();
+                userSessionModel.AuthLevl = Convert.ToString(ds.Tables[0].Rows[0]["AUTH_LEVL"]).Trim();
+                userSessionModel.RoleId = Convert.ToInt32(ds.Tables[0].Rows[0]["ROLE_ID"]);
+                userSessionModel.RoleName = Convert.ToString(ds.Tables[0].Rows[0]["ROLE_NAME"]).Trim();
+                userSessionModel.OrgnTypeL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
+                userSessionModel.OrganisationL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+                userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
+                userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+                userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
+                userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+            }
+            else
+            {
+                userSessionModel = null;
+            }
 
-            //if(model.UserType.Trim() == "LO_LOGIN")
-            //{
-            //    T107LoLogginLog T107 = new()
-            //    {
-            //        Mobile = model.UserName.Trim(),
-            //        Otp = Convert.ToByte(model.OTP),
-            //        OtpGenTime = DateTime.Now,
-            //        OtpExpTime = DateTime.Now,
-            //        //OtpGenTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second),
-            //        //OtpExpTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + (Convert.ToInt32(DateTime.Now.Minute) + 10) + ":" + DateTime.Now.Second),
-            //        LogginTime = DateTime.Now,
-            //        Status = "A"
-            //    };
+            if (model.UserType.Trim() == "LO_LOGIN")
+            {
+                T107LoLogginLog T107 = new()
+                {
+                    Mobile = model.UserName.Trim(),
+                    Otp = Convert.ToByte(model.OTP),
+                    OtpGenTime = DateTime.Now,
+                    OtpExpTime = DateTime.Now,
+                    //OtpGenTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second),
+                    //OtpExpTime = Convert.ToDateTime(DateTime.Now.Date.ToString("dd/MM/yyyy") + " " + DateTime.Now.Hour + ":" + (Convert.ToInt32(DateTime.Now.Minute) + 10) + ":" + DateTime.Now.Second),
+                    LogginTime = DateTime.Now,
+                    Status = "A"
+                };
 
-            //    context.T107LoLogginLogs.Add(T107);
-            //    context.SaveChanges();
-            //}
+                context.T107LoLogginLogs.Add(T107);
+                context.SaveChanges();
+            }
 
-            userSessionModel = (from u in context.T02Users
-                                where u.UserId.Trim() == model.UserName.Trim()
-                                //&& u.Password.Trim() == model.Password.Trim()
-                                join ur in context.Userroles on u.UserId equals ur.UserId into userRoles
-                                from ur in userRoles.DefaultIfEmpty()
-                                join r in context.Roles on ur.RoleId equals r.RoleId into roles
-                                from r in roles.DefaultIfEmpty()
-                                join t106 in context.T106LoOrgns on model.UserName.Trim() equals t106.Mobile into orgns
-                                from orgn in orgns.DefaultIfEmpty()
-                                join t32 in context.T32ClientLogins on model.UserName.Trim() equals t32.Mobile into clientLogins
-                                from clientLogin in clientLogins.DefaultIfEmpty()
-                                join t09 in context.T09Ies on model.UserName equals t09.IeEmpNo into ies
-                                from ie in ies.DefaultIfEmpty()
-                                select new UserSessionModel
-                                {
-                                    MOBILE = u.Mobile,
-                                    UserID = Convert.ToInt32(u.Id),
-                                    Name = Convert.ToString(u.UserName),
-                                    UserName = Convert.ToString(u.UserId),
-                                    Region = Convert.ToString(u.Region),
-                                    AuthLevl = Convert.ToString(u.AuthLevl),
-                                    RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
-                                    RoleName = r != null ? Convert.ToString(r.Rolename) : string.Empty,
-                                    OrgnTypeL = orgn != null ? Convert.ToString(orgn.OrgnType) : string.Empty,
-                                    OrganisationL = orgn != null ? Convert.ToString(orgn.OrgnChased) : string.Empty,
-                                    OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
-                                    Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
-                                    IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0,
-                                    CoCd = u != null ? Convert.ToInt16(u.CoCd) : 0
-                                }).FirstOrDefault();
+            //userSessionModel = (from u in context.T02Users
+            //                    where u.UserId.Trim() == model.UserName.Trim()
+            //                    //&& u.Password.Trim() == model.Password.Trim()
+            //                    join ur in context.Userroles on u.UserId equals ur.UserId into userRoles
+            //                    from ur in userRoles.DefaultIfEmpty()
+            //                    join r in context.Roles on ur.RoleId equals r.RoleId into roles
+            //                    from r in roles.DefaultIfEmpty()
+            //                    join t106 in context.T106LoOrgns on model.UserName.Trim() equals t106.Mobile into orgns
+            //                    from orgn in orgns.DefaultIfEmpty()
+            //                    join t32 in context.T32ClientLogins on model.UserName.Trim() equals t32.Mobile into clientLogins
+            //                    from clientLogin in clientLogins.DefaultIfEmpty()
+            //                    join t09 in context.T09Ies on model.UserName equals t09.IeEmpNo into ies
+            //                    from ie in ies.DefaultIfEmpty()
+            //                    select new UserSessionModel
+            //                    {
+            //                        MOBILE = u.Mobile,
+            //                        UserID = Convert.ToInt32(u.Id),
+            //                        Name = Convert.ToString(u.UserName),
+            //                        UserName = Convert.ToString(u.UserId),
+            //                        Region = Convert.ToString(u.Region),
+            //                        AuthLevl = Convert.ToString(u.AuthLevl),
+            //                        RoleId = ur != null ? Convert.ToInt32(ur.RoleId) : 0,
+            //                        RoleName = r != null ? Convert.ToString(r.Rolename) : string.Empty,
+            //                        OrgnTypeL = orgn != null ? Convert.ToString(orgn.OrgnType) : string.Empty,
+            //                        OrganisationL = orgn != null ? Convert.ToString(orgn.OrgnChased) : string.Empty,
+            //                        OrgnType = clientLogin != null ? Convert.ToString(clientLogin.OrgnType) : string.Empty,
+            //                        Organisation = clientLogin != null ? Convert.ToString(clientLogin.Organisation) : string.Empty,
+            //                        IeCd = ie != null ? Convert.ToInt16(ie.IeCd) : 0,
+            //                        CoCd = u != null ? Convert.ToInt16(u.CoCd) : 0
+            //                    }).FirstOrDefault();
 
             return userSessionModel;
 
@@ -259,22 +352,117 @@ namespace IBS.Repositories
             }
         }
 
-        public T02User FindByUsernameOrEmail(string UserName)
+        public UserSessionModel FindByUsernameOrEmail(string UserName, string UserType)
         {
             //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == UserName.Trim() || p.Email.Trim() == UserName.Trim());
-            return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == UserName.Trim());
-            //return new T02User();
+            //return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == UserName.Trim());
+
+            UserSessionModel userSessionModel = new UserSessionModel();
+            if (UserType == "USERS")
+            {
+                userSessionModel = (from u in context.T02Users
+                                    where u.UserId.Trim() == UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        UserName = u.UserName,
+                                        FPUserID = u.UserId,
+                                        Email = ""
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "VENDOR")
+            {
+                userSessionModel = (from u in context.T05Vendors
+                                    where u.VendCd == Convert.ToInt32(UserName.Trim())
+                                    select new UserSessionModel
+                                    {
+                                        UserName = u.VendName,
+                                        FPUserID = Convert.ToString(u.VendCd),
+                                        Email = ""
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "IE")
+            {
+                userSessionModel = (from u in context.T09Ies
+                                    where u.IeEmpNo.Trim() == UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        UserName = u.IeName,
+                                        FPUserID = Convert.ToString(u.IeEmpNo),
+                                        Email = ""
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                userSessionModel = (from u in context.T32ClientLogins
+                                    where u.Mobile.Trim() == UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        UserName = u.UserName,
+                                        FPUserID = Convert.ToString(u.Mobile),
+                                        Email = ""
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                userSessionModel = (from u in context.T105LoLogins
+                                    where u.Mobile.Trim() == UserName.Trim()
+                                    select new UserSessionModel
+                                    {
+                                        UserName = u.LoName,
+                                        FPUserID = Convert.ToString(u.Mobile),
+                                        Email = ""
+                                    }).FirstOrDefault();
+            }
+
+            return userSessionModel;
         }
 
         public void ChangePassword(ResetPasswordModel resetPassword)
         {
-            var user = context.T02Users.Find(resetPassword.UserId);
-            if (user == null)
-                throw new Exception("User Record Not found");
-            else
+            if (resetPassword.UserType == "USERS")
             {
-                user.Password = resetPassword.ConfirmPassword;
-                context.SaveChanges();
+                var user = context.T02Users.Find(resetPassword.UserId);
+                if (user != null)
+                {
+                    user.Password = resetPassword.ConfirmPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (resetPassword.UserType == "VENDOR")
+            {
+                var user = context.T05Vendors.Where(x=>x.VendCd == Convert.ToInt32(resetPassword.UserId)).FirstOrDefault();
+                if (user != null)
+                {
+                    user.VendPwd = resetPassword.ConfirmPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (resetPassword.UserType == "IE")
+            {
+                var user = context.T09Ies.Where(x => x.IeEmpNo == resetPassword.UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.IePwd = resetPassword.ConfirmPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (resetPassword.UserType == "CLIENT_LOGIN")
+            {
+                var user = context.T32ClientLogins.Where(x => x.Mobile == resetPassword.UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Pwd = resetPassword.ConfirmPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (resetPassword.UserType == "LO_LOGIN")
+            {
+                var user = context.T105LoLogins.Where(x => x.Mobile == resetPassword.UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Pwd = resetPassword.ConfirmPassword;
+                    context.SaveChanges();
+                }
             }
         }
 

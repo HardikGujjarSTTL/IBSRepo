@@ -21538,16 +21538,12 @@ public partial class ModelContext : DbContext
                 .HasNoKey()
                 .ToTable("USER_MASTER_TEMP");
 
-            entity.Property(e => e.Roleid)
-                .HasPrecision(6)
-                .HasColumnName("ROLEID");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("USER_ID");
-            entity.Property(e => e.UserMasterId)
+            entity.Property(e => e.Masterid)
                 .HasPrecision(13)
-                .HasColumnName("USER_MASTER_ID");
+                .HasColumnName("MASTERID");
+            entity.Property(e => e.Roleid)
+                .HasPrecision(13)
+                .HasColumnName("ROLEID");
         });
 
         modelBuilder.Entity<Userrole>(entity =>
@@ -21596,6 +21592,7 @@ public partial class ModelContext : DbContext
                 .HasColumnName("USER_ID");
             entity.Property(e => e.UserMasterId)
                 .HasPrecision(13)
+                .ValueGeneratedOnAdd()
                 .HasColumnName("USER_MASTER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)

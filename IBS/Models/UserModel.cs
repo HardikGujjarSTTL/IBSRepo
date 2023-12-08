@@ -48,6 +48,7 @@ namespace IBS.Models
 
         public decimal RoleId { get; set; }
         public string RoleName { get; set; }
+        public string FPUserID { get; set; }
     }
 
     public class UserAuthorizationModel
