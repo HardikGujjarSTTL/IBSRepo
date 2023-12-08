@@ -4129,10 +4129,6 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserType)).ToList();
         }
-        public static List<TextValueDropDownDTO> GetUserTypeLogin()
-        {
-            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.UserTypeLogin)).ToList();
-        }
 
         public static IEnumerable<TextValueDropDownDTO> GetIEPosting()
         {
