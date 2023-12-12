@@ -165,8 +165,8 @@ namespace IBS.Repositories
                 model.ie_cd = Convert.ToInt32(dt.Rows[0]["ie_cd"] is DBNull ? 0 : dt.Rows[0]["ie_cd"]);
                 model.ie_co_cd = Convert.ToInt32(dt.Rows[0]["ie_co_cd"] is DBNull ? 0 : dt.Rows[0]["ie_co_cd"]);
                 model.UserId = dt.Rows[0]["user_id"].ToString();
-                //model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
-                //model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
+                model.unitofM = "Per" + dt.Rows[0]["UOM_S_DESC"].ToString();
+                model.uom_cd = dt.Rows[0]["uom_cd"].ToString();
                 model.Remarks = dt.Rows[0]["REMARKS"].ToString();
                 model.JiStatusCd = dt.Rows[0]["JI_STATUS_CD"].ToString();
                 model.COMP_RECV_REGION = dt.Rows[0]["COMP_RECV_REGION"].ToString();

@@ -247,7 +247,7 @@ namespace IBS.Repositories
                 userSessionModel.OrgnTypeL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
                 userSessionModel.OrganisationL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
                 userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
-                userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+                userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
             }
