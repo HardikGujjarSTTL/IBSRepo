@@ -48,7 +48,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType() , "Value", "Text"),"--Select--", new{ @onChange="FillAgencyClient();"})
+                        @Html.DropDownListFor(model => model.RlyNonrly, new SelectList(IBS.Models.Common.ClientType(), "Value", "Text"), "--Select--", new { @onChange = "FillAgencyClient();" })
 
                         <span asp-validation-for="RlyNonrly" class="text-danger"></span>
                     </div>
@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <label for="Reference">Agency/Client<i class="text-danger">*</i></label>
                                 @*@Html.DropDownListFor(model => model.RlyCd, new SelectList(IBS.Models.Common.GetAgencyClient(Model.RlyNonrly) , "Value", "Text"),"--Select--", new{ @onChange="fill_consignee_purcher();"})*@
-                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="fill_consignee_purcher();"})
+                                @Html.DropDownListFor(model => model.RlyCd, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { onchange = "fill_consignee_purcher();" })
 
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
@@ -69,17 +69,17 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Case To Be Registered At<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.RegionCode, new SelectList(IBS.Models.Common.RegionCode(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="RegionCode" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Stock / Non-Stock (For Railways Only)<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">PO/Offer Letter No.<i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.PoOrLetter, new SelectList(IBS.Models.Common.PoOrLetter(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="PoOrLetter" class="text-danger"></span>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                         <label for="Reference">Select "Other" if desired Purchaser not found in the list and then Enter its details in the text box below <i class="text-danger">*</i></label>
                     </div>
                     <div class="col-md-4 mb-3">
-                        @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("","","") , "Value", "Text") ,new {onchange="ChanedPurchaserCd();"})
+                        @Html.DropDownListFor(model => model.PurchaserCd, new SelectList(IBS.Models.Common.Getfill_consignee_purcher("", "", ""), "Value", "Text"), new { onchange = "ChanedPurchaserCd();" })
                         <span asp-validation-for="PurchaserCd" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3" id="dvPurchaser">
@@ -157,7 +157,7 @@
                         <label for="Reference"><span class="astric">*</span> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
                     </div>
                     <div class="col-md-4 mb-3" id="dvddlManufac">
-                        @Html.DropDownListFor(model => model.ddlManufac, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--",new {onchange="ChanedManufacturer();"})
+                        @Html.DropDownListFor(model => model.ddlManufac, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { onchange = "ChanedManufacturer();" })
                     </div>
                 </div>
                 <div class="row my-0">
@@ -180,7 +180,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Contract</label>
-                        @Html.DropDownListFor(model => model.Contractid, new SelectList(IBS.Models.Common.GetContract() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.Contractid, new SelectList(IBS.Models.Common.GetContract(), "Value", "Text"), "--Select--")
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="reference" style="margin-top: 42px;">
@@ -215,17 +215,19 @@
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ParentLOA" />
                     </div>
                 </div>
-                @if (Model.RealCaseNo == null || Model.RealCaseNo == "")
-                {
-                    <div class="savenext-btn">
+                <div class="savenext-btn">
+                    @if (Model.RealCaseNo == null || Model.RealCaseNo == "")
+                    {
                         <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
-                    </div>
-                }
+                    }
+                    <button type="button" class="save-btn" onclick="PO_Details();">PO Details</button>
+                    <a asp-action="Index" asp-controller="POMaster" class="formBtn viewall-btn">Cancel</a>
+                </div>
             </div>
         </form>
     </div>
 </section>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -556,10 +558,8 @@
         }
 
         function Save() {
-            if($("#PurchaserCd").val() == "0")
-            {
-                if ($("#Purchaser").val() == "")
-                {
+            if ($("#PurchaserCd").val() == "0") {
+                if ($("#Purchaser").val() == "") {
                     ShowHideMsgNew(false, "Purchaser details is required.");
                     return;
                 }
@@ -568,6 +568,11 @@
                 if (!SaveSingleDocuments("tab-1")) { return; }
                 $("#frmPOMaster").submit();
             }
+        }
+
+        function PO_Details() {
+            var CaseNo = $("#CaseNo").val();
+            window.location.href = '@Url.Action("PODetails", "POMaster")?CaseNo=' + CaseNo;
         }
 
         completed = function (response) {
