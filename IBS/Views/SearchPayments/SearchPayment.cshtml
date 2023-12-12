@@ -69,7 +69,7 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="searchpayment" class="table-responsive">
+                <table id="searchpayment" class="table-responsive nowrap">
                     <thead>
                         <tr>
                             <th>Action</th>
@@ -125,15 +125,15 @@
             //var url = '@Url.Action("PaymentList", "SearchPayments")';
 
             $("#searchpayment").DataTable({
-                stateSave: false,// Design Assets
+                stateSave: false,
                 autoWidth: true,
-                scrollX: true,
+                //scrollX: true,
                 scrollCollapse: true,
-                processing: true, // ServerSide Setups
+                processing: true,
                 serverSide: true,
                 destroy: true,
-                paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                paging: true,
+                searching: true,
                 ajax: {// Ajax Filter
                     url: '@Url.Action("PaymentList", "SearchPayments")',
                     type: "POST",
@@ -206,7 +206,10 @@
                     { data: "CASE_NO" },
 
                 ],
-                "order": [[1, "asc"]]
+                "order": [[1, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#searchpayment").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
             });
         }
 

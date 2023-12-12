@@ -62,7 +62,7 @@ namespace IBSAPI.Repositories
                 userModel.RoleId = Convert.ToInt32(ds.Tables[0].Rows[0]["ROLE_ID"]);
                 userModel.RoleName = Convert.ToString(ds.Tables[0].Rows[0]["ROLE_NAME"]).Trim();
                 userModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
-                userModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+                userModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userModel.CO_CD = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
             }
