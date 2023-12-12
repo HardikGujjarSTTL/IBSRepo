@@ -40,54 +40,49 @@
                     </td>
                     <td class="w-25">
                         <b><span id="lblCaseNo"></span></b>
-                        <label>@Model.Caseno</label>
+                        <label class="normalText">@Model.Caseno</label>
                     </td>
                     <td class="w-25"><label for="Reference">Call Date - SNo. : </label></td>
-                    <td class="w-25"><label>@Convert.ToDateTime(@Model.Callrecvdt).ToString("dd/MM/yyyy") - @Model.Callsno </label></td>
+                    <td class="w-25"><label class="normalText">@Convert.ToDateTime(@Model.Callrecvdt).ToString("dd/MM/yyyy") - @Model.Callsno </label></td>
                 </tr>
                 <tr>
                     <td><label for="Reference">Stock/Non Stock : </label></td>
-                    <td><label>@Model.StockNonstock</label></td>
+                    <td><label class="normalText">@Model.StockNonstock</label></td>
                     <td><label for="Reference">Inspecting Er. : </label></td>
-                    <td><label>@Model.IeName</label></td>
+                    <td><label class="normalText">@Model.IeName</label></td>
                 </tr>
                 <tr>
                     <td><label for="Reference">Contract No. : </b></label></td>
                     <td>
                         <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                        <label class="lineBreak">@Model.PoNo</label>
+                        <label class="lineBreak normalText">@Model.PoNo</label>
                     </td>
                     <td>
                         <label for="Reference">Date : </label>
                     </td>
-                    <td> <label>@Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy")</label></td>
+                    <td> <label class="normalText">@Convert.ToDateTime(@Model.PoDt).ToString("dd/MM/yyyy")</label></td>
                 </tr>
                 <tr>
                     <td><label for="Reference">PO Source : </label></td>
-                    <td><label>@Model.PoSource</label></td>
-                    <td><label for="Reference"> </label></td>
-                    <td><label></label></td>
-                </tr>
-                <tr>
+                    <td><label class="normalText">@Model.PoSource</label></td>
                     <td><label for="Reference">Vendor : </label></td>
-                    <td colspan="3">
+                    <td>
                         <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                        <label>@Model.VendName</label>
+                        <label class="normalText">@Model.VendName</label>
                     </td>
                 </tr>
                 <tr>
                     <td><label for="Reference">Name & Address of the party in whose favour invoice is to be raised : </label></td>
                     <td>
                         <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                        <label>@Model.BPOCall</label>
+                        <label class="normalText">@Model.BPOCall</label>
                     </td>
                     <td><label for="Reference">GSTIN No. of the party in whose favour invoice is to be raised : </label></td>
-                    <td><label>@Model.GSTINCall</label></td>
+                    <td><label class="normalText">@Model.GSTINCall</label></td>
                 </tr>
                 <tr>
                     <td><label for="Reference" id="lblIrfcBpo">IRFC BPO : </label></td>
                     <td>
-                        <b><span></span></b>
                         @Html.DropDownListFor(model => model.IrfcBpo, new SelectList(IBS.Models.Common.GetBPOList() , "Value", "Text"),"--Select--")
                     </td>
                     <td><label for="Reference">IRFC Funded : </label></td>
@@ -102,24 +97,24 @@
                         <td><label for="Reference" id="lblIrfcBpo">Bill No : </label></td>
                         <td>
                             <b><span class="darkRedBoldText"></span></b>
-                            <label>@Model.BillNo</label>
+                            <label class="normalText">@Model.BillNo</label>
                         </td>
                         <td><label for="Reference" id="lblIrfcBpo">Material Value : </label></td>
                         <td>
                             <b><span class="darkRedBoldText"></span></b>
-                            <label>@Model.TMValue</label>
+                            <label class="normalText">@Model.TMValue</label>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="Reference">Insp Fee : </label></td>
                         <td>
                             <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                            <label>@Model.TIFee</label>
+                            <label class="normalText">@Model.TIFee</label>
                         </td>
                         <td><label for="Reference">Net Fee : </label></td>
                         <td>
                             <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                            <label>@Model.NetFee</label>
+                            <label class="normalText">@Model.NetFee</label>
                         </td>
                     </tr>
 
@@ -129,7 +124,7 @@
                             <td><label for="Reference">Invoice No. : </label></td>
                             <td>
                                 <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                                <label>@Model.InvoiceNo</label>
+                                <label class="normalText">@Model.InvoiceNo</label>
                             </td>
                         }
                         @if (Model.ActionType == "A")
@@ -137,7 +132,7 @@
                             <td><label for="Reference">Advance : </label></td>
                             <td>
                                 <b><span id="lblCaseNo" class="darkRedBoldText"></span></b>
-                                <label>@Model.AdvBill</label>
+                                <label class="normalText">@Model.AdvBill</label>
                             </td>
                         }
                     </tr>
@@ -303,7 +298,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference"><a onclick="lnkbtnMRDT();" style="color:dodgerblue;" title="Click here to refresh Call / Material Rediness Date from [Call Registration] Form">Call/Material Readiness Date</a></label>
+                        <label for="Reference"><a onclick="lnkbtnMRDT();" title="Click here to refresh Call / Material Rediness Date from [Call Registration] Form">Call/Material Readiness Date</a></label>
                         @if (@Model.ActionType == "A")
                         {
                             <input type="text" class="datepicker" asp-for="DtInspDesire" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
@@ -567,39 +562,66 @@
                 </div>
             </div>
 
-            <div class="alert alert-warning">
-                <div class="row center my-0">
-                    <div class="col-md-12">
-                        <span style="color:#d52127;">* Enter Fee Details Before Generating Bill !!!</span>
-                        <div>
-                            @if (@Model.STS != "X")
-                            {
-                                <button type="button" class="commonBtn" id="btnGBill" ToolTip="Please Save the Inspection Certificate and Edit Items Qty Passed, Rejected and Due before Generating the Bill!!!">Generate Bill</button>
-                            }
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="alert alert-info UploadDoc">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span style="color:#d52127;">
+                                    Upload a scanned copy of Invoice Supporting Documents in "PDF" format from here. Scanned copy should be in Black & White and Low DPI.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-12">
+                                <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICDocument" />
+                            </div>
+                            <div class="col-md-12">
+                                <div class="savenext-btn">
+                                    <button type="button" class="save-btn active" id="btnUpload" onclick="UploadDocument()">Upload Invoice Supporting Docs</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                   
+                        <div class="row center my-0">
+                            <div class="col-md-12">
+                            <div class="alert alert-warning">
+                                <span style="color:#d52127;">* Enter Fee Details Before Generating Bill !!!</span>
+                                <div>
+                                    @if (@Model.STS != "X")
+                                    {
+                                        <button type="button" class="commonBtn" id="btnGBill" ToolTip="Please Save the Inspection Certificate and Edit Items Qty Passed, Rejected and Due before Generating the Bill!!!">Generate Bill</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-0 center">
+                       
+                        <div class="col-md-12 mb-3">
+                            <div class="alert alert-warning">
+                            <span style="color:#d52127;">
+                                * Enter Remarks (If Any) before clicking "Return Bills to Railways" button, these Remarks will be saved in IBS & sent to Railways in Returned Bill.
+                            </span>
+                                <div class="center">
+
+                                    <button type="button" class="commonBtn" id="btnReturnBill">Return Bills to Railways</button>
+                                </div>
+                        </div>
+                       
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="alert alert-secondary UploadDoc">
-                <div class="row">
-                    <div class="col-md-12">
-                        <span style="color:#d52127;">
-                            Upload a scanned copy of Invoice Supporting Documents in "PDF" format from here. Scanned copy should be in Black & White and Low DPI.
-                        </span>
-                    </div>
-                </div>
-                <div class="row my-0">
-                    <div class="col-md-4">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICDocument" />
-                    </div>
-                    <div class="col-md-4">
-                        <div class="savenext-btn btnAlign">
-                            <button type="button" class="save-btn active" id="btnUpload" onclick="UploadDocument()">Upload Invoice Supporting Docs</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
+           
+
+            
 
             @if (Model.BillNo != null)
             {
@@ -610,17 +632,7 @@
                 </div>
             }
 
-            <div class="row my-0 center">
-                <div class="col-md-12 mb-3">
-                    <span style="color:#d52127;">
-                        * Enter Remarks (If Any) before clicking "Return Bills to Railways" button, these Remarks will be saved in IBS & sent to Railways in Returned Bill.
-                    </span>
-                </div>
-                <div class="col-md-12 center">
-
-                    <button type="button" class="commonBtn" id="btnReturnBill">Return Bills to Railways</button>
-                </div>
-            </div>
+           
         </div>
 
     </form>
