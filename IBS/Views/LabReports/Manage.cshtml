@@ -38,7 +38,60 @@
     $(document).ajaxComplete(function () {
         $(".overlayLoader").hide();
     });
+    function downloaddoc(Caseno, CallDocDate, CALL_SNO,File) {
+        
+        var fileUrl = "@Url.Action("DownloadFile", "LabReports")" + "?caseno=" + Caseno + "&calldt=" + CallDocDate + "&csno=" + CALL_SNO + "&FileName=" + File;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', fileUrl, true);
+        xhr.responseType = 'blob';
 
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                
+                var blob = new Blob([xhr.response], { type: 'application/pdf' });
+
+                
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+
+                link.download = Caseno + "_" + CALL_SNO + "_" + CallDocDate + ".pdf";
+
+                
+                link.click();
+            } else {
+                alert('File not found.');
+            }
+        };
+
+        xhr.send();
+    }
+    function downloaddoc2(Caseno, CallDocDate, CALL_SNO, File) {
+
+        var fileUrl = "@Url.Action("DownloadFile2", "LabReports")" + "?caseno=" + Caseno + "&calldt=" + CallDocDate + "&csno=" + CALL_SNO + "&FileName=" + File;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', fileUrl, true);
+        xhr.responseType = 'blob';
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+
+                var blob = new Blob([xhr.response], { type: 'application/pdf' });
+
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+
+                link.download = Caseno + "_" + CALL_SNO + "_" + CallDocDate + ".pdf";
+
+
+                link.click();
+            } else {
+                alert('File not found.');
+            }
+        };
+
+        xhr.send();
+    }
     $(document).ready(function () {
         if ('@ReportType' == 'LabReg') {
              loadLabRegReport();
@@ -67,7 +120,7 @@
 
     });
     function loadLabRegReport() {
-        $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab',from:'@Model.from',to:'@Model.to' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab', from: '@Model.from', to: '@Model.to', Disciplinewise: '@Model.Disciplinewise', rdbPDis: '@Model.rdbPDis', Discipline: '@Model.Discipline' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });
@@ -126,13 +179,14 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
+         var HTML = $('#dvReportViewer').html();
 
         $.ajax({
             url: "@Url.Action("GeneratePDF", "LabReports")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
+             data: { htmlContent: HTML },
+            //data: { ReportType: '@ReportType' },
             xhrFields: {
                 responseType: 'blob'
             },

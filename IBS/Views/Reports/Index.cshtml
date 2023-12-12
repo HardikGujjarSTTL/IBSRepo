@@ -13,6 +13,7 @@
     else if (ReportType == "IEDairy") ReportTitle = "IE DAIRY REPORT";
     else if (ReportType == "IEWorkPlan") ReportTitle = "IE DAILY WORK PLAN REPORT";
     else if (ReportType == "CCI") ReportTitle = "CONSIGNEE COMPLAINTS";
+    else if (ReportType == "BSV") ReportTitle = "Summary Of Bank Statement Voucher";
     ViewData["Title"] = ReportTitle;
 }
 
@@ -150,7 +151,28 @@
                 </div>
             </div>
         </div>
-
+        <div class="task-inner row report6" style="display: none">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="FromDate">From Date</label>
+                    <input type="text" class="datepicker" id="FDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="ToDate">To Date</label>
+                    <input type="text" class="datepicker" id="TDate" placeholder="DD/MM/YYYY" />
+                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="savenext-btn btnAlign">
+                    <button type="button" class="save-btn active" onclick="ViewReport6();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
+            </div>
+        </div>
         <div class="task-inner row IEDairy" style="display: none">
             <div class="row my-0" id="iesec" style="display: none">
                 <div class="col-md-4 mb-3">
@@ -247,6 +269,11 @@
             else if ('@ReportType' == "UNBILLEDIC" || '@ReportType' == "PendingJICases" || '@ReportType' == "IEWorkPlan" || '@ReportType' == "CCI") {
                 $(".report1").css("display", "");                
             }
+            else if ('@ReportType' == "BSV") {
+
+                $(".report6").css("display", "");
+
+            }
             else if ('@ReportType' == "CaseHistory") {
                 
                 $(".report3").css("display", "");
@@ -336,6 +363,49 @@
             var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
             let myObject = { ReportType, FromDate, ToDate };
+
+            //if (ReportType == "ICISSUEDNSUB") {
+            //    var Type = $('input[name="rdbType"]:checked').val();
+            //    myObject = { ReportType, Type, FromDate, ToDate };
+            //    var url = '@Url.Action("ManageICIssued", "Reports")?' + $.param(myObject);
+            //    window.open(url, '_blank');
+            //}
+            //else {
+            var url = '@Url.Action("Manage", "Reports")?' + $.param(myObject);
+            window.open(url, '_blank');
+            //}
+        }
+        function ViewReport6() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#FDate").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#TDate").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#FDate").val() != "" && IsValidDate($("#FDate").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#TDate").val() != "" && IsValidDate($("#TDate").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var FDate = $('#FDate').val();
+            var TDate = $('#TDate').val();
+            let myObject = { ReportType, FDate, TDate };
 
             //if (ReportType == "ICISSUEDNSUB") {
             //    var Type = $('input[name="rdbType"]:checked').val();

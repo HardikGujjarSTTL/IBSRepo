@@ -15,5 +15,6 @@ namespace IBS.Interfaces.Reports
 
         IEWorkPlanModel Get_IE_WorkPlan(DateTime FromDate, DateTime ToDate, string IECD, string Region);
         ConsigneeComplaintsModel Get_Consignee_Complaints(DateTime FromDate, DateTime ToDate, string IECD, string Region);
+        RecieptVoucherModel GetBankStatement(string FDate, string TDate, string Region);
     }
 }

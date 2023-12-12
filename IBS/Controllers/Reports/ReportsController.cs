@@ -36,13 +36,14 @@ namespace IBS.Controllers.Reports
             return View();
         }
 
-        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate)
+        public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate, string FDate, string TDate)
         {
-            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate };
+            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate,FDate = FDate,TDate = TDate };
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
             else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
             else if (ReportType == "CCI") model.ReportTitle = "CONSIGNEE COMPLAINTS";
+            else if (ReportType == "BSV") model.ReportTitle = "Summary Of Bank Statement Voucher";
             return View(model);
         }
         public IActionResult Manage7thCopy(string ReportType, string Bk_No, string Set_No_Fr)
@@ -86,6 +87,26 @@ namespace IBS.Controllers.Reports
             model.Region = wRegion;
             model.lstICUnBilledList = iC_ReceiptRepository.Get_UnBilled_IC(model.Display_FromDate, model.Display_ToDate, Region);
             GlobalDeclaration.ICUnbilled = model;
+            return PartialView(model);
+        }
+        #endregion
+        #region Bank Statement
+        public IActionResult BankStatement(string FDate, string TDate)
+        {
+            RecieptVoucherModel model = new();
+            var wRegion = "";
+            var Region = SessionHelper.UserModelDTO.Region;
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+           // RecieptVoucherModel model = new() { FromDate = Convert.ToString(FromDate), ToDate = Convert.ToString(ToDate) };
+            model.Region = wRegion;
+            model = reportsRepository.GetBankStatement(FDate,TDate, Region);
+            model.FromDate = FDate;
+            model.ToDate = TDate;
+            GlobalDeclaration.BankStatement = model;
             return PartialView(model);
         }
         #endregion
@@ -260,6 +281,12 @@ namespace IBS.Controllers.Reports
                 IEWorkPlanModel model = GlobalDeclaration.IEWorkPlan;
                 htmlContent = await this.RenderViewToStringAsync("/Views/Reports/IEWorkPlan.cshtml", model);
             }
+            else if (ReportType == "BSV")
+            {
+                RecieptVoucherModel model = GlobalDeclaration.BankStatement;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/BankStatement.cshtml", model);
+            }
+
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

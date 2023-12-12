@@ -29,6 +29,7 @@
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Dispatch to Lab Date</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Test Report Receipt Date</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Testing Result</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">No.of Samples</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Remarks</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Testing Charges</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Service Tax</font></b></th>
@@ -37,6 +38,7 @@
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TDS</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TDS Date</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Due</font></b></th>
+                    
 
                 </tr>
                 @if (Model != null && Model.lstLabReport != null && Model.lstLabReport.Count > 0)
@@ -129,6 +131,11 @@
                             </td>
                             <td width="25%" valign="top" align="Left">
                                 <font size="1" face="Verdana">
+                                    @item.NO_OF_SAMPLES
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="Left">
+                                <font size="1" face="Verdana">
                                     @item.REMARKS
                                 </font>
                             </td>
@@ -167,6 +174,7 @@
                                     @item.AMT_DUE
                                 </font>
                             </td>
+                            
                         </tr>
                         serialNumber++;
                     }
@@ -202,6 +210,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td width="15%" valign="top" align="center" colspan="1"><font size="1" face="Verdana"><b>Total</b></font></td>
                         <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumTesting</b></font></td>
                         <td width="7%" valign="top" align="center"><font size="1" face="Verdana"><b>@sumService</b></font></td>
@@ -218,7 +227,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="25" class="noRecordGrid">No records found</td>
+                        <td colspan="5" class="noRecordGrid">No records found</td>
                     </tr>
                 }
             </tbody>
