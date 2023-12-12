@@ -647,7 +647,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
             }
-            model.UserId = UserName.Substring(0, 8);
+            model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
             model.IeCd = Convert.ToString(GetIeCd);
             model = callregisterRepository.CallStatusFilesSave(model, DocumentsList);
             if (model.AlertMsg == "Success")

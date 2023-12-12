@@ -1524,3 +1524,4 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .userSelect{ cursor:pointer;}
 .dashboard-box .dash-total{ max-width:70%; width:100%;}
 .noRecordGrid{text-align:center; background: #f1f1f1 !important;}
+.normalText{ font-weight:normal; color:#323232; font-size:14px;}
