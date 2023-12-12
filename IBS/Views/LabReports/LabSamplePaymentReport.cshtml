@@ -25,6 +25,7 @@
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TESTING CHARGES SUBMITTED BY VENDOR</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">TDS SUBMITTED BY VENDOR</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SUBMISSION OF TESTING CHARGES DOCUMENT BY VENDOR</font></b></th>
+                    @* <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SUBMISSION OF TESTING CHARGES DOCUMENT BY VENDOR</font></b></th> *@
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SUBMISSION OF TESTING CHARGES DOCUMENT UPLOADED DATETIME BY VENDOR</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">UTR NO.</font></b></th>
                     <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">UTR DATE</font></b></th>
@@ -103,10 +104,18 @@
                                 <font size="1" face="Verdana">
                                     @if (@item.PDoc == true)
                                     {
-                                        <a href="javascript:void(0);" onclick="downloaddoc('@item.CASE_NO','@item.CallDocDate','@item.CALL_SNO','@item.File')">VIEW VENDOR PAYMENT RECEIPT</a>
+                                        <a href="@item.File" onclick="downloaddoc('@item.CASE_NO','@item.CallDocDate','@item.CALL_SNO','@item.File')">VIEW VENDOR PAYMENT RECEIPT</a>
                                     }
                                 </font>
                             </td>
+                            @* <td width="25%" valign="top" align="left">
+                                <font size="1" face="Verdana">
+                                    @if (@item.PDoc == true)
+                                    {
+                                        <a href="javascript:void(0);" id="docpdf" onclick="downloaddoc3('@item.CASE_NO','@item.CallDocDate','@item.CALL_SNO','@item.File')">VIEW VENDOR PAYMENT RECEIPT</a>
+                                    }
+                                </font>
+                            </td> *@
                             <td width="25%" valign="top" align="left">
                                 <font size="1" face="Verdana">
                                     @item.Vend_INIT_DT
@@ -136,7 +145,7 @@
                                 <font size="1" face="Verdana">
                                     @if (@item.LABDoc == true)
                                     {
-                                        <a href="javascript:void(0);" onclick="downloaddoc2('@item.CASE_NO','@item.CallDocDate','@item.CALL_SNO','@item.File2')">VIEW LAB REPORT</a>
+                                        <a href="@item.File2" onclick="downloaddoc2('@item.CASE_NO','@item.CallDocDate','@item.CALL_SNO','@item.File2')">VIEW LAB REPORT</a>
                                     }
                                 </font>
                             </td>

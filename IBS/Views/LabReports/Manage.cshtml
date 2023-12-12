@@ -38,6 +38,36 @@
     $(document).ajaxComplete(function () {
         $(".overlayLoader").hide();
     });
+    function downloaddoc3(Caseno, CallDocDate, CALL_SNO, File) {
+
+        var fileUrl = "@Url.Action("DownloadFile", "LabReports")" + "?caseno=" + Caseno + "&calldt=" + CallDocDate + "&csno=" + CALL_SNO + "&FileName=" + File;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', fileUrl, true);
+        xhr.responseType = 'blob';
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+
+                var blob = new Blob([xhr.response], { type: 'application/pdf' });
+
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                alert(link.href);
+                // $("#docpdf").href = ;
+                $("#docpdf").attr("href", window.URL.createObjectURL(blob));
+
+                link.download = Caseno + "_" + CALL_SNO + "_" + CallDocDate + ".pdf";
+
+
+                link.click();
+            } else {
+                alert('File not found.');
+            }
+        };
+
+        xhr.send();
+    }
     function downloaddoc(Caseno, CallDocDate, CALL_SNO,File) {
         
         var fileUrl = "@Url.Action("DownloadFile", "LabReports")" + "?caseno=" + Caseno + "&calldt=" + CallDocDate + "&csno=" + CALL_SNO + "&FileName=" + File;
