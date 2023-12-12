@@ -73,48 +73,56 @@ namespace IBS.Repositories
             int RailwayId = 0;
             var Railway = (from r in context.T91Railways where r.RlyCd == model.RLY_CD select r).FirstOrDefault();
             var existingRailway = context.T91Railways.FirstOrDefault(r => r.RlyCd == model.RLY_CD);
-            if (existingRailway == null || existingRailway.RlyCd == model.RLY_CD)
+            if (existingRailway.RlyCd != model.RLY_CD && existingRailway != null)
             {
-                #region Railway save
-                if (Railway == null)
+                if (existingRailway == null)
                 {
-                    T91Railway obj = new T91Railway();
-                    obj.RlyCd = model.RLY_CD;
-                    obj.Railway = model.RAILWAY;
-                    obj.HeadQuarter = model.HEAD_QUARTER;
-                    obj.ImmsRlyCd = model.IMMS_RLY_CD;
-                    obj.UserId = model.USERID;
-                    obj.Createdby = model.Createdby;
-                    obj.Createddate = DateTime.Now;
-                    context.T91Railways.Add(obj);
-                    context.SaveChanges();
-                    RailwayId = 1;
+                    #region Railway save
+                    if (Railway == null)
+                    {
+                        T91Railway obj = new T91Railway();
+                        obj.RlyCd = model.RLY_CD;
+                        obj.Railway = model.RAILWAY;
+                        obj.HeadQuarter = model.HEAD_QUARTER;
+                        obj.ImmsRlyCd = model.IMMS_RLY_CD;
+                        obj.UserId = model.USERID;
+                        obj.Createdby = model.Createdby;
+                        obj.Createddate = DateTime.Now;
+                        context.T91Railways.Add(obj);
+                        context.SaveChanges();
+                        RailwayId = 1;
+                    }
+                    else
+                    {
+                        Railway.RlyCd = model.RLY_CD;
+                        Railway.Railway = model.RAILWAY;
+                        Railway.HeadQuarter = model.HEAD_QUARTER;
+                        Railway.ImmsRlyCd = model.IMMS_RLY_CD;
+                        Railway.UserId = model.USERID;
+                        Railway.Updatedby = model.Updatedby;
+                        Railway.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                        RailwayId = 2;
+                    }
+                    #endregion
                 }
                 else
                 {
-                    Railway.RlyCd = model.RLY_CD;
-                    Railway.Railway = model.RAILWAY;
-                    Railway.HeadQuarter = model.HEAD_QUARTER;
-                    Railway.ImmsRlyCd = model.IMMS_RLY_CD;
-                    Railway.UserId = model.USERID;
-                    Railway.Updatedby = model.Updatedby;
-                    Railway.Updateddate = DateTime.Now;
-                    context.SaveChanges();
-                    RailwayId = 2;
+                    return RailwayId;
                 }
-                #endregion
             }
             else
             {
                 return RailwayId;
             }
+           
             return RailwayId;
         }
 
         public Railway FindRailwayByID(string id)
         {
             Railway model = new();
-            T91Railway Railways = context.T91Railways.Find(id);
+            T91Railway Railways = (from r in context.T91Railways where r.RlyCd == id select r).FirstOrDefault();
 
             if (Railways == null)
                 throw new Exception("Railway Not found");
@@ -123,7 +131,7 @@ namespace IBS.Repositories
                 model.RLY_CD = Railways.RlyCd;
                 model.RAILWAY = Railways.Railway;
                 model.HEAD_QUARTER = Railways.HeadQuarter;
-                model.IMMSRLyCD = Railways.ImmsRlyCd;
+                model.IMMS_RLY_CD = Railways.ImmsRlyCd;
                 return model;
             }
         }

@@ -14,7 +14,7 @@ namespace IBS.Models
         public string? USERID { get; set; }
         public string? DATETIME { get; set; }
         public string? IMMS_RLY_CD { get; set; }
-        public string? IMMSRLyCD { get; set; }
+        public string? Type { get; set; }
         public int? Updatedby { get; set; }
         public int? Createdby { get; set; }
     }

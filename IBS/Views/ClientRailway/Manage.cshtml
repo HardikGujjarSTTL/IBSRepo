@@ -17,6 +17,7 @@
     <form role="form" asp-controller="ClientRailway" asp-action="RailwaySave" id="frmRailways">
         <div class="accordion-body">
             <div class="row my-0">
+                <input hidden asp-for="Type"/>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Railway Code<i class="text-danger">*</i></label>
                     <input type="text" class="input" asp-for="RLY_CD" />
@@ -33,7 +34,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">IMMS Railway Code</label>
-                    <input type="text" class="input" asp-for="IMMSRLyCD" />
+                    <input type="text" class="input" maxlength="2" onkeypress="return isNumber(event)" asp-for="IMMS_RLY_CD" />
                 </div>
             </div>
             <div class="savenext-btn">

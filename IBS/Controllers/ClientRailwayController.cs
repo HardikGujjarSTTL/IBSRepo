@@ -28,11 +28,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string id,string ReportType)
+        public IActionResult Manage(string id,string Type)
         {
             Railway model = new();
             if (!string.IsNullOrEmpty(id))
             {
+                model.Type = Type;
                 model = railwayRepository.FindRailwayByID(id);
             }
             return View(model);
@@ -46,7 +47,7 @@ namespace IBS.Controllers
             try
             {
                 model.USERID = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                if (!string.IsNullOrEmpty(model.RLY_CD))
+                if (model.Type == "U")
                 {
                     model.Updatedby = UserId; 
                     int i = railwayRepository.RailwayInsertUpdate(model);
