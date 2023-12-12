@@ -15,7 +15,7 @@ namespace IBS.Models
         public string OTP { get; set; }
         public string MOBILE { get; set; }
         public string DecryptUserName { get; set; }
-
+        [Required(ErrorMessage = "User Type is required.")]
         public string UserType { get; set; }
         public string DecryptUserType { get; set; }
 
@@ -40,12 +40,14 @@ namespace IBS.Models
         public string USER_ID { get; set; }
         public string MOBILE { get; set; }
         public int CoCd { get; set; }
+        public string FPUserID { get; set; }
     }
 
     public class ForgotPasswordModel
     {
         [Required(ErrorMessage = "Username or Email-Id is required.")]
         public string UserName { get; set; }
+        public string UserType { get; set; }
     }
 
     public class ResetPasswordModel
@@ -62,5 +64,6 @@ namespace IBS.Models
         [Required, DataType(DataType.Password), Display(Name = "Re enter new password")]
         [Compare("NewPassword", ErrorMessage = "Confirm password does not match")]
         public string ConfirmPassword { get; set; }
+        public string UserType { get; set; }
     }
 }

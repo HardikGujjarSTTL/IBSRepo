@@ -205,7 +205,9 @@
 
         public string CM_APPROVAL { get; set; }
 
-        
+        public int APPROVALCOUNT { get; set; }
+
+
     }
 
 }

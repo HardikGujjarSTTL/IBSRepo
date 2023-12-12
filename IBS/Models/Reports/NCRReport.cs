@@ -5,8 +5,8 @@ namespace IBS.Models.Reports
     {
         public string month { get; set; }
         public string year { get; set; }
-        public string FromDate { get; set; }
-        public string ToDate { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public string AllCM { get; set; }
         public string forCM { get; set; }
         public string All { get; set; }

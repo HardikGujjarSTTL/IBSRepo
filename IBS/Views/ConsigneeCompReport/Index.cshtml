@@ -16,9 +16,14 @@
 </div>
 
 <style type="text/css">
-    #particularclient {display: flex;justify-content: space-between;}
+    #particularclient {
+        display: flex;
+        justify-content: space-between;
+    }
 
-    #particularclient select {margin-right: 10px;}
+        #particularclient select {
+            margin-right: 10px;
+        }
 </style>
 
 <div class="accordion-body CCU" style="display:none;">
@@ -29,7 +34,7 @@
         <input type="hidden" id="hdnInspRegions" name="hdnInspRegions" />
         <input type="hidden" id="hdnJIInspRegion" name="hdnJIInspRegion" />
         <input type="hidden" id="hdnJIREQRegion" name="hdnJIREQRegion" />
-       @* <input type="hidden" id="hdneastern" name="hdneastern" />
+        @* <input type="hidden" id="hdneastern" name="hdneastern" />
         <input type="hidden" id="hdnwestern" name="hdnwestern" />
         <input type="hidden" id="hdnalljiRegions" name="hdnalljiRegions" />
         <input type="hidden" id="hdnnorthernji" name="hdnnorthernji" />
@@ -390,14 +395,14 @@
             </div>
 
         </div>
-    <div class="savenext-btn">
-        <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
-        <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
-    </div>
-    <br />
-    <div class="alert alert-secondary center mb-3">
-        <span id="Label8">After Apply Next Filter Old Data Should Be Clear</span>
-    </div>
+        <div class="savenext-btn">
+            <button type="button" class="save-btn active" onclick="ViewReport();">Submit</button>
+            <button type="button" class="reset-btn" onclick="ClearControls1();">Clear</button>
+        </div>
+        <br />
+        <div class="alert alert-secondary center mb-3">
+            <span id="Label8">After Apply Next Filter Old Data Should Be Clear</span>
+        </div>
     </form>
 </div>
 
@@ -686,14 +691,14 @@
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="FromDateTOPN">For The Period From</label>
-                    <input type="text" class="input datepicker" id="FromDateTOPN" placeholder="DD/MM/YYYY">
+                    <input type="text" class="input datepicker" id="FromDateTOPN" placeholder="DD/MM/YYYY" onchange="DateValidation(true)" />
                     <span class="text-danger field-validation-error" id="spnErrorfromdt"></span>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-search">
                     <label for="ToDateTOPN">To</label>
-                    <input type="text" class="input datepicker" id="ToDateTOPN" placeholder="DD/MM/YYYY" />
+                    <input type="text" class="input datepicker" id="ToDateTOPN" placeholder="DD/MM/YYYY" onchange="DateValidation(true)" />
                     <span class="text-danger field-validation-error" id="spnErrortodt"></span>
                 </div>
             </div>
@@ -1494,7 +1499,7 @@
 
             var FromDate = moment($('#FromDateDC').datepicker('getDate')).format("YYYY-MM-DD");
             var ToDate = moment($('#ToDateDC').datepicker('getDate')).format("YYYY-MM-DD");
-            let myObject = {ReportType, FromDate, ToDate };
+            let myObject = { ReportType, FromDate, ToDate };
 
             var url = '@Url.Action("ManageByDefectCode", "ConsigneeCompReport")?' + $.param(myObject);
             window.open(url, '_blank');
@@ -1543,6 +1548,9 @@
             $("#spnErrorfromdt").html("");
             $("#spnErrormonth").html("");
             $("#spnErroryear").html("");
+            
+            DateValidation(true);
+
             var formonth = $("#formonth").is(":checked") == true ? "true" : "false";
             var forperiod = $("#forperiod").is(":checked") == true ? "true" : "false";
             var IsValid = true;
@@ -1558,7 +1566,7 @@
                 if ($("#month").val() == "") {
                     $("#spnErrormonth").html("Select Month");
                     IsValid = false;
-                }else{
+                } else {
                     $("#spnErrormonth").html("");
                 }
                 if ($("#year").val() == "") {
@@ -1570,22 +1578,11 @@
             }
 
             if (forperiod == "true") {
-                if ($("#FromDateTOPN").val() == "") {
-                    $("#spnErrorfromdt").html("Enter From Date.");
-                    IsValid = false;
-                } else {
-                    $("#spnErrorfromdt").html("");
-                }
-                if ($("#ToDateTOPN").val() == "") {
-                    $("#spnErrortodt").html("Enter To Date.");
-                    IsValid = false;
-                } else {
-                    $("#spnErrortodt").html("");
-                }
+                IsValid = DateValidation(IsValid);
             }
 
             if (!IsValid) return;
-            debugger
+
             var IsValid = true;
             var monthChar = $('#month option:selected').text();
             var month = getMonthNumber(monthChar);
@@ -1636,6 +1633,23 @@
             const date = new Date(`${monthName} 1, 2000`);
             const monthNumber = (date.getMonth() + 1).toString().padStart(2, '0');
             return monthNumber;
+        }
+
+        function DateValidation(IsValid) {
+
+            if ($("#FromDateTOPN").val() == "") {
+                $("#spnErrorfromdt").html("Enter From Date.");
+                IsValid = false;
+            } else {
+                $("#spnErrorfromdt").html("");
+            }
+            if ($("#ToDateTOPN").val() == "") {
+                $("#spnErrortodt").html("Enter To Date.");
+                IsValid = false;
+            } else {
+                $("#spnErrortodt").html("");
+            }
+            return IsValid;
         }
     </script>
 }

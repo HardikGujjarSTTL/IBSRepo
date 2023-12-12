@@ -12,238 +12,239 @@
     </div>
 </div>
 <div class="accordion-body">
-<div class="task-listinput">
-    <input type="hidden" asp-for="Region" />
-    <input type="hidden" asp-for="ActionType" />
     <div class="task-listinput">
-        <div class="task-inner row CWBills">
-            <div class="col-md-12 mb-3">
-                <div class="custom-readio">
-                    <div class="company-checkbox">
-                        <div class="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="BillSummary_M" asp-for="BillSummary" name="BillSummary" value="M" checked>
-                                <label for="BillSummary_M">Summary Report For the Month</label>
-                            </div>
-                        </div>
-                        <div c lass="remember">
-                            <div class="remecheckbox">
-                                <input type="radio" id="BillSummary_P" asp-for="BillSummary" name="BillSummary" value="P">
-                                <label for="BillSummary_P">Summary Report For the Given Period</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="FromMn" id="lblMonth">Month</label> <br />
-                @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
-                <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="FromYr" id="lblYear">Year</label> <br />
-                @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
-                <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
-            </div>
-            <div class="col-md-4 mb-3 trTo" style="display: none">
-                <label for="ToMn">To Month</label> <br />
-                @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")
-                <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
-            </div>
-            <div class="col-md-4 mb-3 trTo" style="display: none">
-                <label for="ToYr">To Year</label> <br />
-                @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")
-                <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
-            </div>
-            <div class="col-md-4 mb-3 SWBills" style="display: none">
-                <label for="IncRites">Include RITES Billing (Y/N)</label> <br />
-                @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"))
-                <span class="text-danger field-validation-error" id="spnErrorIncRites"></span>
-            </div>
-        </div>
-
-        <div class="task-inner row RlyBills" style="display:none;">
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="ClientType" id="lblClientType">Client Type</label> <br />
-                    @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType() , "Value", "Text"),"--Select--")
-                    <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
+        <input type="hidden" asp-for="Region" />
+        <input type="hidden" asp-for="ActionType" />
+        <div class="task-listinput">
+            <div class="task-inner row CWBills">
+                <div class="col-md-12 mb-3">
                     <div class="custom-readio">
                         <div class="company-checkbox">
                             <div class="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" id="BPO_A" asp-for="BpoType" name="BpoType" value="A" checked="checked">
-                                    <label for="BPO_A">All BPO</label>
+                                    <input type="radio" id="BillSummary_M" asp-for="BillSummary" name="BillSummary" value="M" checked>
+                                    <label for="BillSummary_M">Summary Report For the Month</label>
                                 </div>
                             </div>
                             <div c lass="remember">
                                 <div class="remecheckbox">
-                                    <input type="radio" id="BPO_P" asp-for="BpoType" name="BpoType" value="P">
-                                    <label for="BPO_P">Particular BPO</label>
+                                    <input type="radio" id="BillSummary_P" asp-for="BillSummary" name="BillSummary" value="P">
+                                    <label for="BillSummary_P">Summary Report For the Given Period</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3 BpoRly" style="display:none;">
-                    <label for="BpoRly" id="lblBpoRly">For Particular Client</label> <br />
-                    @Html.DropDownListFor(model => model.BpoRly, new SelectList(IBS.Models.Common.GetBPORLY("R") , "Value", "Text"),"--Select--")
-                    <span class="text-danger field-validation-error" id="spnErrorBpoRly"></span>
-                </div>
-            </div>
-            <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <div class="custom-readio">
-                        <div class="company-checkbox">
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="RlyBillSummary_M" asp-for="RlyBillSummary" name="RlyBillSummary" value="M" checked="checked">
-                                    <label for="RlyBillSummary_M">For the Month</label>
-                                </div>
-                            </div>
-                            <div c lass="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="RlyBillSummary_P" asp-for="RlyBillSummary" name="RlyBillSummary" value="P">
-                                    <label for="RlyBillSummary_P">For Given Period</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <label for="FromMn" id="lblMonth">Month</label> <br />
+                    @Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
                 </div>
-
-                <div class="col-md-2 mb-3 RlyFromMn">
-                    <label for="ToMonthRly" id="lblMonthRly">Month</label> <br />
-                    @*@Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")*@
-                    @Html.DropDownList("FromMnRly", Common.GetMonths(),"--Select--")
-                    <span class="text-danger field-validation-error" id="spnErrorFromMnRly"></span>
-                </div>
-                <div class="col-md-2 mb-3 RlyFromYr">
+                <div class="col-md-4 mb-3">
                     <label for="FromYr" id="lblYear">Year</label> <br />
-                    @*@Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")*@
-                    @Html.DropDownList("FromYrRly", Common.GetYears(),"--Select--")
-                    <span class="text-danger field-validation-error" id="spnErrorFromYrRly"></span>
+                    @Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
                 </div>
-                <div class="col-md-2 mb-3 RlyFromDt" style="display: none">
-                    <label for="FromDt">To Month</label> <br />
-                    <input type="text" class="datepicker" asp-for="FromDt" readonly placeholder="DD/MM/YYYY">
-                    <span class="text-danger field-validation-error" id="spnErrorFromDt"></span>
+                <div class="col-md-4 mb-3 trTo" style="display: none">
+                    <label for="ToMn">To Month</label> <br />
+                    @Html.DropDownListFor(model => model.ToMn, new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
                 </div>
-                <div class="col-md-2 mb-3 RlyToDt" style="display: none">
-                    <label for="ToDt">To Year</label> <br />
-                    <input type="text" class="datepicker" asp-for="ToDt" readonly placeholder="DD/MM/YYYY">
-                    <span class="text-danger field-validation-error" id="spnErrorToDt"></span>
+                <div class="col-md-4 mb-3 trTo" style="display: none">
+                    <label for="ToYr">To Year</label> <br />
+                    @Html.DropDownListFor(model => model.ToYr, new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--")
+                    <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
                 </div>
-            </div>
-
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <div class="custom-readio">
-                        <div class="company-checkbox">
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-4 mb-3 SWBills" style="display: none">
+                    <label for="IncRites">Include RITES Billing (Y/N)</label> <br />
+                    @Html.DropDownListFor(model => model.IncRites, new SelectList(IBS.Models.Common.CommonYesNo(), "Value", "Text"))
+                    <span class="text-danger field-validation-error" id="spnErrorIncRites"></span>
                 </div>
             </div>
 
-        </div>
+            <div class="task-inner row RlyBills" style="display:none;">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="ClientType" id="lblClientType">Client Type</label> <br />
+                        @Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType(), "Value", "Text"), "--Select--", new { @class = "", @onchange = "FillBPO();" })
+                        @* @Html.DropDownList(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailType(), "--Select--", new { @class = "", @onchange = "FillBPO();" }) *@
+                        <span class="text-danger field-validation-error" id="spnErrorClientType"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="BPO_A" asp-for="BpoType" name="BpoType" value="A" checked="checked">
+                                        <label for="BPO_A">All BPO</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="BPO_P" asp-for="BpoType" name="BpoType" value="P">
+                                        <label for="BPO_P">Particular BPO</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 BpoRly" style="display:none;">
+                        <label for="BpoRly" id="lblBpoRly">For Particular Client</label> <br />
+                        @Html.DropDownListFor(model => model.BpoRly, new SelectList(IBS.Models.Common.GetBPORLY("R"), "Value", "Text"), "--Select--")
+                        <span class="text-danger field-validation-error" id="spnErrorBpoRly"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="RlyBillSummary_M" asp-for="RlyBillSummary" name="RlyBillSummary" value="M" checked="checked">
+                                        <label for="RlyBillSummary_M">For the Month</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="RlyBillSummary_P" asp-for="RlyBillSummary" name="RlyBillSummary" value="P">
+                                        <label for="RlyBillSummary_P">For Given Period</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="task-inner row NSC" style="display:none;">
-            <div class="row my-0 NSCDt">
-                <div class="col-md-2 mb-3">
-                    <label for="FromDate" id="lblFromDate">For The Period From</label> <br />
-                    <input type="text" class="datepicker" id="FromDate" readonly placeholder="DD/MM/YYYY">
-                    <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                    <div class="col-md-2 mb-3 RlyFromMn">
+                        <label for="ToMonthRly" id="lblMonthRly">Month</label> <br />
+                        @*@Html.DropDownListFor(model => model.FromMn, new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--")*@
+                        @Html.DropDownList("FromMnRly", Common.GetMonths(), "--Select--")
+                        <span class="text-danger field-validation-error" id="spnErrorFromMnRly"></span>
+                    </div>
+                    <div class="col-md-2 mb-3 RlyFromYr">
+                        <label for="FromYr" id="lblYear">Year</label> <br />
+                        @*@Html.DropDownListFor(model => model.FromYr, new SelectList(IBS.Models.Common.GetYears() , "Value", "Text"),"--Select--")*@
+                        @Html.DropDownList("FromYrRly", Common.GetYears(), "--Select--")
+                        <span class="text-danger field-validation-error" id="spnErrorFromYrRly"></span>
+                    </div>
+                    <div class="col-md-2 mb-3 RlyFromDt" style="display: none">
+                        <label for="FromDt">To Month</label> <br />
+                        <input type="text" class="datepicker" asp-for="FromDt" placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorFromDt"></span>
+                    </div>
+                    <div class="col-md-2 mb-3 RlyToDt" style="display: none">
+                        <label for="ToDt">To Year</label> <br />
+                        <input type="text" class="datepicker" asp-for="ToDt" placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorToDt"></span>
+                    </div>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <label for="ToDate" id="lblToDate">For The Period To</label> <br />
-                    <input type="text" class="datepicker" id="ToDate" readonly placeholder="DD/MM/YYYY">
-                    <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <div class="custom-readio">
-                        <div class="company-checkbox">
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <label for="NSCRegion_A"><input type="checkbox" asp-for="chkRegion" value="A" id="NSCRegion_A" checked="checked" /> All Regions</label>
+
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <label for="Region_A"><input type="checkbox" asp-for="chkRegion" value="A" id="Region_A" checked="checked" /> All Regions</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <div class="custom-readio">
-                        <div class="company-checkbox">
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="NSCRailways_A" asp-for="RlyTypes" name="RlyTypes" value="A" checked>
-                                    <label for="NSCRailways_A">All Railways</label>
-                                </div>
-                            </div>
-                            <div c lass="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="NSCRailways_P" asp-for="RlyTypes" name="RlyTypes" value="P">
-                                    <label for="NSCRailways_P">Particular Railway</label>
+
+            <div class="task-inner row NSC" style="display:none;">
+                <div class="row my-0 NSCDt">
+                    <div class="col-md-2 mb-3">
+                        <label for="FromDate" id="lblFromDate">For The Period From</label> <br />
+                        <input type="text" class="datepicker" id="FromDate" readonly placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="ToDate" id="lblToDate">For The Period To</label> <br />
+                        <input type="text" class="datepicker" id="ToDate" readonly placeholder="DD/MM/YYYY">
+                        <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <label for="NSCRegion_A"><input type="checkbox" asp-for="chkRegion" value="A" id="NSCRegion_A" checked="checked" /> All Regions</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3" id="tdClientType" style="display:none;">
-                    <label for="ClientTypeNSC" id="lblClientTypeNSC">Particular Railway Types</label> <br />
-                    @*@Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })*@
-                    @Html.DropDownList("ClientTypeNSC", Common.GetRailway(),"--Select--", new { @class = "", @onchange = "BindlstAU();" })
-                    <span class="text-danger field-validation-error" id="spnErrorClientTypeNSC"></span>
-                </div>
-            </div>
-            <div class="row my-0" style="display:none;" id="trAU">
-                <div class="col-md-3 mb-3">
-                    <label for="ClientType" id="lblClientTypeNSC">Type of AU</label>
-                    <div class="custom-readio">
-                        <div class="company-checkbox">
-                            <div class="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="AU_A" asp-for="AU" name="AU" value="A" checked>
-                                    <label for="AU_A">All AU's</label>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="NSCRailways_A" asp-for="RlyTypes" name="RlyTypes" value="A" checked>
+                                        <label for="NSCRailways_A">All Railways</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div c lass="remember">
-                                <div class="remecheckbox">
-                                    <input type="radio" id="AU_P" asp-for="AU" name="AU" value="P">
-                                    <label for="AU_P">Particular AU</label>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="NSCRailways_P" asp-for="RlyTypes" name="RlyTypes" value="P">
+                                        <label for="NSCRailways_P">Particular Railway</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3 mb-3" id="tdClientType" style="display:none;">
+                        <label for="ClientTypeNSC" id="lblClientTypeNSC">Particular Railway Types</label> <br />
+                        @*@Html.DropDownListFor(model => model.ClientType, new SelectList(IBS.Models.Common.GetRailway() , "Value", "Text"),"--Select--", new { @class = "", @onchange = "BindlstAU();" })*@
+                        @Html.DropDownList("ClientTypeNSC", Common.GetRailway(), "--Select--", new { @class = "", @onchange = "BindlstAU();" })
+                        <span class="text-danger field-validation-error" id="spnErrorClientTypeNSC"></span>
+                    </div>
                 </div>
-                <div class="col-md-2 mb-3" style="display:none;" id="tdAU">
-                    <label for="lstAU" id="lbllstAU">Particular AU Types</label> <br />
-                    @Html.DropDownListFor(model => model.lstAU, new SelectList(IBS.Models.Common.GetAUCrisByRlyCd(Model.ClientType) , "Value", "Text"),"--Select--")
-                    <span class="text-danger field-validation-error" id="spnErrorlstAU"></span>
+                <div class="row my-0" style="display:none;" id="trAU">
+                    <div class="col-md-3 mb-3">
+                        <label for="ClientType" id="lblClientTypeNSC">Type of AU</label>
+                        <div class="custom-readio">
+                            <div class="company-checkbox">
+                                <div class="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="AU_A" asp-for="AU" name="AU" value="A" checked>
+                                        <label for="AU_A">All AU's</label>
+                                    </div>
+                                </div>
+                                <div c lass="remember">
+                                    <div class="remecheckbox">
+                                        <input type="radio" id="AU_P" asp-for="AU" name="AU" value="P">
+                                        <label for="AU_P">Particular AU</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3" style="display:none;" id="tdAU">
+                        <label for="lstAU" id="lbllstAU">Particular AU Types</label> <br />
+                        @Html.DropDownListFor(model => model.lstAU, new SelectList(IBS.Models.Common.GetAUCrisByRlyCd(Model.ClientType), "Value", "Text"), "--Select--")
+                        <span class="text-danger field-validation-error" id="spnErrorlstAU"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active" onclick="GetViewReport();">Submit</button>
-                <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+            <div class="col-md-12 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="GetViewReport();">Submit</button>
+                    <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
@@ -611,8 +612,9 @@
                 $("#spnErrorFromYrRly").html("");
                 $("#spnErrorFromDt").html("");
                 $("#spnErrorToDt").html("");
+                debugger
                 var rdoSummary = "";
-                if ($("#BillSummary_M").is(":checked")) {
+                if ($("#RlyBillSummary_M").is(":checked")) {
                     rdoSummary = "M";
                     $("BpoRly").val("");
                 }
@@ -638,8 +640,8 @@
                 var BpoRly = $("#BpoRly").val();
                 var FromMn = $("#FromMnRly").val();
                 var FromYr = $("#FromYrRly").val();
-                var FromDt = moment($('#FromDtRly').datepicker('getDate')).format("YYYY-MM-DD");
-                var ToDt = moment($('#ToDtRly').datepicker('getDate')).format("YYYY-MM-DD");
+                var FromDt = moment($('#FromDt').datepicker('getDate')).format("YYYY-MM-DD");
+                var ToDt = moment($('#ToDt').datepicker('getDate')).format("YYYY-MM-DD");
                 var RlyBillSummary = $('input[name="RlyBillSummary"]:checked').val();
                 var RlyBpoType = $('input[name="BpoType"]:checked').val();
                 if ($("#ClientType").val() == "") {
@@ -720,7 +722,7 @@
                 }
                 else {
                     rdbPRly = "A";
-                    
+
                 }
                 var rdbPAU = "";
                 if ($("#AU_P").is(":checked")) {
@@ -757,5 +759,30 @@
                 }
             });
         }
+
+        function FillBPO() {
+            var BpoType = $("#ClientType").val();
+            if (ClientType != null) {
+                $.ajax({
+                    url: '@Url.Action("GetBPORLY", "BillingReports")?BpoType=' + BpoType,
+                    type: 'GET',
+                    cache: false,
+                    data: '{}',
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response.list != null) {
+                        $("#BpoRly").html("");
+                        $("#BpoRly").append("<option value=''>--Select--</option>");
+                        $.each(response.list, function (index, value) {
+                            $("#BpoRly").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                        });
+                    }
+                    else {
+                        ShowHideMsgNew(response.status, "Not Found!!!");
+                    }
+                });
+            }
+        }
     </script>
-    }
+}

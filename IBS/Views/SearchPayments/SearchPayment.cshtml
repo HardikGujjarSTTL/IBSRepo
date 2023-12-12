@@ -8,68 +8,60 @@
     //}
 }
 
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
 <section class="@clsView">
     <div class="task-listinput">
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div id="BankNameDropdown" class="col-md-4 mb-4">
-                            <label for="Reference">Bank</label>
-                            <label for="Reference"><i class="text-danger">*</i></label>
-                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), "--SELECT--" ,new { id = "BankNameDropdown" })
-                      
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Instrument No.</label>
-                             <label for="Reference"><i class="text-danger">*</i></label>
-                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
-                          
-                        </div>
-
-                      
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Instrument Date</label>
-                           <label for="Reference"><i class="text-danger">*</i></label>
-                            <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT">
-                           
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Instrument Amount<span class="text-danger"></label>
-                            <label for="Reference"><i class="text-danger">*</i></label>
-                            <input type="text" id="AMOUNT" class="input" asp-for="AMOUNT" mode maxlength="300" />
-                           @* <span asp-validation-for="AMOUNT" class="text-danger"></span>*@
-                        </div>
-
-                      
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Case No.</label>
-                             <label for="Reference"><i class="text-danger">*</i></label>
-                            <input type="text" id="CASE_NO" class="input" asp-for="CASE_NO" maxlength="300" />
-                           @* <span asp-validation-for="CASE_NO" class="text-danger"></span>*@
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Narration/Vendor Name</label>
-                             <label for="Reference"><i class="text-danger">*</i></label>
-                            <input type="text" id="NARRATION" class="input" asp-for="NARRATION" maxlength="300">
-                           
-
-
-                        </div>
-
-                    
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="SearchPayments" asp-action="SearchPayment" data-ajax-method="post" data-ajax-complete="completed" id="frmSearchPayment">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div id="BankNameDropdown" class="col-md-4 mb-4">
+                        <label for="Reference">Bank Name</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        @* @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), "--SELECT--", new { id = "BankNameDropdown" }) *@
+                        @Html.DropDownListFor(model => model.BANK_NAME, new SelectList(IBS.Models.Common.GetBank(), "Value", "Text"), "--Select--")
                     </div>
 
-                    <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Search</button>
-                    @*<button type="submit" onclick="find();">Search2</button>*@
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Instrument No.</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="10" />
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Instrument Date</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT" placeholder="DD/MM/YYYY">
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Instrument Amount</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        <input type="text" id="AMOUNT" class="input" asp-for="AMOUNT" mode maxlength="10" />
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Case No.</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        <input type="text" id="CASE_NO" class="input" asp-for="CASE_NO" maxlength="12" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Narration/Vendor Name</label>
+                        @* <label for="Reference"><i class="text-danger">*</i></label> *@
+                        <input type="text" id="NARRATION" class="input" asp-for="NARRATION" maxlength="300">
                     </div>
                 </div>
-            </form>
+
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Search</button>
+                    @*<button type="submit" onclick="find();">Search2</button>*@
+                </div>
+            </div>
+        </form>
     </div>
 </section>
 
@@ -77,10 +69,9 @@
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
-                <table id="searchpayment" class="table-responsive">
+                <table id="searchpayment" class="table-responsive nowrap">
                     <thead>
                         <tr>
-                         
                             <th>Action</th>
                             <th>Voucher No.</th>
                             <th>Voucher Date</th>
@@ -95,7 +86,6 @@
                             <th>BPO</th>
                             <th>Narration</th>
                             <th>Case No.</th>
-                            
                             @*<th>View Contract</th>*@
                         </tr>
                     </thead>
@@ -107,66 +97,153 @@
     </section>
 </div>
 
-@section scripts{
+@section scripts {
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
-
         $(function () {
-            //$("#dtlab").hide();
             $("#searchpayment").css("display", "none");
         });
 
-       function Save(){
-            //if ($('#CASE_NO').val() == null || $('#CASE_NO').val() == "") {
-            //   alert('Pleae fill Case No');
-               
-            //}
-          //  else
-         //   {
-                SearchPayment();
-         //   }
-       }
+        function Save() {
+            // SearchPayment();
+            SearchPay();
+        }
 
-        function SearchPayment() {
-           
+        function SearchPay() {
             $("#searchpayment").css("display", "block");
             var AMOUNT = $("#AMOUNT").val();
             var NARRATION = $('#NARRATION').val();
             var CASE_NO = $('#CASE_NO').val();
-            var BankNameDropdown = $('#BankNameDropdown').val();
+            var BANK_NAME = $('#BANK_NAME').val();
             var CHQ_NO = $('#CHQ_NO').val();
             var CHQ_DT = $('#CHQ_DT').val();
             var VCHR_DT = $('#VCHR_DT').val();
             var ACC_CD = $('#ACC_CD').val();
-            //var PaymentDT = $("#txtpydt").val();
-            //var Lab = $("#ddlpylab").val();
+            //var url = '@Url.Action("PaymentList", "SearchPayments")';
+
+            $("#searchpayment").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                //scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {// Ajax Filter
+                    url: '@Url.Action("PaymentList", "SearchPayments")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            AMOUNT, NARRATION, CASE_NO, BANK_NAME, CHQ_NO, CHQ_DT, VCHR_DT, ACC_CD
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    // {
+                    //     data: '', orderable: false, width: '5%',
+                    //     render: function (data, type, row, meta) {
+                    //         return meta.row + meta.settings._iDisplayStart + 1;
+                    //     }
+                    // },
+
+                //             var edit = event.currentTarget.id;
+                // var newURL = "/BillCheckPosting/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BANK_NAME=' + BANK_CD;
+                // window.location.href = newURL;
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            debugger
+                            var ChqNo = data.CHQ_NO;
+                            var ChqDt = moment(data.CHQ_DT).format("DD/MM/YYYY");
+                            var BankName = data.BANK_CD;
+                            let myObject = { ChqNo, ChqDt, BankName };
+                            var editUrl = '@Url.Action("Index", "BillCheckPosting")?' + $.param(myObject);
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+
+                    { data: "VCHR_NO" },
+                    {
+                        data: "VCHR_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "BANK_NAME" },
+                    { data: "CHQ_NO" },
+                    // { data: "CHQ_DT" },
+                    {
+                        data: "CHQ_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "AMOUNT" },
+                    { data: "ACC_CD" },
+                    { data: "AMOUNT_ADJUSTED" },
+                    { data: "AMT_TRANSFERRED" },
+                    { data: "SUSPENSE_AMT" },
+                    { data: "BPO" },
+                    { data: "NARRATION" },
+                    { data: "CASE_NO" },
+
+                ],
+                "order": [[1, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#searchpayment").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+
+        function SearchPayment() {
+
+            $("#searchpayment").css("display", "block");
+            var AMOUNT = $("#AMOUNT").val();
+            var NARRATION = $('#NARRATION').val();
+            var CASE_NO = $('#CASE_NO').val();
+            var BANK_NAME = $('#BANK_NAME').val();
+            alert(BANK_NAME);
+            var CHQ_NO = $('#CHQ_NO').val();
+            var CHQ_DT = $('#CHQ_DT').val();
+            var VCHR_DT = $('#VCHR_DT').val();
+            var ACC_CD = $('#ACC_CD').val();
             var url = '@Url.Action("PaymentList", "SearchPayments")';
             $.ajax({
-                //url: '/SearchPayments/PaymentList', // Replace with your actual endpoint URL
-                url:url,
+                url: url,
                 type: 'POST',
                 dataType: 'json',
-                data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BankNameDropdown: BankNameDropdown, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
+                data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BANK_NAME: BANK_NAME, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
                 success: function (data) {
                     debugger;
-                    // Once data is successfully received, populate the table
                     var tableBody = $('#tableBody');
-                    tableBody.empty(); // Clear existing rows (if any)
+                    tableBody.empty();
                     for (i = 0; i < data.data.length; i++) {
-
                         var row = $('<tr>');
-                        //row.append($('<td>').text(data[i].SNO)); // SRNo.
                         var snoLink = $('<a>').text("Select").attr('id', "editButton").css({ 'color': 'blue', 'text-decoration': 'none' });
                         snoLink.hover(
                             function () {
-                                $(this).css('text-decoration', 'underline'); // Add underline on hover
+                                $(this).css('text-decoration', 'underline');
                             },
                             function () {
-                                $(this).css('text-decoration', 'none');      // Remove underline on hover out
+                                $(this).css('text-decoration', 'none');
                             }
                         );
                         var snoCell = $('<td>').append(snoLink);
@@ -192,111 +269,16 @@
 
                         (function (CHQ_NO, CHQ_DT, BANK_CD) {
                             snoLink.click(function (event) {
-
-
-                               
-
                                 var edit = event.currentTarget.id;
-                                var newURL = "/BillCheckPosting/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BankNameDropdown=' + BANK_CD;
+                                var newURL = "/BillCheckPosting/Index?CHQ_NO=" + CHQ_NO + '&CHQ_DATE=' + CHQ_DT + '&BANK_NAME=' + BANK_CD;
                                 window.location.href = newURL;
                             });
                         })(CHQ_NO, CHQ_DT, BANK_CD);
                     }
-
-                    
-
                 },
                 error: function () {
-
                 }
             });
         }
-
-
-
-        //function find() {
-        //    debugger;
-        //    $.ajax({
-        //        url: '/SearchPayments/PaymentList',
-        //        type: 'POST',
-        //        dataType: 'json',
-        //        success: function (data) {
-        //            debugger;
-        //            var tableBody = $('#tableBody');
-        //            tableBody.empty();
-
-        //            for (var i = 0; i < data.length; i++) {
-        //                var row = $('<tr>');
-
-        //                // ... Populate row data as before ...
-
-        //                // Create a link element for each row
-        //                var snoLink = $('<a>').text('Select');
-        //                snoLink.attr('data-regno', data[i].SampleRegNo);
-        //                snoLink.attr('data-sno', data[i].SNO);
-
-        //                var actionColumn = $('<td>').append(snoLink);
-        //                row.append(actionColumn);
-        //                tableBody.append(row);
-        //            }
-
-        //            // Bind click event to the links
-        //            $('#tableBody').on('click', 'a[data-sno]', function () {
-        //                var regNo = $(this).attr('data-regno');
-        //                var sno = $(this).attr('data-sno');
-        //                LabDtlModify(regNo, sno);
-        //            });
-        //        },
-        //        error: function () {
-        //            // Handle error if needed
-        //        }
-        //    });
-        //}
-
-        //function InitializeDatatable() {
-        //    //alert('here');
-        //    //alert('aagya initialize table me ');
-        //    $("#searchpayment").DataTable({
-        //        stateSave: false,// Design Assets
-        //        autoWidth: true,
-        //        scrollX: true,
-        //        scrollCollapse: true,
-        //        processing: false, // ServerSide Setups
-        //        serverSide: true,
-        //        destroy: true,
-        //        paging: false,// Paging Setups
-        //        searching: false,// Searching Setups   
-        //        ajax: {// Ajax Filter
-        //            url: "@Url.Action("PaymentList")",
-        //            type: "POST",
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json",
-        //            data:{}
-        //        },
-        //        columns: [// Columns Setups
-                    
-        //            { data: "VCHR_NO" },
-        //            { data: "VCHR_DT" },
-        //            { data: "BANK_NAME" },
-        //            { data: "CHQ_NO" },
-        //            { data: "CHQ_DT" },
-        //            { data: "AMOUNT" },
-        //            { data: "ACC_CD" },
-        //            { data: "AMOUNT_ADJUSTED" },
-        //            { data: "AMT_TRANSFERRED" },
-        //            { data: "SUSPENSE_AMT" },
-        //            { data: "BPO" },
-        //            { data: "NARRATION" },
-        //            { data: "CASE_NO" }
-
-
-        //        ],
-        //        "order": [[0, "asc"]]
-        //    });
-        //}
-
-
-
-
     </script>
 }

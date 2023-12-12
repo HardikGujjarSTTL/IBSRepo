@@ -17,13 +17,15 @@ namespace IBS.Controllers
         [HttpPost]
         [Authorization("SearchPayments", "SearchPayment", "view")]
 
-        public IActionResult PaymentList(string AMOUNT , string CASE_NO , string CHQ_NO , string BankNameDropdown , string NARRATION, string VCHR_DT, string ACC_CD)
+        [HttpPost]
+        public IActionResult PaymentList([FromBody] DTParameters dtParameters)
+        //public IActionResult PaymentList(string AMOUNT , string CASE_NO , string CHQ_NO , string BANK_NAME, string NARRATION, string CHQ_DT, string ACC_CD)
             {
-            DTParameters dtParameters = new DTParameters();
-            var region = GetRegionCode;
-            int Role = UserId;
-           
-             DTResult<SearchPaymentsModel> dTResult = SearchPaymentsRepository.GetSearchPayment(dtParameters, AMOUNT , CASE_NO , CHQ_NO, BankNameDropdown, NARRATION , VCHR_DT , ACC_CD , region ,Role);
+            //DTParameters dtParameters = new DTParameters();
+            //var Region = Region;
+            //int Role = UserId;
+            DTResult<SearchPaymentsModel> dTResult = SearchPaymentsRepository.GetSearchPayment(dtParameters, Region, UserId);
+            //DTResult<SearchPaymentsModel> dTResult = SearchPaymentsRepository.GetSearchPayment(dtParameters, AMOUNT , CASE_NO , CHQ_NO, BANK_NAME, NARRATION , CHQ_DT, ACC_CD , region ,Role);
             return Json(dTResult);
         }
 

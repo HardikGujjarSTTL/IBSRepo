@@ -189,7 +189,10 @@ namespace IBS.Controllers.Reports.OtherReports
             NCRReport model = otherReportsRepository.GetNCRIECOWiseData(month, year, FromDate, ToDate, AllCM, forCM, All, Outstanding, formonth, forperiod, Region, iecmname, reporttype);
             model.Regions = wRegion;
             model.Todaydate = currentDateAndTime;
-
+            model.reporttype = reporttype;
+            model.IENametext = IENametext;
+            model.COName = COName;
+            model.monthChar = monthChar;
             GlobalDeclaration.NCRReports = model;
             return PartialView(model);
         }
