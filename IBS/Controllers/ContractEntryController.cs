@@ -40,15 +40,17 @@ namespace IBS.Controllers
             ContractEntry model = new();
             try
             {
-                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, Convert.ToString(id));
+                var AppID = id > 0 ? Convert.ToString(id) : "";
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = new List<IBS_DocumentDTO>();
                 FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
+
+                lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ContractEntryDoc, AppID);
                 FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
                 FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Contract_Doc).ToList();
                 FileUploaderUpload_Memo.OthersSection = false;
                 FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
                 FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
                 ViewBag.Upload_Contract_Doc = FileUploaderUpload_Memo;
-
                 if (id > 0)
                 {
                     model = contractEntryRepository.FindByID(id);
@@ -76,7 +78,7 @@ namespace IBS.Controllers
                     msg = "Contract Updated Successfully.";
                     model.UpdatedBy = UserId;
                 }
-                model.CreatedBy = UserId;                
+                model.CreatedBy = UserId;
                 int i = contractEntryRepository.ContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {
@@ -115,7 +117,7 @@ namespace IBS.Controllers
         public IActionResult SearchClient(string clientType, string searchTerm)
         {
             List<SelectListItem> filteredUsers = new List<SelectListItem>();
-            if(clientType == "R") 
+            if (clientType == "R")
                 filteredUsers = Common.GetRailwayWithCode(searchTerm);
             else
                 filteredUsers = Common.GetClientName(clientType, searchTerm);
