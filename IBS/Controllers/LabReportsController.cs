@@ -70,6 +70,7 @@ namespace IBS.Controllers
             else if (ReportType == "SummNR") model.ReportTitle = "SUMMARY OF ONLINE PAYMENT IN NR";
             else if (ReportType == "LabInv") model.ReportTitle = "LAB INVOICE REPORT";
             else if (ReportType == "LabInfo") model.ReportTitle = "LAB SAMPLE INFO DETAILS";
+            else if (ReportType == "Barcode") model.ReportTitle = "BARCODE SUMMARY REPORT";
             return View(model);
     }
         public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string from, string to, string Disciplinewise, string rdbPDis, string Discipline)
@@ -246,6 +247,34 @@ namespace IBS.Controllers
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "LabSamplePaymentReport", 1, GetIPAddress());
+            }
+            return PartialView(model);
+        }
+        public IActionResult BarcodeReport(string ReportType, string wFrmDtO, string wToDt)
+        {
+            LabReportsModel model = new LabReportsModel();
+            try
+            {
+                ViewBag.From = wFrmDtO;
+                ViewBag.To = wToDt;
+
+                string Region = GetRegionCode;
+                if (Region == "N")
+                { ViewBag.Region = "NORTHERN REGION"; }
+                else if (Region == "S")
+                { ViewBag.Region = "SOUTHERN REGION"; }
+                else if (Region == "E")
+                { ViewBag.Region = "EASTERN REGION"; }
+                else if (Region == "W")
+                { ViewBag.Region = "WESTERN REGION"; }
+                else if (Region == "C")
+                { ViewBag.Region = "CENTRAL REGION"; }
+                
+                model = LabReportsRepository.BarcodeReport(ReportType, wFrmDtO, wToDt, Region);
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "BarcodeReport", 1, GetIPAddress());
             }
             return PartialView(model);
         }

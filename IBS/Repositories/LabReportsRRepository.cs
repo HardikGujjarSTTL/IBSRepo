@@ -512,5 +512,37 @@ namespace IBS.Repositories
             //}
             return model;
         }
+        public LabReportsModel BarcodeReport(string ReportType, string wFrmDtO, string wToDt, string Regin)
+        {
+
+            LabReportsModel model = new();
+            List<LabReportsModel> lstlab = new();
+
+
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("wDtFr", OracleDbType.NVarchar2, wFrmDtO, ParameterDirection.Input);
+            par[1] = new OracleParameter("wDtTo", OracleDbType.NVarchar2, wToDt, ParameterDirection.Input);
+            par[2] = new OracleParameter("cur", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("BARCODE_GENERATED_REPORT", par, 2);
+            DataTable dt = ds.Tables[0];
+            lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
+            {
+                barcode_no = row["barcode_no"].ToString(),
+                total_qty = row["total_qty"].ToString(),
+                CASE_NO = row["case_no"].ToString(),
+                createddate = row["createddate"].ToString(),
+                INSPECTOR_CUSTOMER = row["INSPECTOR_CUSTOMER"].ToString(),
+                DESCRIPTION = Convert.ToString(row["DESCRIPTION"]),
+                SEALING_TYPE = row["SEALING_TYPE"].ToString(),
+                RATE = row["RATE"].ToString(),
+                TARGETED_DATE = row["TARGETED_DATE"].ToString(),
+                RTAX = row["RTAX"].ToString(),
+
+            }).ToList();
+            model.lstBarcodeReport = lstlab;
+            
+            return model;
+        }
     }
 }
