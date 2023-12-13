@@ -91,19 +91,20 @@ namespace IBS.Repositories
                     context.SaveChanges();
                     RailwayId = 1;
                 }
-                else
-                {
-                    Railway.RlyCd = model.RLY_CD;
-                    Railway.Railway = model.RAILWAY;
-                    Railway.HeadQuarter = model.HEAD_QUARTER;
-                    Railway.ImmsRlyCd = model.IMMS_RLY_CD;
-                    Railway.UserId = model.USERID;
-                    Railway.Updatedby = model.Updatedby;
-                    Railway.Updateddate = DateTime.Now;
-                    context.SaveChanges();
-                    RailwayId = 2;
-                }
                 #endregion
+            }
+
+            if (model.Type == "U")
+            {
+                Railway.RlyCd = model.RLY_CD;
+                Railway.Railway = model.RAILWAY;
+                Railway.HeadQuarter = model.HEAD_QUARTER;
+                Railway.ImmsRlyCd = model.IMMS_RLY_CD;
+                Railway.UserId = model.USERID;
+                Railway.Updatedby = model.Updatedby;
+                Railway.Updateddate = DateTime.Now;
+                context.SaveChanges();
+                RailwayId = 2;
             }
 
             return RailwayId;

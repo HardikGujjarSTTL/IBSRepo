@@ -33,8 +33,8 @@ namespace IBS.Controllers
             Railway model = new();
             if (!string.IsNullOrEmpty(id))
             {
-                model.Type = Type;
                 model = railwayRepository.FindRailwayByID(id);
+                model.Type = Type;
             }
             return View(model);
         }
