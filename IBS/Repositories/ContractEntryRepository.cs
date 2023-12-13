@@ -101,21 +101,21 @@ namespace IBS.Repositories
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
+            var orderAscendingDirection = false;
 
             if (dtParameters.Order != null)
             {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                orderCriteria = "LETTER_DATE"; // dtParameters.Columns[2].Data;
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "CLIENTNAME";
+                    orderCriteria = "LETTER_DATE";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
-                orderCriteria = "CLIENTNAME";
+                orderCriteria = "LETTER_DATE";
                 orderAscendingDirection = true;
             }
 
@@ -131,11 +131,19 @@ namespace IBS.Repositories
 
             DataTable dt = new DataTable();
             DataSet ds;
-
-            OracleParameter[] par = new OracleParameter[3];
-            par[0] = new OracleParameter("p_clientname", OracleDbType.Varchar2, clientname, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_clienttype", OracleDbType.Varchar2, Clienttype, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            string ClientCode = null;
+            if (!string.IsNullOrEmpty(clientname))
+            {
+                var Client = clientname.Split("=");
+                ClientCode = Client[0].Trim();
+                clientname = Client[1].Trim();
+            }
+            
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_clienttype", OracleDbType.Varchar2, Clienttype, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_clientcode", OracleDbType.Varchar2, ClientCode, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_clientname", OracleDbType.Varchar2, clientname, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("GetContractInfo", par, 1);
             dt = ds.Tables[0];
             List<ContractEntry> list = null;

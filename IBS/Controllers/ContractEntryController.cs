@@ -116,7 +116,7 @@ namespace IBS.Controllers
         {
             List<SelectListItem> filteredUsers = new List<SelectListItem>();
             if(clientType == "R") 
-                filteredUsers = Common.GetRailwayWithCode();
+                filteredUsers = Common.GetRailwayWithCode(searchTerm);
             else
                 filteredUsers = Common.GetClientName(clientType, searchTerm);
 

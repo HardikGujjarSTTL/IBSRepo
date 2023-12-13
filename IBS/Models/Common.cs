@@ -4676,8 +4676,8 @@ namespace IBS.Models
         public static List<SelectListItem> SetClientName(string ClientType, string ClientName)
         {
             var Client = ClientName.Split("=");
-            var ClientCode = Client.Count() > 0 ? Client[1].Trim() : "";
-            var ClientOrg = Client.Count() > 0 ? Client[0].Trim() : "";
+            var ClientCode = Client.Count() > 0 ? Client[0].Trim() : "";
+            var ClientOrg = Client.Count() > 0 ? Client[1].Trim() : "";
             List<SelectListItem> lstClient = new List<SelectListItem>();
             if (ClientType == "R")
             {
@@ -4691,7 +4691,7 @@ namespace IBS.Models
             {
                 ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
                 lstClient = modelContext.T12BillPayingOfficers
-                        .Where(t => t.BpoType.Trim() == ClientType && t.BpoOrgn.Trim() == ClientOrg)
+                        .Where(t => t.BpoType.Trim() == ClientType && t.BpoOrgn.Trim() == ClientOrg.Trim())
                         .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
                         .Distinct()
                         .ToList();
@@ -4700,10 +4700,11 @@ namespace IBS.Models
             return lstClient;
         }
 
-        public static List<SelectListItem> GetRailwayWithCode()
+        public static List<SelectListItem> GetRailwayWithCode(string searchTerm)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropList = (from a in ModelContext.T91Railways
+                                             where a.Railway.ToLower().Contains(searchTerm.ToLower())
                                              orderby a.Railway
                                              select new SelectListItem
                                              {

@@ -118,7 +118,15 @@
                 columns: [
                     { data: "CLIENTNAME" },
                     { data: "LETTER_NO" },
-                    { data: "LETTER_DATE" },
+                    {
+                        data: "LETTER_DATE",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "LOTOFINSP" },
                     { data: "MATERIALVALUE" },
                     { data: "Materialdescription" },
@@ -155,7 +163,7 @@
         });
 
         $("#CLIENTTYPE").on("change", function () {
-            $("[data-valmsg-for='CLIENTTYPE']").hide();            
+            $("[data-valmsg-for='CLIENTTYPE']").hide();
         });
 
         $("#CLIENTTYPE").on("blur", function () {
@@ -163,7 +171,7 @@
                 $("[data-valmsg-for='CLIENTTYPE']").show();
             }
         });
-       
+
         $(document).ready(function () {
             var clientType = $("#CLIENTTYPE").val();
             $('#CLIENTNAME').select2({
