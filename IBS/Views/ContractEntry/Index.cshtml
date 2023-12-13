@@ -14,18 +14,16 @@
     <div class="accordion-body">
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-3">
-                <label for="Reference">Client Name</label>
-                @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTNAME" })
-                <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-3">
                 <label for="Reference">Client Type</label>
-                @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control", @id="CLIENTTYPE" })
+                @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"), "--Select--",new { @class = "select2", @id="CLIENTTYPE" })
                 <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
             </div>
-
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <label for="Reference">Client Name</label>
+                @Html.DropDownListFor( model => model.CLIENTNAME, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @class = "select2", id = "CLIENTNAME" })
+                <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
+            </div>
+            <div class="col-md-5">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" id="btnSearch">Search</button>
                 </div>
@@ -120,7 +118,15 @@
                 columns: [
                     { data: "CLIENTNAME" },
                     { data: "LETTER_NO" },
-                    { data: "LETTER_DATE" },
+                    {
+                        data: "LETTER_DATE",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "LOTOFINSP" },
                     { data: "MATERIALVALUE" },
                     { data: "Materialdescription" },
@@ -164,6 +170,30 @@
             if ($(this).val() === "") {
                 $("[data-valmsg-for='CLIENTTYPE']").show();
             }
+        });
+
+        $(document).ready(function () {
+            var clientType = $("#CLIENTTYPE").val();
+            $('#CLIENTNAME').select2({
+                ajax: {
+                    url: '@Url.Action("SearchClient", "ContractEntry")',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            clientType: $("#CLIENTTYPE").val(),
+                            searchTerm: params.term || ''
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
         });
     </script>
 }

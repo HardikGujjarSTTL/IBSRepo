@@ -1607,15 +1607,16 @@ namespace IBS.Models
 
         }
 
-        public static List<SelectListItem> GetClientName()
+        public static List<SelectListItem> GetClientName(string Type, string SearchValue)
         {
             ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> distinctUserNames = modelContext.T32ClientLogins
-                    .Select(t => new SelectListItem { Value = t.UserName, Text = t.UserName })
+            List<SelectListItem> distinctUserNames = modelContext.T12BillPayingOfficers
+                    .OrderBy(t => t.BpoOrgn)
+                    .Where(t => t.BpoType.Trim() == Type && t.BpoOrgn.ToLower().Contains(SearchValue.ToLower()))
+                    .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
                     .Distinct()
                     .ToList();
             return distinctUserNames;
-
         }
 
         public static List<SelectListItem> GetNCCode(string NCRClass)
@@ -4670,6 +4671,47 @@ namespace IBS.Models
                             .Distinct()
                             .ToList();
             return city;
+        }
+
+        public static List<SelectListItem> SetClientName(string ClientType, string ClientName)
+        {
+            var Client = ClientName.Split("=");
+            var ClientCode = Client.Count() > 0 ? Client[0].Trim() : "";
+            var ClientOrg = Client.Count() > 0 ? Client[1].Trim() : "";
+            List<SelectListItem> lstClient = new List<SelectListItem>();
+            if (ClientType == "R")
+            {
+                ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+                lstClient = modelContext.T91Railways
+                        .Where(x => x.RlyCd.Trim() == ClientCode.Trim() && x.Railway.Trim() == ClientOrg.Trim())
+                        .Select(x => new SelectListItem { Value = x.RlyCd.Trim() + " = " + x.Railway.Trim(), Text = x.RlyCd.Trim() + " = " + x.Railway.Trim() })
+                        .ToList();
+            }
+            else
+            {
+                ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+                lstClient = modelContext.T12BillPayingOfficers
+                        .Where(t => t.BpoType.Trim() == ClientType && t.BpoOrgn.Trim() == ClientOrg.Trim())
+                        .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
+                        .Distinct()
+                        .ToList();
+
+            }
+            return lstClient;
+        }
+
+        public static List<SelectListItem> GetRailwayWithCode(string searchTerm)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from a in ModelContext.T91Railways
+                                             where a.Railway.ToLower().Contains(searchTerm.ToLower())
+                                             orderby a.Railway
+                                             select new SelectListItem
+                                             {
+                                                 Text = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway),
+                                                 Value = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway)
+                                             }).ToList();
+            return dropList;
         }
     }
 

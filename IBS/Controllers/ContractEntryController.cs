@@ -5,6 +5,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace IBS.Controllers
@@ -75,7 +76,7 @@ namespace IBS.Controllers
                     msg = "Contract Updated Successfully.";
                     model.UpdatedBy = UserId;
                 }
-                model.CreatedBy = UserId;
+                model.CreatedBy = UserId;                
                 int i = contractEntryRepository.ContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {
@@ -109,6 +110,22 @@ namespace IBS.Controllers
                 AlertDanger();
             }
             return RedirectToAction("Index");
+        }
+
+        public IActionResult SearchClient(string clientType, string searchTerm)
+        {
+            List<SelectListItem> filteredUsers = new List<SelectListItem>();
+            if(clientType == "R") 
+                filteredUsers = Common.GetRailwayWithCode(searchTerm);
+            else
+                filteredUsers = Common.GetClientName(clientType, searchTerm);
+
+            var result = filteredUsers.Select(u => new
+            {
+                id = u.Value,
+                text = u.Text
+            });
+            return Json(new { data = result });
         }
 
     }

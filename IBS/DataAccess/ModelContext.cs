@@ -25,6 +25,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Bankcodedrpdown> Bankcodedrpdowns { get; set; }
 
+    public virtual DbSet<BarcodeGenerated> BarcodeGenerateds { get; set; }
+
     public virtual DbSet<BarcodeGeneration> BarcodeGenerations { get; set; }
 
     public virtual DbSet<BounceT25RvDetail> BounceT25RvDetails { get; set; }
@@ -900,6 +902,46 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(47)
                 .IsUnicode(false)
                 .HasColumnName("BANK_NAME");
+        });
+
+        modelBuilder.Entity<BarcodeGenerated>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("ID");
+
+            entity.ToTable("BARCODE_GENERATED");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .ValueGeneratedOnAdd()
+                .IsFixedLength()
+                .HasColumnName("ID");
+            entity.Property(e => e.BarcodeNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("BARCODE_NO");
+            entity.Property(e => e.CaseNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CASE_NO");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Ipaddress)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("IPADDRESS");
+            entity.Property(e => e.Qty)
+                .HasPrecision(6)
+                .HasColumnName("QTY");
+            entity.Property(e => e.Userid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USERID");
         });
 
         modelBuilder.Entity<BarcodeGeneration>(entity =>
@@ -4554,7 +4596,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("HOLOGRAM");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeStamp)
                 .HasMaxLength(200)
@@ -4594,7 +4636,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ITEM_REMARK");
             entity.Property(e => e.ItemSrnoPo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
             entity.Property(e => e.LabTstRectDt)
                 .HasColumnType("DATE")
@@ -7010,17 +7052,22 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<NonRlyClient>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C009399");
+            entity.HasKey(e => new { e.Clientname, e.Shortcode, e.Orgntype }).HasName("NON_RLY_CLIENT_PK");
 
             entity.ToTable("NON_RLY_CLIENT");
 
-            entity.Property(e => e.Id)
-                .HasPrecision(6)
-                .HasColumnName("ID");
             entity.Property(e => e.Clientname)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("CLIENTNAME");
+            entity.Property(e => e.Shortcode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("SHORTCODE");
+            entity.Property(e => e.Orgntype)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ORGNTYPE");
             entity.Property(e => e.Contactdesignation)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -7039,20 +7086,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("EMAILID");
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(6)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Mobileno)
                 .HasMaxLength(20)
                 .HasColumnName("MOBILENO");
-            entity.Property(e => e.Orgntype)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("ORGNTYPE");
-            entity.Property(e => e.Shortcode)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("SHORTCODE");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
@@ -10410,6 +10453,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Callcancelation)
                 .HasColumnType("NUMBER")
                 .HasColumnName("CALLCANCELATION");
+            entity.Property(e => e.Clientcode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CLIENTCODE");
             entity.Property(e => e.Clientname)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -25323,6 +25370,7 @@ public partial class ModelContext : DbContext
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("BARCODE_SEQ");
+        modelBuilder.HasSequence("BARCODEGENERATED");
         modelBuilder.HasSequence("CLIENT_FEEDBACK_SEQ");
         modelBuilder.HasSequence("EMAILCONFIGURATIONSEQ");
         modelBuilder.HasSequence("GENERAL_FILE_SEQ");

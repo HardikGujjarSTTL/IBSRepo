@@ -44,4 +44,6 @@ public partial class T100Contract
     public int? Updatedby { get; set; }
 
     public int? Isdeleted { get; set; }
+
+    public string? Clientcode { get; set; }
 }
