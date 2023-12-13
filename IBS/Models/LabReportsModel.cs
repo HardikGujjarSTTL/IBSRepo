@@ -143,5 +143,16 @@ namespace IBS.Models
         public string Discipline { get; set; }
         public List<LabReportsModel> lstLabReport { get; set; }
         public List<LabReportsModel> lstsum { get; set; }
+
+        public string barcode_no { get; set; }
+        public string total_qty { get; set; }
+        public string createddate { get; set; }
+        public string INSPECTOR_CUSTOMER { get; set; }
+        public string DESCRIPTION { get; set; }
+        public string SEALING_TYPE { get; set; }
+        public string RATE { get; set; }
+        public string TARGETED_DATE { get; set; }
+        public string RTAX { get; set; }
+        public List<LabReportsModel> lstBarcodeReport { get; set; }
     }
 }

@@ -1,0 +1,104 @@
+﻿@model IBS.Models.LabReportsModel
+
+<div>
+    @* <h3 class="center">(@ViewBag.Region)</h3> *@
+
+
+    <h3 class="center">BARCODE SUMMARY FOR THE PERIOD: <span class="orangeText"> @ViewBag.From </span> To <span class="orangeText">@ViewBag.To </span></h3>
+
+    <br>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+
+                    <th width="5%" valign="top" align="center"><b><font sizw="1" face="Verdana">S.NO.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font sizw="1" face="Verdana">Barcode No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font sizw="1" face="Verdana">Total Qty</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font sizw="1" face="Verdana">Case No</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font sizw="1" face="Verdana">Created Date</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font sizw="1" face="Verdana">Inspector_Customer</font></b></th>
+                    <th width="35%" valign="top" align="center"><b><font sizw="1" face="Verdana">Description</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sealing Type</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Rate</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Targeted Date</font></b></th>
+                    <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">R.Tax</font></b></th>
+                    
+
+                </tr>
+                @if (Model != null && Model.lstBarcodeReport != null && Model.lstBarcodeReport.Count > 0)
+                {
+                    var serialNumber = 1;
+                    @foreach (var item in Model.lstBarcodeReport)
+                    {
+
+                        <tr>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@serialNumber</font></td>
+                            <td width="10%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.barcode_no
+                                </font>
+                            </td>
+                            <td width="5%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.total_qty
+                                </font>
+                            </td>
+                            <td width="10%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.CASE_NO
+                                </font>
+                            </td>
+                            <td width="10%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.createddate
+                                </font>
+                            </td>
+                            <td width="15%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.INSPECTOR_CUSTOMER
+                                </font>
+                            </td>
+                            <td width="35%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.DESCRIPTION
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.SEALING_TYPE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.RATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.TARGETED_DATE
+                                </font>
+                            </td>
+                            <td width="25%" valign="top" align="center">
+                                <font size="1" face="Verdana">
+                                    @item.RTAX
+                                </font>
+                            </td>
+                            
+                        </tr>
+                        serialNumber++;
+                    }
+                    
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11" class="noRecordGrid">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
