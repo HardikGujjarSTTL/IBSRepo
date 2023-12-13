@@ -1,10 +1,10 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+--Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
 
-Scaffold-DbContext name=DefaultConnection Oracle.EntityFrameworkCore -noOnConfiguring -OutputDir DataAccess -Force
-=============================================================================================================================================
-By Hardik Gujjar
-=============================================================================================================================================
+--Scaffold-DbContext name=DefaultConnection Oracle.EntityFrameworkCore -noOnConfiguring -OutputDir DataAccess -Force
+--=============================================================================================================================================
+--By Hardik Gujjar
+--=============================================================================================================================================
 
 ALTER TABLE T09_IE 
     MODIFY IE_PWD  VARCHAR2(8 BYTE);
@@ -95,7 +95,7 @@ ADD CONSTRAINT T45_CLAIM_MASTER_pk  PRIMARY KEY (ID);
 -------------------------------
 
 ALTER TABLE T46_CLAIM_DETAIL 
-ADD NUMBER(6,0) Int ;
+ADD ID NUMBER(6,0) ;
 CREATE SEQUENCE T46_CLAIM_DETAIL_seq
   START WITH 1
   INCREMENT BY 1
@@ -113,7 +113,7 @@ MODIFY (CLAIM_NO VARCHAR2(11 BYTE) NOT NULL);
 -------------------------------
 
 ALTER TABLE T47_IE_WORK_PLAN 
-ADD NUMBER(6,0) Int ;
+ADD ID NUMBER(6,0) ;
 CREATE SEQUENCE T47_IE_WORK_PLAN_seq
   START WITH 1
   INCREMENT BY 1
@@ -132,10 +132,10 @@ MODIFY (CALL_SNO NUMBER(5,0) NOT NULL);
 -------------------------------
 
     ALTER TABLE T09_IE
-MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+MODIFY (IE_CD NUMBER(6,0));
 
  ALTER TABLE NO_IE_WORK_PLAN
-MODIFY (IE_CD NUMBER(6,0) NOT NULL);
+MODIFY (IE_CD NUMBER(6,0));
 
 
  ALTER TABLE T10_IC_BOOKSET
@@ -275,19 +275,6 @@ ADD ID NUMBER(6,0) ;
 CREATE SEQUENCE T13_PO_MASTER_seq
   START WITH 1
   INCREMENT BY 1
-  CACHE 20;
-UPDATE T13_PO_MASTER
-   SET ID = T13_PO_MASTER_seq.nextval;
-ALTER TABLE T13_PO_MASTER
-    MODIFY ID NUMBER(6,0) DEFAULT T13_PO_MASTER_seq.nextval;
-
--------------------------------
-
-ALTER TABLE T13_PO_MASTER 
-ADD ID NUMBER(6,0) ;
-CREATE SEQUENCE T13_PO_MASTER_seq
-  START WITH 1
-  INCREMENT BY 1
   NOMAXVALUE
   NOCACHE
   NOCYCLE;
@@ -312,7 +299,7 @@ CREATE TABLE IBS_Document(
 	IsDownloadTemplate NUMBER(2,0) ,
 	FolderPath Varchar2(500) ,
 	IsVideo NUMBER(2,0) NOT NULL
-)
+);
 
 ALTER TABLE IBS_Document ADD (
   CONSTRAINT IBS_Document_pk PRIMARY KEY (ID));
@@ -338,7 +325,7 @@ CREATE TABLE IBS_DocumentCategory(
 	categorylabel Varchar2(100) NULL,
 	ShowList NUMBER(2,0) NOT NULL,
 	GroupId NUMBER(6,0) NULL
-)
+);
 
 ALTER TABLE IBS_DocumentCategory ADD (
   CONSTRAINT IBS_DocumentCategory_pk PRIMARY KEY (ID));
@@ -379,7 +366,7 @@ CREATE TABLE IBS_APPDocument(
 	ThumnailFileID Varchar2(100) NULL,
 	ThumnailExtension Varchar2(50) NULL,
 	CouchDBDocID Nvarchar2(50) NULL
-)
+);
 
 ALTER TABLE IBS_APPDocument ADD (
   CONSTRAINT IBS_APPDocument_pk PRIMARY KEY (ID));
@@ -400,7 +387,8 @@ ADD CONSTRAINT fk_GNR_APPDocument_GNR_Document
   REFERENCES IBS_Document(ID);
 
 
-    
+ALTER TABLE T80_Po_Master ADD Isdeleted NUMBER(2,0);
+
 create or replace View VIEW_POMASTERLIST
 AS
 select 
@@ -436,13 +424,13 @@ AS
     where 
         VEND_NAME is not null and 
         V.VEND_CITY_CD=C.CITY_CD 
-        ORDER BY VEND_NAME
+        ORDER BY VEND_NAME;
 
 
 Create VIEW view_GetManufVEND
 AS
     select VEND_CD,VEND_NAME,VEND_ADD1,VEND_CONTACT_PER_1,VEND_CONTACT_TEL_1,VEND_STATUS,to_char(VEND_STATUS_DT_FR,'dd/mm/yyyy')VEND_STATUS_FR,to_char(VEND_STATUS_DT_TO,'dd/mm/yyyy')VEND_STATUS_TO,VEND_EMAIL 
-    from T05_VENDOR
+    from T05_VENDOR;
 
 
 Create View VIEW_POMASTERLIST
@@ -467,10 +455,10 @@ select
         where 
             m.VEND_CD=v.VEND_CD and 
             v.VEND_CITY_CD=t.CITY_CD And 
-            m.PURCHASER_CD=c.CONSIGNEE_CD(+)
+            m.PURCHASER_CD=c.CONSIGNEE_CD(+);
 
 
-create or replace PROCEDURE GENERATE_VEND_CASE_NO(
+CREATE OR REPLACE PROCEDURE "GENERATE_VEND_CASE_NO" (
     IN_REGION_CD IN VARCHAR2,
     IN_PO_DT IN VARCHAR2,
     p_result_cursor    OUT SYS_REFCURSOR
@@ -513,23 +501,24 @@ BEGIN
     SELECT w_Case_No AS CaseNo, IN_REGION_CD AS IN_REGION_CD FROM DUAL;
 
 END;
+/
 
 
-ALTER TABLE T05_VENDOR ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T05_VENDOR ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T05_VENDOR ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T05_VENDOR ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T05_VENDOR ADD ISDELETED NUMBER(2,0)
+ALTER TABLE T05_VENDOR ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T05_VENDOR ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T05_VENDOR ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T05_VENDOR ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T05_VENDOR ADD ISDELETED NUMBER(2,0);
 
-ALTER TABLE T82_PO_DETAIL ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T82_PO_DETAIL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T82_PO_DETAIL ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T82_PO_DETAIL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T82_PO_DETAIL ADD ISDELETED NUMBER(2,0)
+ALTER TABLE T82_PO_DETAIL ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T82_PO_DETAIL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T82_PO_DETAIL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T82_PO_DETAIL ADD ISDELETED NUMBER(2,0);
 
 
 
-CREATE OR REPLACE PROCEDURE GET_BPOS_BY_TYPE_RLY (
+CREATE OR REPLACE PROCEDURE "GET_BPOS_BY_TYPE_RLY" (
     p_BPO_TYPE IN VARCHAR2,
     p_client IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -544,8 +533,9 @@ BEGIN
         AND UPPER(TRIM(BPO_RLY)) = UPPER(TRIM(p_client))
         ORDER BY BPO_NAME;
 END;
+/
 
-create or replace PROCEDURE GET_PO_DETAILS(
+CREATE OR REPLACE PROCEDURE "GET_PO_DETAILS" (
     p_case_no IN CHAR,
     p_Result OUT SYS_REFCURSOR
 ) AS
@@ -582,8 +572,9 @@ BEGIN
     ORDER BY
         p.ITEM_SRNO;
 END;
+/
 
-create or replace PROCEDURE SP_GetConsignee (
+CREATE OR REPLACE PROCEDURE "SP_GETCONSIGNEE" (
     p_RLY_NONRLY IN VARCHAR2,
     p_client IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -639,9 +630,10 @@ BEGIN
             END IF;
     END IF;
 END;
+/
 
 
-==================================== Menu Role ========================
+--==================================== Menu Role ========================
 
 CREATE TABLE USERROLES (
     ID NUMBER(6) PRIMARY KEY,
@@ -705,7 +697,6 @@ CREATE TABLE MenuRoleMapping (
     IsView NUMBER(1)
 );
 
-
 create or replace PROCEDURE SP_GetMenuMaster (
     p_RoleID IN NUMBER,
     p_Result OUT SYS_REFCURSOR
@@ -737,7 +728,6 @@ BEGIN
 END;
 
 
-==============
 
 ALTER TABLE T103_VEND_DOCS 
 ADD ID NUMBER(6,0) ;
@@ -752,7 +742,6 @@ UPDATE T103_VEND_DOCS
 ALTER TABLE T103_VEND_DOCS
     MODIFY ID NUMBER(6,0) DEFAULT T103_VEND_DOCS_seq.nextval;
 
-    =================
 
 create or replace PROCEDURE SP_GetVendorDocumentDetails (
 p_VEND_CD IN VARCHAR2,
@@ -782,8 +771,6 @@ BEGIN
 END;
 
 
-=====================
-
 
 CREATE TABLE EmailConfiguration (
     Id NUMBER(6,0) PRIMARY KEY,
@@ -804,43 +791,51 @@ CREATE SEQUENCE EmailConfigurationSeq
   NOCACHE
   NOCYCLE;
 
- ==============================
 
-    create or replace PROCEDURE GET_VENDOR_INFO
-(
-    IN_CASE_NO IN VARCHAR2, 
-    p_Result OUT SYS_REFCURSOR
+    CREATE OR REPLACE PROCEDURE "GET_VENDOR_INFO" (
+    P_REGION_CODE VARCHAR2,
+    P_ForGPer BOOLEAN,
+    P_rdbICDT BOOLEAN,
+    P_rdbPart BOOLEAN, 
+    P_rdbMatValue BOOLEAN,
+    p_From_Date VARCHAR2,
+    p_To_Date VARCHAR2,
+    P_lstVendor VARCHAR2,
+     p_Year VARCHAR2,
+    p_Month VARCHAR2,
+    P_Vendor_INFO OUT SYS_REFCURSOR
 )
-AS
-    p_VEND_CD NUMBER;
-    p_VEND_NAME VARCHAR2(255);
-    p_VEND_ADDRESS VARCHAR2(255);
-    p_VEND_EMAIL VARCHAR2(255);
+IS
+ str VARCHAR2(4000);
 BEGIN
-    SELECT
-        T13.VEND_CD,
-        T05.VEND_NAME,
-        NVL2(T05.VEND_ADD2, T05.VEND_ADD1 || '/' || T05.VEND_ADD2, T05.VEND_ADD1) || '/' || T03.CITY AS VEND_ADDRESS,
-        T05.VEND_EMAIL
-    INTO
-        p_VEND_CD,
-        p_VEND_NAME,
-        p_VEND_ADDRESS,
-        p_VEND_EMAIL
-    FROM
-        T13_PO_MASTER T13
-    JOIN
-        T05_VENDOR T05 ON T13.VEND_CD = T05.VEND_CD
-    JOIN
-        T03_CITY T03 ON T05.VEND_CITY_CD = T03.CITY_CD
-    WHERE
-        T13.CASE_NO = IN_CASE_NO;
+    str := 'SELECT (TRIM(v22.VEND_NAME) || '' , '' || NVL2(TRIM(v22.VEND_ADD1), TRIM(v22.VEND_ADD1) || '' , '' || v22.VENDOR_CITY, v22.VENDOR_CITY)) AS VENDOR,' ||
+                'COUNT(*) AS NO_OF_INSP,ROUND(SUM(NVL(v22.MATERIAL_VALUE, 0)), 0) AS MATERIAL_VALUE,SUM(NVL(v22.INSP_FEE, 0)) AS INSP_FEE ' ||
+                'FROM V22_BILL v22 WHERE V22.REGION_CODE= ''' || P_REGION_CODE || ''' ';
 
-    OPEN p_Result FOR
-        SELECT VEND_EMAIL FROM T05_VENDOR WHERE VEND_CD = p_VEND_CD;
+
+           IF P_ForGPer = true THEN
+                IF P_rdbICDT = true THEN
+                   -- str := str || ' AND v22.IC_DT BETWEEN TO_DATE(''' || p_From_Date || ''', ''DD/MM/YYYY'') AND TO_DATE(''' || p_To_Date || ''', ''DD/MM/YYYY'')';
+                str := str || ' AND v22.IC_DT BETWEEN (''' || p_From_Date || ''') AND (''' || p_To_Date || ''')';
+                ELSE
+                    --str := str || ' AND v22.BILL_DT BETWEEN TO_DATE(''' || p_From_Date || ''', ''DD/MM/YYYY'') AND TO_DATE(''' || p_To_Date || ''', ''DD/MM/YYYY'')';
+                str := str || ' AND v22.BILL_DT BETWEEN (''' || p_From_Date || ''') AND (''' || p_To_Date || ''')';
+                END IF;
+            ELSE
+                IF P_rdbICDT = true THEN
+                   str := str || ' AND TO_CHAR(v22.IC_DT, ''YYYYMM'') = ''' || p_Year || p_Month || '''';
+                ELSE
+                    str := str || ' AND TO_CHAR(v22.BILL_DT, ''YYYYMM'') = ''' || p_Year || p_Month || '''';
+                END IF;
+            END IF;
+            IF P_rdbPart = true THEN
+                    str := str || ' and  V22.VEND_CD = ''' || P_lstVendor || '''';              
+            END IF;
+           str := str || ' GROUP BY (TRIM(v22.VEND_NAME) || '' , '' || NVL2(TRIM(v22.VEND_ADD1), TRIM(v22.VEND_ADD1) || '' , '' || v22.VENDOR_CITY, v22.VENDOR_CITY))';
+             OPEN P_Vendor_INFO FOR str; 
 END;
+/
 
-==============================
 create or replace PROCEDURE GENERATE_REAL_CASE_NO
 (
     IN_REGION_CD IN CHAR,
@@ -965,28 +960,26 @@ END;
 
 
 
-=======================
-ALTER TABLE T78_CENTRAL_QOI ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T78_CENTRAL_QOI ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T78_CENTRAL_QOI ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T78_CENTRAL_QOI ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T78_CENTRAL_QOI ADD ISDELETED NUMBER(2,0)
+ALTER TABLE T78_CENTRAL_QOI ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T78_CENTRAL_QOI ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T78_CENTRAL_QOI ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T78_CENTRAL_QOI ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T78_CENTRAL_QOI ADD ISDELETED NUMBER(2,0);
 
 
-ALTER TABLE T79_CENTRAL_QOINSP ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T79_CENTRAL_QOINSP ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T79_CENTRAL_QOINSP ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T79_CENTRAL_QOINSP ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T79_CENTRAL_QOINSP ADD ISDELETED NUMBER(2,0)
+ALTER TABLE T79_CENTRAL_QOINSP ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T79_CENTRAL_QOINSP ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T79_CENTRAL_QOINSP ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T79_CENTRAL_QOINSP ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T79_CENTRAL_QOINSP ADD ISDELETED NUMBER(2,0);
 
-===========================
 
-ALTER TABLE T81_CR_REJ ADD ID  NUMBER(6,0) 
-ALTER TABLE T81_CR_REJ ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T81_CR_REJ ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T81_CR_REJ ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T81_CR_REJ ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T81_CR_REJ ADD ISDELETED NUMBER(2,0)
+ALTER TABLE T81_CR_REJ ADD ID  NUMBER(6,0); 
+ALTER TABLE T81_CR_REJ ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T81_CR_REJ ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T81_CR_REJ ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T81_CR_REJ ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T81_CR_REJ ADD ISDELETED NUMBER(2,0);
 
 
 
@@ -1006,7 +999,6 @@ ADD CONSTRAINT T81_CR_REJ_pk PRIMARY KEY (ID);
 ALTER TABLE T81_CR_REJ
     MODIFY ID NUMBER(6,0) DEFAULT T81_CR_REJSeq.nextval;
 
-    ===============================
 
 CREATE SEQUENCE T57_ONGOING_CONTRACTSSeq
     START WITH 1
@@ -1018,23 +1010,20 @@ CREATE SEQUENCE T57_ONGOING_CONTRACTSSeq
 ALTER TABLE T57_ONGOING_CONTRACTS
     MODIFY CONTRACT_ID NUMBER(8,0) DEFAULT T57_ONGOING_CONTRACTSSeq.nextval;
 
-    ===============================
 
-    ALTER TABLE T63_EXP ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T63_EXP ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T63_EXP ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T63_EXP ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T63_EXP ADD ISDELETED NUMBER(2,0)
+    ALTER TABLE T63_EXP ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T63_EXP ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T63_EXP ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T63_EXP ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T63_EXP ADD ISDELETED NUMBER(2,0);
 
-===============
-  ALTER TABLE T66TechRef ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T66TechRef ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T66TechRef ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T66TechRef ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T66TechRef ADD ISDELETED NUMBER(2,0)
+  ALTER TABLE T66TechRef ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T66TechRef ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T66TechRef ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T66TechRef ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T66TechRef ADD ISDELETED NUMBER(2,0);
 
-===============
-ALTER TABLE T66_TECH_REF ADD ID  NUMBER(6,0)
+ALTER TABLE T66_TECH_REF ADD ID  NUMBER(6,0);
 
 CREATE SEQUENCE T66_TECH_REFSeq
     START WITH 1
@@ -1052,9 +1041,8 @@ ALTER TABLE T66_TECH_REF
       ALTER TABLE T66_TECH_REF
 ADD CONSTRAINT T66_TECH_REF_pk PRIMARY KEY (ID);
 
- =====================
 
- create or replace PROCEDURE GENERATE_TR_ID_New
+ CREATE OR REPLACE PROCEDURE "GENERATE_TR_ID_NEW" 
 (
     IN_TECH_DT IN varchar2, 
     IN_REGION_CD IN varchar2, 
@@ -1066,6 +1054,7 @@ ADD CONSTRAINT T66_TECH_REF_pk PRIMARY KEY (ID);
 
 BEGIN
     ---
+   
     If to_number(substr(IN_TECH_DT, 3, 2)) < 4 then
         w_YY := lpad(to_number(substr(IN_TECH_DT, 7, 2)) - 1, 2, '0');
     Else
@@ -1082,8 +1071,8 @@ BEGIN
         where substr(TECH_ID, 1, 3) = w_ctr;
 
 END;
+/
 
-====================
 create or replace PROCEDURE SP_GetMenuMapping
 (
     p_cursor OUT SYS_REFCURSOR
@@ -1105,7 +1094,6 @@ BEGIN
             mm.ROLEID,r.ROLENAME;
 END;
 
-================
 
 //create or replace PROCEDURE SP_Get_Menu_Hierarchy_By_Using_RoleID
 //(
@@ -1221,10 +1209,10 @@ Selected,IsAdd,IsEdit,PIsDelete,IsView) AS (
         menu_master m
     INNER JOIN
         RecursiveMenu rm ON m.parentid = rm.id
-)
+);
 
 
-SELECT
+/*SELECT
     id,
     parentid,
     controllername,
@@ -1253,10 +1241,10 @@ ORDER SIBLINGS BY
 
 
 END;
+*/
 
-========================
 
-SELECT
+/*SELECT
     id,
     parentid,
     controllername,
@@ -1285,8 +1273,8 @@ ORDER SIBLINGS BY
 
 
 END;
+*/
 
-====================
 create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
     p_cs_no VARCHAR2,
     p_po_no VARCHAR2,
@@ -1333,7 +1321,6 @@ BEGIN
 END;
 
 
-===============================
 
 create or replace PROCEDURE SP_GET_RAILWAY_CODES (
     p_bpo_type VARCHAR2,
@@ -1360,8 +1347,7 @@ BEGIN
 END;
 
 
-==============
-CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+CREATE OR REPLACE PROCEDURE "GET_VENDOR_DETAILSFORDROPDOWN" (
     p_vend_cd IN VARCHAR2,
     p_result_cursor OUT SYS_REFCURSOR
 )
@@ -1378,9 +1364,8 @@ BEGIN
 END;
 /
 
-=======================
 
-create or replace PROCEDURE GENERATE_CASE_NO (
+CREATE OR REPLACE PROCEDURE "GENERATE_CASE_NO" (
     IN_REGION_CD IN VARCHAR2,
     IN_PO_DT IN VARCHAR2,
     p_result_cursor OUT SYS_REFCURSOR
@@ -1403,12 +1388,10 @@ BEGIN
         SELECT w_Case_No AS CaseNo, 0 AS ERR_CD FROM DUAL;
 
 END;
+/
 
 
-===================
-
-
-CREATE OR REPLACE PROCEDURE GET_PO_BPO_DETAILS (
+CREATE OR REPLACE PROCEDURE "GET_PO_BPO_DETAILS" (
     p_case_no IN VARCHAR2,
     p_result_cursor OUT SYS_REFCURSOR
 )
@@ -1429,7 +1412,6 @@ BEGIN
 END;
 /
 
-=====================
 create or replace PROCEDURE SP_GET_PO_DETAILSForAdministrator(
     p_case_no IN VARCHAR2,
     p_result_cursor OUT SYS_REFCURSOR
@@ -1452,8 +1434,6 @@ BEGIN
 END;
 
 
-===================
-
 ALTER TABLE Vendor_Feedback 
 ADD ID NUMBER(6,0) ;
 
@@ -1473,10 +1453,19 @@ ALTER TABLE Vendor_Feedback
 ALTER TABLE Vendor_Feedback
 ADD CONSTRAINT Vendor_Feedback_pk  PRIMARY KEY (ID);
 
-======================
 
-ALTER TABLE CLIENT_FEEDBACK 
-ADD ID NUMBER(6,0) ;
+ALTER TABLE CLIENT_FEEDBACK ADD ID NUMBER(6,0) ;
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_1 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_2 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_3 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_4 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_5 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_6 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_7 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_8 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_9 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_10 NUMBER(6,0)
+ALTER TABLE CLIENT_FEEDBACK MODIFY FIELD_11 NUMBER(6,0)
 
 CREATE SEQUENCE CLIENT_FEEDBACK_seq
   START WITH 1
@@ -1494,7 +1483,6 @@ ALTER TABLE CLIENT_FEEDBACK
 ALTER TABLE CLIENT_FEEDBACK
 ADD CONSTRAINT CLIENT_FEEDBACK_pk  PRIMARY KEY (ID);
 
-======================
 create or replace PROCEDURE SP_Get_ICCancelData (
     p_BKNo IN VARCHAR2,
     p_SetNo IN VARCHAR2,
@@ -1533,16 +1521,14 @@ BEGIN
     ORDER BY IC.BK_NO, IC.SET_NO;
 END;
 
-===============
-ALTER TABLE T36_BILL ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T36_BILL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T36_BILL ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T36_BILL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0)  
+ALTER TABLE T36_BILL ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T36_BILL ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T36_BILL ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T36_BILL ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T36_BILL ADD ISDELETED NUMBER(2,0);
 
-=============
 
-CREATE OR REPLACE PROCEDURE SP_GetBillData (
+CREATE OR REPLACE PROCEDURE "SP_GETBILLDATA" (
     p_Region IN VARCHAR2,
     p_BillNo IN VARCHAR2,
     p_BillFromDate IN VARCHAR2,
@@ -1567,10 +1553,7 @@ BEGIN
     
     OPEN p_Result FOR v_Query ;
 END SP_GetBillData;
-
-
-
-=======================
+/
 
 
 CREATE TABLE T34_CENTRAL_ITEM_MASTER (
@@ -1599,7 +1582,6 @@ CREATE SEQUENCE T34_CENTRAL_ITEM_MASTER_seq
 ALTER TABLE T34_CENTRAL_ITEM_MASTER
     MODIFY ID NUMBER(6,0) DEFAULT T34_CENTRAL_ITEM_MASTER_seq.nextval;
     
-==============
 
 
 CREATE TABLE T35_Central_Item_Detail (
@@ -1633,7 +1615,7 @@ CREATE SEQUENCE T35_Central_Item_Detail_seq
 ALTER TABLE T35_Central_Item_Detail
     MODIFY ID NUMBER(6,0) DEFAULT T35_Central_Item_Detail_seq.nextval;
     
-==================
+
 CREATE TABLE RegionalHRDataOfIE (
     ID NUMBER(6, 0) NOT NULL,
     IE_CD NUMBER(6, 0) NOT NULL,
@@ -1671,7 +1653,6 @@ ALTER TABLE RegionalHRDataOfIE
     MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
 
 
-==================================
 CREATE TABLE Log_RegionalHRDataOfIE (
     LID  NUMBER(6,0) NOT NULL,
     ID NUMBER(6, 0) NOT NULL,
@@ -1711,8 +1692,6 @@ CREATE SEQUENCE Log_RegionalHRDataOfIE_seq
    
 ALTER TABLE Log_RegionalHRDataOfIE
     MODIFY LID NUMBER(6,0) DEFAULT Log_RegionalHRDataOfIE_seq.nextval;
-
-  ======================
 
 
 CREATE OR REPLACE TRIGGER Update_RegionalHRDataOfIE_Trigger
@@ -1764,16 +1743,13 @@ BEGIN
         :NEW.updatedby
     );
 END;
-/
-
-========================
 
 
-create or replace PROCEDURE SP_DetailedReport_POofSpecificValues(
+CREATE OR REPLACE PROCEDURE "SP_DETAILEDREPORT_POOFSPECIFICVALUES" (
     p_SelCriteria IN VARCHAR2,   
     p_Region IN VARCHAR2,
-    p_frmDt IN VARCHAR2,
-    p_toDt IN VARCHAR2,
+    p_frmDt IN DATE,
+    p_toDt IN DATE,
     p_wAgency IN VARCHAR2,
     p_wClient IN VARCHAR2,
     p_wFrmAmt IN NUMBER,
@@ -1817,8 +1793,10 @@ BEGIN
                     ELSE T13.RECV_DT
                 END
                  BETWEEN p_frmDt AND p_toDt)
+            
             AND T13.RLY_NONRLY = p_wAgency
-            AND (RLY_CD = p_wClient or RLY_CD IS NULL)
+            --AND (RLY_CD = p_wClient or RLY_CD IS NULL)
+            AND (RLY_CD = p_wClient OR RLY_CD IS NULL OR p_wClient IS NULL)
         GROUP BY
             T13.CASE_NO,
             T13.PO_NO,
@@ -1841,8 +1819,7 @@ BEGIN
         P.CONSIGNEE,
         TRIM(T15.ITEM_DESC);
 END SP_DetailedReport_POofSpecificValues;
-
-=========================
+/
 
 create or replace PROCEDURE SP_SummarizedReport_POofSpecificValues(
     p_SelCriteria IN VARCHAR2,  
@@ -1891,7 +1868,6 @@ BEGIN
         P.CLIENT;
 END SP_SummarizedReport_POofSpecificValues;
 
-=========================================
 create or replace PROCEDURE SP_Get_ItemWiseInspections (    
     p_RegionCode IN VARCHAR2,
     p_ItemDesc1 IN VARCHAR2,
@@ -1975,7 +1951,6 @@ BEGIN
         T20.IC_DT,
         T22.BILL_NO;
 END SP_Get_ItemWiseInspections;
-============================
 
 CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
     p_RegionCode IN VARCHAR2,
@@ -2030,26 +2005,22 @@ BEGIN
 END SP_Get_ClientWiseInspections;
 
 
-==========================
 
-ALTER TABLE T16_Ic_Cancel ADD CREATEDBY  NUMBER(6,0)
-ALTER TABLE T16_Ic_Cancel ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T16_Ic_Cancel ADD UPDATEDBY  NUMBER(6,0)
-ALTER TABLE T16_Ic_Cancel ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE
-ALTER TABLE T16_Ic_Cancel ADD ISDELETED NUMBER(2,0)  
-ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0)
+ALTER TABLE T16_Ic_Cancel ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T16_Ic_Cancel ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDBY  NUMBER(6,0);
+ALTER TABLE T16_Ic_Cancel ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+ALTER TABLE T16_Ic_Cancel ADD ISDELETED NUMBER(2,0);
+ALTER TABLE T16_Ic_Cancel ADD Status NUMBER(2,0);
 
 
 --update T16_Ic_Cancel set status=1
 
-=====================
-ALTER TABLE T13_Po_Master ADD IsPriceVariation NUMBER(2,0)
-ALTER TABLE T13_Po_Master ADD IsStageInspection NUMBER(2,0)
-======================
+ALTER TABLE T13_Po_Master ADD IsPriceVariation NUMBER(2,0);
+ALTER TABLE T13_Po_Master ADD IsStageInspection NUMBER(2,0);
 
-ALTER TABLE T80_Po_Master ADD IsPriceVariation NUMBER(2,0)
-ALTER TABLE T80_Po_Master ADD IsStageInspection NUMBER(2,0)
-===============
+ALTER TABLE T80_Po_Master ADD IsPriceVariation NUMBER(2,0);
+ALTER TABLE T80_Po_Master ADD IsStageInspection NUMBER(2,0);
 
 
 create or replace PROCEDURE sp_PCDOReport_Highlights (
@@ -2070,7 +2041,6 @@ BEGIN
 END sp_PCDOReport_Highlights;
 
 
-=========================
 
 create or replace PROCEDURE sp_PCDOReport_CO_Highlights (
     p_CumYrMth IN VARCHAR2,
@@ -2254,8 +2224,6 @@ END sp_PCDOReport_CO_Highlights;
 
 
 
-==============
-
 
 create or replace PROCEDURE sp_PCDOReport_FinancialBilling (
     dmonth IN VARCHAR2,
@@ -2426,8 +2394,6 @@ BEGIN
 END sp_PCDOReport_FinancialBilling;
 
 
-================
-
 create or replace PROCEDURE sp_PCDOReport_FinancialExpenditureRealization (
     wYrMth_Past IN VARCHAR2,
     CumYrPast IN VARCHAR2,
@@ -2575,27 +2541,24 @@ OPEN p_Result1 FOR
 				Group by region_code order by Serial_Code;
 
 END sp_PCDOReport_FinancialExpenditureRealization;
-=================================
 
 
-ALTER TABLE T16_Ic_Cancel 
+ALTER TABLE T16_IC_CANCEL 
 ADD ID NUMBER(6,0) ;
 
-CREATE SEQUENCE T16_Ic_Cancel_seq
+CREATE SEQUENCE T16_IC_CANCEL_seq
   START WITH 1
   INCREMENT BY 1
   NOMAXVALUE
   NOCACHE
   NOCYCLE;
   
-UPDATE T16_Ic_Cancel
-   SET ID = T16_Ic_Cancel_seq.nextval;
+UPDATE T16_IC_CANCEL
+   SET ID = T16_IC_CANCEL_seq.nextval;
    
-ALTER TABLE T16_Ic_Cancel
-    MODIFY ID NUMBER(6,0) DEFAULT T16_Ic_Cancel_seq.nextval;
+ALTER TABLE T16_IC_CANCEL
+    MODIFY ID NUMBER(6,0) DEFAULT T16_IC_CANCEL_seq.nextval;
 
-
-===================
 
 ALTER TABLE T15_PO_DETAIL 
 ADD DRAWING_NO VARCHAR2(30 BYTE);
@@ -2603,14 +2566,12 @@ ADD DRAWING_NO VARCHAR2(30 BYTE);
 ALTER TABLE T15_PO_DETAIL 
 ADD SPECIFICATION_NO VARCHAR2(30 BYTE);
 
-======================
 ALTER TABLE T82_Po_Detail 
 ADD DRAWING_NO VARCHAR2(30 BYTE);
 
 ALTER TABLE T82_Po_Detail 
 ADD SPECIFICATION_NO VARCHAR2(30 BYTE);
 
-=====================
 create or replace PROCEDURE sp_PCDOReport_FinancialOutstanding (
     wYrMth_Past IN VARCHAR2,
     CumYrPast IN VARCHAR2,
@@ -2697,7 +2658,6 @@ BEGIN
 
 END sp_PCDOReport_FinancialOutstanding;
 
-===============================
 create or replace PROCEDURE sp_PCDOReport_EOIPricedOfferSent (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -2733,7 +2693,6 @@ BEGIN
         CONTRACT_NO;
 END sp_PCDOReport_EOIPricedOfferSent;
 
-===============================
 CREATE OR REPLACE PROCEDURE sp_PCDOReport_BDEfforts (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -2754,9 +2713,6 @@ BEGIN
     WHERE TO_CHAR(visit_dt, 'yyyymm') = wYrMth AND TYPE_CB = 'B';
 END sp_PCDOReport_BDEfforts;
 
-
-
-==================
 
 create or replace PROCEDURE sp_PCDOReport_PreviousOfferSent (
     wYrMth IN VARCHAR2,
@@ -2794,7 +2750,6 @@ BEGIN
 
 END sp_PCDOReport_PreviousOfferSent;
 
-===============
 
 create or replace PROCEDURE sp_PCDOReport_ProgressofChecksheets (
     wYrMth IN VARCHAR2,
@@ -2820,7 +2775,6 @@ BEGIN
 
 END sp_PCDOReport_ProgressofChecksheets;
 
-=================================
 create or replace PROCEDURE sp_PCDOReport_Complaints (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR,
@@ -3044,8 +2998,6 @@ BEGIN
                 order by rej_dt;
                 
 END sp_PCDOReport_Complaints;
-
-==============================
 
 create or replace PROCEDURE sp_PCDOReport_Complaints (
     wYrMth IN VARCHAR2,
@@ -3273,7 +3225,6 @@ BEGIN
                 
 END sp_PCDOReport_Complaints;
 
-=====================
 create or replace PROCEDURE sp_PCDOReport_QualityofInspection (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -3323,8 +3274,6 @@ BEGIN
 
     END sp_PCDOReport_QualityofInspection;
     
-
-===========================
 
 create or replace PROCEDURE sp_PCDOReport_QualityofInspectionCentral (
     wYrMth IN VARCHAR2,
@@ -3436,7 +3385,7 @@ BEGIN
 
 END sp_PCDOReport_QualityofInspectionCentral;
 
-=======================
+
 create or replace PROCEDURE sp_PCDOReport_ImprovementofQualityofService (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR,
@@ -3519,8 +3468,6 @@ BEGIN
 
 END sp_PCDOReport_ImprovementofQualityofService;
 
-=========================
-
 
 create or replace PROCEDURE sp_PCDOReport_OutstandingRailways (
     wYrMth IN VARCHAR2,
@@ -3548,7 +3495,7 @@ BEGIN
 
 END sp_PCDOReport_OutstandingRailways;
 
-=============
+
 create or replace PROCEDURE sp_PCDOReport_Top5OutstandingRailwayNonRailways (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR,
@@ -3591,7 +3538,6 @@ BEGIN
 
 END sp_PCDOReport_Top5OutstandingRailwayNonRailways;
 
-====================
 create or replace PROCEDURE sp_PCDOReport_ClientContact (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -3613,7 +3559,6 @@ BEGIN
 
 END sp_PCDOReport_ClientContact;
 
-==================
 
 create or replace PROCEDURE sp_PCDOReport_DFOVisit (
     wYrMth IN VARCHAR2,
@@ -3636,7 +3581,7 @@ BEGIN
 
 END sp_PCDOReport_DFOVisit;
 
-============================
+
 create or replace PROCEDURE sp_PCDOReport_Training (
     wYrMth IN VARCHAR2,
     CumYrMth IN VARCHAR2,
@@ -3681,7 +3626,7 @@ BEGIN
 
 END sp_PCDOReport_Training;
 
-=========================
+
 create or replace PROCEDURE sp_PCDOReport_TechnicalReferences (
     wYrMth IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
@@ -3704,7 +3649,7 @@ BEGIN
 
 END sp_PCDOReport_TechnicalReferences;
 
-===============
+
 create or replace PROCEDURE sp_PCDOReport_Summary (
     wYrMth IN VARCHAR2,
     CumYrMth IN VARCHAR2,
@@ -3821,15 +3766,11 @@ BEGIN
         ORDER BY Serial_Code;
 END sp_PCDOReport_Summary;
 
-======================
-
-
-
 
  ALTER TABLE T02_USERS 
 ADD MOBILE VARCHAR2(10 BYTE) ;
 
-===========
+
 CREATE TABLE IBS_USERS_OTP(
     ID NUMBER(6,0) NOT NULL,
 	USER_ID CHAR(20 BYTE),
@@ -3851,14 +3792,12 @@ ALTER TABLE IBS_USERS_OTP ADD (
 ALTER TABLE IBS_USERS_OTP
     MODIFY ID NUMBER(6,0) DEFAULT IBS_USERS_OTP_seq.nextval;
 
-============
 
-ALTER TABLE T13_Po_Master ADD ContractID NUMBER(6,0)
-ALTER TABLE T80_Po_Master ADD ContractID NUMBER(6,0)
+ALTER TABLE T13_Po_Master ADD ContractID NUMBER(6,0);
+ALTER TABLE T80_Po_Master ADD ContractID NUMBER(6,0);
 
-==================
 
-create or replace PROCEDURE Get_SP_DEO_CRIS_PurchesOrderList(
+CREATE OR REPLACE PROCEDURE "GET_SP_DEO_CRIS_PURCHESORDERLIST" (
     p_Region IN NVARCHAR2,
     p_Result OUT SYS_REFCURSOR
 )
@@ -3891,9 +3830,9 @@ BEGIN
     ORDER BY 
         REGION_CODE DESC, H.PO_DT DESC;
 END;
+/
 
 
-=============
 
 create or replace PROCEDURE SP_Get_DEO_CRIS_PurchesOrderData (
     p_POKey IN VARCHAR2,
@@ -3934,9 +3873,475 @@ BEGIN
     WHERE IMMS_POKEY = p_POKey AND IMMS_RLY_CD = p_RlyCode;
 END;
 
-==========
 
-create or replace PROCEDURE GENERATE_REAL_CASE_NO_CRIS_new (
+CREATE OR REPLACE PROCEDURE "GENERATE_REAL_CASE_NO" 
+(
+    IN_REGION_CD IN CHAR,
+    IN_TEMP_CASE_NO IN CHAR,
+    IN_TEMP_USER_ID IN CHAR,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+    CURSOR po_detail IS
+    SELECT ITEM_SRNO, CONSIGNEE_CD, BPO_CD
+    FROM T82_PO_DETAIL
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    r1 po_detail%ROWTYPE;
+    w_ctr CHAR(5) := NULL;
+    w_sno CHAR(4) := NULL;
+    w_Case_No CHAR(9) := NULL;
+    w_Purchaser NUMBER(8) := NULL;
+    w_Rly_Cd VARCHAR2(50) := NULL;
+    my_exception EXCEPTION;
+    OUT_ERR_CD NUMBER := 0;
+    OUT_CASE_NO CHAR(9) := NULL;
+    p_Result_Cursor SYS_REFCURSOR;
+BEGIN
+    ---
+    DBMS_OUTPUT.PUT_LINE('1');
+    SELECT PURCHASER_CD, TRIM(RLY_CD)
+    INTO w_Purchaser, w_Rly_Cd
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+    
+    IF (w_Purchaser = 0) OR (TRIM(w_Rly_Cd) = '0') OR (w_Purchaser IS NULL) OR (TRIM(w_Rly_Cd) IS NULL) THEN
+    DBMS_OUTPUT.PUT_LINE('2');
+        OUT_ERR_CD := 2;
+            OPEN p_Result_Cursor FOR
+            SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+            FROM DUAL;
+            p_Result := p_Result_Cursor;
+            
+        RAISE my_exception;
+        
+    END IF;
+    ---
+    FOR r1 IN po_detail LOOP
+        IF r1.CONSIGNEE_CD = 0 OR TRIM(r1.BPO_CD) = '0' THEN
+            OUT_ERR_CD := 3;
+            
+                OPEN p_Result_Cursor FOR
+                SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+                FROM DUAL;
+                p_Result := p_Result_Cursor;
+                
+            RAISE my_exception;
+            EXIT;
+        END IF;
+    END LOOP;
+    ---
+    SELECT REGION_CODE || TO_CHAR(PO_DT, 'YYMM')
+    INTO w_ctr
+    FROM T80_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    SELECT LPAD(NVL(MAX(TO_NUMBER(NVL(SUBSTR(CASE_NO, 6, 4), 0))), 0) + 1, 4, '0')
+    INTO w_sno
+    FROM T13_PO_MASTER
+    WHERE REGION_CODE = IN_REGION_CD AND SUBSTR(CASE_NO, 1, 5) = w_ctr;
+    ---
+    OUT_ERR_CD := 4;
+    OUT_CASE_NO := w_ctr || w_sno;
+
+    -- Explicitly list the columns in the INSERT INTO statements
+   Insert into T13_PO_MASTER(case_no,purchaser_cd,stock_nonstock,rly_nonrly,po_or_letter,po_no,l5no_po,po_dt,recv_dt,vend_cd,rly_cd,region_code,user_id,datetime,
+   remarks,inspecting_agency,poi_cd,po_source,pending_charges,ISPRICEVARIATION,ISSTAGEINSPECTION,CONTRACTID) 
+Select OUT_CASE_NO,PURCHASER_CD,STOCK_NONSTOCK,RLY_NONRLY,PO_OR_LETTER,PO_NO,
+substr(PO_NO,LENGTH(PO_NO)-4,5),
+PO_DT,RECV_DT,VEND_CD,RLY_CD,REGION_CODE,IN_TEMP_USER_ID,DATETIME,REMARKS,'R',POI_CD,'V',0,ISPRICEVARIATION,ISSTAGEINSPECTION,CONTRACTID
+From T80_PO_MASTER Where  REGION_CODE =IN_REGION_CD and CASE_NO=IN_TEMP_CASE_NO;
+
+
+    ---
+    OUT_ERR_CD := 5;
+    INSERT INTO T14_PO_BPO
+    (CASE_NO, CONSIGNEE_CD, BPO_CD)
+    SELECT UNIQUE OUT_CASE_NO, CONSIGNEE_CD, BPO_CD
+    FROM T82_PO_DETAIL
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 6;
+
+    Insert into T15_PO_DETAIL (case_no,item_srno,item_desc,consignee_cd,qty,rate,uom_cd,basic_value,sales_tax_per,
+    sales_tax,excise_type,excise_per,excise,discount_type,discount_per,discount,other_charges,value,
+    delv_dt,ext_delv_dt,user_id,datetime,ot_charge_type,ot_charge_per,item_cd,
+    pl_no)
+    Select OUT_CASE_NO,ITEM_SRNO,ITEM_DESC,CONSIGNEE_CD,QTY,RATE,UOM_CD,BASIC_VALUE,SALES_TAX_PER,SALES_TAX,EXCISE_TYPE,EXCISE_PER,EXCISE,DISCOUNT_TYPE,DISCOUNT_PER,DISCOUNT,OTHER_CHARGES,
+    VALUE,DELV_DT,EXT_DELV_DT,IN_TEMP_USER_ID,DATETIME,OT_CHARGE_TYPE,OT_CHARGE_PER, ITEM_CD,PL_NO 
+    From T82_PO_DETAIL Where CASE_NO=IN_TEMP_CASE_NO;
+
+    ---
+    OUT_ERR_CD := 7;
+    UPDATE T80_PO_MASTER
+    SET REAL_CASE_NO = OUT_CASE_NO
+    WHERE CASE_NO = IN_TEMP_CASE_NO;
+    ---
+    OUT_ERR_CD := 0;
+    COMMIT;
+
+    -- Open the cursor for the result
+    OPEN p_Result_Cursor FOR
+    SELECT OUT_ERR_CD AS ERR_CD, OUT_CASE_NO AS CASE_NO
+    FROM DUAL;
+    p_Result := p_Result_Cursor;
+
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        ROLLBACK;
+    WHEN NO_DATA_FOUND THEN
+        ROLLBACK;
+    WHEN my_exception THEN
+        ROLLBACK;
+    WHEN OTHERS THEN
+        ROLLBACK;
+END;
+/
+
+
+
+create or replace PROCEDURE SP_Get_DEOCRISPurchesOrderDetails (
+    p_IMMS_POKEY VARCHAR2,
+    p_IMMS_RLY_CD VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+  OPEN p_Result FOR
+    SELECT
+      p.IMMS_POKEY,
+      p.IMMS_RLY_CD,
+      p.ITEM_SRNO,
+      p.ITEM_DESC,
+      NVL2(
+        p.CONSIGNEE_CD,
+        (C.CONSIGNEE_CD
+          || '-'
+          || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
+          || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
+          || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))),
+        p.IMMS_CONSIGNEE_NAME || '/' || p.IMMS_CONSIGNEE_DETAIL
+      ) CONSIGNEE_NAME,
+      p.QTY,
+      p.RATE,
+      p.VALUE
+    FROM IMMS_RITES_PO_DETAIL p
+    LEFT JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
+    LEFT JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
+    WHERE p.IMMS_POKEY = p_IMMS_POKEY
+      AND p.IMMS_RLY_CD = p_IMMS_RLY_CD
+    ORDER BY p.ITEM_SRNO;
+END SP_Get_DEOCRISPurchesOrderDetails;
+
+
+
+CREATE TABLE Token(
+    TokenId NUMBER(6,0) NOT NULL,
+	User_Id CHAR(12 BYTE),
+    AuthToken VARCHAR2(200 BYTE),
+	IssueOn TIMESTAMP(6) WITH TIME ZONE,
+	ExpiresOn TIMESTAMP(6) WITH TIME ZONE
+)
+ALTER TABLE Token ADD (
+  CONSTRAINT Token_pk PRIMARY KEY (TokenId));
+  
+ CREATE SEQUENCE Token_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+   
+ALTER TABLE Token
+    MODIFY TokenId NUMBER(6,0) DEFAULT Token_seq.nextval;
+
+
+
+ ALTER TABLE t02_users 
+    MODIFY user_id CHAR(20 BYTE);
+
+ ALTER TABLE USERROLES 
+    MODIFY user_id CHAR(20 BYTE);
+
+ ALTER TABLE T02_USERS_HISTORY 
+    MODIFY user_id CHAR(20 BYTE);
+
+
+ ALTER TABLE USERROLES_HISTORY 
+    MODIFY user_id CHAR(20 BYTE);
+
+
+
+CREATE OR REPLACE PROCEDURE "GETCASEDETAILFORIE_API" (
+    p_IeCd IN NUMBER,
+    p_Case_No IN VARCHAR2,
+    p_CALL_RECV_DT IN DATE,
+    p_CALL_SNO IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        x.CASE_NO AS Case_No, 
+        x.CALL_RECV_DT AS Call_Recv_DT, 
+        x.CALL_SNO AS Call_SNo, 
+        SUM(t18.QTY_TO_INSP) AS Qty, 
+        v.VEND_NAME AS Vendor, 
+        v.vend_add1 AS Vendor_Address, 
+        TO_CHAR(v.VEND_CD) AS Vendor_Code, 
+        ct.City AS Vendor_City, 
+        y.PO_DT AS PO_DT, 
+        y.PO_NO AS PO_No, 
+        CASE
+            WHEN y.po_source = 'V' THEN 'VENDOR'
+            WHEN y.po_source = 'M' THEN 'MANUAL'
+            WHEN y.po_source = 'C' THEN 'IREPS'
+            WHEN y.po_source = '' THEN 'OTHER'
+            ELSE ''
+        END AS PO_Source,
+        CASE
+            WHEN y.rly_nonrly = 'R' THEN 'Railways'
+            WHEN y.rly_nonrly = 'P' THEN 'Private'
+            WHEN y.rly_nonrly = 'U' THEN 'PSU'
+            WHEN y.rly_nonrly = 'S' THEN 'State Govt'
+            WHEN y.rly_nonrly = 'F' THEN 'Foreign Railways'
+            ELSE ''
+        END AS PO_Type,
+        cs.CALL_STATUS_DESC AS Status, 
+        ie.IE_EMAIL AS EMail, 
+        ie.IE_PHONE_NO AS MobileNo,
+        x.BK_NO,
+        x.SET_NO
+    FROM T17_CALL_REGISTER x
+    JOIN T18_CALL_DETAILS t18 ON x.CASE_NO = t18.CASE_NO AND x.CALL_RECV_DT = t18.CALL_RECV_DT AND x.CALL_SNO = t18.CALL_SNO
+    JOIN T13_PO_MASTER y ON x.CASE_NO = y.CASE_NO
+    JOIN V06_Consignee  p ON y.PURCHASER_CD = p.CONSIGNEE_CD
+    JOIN T05_VENDOR v ON y.VEND_CD = v.VEND_CD
+    JOIN T21_CALL_STATUS_CODES cs ON x.CALL_STATUS = cs.CALL_STATUS_CD
+    JOIN T09_IE ie ON x.IE_CD = ie.IE_CD
+    JOIN T03_CITY ct ON v.Vend_City_Cd = ct.CITY_CD
+    WHERE x.IE_CD = p_IeCd
+        AND x.CASE_NO = p_Case_No 
+        AND x.CALL_RECV_DT = p_CALL_RECV_DT
+        AND x.CALL_SNO = p_CALL_SNO
+    GROUP BY
+        x.CASE_NO, x.CALL_RECV_DT, x.CALL_SNO, 
+        v.VEND_NAME,v.vend_add1, v.VEND_CD, ct.City, 
+        y.PO_DT, y.PO_NO,y.po_source,y.rly_nonrly, cs.CALL_STATUS_DESC, 
+        ie.IE_EMAIL, ie.IE_PHONE_NO,
+        x.BK_NO,
+        x.SET_NO;
+END;
+/
+
+
+ALTER TABLE T80_PO_MASTER 
+ADD ClientUserID Varchar2(20);
+
+ALTER TABLE t02_users 
+ADD CO_CD NUMBER(6,0);
+
+ALTER TABLE t02_users MODIFY MIGTYPE VARCHAR2(10 BYTE);
+    ALTER TABLE T02_USERS_HISTORY MODIFY MIGTYPE VARCHAR2(10 BYTE);
+
+
+CREATE OR REPLACE PROCEDURE "GET_CM_DASHBOARD_POMASTERLIST" (
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    -- Initialize the parameters
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE();
+
+DBMS_OUTPUT.PUT_LINE('Start date: ' || P_FROMDATE);
+    DBMS_OUTPUT.PUT_LINE('End date: ' || P_TODATE);
+    
+    OPEN P_RESULT_CURSOR FOR
+    WITH TempResult AS (
+        SELECT
+            m.VEND_CD AS VendCd,
+            m.PO_NO AS PoNo,
+            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
+            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+            m.REAL_CASE_NO,
+            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+            m.REMARKS,
+            m.RLY_NONRLY,
+            m.RLY_CD AS MainrlyCd,
+            m.RLY_CD AS RlyCds,
+            m.REGION_CODE,
+            m.DATETIME AS pDatetime
+        FROM
+            T80_PO_MASTER m
+            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+        WHERE
+            (m.ISDELETED IS NULL OR m.ISDELETED = 0) AND
+            m.REAL_CASE_NO IS NULL
+            AND m.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+--            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+
+        UNION
+
+        SELECT
+            m.VEND_CD AS VendCd,
+            m.PO_NO AS PoNo,
+            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
+            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+            m.RITES_CASE_NO AS REAL_CASE_NO,
+            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+            m.REMARKS,
+            m.RLY_NONRLY,
+            m.RLY_CD AS MainrlyCd,
+            m.RLY_CD AS RlyCds,
+            m.REGION_CODE,
+            m.DATETIME AS pDatetime
+        FROM
+            IMMS_RITES_PO_HDR m
+            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+        WHERE
+            m.RITES_CASE_NO IS NULL
+             AND m.PO_DT BETWEEN P_FROMDATE AND P_TODATE
+--            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+    )
+
+    SELECT 
+        VendCd,
+        PoNo,
+        PoDtDate,
+        RlyCd,
+        REAL_CASE_NO AS RealCaseNo,
+        VendorName,
+        ConsigneeSName,
+        Remarks,
+        RLY_NONRLY AS RlyNonrly,
+        MainrlyCd,
+        RlyCds,
+        REGION_CODE AS RegionCode,
+        pDatetime
+    FROM TempResult
+    ORDER BY pDatetime DESC;
+
+END GET_CM_DASHBOARD_POMASTERLIST;
+/
+
+create or replace PROCEDURE GetBPOData (
+    p_searchTerm VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT BPO_CD as Value, BPO_CD || '-' || BPO AS Text
+    FROM V12_BILL_PAYING_OFFICER
+    WHERE UPPER(TRIM(BPO)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+       OR BPO_CD = p_searchTerm
+    ORDER BY V12_BILL_PAYING_OFFICER.BPO;
+END GetBPOData;
+
+create or replace PROCEDURE GetConsigneeData (
+    p_searchTerm VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
+    FROM V06_CONSIGNEE
+    WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+    ORDER BY V06_CONSIGNEE.CONSIGNEE;
+END GetConsigneeData;
+
+
+CREATE OR REPLACE PROCEDURE "GET_LOGINDETAILSFORAPI" (
+    P_USER_NAME IN VARCHAR2,
+    P_PASSWORD IN VARCHAR2,
+    P_USERTYPE IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
+BEGIN
+
+    IF P_USER_NAME IS NULL THEN
+        -- Handle NULL inputs
+        OPEN P_RESULT_CURSOR FOR
+            SELECT 'NULL_INPUT' AS RESULT FROM DUAL;
+    ELSE
+        IF P_USERTYPE = 'USERS'
+            THEN   
+            -- Valid credentials
+            OPEN P_RESULT_CURSOR FOR
+            SELECT u.MOBILE AS MOBILE,u.ID AS ID, u.USER_NAME AS USER_NAME,u.USER_ID AS USER_ID,
+            u.REGION AS REGION,u.auth_levl as AUTH_LEVL,
+            R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            FROM T02_USERS u 
+           JOIN USER_MASTER UM ON TO_CHAR(u.USER_ID) = TO_CHAR(UM.USER_ID)
+            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
+            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
+            WHERE TRIM(u.USER_ID) = TRIM(P_USER_NAME) AND TRIM(u.password) = TRIM(P_PASSWORD); 
+        ELSIF P_USERTYPE = 'VENDOR'
+            THEN
+            OPEN P_RESULT_CURSOR FOR
+            SELECT V.VEND_CONTACT_TEL_1 AS MOBILE, V.VEND_CD AS ID,V.VEND_NAME AS USER_NAME,V.VEND_CD AS USER_ID,
+            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            FROM T05_VENDOR V 
+            JOIN USER_MASTER UM ON TO_CHAR(V.VEND_CD) = TO_CHAR(UM.USER_ID)
+            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
+            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
+            WHERE TRIM(v.VEND_CD) = TRIM(P_USER_NAME) AND TRIM(v.VEND_PWD) = TRIM(P_PASSWORD);
+        ELSIF P_USERTYPE = 'IE'
+            THEN
+            OPEN P_RESULT_CURSOR FOR
+             SELECT E.IE_PHONE_NO AS MOBILE,E.IE_CD AS ID,E.IE_NAME AS USER_NAME, E.IE_EMP_NO AS USER_ID,
+            E.IE_REGION AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,E.IE_CD AS IECD,E.IE_CO_CD AS COCD
+            FROM T09_IE E
+            JOIN USER_MASTER UM ON TO_CHAR(E.IE_EMP_NO) = TO_CHAR(UM.USER_ID)
+            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
+            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
+            WHERE TRIM(E.IE_EMP_NO) = TRIM(P_USER_NAME) AND TRIM(E.IE_PWD) = TRIM(P_PASSWORD)
+            AND E.IE_STATUS is null;
+        ELSIF P_USERTYPE = 'CLIENT_LOGIN'
+            THEN
+            OPEN P_RESULT_CURSOR FOR
+            SELECT C.MOBILE AS MOBILE, C.ID AS ID,C.USER_NAME AS USER_NAME,C.MOBILE AS USER_ID,
+            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
+            C.ORGN_TYPE AS ORGN_TYPE,NULL AS ORGN_CHASED,C.ORGANISATION AS ORGANISATION,0 AS IECD,0 AS COCD
+            FROM T32_CLIENT_LOGIN C
+            JOIN USER_MASTER UM ON TO_CHAR(C.MOBILE) = TO_CHAR(UM.USER_ID)
+            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
+            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
+            WHERE TRIM(C.MOBILE) = TRIM(P_USER_NAME) AND TRIM(c.pwd) = TRIM(P_PASSWORD);
+        ELSIF P_USERTYPE = 'LO_LOGIN'
+            THEN
+            OPEN P_RESULT_CURSOR FOR
+            SELECT L.MOBILE AS MOBILE, 0 AS ID,L.LO_NAME AS USER_NAME,L.MOBILE AS USER_ID,
+            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            FROM T105_LO_LOGIN L
+            JOIN USER_MASTER UM ON TO_CHAR(L.MOBILE) = TO_CHAR(UM.USER_ID)
+            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
+            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
+            WHERE TRIM(L.MOBILE) = TRIM(P_USER_NAME) AND TRIM(l.pwd) = TRIM(P_PASSWORD)
+            AND (TO_DATE((SELECT SYSDATE FROM DUAL),'DD-MM-YY') BETWEEN L.LO_PER_FR AND L.LO_PER_TO);        
+        END IF;
+    END IF;
+
+END;
+/
+
+CREATE OR REPLACE PROCEDURE "GENERATE_REAL_CASE_NO_CRIS_NEW" (
     IN_REGION_CD IN CHAR,
     IN_TEMP_POKEY IN NUMBER,
     IN_TEMP_RLY_CD IN CHAR,
@@ -4103,372 +4508,4 @@ EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
 END;
-
-
-=================
-
-create or replace PROCEDURE SP_Get_DEOCRISPurchesOrderDetails (
-    p_IMMS_POKEY VARCHAR2,
-    p_IMMS_RLY_CD VARCHAR2,
-    p_Result OUT SYS_REFCURSOR
-) AS
-BEGIN
-  OPEN p_Result FOR
-    SELECT
-      p.IMMS_POKEY,
-      p.IMMS_RLY_CD,
-      p.ITEM_SRNO,
-      p.ITEM_DESC,
-      NVL2(
-        p.CONSIGNEE_CD,
-        (C.CONSIGNEE_CD
-          || '-'
-          || NVL2(TRIM(C.CONSIGNEE_DESIG), TRIM(C.CONSIGNEE_DESIG) || '/', '')
-          || NVL2(TRIM(C.CONSIGNEE_DEPT), TRIM(C.CONSIGNEE_DEPT) || '/', '')
-          || NVL2(TRIM(C.CONSIGNEE_FIRM), TRIM(C.CONSIGNEE_FIRM) || '/', '')
-          || NVL2(TRIM(C.CONSIGNEE_ADD1), TRIM(C.CONSIGNEE_ADD1) || '/', '')
-          || NVL2(TRIM(D.LOCATION), TRIM(D.LOCATION) || ' : ' || TRIM(D.CITY), TRIM(D.CITY))),
-        p.IMMS_CONSIGNEE_NAME || '/' || p.IMMS_CONSIGNEE_DETAIL
-      ) CONSIGNEE_NAME,
-      p.QTY,
-      p.RATE,
-      p.VALUE
-    FROM IMMS_RITES_PO_DETAIL p
-    LEFT JOIN T06_CONSIGNEE C ON p.CONSIGNEE_CD = C.CONSIGNEE_CD
-    LEFT JOIN T03_CITY D ON C.CONSIGNEE_CITY = D.CITY_CD
-    WHERE p.IMMS_POKEY = p_IMMS_POKEY
-      AND p.IMMS_RLY_CD = p_IMMS_RLY_CD
-    ORDER BY p.ITEM_SRNO;
-END SP_Get_DEOCRISPurchesOrderDetails;
-
-
-
-=====================
-
-
-CREATE TABLE Token(
-    TokenId NUMBER(6,0) NOT NULL,
-	User_Id CHAR(12 BYTE),
-    AuthToken VARCHAR2(200 BYTE),
-	IssueOn TIMESTAMP(6) WITH TIME ZONE,
-	ExpiresOn TIMESTAMP(6) WITH TIME ZONE
-)
-ALTER TABLE Token ADD (
-  CONSTRAINT Token_pk PRIMARY KEY (TokenId));
-  
- CREATE SEQUENCE Token_seq
-  START WITH 1
-  INCREMENT BY 1
-  NOMAXVALUE
-  NOCACHE
-  NOCYCLE;
-   
-ALTER TABLE Token
-    MODIFY TokenId NUMBER(6,0) DEFAULT Token_seq.nextval;
-
-
- ===========================
-
- ALTER TABLE t02_users 
-    MODIFY user_id CHAR(20 BYTE)
-
- ALTER TABLE USERROLES 
-    MODIFY user_id CHAR(20 BYTE)
-
- ALTER TABLE T02_USERS_HISTORY 
-    MODIFY user_id CHAR(20 BYTE)
-
-
- ALTER TABLE USERROLES_HISTORY 
-    MODIFY user_id CHAR(20 BYTE)
-
-
-==========================
-
-create or replace PROCEDURE GetCaseDetailForIE_API(
-    p_IeCd IN NUMBER,
-    p_Case_No IN VARCHAR2,
-    p_CALL_RECV_DT IN DATE,
-    p_CALL_SNO IN NUMBER,
-    p_Result OUT SYS_REFCURSOR
-)
-IS
-BEGIN
-    OPEN p_Result FOR
-    SELECT 
-        x.CASE_NO AS Case_No, 
-        x.CALL_RECV_DT AS Call_Recv_DT, 
-        x.CALL_SNO AS Call_SNo, 
-        SUM(t18.QTY_TO_INSP) AS Qty, 
-        v.VEND_NAME AS Vendor, 
-        v.vend_add1 AS Vendor_Address, 
-        TO_CHAR(v.VEND_CD) AS Vendor_Code, 
-        ct.City AS Vendor_City, 
-        y.PO_DT AS PO_DT, 
-        y.PO_NO AS PO_No, 
-        CASE
-            WHEN y.po_source = 'V' THEN 'VENDOR'
-            WHEN y.po_source = 'M' THEN 'MANUAL'
-            WHEN y.po_source = 'C' THEN 'IREPS'
-            WHEN y.po_source = '' THEN 'OTHER'
-            ELSE ''
-        END AS PO_Source,
-        CASE
-             WHEN y.rly_nonrly = 'R' THEN 'Railways'
-            WHEN y.rly_nonrly = 'P' THEN 'Private'
-            WHEN y.rly_nonrly = 'U' THEN 'PSU'
-            WHEN y.rly_nonrly = 'S' THEN 'State Govt'
-            WHEN y.rly_nonrly = 'F' THEN 'Foreign Railways'
-            ELSE ''
-        END AS PO_Type,
-        cs.CALL_STATUS_DESC AS Status, 
-        ie.IE_EMAIL AS EMail, 
-        ie.IE_PHONE_NO AS MobileNo,
-        x.BK_NO,
-        x.SET_NO
-    FROM 
-        T17_CALL_REGISTER x
-    JOIN 
-        T18_CALL_DETAILS t18 ON x.CASE_NO = t18.CASE_NO 
-                            AND x.CALL_RECV_DT = t18.CALL_RECV_DT 
-                            AND x.CALL_SNO = t18.CALL_SNO
-    JOIN 
-        T13_PO_MASTER y ON x.CASE_NO = y.CASE_NO
-    JOIN 
-        V06_Consignee  p ON y.PURCHASER_CD = p.CONSIGNEE_CD
-    JOIN 
-        T05_VENDOR v ON y.VEND_CD = v.VEND_CD
-    JOIN 
-        T21_CALL_STATUS_CODES cs ON x.CALL_STATUS = cs.CALL_STATUS_CD
-    JOIN 
-        T09_IE ie ON x.IE_CD = ie.IE_CD
-    JOIN 
-        T03_CITY ct ON v.Vend_City_Cd = ct.CITY_CD
-    WHERE 
-        x.IE_CD = p_IeCd
-        AND x.CASE_NO = p_Case_No 
-        AND x.CALL_RECV_DT = p_CALL_RECV_DT
-        AND x.CALL_SNO = p_CALL_SNO
-    GROUP BY
-        x.CASE_NO, x.CALL_RECV_DT, x.CALL_SNO, 
-        v.VEND_NAME,v.vend_add1, v.VEND_CD, ct.City, 
-        y.PO_DT, y.PO_NO,y.po_source,y.rly_nonrly, cs.CALL_STATUS_DESC, 
-        ie.IE_EMAIL, ie.IE_PHONE_NO,
-        x.BK_NO,
-        x.SET_NO;
-
-END;
-
-===============
-
-ALTER TABLE T80_PO_MASTER 
-ADD ClientUserID Varchar2(20);
-=====================
-
-ALTER TABLE t02_users 
-ADD CO_CD NUMBER(6,0);
-
-ALTER TABLE t02_users MODIFY MIGTYPE VARCHAR2(10 BYTE);
-    ALTER TABLE T02_USERS_HISTORY MODIFY MIGTYPE VARCHAR2(10 BYTE);
-
-========================
-
-create or replace PROCEDURE GET_CM_DASHBOARD_POMASTERLIST(
-    P_RESULT_CURSOR OUT SYS_REFCURSOR
-) AS
-    P_FROMDATE VARCHAR2(12);
-    P_TODATE VARCHAR2(12);
-BEGIN
-    -- Initialize the parameters
-    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
-    --P_FROMDATE := TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'DD/MM/YYYY');
-    P_TODATE := TO_CHAR(SYSDATE, 'DD/MM/YYYY');
-
-DBMS_OUTPUT.PUT_LINE('Start date: ' || P_FROMDATE);
-    DBMS_OUTPUT.PUT_LINE('End date: ' || P_TODATE);
-    
-    OPEN P_RESULT_CURSOR FOR
-    WITH TempResult AS (
-        SELECT
-            m.VEND_CD AS VendCd,
-            m.PO_NO AS PoNo,
-            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
-            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
-            m.REAL_CASE_NO,
-            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
-            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
-                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
-            m.REMARKS,
-            m.RLY_NONRLY,
-            m.RLY_CD AS MainrlyCd,
-            m.RLY_CD AS RlyCds,
-            m.REGION_CODE,
-            m.DATETIME AS pDatetime
-        FROM
-            T80_PO_MASTER m
-            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
-            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
-            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
-        WHERE
-            (m.ISDELETED IS NULL OR m.ISDELETED = 0) AND
-            m.REAL_CASE_NO IS NULL
-            AND m.PO_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
-            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
-
-        UNION
-
-        SELECT
-            m.VEND_CD AS VendCd,
-            m.PO_NO AS PoNo,
-            TO_CHAR(m.PO_DT, 'dd/mm/yyyy') AS PoDtDate,
-            (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government', 'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
-            m.RITES_CASE_NO AS REAL_CASE_NO,
-            (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
-            (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
-                NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') || TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
-            m.REMARKS,
-            m.RLY_NONRLY,
-            m.RLY_CD AS MainrlyCd,
-            m.RLY_CD AS RlyCds,
-            m.REGION_CODE,
-            m.DATETIME AS pDatetime
-        FROM
-            IMMS_RITES_PO_HDR m
-            LEFT JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
-            LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
-            LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
-        WHERE
-            m.RITES_CASE_NO IS NULL
-             AND m.PO_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
-            AND m.PO_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
-    )
-
-    SELECT 
-        VendCd,
-        PoNo,
-        PoDtDate,
-        RlyCd,
-        REAL_CASE_NO AS RealCaseNo,
-        VendorName,
-        ConsigneeSName,
-        Remarks,
-        RLY_NONRLY AS RlyNonrly,
-        MainrlyCd,
-        RlyCds,
-        REGION_CODE AS RegionCode,
-        pDatetime
-    FROM TempResult
-    ORDER BY pDatetime DESC;
-
-END GET_CM_DASHBOARD_POMASTERLIST;
-
-=========================
-create or replace PROCEDURE GetBPOData (
-    p_searchTerm VARCHAR2,
-    p_cursor OUT SYS_REFCURSOR
-)
-IS
-BEGIN
-    OPEN p_cursor FOR
-    SELECT BPO_CD as Value, BPO_CD || '-' || BPO AS Text
-    FROM V12_BILL_PAYING_OFFICER
-    WHERE UPPER(TRIM(BPO)) LIKE TRIM(UPPER(p_searchTerm || '%'))
-       OR BPO_CD = p_searchTerm
-    ORDER BY V12_BILL_PAYING_OFFICER.BPO;
-END GetBPOData;
-
-=================
-create or replace PROCEDURE GetConsigneeData (
-    p_searchTerm VARCHAR2,
-    p_cursor OUT SYS_REFCURSOR
-)
-IS
-BEGIN
-    OPEN p_cursor FOR
-    SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
-    FROM V06_CONSIGNEE
-    WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
-    ORDER BY V06_CONSIGNEE.CONSIGNEE;
-END GetConsigneeData;
-
-=================
-
-
-create or replace PROCEDURE GET_LOGINDETAILSForAPI (
-    P_USER_NAME IN VARCHAR2,
-    P_PASSWORD IN VARCHAR2,
-    P_USERTYPE IN VARCHAR2,
-    P_RESULT_CURSOR OUT SYS_REFCURSOR
-) AS
-BEGIN
-
-    IF P_USER_NAME IS NULL THEN
-        -- Handle NULL inputs
-        OPEN P_RESULT_CURSOR FOR
-            SELECT 'NULL_INPUT' AS RESULT FROM DUAL;
-    ELSE
-        IF P_USERTYPE = 'USERS'
-            THEN   
-            -- Valid credentials
-            OPEN P_RESULT_CURSOR FOR
-            SELECT u.MOBILE AS MOBILE,u.ID AS ID, u.USER_NAME AS USER_NAME,u.USER_ID AS USER_ID,
-            u.REGION AS REGION,u.auth_levl as AUTH_LEVL,
-            R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
-            FROM T02_USERS u 
-           JOIN USER_MASTER UM ON TO_CHAR(u.USER_ID) = TO_CHAR(UM.USER_ID)
-            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
-            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
-            WHERE TRIM(u.USER_ID) = TRIM(P_USER_NAME) AND TRIM(u.password) = TRIM(P_PASSWORD); 
-        ELSIF P_USERTYPE = 'VENDOR'
-            THEN
-            OPEN P_RESULT_CURSOR FOR
-            SELECT V.VEND_CONTACT_TEL_1 AS MOBILE, V.VEND_CD AS ID,V.VEND_NAME AS USER_NAME,V.VEND_CD AS USER_ID,
-            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
-            FROM T05_VENDOR V 
-            JOIN USER_MASTER UM ON TO_CHAR(V.VEND_CD) = TO_CHAR(UM.USER_ID)
-            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
-            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
-            WHERE TRIM(v.VEND_CD) = TRIM(P_USER_NAME) AND TRIM(v.VEND_PWD) = TRIM(P_PASSWORD);
-        ELSIF P_USERTYPE = 'IE'
-            THEN
-            OPEN P_RESULT_CURSOR FOR
-             SELECT E.IE_PHONE_NO AS MOBILE,E.IE_CD AS ID,E.IE_NAME AS USER_NAME, E.IE_EMP_NO AS USER_ID,
-            E.IE_REGION AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,E.IE_CD AS IECD,E.IE_CO_CD AS COCD
-            FROM T09_IE E
-            JOIN USER_MASTER UM ON TO_CHAR(E.IE_EMP_NO) = TO_CHAR(UM.USER_ID)
-            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
-            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
-            WHERE TRIM(E.IE_EMP_NO) = TRIM(P_USER_NAME) AND TRIM(E.IE_PWD) = TRIM(P_PASSWORD)
-            AND E.IE_STATUS is null;
-        ELSIF P_USERTYPE = 'CLIENT_LOGIN'
-            THEN
-            OPEN P_RESULT_CURSOR FOR
-            SELECT C.MOBILE AS MOBILE, C.ID AS ID,C.USER_NAME AS USER_NAME,C.MOBILE AS USER_ID,
-            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            C.ORGN_TYPE AS ORGN_TYPE,NULL AS ORGN_CHASED,C.ORGANISATION AS ORGANISATION,0 AS IECD,0 AS COCD
-            FROM T32_CLIENT_LOGIN C
-            JOIN USER_MASTER UM ON TO_CHAR(C.MOBILE) = TO_CHAR(UM.USER_ID)
-            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
-            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
-            WHERE TRIM(C.MOBILE) = TRIM(P_USER_NAME) AND TRIM(c.pwd) = TRIM(P_PASSWORD);
-        ELSIF P_USERTYPE = 'LO_LOGIN'
-            THEN
-            OPEN P_RESULT_CURSOR FOR
-            SELECT L.MOBILE AS MOBILE, 0 AS ID,L.LO_NAME AS USER_NAME,L.MOBILE AS USER_ID,
-            NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
-            FROM T105_LO_LOGIN L
-            JOIN USER_MASTER UM ON TO_CHAR(L.MOBILE) = TO_CHAR(UM.USER_ID)
-            JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
-            JOIN ROLES R ON UR.ROLE_ID = R.ROLE_ID
-            WHERE TRIM(L.MOBILE) = TRIM(P_USER_NAME) AND TRIM(l.pwd) = TRIM(P_PASSWORD)
-            AND (TO_DATE((SELECT SYSDATE FROM DUAL),'DD-MM-YY') BETWEEN L.LO_PER_FR AND L.LO_PER_TO);        
-        END IF;
-    END IF;
-
-END;
-
-=====================
+/

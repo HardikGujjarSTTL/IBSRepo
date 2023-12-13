@@ -1,9 +1,9 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+--Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
 
-=============================================================================================================================================
+--=============================================================================================================================================
 
-By Ravi Jaiswal
+--By Ravi Jaiswal
 
 
 
@@ -17,20 +17,20 @@ ALTER TABLE T04_UOM
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T04_UOM
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T04_UOM
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 
-    CREATE SEQUENCE T04_UOM_seq
+/*CREATE SEQUENCE T04_UOM_seq
   START WITH 1
   INCREMENT BY 1
   CACHE 20;
   
 ALTER TABLE T04_UOM
-    MODIFY UOM_CD NUMBER(3,0) DEFAULT T04_UOM_seq.nextval;
-********************************************************
+    MODIFY UOM_CD NUMBER(3,0) DEFAULT T04_UOM_seq.nextval;*/
+
     
 ALTER TABLE T07_rites_desig 
     ADD IsDeleted NUMBER(2,0);
@@ -42,26 +42,25 @@ ALTER TABLE T07_rites_desig
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T07_rites_desig
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T07_rites_desig
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
     ALTER TABLE T07_RITES_DESIG
 MODIFY (R_DESIG_CD  NUMBER(6,0));
     
     
-     CREATE SEQUENCE T07_RITES_DESIG_seq
+/*CREATE SEQUENCE T07_RITES_DESIG_seq
   START WITH 1
   INCREMENT BY 1
   CACHE 20;
   
 ALTER TABLE T07_RITES_DESIG
-    MODIFY R_DESIG_CD NUMBER(3,0) DEFAULT T07_RITES_DESIG_seq.nextval;
+    MODIFY R_DESIG_CD NUMBER(3,0) DEFAULT T07_RITES_DESIG_seq.nextval;*/
 
-    ***********************************
-    ALTER TABLE T91_RAILWAYS 
-    ADD IsDeleted NUMBER(2,0);
+ALTER TABLE T91_RAILWAYS 
+ADD IsDeleted NUMBER(2,0);
 
 ALTER TABLE T91_RAILWAYS
     ADD CreatedBy Number(6,0);
@@ -70,15 +69,14 @@ ALTER TABLE T91_RAILWAYS
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T91_RAILWAYS
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T91_RAILWAYS
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 
 
-    -----------------------------------------------
-    ALTER TABLE T91_RAILWAYS
+/*ALTER TABLE T91_RAILWAYS
 DROP PRIMARY KEY;
 
     
@@ -97,9 +95,8 @@ ALTER TABLE T91_RAILWAYS
     MODIFY ID NUMBER(6,0) DEFAULT T91_RAILWAYS_seq.nextval;
 
 ALTER TABLE T91_RAILWAYS
-ADD CONSTRAINT T91_RAILWAYS_pk  PRIMARY KEY (ID);
+ADD CONSTRAINT T91_RAILWAYS_pk  PRIMARY KEY (ID);*/
 
---------------------------------
 ALTER TABLE T90_RLY_DESIGNATION 
     ADD IsDeleted NUMBER(2,0);
 
@@ -110,12 +107,11 @@ ALTER TABLE T90_RLY_DESIGNATION
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T90_RLY_DESIGNATION
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T90_RLY_DESIGNATION
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
------------------------------------------------------
 ALTER TABLE T03_CITY 
     ADD IsDeleted NUMBER(2,0);
 
@@ -126,18 +122,17 @@ ALTER TABLE T03_CITY
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T03_CITY
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T03_CITY
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
-    ALTER TABLE T03_CITY 
-    ADD Country Number(6,0);
+ALTER TABLE T03_CITY 
+ADD Country Number(6,0);
 
-    ALTER TABLE T03_CITY
+ALTER TABLE T03_CITY
 MODIFY (COUNTRY  VARCHAR2(50 BYTE));
 
--------------------------------------------------------
 ALTER TABLE T94_Bank 
     ADD IsDeleted NUMBER(2,0);
 
@@ -148,25 +143,23 @@ ALTER TABLE T94_Bank
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T94_Bank
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T94_Bank
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
-    ALTER TABLE T94_Bank
+ALTER TABLE T94_Bank
 MODIFY (BANK_CD  NUMBER(6,0));
---------------------------------------------------------
 
 
-
-CREATE SEQUENCE T94_Bank_seq
+/*CREATE SEQUENCE T94_Bank_seq
   START WITH 1
   INCREMENT BY 1
   CACHE 20;
 
 ALTER TABLE T94_Bank
-    MODIFY BANK_CD NUMBER(6,0) DEFAULT T94_Bank_seq.nextval;
--------------------------------------------------------------------
+    MODIFY BANK_CD NUMBER(6,0) DEFAULT T94_Bank_seq.nextval;*/
+
 ALTER TABLE T95_ACCOUNT_CODES 
     ADD IsDeleted NUMBER(2,0);
 
@@ -177,14 +170,14 @@ ALTER TABLE T95_ACCOUNT_CODES
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T95_ACCOUNT_CODES
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T95_ACCOUNT_CODES
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
     ALTER TABLE T95_ACCOUNT_CODES
 MODIFY (ACC_CD  NUMBER(6,0));
--------------------------------------------
+
 ALTER TABLE T61_ITEM_MASTER 
     ADD IsDeleted NUMBER(2,0);
 
@@ -195,11 +188,11 @@ ALTER TABLE T61_ITEM_MASTER
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T61_ITEM_MASTER
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T61_ITEM_MASTER
-    ADD UpdatedDate DATE
----------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T06_CONSIGNEE 
     ADD IsDeleted NUMBER(2,0);
 
@@ -210,11 +203,11 @@ ALTER TABLE T06_CONSIGNEE
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T06_CONSIGNEE
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T06_CONSIGNEE
-    ADD UpdatedDate DATE
----------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T09_IE 
     ADD IsDeleted NUMBER(2,0);
 
@@ -225,17 +218,18 @@ ALTER TABLE T09_IE
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T09_IE
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T09_IE
-    ADD UpdatedDate DATE
-
-    ALTER TABLE T09_IE
-MODIFY (IE_CITY_CD  NUMBER(6,0));
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T09_IE
-MODIFY (IE_SEAL_NO  NUMBER(6,0));
------------------------------------------
+MODIFY (IE_CITY_CD NUMBER(6,0));
+
+ALTER TABLE T09_IE
+MODIFY (IE_SEAL_NO NUMBER(6,0));
+
+
 ALTER TABLE T08_IE_CONTROLL_OFFICER 
     ADD IsDeleted NUMBER(2,0);
 
@@ -246,14 +240,14 @@ ALTER TABLE T08_IE_CONTROLL_OFFICER
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T08_IE_CONTROLL_OFFICER
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T08_IE_CONTROLL_OFFICER
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
-    ALTER TABLE T08_IE_CONTROLL_OFFICER
+ALTER TABLE T08_IE_CONTROLL_OFFICER
 MODIFY (CO_CD  NUMBER(6,0));
---------------------------------------------
+
 ALTER TABLE T12_Bill_Paying_Officer 
     ADD IsDeleted NUMBER(2,0);
 
@@ -264,11 +258,11 @@ ALTER TABLE T12_Bill_Paying_Officer
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T12_Bill_Paying_Officer
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T12_Bill_Paying_Officer
-    ADD UpdatedDate DATE
-------------------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T99_CLUSTER_MASTER 
     ADD IsDeleted NUMBER(2,0);
 
@@ -279,33 +273,26 @@ ALTER TABLE T99_CLUSTER_MASTER
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T99_CLUSTER_MASTER
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T99_CLUSTER_MASTER
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T99_CLUSTER_MASTER
 MODIFY (CLUSTER_CODE  NUMBER(6,0));
--------------------------------------
-CREATE TABLE "IBSDEV"."COUNTRY_MASTER" 
-   (	"ID" NUMBER(2,0) NOT NULL ENABLE, 
-	"COUNTRY_NAME" VARCHAR2(20 BYTE), 
-	"COUNTRY_CODE" NUMBER(2,0), 
-	"ISDELETED" NUMBER(2,0), 
-	"CREATEDBY" NUMBER(6,0), 
-	"CREATEDDATE" DATE, 
-	 CONSTRAINT "COUNTRY_MASTER_PK" PRIMARY KEY ("ID")
-     );
 
-ALTER TABLE country_master 
-    ADD IsDeleted NUMBER(2,0);
 
-ALTER TABLE country_master
-    ADD CreatedBy Number(6,0);
-    
-    ALTER TABLE country_master
-    ADD CreatedDate DATE
----------------------------------------
+CREATE TABLE "COUNTRY_MASTER" 
+(	
+    "ID" NUMBER(2,0) NOT NULL ENABLE, 
+    "COUNTRY_NAME" VARCHAR2(20 BYTE), 
+    "COUNTRY_CODE" NUMBER(2,0), 
+    "ISDELETED" NUMBER(2,0), 
+    "CREATEDBY" NUMBER(6,0), 
+    "CREATEDDATE" DATE, 
+    CONSTRAINT "COUNTRY_MASTER_PK" PRIMARY KEY ("ID")
+);
+
 
 ALTER TABLE T10_IC_BookSET 
     ADD IsDeleted NUMBER(2,0);
@@ -317,12 +304,11 @@ ALTER TABLE T10_IC_BookSET
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T10_IC_BookSET
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T10_IC_BookSET
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
-------------------------------------------------
 
 ALTER TABLE T100_vender_cluster 
     ADD IsDeleted NUMBER(2,0);
@@ -334,11 +320,11 @@ ALTER TABLE T100_vender_cluster
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T100_vender_cluster
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T100_vender_cluster
-    ADD UpdatedDate DATE
------------------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T31_HOLOGRAM_ISSUED 
     ADD IsDeleted NUMBER(2,0);
 
@@ -349,11 +335,11 @@ ALTER TABLE T31_HOLOGRAM_ISSUED
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T31_HOLOGRAM_ISSUED
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T31_HOLOGRAM_ISSUED
-    ADD UpdatedDate DATE
-----------------------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT 
     ADD IsDeleted NUMBER(2,0);
 
@@ -364,11 +350,11 @@ ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T102_IE_MAXIMUM_CALL_LIMIT
-    ADD UpdatedDate DATE
--------------------------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
+
 ALTER TABLE T32_CLIENT_LOGIN 
     ADD IsDeleted NUMBER(2,0);
 
@@ -379,12 +365,10 @@ ALTER TABLE T32_CLIENT_LOGIN
     ADD UpdatedBy Number(6,0); 
     
 ALTER TABLE T32_CLIENT_LOGIN
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T32_CLIENT_LOGIN
-    ADD UpdatedDate DATE
-
---------------------------------------------------
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 
 
