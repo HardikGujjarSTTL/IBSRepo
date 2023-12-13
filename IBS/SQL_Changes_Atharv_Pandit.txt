@@ -1,7 +1,7 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+--Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
 
-=============================================================================================================================================
+--=============================================================================================================================================
 
 
 Create View view_Voucher_List
@@ -11,7 +11,7 @@ As
     where T24.VCHR_NO=R.VCHR_NO and R.ACC_CD=A.ACC_CD(+) 
     AND R.BPO_CD=B.BPO_CD(+) and R.BANK_CD=D.BANK_CD 
     AND B.BPO_CITY_CD=C.CITY_CD(+) 
-    and (nvl(T24.VCHR_TYPE,'X')<>'I')
+    and (nvl(T24.VCHR_TYPE,'X')<>'I');
 
 
 
@@ -20,11 +20,11 @@ SELECT lpad(nvl(max(to_number(nvl(substr(VCHR_NO, 6, 8), 0))), 0) + 1, 3, '0') A
 FROM T24_RV;
 
  CREATE OR REPLACE VIEW BankCodeDrpdown AS
- select BANK_CD,(lpad(to_char(FMIS_BANK_CD),4,'0')||'-'||BANK_NAME) BANK_NAME from T94_BANK WHERE FMIS_BANK_CD is not NULL order by BANK_NAME
+ select BANK_CD,(lpad(to_char(FMIS_BANK_CD),4,'0')||'-'||BANK_NAME) BANK_NAME from T94_BANK WHERE FMIS_BANK_CD is not NULL order by BANK_NAME;
 
 
   CREATE OR REPLACE VIEW BPO_Check AS
-select P.CASE_NO, B.BPO_CD,V.VEND_NAME from T13_PO_MASTER P,T14_PO_BPO B, T05_VENDOR V WHERE P.CASE_NO=B.CASE_NO(+) and P.VEND_CD=V.VEND_CD
+select P.CASE_NO, B.BPO_CD,V.VEND_NAME from T13_PO_MASTER P,T14_PO_BPO B, T05_VENDOR V WHERE P.CASE_NO=B.CASE_NO(+) and P.VEND_CD=V.VEND_CD;
 
    ALTER TABLE T12_BILL_PAYING_OFFICER
 MODIFY BPO_CITY_CD NUMBER(6,0) ;
