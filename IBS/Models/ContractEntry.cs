@@ -22,5 +22,6 @@
         public int? IsDeleted { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? updatedDate { get; set; }
+        public string CLIENTCODE { get; set; }
     }
 }

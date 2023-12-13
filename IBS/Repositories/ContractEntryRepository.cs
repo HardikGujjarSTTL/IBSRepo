@@ -24,6 +24,13 @@ namespace IBS.Repositories
         {
             int ContractId = 0;
             int maxID = 0;
+
+            if (!string.IsNullOrEmpty(model.CLIENTNAME))
+            {
+                var Client = model.CLIENTNAME.Split("=");
+                model.CLIENTCODE = Client[0].Trim();
+                model.CLIENTNAME = Client[1].Trim();
+            }
             var Contract = (from r in context.T100Contracts where r.Id == Convert.ToInt32(model.ID) select r).FirstOrDefault();
             #region Contract save
             if (Contract == null)
@@ -34,7 +41,7 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    maxID = 1; 
+                    maxID = 1;
                 }
                 T100Contract obj = new T100Contract();
                 obj.Id = maxID;
@@ -55,6 +62,7 @@ namespace IBS.Repositories
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = model.CreatedBy;
                 obj.Createddate = DateTime.Now;
+                obj.Clientcode = model.CLIENTCODE;
                 context.T100Contracts.Add(obj);
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(obj.Id);
@@ -78,6 +86,7 @@ namespace IBS.Repositories
                 Contract.Isdeleted = Convert.ToByte(false);
                 Contract.Updatedby = model.UpdatedBy;
                 Contract.Updatedate = DateTime.Now;
+                Contract.Clientcode = model.CLIENTCODE;
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(Contract.Id);
             }
@@ -110,7 +119,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string clientname = "", Clienttype="";
+            string clientname = "", Clienttype = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ClientName"]))
             {
                 clientname = Convert.ToString(dtParameters.AdditionalValues["ClientName"]);
@@ -132,24 +141,24 @@ namespace IBS.Repositories
             List<ContractEntry> list = null;
 
             if (ds != null && ds.Tables.Count > 0)
-            { 
+            {
                 list = dt.AsEnumerable().Select(row => new ContractEntry
                 {
-                        LETTER_NO = row["LETTER_NO"] != DBNull.Value ? Convert.ToString(row["LETTER_NO"]) : "",
-                        ID = row["ID"] != DBNull.Value ? Convert.ToInt32(row["ID"]) : 0,
-                        LETTER_DATE = row["LETTER_DATE"] != DBNull.Value ? Convert.ToDateTime(row["LETTER_DATE"]) : DateTime.MinValue,
-                        TPFROM = row["TPFROM"] != DBNull.Value ? Convert.ToDateTime(row["TPFROM"]) : DateTime.MinValue,
-                        TPTO = row["TPTO"] != DBNull.Value ? Convert.ToDateTime(row["TPTO"]) : DateTime.MinValue,
-                        CLIENTTYPE = row["CLIENTTYPE"] != DBNull.Value ? Convert.ToString(row["CLIENTTYPE"]) : string.Empty,
-                        CLIENTNAME = row["CLIENTNAME"] != DBNull.Value ? Convert.ToString(row["CLIENTNAME"]) : string.Empty,
-                        INSPFEE = row["INSPFEE"] != DBNull.Value ? Convert.ToInt32(row["INSPFEE"]) : 0,
-                        MANDAYBASIS = row["MANDAYBASIS"] != DBNull.Value ? Convert.ToInt32(row["MANDAYBASIS"]) : 0,
-                        LOTOFINSP = row["LOTOFINSP"] != DBNull.Value ? Convert.ToInt32(row["LOTOFINSP"]) : 0,
-                        MATERIALVALUE = row["MATERIALVALUE"] != DBNull.Value ? Convert.ToInt32(row["MATERIALVALUE"]) : 0,
-                        MINPOVAL = row["MINPOVAL"] != DBNull.Value ? Convert.ToInt32(row["MINPOVAL"]) : 0,
-                        MAXPOVAL = row["MAXPOVAL"] != DBNull.Value ? Convert.ToInt32(row["MAXPOVAL"]) : 0,
-                        CALLCANCELATION = row["CALLCANCELATION"] != DBNull.Value ? Convert.ToInt32(row["CALLCANCELATION"]) : 0,
-                        Materialdescription = row["MATERIALDESCRIPTION"] != DBNull.Value ? Convert.ToString(row["MATERIALDESCRIPTION"]) : string.Empty,
+                    LETTER_NO = row["LETTER_NO"] != DBNull.Value ? Convert.ToString(row["LETTER_NO"]) : "",
+                    ID = row["ID"] != DBNull.Value ? Convert.ToInt32(row["ID"]) : 0,
+                    LETTER_DATE = row["LETTER_DATE"] != DBNull.Value ? Convert.ToDateTime(row["LETTER_DATE"]) : DateTime.MinValue,
+                    TPFROM = row["TPFROM"] != DBNull.Value ? Convert.ToDateTime(row["TPFROM"]) : DateTime.MinValue,
+                    TPTO = row["TPTO"] != DBNull.Value ? Convert.ToDateTime(row["TPTO"]) : DateTime.MinValue,
+                    CLIENTTYPE = row["CLIENTTYPE"] != DBNull.Value ? Convert.ToString(row["CLIENTTYPE"]) : string.Empty,
+                    CLIENTNAME = row["CLIENTNAME"] != DBNull.Value ? Convert.ToString(row["CLIENTNAME"]) : string.Empty,
+                    INSPFEE = row["INSPFEE"] != DBNull.Value ? Convert.ToInt32(row["INSPFEE"]) : 0,
+                    MANDAYBASIS = row["MANDAYBASIS"] != DBNull.Value ? Convert.ToInt32(row["MANDAYBASIS"]) : 0,
+                    LOTOFINSP = row["LOTOFINSP"] != DBNull.Value ? Convert.ToInt32(row["LOTOFINSP"]) : 0,
+                    MATERIALVALUE = row["MATERIALVALUE"] != DBNull.Value ? Convert.ToInt32(row["MATERIALVALUE"]) : 0,
+                    MINPOVAL = row["MINPOVAL"] != DBNull.Value ? Convert.ToInt32(row["MINPOVAL"]) : 0,
+                    MAXPOVAL = row["MAXPOVAL"] != DBNull.Value ? Convert.ToInt32(row["MAXPOVAL"]) : 0,
+                    CALLCANCELATION = row["CALLCANCELATION"] != DBNull.Value ? Convert.ToInt32(row["CALLCANCELATION"]) : 0,
+                    Materialdescription = row["MATERIALDESCRIPTION"] != DBNull.Value ? Convert.ToString(row["MATERIALDESCRIPTION"]) : string.Empty,
                 }).ToList();
 
                 query = list.AsQueryable();
@@ -180,7 +189,7 @@ namespace IBS.Repositories
                 model.TPFROM = Contract.Tpfrom;
                 model.TPTO = Contract.Tpto;
                 model.CLIENTTYPE = Contract.Clienttype;
-                model.CLIENTNAME = Contract.Clientname;
+                model.CLIENTNAME = Contract.Clientcode + " = " + Contract.Clientname;
                 model.INSPFEE = Convert.ToInt32(Contract.Inspfee);
                 model.MANDAYBASIS = Convert.ToInt32(Contract.Mandaybasis);
                 model.LOTOFINSP = Convert.ToInt32(Contract.Lotofinsp);
@@ -189,6 +198,7 @@ namespace IBS.Repositories
                 model.MAXPOVAL = Convert.ToInt32(Contract.Maxpoval);
                 model.CALLCANCELATION = Convert.ToInt32(Contract.Callcancelation);
                 model.Materialdescription = Contract.Materialdescription;
+                model.CLIENTCODE = Contract.Clientcode;
                 return model;
             }
         }

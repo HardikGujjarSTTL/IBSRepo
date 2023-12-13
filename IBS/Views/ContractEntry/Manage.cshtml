@@ -34,15 +34,27 @@
                         <input type="text" class="input datepicker" ASP-FOR="LETTER_DATE" maxlength="300" required />
                         <span asp-validation-for="LETTER_DATE" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Client Name</label>
-                        @Html.DropDownListFor(model => model.CLIENTNAME, new SelectList(IBS.Models.Common.GetClientName() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTNAME" })
-                        <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Client Type</label>
-                        @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.Orgn_Type() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTTYPE" })
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Organization Type</label>
+                        @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"), "--Select--",new { @class = "form-control",@id="CLIENTTYPE" })
                         <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Organization Name</label>
+                        @if (!string.IsNullOrEmpty(Model.CLIENTNAME))
+                        {
+                            @Html.DropDownListFor(model => model.CLIENTNAME,
+                        new SelectList(IBS.Models.Common.SetClientName(Model.CLIENTTYPE,Model.CLIENTNAME) , "Value", "Text", Model.CLIENTNAME),
+                        "--Select--", new { @class = "form-control",@id="CLIENTNAME" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor( model => model.CLIENTNAME,
+                                        new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"),
+                                        "--Select--", new { @class = "select2", id = "CLIENTNAME" })
+                        }
+
+                        <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Time Period From.</label>
@@ -115,18 +127,18 @@
     </div>
 </section>
 
-                        
+
 @section scripts{
 
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
-       function BtnSave(){
+        function BtnSave() {
             if ($("#frmContract").valid()) {
                 SaveSingleDocuments("tab-1");
                 $("#frmContract").submit();
             }
-       }
+        }
 
         completed = function (response) {
             var res = response.responseJSON;
@@ -135,5 +147,33 @@
                 window.location.href = '@Url.Action("Index", "ContractEntry")';
             }
         };
+
+        $(document).ready(function () {
+            var clientType = $("#CLIENTTYPE").val();
+            $('#CLIENTNAME').select2({
+                ajax: {
+                    url: '@Url.Action("SearchClient", "ContractEntry")',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            clientType: $("#CLIENTTYPE").val(),
+                            searchTerm: params.term || ''
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+
+            $("#CLIENTTYPE").on("change", function () {                
+                $('#CLIENTNAME').val("");
+            });
+        });
     </script>
 }
