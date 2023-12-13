@@ -5,6 +5,8 @@
         public string ReportType { get; set; }
 
         public string ReportTitle { get; set; }
+        public string FDate { get; set; }
+        public string TDate { get; set; }
 
         public DateTime? FromDate { get; set; }
         public string Display_FromDate { get { return this.FromDate != null ? Common.ConvertDateFormat(this.FromDate.Value) : ""; } }

@@ -48,6 +48,10 @@
                             <label for="rb3"><input type="radio" name="radioGroup" id="rb3" /> Lab Wise</label>                            
                             <span class="text-danger"></span>
                         </li>
+                    <li>
+                        <label for="rb4"><input type="radio" name="radioGroup" id="rb4" /> Discipline Wise</label>
+                        <span class="text-danger"></span>
+                    </li>
                     </ul>
                 </div>
             </div>
@@ -125,6 +129,30 @@
                         <span class="text-danger"></span>
                     </div>
                 </div>
+        <div class="row my-0">
+            <div class="col-lg-12">
+                <ul class="radioListForm mb-0 pb-0">
+                    <li>
+                        <div style="display:none" id="ie7">
+                            <label for="rbc5"><input type="radio" name="child4" id="rbc7" /> All Lab</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div style="display:none" id="ie8">
+                            <label for="rbc6"><input type="radio" name="child4" id="rbc8" /> Particular Discipline</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3" style="display:none" id="dd4">
+                @Html.DropDownList("DisciplineId", new SelectList(IBS.Models.Common.Discipline(), "Value", "Text"), new { id = "ddl4p" })
+                <span class="text-danger"></span>
+            </div>
+        </div>
            
             <div class="row my-0">
                 <div class="col-md-2 mb-3">
@@ -256,10 +284,13 @@
                 $("#rbc3").prop("checked", false);
                 $("#ie5").css("display", "none");
                 $("#ie6").css("display", "none");
+                $("#ie7").css("display", "none");
+                $("#ie8").css("display", "none");
                 $("#rbc5").prop("checked", false);
                 $("#dd1").css("display", "none");
                 $("#dd2").css("display", "none");
                 $("#dd3").css("display", "none");
+                $("#dd4").css("display", "none");
             }
             else if (selectedId == "rb2") {
                 sessionStorage.removeItem("rbb2");
@@ -272,10 +303,13 @@
                 $("#rbc1").prop("checked", false);
                 $("#ie5").css("display", "none");
                 $("#ie6").css("display", "none");
+                $("#ie7").css("display", "none");
+                $("#ie8").css("display", "none");
                 $("#rbc5").prop("checked", false);
                 $("#dd1").css("display", "none");
                 $("#dd2").css("display", "none");
                 $("#dd3").css("display", "none");
+                $("#dd4").css("display", "none");
             }
             else if (selectedId == "rb3") {
                 sessionStorage.removeItem("rbb3");
@@ -288,10 +322,34 @@
                 $("#rbc1").prop("checked", false);
                 $("#ie3").css("display", "none");
                 $("#ie4").css("display", "none");
+                $("#ie7").css("display", "none");
+                $("#ie8").css("display", "none");
                 $("#rbc3").prop("checked", false);
                 $("#dd1").css("display", "none");
                 $("#dd2").css("display", "none");
                 $("#dd3").css("display", "none");
+                $("#dd4").css("display", "none");
+
+            }
+            else if (selectedId == "rb4") {
+                sessionStorage.removeItem("rbb4");
+                sessionStorage.setItem("rbb4", true);
+                $("#ie7").css("display", "block");
+                $("#ie8").css("display", "block");
+                $("#ie5").css("display", "none");
+                $("#ie6").css("display", "none");
+                $("#rbc7").prop("checked", true);
+                $("#ie1").css("display", "none");
+                $("#ie2").css("display", "none");
+                $("#rbc1").prop("checked", false);
+                $("#ie3").css("display", "none");
+                $("#ie4").css("display", "none");
+                $("#rbc3").prop("checked", false);
+                $("#rbc5").prop("checked", false);
+                $("#dd1").css("display", "none");
+                $("#dd2").css("display", "none");
+                $("#dd3").css("display", "none");
+                $("#dd4").css("display", "none");
 
             }
 
@@ -305,6 +363,8 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch5", true);
                 $("#dd1").css("display", "none");
             }
@@ -315,6 +375,8 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch6", true);
                 $("#dd1").css("display", "block");
             }
@@ -328,6 +390,8 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch3", true);
                 $("#dd2").css("display", "none");
             }
@@ -338,6 +402,8 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch4", true);
                 $("#dd2").css("display", "block");
             }
@@ -351,6 +417,8 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch1", true);
                 $("#dd3").css("display", "none");
             }
@@ -361,8 +429,37 @@
                 sessionStorage.removeItem("ch4");
                 sessionStorage.removeItem("ch5");
                 sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
                 sessionStorage.setItem("ch2", true);
                 $("#dd3").css("display", "block");
+            }
+        });
+         $('input[name="child4"]').change(function () {
+            var selectedId = $(this).attr('id');
+            if (selectedId == "rbc7") {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
+                sessionStorage.setItem("ch7", true);
+                $("#dd4").css("display", "none");
+            }
+            else {
+                sessionStorage.removeItem("ch1");
+                sessionStorage.removeItem("ch2");
+                sessionStorage.removeItem("ch3");
+                sessionStorage.removeItem("ch4");
+                sessionStorage.removeItem("ch5");
+                sessionStorage.removeItem("ch6");
+                sessionStorage.removeItem("ch7");
+                sessionStorage.removeItem("ch8");
+                sessionStorage.setItem("ch8", true);
+                $("#dd4").css("display", "block");
             }
         });
         $('input[name="Group"]').change(function () {
@@ -432,6 +529,7 @@
             sessionStorage.setItem("rbb1", false);
             sessionStorage.setItem("rbb2", false);
             sessionStorage.setItem("rbb3", false);
+            sessionStorage.setItem("rbb4", false);
             if ('@ReportType' == 'LabReg') {
                 $(".report1").css("display", "");
             }
@@ -501,6 +599,11 @@
             if (sessionStorage.getItem("ch2") == "true") {
                 var lstLab = $("#ddl3p").val();
             }
+            var Disciplinewise = sessionStorage.getItem("rbb4");
+            var rdbPDis = sessionStorage.getItem("ch8");
+            if (sessionStorage.getItem("ch8") == "true") {
+                var Discipline = $("#ddl4p").val();
+            }
            
             var rdbPending = sessionStorage.getItem("rr2");
             var rdbPaid = sessionStorage.getItem("rr3");
@@ -510,7 +613,7 @@
             
             var from = $("#dtfrom").val();
             var to = $("#dtto").val();
-            let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab,from,to };
+            let myObject = { ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab, from, to, Disciplinewise, rdbPDis, Discipline };
 
             var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
             //var url = '@Url.Action("Manage", "LabReports")?' + formData;

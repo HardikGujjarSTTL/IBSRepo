@@ -12,6 +12,7 @@ using System;
 using System.Drawing;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using IBS.Helper;
 
 namespace IBS.Controllers
 {
@@ -33,7 +34,7 @@ namespace IBS.Controllers
             ViewBag.Region = Region;
             return View();
         }
-        public IActionResult Manage(string ReportType,string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string lstStatus, string rdbrecvdt,string from,string to)
+        public IActionResult Manage(string ReportType,string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string lstStatus, string rdbrecvdt,string from,string to, string Disciplinewise, string rdbPDis, string Discipline)
         {
             
             LabReportsModel model = new()
@@ -58,7 +59,10 @@ namespace IBS.Controllers
                 lstStatus = lstStatus,
                 rdbrecvdt = rdbrecvdt,
                 from = from,
-                to = to
+                to = to,
+                Disciplinewise = Disciplinewise,
+                rdbPDis = rdbPDis,
+                Discipline = Discipline,
             };
             if (ReportType == "LabReg") model.ReportTitle = "LAB REGISTER REPORT";
             else if (ReportType == "LabPer") model.ReportTitle = "LAB PERFORMANCE REPORT";
@@ -68,7 +72,7 @@ namespace IBS.Controllers
             else if (ReportType == "LabInfo") model.ReportTitle = "LAB SAMPLE INFO DETAILS";
             return View(model);
     }
-        public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string from, string to)
+        public IActionResult LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string from, string to, string Disciplinewise, string rdbPDis, string Discipline)
         {
             LabReportsModel model = new LabReportsModel();
             try
@@ -88,7 +92,8 @@ namespace IBS.Controllers
                 else if (Region == "C")
                 { ViewBag.Region = "CENTRAL REGION"; }
 
-                model = LabReportsRepository.LabRegisterReport(ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab, Region);
+                model = LabReportsRepository.LabRegisterReport(ReportType, wFrmDtO, wToDt, rdbIEWise, rdbPIE, rdbVendWise, rdbPVend, rdbLabWise, rdbPLab, rdbPending, rdbPaid, rdbDue, rdbPartlyPaid, lstTStatus, lstIE, ddlVender, lstLab, Disciplinewise,rdbPDis,Discipline, Region);
+                //GlobalDeclaration.LabRegisterRpt = model;
             }
             catch (Exception ex)
             {
@@ -244,14 +249,88 @@ namespace IBS.Controllers
             }
             return PartialView(model);
         }
+        public IActionResult DownloadFile(string caseno, string calldt, string csno, string FileName)
+        {
+            try
+            {
+                var Caseno = "";
+                var callsno = "";
+                var calldocdt = "";
+
+                Caseno = caseno;
+                callsno = csno;
+                calldocdt = calldt;
+
+                string fn = "", MyFile = "";
+                string mdt = calldocdt.Trim();
+                fn = Path.GetFileName(FileName);
+                MyFile = $"{Caseno.Trim()}_{callsno.Trim()}_{mdt}";
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", $"{MyFile}.PDF");
+                if (System.IO.File.Exists(filePath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                    return File(fileBytes, "application/pdf", fn);
+                }
+                else
+                {
+                    return NotFound(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "DownloadFile", 1, GetIPAddress());
+            }
+            return NotFound();
+        }
+        public IActionResult DownloadFile2(string caseno, string calldt, string csno, string FileName)
+        {
+            try
+            {
+                var Caseno = "";
+                var callsno = "";
+                var calldocdt = "";
+
+                Caseno = caseno;
+                callsno = csno;
+                calldocdt = calldt;
+
+                string fn = "", MyFile = "";
+                string mdt = calldocdt.Trim();
+                fn = Path.GetFileName(FileName);
+                MyFile = $"{Caseno.Trim()}_{callsno.Trim()}_{mdt}";
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", $"{MyFile}.PDF");
+                if (System.IO.File.Exists(filePath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                    return File(fileBytes, "application/pdf", fn);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabReports", "DownloadFile", 1, GetIPAddress());
+            }
+            return NotFound();
+        }
 
         [HttpPost]
     public async Task<IActionResult> GeneratePDF(string htmlContent)
     {
-        //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-        //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
-
-        await new BrowserFetcher().DownloadAsync();
+            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
+            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            //string htmlContent = string.Empty;
+            //if (ReportType == "LabReg")
+            //{
+            //    LabReportsModel model = GlobalDeclaration.LabRegisterRpt;
+            //    htmlContent = await this.RenderViewToStringAsync("/Views/LabReports/LabRegisterReport.cshtml", model);
+            //}
+            
+            await new BrowserFetcher().DownloadAsync();
         await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
             Headless = true,

@@ -68,8 +68,17 @@
             loadCCI();
             fileName = 'Consignee_Complaints_Report';
         }
+        else if ('@ReportType' == "BSV") {
+            BankStatement();
+            fileName = 'Summary Of Bank Statement Voucher';
+        }
     });
-
+    function BankStatement() {
+        $("#dvReportViewer").load("@Url.Action("BankStatement")", { FDate: '@Model.FDate', TDate: '@Model.TDate' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
     function loadUnBilledIC() {
         $("#dvReportViewer").load("@Url.Action("UnBilledIC")", { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate' }, function (response) {
             $("#dvReportViewer").empty();

@@ -26,7 +26,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public LabReportsModel LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string Regin)
+        public LabReportsModel LabRegisterReport(string ReportType, string wFrmDtO, string wToDt, string rdbIEWise, string rdbPIE, string rdbVendWise, string rdbPVend, string rdbLabWise, string rdbPLab, string rdbPending, string rdbPaid, string rdbDue, string rdbPartlyPaid, string lstTStatus, string lstIE, string ddlVender, string lstLab, string Disciplinewise, string rdbPDis, string Discipline, string Regin)
         {
             string reg = "";
             LabReportsModel model = new();
@@ -34,7 +34,7 @@ namespace IBS.Repositories
             List<LabReportsModel> lstsum = new();
 
             //model = calculate(wFrmDtO, wToDt, Regin);
-            OracleParameter[] par = new OracleParameter[18];
+            OracleParameter[] par = new OracleParameter[21];
             par[0] = new OracleParameter("p_region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[1] = new OracleParameter("p_wFrmDtO", OracleDbType.Date, wFrmDtO, ParameterDirection.Input);
             par[2] = new OracleParameter("p_wToDt", OracleDbType.Date, wToDt, ParameterDirection.Input);
@@ -52,10 +52,12 @@ namespace IBS.Repositories
             par[14] = new OracleParameter("p_rdbLabWise", OracleDbType.Boolean, rdbLabWise, ParameterDirection.Input);
             par[15] = new OracleParameter("p_rdbPLab", OracleDbType.Boolean, rdbPLab, ParameterDirection.Input);
             par[16] = new OracleParameter("p_lstLab", OracleDbType.NVarchar2, lstLab, ParameterDirection.Input);
-           // par[17] = new OracleParameter("p_total_testing_fee", OracleDbType.Int32, ParameterDirection.Output);
-            par[17] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[17] = new OracleParameter("p_Disciplinewise", OracleDbType.Boolean,Disciplinewise, ParameterDirection.Input);
+            par[18] = new OracleParameter("p_rdbPDis", OracleDbType.Boolean, rdbPDis, ParameterDirection.Input);
+            par[19] = new OracleParameter("p_Discipline", OracleDbType.NVarchar2, Discipline, ParameterDirection.Input);
+            par[20] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("LabRegisterReport", par, 17);
+            var ds = DataAccessDB.GetDataSet("LabRegisterReport", par, 20);
             //int totalTestingFee = Convert.ToInt32(par[17].Value);
             DataTable dt = ds.Tables[0];
             
@@ -85,7 +87,8 @@ namespace IBS.Repositories
                 ITEM_DESC = row["ITEM_DESC"].ToString(),
                 REMARKS = row["REMARKS"].ToString(),
                 SAMPLE_DISPATCH_DATE = row["SAMPLE_DISPATCH_DATE"].ToString(),
-                
+                NO_OF_SAMPLES = row["QTY"].ToString(),
+
             }).ToList();
             foreach (var item in lstlab)
             {
@@ -404,28 +407,80 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("GET_PaymentReport", par, 5);
             DataTable dt = ds.Tables[0];
-            lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
+            foreach (DataRow row in dt.Rows)
             {
-                call_recv_dt = Convert.ToString(row["call_recv_dt"]),
-                SAMPLE_REG_NO = Convert.ToString(row["sample_reg_no"]),
-                CASE_NO = Convert.ToString(row["case_no"]),
-                IE_NAME = Convert.ToString(row["ie_name"]),
-                vend_name = Convert.ToString(row["vend_name"]),
-                MFG_NAME = Convert.ToString(row["mfg_name"]),
-                likely_dt_report = Convert.ToString(row["likely_dt_report"]),
-                LAB_STATUS = Convert.ToString(row["LAB_STATUS"]),
-                testing_charges_by_lab = Convert.ToString(row["testing_charges_by_lab"]),
-                testing_charges_by_vendor = Convert.ToString(row["testing_charges_by_vendor"]),
-                tds_charges_by_vendor = Convert.ToString(row["tds_charges_by_vendor"]),
-                Vend_INIT_DT = Convert.ToString(row["Vend_INIT_DT"]),
-                UTR_NO = Convert.ToString(row["UTR_NO"]),
-                UTR_DATE = Convert.ToString(row["UTR_DATE"]),
-                doc_status_fin = Convert.ToString(row["doc_status_fin"]),
-                FIN_INIT_DT = Convert.ToString(row["FIN_INIT_DT"]),
-                REMARKS = Convert.ToString(row["REMARKS"]),
-                DOC_REJ_REMARK = Convert.ToString(row["DOC_REJ_REMARK"]),
-            }).ToList();
-            model.lstLabReport = lstlab;
+                var caseno = "";
+                var callsno = "";
+                var calldocdt = "";
+
+                caseno = row["case_no"].ToString(); 
+                callsno = row["call_sno"].ToString(); 
+                calldocdt = row["call_doc_dt"].ToString(); 
+
+                string fn = "", MyFile = "";
+                string mdt = calldocdt.Trim();
+
+                MyFile = $"{caseno.Trim()}_{callsno.Trim()}_{mdt}";
+
+                //fn = Path.GetFileName(filename);
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", $"{MyFile}.PDF");
+                string filePath2 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", $"{MyFile}.PDF");
+                bool docExists = File.Exists(filePath);
+                bool docExists2 = File.Exists(filePath2);
+
+                LabReportsModel labReport = new LabReportsModel
+                {
+                    call_recv_dt = Convert.ToString(row["call_recv_dt"]),
+                    SAMPLE_REG_NO = Convert.ToString(row["sample_reg_no"]),
+                    CASE_NO = Convert.ToString(row["case_no"]),
+                    IE_NAME = Convert.ToString(row["ie_name"]),
+                    vend_name = Convert.ToString(row["vend_name"]),
+                    MFG_NAME = Convert.ToString(row["mfg_name"]),
+                    likely_dt_report = Convert.ToString(row["likely_dt_report"]),
+                    LAB_STATUS = Convert.ToString(row["LAB_STATUS"]),
+                    testing_charges_by_lab = Convert.ToString(row["testing_charges_by_lab"]),
+                    testing_charges_by_vendor = Convert.ToString(row["testing_charges_by_vendor"]),
+                    tds_charges_by_vendor = Convert.ToString(row["tds_charges_by_vendor"]),
+                    Vend_INIT_DT = Convert.ToString(row["Vend_INIT_DT"]),
+                    UTR_NO = Convert.ToString(row["UTR_NO"]),
+                    UTR_DATE = Convert.ToString(row["UTR_DATE"]),
+                    doc_status_fin = Convert.ToString(row["doc_status_fin"]),
+                    FIN_INIT_DT = Convert.ToString(row["FIN_INIT_DT"]),
+                    REMARKS = Convert.ToString(row["REMARKS"]),
+                    DOC_REJ_REMARK = Convert.ToString(row["DOC_REJ_REMARK"]),
+                    PDoc = docExists,
+                    LABDoc = docExists2,
+                    CALL_SNO = Convert.ToString(row["call_sno"]),
+                    CallDocDate = Convert.ToString(row["call_doc_dt"]),
+                    File = filePath,
+                    File2 = filePath2,
+                };
+                lstlab.Add(labReport);
+                model.lstLabReport = lstlab;
+            }
+            //lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
+            //{
+            //    call_recv_dt = Convert.ToString(row["call_recv_dt"]),
+            //    SAMPLE_REG_NO = Convert.ToString(row["sample_reg_no"]),
+            //    CASE_NO = Convert.ToString(row["case_no"]),
+            //    IE_NAME = Convert.ToString(row["ie_name"]),
+            //    vend_name = Convert.ToString(row["vend_name"]),
+            //    MFG_NAME = Convert.ToString(row["mfg_name"]),
+            //    likely_dt_report = Convert.ToString(row["likely_dt_report"]),
+            //    LAB_STATUS = Convert.ToString(row["LAB_STATUS"]),
+            //    testing_charges_by_lab = Convert.ToString(row["testing_charges_by_lab"]),
+            //    testing_charges_by_vendor = Convert.ToString(row["testing_charges_by_vendor"]),
+            //    tds_charges_by_vendor = Convert.ToString(row["tds_charges_by_vendor"]),
+            //    Vend_INIT_DT = Convert.ToString(row["Vend_INIT_DT"]),
+            //    UTR_NO = Convert.ToString(row["UTR_NO"]),
+            //    UTR_DATE = Convert.ToString(row["UTR_DATE"]),
+            //    doc_status_fin = Convert.ToString(row["doc_status_fin"]),
+            //    FIN_INIT_DT = Convert.ToString(row["FIN_INIT_DT"]),
+            //    REMARKS = Convert.ToString(row["REMARKS"]),
+            //    DOC_REJ_REMARK = Convert.ToString(row["DOC_REJ_REMARK"]),
+            //}).ToList();
+            //model.lstLabReport = lstlab;
+
             //if (ds.Tables[0].Rows.Count != 0)
             //{
             //    if (ds != null && ds.Tables.Count > 0)

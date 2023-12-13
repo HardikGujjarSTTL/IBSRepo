@@ -452,5 +452,33 @@ namespace IBS.Repositories.Reports
             model.lstConsigneeComplaints = lstCons;
             return model;
         }
+        public RecieptVoucherModel GetBankStatement(string FDate, string TDate, string Region)
+        {
+            RecieptVoucherModel model = new();
+            List<RecieptVoucherModel> lstCons = new();
+
+            
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, TDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_GET_BANKSTATEMENT", par, 3);
+            DataTable dt = ds.Tables[0];
+
+            lstCons = dt.AsEnumerable().Select(row => new RecieptVoucherModel
+            {
+                BANK_NAME = Convert.ToString(row["bank"]),
+                VCHR_NO = Convert.ToString(row["vchr_no"]),
+                VoucherDate = Convert.ToString(row["vchr_dt"]),
+                AccountNo = Convert.ToString(row["AccountNo"]),
+                AMOUNT = Convert.ToString(row["Amount"]),
+                
+            }).ToList();
+            model.lstBankStatement = lstCons;
+            return model;
+        }
     }
 }
