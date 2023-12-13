@@ -287,9 +287,9 @@ input[type="date"] {
             <div class="row my-0">
                 <input type="hidden" id="lblSno" class="input" readonly="readonly" />
                 <div class="col-md-12 mb-4">
-                    <label for="Reference">Item</label>
+                   <label for="Reference">Item <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.GetItem(@Model.CaseNo,Model.CallRecDt,Model.CallSNO) , "Value", "Text"),"",new { @id = "ddlitem"})
-
+                    <span class="text-danger field-validation-error" id="spnError1"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -320,7 +320,7 @@ input[type="date"] {
             <div class="row my-0">
 
                 <div class="col-md-12 mb-4" style="margin-top:auto;">
-
+                    <label for="Reference">Test to be Conducted</label>
                     @Html.DropDownListFor(model => model.TestTobeCon, new SelectList(IBS.Models.Common.TestToBeConducted() , "Value", "Text"),new { @id = "ddltesttobecon",style="display:none;" })
                     <textarea asp-for="TestTobeCon" class="custom-textarea" id="txttesttobeCon" style="display:none;" maxlength="200"></textarea>
                 </div>
@@ -328,8 +328,9 @@ input[type="date"] {
             <div class="row my-0">
 
                 <div class="col-md-12 mb-4">
-                    <label for="Reference">Lab</label>
+                    <label for="Reference">Lab <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.Item, new SelectList(IBS.Models.Common.GetLab() , "Value", "Text"),"",new { @id = "ddllab" })
+                    <span class="text-danger field-validation-error" id="spnError2"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -352,20 +353,21 @@ input[type="date"] {
             </div>
             <div class="row my-0">
                 <div class="col-md-4 mb-4">
-                    <label for="Reference">Testing Fee</label>
+                    <label for="Reference">Testing Fee <i class="text-danger">*</i></label>
                     <input type="text" id="testingfee" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+                    <span class="text-danger field-validation-error" id="spnError3"></span>
 
                 </div>
 
                 <div class="col-md-4 mb-4">
-                    <label for="Reference">Service Tax</label>
+                    <label for="Reference">Service Tax <i class="text-danger">*</i></label>
                     <input type="text" id="sertax" class="input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-
+                    <span class="text-danger field-validation-error" id="spnError4"></span>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <label for="Reference">Handling Charges</label>
+                    <label for="Reference">Handling Charges <i class="text-danger">*</i></label>
                     <input type="text" id="handlingcharges" class="input"  maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-
+                    <span class="text-danger field-validation-error" id="spnError5"></span>
                 </div>
             </div>
             <div class="row my-0">
@@ -375,8 +377,9 @@ input[type="date"] {
 
                 </div>
                 <div class="col-md-3 mb-4">
-                    <label>Testing Result</label>
+                    <label>Testing Result <i class="text-danger">*</i></label>
                     @Html.DropDownListFor(model => model.TestingResult, new SelectList(IBS.Models.Common.GetStatus() , "Value", "Text"),"",new { @id = "ddlstatus" })
+                    <span class="text-danger field-validation-error" id="spnError6"></span>
                 </div>
             
                 <div class="col-md-6 mb-4">
@@ -478,6 +481,38 @@ input[type="date"] {
        
 
         function AddNewLabDetails(){
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            $("#spnError3").html("");
+            $("#spnError4").html("");
+            $("#spnError5").html("");
+            $("#spnError6").html("");
+            var IsValid = true;
+            if ($("#ddlitem").val() == "") {
+                $("#spnError1").html("Please Select Item.");
+                IsValid = false;
+            }
+            if ($("#ddllab").val() == "") {
+                $("#spnError2").html("Please Select Lab.");
+                IsValid = false;
+            }
+            if ($("#testingfee").val() == "") {
+                $("#spnError3").html("Please Enter Testing Fee.");
+                IsValid = false;
+            }
+            if ($("#sertax").val() == "") {
+                $("#spnError4").html("Please Enter Service Tax.");
+                IsValid = false;
+            }
+            if ($("#handlingcharges").val() == "") {
+                $("#spnError5").html("Please Enter Handling Charges.");
+                IsValid = false;
+            }
+            if ($("#ddlstatus").val() == "") {
+                $("#spnError6").html("Please Select Testing Result.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
 
             var dtofrrValue = $("#dtregdt").val();
             var wFrmDtO1 = "";
@@ -604,6 +639,7 @@ input[type="date"] {
                 CallSNO: $("#lblCallSno").val(),
                 VendorCode: $("#lblVENDCD").val(),
                 TestingType: sessionStorage.getItem('result'),
+                TotalTDS: $("#lbltotds").val(),
                 CodeNo: $("#txtcodeno").val(),
                 CodeDate: wFrmDtO5,
 
@@ -640,17 +676,12 @@ input[type="date"] {
                 dataType: "json",
                 data: JSON.stringify(LABREGISTERModel),
                 success: function (res) {
-                    //var message = '@ViewBag.Message';
-                    //var regnoblcnk = '@ViewBag.regnoblank';
-                    //if(message != ""){
-                    //    alert(message);
-                    //}
-                    //if (regnoblcnk != "") {
-                    //    alert(regnoblcnk);
-                    //}
-                    if (res == true) {
+                    
 
-                        alert('Data Saved Successfully!');
+                    var registerNumber = res.message;
+                    if (res.success == true) {
+                        alert('Data Saved Successfully! Register Number: ' + registerNumber);
+                        //alert('Data Saved Successfully!');
                         window.location.href = "@Url.Action("Index", "LabRegisterForm")";
                     }
                     else {
@@ -661,17 +692,11 @@ input[type="date"] {
 
                 },
                 error: function (res) {
-                    //var message = '@ViewBag.Message';
-                    //var regnoblcnk = '@ViewBag.regnoblank';
-                    //if (message != "") {
-                    //    alert(message);
-                    //}
-                    //if (regnoblcnk != "") {
-                    //    alert(regnoblcnk);
-                    //}
-                    if (res == true) {
+                   
 
-                        alert('Data Saved Successfully!');
+                    if (res.success == true) {
+                        alert('Data Saved Successfully! Register Number: ' + registerNumber);
+                        //alert('Data Saved Successfully!');
                         window.location.href = "@Url.Action("Index", "LabRegisterForm")";
                     }
                     else {

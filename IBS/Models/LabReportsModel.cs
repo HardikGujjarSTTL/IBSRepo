@@ -109,12 +109,16 @@ namespace IBS.Models
         public string testing_charges_by_vendor { get; set; }
         public string tds_charges_by_vendor { get; set; }
         public string CallDocDate { get; set; }
+        public string File { get; set; }
+        public string File2 { get; set; }
         public string doc_status_fin { get; set; }
         public string Vend_INIT_DT { get; set; }
         public string FIN_INIT_DT { get; set; }
         public string call_recv_dt { get; set; }
         public string UTR_NO { get; set; }
         public string UTR_DATE { get; set; }
+        public bool PDoc { get; set; }
+        public bool LABDoc { get; set; }
 
         public string wFrmDtO { get; set; }
         public string wToDt { get; set; }
@@ -134,6 +138,9 @@ namespace IBS.Models
         public string lstLab { get; set; }
         public string from { get; set; }
         public string to { get; set; }
+        public string Disciplinewise { get; set; }
+        public string rdbPDis { get; set; }
+        public string Discipline { get; set; }
         public List<LabReportsModel> lstLabReport { get; set; }
         public List<LabReportsModel> lstsum { get; set; }
     }

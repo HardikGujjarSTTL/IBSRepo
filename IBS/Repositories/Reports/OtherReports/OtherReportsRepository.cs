@@ -251,7 +251,7 @@ namespace IBS.Repositories.Reports.OtherReports
             DataSet ds = null;
             DataTable dt = new DataTable();
 
-            model.month = month; model.year = year; model.AllCM = AllCM; model.FromDate = FromDate; model.ToDate = ToDate; model.forCM = forCM; model.Outstanding = Outstanding; model.formonth = formonth; model.forperiod = forperiod;
+            model.month = month; model.year = year; model.AllCM = AllCM; model.FromDate = Convert.ToDateTime(FromDate); model.ToDate = Convert.ToDateTime(ToDate); model.forCM = forCM; model.Outstanding = Outstanding; model.formonth = formonth; model.forperiod = forperiod;
 
             string formattedFromDate = "";
             string formattedToDate = "";

@@ -26,7 +26,7 @@
         }
         else
         {
-            <h3 class="center">Download documents for rly invoices for the period : <span class="orangeText">@Model.FromDt - @Model.ToDt</span> @Model.Region</h3>
+            <h3 class="center">Download documents for rly invoices for the period : <span class="orangeText">@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") - @Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")</span> @Model.Region</h3>
         }
         <table class="borderTable" cellpadding="0" cellspacing="0" width="100%" id="dtList">
             <tbody>

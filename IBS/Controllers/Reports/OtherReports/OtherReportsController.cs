@@ -190,6 +190,9 @@ namespace IBS.Controllers.Reports.OtherReports
             model.Regions = wRegion;
             model.Todaydate = currentDateAndTime;
             model.reporttype = reporttype;
+            model.IENametext = IENametext;
+            model.COName = COName;
+            model.monthChar = monthChar;
             GlobalDeclaration.NCRReports = model;
             return PartialView(model);
         }

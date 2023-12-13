@@ -1,0 +1,42 @@
+﻿@model IBS.Models.RecieptVoucherModel
+<div>
+    @*<h3 class="center"></h3>*@
+    <h3 class="center">Summary Of Bank Statement Voucher<br /> <span class="orangeText"> @Model.FromDate </span> To <span class="orangeText">@Model.ToDate </span><br />(@Model.Region)</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Voucher No</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Voucher Date</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bank</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Account No</font></b></th>
+                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Amount</font></b></th>
+                    
+                </tr>
+                @if (Model != null && Model.lstBankStatement != null && Model.lstBankStatement.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstBankStatement)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.VCHR_NO</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.VoucherDate</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BANK_NAME</font></td>
+                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.AccountNo</font></td>
+                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.AMOUNT</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" class="noRecordGrid">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

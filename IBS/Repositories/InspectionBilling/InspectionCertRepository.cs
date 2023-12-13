@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.Net;
 using System.Dynamic;
+using System.Globalization;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -1386,13 +1387,24 @@ namespace IBS.Repositories.InspectionBilling
             Callsno = Callsno.ToString() == "" ? string.Empty : Callsno.ToString();
             Consignee = Consignee.ToString() == "" ? string.Empty : Consignee.ToString();
 
+            //query = from c in context.T18CallDetails
+            //        join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+            //        join u in context.T04Uoms on p.UomCd equals u.UomCd
+            //        where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == Caseno
+            //               && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
+            //               && c.CallSno == Convert.ToInt16(Callsno)
+            //               && c.ConsigneeCd == Convert.ToInt32(Consignee)
             query = from c in context.T18CallDetails
                     join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                     join u in context.T04Uoms on p.UomCd equals u.UomCd
-                    where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == Caseno
-                           && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
-                           && c.CallSno == Convert.ToInt16(Callsno)
-                           && c.ConsigneeCd == Convert.ToInt32(Consignee)
+                    join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                    from intermediate in intermediateGroup.DefaultIfEmpty()
+                    where c.ItemSrnoPo == p.ItemSrno
+                       && c.CaseNo == Caseno
+                       && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
+                       && c.CallSno == Convert.ToInt16(Callsno)
+                       && c.ConsigneeCd == Convert.ToInt32(Consignee)
+
                     select new InspectionCertModel
                     {
                         ItemSrnoPo = c.ItemSrnoPo,
@@ -1401,10 +1413,10 @@ namespace IBS.Repositories.InspectionBilling
                         QtyOrdered = c.QtyOrdered,
                         CumQtyPrevOffered = c.CumQtyPrevOffered,
                         CumQtyPrevPassed = c.CumQtyPrevPassed,
-                        QtyToInsp = c.QtyToInsp,
-                        QtyPassed = c.QtyPassed,
-                        QtyRejected = c.QtyRejected,
-                        QtyDue = c.QtyDue,
+                        QtyToInsp = (intermediate.QtyToInsp != 0) ? intermediate.QtyToInsp : c.QtyToInsp,
+                        QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
+                        QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
+                        QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
                         Rate = p.Rate,
                         SalesTaxPer = p.SalesTaxPer,
                         SalesTax = p.SalesTax,
@@ -2094,15 +2106,28 @@ namespace IBS.Repositories.InspectionBilling
 
 
             var query = (from c in context.T18CallDetails
-                         join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
-                         join u in context.T04Uoms on p.UomCd equals u.UomCd
-                         where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
-                         select new
-                         {
-                             c,
-                             p,
-                             u
-                         }).FirstOrDefault();
+                        join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                        join u in context.T04Uoms on p.UomCd equals u.UomCd
+                        join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                        from intermediate in intermediateGroup.DefaultIfEmpty()
+                        where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
+                        select new
+                        {
+                            c,
+                            p,
+                            u,
+                            intermediate
+                        }).FirstOrDefault();
+            //var query = (from c in context.T18CallDetails
+            //             join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+            //             join u in context.T04Uoms on p.UomCd equals u.UomCd
+            //             where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
+            //             select new
+            //             {
+            //                 c,
+            //                 p,
+            //                 u
+            //             }).FirstOrDefault();
             var CDetails = query;
 
             if (CDetails != null)
@@ -2114,11 +2139,14 @@ namespace IBS.Repositories.InspectionBilling
                 model.QtyOrdered = CDetails.c.QtyOrdered;
                 model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
                 model.ItemDescPo = CDetails.c.ItemDescPo;
-                model.QtyPassed = CDetails.c.QtyPassed;
-                model.QtyToInsp = CDetails.c.QtyToInsp;
-                model.QtyPassed = CDetails.c.QtyPassed;
-                model.QtyRejected = CDetails.c.QtyRejected;
-                model.QtyDue = CDetails.c.QtyDue;
+                model.QtyToInsp = (CDetails.intermediate.QtyToInsp != 0) ? CDetails.intermediate.QtyToInsp : CDetails.c.QtyToInsp;
+                model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed;
+                model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected;
+                model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue : CDetails.c.QtyDue;
+                //model.QtyToInsp = CDetails.c.QtyToInsp;
+                //model.QtyPassed = CDetails.c.QtyPassed;
+                //model.QtyRejected = CDetails.c.QtyRejected;
+                //model.QtyDue = CDetails.c.QtyDue;
                 model.Rate = CDetails.p.Rate;
                 model.SalesTaxPer = CDetails.p.SalesTaxPer;
                 model.SalesTax = CDetails.p.SalesTax;

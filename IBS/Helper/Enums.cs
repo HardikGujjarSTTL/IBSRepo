@@ -879,5 +879,6 @@ namespace IBS.Helper
         public static IEDairyModel IEDairy { get;set; }
 
         public static IEWorkPlanModel IEWorkPlan { get; set; }
+        public static RecieptVoucherModel BankStatement { get; set; }
     }
 }

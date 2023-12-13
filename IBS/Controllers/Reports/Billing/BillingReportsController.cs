@@ -116,6 +116,21 @@ namespace IBS.Controllers.Reports.Billing
             model.FilePath3 = BillICPath;
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult GetBPORLY(string BpoType)
+        {
+            try
+            {
+                List<SelectListItem> objList = Common.GetBPORLY(BpoType);
+                return Json(new { status = true, list = objList });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AdministratorPurchaseOrder", "GetRailwayCode", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         #endregion
 
         #region Other Event

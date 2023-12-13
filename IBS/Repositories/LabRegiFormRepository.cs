@@ -595,9 +595,9 @@ namespace IBS.Repositories
         public bool InsertLabReg(LABREGISTERModel LABREGISTERModel)
         {
             string REG_NO = GenerateSampleRegNo(LABREGISTERModel);
+            LABREGISTERModel.SampleRegNo = REG_NO;
             string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
-
             ss = GetDateString(sqlQuery);
             try
             {
@@ -617,7 +617,7 @@ namespace IBS.Repositories
                 {
                     LABREGISTERModel.TestingType = "";
                 }
-                OracleParameter[] par = new OracleParameter[15];
+                OracleParameter[] par = new OracleParameter[16];
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, REG_NO, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_SAMPLE_REG_DT", OracleDbType.Date, LABREGISTERModel.SampleRegDate, ParameterDirection.Input);
                 //par[2] = new OracleParameter("p_SAMPLE_DRAWL_DT", OracleDbType.Date, LABREGISTERModel.SampleDrawalDate, ParameterDirection.Input);
@@ -667,20 +667,21 @@ namespace IBS.Repositories
                 par[10] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, LABREGISTERModel.UName, ParameterDirection.Input);
                 par[11] = new OracleParameter("p_DATETIME", OracleDbType.Date, ss, ParameterDirection.Input);
                 par[12] = new OracleParameter("p_TESTING_TYPE", OracleDbType.Varchar2, LABREGISTERModel.TestingType, ParameterDirection.Input);
-                par[13] = new OracleParameter("p_CODE_NO", OracleDbType.Varchar2, LABREGISTERModel.CodeNo, ParameterDirection.Input);
+                par[13] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LABREGISTERModel.TotalTDS, ParameterDirection.Input);
+                par[14] = new OracleParameter("p_CODE_NO", OracleDbType.Varchar2, LABREGISTERModel.CodeNo, ParameterDirection.Input);
                 //par[14] = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
-                OracleParameter param14;
+                OracleParameter param15;
 
                 if (LABREGISTERModel.CodeDate == "")
                 {
-                    param14 = new OracleParameter("p_CODE_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
+                    param15 = new OracleParameter("p_CODE_DT", OracleDbType.Date, DBNull.Value, ParameterDirection.Input);
                 }
                 else
                 {
-                    param14 = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
+                    param15 = new OracleParameter("p_CODE_DT", OracleDbType.Date, LABREGISTERModel.CodeDate, ParameterDirection.Input);
                 }
 
-                par[14] = param14;
+                par[15] = param15;
 
                 var ds = DataAccessDB.ExecuteNonQuery("SP_INSERT_LAB_REGISTER", par, 1);
                 string Sno = GetSNo(REG_NO);

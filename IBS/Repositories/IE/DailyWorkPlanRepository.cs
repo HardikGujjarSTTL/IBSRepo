@@ -269,7 +269,7 @@ namespace IBS.Repositories.IE
             //}
 
 
-            int VendCount = 0, RecCount=0;
+            int VendCount = 0, RecCount = 0;
             var distinctVCodes = deserializedData.Select(x => x.MfgCd).Distinct();
             foreach (var VCode in distinctVCodes)
             {
@@ -298,6 +298,14 @@ namespace IBS.Repositories.IE
                             model.CallRecvDt = details.CallRecvDt;
                             model.CallSno = details.CallSno;
 
+                            var approvalCount = context.T47IeWorkPlans.Count(x => x.VisitDt.Date == DateTime.Now.Date && x.IeCd == GetIeCd);
+                            var T17 = context.T17CallRegisters.Where(x => x.CaseNo == details.CaseNo && x.CallRecvDt == details.CallRecvDt && x.CallSno == details.CallSno).FirstOrDefault();
+                            if (approvalCount < 5)
+                            {
+                                T17.CmApproval = "A";
+                                T17.CmApprovalDt = DateTime.Now.Date;
+                                context.SaveChanges();
+                            }
                             var query = (from t17 in context.T17CallRegisters
                                          join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
                                          join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
@@ -349,6 +357,15 @@ namespace IBS.Repositories.IE
                         model.CaseNo = details.CaseNo;
                         model.CallRecvDt = details.CallRecvDt;
                         model.CallSno = details.CallSno;
+
+                        var approvalCount = context.T47IeWorkPlans.Count(x => x.VisitDt.Date == DateTime.Now.Date && x.IeCd == GetIeCd);
+                        var T17 = context.T17CallRegisters.Where(x => x.CaseNo == details.CaseNo && x.CallRecvDt == details.CallRecvDt && x.CallSno == details.CallSno).FirstOrDefault();
+                        if (approvalCount < 5)
+                        {
+                            T17.CmApproval = "A";
+                            T17.CmApprovalDt = DateTime.Now.Date;
+                            context.SaveChanges();
+                        }
 
                         var query = (from t17 in context.T17CallRegisters
                                      join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
@@ -414,6 +431,14 @@ namespace IBS.Repositories.IE
                     context.T47IeWorkPlans.RemoveRange(T47);
                     context.SaveChanges();
                     ID = Convert.ToInt32(T47.CallSno);
+                }
+                var approvalCount = context.T47IeWorkPlans.Count(x => x.VisitDt.Date == DateTime.Now.Date && x.IeCd == GetIeCd);
+                var T17 = context.T17CallRegisters.Where(x => x.CaseNo == details.CaseNo && x.CallRecvDt == details.CallRecvDt && x.CallSno == details.CallSno).FirstOrDefault();
+                if (T17 != null)
+                {
+                    T17.CmApproval = null;
+                    T17.CmApprovalDt = null;
+                    context.SaveChanges();
                 }
             }
             return ID;
