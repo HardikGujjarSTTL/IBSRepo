@@ -1,4 +1,5 @@
 ﻿@model IBS.Models.Reports.NCRReport
+@using System.Globalization
 
 <div>
     <h3 class="center">@Model.Regions</h3>
@@ -9,11 +10,11 @@
         {
             @if (@Model.AllCM == "true")
             {
-                <h3 class="heading3">No. Of NCR's Registered during  : @Model.month , @Model.year (CM Wise)</h3>
+                <h3 class="heading3">No. Of NCR's Registered during  : @Model.monthChar , @Model.year (CM Wise)</h3>
             }
             else
             {
-                <h3 class="heading3">CO : @Model.COName Registered during : @Model.month , @Model.year </h3>
+                <h3 class="heading3">CO : @Model.IENametext Registered during : @Model.monthChar , @Model.year </h3> 
             }
 
         }
@@ -21,12 +22,12 @@
         {
             @if (@Model.AllCM == "true")
             {
-                <h3 class="heading3">No. Of NCR's Registered during  : @Model.FromDate To @Model.ToDate (CM Wise)</h3>
+                <h3 class="heading3">No. Of NCR's Registered during  : @Model.FromDate.ToString("dd/MM/yyyy") To @Model.ToDate.ToString("dd/MM/yyyy") (CM Wise)</h3>
                 <h3 class="heading3">Run Date  : @Model.Todaydate</h3>
             }
             else
             {
-                <h3 class="heading3">CO : @Model.COName Registered during : @Model.FromDate To @Model.ToDate </h3>
+                <h3 class="heading3">CO : @Model.IENametext Registered during : @Model.FromDate.ToString("dd/MM/yyyy") To @Model.ToDate.ToString("dd/MM/yyyy") </h3>
                 <h3 class="heading3">Run Date  : @Model.Todaydate </h3>
             }
         }
@@ -38,11 +39,11 @@
         {
             @if (@Model.AllCM == "true")
             {
-                <h3 class="heading3">No. Of NCR's Registered during  : @Model.month , @Model.year (IE Wise)</h3>
+                <h3 class="heading3">No. Of NCR's Registered during  : @Model.monthChar , @Model.year (IE Wise)</h3>
             }
             else
             {
-                <h3 class="heading3">IE : @Model.IENametext Registered during : @Model.month , @Model.year </h3>
+                <h3 class="heading3">IE : @Model.IENametext Registered during : @Model.monthChar , @Model.year </h3>
             }
 
         }
@@ -50,12 +51,12 @@
         {
             @if (@Model.AllCM == "true")
             {
-                <h3 class="heading3">No. Of NCR's Registered during  : @Model.FromDate To @Model.ToDate (IE Wise)</h3>
+                <h3 class="heading3">No. Of NCR's Registered during  : @Model.FromDate.ToString("dd/MM/yyyy") To @Model.ToDate.ToString("dd/MM/yyyy") (IE Wise)</h3>
                 <h3 class="heading3">Run Date  : @Model.Todaydate</h3>
             }
             else
             {
-                <h3 class="heading3">IE : @Model.IENametext Registered during : @Model.FromDate To @Model.ToDate </h3>
+                <h3 class="heading3">IE : @Model.IENametext Registered during : @Model.FromDate.ToString("dd/MM/yyyy") To @Model.ToDate.ToString("dd/MM/yyyy") </h3>
                 <h3 class="heading3">Run Date  : @Model.Todaydate </h3>
             }
         }

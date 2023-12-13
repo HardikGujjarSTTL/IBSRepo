@@ -16,10 +16,18 @@ namespace IBS.Models
         public int? BANK_CD { get; set; }
 
         public string BANK_NAME { get; set; }
+        public string VoucherDate { get; set; }
+        public string AccountNo { get; set; }
 
         public string VCHR_TYPE { get; set; }
 
         public string Region { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string CHQ_NO { get; set; }
+
+        public string CHQ_DT { get; set; }
+        public string AMOUNT { get; set; }
 
         public string UserName { get; set; }
 
@@ -36,6 +44,7 @@ namespace IBS.Models
         public bool IsNew { get; set; } = true;
 
         public List<VoucherDetailsModel> lstVoucherDetails { get; set; }
+        public List<RecieptVoucherModel> lstBankStatement { get; set; }
     }
 
     public class VoucherDetailsModel

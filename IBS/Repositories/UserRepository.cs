@@ -247,7 +247,7 @@ namespace IBS.Repositories
                 userSessionModel.OrgnTypeL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
                 userSessionModel.OrganisationL = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
                 userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
-                userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_CHASED"]).Trim();
+                userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
             }
@@ -672,10 +672,10 @@ namespace IBS.Repositories
                         ActionName = row.Field<string>("ACTIONNAME"),
                         IconPath = row.Field<string>("ICONPATH"),
                         Role_Id = row.Field<Int32>("ROLE_ID"),
-                        AddAccess = row.Field<decimal>("IsAdd") == 1 ? true : false,
-                        EditAccess = row.Field<decimal>("IsEdit") == 1 ? true : false,
-                        DeleteAccess = row.Field<decimal>("PIsDelete") == 1 ? true : false,
-                        ViewAccess = row.Field<decimal>("IsView") == 1 ? true : false,
+                        AddAccess = row.Field<Int32>("IsAdd") == 1 ? true : false,
+                        EditAccess = row.Field<Int32>("IsEdit") == 1 ? true : false,
+                        DeleteAccess = row.Field<Int32>("PIsDelete") == 1 ? true : false,
+                        ViewAccess = row.Field<Int32>("IsView") == 1 ? true : false,
                     }));
                 }
             }

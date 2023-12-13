@@ -1,14 +1,7 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
-=============================================================================================================================================
 
 -- 1. Create a table with a primary key constraint
 
-
-
-=============================================================================================================================================
-By Vishvaraj Rathod
-=============================================================================================================================================
 
 ALTER TABLE T57_ONGOING_CONTRACTS 
     ADD IsDeleted NUMBER(2,0);
@@ -20,10 +13,10 @@ ALTER TABLE T46_CLAIM_DETAIL
     ADD UpdatedBy Number(2,0); 
     
 ALTER TABLE T57_ONGOING_CONTRACTS
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE T57_ONGOING_CONTRACTS
-    ADD UpdatedDate DATE 
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE ;
 
 ALTER TABLE T57_ONGOING_CONTRACTS 
     MODIFY CONTRACT_ID  NUMBER(8,0);
@@ -108,10 +101,10 @@ ALTER TABLE t59_lab_exp
     ADD UpdatedBy Number(2,0); 
     
 ALTER TABLE t59_lab_exp
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE t59_lab_exp
-    ADD UpdatedDate DATE 
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE ;
 
 ALTER TABLE t59_lab_exp 
     ADD IsDeleted NUMBER(2,0);
@@ -127,10 +120,10 @@ ALTER TABLE t83_be_target
     ADD UpdatedBy CHAR(8,0); 
     
 ALTER TABLE t83_be_target
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE t83_be_target
-    ADD UpdatedDate DATE 
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE; 
 
 -------------------------------------------
 
@@ -144,7 +137,7 @@ ALTER TABLE t84_outs_ly
     ADD UpdatedBy CHAR(8,0); 
     
 ALTER TABLE t84_outs_ly
-    ADD CreatedDate DATE
+    ADD CreatedDate TIMESTAMP(6) WITH TIME ZONE;
 
 ALTER TABLE t84_outs_ly
-    ADD UpdatedDate DATE
+    ADD UpdatedDate TIMESTAMP(6) WITH TIME ZONE;

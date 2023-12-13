@@ -212,7 +212,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [Authorization("LabRegisterForm", "Index", "edit")]
-        public bool InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
+        public JsonResult InsertLabReg([FromBody] LABREGISTERModel LABREGISTERModel)
         {
             try
             {
@@ -250,25 +250,21 @@ namespace IBS.Controllers
                 if (result == false)
                 {
                     //ViewBag.regnoblank = "Registration Details not available";
-                    return false;
+                    //return false;
+                    return Json(new { success = false, message = "Registration Details not available" });
                 }
                 else
                 {
-                    return true;
+                    return Json(new { success = true, message = LABREGISTERModel.SampleRegNo });
+                    //return true;
                 }
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "LabRegisterForm", "InsertLabReg", 1, GetIPAddress());
             }
-            return false;
-            //}
-            //else
-            //{
-            //    ViewBag.Message = "Code No. & Date cannot be left blank."; 
-            //    return false;
-            //}
-
+            //return false;
+            return Json(new { success = false, message = "Registration Details not available" });
         }
         [HttpPost]
         public IActionResult PrintInvoice(string RegNo)

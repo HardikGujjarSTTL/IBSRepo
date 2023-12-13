@@ -1,0 +1,74 @@
+﻿@model IBS.Models.Railway
+
+@{
+    ViewData["Title"] = "Manage";
+    var Types = Model.Type;
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manage Client Railway</h2>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="ClientRailway" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <form role="form" asp-controller="ClientRailway" asp-action="RailwaySave" id="frmRailways">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <input hidden asp-for="Type"/>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Railway Code<i class="text-danger">*</i></label>
+                    @if (Types == "U")
+                    {
+                        <input type="text" class="input" asp-for="RLY_CD" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="input" asp-for="RLY_CD" />
+                    }
+                    <span asp-validation-for="RLY_CD" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">Railway<i class="text-danger">*</i></label>
+                    <input type="text" class="input" asp-for="RAILWAY" />
+                    <span asp-validation-for="RAILWAY" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">HEAD QUARTER</label>
+                    <input type="text" class="input" asp-for="HEAD_QUARTER" />
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="Reference">IMMS Railway Code</label>
+                    <input type="text" class="input" maxlength="2" onkeypress="return isNumber(event)" asp-for="IMMS_RLY_CD" />
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active Permission_Save" onclick="SaveRailway();">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        //$(document).ready(function () {
+        //    var Type = $("#Type").val();
+        //    if(Type == "U"){
+        //        $('#RLY_CD').prop('disabled', true);
+        //    }
+        //});
+
+        function SaveRailway() {
+            if ($("#frmRailways").valid()) {
+                $("#frmRailways").submit();
+            }
+        }
+
+    </script>
+}
+

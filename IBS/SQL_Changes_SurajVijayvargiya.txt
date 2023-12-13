@@ -1,11 +1,11 @@
 
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
-=============================================================================================================================================
+--Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+--=============================================================================================================================================
 
 create view view_Laboratory
 as
 select LAB_ID,LAB_NAME,LAB_ADDRESS,T1.City from T65_LABORATORY_MASTER T0
-left join T03_CITY T1 on T0.LAB_CITY=t1.city_cd
+left join T03_CITY T1 on T0.LAB_CITY=t1.city_cd;
 
 ALTER TABLE T64_TEST_CATEGORY
 MODIFY TEST_CATEGORY_CD CHAR(2 BYTE);
@@ -36,11 +36,11 @@ MODIFY IE_CD NUMBER(6,0) ;
 ALTER TABLE T65_LABORATORY_MASTER
     MODIFY LAB_ID NUMBER(6,0) DEFAULT T65_LABORATORY_MASTER_seq.nextval;
 
-    ALTER INDEX PK_LAB_ID RENAME TO T65_LABORATORY_MASTER_PK;
+ALTER INDEX PK_LAB_ID RENAME TO T65_LABORATORY_MASTER_PK;
 
 
-    1) Tds Entry
-    create or replace PROCEDURE SP_GET_SearchRegNo
+--1) Tds Entry
+create or replace PROCEDURE SP_GET_SearchRegNo
 (
   p_SAMPLE_REG_NO IN VARCHAR2, -- IN parameter to accept txtBNO.Text value
   p_REGION IN VARCHAR2,         -- If "Session['Region']" is passed, otherwise remove this parameter
@@ -60,7 +60,9 @@ BEGIN
       AND (p_REGION IS NULL OR SUBSTR(CASE_NO, 1, 1) = p_REGION)
       AND NVL(AMOUNT_RECIEVED, 0) < NVL(TOTAL_LAB_CHARGES, 0);
 END;
-2) Lab Register Form
+/
+
+--2) Lab Register Form
 create or replace PROCEDURE SP_LabRegLoadData
 (
   p_SAMPLE_REG_NO IN VARCHAR2, -- IN parameter to accept txtBNO.Text value
@@ -95,3 +97,4 @@ BEGIN
     AND T50.IE_CD = T09.IE_CD
     AND T50.VEND_CD = V05.VEND_CD;
 END;
+/

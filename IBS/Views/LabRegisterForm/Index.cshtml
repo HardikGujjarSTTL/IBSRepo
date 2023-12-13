@@ -221,7 +221,16 @@
             $(".datepicker").datepicker({
                 dateFormat: "dd/mm/yy" // Set the date format to "dd/mm/yy"
             });
-            //InitializeDatatableLabReg();
+            var inputFields = ['#txtlabregno', '#txtcaseno', '#txtcallRDt', '#txtcallno'];
+            inputFields.forEach(function (inputId) {
+                $(inputId).keypress(function (event) {
+                    if (event.which === 13) {
+                        event.preventDefault();
+                        $('#btnsr').click();
+                    }
+                });
+            });
+
         });
         function InitializeDatatableLabReg(CaseNo, CallRdt, RegNo) {
 
@@ -404,8 +413,14 @@
             });
 
         }
+       
         $("#btnsr").click(function () {
+            if ($("#txtlabregno").val() == '' && $("#txtcaseno").val() == '' && $("#txtcallRDt").val() == '' && $("#txtcallno").val() == '') {
+                location.reload();
+                return false;
+            }
 
+            
             var CaseNo = $("#txtcaseno").val();
             var CallRdt = $("#txtcallRDt").val();
             var RegNo = $("#txtlabregno").val();

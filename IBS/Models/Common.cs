@@ -2843,14 +2843,15 @@ namespace IBS.Models
 
             List<SelectListItem> BpoRly = new();
 
+
             BpoRly = (from t12 in ModelContext.T12BillPayingOfficers
                       where t12.BpoType == BpoType
-                      orderby t12.BpoRly
+                      //orderby t12.BpoRly ascending
                       select new SelectListItem
                       {
-                          Text = t12.BpoRly,
-                          Value = t12.BpoRly
-                      }).Distinct().ToList();
+                          Text = Convert.ToString(t12.BpoRly).Trim(),
+                          Value = Convert.ToString(t12.BpoRly).Trim()
+                      }).Distinct().OrderBy(x => x.Text).ToList();
             return BpoRly;
         }
         public static List<SelectListItem> GetBPO(string BpoType)
@@ -2863,7 +2864,7 @@ namespace IBS.Models
             BpoRly = (from bpo in ModelContext.T12BillPayingOfficers
                       where bpo.BpoCd.Trim().ToUpper() == searchText ||
                   bpo.BpoName.Trim().ToUpper().StartsWith(searchText)
-                      orderby bpo.BpoName
+                      orderby bpo.BpoName ascending
                       select new SelectListItem
                       {
                           Value = bpo.BpoCd,

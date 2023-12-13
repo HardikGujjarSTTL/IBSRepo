@@ -21,7 +21,8 @@ namespace IBS.Repositories
             int maxID = 0;
             int NonClientId = 0;
             var NonClient = (from r in context.NonRlyClients where r.Id == Convert.ToInt32(model.Id) select r).FirstOrDefault();
-            var existingClient = context.NonRlyClients.FirstOrDefault(r => r.Mobileno == model.MOBILE);
+            var existingClient = context.NonRlyClients.FirstOrDefault(r => r.Clientname == model.ClientName && r.Shortcode == model.ShortCode && r.Orgntype == model.Orgn_Type);
+
             if (existingClient == null || existingClient.Id == Convert.ToInt32(model.Id))
             {
                 #region Non Client save
