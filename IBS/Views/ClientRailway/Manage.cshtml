@@ -48,6 +48,14 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
+        $(document).ready(function () {
+            debugger
+            var Type = $("#Type").val();
+            if(Type == "U"){
+                $('#RLY_CD').prop('disabled', true);
+            }
+        });
+
         function SaveRailway() {
             if ($("#frmRailways").valid()) {
                 $("#frmRailways").submit();
