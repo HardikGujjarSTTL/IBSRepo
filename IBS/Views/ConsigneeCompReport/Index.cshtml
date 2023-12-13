@@ -1357,7 +1357,9 @@
             var ddlsupercm = $('#ddlsupercm').val();
             var ddliename = $('#ddliename').val();
             var Clientwiseddl = $('#Clientwiseddl').val();
-            var vendor = $('#vendor').val();
+            var vendortxt = $('#vendortxt').val();
+            var indexOfHyphen = vendortxt.indexOf("-");
+            var vendor = vendortxt.substr(0, indexOfHyphen).trim();
             var Item = $('#Item').val();
             var consignee = $('#consignee').val();
 
