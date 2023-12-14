@@ -2,13 +2,13 @@
 
 <div>
     <h3 class="center">@Model.Region</h3>
-    @if (@Model.FromDate != null)
+    @if (@Model.monthtxt != null && @Model.monthtxt != "--Select--")
     {
-        <h3 class="heading3">Vendor Performance For  :  @Model.vendor <span class="orangeText"> During  @Model.FromDate To @Model.ToDate </span> (Based on Call Date)</h3>
+        <h3 class="heading3">Vendor Performance For  : @Model.vendor <span class="orangeText"> (@Model.monthtxt , @Model.year) </span> (Based on Call Date)</h3>
     }
     else
     {
-        <h3 class="heading3">Vendor Performance For  : @Model.vendor <span class="orangeText"> (@Model.monthtxt , @Model.year) </span> (Based on Call Date)</h3>
+        <h3 class="heading3">Vendor Performance For  :  @Model.vendor <span class="orangeText"> During  @Model.FromDate To @Model.ToDate </span> (Based on Call Date)</h3>
     }
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
