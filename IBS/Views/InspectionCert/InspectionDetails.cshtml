@@ -241,7 +241,7 @@
                     <input type="text" class="input" asp-for="Au" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
                     @*<label class="darkRedBoldText">@Model.Au</label>*@
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-11 mb-3">
                     <label for="Reference btnAlign">Bill Paying Officer : </label>
                     <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;color:#d52127;" readonly>
                     @*<label class="darkRedBoldText">@Model.BpoName</label>*@
@@ -425,11 +425,11 @@
                         <span id="spnBillDt" style="color:#d52127;"></span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3" style="display:none;">
                     <div class="reference btnAlign">
                         @*<label for="Reference" id="lblBillDtUpdate">Bill Date</label>*@
                         <div class="savenext-btn">
-                            <button type="button" class="save-btn active" id="btnBillDtUpdate" style="display:none;">Bill Date Update</button>
+                            <button type="button" class="save-btn active" id="btnBillDtUpdate" >Bill Date Update</button>
                         </div>
                     </div>
                 </div>
@@ -518,7 +518,7 @@
                         <input type="text" class="input" asp-for="BpoCd" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-11 mb-3">
                     <div class="reference">
                         <label for="Reference"><span style="color:#d52127;">Only For Display in Invoice</span></label>
                         @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))

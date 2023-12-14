@@ -67,6 +67,8 @@ namespace IBS.Repositories
                     {
                         BARCODE = Convert.ToString(row["BARCODE"]),
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        CALL_RECV_DT = Convert.ToString(row["call_recv_dt"]),
+                        CALL_SNO = Convert.ToInt32(row["call_sno"]),
                         CURRENT_DATE = Convert.ToString(row["CURRENT_DATE"]),
                         INSPECTOR_CUSTOMER = Convert.ToString(row["INSPECTOR_CUSTOMER"]),
                         DESCRIPTION = Convert.ToString(row["DESCRIPTION"]),
@@ -405,6 +407,32 @@ namespace IBS.Repositories
                 }
 
             }
+            return true;
+        }
+        public bool SaveBarcodeGenerated(string Barcode, int quantity, string caseno, int callsno, string calldate, string IPADDRESS, string USERID, string CREATEDBY)
+        {
+            calldate = Convert.ToDateTime(calldate).ToString("MM/dd/yyyy");
+            try
+            {
+                //string BarCodeNo = GenerateBarCodeNo(BarcodeGenerate);
+                OracleParameter[] par = new OracleParameter[9];
+                par[0] = new OracleParameter("p_BARCODE_NO", OracleDbType.Varchar2, Barcode, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_QTY", OracleDbType.Int32, quantity, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, caseno, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_CALL_SNO", OracleDbType.Int32, callsno, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_CALL_DATE", OracleDbType.Date, calldate, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_CREATEDDATE", OracleDbType.Date, DateTime.Now, ParameterDirection.Input);
+                par[6] = new OracleParameter("p_CREATEDBY", OracleDbType.Varchar2, CREATEDBY, ParameterDirection.Input);
+                par[7] = new OracleParameter("p_USERID", OracleDbType.Varchar2, USERID, ParameterDirection.Input);
+                par[8] = new OracleParameter("p_IPADDRESS", OracleDbType.Varchar2, IPADDRESS, ParameterDirection.Input);
+                var ds = DataAccessDB.ExecuteNonQuery("InsertBarcodeGenerated", par, 1);
+            }
+
+            catch (Exception ex)
+            {
+                return false;
+            }
+
             return true;
         }
     }

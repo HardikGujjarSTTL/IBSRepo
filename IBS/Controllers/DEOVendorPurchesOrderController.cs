@@ -598,19 +598,22 @@ namespace IBS.Controllers
                         foreach (var item in lstDocument)
                         {
                             string TempFilePath2 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm);
-                            string VendorPath2 = Path.Combine(TempFilePath2, item.FileID);
-                            string TempFilePath12 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder);
-                            string DestinationPath1 = Path.Combine(TempFilePath12, item.FileID);
-                            if (System.IO.File.Exists(VendorPath2) && !System.IO.File.Exists(DestinationPath1))
+                            if (item.FileID != null)
                             {
-                                System.IO.File.Copy(VendorPath2, DestinationPath1, true);
-                            }
+                                string VendorPath2 = Path.Combine(TempFilePath2, item.FileID);
+                                string TempFilePath12 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder);
+                                string DestinationPath1 = Path.Combine(TempFilePath12, item.FileID);
+                                if (System.IO.File.Exists(VendorPath2) && !System.IO.File.Exists(DestinationPath1))
+                                {
+                                    System.IO.File.Copy(VendorPath2, DestinationPath1, true);
+                                }
 
-                            IBS_DocumentDTO iBS_DocumentDTOs = pOMasterRepository.FindAPPDocumentByID(Convert.ToString(item.ApplicationID), (int)item.DocumentID);
-                            if (iBS_DocumentDTOs != null)
-                            {
-                                iBS_DocumentDTOs.ApplicationID = RealCaseNo;
-                                int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTOs);
+                                IBS_DocumentDTO iBS_DocumentDTOs = pOMasterRepository.FindAPPDocumentByID(Convert.ToString(item.ApplicationID), (int)item.DocumentID);
+                                if (iBS_DocumentDTOs != null)
+                                {
+                                    iBS_DocumentDTOs.ApplicationID = RealCaseNo;
+                                    int id = pOMasterRepository.SaveAPPDocumentByID(iBS_DocumentDTOs);
+                                }
                             }
                         }
 
