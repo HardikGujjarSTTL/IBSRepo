@@ -14,14 +14,14 @@
     <div class="accordion-body">
         <div class="row my-0 d-flex align-items-end">
             <div class="col-md-3">
-                <label for="Reference">Client Type</label>
+                <label for="Reference">Organization Type</label>
                 @Html.DropDownListFor(model => model.CLIENTTYPE, new SelectList(IBS.Models.Common.RailwaysTypes() , "Value", "Text"), "--Select--",new { @class = "select2", @id="CLIENTTYPE" })
                 <span asp-validation-for="CLIENTTYPE" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="Reference">Client Name</label>
+                <label for="Reference">Organization Name</label>
                 @Html.DropDownListFor( model => model.CLIENTNAME, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @class = "select2", id = "CLIENTNAME" })
-                <span asp-validation-for="CLIENTNAME" class="text-danger"></span>
+                @*<span asp-validation-for="CLIENTNAME" class="text-danger"></span>*@
             </div>
             <div class="col-md-5">
                 <div class="savenext-btn">
@@ -36,7 +36,8 @@
                 <table id="dtcontract" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>CLIENT NAME</th>
+                            <th>ORGANIZATION NAME</th>
+                            <th>ORGANIZATION TYPE</th>
                             <th>LETTER NO.</th>
                             <th>LETTER DATE</th>
                             <th>Total LOT OF INSP</th>
@@ -70,8 +71,8 @@
             var ctypeValidationSpan = $("[data-valmsg-for='CLIENTTYPE']");
 
             if (cnameValue === "" && ctypeValue === "") {
-                cnameValidationSpan.html("Client Name is required.");
-                ctypeValidationSpan.html("Client Type is required.");
+                cnameValidationSpan.html("Organization Name is required.");
+                ctypeValidationSpan.html("Organization Type is required.");
                 cnameValidationSpan.show();
                 ctypeValidationSpan.show();
                 return;
@@ -117,6 +118,7 @@
                 },
                 columns: [
                     { data: "CLIENTNAME" },
+                    { data: "CLIENTTYPE" },
                     { data: "LETTER_NO" },
                     {
                         data: "LETTER_DATE",

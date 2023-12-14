@@ -1616,7 +1616,7 @@ namespace IBS.Models
                     .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
                     .Distinct()
                     .ToList();
-            return distinctUserNames;
+            return distinctUserNames.OrderBy(x => x.Text).ToList();
         }
 
         public static List<SelectListItem> GetNCCode(string NCRClass)
@@ -4711,7 +4711,7 @@ namespace IBS.Models
                                                  Text = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway),
                                                  Value = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway)
                                              }).ToList();
-            return dropList;
+            return dropList.OrderBy(x => x.Text).ToList();
         }
     }
 
