@@ -1352,12 +1352,14 @@
             var ParticularConsignee = $("#ParticularConsignee").is(":checked") == true ? "true" : "false";
             var ParticularVendor = $("#ParticularVendor").is(":checked") == true ? "true" : "false";
             var Detailed = $("#Detailed").is(":checked") == true ? "true" : "false";
-            var FinancialYearsvalue = $("#FinancialYears").val();
-            var FinancialYears = $('#FinancialYears option:selected').text();
-            var ddlsupercm = $('#ddlsupercm').val();
-            var ddliename = $('#ddliename').val();
-            var Clientwiseddl = $('#Clientwiseddl').val();
-            var vendor = $('#vendor').val();
+            var FinancialYearsvalue = $("#FinancialYears").val() == "--Select--" ? null : $("#FinancialYears").val();
+            var FinancialYears = $('#FinancialYears option:selected').text() == "--Select--" ? null : $('#FinancialYears option:selected').text();
+            var ddlsupercm = $('#ddlsupercm').val() == "--Select--" ? null : $('#ddlsupercm').val();
+            var ddliename = $('#ddliename').val() == "--Select--" ? null : $('#ddliename').val();
+            var Clientwiseddl = $('#Clientwiseddl').val() == "--Select--" ? null : $('#Clientwiseddl').val();
+            var vendortxt = $('#vendortxt').val();
+            var indexOfHyphen = vendortxt.indexOf("-");
+            var vendor = vendortxt.substr(0, indexOfHyphen).trim();
             var Item = $('#Item').val();
             var consignee = $('#consignee').val();
 

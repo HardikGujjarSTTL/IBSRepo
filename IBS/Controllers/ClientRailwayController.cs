@@ -55,11 +55,6 @@ namespace IBS.Controllers
                     {
                         AlertAddSuccess("Record Updated Successfully.");
                     }
-                    //else if(i == 0)
-                    //{
-                    //    AlertAlreadyExist("This Railway Code Is Already Exist!!!");
-                    //    return View("Manage", model);
-                    //}
                 }
                 else 
                 {

@@ -173,6 +173,7 @@ namespace IBS.Repositories
                 _data.Remarks = model.REMARKS;
                 _data.RemarksDt = Convert.ToDateTime(model.REMARKS_DT);
                 _data.Updatedby = Convert.ToInt32(model.USER_ID);
+                _data.Updateddate = DateTime.Now;
                 context.SaveChanges();
                 flag = 1;
             }
@@ -235,41 +236,7 @@ namespace IBS.Repositories
         }
 
         public List<IC_Unbilled_List_Model> Get_UnBilled_IC(string FromDate, string ToDate, string Region)
-        {
-            //DTResult<ICReportModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICReportModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "BK_NO";
-            //    }
-            //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
-            //string FromDate = "", ToDate = "", REGION = "";
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
+        {            
             string REGION = "";
             if (!string.IsNullOrEmpty(Region))
             {
@@ -303,52 +270,11 @@ namespace IBS.Repositories
                 IC_DATE = row["IC_DATE"].ToString(),
             }).ToList();
 
-            return list;
-            //query = list.AsQueryable();
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
+            return list;            
         }
 
         public List<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive(string FromDate, string ToDate, UserSessionModel model)
-        //public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
-        {
-            //DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICIssueNotReceiveModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = false;//true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-            //    }
-            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
-            //string FromDate = "", ToDate = "", REGION = "";
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
+        {            
             string REGION = "";
             if (!string.IsNullOrEmpty(model.Region))
             {
@@ -389,67 +315,17 @@ namespace IBS.Repositories
                 RLY_NONRLY = Convert.ToString(row["RLY_NONRLY"])
             }).ToList();
 
-            return list;
-            //query = list.AsQueryable();
-
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
+            return list;            
         }
 
         public List<ICStatusListModel> Get_IC_Status(string FromDate, string ToDate, string IECD, string Region)
-        {
-            //DTResult<ICStatusModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICStatusModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = false;//true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-            //    }
-            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
+        {            
             string REGION = "", IE_CD = null;
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
-            //{
-            //    IE_CD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
-            //}
-            //if (!string.IsNullOrEmpty(Region))
-            //{
-            //    REGION = Region;
-            //}
-
+            
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
             IE_CD = IE_CD == "" ? null : IE_CD;
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
-
 
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
@@ -461,7 +337,6 @@ namespace IBS.Repositories
             var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
             DataTable dt = ds.Tables[0];
 
-
             List<ICStatusListModel> list = dt.AsEnumerable().Select(row => new ICStatusListModel
             {
                 IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
@@ -471,14 +346,7 @@ namespace IBS.Repositories
                 BILL_NO = Convert.ToString(row["BILL_NO"])
             }).ToList();
 
-            return list;
-            //query = list.AsQueryable();
-
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
+            return list;            
         }
     }
 }
