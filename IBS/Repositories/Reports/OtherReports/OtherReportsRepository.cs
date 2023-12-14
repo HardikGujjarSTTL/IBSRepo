@@ -854,7 +854,16 @@ namespace IBS.Repositories.Reports.OtherReports
                             IE_NAME = Convert.ToString(row["IE_NAME"]),
                             CO_NAME = Convert.ToString(row["CO_NAME"]),
                         }).ToList();
-                        model.lstDailyIECMWorkPlanReporttbl3 = listcong;
+
+                        if (model.lstDailyIECMWorkPlanReporttbl3 == null)
+                        {
+                            model.lstDailyIECMWorkPlanReporttbl3 = new List<DailyIECMWorkPlanReporttbl3>();
+                        }
+
+                        foreach (var item in listcong)
+                        {
+                            model.lstDailyIECMWorkPlanReporttbl3.Add(item);
+                        }
                     }
                 }
 

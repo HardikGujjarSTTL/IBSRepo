@@ -835,7 +835,7 @@
         $(document).ready(function () {
             $("#ddlsupercmUE").hide();
             $("#ddlienameUE").hide();
-            $("#AllIEUE").hide();
+            $("#AllIEUE").show();
             $("#AllCMWiseUE").hide();
             $("#divdate").hide();
             $("#iecmname").hide();
@@ -849,7 +849,8 @@
             $("#vendorVENDPER").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                       // url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
