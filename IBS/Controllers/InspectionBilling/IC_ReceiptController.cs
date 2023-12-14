@@ -121,6 +121,8 @@ namespace IBS.Controllers.InspectionBilling
                 var res = iC_ReceiptRepository.CheckIC(model);
                 if (res == 1)
                 {
+                    model.USER_NAME = UserName.Substring(0, 8);
+                    model.USER_ID = UserId;
                     result = iC_ReceiptRepository.IC_Receipt_InsertUpdate(model);
                 }
                 else if (res == 0)
