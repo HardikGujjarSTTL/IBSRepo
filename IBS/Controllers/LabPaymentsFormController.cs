@@ -168,25 +168,38 @@ namespace IBS.Controllers
             }
             return Json(false);
         }
+        public IActionResult ManagePrint(string VOUCHER_NO)
+        {
 
+            LabPaymentFormModel model = new()
+            {
+                PaymentID = VOUCHER_NO
+            };
+           
+            return View(model);
+        }
         public IActionResult PrintLabPayment(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
         {
+            LabPaymentFormModel dTResult = new LabPaymentFormModel();
             ViewBag.PaymentID = VOUCHER_NO;
+            paymentFormModel.PaymentID = VOUCHER_NO;
             //paymentFormModel.Lab = Lab;
+            ViewBag.Region = GetRegionCode;
+            if (Region == "N")
+            { ViewBag.Region = "NORTHERN REGION"; }
+            else if (Region == "S")
+            { ViewBag.Region = "SOUTHERN REGION"; }
+            else if (Region == "E")
+            { ViewBag.Region = "EASTERN REGION"; }
+            else if (Region == "W")
+            { ViewBag.Region = "WESTERN REGION"; }
+            else if (Region == "C")
+            { ViewBag.Region = "CENTRAL REGION"; }
             paymentFormModel.Regin = GetRegionCode;
-            if (paymentFormModel.Regin == "N")
-
-                paymentFormModel.Regin = "Northern Region";
-            else if (paymentFormModel.Regin == "S")
-                paymentFormModel.Regin = "Southern Region";
-            else if (paymentFormModel.Regin == "E")
-                paymentFormModel.Regin = "Eastern Region";
-            else if (paymentFormModel.Regin == "W")
-                paymentFormModel.Regin = "Western Region";
-            else if (paymentFormModel.Regin == "C")
-                paymentFormModel.Regin = "Central Region";
+            
             //List<LabPaymentFormModel> dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
-            return View(paymentFormModel);
+            dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
+            return PartialView(dTResult);
         }
         [HttpPost]
         public IActionResult PrintLapPayments(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
