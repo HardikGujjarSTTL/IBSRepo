@@ -45,7 +45,7 @@
                             <td align="right"><font size="1" face="Verdana">@item.EXCESSORSHORT</font></td>
                         </tr>
                         SrNo++;
-                        _Amount += @item.BILL_AMT;
+                        _Amount += @item.AMT_CLEARED;
                     }
                     <tr class="reportTotal">
                         <td width='5%' valign='top' align='right' colspan='11'> <font size='1' face='Verdana'><b>Total Amount Posted During The Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></b></font></td>
