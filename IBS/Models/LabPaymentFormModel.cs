@@ -33,7 +33,7 @@ namespace IBS.Models
         public string SubCd { get; set; }
         public string SBUCd { get; set; }
         public string ProjectCd { get; set; }
-
+        public List<LabPaymentFormModel> lstPrint { get; set; }
 
     }
 

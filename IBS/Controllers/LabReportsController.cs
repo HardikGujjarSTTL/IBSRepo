@@ -278,6 +278,26 @@ namespace IBS.Controllers
             }
             return PartialView(model);
         }
+        string dateconcate20(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(0, 4);
+            myMonth = dt.Substring(4, 2);
+            myDay = dt.Substring(6, 2);
+            string dt1 = myYear + myDay + myMonth;
+            return (dt1);
+        }
+        string dateconcate21(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(0, 4);
+            myMonth = dt.Substring(4, 2);
+            myDay = dt.Substring(6, 2);
+            string dt1 = myYear + myMonth + myDay;
+            return (dt1);
+        }
         public IActionResult DownloadFile(string caseno, string calldt, string csno, string FileName)
         {
             try
@@ -291,7 +311,7 @@ namespace IBS.Controllers
                 calldocdt = calldt;
 
                 string fn = "", MyFile = "";
-                string mdt = calldocdt.Trim();
+                string mdt = dateconcate21(calldocdt.Trim());
                 fn = Path.GetFileName(FileName);
                 MyFile = $"{Caseno.Trim()}_{callsno.Trim()}_{mdt}";
                 string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", $"{MyFile}.PDF");
@@ -325,7 +345,7 @@ namespace IBS.Controllers
                 calldocdt = calldt;
 
                 string fn = "", MyFile = "";
-                string mdt = calldocdt.Trim();
+                string mdt = dateconcate20(calldocdt.Trim());
                 fn = Path.GetFileName(FileName);
                 MyFile = $"{Caseno.Trim()}_{callsno.Trim()}_{mdt}";
                 string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", $"{MyFile}.PDF");

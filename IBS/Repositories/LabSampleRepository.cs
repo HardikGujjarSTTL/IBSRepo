@@ -128,8 +128,8 @@ namespace IBS.Repositories
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.IEName).ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();

@@ -492,8 +492,6 @@ namespace IBS.Repositories
         public LabPaymentFormModel PrintLabPayment(LabPaymentFormModel paymentFormModel)
         {
 
-
-
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[4];
@@ -523,21 +521,19 @@ namespace IBS.Repositories
                     
                     
                 }
-                //LabPaymentFormModel sampleDetail = new();
-                //if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
-                //{
-                   
-                //        DataRow row = ds.Tables[1].Rows[0];
-                //     sampleDetail = new LabPaymentFormModel
-                //        {
-                //            SAMPLE_REG_NO = Convert.ToString(row["SAMPLE_REG_NO"]),
-                //            IAMOUNT = Convert.ToString(row["AMT"])
-                //        };
+                List<LabPaymentFormModel> lstlab = context.T51LabRegisterDetails
+                    .Where(l => l.PaymentId == paymentFormModel.PaymentID && l.SampleRegNo.StartsWith(paymentFormModel.Regin))
+                        .Select(l => new LabPaymentFormModel
+                        {
+                            AccountCd = "642",
+                            SubCd = "",
+                            SBUCd = "20",
+                            ProjectCd = "",
+                            SAMPLE_REG_NO = Convert.ToString(l.SampleRegNo),
+                            Amount = Convert.ToString((l.TestingFee ?? 0) + (l.ServiceTax ?? 0))
 
-                    
-                //}
-                //model.SAMPLE_REG_NO = sampleDetail.SAMPLE_REG_NO;
-                //model.IAMOUNT = sampleDetail.IAMOUNT;
+                        }).ToList();
+                model.lstPrint = lstlab;
                 return model;
             }
 
