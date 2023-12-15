@@ -207,7 +207,7 @@ namespace IBS.Repositories
             var bscheck = (from item in context.T10IcBooksets
                            where item.BkNo.Trim().ToUpper() == model.BK_NO.Trim() &&
                                  Convert.ToInt32(model.SET_NO) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(model.SET_NO) <= Convert.ToInt32(item.SetNoTo) &&
-                                 item.IssueToIecd == 873
+                                 item.IssueToIecd == model.IE_CD
                            select new
                            {
                                IssueDate = Convert.ToDateTime(item.IssueDt).ToString("yyyyMMdd")
