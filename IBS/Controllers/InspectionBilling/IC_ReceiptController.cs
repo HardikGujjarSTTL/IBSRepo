@@ -46,30 +46,31 @@ namespace IBS.Controllers.InspectionBilling
                 BKNO = Convert.ToString(Request.Query["BK_NO"]);
                 SNO = Convert.ToString(Request.Query["SET_NO"]);
                 Action = "M";
-            }           
+            }
 
             var IEStatus = iC_ReceiptRepository.Get_IE_Whome_Issued(region);
             ViewBag.Status = IEStatus;
+            data.REGION = Convert.ToString(GetUserInfo.Region);
 
             var currDate = DateTime.Now.ToString("dd/MM/yyyy").Replace("-", "/"); //current_date();
 
             if (Action == "A")
-            {                
+            {
                 ViewBag.ICDT = currDate.Replace('-', '/');
                 data.IC_SUBMIT_DT = currDate;
                 ViewBag.IsDelete = false;
             }
             else if (Action == "M")
-            {               
+            {
                 data = iC_ReceiptRepository.Get_Selected_IC_Receipt(BKNO, SNO, region);
                 ViewBag.IsDelete = true;
             }
             data.RDT = currDate;
-            
+
             if (Convert.ToString(GetUserInfo.AuthLevl) == "4")
             {
                 ViewBag.IsSave = false;
-                ViewBag.IsDelete = false;                
+                ViewBag.IsDelete = false;
             }
 
             return View(data);
@@ -109,41 +110,50 @@ namespace IBS.Controllers.InspectionBilling
             return Json(data);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         [Authorization("IC_Receipt", "Index", "edit")]
         public IActionResult ICReceiptSave(IC_ReceiptModel model)
         {
             int result = 0;
+
             var msg = "";
+            var flag = true;
             try
             {
                 var res = iC_ReceiptRepository.CheckIC(model);
                 if (res == 1)
                 {
-                    model.USER_NAME = UserName.Substring(0, 8);
+                    model.USER_NAME = UserName;
                     model.USER_ID = UserId;
+                    model.REGION = Region;
                     result = iC_ReceiptRepository.IC_Receipt_InsertUpdate(model);
+
+                    msg = result == 1 ? "Record Inserted Successful" : result == 2 ? "Record Updated Successful" : "Record Not Inserted/Updated";
+                    flag = (result == 1 || result == 2) ? true : false;
                 }
                 else if (res == 0)
                 {
                     msg = "Book No. and Set No. specified is not issued to the Selected Inspection Engineer!!!";
+                    flag = false;
                 }
                 else if (res == 2)
                 {
                     msg = "Bill already generated for given Book and Set No.!!!";
+                    flag = false;
                 }
                 else if (res == 3)
                 {
                     msg = "IC Submit Date Cannot be Less then Issue Date  !!!";
+                    flag = false;
                 }
             }
             catch (Exception ex)
             {
+                flag = false;
                 msg = "Oops Somthing Went Wrong !!";
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());                
             }
-            return Json(msg);
+            return Json(new { status = flag, responseText = msg });
         }
 
         [HttpPost]
@@ -153,7 +163,7 @@ namespace IBS.Controllers.InspectionBilling
             int result = 0;
             try
             {
-                IC_ReceiptModel model = new ();
+                IC_ReceiptModel model = new();
                 model.BK_NO = BK_NO;
                 model.SET_NO = SET_NO;
                 var REGION = Convert.ToString(GetUserInfo.Region);
@@ -167,7 +177,7 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptDelete", 1, GetIPAddress());
             }
             return Json(result);
-        }                               
+        }
 
         public IActionResult ICStatus()
         {
