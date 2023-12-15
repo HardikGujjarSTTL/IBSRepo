@@ -963,7 +963,8 @@
             $("#vendortxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                       // url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
@@ -980,7 +981,8 @@
             $("#consigneetxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetConsigneeData",
+                        url: "@Url.Action("GetConsigneeData", "Search")",
+                        //url: "/Search/GetConsigneeData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
