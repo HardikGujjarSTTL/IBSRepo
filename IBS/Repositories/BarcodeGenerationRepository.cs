@@ -294,7 +294,7 @@ namespace IBS.Repositories
             //                  DISCIPLINE_ID = Convert.ToString(l.DisciplineId),
             //                  QTY = "1"
             //              }).ToList();
-            var query1 = (from l in context.TestTables
+            var query1 = (from l in context.Labratemasters
                           where l.DisciplineId == Convert.ToInt32(DisID)
                           select new BarcodeGenerate
                           {

@@ -390,6 +390,26 @@ namespace IBS.Repositories
             model.SumGST = LabReportsModel.SumGST;
             return model;
         }
+        string dateconcate20(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(0, 4);
+            myMonth = dt.Substring(4, 2);
+            myDay = dt.Substring(6, 2);
+            string dt1 = myYear + myDay + myMonth;
+            return (dt1);
+        }
+        string dateconcate21(string dt)
+        {
+            string myYear, myMonth, myDay;
+
+            myYear = dt.Substring(0, 4);
+            myMonth = dt.Substring(4, 2);
+            myDay = dt.Substring(6, 2);
+            string dt1 = myYear + myMonth + myDay;
+            return (dt1);
+        }
         public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin, string lstStatus, string rdbrecvdt)
         {
 
@@ -417,13 +437,15 @@ namespace IBS.Repositories
                 callsno = row["call_sno"].ToString(); 
                 calldocdt = row["call_doc_dt"].ToString(); 
 
-                string fn = "", MyFile = "";
-                string mdt = calldocdt.Trim();
+                string fn = "", MyFile = "", MyFile2 = "";
+                string mdt = dateconcate20(calldocdt.Trim());
+                string mdt2 = dateconcate21(calldocdt.Trim());
 
                 MyFile = $"{caseno.Trim()}_{callsno.Trim()}_{mdt}";
+                MyFile2 = $"{caseno.Trim()}_{callsno.Trim()}_{mdt2}";
 
                 //fn = Path.GetFileName(filename);
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", $"{MyFile}.PDF");
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", $"{MyFile2}.PDF");
                 string filePath2 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", $"{MyFile}.PDF");
                 bool docExists = File.Exists(filePath);
                 bool docExists2 = File.Exists(filePath2);

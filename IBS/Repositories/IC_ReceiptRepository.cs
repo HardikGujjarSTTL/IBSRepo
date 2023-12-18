@@ -1,10 +1,12 @@
-﻿using Humanizer;
+﻿using DocumentFormat.OpenXml.InkML;
+using Humanizer;
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Drawing;
@@ -142,20 +144,23 @@ namespace IBS.Repositories
         public int IC_Receipt_InsertUpdate(IC_ReceiptModel model)
         {
             int flag = 0;
-            var _data = context.T30IcReceiveds.Find(model.BK_NO, model.SET_NO, model.REGION);
+            var _data = (from item in context.T30IcReceiveds
+                         where item.BkNo.Trim() == model.BK_NO.Trim() && item.SetNo.Trim() == model.SET_NO.Trim() && item.Region.Trim() == model.REGION.Trim()
+                         select item).FirstOrDefault();
+
             if (_data == null)
             {
                 T30IcReceived obj = new T30IcReceived();
                 obj.Region = model.REGION;
                 obj.BkNo = model.BK_NO;
                 obj.SetNo = model.SET_NO;
-                obj.IeCd = Convert.ToByte(model.IE_CD);
-                obj.IcSubmitDt = Convert.ToDateTime(model.IC_SUBMIT_DT);
+                obj.IeCd = model.IE_CD;
+                obj.IcSubmitDt = string.IsNullOrEmpty(model.IC_SUBMIT_DT) ? null : Convert.ToDateTime(model.IC_SUBMIT_DT);
                 obj.BillNo = model.BILL_NO;
                 obj.UserId = model.USER_NAME;
                 obj.Datetime = DateTime.Now;
                 obj.Remarks = model.REMARKS;
-                obj.RemarksDt = Convert.ToDateTime(model.REMARKS_DT);
+                obj.RemarksDt = string.IsNullOrEmpty(model.REMARKS_DT) ? null : Convert.ToDateTime(model.REMARKS_DT);
                 obj.Createdby = Convert.ToInt32(model.USER_ID);
                 obj.Createddate = DateTime.Now;
                 context.T30IcReceiveds.Add(obj);
@@ -166,15 +171,16 @@ namespace IBS.Repositories
             {
                 _data.BkNo = model.BK_NO;
                 _data.SetNo = model.SET_NO;
-                _data.IeCd = Convert.ToByte(model.IE_CD);
-                _data.IcSubmitDt = Convert.ToDateTime(model.IC_SUBMIT_DT);
+                _data.IeCd = model.IE_CD;
+                _data.IcSubmitDt = string.IsNullOrEmpty(model.IC_SUBMIT_DT) ? null : Convert.ToDateTime(model.IC_SUBMIT_DT);
                 _data.UserId = model.USER_NAME;
                 _data.Datetime = DateTime.Now;
                 _data.Remarks = model.REMARKS;
-                _data.RemarksDt = Convert.ToDateTime(model.REMARKS_DT);
+                _data.RemarksDt = string.IsNullOrEmpty(model.REMARKS_DT) ? null : Convert.ToDateTime(model.REMARKS_DT);
                 _data.Updatedby = Convert.ToInt32(model.USER_ID);
+                _data.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                flag = 1;
+                flag = 2;
             }
             return flag;
         }
@@ -182,8 +188,9 @@ namespace IBS.Repositories
         public int IC_Receipt_Delete(IC_ReceiptModel model)
         {
             var flag = 0;
-            var _data = context.T30IcReceiveds.Where(x => x.BkNo == model.BK_NO && x.SetNo == model.SET_NO && x.Region == model.REGION).Select(x => x).FirstOrDefault();
-            //var _data = context.T30IcReceiveds.Find(model.REGION, model.BK_NO, model.SET_NO);
+            var _data = (from item in context.T30IcReceiveds
+                         where item.BkNo.Trim() == model.BK_NO.Trim() && item.SetNo.Trim() == model.SET_NO.Trim() && item.Region.Trim() == model.REGION.Trim()
+                         select item).FirstOrDefault();
             if (_data != null)
             {
                 _data.Isdeleted = 1;
@@ -197,17 +204,24 @@ namespace IBS.Repositories
 
         public int CheckIC(IC_ReceiptModel model)
         {
-            var res = context.T10IcBooksets
-                        .Where(x => x.BkNo == model.BK_NO && Convert.ToInt32(x.SetNoFr) >= Convert.ToInt32(model.SET_NO) && Convert.ToInt32(x.SetNoTo) <= Convert.ToInt32(model.SET_NO) && x.IssueToIecd == model.IE_CD)
-                        .Select(x => DateTime.ParseExact(x.IssueDt.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString()).FirstOrDefault();
+            var bscheck = (from item in context.T10IcBooksets
+                           where item.BkNo.Trim().ToUpper() == model.BK_NO.Trim() &&
+                                 Convert.ToInt32(model.SET_NO) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(model.SET_NO) <= Convert.ToInt32(item.SetNoTo) &&
+                                 item.IssueToIecd == model.IE_CD
+                           select new
+                           {
+                               IssueDate = Convert.ToDateTime(item.IssueDt).ToString("yyyyMMdd")
+                           }).FirstOrDefault().IssueDate;
+
             string myYear = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Year);
             string myMonth = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Month);
             string myDay = Convert.ToString(Convert.ToDateTime(model.IC_SUBMIT_DT).Day);
             var dt = myYear + myMonth + myDay;
 
-            int i = res == dt ? 0 : 1;
 
-            if (res != "" && res != null)
+            int i = bscheck.CompareTo(dt);
+
+            if (!string.IsNullOrEmpty(bscheck))
             {
                 if (i > 0)
                 {
@@ -215,10 +229,12 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    var res1 = context.T20Ics
-                                .Where(x => x.BkNo == model.BK_NO && x.SetNo == model.SET_NO && x.CaseNo.Remove(1) == model.REGION)
-                                .Select(x => x.BillNo).FirstOrDefault().ToString();
-                    if (res1 == "" || res1 == null)
+                    var bscheck1 = (from item in context.T20Ics
+                                    where item.BkNo.Trim().ToUpper() == model.BK_NO.Trim() &&
+                                          item.SetNo.Trim().ToUpper() == model.SET_NO.Trim() &&
+                                          item.CaseNo.Substring(0, 1) == model.REGION
+                                    select item.BillNo).FirstOrDefault();
+                    if (string.IsNullOrEmpty(bscheck1))
                     {
                         return 1;
                     }
@@ -236,40 +252,6 @@ namespace IBS.Repositories
 
         public List<IC_Unbilled_List_Model> Get_UnBilled_IC(string FromDate, string ToDate, string Region)
         {
-            //DTResult<ICReportModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICReportModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "BK_NO";
-            //    }
-            //    orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
-            //string FromDate = "", ToDate = "", REGION = "";
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
             string REGION = "";
             if (!string.IsNullOrEmpty(Region))
             {
@@ -304,51 +286,10 @@ namespace IBS.Repositories
             }).ToList();
 
             return list;
-            //query = list.AsQueryable();
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
         }
 
         public List<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive(string FromDate, string ToDate, UserSessionModel model)
-        //public DTResult<ICIssueNotReceiveModel> Get_IC_Issue_Not_Receive([FromBody] DTParameters dtParameters, string Region, string UserName, string Ic_Cd)
         {
-            //DTResult<ICIssueNotReceiveModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICIssueNotReceiveModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = false;//true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-            //    }
-            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "CO_NAME"; //"CASE_NO";// "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
-            //string FromDate = "", ToDate = "", REGION = "";
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
             string REGION = "";
             if (!string.IsNullOrEmpty(model.Region))
             {
@@ -390,66 +331,16 @@ namespace IBS.Repositories
             }).ToList();
 
             return list;
-            //query = list.AsQueryable();
-
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
         }
 
         public List<ICStatusListModel> Get_IC_Status(string FromDate, string ToDate, string IECD, string Region)
         {
-            //DTResult<ICStatusModel> dTResult = new() { draw = 0 };
-            //IQueryable<ICStatusModel>? query = null;
-
-            //var searchBy = dtParameters.Search?.Value;
-            //var orderCriteria = string.Empty;
-            //var orderAscendingDirection = false;//true;
-
-
-            //if (dtParameters.Order != null)
-            //{
-            //    // in this example we just default sort on the 1st column
-            //    orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-
-            //    if (orderCriteria == "")
-            //    {
-            //        orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-            //    }
-            //    //orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
-            //}
-            //else
-            //{
-            //    orderCriteria = "IC_SUBMIT_DT"; //"CASE_NO";// "BK_NO";
-            //    orderAscendingDirection = true;
-            //}
-
             string REGION = "", IE_CD = null;
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
-            //{
-            //    FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
-            //{
-            //    ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
-            //}
-            //if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IECD"]))
-            //{
-            //    IE_CD = Convert.ToString(dtParameters.AdditionalValues["IECD"]);
-            //}
-            //if (!string.IsNullOrEmpty(Region))
-            //{
-            //    REGION = Region;
-            //}
 
             FromDate = FromDate.ToString() == "" ? string.Empty : FromDate.ToString();
             ToDate = ToDate.ToString() == "" ? string.Empty : ToDate.ToString();
             IE_CD = IE_CD == "" ? null : IE_CD;
             REGION = REGION.ToString() == "" ? string.Empty : REGION.ToString();
-
 
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
@@ -461,7 +352,6 @@ namespace IBS.Repositories
             var ds = DataAccessDB.GetDataSet("SP_GET_IC_STATUS", par, 1);
             DataTable dt = ds.Tables[0];
 
-
             List<ICStatusListModel> list = dt.AsEnumerable().Select(row => new ICStatusListModel
             {
                 IC_SUBMIT_DT = Convert.ToString(row["IC_SUBMIT_DT"]),
@@ -472,13 +362,6 @@ namespace IBS.Repositories
             }).ToList();
 
             return list;
-            //query = list.AsQueryable();
-
-            //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-            //dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-            //return dTResult;
         }
     }
 }

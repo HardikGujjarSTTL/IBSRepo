@@ -1,3 +1,8 @@
+--Scaffold-DbContext name=DefaultConnection Oracle.EntityFrameworkCore -noOnConfiguring -OutputDir DataAccess -Force
+--=============================================================================================================================================
+--By Naimish Rana
+--=============================================================================================================================================
+
 create or replace FUNCTION GET_FINANCIAL_YEAR_START_DATE
 RETURN DATE 
 IS
@@ -1204,3 +1209,198 @@ BEGIN
     ORDER BY t17.CALL_RECV_DT DESC;
 END GET_VENDOR_DASHBOARD_RECENT_PO;
 ----------------------------------------------------- END VENDOR DASHBOARD SP -----------------------------------------------------
+
+
+----------------------------------------------------- START Receipt of book set in Inspection Office PAGE -----------------------------------------------------
+create or replace PROCEDURE SP_GET_IC_RECEIPT 
+(
+  P_BK_NO IN VARCHAR2,
+  P_SET_NO IN VARCHAR2,
+  P_IE_CD IN VARCHAR2,
+  P_REGION IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    
+    Select  t30.BK_NO,
+            t30.SET_NO,
+            t09.IE_NAME,
+            to_char(t30.IC_SUBMIT_DT,'dd/mm/yyyy') IC_SUBMIT_DT 
+    From T30_IC_RECEIVED t30, T09_IE t09 
+    WHERE t30.IE_CD = t09.IE_CD
+    AND ((P_BK_NO IS NOT NULL AND upper(trim(t30.BK_NO)) LIKE upper(P_BK_NO)) OR (P_BK_NO IS NULL))
+    AND ((P_SET_NO IS NOT NULL AND trim(t30.SET_NO) = P_SET_NO) OR (P_SET_NO IS NULL))
+    AND ((P_IE_CD IS NOT NULL AND trim(t30.IE_CD) = P_IE_CD) OR (P_IE_CD IS NULL))    
+    AND BILL_NO IS NULL 
+    AND REGION = P_REGION 
+    AND t30.IsDeleted = 0
+    ORDER BY t30.BK_NO ,t30.SET_NO;    
+END;
+
+create or replace PROCEDURE SP_GET_SELECTED_IC_RECEIPT 
+(
+  P_BK_NO IN VARCHAR2,
+  P_SET_NO IN VARCHAR2,
+  P_REGION IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    
+    SELECT  REGION,
+            BK_NO,
+            SET_NO,
+            IE_CD,
+            to_char(IC_SUBMIT_DT,'dd/mm/yyyy') SUBMIT_DT,
+            REMARKS,
+            to_char(REMARKS_DT,'dd/mm/yyyy') REMARKS_DATE 
+    FROM T30_IC_RECEIVED 
+    WHERE UPPER(TRIM(BK_NO))= upper(TRIM(P_BK_NO)) 
+    AND UPPER(TRIM(SET_NO)) = upper(TRIM(P_SET_NO)) 
+    AND REGION = P_REGION 
+    AND BILL_NO is null
+    AND NVL(ISDELETED,0) = 0;
+END;
+
+create or replace PROCEDURE SP_GET_UNBILLED_IC 
+(
+    P_FROMDATE IN VARCHAR2, 
+    P_TODATE IN VARCHAR2,
+    P_REGION IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    
+    SELECT  TO_CHAR(IC_SUBMIT_DATE,'DD/MM/YYYY') SUBMIT_DATE, 
+            IC_SUBMIT_DATE, 
+            IE_NAME, 
+            BK_NO, 
+            SET_NO, 
+            CLIENT_TYPE, 
+            REMARKS, 
+            REMARKS_DATE, 
+            IC_DATE 
+    FROM ( 
+        SELECT  T30.IC_SUBMIT_DT IC_SUBMIT_DATE,
+                T09.IE_NAME,
+                T30.BK_NO,
+                T30.SET_NO,
+                DECODE(T12.BPO_TYPE,'R','RAILWAY','NON RAILWAY') CLIENT_TYPE,
+                T30.REMARKS, 
+                to_char(T30.REMARKS_DT,'dd/mm/yyyy')REMARKS_DATE, 
+                TO_CHAR(IC.DATETIME,'DD/MM/YYYY') IC_DATE 
+        FROM T30_IC_RECEIVED T30 
+        LEFT JOIN T16_IC_CANCEL T16 ON (T30.BK_NO=T16.BK_NO and T30.SET_NO=T16.SET_NO and T30.REGION= T16.REGION) , T09_IE T09, IC_INTERMEDIATE IC, T14_PO_BPO T14, T12_BILL_PAYING_OFFICER T12 
+        WHERE (T16.BK_NO IS NULL and T16.SET_NO IS NULL and T16.REGION IS NULL) 
+        and T30.IE_CD=T09.IE_CD 
+        AND IC.BK_NO=T30.BK_NO 
+        AND IC.SET_NO=T30.SET_NO 
+        AND IC.CASE_NO=T14.CASE_NO 
+        AND IC.CONSIGNEE_CD=T14.CONSIGNEE_CD 
+        AND T14.BPO_CD=T12.BPO_CD 
+        and (T30.IC_SUBMIT_DT between to_date(P_FROMDATE,'dd/mm/yyyy') and to_date(P_TODATE,'dd/mm/yyyy')) 
+        and T30.REGION='N' 
+        AND SUBSTR(IC.CASE_NO,1,1) = P_REGION
+        and BILL_NO is null         
+        UNION ALL 
+        select  T30.IC_SUBMIT_DT IC_SUBMIT_DATE,
+                T09.IE_NAME,
+                T30.BK_NO,
+                T30.SET_NO,
+                DECODE(T13.RLY_NONRLY,'R','RAILWAY','NON RAILWAY') CLIENT_TYPE,
+                T30.REMARKS, 
+                to_char(T30.REMARKS_DT,'dd/mm/yyyy')REMARKS_DATE, 
+                TO_CHAR(T17.CALL_STATUS_DT,'DD/MM/YYYY') IC_DATE 
+        FROM T30_IC_RECEIVED T30 
+        LEFT JOIN T16_IC_CANCEL T16 on (T30.BK_NO=T16.BK_NO and T30.SET_NO=T16.SET_NO and T30.REGION= T16.REGION) , T09_IE T09, T17_CALL_REGISTER T17, T13_PO_MASTER T13 
+        WHERE (T16.BK_NO IS NULL and T16.SET_NO IS NULL and T16.REGION IS NULL) 
+        AND T30.IE_CD=T09.IE_CD 
+        AND T17.BK_NO=T30.BK_NO 
+        AND T17.SET_NO=T30.SET_NO 
+        AND T17.CASE_NO=T13.CASE_NO 
+        and (T30.IC_SUBMIT_DT between to_date(P_FROMDATE,'dd/mm/yyyy') and to_date(P_TODATE,'dd/mm/yyyy')) 
+        and T30.REGION = P_REGION
+        AND NOT REGEXP_LIKE(SUBSTR(T30.BK_NO,1,1), '[0-9]+') AND BILL_NO is null  
+    ) 
+    GROUP BY TO_CHAR(IC_SUBMIT_DATE,'DD/MM/YYYY'), IC_SUBMIT_DATE, IE_NAME,BK_NO, SET_NO, CLIENT_TYPE, REMARKS, REMARKS_DATE, IC_DATE 
+    ORDER BY IC_SUBMIT_DATE,IE_NAME,BK_NO,SET_NO;
+END SP_GET_UNBILLED_IC;
+
+create or replace PROCEDURE SP_GET_IC_ISSUED_BY_IE 
+(
+  P_FROMDATE IN VARCHAR2, 
+  P_TODATE IN VARCHAR2, 
+  P_REGION IN VARCHAR2,
+--  P_USERNAME IN VARCHAR2,
+  P_IE_CD IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    
+    SELECT  to_char(CALL_STATUS_DT,'dd/mm/yyyy') IC_ISSUED_DT,
+            a.BK_NO,
+            a.SET_NO,
+            a.IE_NAME,
+            a.CO_NAME,
+            a.CASE_NO,
+            a.PO_SOURCE,
+            a.PO_YR,
+            a.PO_NO,
+            a.IMMS_RLY_CD, 
+            a.RLY_NONRLY 
+    FROM ( 
+        SELECT  T17.CASE_NO,
+                T17.CALL_STATUS_DT,
+                'dd/mm/yyyy',
+                T17.BK_NO,
+                T17.SET_NO,
+                T09.IE_NAME,
+                T08.CO_NAME,
+                PO_SOURCE,
+                TO_CHAR(PO_DT,'YYYY') PO_YR, 
+                PO_NO, 
+                NVL((SELECT IMMS_RLY_CD FROM T91_RAILWAYS T91 WHERE T13.RLY_CD=T91.RLY_CD),'') IMMS_RLY_CD, 
+                RLY_NONRLY 
+        FROM T17_CALL_REGISTER T17 
+        LEFT JOIN T30_IC_RECEIVED T30 ON (T17.BK_NO = T30.BK_NO and T17.SET_NO=T30.SET_NO and T17.REGION_CODE=T30.REGION), T09_IE T09, T08_IE_CONTROLL_OFFICER T08, T13_PO_MASTER T13 
+        WHERE (T30.BK_NO is null and T30.SET_NO is null and T30.REGION is null) 
+        and T17.IE_CD=T09.IE_CD 
+        and T09.IE_CO_CD=T08.CO_CD 
+        AND T17.CASE_NO=T13.CASE_NO 
+        AND substr(T17.CASE_NO,1,1) = P_REGION
+        and (P_IE_CD IS NULL OR T17.IE_CD = P_IE_CD)
+        and T17.CALL_STATUS in ('A','R','G','T') 
+        and (T17.CALL_STATUS_DT between to_date(P_FROMDATE,'dd/mm/yyyy') and to_date(P_TODATE,'dd/mm/yyyy') ) 
+    ) a 
+    left join T20_IC T20 on (a.BK_NO=T20.BK_NO and a.SET_NO=T20.SET_NO and a.CASE_NO=T20.CASE_NO) 
+    where (T20.BK_NO is null and T20.SET_NO is null and T20.CASE_NO is null) 
+    Order by a.CO_NAME,a.CALL_STATUS_DT,a.BK_NO,a.SET_NO;        
+END SP_GET_IC_ISSUED_BY_IE;
+
+create or replace PROCEDURE SP_GET_IC_STATUS 
+(
+    P_FROMDATE IN VARCHAR2,
+    P_TODATE IN VARCHAR2,
+    P_REGION IN VARCHAR2,
+    P_IECD IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+  
+    SELECT  to_char(T30.IC_SUBMIT_DT,'dd/mm/yyyy') IC_SUBMIT_DT,
+            T09.IE_NAME,
+            T30.BK_NO,
+            T30.SET_NO,
+            NVL(T30.BILL_NO,'Un-Billed IC') BILL_NO 
+    FROM T30_IC_RECEIVED T30, T09_IE T09 
+    WHERE T30.IE_CD=T09.IE_CD 
+    and (T30.IC_SUBMIT_DT between to_date(P_FROMDATE,'dd/mm/yyyy') and to_date(P_TODATE,'dd/mm/yyyy')) 
+    AND REGION = P_REGION
+    AND (P_IECD IS NULL OR T30.IE_CD = P_IECD)
+    ORDER BY T30.IC_SUBMIT_DT,T09.IE_CD,T30.BK_NO,T30.SET_NO;
+END SP_GET_IC_STATUS;
+----------------------------------------------------- END Receipt of book set in Inspection Office PAGE -----------------------------------------------------

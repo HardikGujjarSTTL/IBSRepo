@@ -432,8 +432,9 @@
             
             var PaymentID = $("#lblpyno").val();
             //window.location.href = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
-            var url = '@Url.Action("PrintLabPayment", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
-            printDirectly(url);
+            var url = '@Url.Action("ManagePrint", "LabPaymentsForm")' + '?VOUCHER_NO=' + PaymentID;
+            window.open(url, '_blank');
+            //printDirectly(url);
         })
         function Edit(PaymentID) {
 
