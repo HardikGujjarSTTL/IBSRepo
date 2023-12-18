@@ -70,7 +70,7 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
-        [Required(ErrorMessage = "Other Charges Type is required")]
+        //[Required(ErrorMessage = "Other Charges Type is required")]
         public string? OtChargeType { get; set; }
         //[Required(ErrorMessage = "Other Charges Per is required")]
         public decimal? OtChargePer { get; set; }
