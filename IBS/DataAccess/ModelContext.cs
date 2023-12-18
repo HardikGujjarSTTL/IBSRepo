@@ -911,7 +911,7 @@ public partial class ModelContext : DbContext
             entity.ToTable("BARCODE_GENERATED");
 
             entity.Property(e => e.Id)
-                .HasMaxLength(1)
+                .HasMaxLength(10)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -920,6 +920,12 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("BARCODE_NO");
+            entity.Property(e => e.CallDate)
+                .HasColumnType("DATE")
+                .HasColumnName("CALL_DATE");
+            entity.Property(e => e.CallSno)
+                .HasPrecision(6)
+                .HasColumnName("CALL_SNO");
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -3766,7 +3772,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Mobile)
-                .HasMaxLength(10)
+                .HasMaxLength(12)
                 .IsUnicode(false)
                 .HasColumnName("MOBILE");
             entity.Property(e => e.Otp)
@@ -4231,6 +4237,13 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("CONSIGNEE_DTL");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasDefaultValueSql("null")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.CumQtyPrevOffered)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
@@ -4354,6 +4367,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("INVOICE_NO");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.ItemDescPo)
                 .HasMaxLength(2000)
                 .IsUnicode(false)
@@ -4449,6 +4466,13 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("UNIT_DTL");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasDefaultValueSql("null")
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -6539,8 +6563,8 @@ public partial class ModelContext : DbContext
             entity.ToTable("LABRATEMASTER");
 
             entity.Property(e => e.Labrateid)
-                .HasPrecision(6)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER")
                 .HasColumnName("LABRATEID");
             entity.Property(e => e.DisciplineId)
                 .HasPrecision(6)
@@ -6549,7 +6573,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("PRICE");
             entity.Property(e => e.TestName)
-                .HasMaxLength(20)
+                .HasMaxLength(1000)
                 .IsUnicode(false)
                 .HasColumnName("TEST_NAME");
         });
@@ -25380,6 +25404,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("IBS_USERS_OTP_SEQ");
         modelBuilder.HasSequence("IC_INTERMEDIATE_HISTORY_SEQ");
         modelBuilder.HasSequence("IC_PO_AMENDMENT_SEQ");
+        modelBuilder.HasSequence("LABRATE");
         modelBuilder.HasSequence("LABTRAN");
         modelBuilder.HasSequence("LABTRANDTL");
         modelBuilder.HasSequence("LOG_REGIONALHRDATAOFIE_SEQ");

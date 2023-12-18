@@ -5,7 +5,7 @@ namespace IBS.DataAccess;
 
 public partial class Labratemaster
 {
-    public int Labrateid { get; set; }
+    public decimal Labrateid { get; set; }
 
     public int? DisciplineId { get; set; }
 
