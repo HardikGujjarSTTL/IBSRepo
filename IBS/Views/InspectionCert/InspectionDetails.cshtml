@@ -681,6 +681,8 @@
             if ($("#IrfcFunded").val() == "N") {
                 $("#IrfcBpo").hide();
                 $("#lblIrfcBpo").hide();
+                $("#ConsigneeGST_Y").prop("checked", true);
+                $("input[name='ConsigneeGST']").prop('disabled', true);
             }
             else {
                 $("#IrfcBpo").show();
@@ -764,6 +766,10 @@
                 $("#lblIrfcBpo").hide();
                 $("input[name='ConsigneeGST']").prop('disabled', true);
                 $("#btnGSTNUpdate").prop('disabled', true);
+                $("#ConsigneeGST_Y").val("rdbConsignee");
+                $("#ConsigneeGST_Y").prop("checked", true);
+                ConsigneeGSTChanged();
+            $('input[type=radio][name=ConsigneeGST]').change();
             }
         });
 
