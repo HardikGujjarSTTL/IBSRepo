@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Mail;
 using NuGet.Protocol.Plugins;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -2896,12 +2897,52 @@ namespace IBS.Repositories.InspectionBilling
             return msg;
         }
 
-        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno)
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno,int IE_CD)
         {
             VenderCallStatusModel model = new();
             //DateTime? _CallRecvDt = CallRecvDt == null ? null : DateTime.ParseExact(CallRecvDt, "dd-MM-yyyy", null);
 
             var Status = context.ViewGetCallStatusDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
+
+            var ic_book = (from item in context.T10IcBooksets
+                           orderby item.IssueDt descending
+                           where item.IssueToIecd == IE_CD
+                           select item).FirstOrDefault();
+
+            var dlt_IC = (from x in context.IcIntermediates
+                          orderby x.SetNo descending
+                          where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
+                          select x).FirstOrDefault();
+
+            if (dlt_IC != null)
+            {
+                int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                string incrementedSetNo = setNo.ToString("D3");
+
+                var ic_bookset = (from item in context.T10IcBooksets
+                                  orderby item.IssueDt descending
+                                  where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                        Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                        item.IssueToIecd == dlt_IC.IeCd
+                                  select item).FirstOrDefault();
+
+                if(ic_bookset != null)
+                {
+                    model.DocBkNo = ic_bookset.BkNo;
+                    model.DocSetNo = Convert.ToString(incrementedSetNo);
+                }
+                else
+                {
+                    model.DocBkNo = "";
+                    model.DocSetNo = "";
+                }
+            }
+            else
+            {
+                model.DocBkNo = ic_book.BkNo;
+                model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
+            }
 
             DateTime CallStatusDt = DateTime.Now.Date;
             if (Status == null)
@@ -2970,25 +3011,25 @@ namespace IBS.Repositories.InspectionBilling
             // Set ConsigneeFirmList to the query result
             model.ConsigneeFirmList = secondQuery.ToList();
 
-            var queryResult = context.IcIntermediates
-                        .Where(ici => ici.CaseNo == CaseNo &&
-                                      ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                      ici.CallSno == CallSno)
-                        .OrderByDescending(ici => ici.Datetime)
-                        .FirstOrDefault();
+            //var queryResult = context.IcIntermediates
+            //            .Where(ici => ici.CaseNo == CaseNo &&
+            //                          ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+            //                          ici.CallSno == CallSno)
+            //            .OrderByDescending(ici => ici.Datetime)
+            //            .FirstOrDefault();
 
-            if (queryResult != null)
-            {
-                model.DocBkNo = queryResult.BkNo;
-                model.DocSetNo = queryResult.SetNo;
+            //if (queryResult != null)
+            //{
+            //    model.DocBkNo = queryResult.BkNo;
+            //    model.DocSetNo = queryResult.SetNo;
 
-            }
-            else
-            {
-                model.DocBkNo = "";
-                model.DocSetNo = "";
+            //}
+            //else
+            //{
+            //    model.DocBkNo = "";
+            //    model.DocSetNo = "";
 
-            }
+            //}
 
             var CancelData = (from l in context.T19CallCancels
                               join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
@@ -3143,8 +3184,10 @@ namespace IBS.Repositories.InspectionBilling
                     var docSetNo = Convert.ToInt32(model.DocSetNo);
 
                     var bsCheck = (from a in context.T10IcBooksets
-                                   where a.BkNo.Trim() == model.DocBkNo.Trim() && docSetNo >= Convert.ToInt32(model.DocSetNo)
-                                   && docSetNo <= Convert.ToInt32(model.DocSetNo) && a.IssueToIecd == Convert.ToInt32(model.IeCd) && a.Ictype == FinalOrStage
+                                   where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                    && docSetNo >= Convert.ToInt32(a.SetNoFr)
+                                   && docSetNo <= Convert.ToInt32(a.SetNoTo)
+                                   && a.IssueToIecd == Convert.ToInt32(model.IeCd) && a.Ictype == FinalOrStage
                                    select a.IssueToIecd).FirstOrDefault();
                 }
 
@@ -4016,16 +4059,15 @@ namespace IBS.Repositories.InspectionBilling
 
                 var docSetNo = Convert.ToInt32(model.DocSetNo);
 
-                var bsCheck = (from a in context.T10IcBooksets
+                var bsCheckIC = (from a in context.T10IcBooksets
                                where a.BkNo.Trim() == model.DocBkNo.Trim()
-                               && docSetNo >= Convert.ToInt32(model.DocSetNo)
-                               && docSetNo <= Convert.ToInt32(model.DocSetNo)
+                               && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
                                && a.IssueToIecd == Convert.ToInt32(model.IeCd)
                                //&& a.Ictype == FinalOrStage
                                && FinalOrStage == "F" ? (a.Ictype == null || a.Ictype == FinalOrStage) : a.Ictype == FinalOrStage
                                select a.IssueToIecd).FirstOrDefault();
 
-                if (bsCheck != null)
+                if (bsCheckIC != null)
                 {
                     var query = context.IcIntermediates
                             .Where(ici => ici.CaseNo == model.CaseNo &&
@@ -4231,7 +4273,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     model.AlertMsg = "Success";
                 }
-                else if (model.DocBkNo != "" && model.DocSetNo != "" && (bsCheck == null || bsCheck == 0))
+                else if (model.DocBkNo != "" && model.DocSetNo != "" && (bsCheckIC == null || bsCheckIC == 0))
                 {
                     model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
                     return model;
@@ -4838,36 +4880,46 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd,int IE_CD)
         {
-            string msg = "";
-            string formattedCallRecvDt = "";
-            if (DesireDt != null && DesireDt != DateTime.MinValue)
+
+            var ic_book = (from item in context.T10IcBooksets
+                           orderby item.IssueDt descending
+                           where item.IssueToIecd == IE_CD
+                           select item).FirstOrDefault();
+
+            var dlt_IC = (from x in context.IcIntermediates
+                          orderby x.SetNo descending
+                          where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
+                          select x).FirstOrDefault();
+
+            if (dlt_IC != null)
             {
-                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
 
-                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
-            }
+                string incrementedSetNo = setNo.ToString("D3");
+                var ic_bookset = (from item in context.T10IcBooksets
+                                  orderby item.IssueDt descending
+                                  where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                        Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                        item.IssueToIecd == dlt_IC.IeCd
+                                  select item).FirstOrDefault();
 
-            var queryResult = context.IcIntermediates
-                         .Where(ici => ici.CaseNo == CaseNo &&
-                                       ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-                                       ici.CallSno == CallSno && 
-                                       ici.ConsigneeCd == selectedConsigneeCd)
-                         .OrderByDescending(ici => ici.Datetime)
-                         .FirstOrDefault();
-
-            if (queryResult != null)
-            {
-                model.DocBkNo = queryResult.BkNo;
-                model.DocSetNo = queryResult.SetNo;
-                model.Consignee = Convert.ToString(queryResult.ConsigneeCd);
+                if (ic_bookset != null)
+                {
+                    model.DocBkNo = ic_bookset.BkNo;
+                    model.DocSetNo = Convert.ToString(incrementedSetNo);
+                }
+                else
+                {
+                    model.DocBkNo = "";
+                    model.DocSetNo = "";
+                }
             }
             else
             {
-                model.DocBkNo = "";
-                model.DocSetNo = "";
-                model.Consignee = "";
+                model.DocBkNo = ic_book.BkNo;
+                model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
             }
             return model;
         }
