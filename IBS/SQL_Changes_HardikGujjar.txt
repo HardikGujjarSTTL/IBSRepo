@@ -1952,7 +1952,7 @@ BEGIN
         T22.BILL_NO;
 END SP_Get_ItemWiseInspections;
 
-CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
+create or replace PROCEDURE SP_Get_ClientWiseInspections (
     p_RegionCode IN VARCHAR2,
     p_ItemDesc1 IN VARCHAR2,
     p_ItemDesc2 IN VARCHAR2,
@@ -1966,42 +1966,76 @@ CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
     p_RlyCd IN VARCHAR2, 
     p_Result OUT SYS_REFCURSOR
 ) AS
-    sql_stmt VARCHAR2(10000);
-
 BEGIN
-    sql_stmt := 'SELECT TRIM(T23.ITEM_DESC) ITEM_DESC, T13.RLY_CD BPO_RLY, SUM(T18.QTY_PASSED) QTY_PASS, SUM(T18.QTY_REJECTED) QTY_REJ, T04.UOM_S_DESC UOM_S_DESC, SUM(T23.VALUE) VALUE, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END) IC_PERIOD, COUNT(*) NO_OF_INSP FROM T13_PO_MASTER T13, T17_CALL_REGISTER T17, T18_CALL_DETAILS T18, T20_IC T20, T22_BILL T22, T23_BILL_ITEMS T23, T04_UOM T04 WHERE T13.CASE_NO = T17.CASE_NO AND T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO AND T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO AND T20.BILL_NO = T22.BILL_NO AND T22.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO AND T23.UOM_CD = T04.UOM_CD';
+    OPEN p_Result FOR
+    SELECT 
+        TRIM(T23.ITEM_DESC) ITEM_DESC,
+        T13.RLY_CD BPO_RLY,
+        SUM(T18.QTY_PASSED) QTY_PASS,
+        SUM(T18.QTY_REJECTED) QTY_REJ,
+        T04.UOM_S_DESC UOM_S_DESC,
+        SUM(T23.VALUE) VALUE,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END) IC_PERIOD,
+        COUNT(*) NO_OF_INSP
+    FROM 
+        T13_PO_MASTER T13,
+        T17_CALL_REGISTER T17,
+        T18_CALL_DETAILS T18,
+        T20_IC T20,
+        T22_BILL T22,
+        T23_BILL_ITEMS T23,
+        T04_UOM T04
+    WHERE 
+        T13.CASE_NO = T17.CASE_NO
+        AND T17.CASE_NO = T18.CASE_NO 
+        AND T17.CALL_RECV_DT = T18.CALL_RECV_DT 
+        AND T17.CALL_SNO = T18.CALL_SNO 
+        AND T17.CASE_NO = T20.CASE_NO 
+        AND T17.CALL_RECV_DT = T20.CALL_RECV_DT 
+        AND T17.CALL_SNO = T20.CALL_SNO 
+        AND T20.BILL_NO = T22.BILL_NO 
+        AND T22.BILL_NO = T23.BILL_NO 
+        AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO 
+        AND T23.UOM_CD = T04.UOM_CD
+        AND 
+        t13.region_code = 
+          CASE
+            WHEN p_OneRegion = 'true' THEN p_RegionCode
+            ELSE t13.region_code
+          END
+        AND ( instr(upper(t23.item_desc),
+                upper(p_ItemDesc1)) > 0
+            OR instr(upper(t23.item_desc),
+                   upper(p_ItemDesc2)) > 0 
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc3)) > 0
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc4)) > 0
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc5)) > 0)
 
-    IF p_OneRegion = 'true' THEN
-        sql_stmt := sql_stmt || ' AND T13.REGION_CODE = ''' || p_RegionCode || '''';
-    END IF;
+        AND (p_ClientType IS NULL OR p_ClientType = 'A' OR (T13.RLY_NONRLY = p_ClientType AND T13.RLY_CD = p_RlyCd))
+        AND (T20.IC_DT BETWEEN p_FrmDt AND p_ToDt)
+    GROUP BY 
+        T13.RLY_CD,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END),
+        T23.ITEM_DESC,
+        T04.UOM_S_DESC
+    ORDER BY 
+        T13.RLY_CD,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END),
+        T23.ITEM_DESC,
+        T04.UOM_S_DESC;
 
-    IF p_ItemDesc1 IS NOT NULL AND p_ItemDesc1 != '' THEN
-        sql_stmt := sql_stmt || ' AND (INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc1 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc2 IS NOT NULL AND p_ItemDesc2 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc2 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc3 IS NOT NULL AND p_ItemDesc3 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc3 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc4 IS NOT NULL AND p_ItemDesc4 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc4 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc5 IS NOT NULL AND p_ItemDesc5 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc5 || ''')) > 0';
-    END IF;
-
-    IF p_ClientType IS NOT NULL AND p_ClientType != '' AND p_ClientType != 'A' THEN
-        sql_stmt := sql_stmt || ' AND T13.RLY_NONRLY = ''' || p_ClientType || ''' AND T13.RLY_CD = ''' || p_RlyCd || '''';
-    END IF;
-
-    sql_stmt := sql_stmt || ' AND (T20.IC_DT BETWEEN ''' || p_FrmDt || ''' AND ''' || p_ToDt || ''') GROUP BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC ORDER BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC';
-
-    OPEN p_Result FOR sql_stmt;
 END SP_Get_ClientWiseInspections;
 
 

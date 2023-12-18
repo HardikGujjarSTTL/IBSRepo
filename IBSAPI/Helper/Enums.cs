@@ -38,6 +38,10 @@ namespace IBSAPI.Helper
         public enum DocumentCategory : int
         {
             ICPHOTOS = 22,
+            ICPhotoDigSign = 23,
+            UploadTestPlan = 24,
+            UploadICAnnexue1 = 25,
+            UploadICAnnexue2 = 26,
         }
         public enum DocumentCategory_CANRegisrtation : int
         {
