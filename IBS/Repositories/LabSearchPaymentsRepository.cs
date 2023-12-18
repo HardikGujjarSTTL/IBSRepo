@@ -24,7 +24,7 @@ namespace IBS.Repositories
             var CASE_NO = dtParameters.AdditionalValues?.GetValueOrDefault("CASE_NO");
             var AMOUNT = dtParameters.AdditionalValues?.GetValueOrDefault("AMOUNT");
             var CHQ_NO = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_NO");
-            var BankNameDropdown = dtParameters.AdditionalValues?.GetValueOrDefault("BankNameDropdown");
+            var BankNameDropdown = dtParameters.AdditionalValues?.GetValueOrDefault("BANK_NAME");
             var CHQ_DT = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_DT");
 
             query = (from t25 in context.T25RvDetails

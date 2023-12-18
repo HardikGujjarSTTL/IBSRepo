@@ -633,7 +633,8 @@ namespace IBS.Controllers.InspectionBilling
 
             if (CaseNo != null && CallRecvDt != null && CallSno > 0)
             {
-                model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno);
+                int IE_CD = SessionHelper.UserModelDTO.IeCd;
+                model = callregisterRepository.FindCallStatus(CaseNo, CallRecvDt, CallSno, IE_CD);
             }
             model.IeCd = IeCd;
             model.ActionType = ActionType;
@@ -904,7 +905,8 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult GetBkNoAndSetNo(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd)
         {
             VenderCallStatusModel lst = new();
-            lst = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno, model, selectedConsigneeCd);
+            int IE_CD = SessionHelper.UserModelDTO.IeCd;
+            lst = callregisterRepository.GetBkNoAndSetNoByConsignee(CaseNo, DesireDt, CallSno, model, selectedConsigneeCd, IE_CD);
             return Json(lst);
         }
 
