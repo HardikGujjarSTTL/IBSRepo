@@ -1,3 +1,8 @@
+--Scaffold-DbContext name=DefaultConnection Oracle.EntityFrameworkCore -noOnConfiguring -OutputDir DataAccess -Force
+--=============================================================================================================================================
+--By Naimish Rana
+--=============================================================================================================================================
+
 create or replace FUNCTION GET_FINANCIAL_YEAR_START_DATE
 RETURN DATE 
 IS
