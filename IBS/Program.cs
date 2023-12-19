@@ -251,6 +251,7 @@ builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRReposi
 
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
+builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
 var app = builder.Build();
 

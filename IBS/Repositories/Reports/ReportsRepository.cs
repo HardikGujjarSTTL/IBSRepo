@@ -35,7 +35,7 @@ namespace IBS.Repositories.Reports
             {
                 IE_CD = iecd;
             }
-            IE_CD = "782";
+            //IE_CD = "782";
             var startDate = Common.DateConcate(FromDate.ToString());
             var toDate = Common.DateConcate(ToDate.ToString());
             OracleParameter[] par = new OracleParameter[4];

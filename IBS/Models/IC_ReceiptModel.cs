@@ -8,7 +8,7 @@ namespace IBS.Models
     {
         public string REGION { get; set; }
 
-        [Required(ErrorMessage ="Book No is required")]
+        [Required(ErrorMessage = "Book No is required")]
         public string BK_NO { get; set; }
 
         [Required(ErrorMessage = "Set No is required")]
@@ -53,7 +53,7 @@ namespace IBS.Models
         public DateTime? ToDt { get; set; }
 
         public string ICType { get; set; }
-    }    
+    }
 
     public class ICIssueNotReceiveModel
     {
@@ -70,6 +70,6 @@ namespace IBS.Models
         public string RLY_NONRLY { get; set; }
 
         public bool IsTIF { get; set; }
-        public bool IsPDF{ get; set; }
-    }    
+        public bool IsPDF { get; set; }       
+    }
 }

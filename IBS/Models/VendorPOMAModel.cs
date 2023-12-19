@@ -63,7 +63,7 @@ namespace IBS.Models
     {
         public string CaseNo { get; set; } = null!;
 
-        public byte ItemSrno { get; set; }
+        public int ItemSrno { get; set; }
 
         public string? ItemDesc { get; set; }
 
@@ -123,7 +123,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? CallLetterDt { get; set; }
 
-        public short CallSno { get; set; }
+        public int CallSno { get; set; }
 
         public byte? CallInstallNo { get; set; }
 
