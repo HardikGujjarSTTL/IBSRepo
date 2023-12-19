@@ -75,5 +75,18 @@ namespace IBS.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public IActionResult HolidayDetail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableDetail([FromBody] DTParameters dtParameters)
+        {
+            DTResult<HolidayMasterModel> dTResult = holidayMasterRepository.GetHolidayMasterList(dtParameters);
+            return Json(dTResult);
+        }
+
     }
 }

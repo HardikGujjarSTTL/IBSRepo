@@ -15,10 +15,7 @@ namespace IBS.Repositories
         public DTResult<HolidayMasterModel> GetHolidayMasterList(DTParameters dtParameters)
         {
             DTResult<HolidayMasterModel> dTResult = new() { draw = 0 };
-            IQueryable<HolidayMasterModel>? query = null;
-
-            DTResult<BankMasterModel> dTResult1 = new() { draw = 0 };
-            IQueryable<BankMasterModel>? query1 = null;
+            IQueryable<HolidayMasterModel>? query = null;            
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
@@ -34,10 +31,7 @@ namespace IBS.Repositories
             {
                 orderCriteria = "Finance_Year";
                 orderAscendingDirection = true;
-            }
-
-            //string BankName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["BankName"]) ? Convert.ToString(dtParameters.AdditionalValues["BankName"]) : "";
-            //int? FMISBankCD = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FMISBankCD"]) ? Convert.ToInt32(dtParameters.AdditionalValues["FMISBankCD"]) : null;
+            }            
 
             query = from a in context.T111HolidayMasters
                     select new HolidayMasterModel
@@ -107,6 +101,49 @@ namespace IBS.Repositories
                 }
             }
             return Convert.ToInt32(model.ID);
+        }
+
+        public DTResult<HolidayDetailModel> GetHolidayDetailList(DTParameters dtParameters)
+        {
+            DTResult<HolidayDetailModel> dTResult = new() { draw = 0 };
+            IQueryable<HolidayDetailModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "HOLIDAY_DT";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                orderCriteria = "HOLIDAY_DT";
+                orderAscendingDirection = true;
+            }
+
+            query = from a in context.T112HolidayDetails
+                    select new HolidayDetailModel
+                    {
+                        ID = a.Id,
+                        HOLIDAY_ID = a.HolidayId,
+                        HOLIDAY_DT = a.HolidayDt,
+                        HOLIDAY_DESC = a.HolidayDesc
+                    };
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
         }
     }
 }

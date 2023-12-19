@@ -8,6 +8,6 @@ namespace IBS.Interfaces
         HolidayMasterModel FindByID(int id);
         int HolidayMasterSave(HolidayMasterModel model);
 
-
+        DTResult<HolidayDetailModel> GetHolidayDetailList(DTParameters dtParameters);
     }
 }

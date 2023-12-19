@@ -20,18 +20,21 @@
                     <div class="input-search">
                         <label for="Finance_Year">Financial Year</label>
                         <input type="text" class="input" asp-for="Finance_Year" />
+                        <span asp-validation-for="Finance_Year" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="input-search">
                         <label for="FY_FR_DT">From Date</label>
                         <input type="text" class="datepicker" asp-for="FY_FR_DT" placeholder="DD/MM/YYYY" />
+                        <span asp-validation-for="FY_FR_DT" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="input-search">
                         <label for="FY_TO_DT">To Date</label>
                         <input type="text" class="datepicker" asp-for="FY_TO_DT" placeholder="DD/MM/YYYY" />
+                        <span asp-validation-for="FY_TO_DT" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -42,7 +45,7 @@
                 </div>
             </div>
         </div>
-    </form>    
+    </form>
 </div>
 
 @section scripts{
@@ -57,7 +60,11 @@
                     $("#frmHolidayMaster").submit();
                 }
             }
-        });        
+
+            function CLearControls() {
+                $("#frmHolidayMaster").clear();
+            }
+        });
     </script>
 }
 
