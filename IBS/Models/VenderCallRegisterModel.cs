@@ -605,7 +605,8 @@ namespace IBS.Models
         public string? IeCd { get; set; }
         public int? IssueToIecd { get; set; }
 
-        public string UserId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
 
         public string? MaterialValue { get; set; }
 

@@ -9,6 +9,7 @@ using IBSAPI.Helper;
 using Newtonsoft.Json;
 using System.Data;
 using System.Dynamic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBSAPI.Repositories
 {
@@ -95,6 +96,19 @@ namespace IBSAPI.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 caseDetailIEModel = JsonConvert.DeserializeObject<List<CaseDetailIEModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
             }
+            var secondQuery = (from cdt in context.T18CallDetails
+                               join csn in context.V06Consignees
+                               on cdt.ConsigneeCd equals csn.ConsigneeCd
+                               where cdt.CaseNo == Case_No &&
+                                     cdt.CallRecvDt == Convert.ToDateTime(CallRecvDt) &&
+                                     cdt.CallSno == CallSNo
+                               select new SelectListItem
+                               {
+                                   Value = csn.ConsigneeCd.ToString(),
+                                   Text = csn.ConsigneeCd + "-" + csn.Consignee
+                               }).Distinct().ToList();
+            caseDetailIEModel.ConsigneeFirmList = secondQuery.ToList();
+
             return caseDetailIEModel;
         }
 

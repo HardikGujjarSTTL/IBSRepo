@@ -1,4 +1,6 @@
-﻿namespace IBSAPI.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace IBSAPI.Models
 {
     public class CaseDetailIEModel
     {
@@ -19,8 +21,9 @@
         public string EMail { get; set; }
         public string BK_NO { get; set; }
         public string SET_NO { get; set; }
-
         public List<PhotosModel> photosModel { get; set; }
+        public List<PhotosModel> pdfModel { get; set; }
+        public List<SelectListItem> ConsigneeFirmList { get; set; } = new List<SelectListItem>();
     }
 
     public class PhotosModel

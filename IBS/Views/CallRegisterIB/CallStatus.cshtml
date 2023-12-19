@@ -543,23 +543,20 @@
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
                 $('#MatCanvalue').hide();
-                debugger
                 $.ajax({
                     url: '@Url.Action("GetBkNoAndSetNo", "CallRegisterIB")',
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
+                        $('#DocBkNo').val(data.DocBkNo);
+                        $('#DocSetNo').val(data.DocSetNo);
+
                         if (selectedValue == data.Consignee) {
-                            $('#DocBkNo').val(data.DocBkNo);
-                            $('#DocSetNo').val(data.DocSetNo);
                             if ($('#DocBkNo').val() != "" && $('#DocSetNo').val() != "") {
                                 $('#ViewPrintIC').prop('disabled', false);
                                 $("#ViewPrintIC").css("cursor", "pointer");
                             }
-                        }
-                        else {
-                            $('#DocBkNo').val(data.DocBkNo);
-                            $('#DocSetNo').val(data.DocSetNo);
+                        } else {
                             $('#ViewPrintIC').prop('disabled', true);
                             $("#ViewPrintIC").css("cursor", "auto");
                         }
