@@ -78,6 +78,61 @@ namespace IBSAPI.Helpers
             return id;
         }
 
+        public static int SavePDFForCallFiles(string ApplicationID, List<APPDocumentDTO> DocumentsList, string FolderPath, IWebHostEnvironment env, IDocument pIDocument1, string FilePreFix = "", String SpecificFileName = "", int DocumentIds = 0, string IsStaging = null)
+        {
+            int id = 0;
+            int AppID = 0;
+            int Documentid = 0;
+            List<APPDocumentDTO> NewDocumentsList = new List<APPDocumentDTO>();
+
+            //string path = Path.Combine(env.WebRootPath, FolderPath);
+            string WebRootPath = "";
+            if (Convert.ToBoolean(IsStaging) == true)
+            {
+                WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
+                //WebRootPath = env.WebRootPath.Replace("IBSAPI", "IBS");
+            }
+            else
+            {
+                WebRootPath = env.WebRootPath;
+            }
+            string path = WebRootPath + FolderPath;
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            foreach (APPDocumentDTO item in DocumentsList)
+            {
+                string DestinationPath = Path.Combine(path, FilePreFix);
+                using (var fileStream = System.IO.File.Create(DestinationPath))
+                {
+                    item.formFile.CopyTo(fileStream);
+                }
+
+                FileInfo newfile = new FileInfo(DestinationPath);
+                item.DocumentCategoryID = DocumentIds;
+                item.Documentid = DocumentIds;
+                item.Applicationid = ApplicationID;
+                item.Relativepath = FolderPath.Replace("~", "");
+                item.Extension = newfile.Extension;
+                item.FileDisplayName = item.FileName;
+                item.UniqueFileName = FilePreFix;
+
+                if (item.Documentid == null || item.Documentid == 0)
+                {
+                    item.Documentid = null;
+                    item.Isotherdoc = Convert.ToByte(true);
+                }
+
+                item.Latitude = item.Latitude;
+                item.Longitude = item.Longitude;
+                NewDocumentsList.Add(item);
+            }
+            id = SaveDocument(NewDocumentsList);
+            return id;
+        }
+
         public static int SaveICFiles(string ApplicationID, List<APPDocumentDTO> DocumentsList, string FolderPath, IWebHostEnvironment env, IDocument pIDocument1, string FilePreFix = "", String SpecificFileName = "", int DocumentIds = 0,string IsStaging = null)
         {
             int id = 0;
