@@ -11467,18 +11467,20 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasDefaultValueSql("null")
+                .HasColumnType("DATE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.HolidayDesc)
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("HOLIDAY_DESC");
             entity.Property(e => e.HolidayDt)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasDefaultValueSql("null")
+                .HasColumnType("DATE")
                 .HasColumnName("HOLIDAY_DT");
             entity.Property(e => e.HolidayId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
+                .HasPrecision(6)
+                .HasDefaultValueSql("null")
                 .HasColumnName("HOLIDAY_ID");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
@@ -11487,7 +11489,8 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasDefaultValueSql("null")
+                .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)

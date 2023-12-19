@@ -7,7 +7,7 @@
         <h2>Holiday Master List</h2>
     </div>
     <div class="list-btn">
-        <a asp-area="" asp-controller="HolidayMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New</a>
+        <a asp-area="" asp-controller="HolidayMaster" asp-action="Manage" class="formBtn"><span class="fa fa-plus"></span> Add New Holiday Master</a>
     </div>
 </div>
 <div class="task-listinput">
@@ -18,8 +18,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Action</th>
-                            <th>View Holiday Detail</th>
+                            <th class="padR10 center">Action</th>
+                            <th class="padR10 center">View Holiday Detail</th>
                             <th>Financial Year</th>
                             <th>From Date</th>
                             <th>To Date</th>
@@ -61,7 +61,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable","HolidayMaster")",
                     type: "POST",
@@ -88,7 +88,7 @@
                             var id = data.ID;
                             var editUrl = '@Url.Action("Manage", "HolidayMaster")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '<a onclick="HolidayMasterDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
@@ -97,8 +97,8 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.ID;
-                            var editUrl = '@Url.Action("Manage", "HolidayMaster")/' + id;
-                            var html = '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var poDetsilsUrl = '@Url.Action("HolidayDetail", "HolidayMaster")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + poDetsilsUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="View Holiday Details"></i></a>';
                             html += '</div>';
                             return html;
                         }
@@ -128,7 +128,12 @@
             });
         }
 
-        fun
+        function HolidayMasterDelete(id) {
+            var url = '@Url.Action("HolidayMasterDelete", "HolidayMaster")/' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
     </script>
 }
 

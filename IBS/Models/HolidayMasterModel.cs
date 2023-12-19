@@ -22,16 +22,19 @@ namespace IBS.Models
     {
         public int? ID { get; set; }
         public int? HOLIDAY_ID { get; set; }
-        [Required(ErrorMessage = "Holiday Date is required")]
-        public DateTime HOLIDAY_DT { get; set; }
+        [Required(ErrorMessage = "Holiday Date is required")]        
+        public DateTime? HOLIDAY_DT { get; set; }
         [Required(ErrorMessage = "Holiday Description is required")]
         public string HOLIDAY_DESC { get; set; }
-        public string USER_ID { get; set; }
-        public int? CREATEDBY { get; set; }
-        public DateTime? CREATEDDATE { get; set; }
-        public int? UPDATEDBY { get; set; }
-        public DateTime? UPDATEDDATE { get; set; }
-        public int? ISDELETED { get; set; }
+        public int? USER_ID { get; set; }
+        public string? USER_NAME { get; set; }
+        //public int? CREATEDBY { get; set; }
+        //public DateTime? CREATEDDATE { get; set; }
+        //public int? UPDATEDBY { get; set; }
+        //public DateTime? UPDATEDDATE { get; set; }
+        //public int? ISDELETED { get; set; }
+
+        public string? FINANCIAL_YEAR { get; set; }
 
     }
 }

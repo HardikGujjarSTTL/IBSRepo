@@ -7,9 +7,9 @@ public partial class T112HolidayDetail
 {
     public int Id { get; set; }
 
-    public string? HolidayId { get; set; }
+    public int? HolidayId { get; set; }
 
-    public DateTimeOffset? HolidayDt { get; set; }
+    public DateTime? HolidayDt { get; set; }
 
     public string? HolidayDesc { get; set; }
 
@@ -17,11 +17,11 @@ public partial class T112HolidayDetail
 
     public int? Createdby { get; set; }
 
-    public DateTimeOffset? Createddate { get; set; }
+    public DateTime? Createddate { get; set; }
 
     public int? Updatedby { get; set; }
 
-    public DateTimeOffset? Updateddate { get; set; }
+    public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
 }
