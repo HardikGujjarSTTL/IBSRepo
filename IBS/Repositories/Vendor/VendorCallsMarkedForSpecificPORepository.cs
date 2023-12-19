@@ -173,7 +173,7 @@ namespace IBS.Repositories.Vendor
                         Remark = l.Remark,
                         CallStatus = l.CallStatus,
                         Colour = l.Colour,
-                        MfgPers = l.MfgPers,
+                        MfgPers = l.MfgPers,    
                         MfgPhone = l.MfgPhone,
                         CallSno = l.CallSno,
                         Hologram = l.Hologram,

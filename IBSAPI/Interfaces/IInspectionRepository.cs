@@ -28,5 +28,9 @@ namespace IBSAPI.Interfaces
 
         List<PhotosModel> GetDocRecordsList(int DocumentCategoryID, string ApplicationID, string WebRootPath);
         int DeleteSingleRecord(DeleteICPhotoRequestModel model);
+
+        int CallStatusFilesSave(ICPhotoUploadRequestModel model);
+
+        public BookNoSetNoModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, int selectedConsigneeCd, int IE_CD);
     }
 }
