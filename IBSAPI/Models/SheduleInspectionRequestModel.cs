@@ -24,6 +24,20 @@
         public string CaseNo { get; set; }
         public string DocBkNo { get; set; }
         public string DocSetNo { get; set; }
+        public string? Consignee { get; set; }
+        public decimal? QtyPassed { get; set; }
+        public decimal? QtyRejected { get; set; }
+        public DateTime CallRecvDt { get; set; }
+        public int CallSno { get; set; }
+        public string? PoNo { get; set; }
+        public int? IeCd { get; set; }
+        public string userId { get; set; }
+    }
+
+    public class BookNoSetNoModel
+    {
+        public string DocBkNo { get; set; }
+        public string DocSetNo { get; set; }
     }
 
     public class DeleteICPhotoRequestModel

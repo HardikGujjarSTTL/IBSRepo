@@ -201,8 +201,10 @@ namespace IBSAPI.Controllers
 
         [HttpPost("ICPhotoUpload")]
         [Consumes("multipart/form-data")]
-        public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude, List<IFormFile> photos, 
-            IFormFile ICPhotoDigitalSign, IFormFile UploadTestPlan, IFormFile UploadICAnnexue1, IFormFile UploadICAnnexue2)
+        public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude,
+            string Consignee,decimal? QtyPassed,decimal? QtyRejected,DateTime call_Recv_DT,int CallSno,string PoNo,
+            int? IeCd,string userId
+            , List<IFormFile> photos, IFormFile ICPhotoDigitalSign, IFormFile UploadTestPlan, IFormFile UploadICAnnexue1, IFormFile UploadICAnnexue2)
         {
             try
             {
@@ -210,6 +212,14 @@ namespace IBSAPI.Controllers
                 model.CaseNo=CaseNo;
                 model.DocBkNo = DocBkNo;
                 model.DocSetNo = DocSetNo;
+                model.Consignee = Consignee;
+                model.QtyPassed = QtyPassed;
+                model.QtyRejected = QtyRejected;
+                model.CallRecvDt = call_Recv_DT;
+                model.CallSno = CallSno;
+                model.PoNo = PoNo;
+                model.IeCd = IeCd;
+                model.userId = userId;
                 string IsStaging = Configuration["MyAppSettings:IsStaging"];
                 if (photos != null && photos.Count > 0)
                 {
@@ -231,24 +241,6 @@ namespace IBSAPI.Controllers
                             aPP.Latitude = Latitude;
                             aPP.Longitude = Longitude;
                             DocumentsList.Add(aPP);
-                            
-                            //string WebRootPath = "";
-                            //if (Convert.ToBoolean(IsStaging) == true)
-                            //{
-                            //    WebRootPath = env.WebRootPath.Replace("IBS2API", "IBS2");
-                            //    //WebRootPath = env.WebRootPath.Replace("IBSAPI", "IBS");
-                            //}
-                            //else
-                            //{
-                            //    WebRootPath = env.WebRootPath;
-                            //}
-                            //string TempFilePath = WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.TempFilePath);
-                            //string TempPath = Path.Combine(TempFilePath, aPP.UniqueFileName+ fileExtension);
-                            //using (var fileStream = System.IO.File.Create(TempPath))
-                            //{
-                            //    photo.CopyTo(fileStream);
-                            //}
-                            //Common.AddException(TempPath, TempPath, "Call", "UploadAPI", 1, string.Empty);
                         }
                         i++;
                     }
@@ -261,7 +253,7 @@ namespace IBSAPI.Controllers
                     int Upload_IC_Annexue2DID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2;
                     if (ICPhotoDigitalSign.Length > 0)
                     {
-                        if (ICPhotoDigitalSign.Name == "IC PhotoDigital Sign")
+                        if (ICPhotoDigitalSign.Name == "ICPhotoDigitalSign")
                         {
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign;
@@ -274,7 +266,7 @@ namespace IBSAPI.Controllers
                     }
                     if (UploadTestPlan.Length > 0)
                     {
-                        if (UploadTestPlan.Name == "Upload TestPlan")
+                        if (UploadTestPlan.Name == "UploadTestPlan")
                         {
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan;
@@ -287,7 +279,7 @@ namespace IBSAPI.Controllers
                     }
                     if (UploadICAnnexue1.Length > 0)
                     {
-                        if (UploadICAnnexue1.Name == "Upload IC Annexue 1")
+                        if (UploadICAnnexue1.Name == "UploadICAnnexue1")
                         {
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1;
@@ -300,7 +292,7 @@ namespace IBSAPI.Controllers
                     }
                     if (UploadICAnnexue2.Length > 0)
                     {
-                        if (UploadICAnnexue2.Name == "Upload IC Annexue 2")
+                        if (UploadICAnnexue2.Name == "UploadICAnnexue2")
                         {
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2;
@@ -311,12 +303,26 @@ namespace IBSAPI.Controllers
                             DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue2).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue2DID, IsStaging);
                         }
                     }
-                    var response = new
+
+                    int id = inspectionRepository.CallStatusFilesSave(model);
+                    if (id > 0)
                     {
-                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                        message = "Successfully"
-                    };
-                    return Ok(response);
+                        var response = new
+                        {
+                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                            message = "Successfully"
+                        };
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        var response = new
+                        {
+                            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                            message = "Something wrong"
+                        };
+                        return BadRequest(response);
+                    }
                 }
                 else
                 {
