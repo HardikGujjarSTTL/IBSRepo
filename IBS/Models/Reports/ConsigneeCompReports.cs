@@ -136,7 +136,7 @@
         public string S_Code { get; set; }
         public string IE { get; set; }
         public int NO_OF_INSPECTION { get; set; }
-        public int MATERIAL_VALUE { get; set; }
+        public decimal MATERIAL_VALUE { get; set; }
         public int RECD { get; set; }
         public int FINALISED { get; set; }
         public int PENDING { get; set; }

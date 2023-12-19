@@ -1,0 +1,107 @@
+﻿@model IBS.Models.OnlinePaymentGateway
+
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
+
+<div class="container">
+    <div class="innerContent">
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>ONLINE PAYMENT GATEWAY FORM FOR RITES INSPECTION CHARGES</h2>
+            </div>
+        </div>
+        <div class="accordion-body p-4">
+            <form data-ajax="true" asp-antiforgery="true"  data-ajax-method="Get" id="frmPaymentGateway" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Case No. </label><i class="text-danger">*</i>
+                        <input type="text" class="input" ASP-FOR="CaseNo" maxlength="50" />
+                        <span asp-validation-for="CaseNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Call Date </label><i class="text-danger">*</i>
+                        <input type="text" class="datepicker" placeholder="DD/MM/YYYY" ASP-FOR="CallDate" maxlength="10" />
+                        <span asp-validation-for="CallDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Call SNo. </label><i class="text-danger">*</i>
+                        <input type="text" class="input" ASP-FOR="CallSno" maxlength="5" onkeypress="return isNumber(event)" />
+                        <span asp-validation-for="CallSno" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="BtnVerify()">Verify</button>
+                </div>
+                <div class="row" id="PayNowId">
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Vendor Name </label>
+                        <input type="text" class="input" ASP-FOR="VEND_NAME" maxlength="50" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Purchase Order No. & Date</label>
+                        <input type="text" class="input" ASP-FOR="PO_NO" maxlength="50" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Purchase Order No. & Date</label>
+                        @Html.DropDownList("ChargesType", new SelectList(IBS.Models.Common.ChargesType() , "Value", "Text"),"--Select--", new { id = "ChargesType" })
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Charges (Rs. Only)</label>
+                        <input type="text" class="input" ASP-FOR="Charges" onkeypress="return isNumberWithDot(event)" maxlength="10"  />
+                    </div>
+                    <div class="col-md-5 mb-5">
+                        <input type="radio" name="PaymentMethod" value="CreditCard" id="creditCard" />
+                        <label for="creditCard">Credit Card/Debit Card</label>
+
+                        <input type="radio" name="PaymentMethod" value="DebitCard" id="debitCard" />
+                        <label for="debitCard">Net Banking</label>
+                    </div>
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active Permission_Save">Pay Now</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#PayNowId").hide();
+        });
+
+        function BtnVerify() {
+
+            if ($("#frmPaymentGateway").valid()) {
+                var urlpath = "@Url.Action("VerifyPayment", "OnlinePaymentGateway")";
+                var formData = $("#frmPaymentGateway").serialize();
+
+                $.ajax({
+                    url: urlpath,
+                    type: 'GET',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.PO_NO != null) {
+                            $("#PO_NO").val(data.PO_NO);
+                            $("#VEND_NAME").val(data.VEND_NAME);
+                            $("#PayNowId").show();
+                        } else {
+                            ShowHideMsgNew(false, data.AlertMsg);
+                            $("#PayNowId").hide();
+                            return;
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                    }
+                });
+            }
+        }
+
+    </script>
+}
