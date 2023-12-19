@@ -4059,13 +4059,21 @@ namespace IBS.Repositories.InspectionBilling
 
                 var docSetNo = Convert.ToInt32(model.DocSetNo);
 
+
                 var bsCheckIC = (from a in context.T10IcBooksets
-                                 where a.BkNo.Trim() == model.DocBkNo.Trim()
-                                 && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
-                                 && a.IssueToIecd == Convert.ToInt32(model.IeCd)
-                                 //&& a.Ictype == FinalOrStage
-                                 && FinalOrStage == "F" ? (a.Ictype == null || a.Ictype == FinalOrStage) : a.Ictype == FinalOrStage
-                                 select a.IssueToIecd).FirstOrDefault();
+                                  where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                  && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
+                                  && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                                  && (a.Ictype ?? "F") == FinalOrStage
+                                  select a.IssueToIecd).FirstOrDefault();
+
+                //var bsCheckIC = (from a in context.T10IcBooksets
+                //                 where a.BkNo.Trim() == model.DocBkNo.Trim()
+                //                 //&& (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
+                //                 && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                //                 //&& a.Ictype == FinalOrStage
+                //                 && FinalOrStage == "F" ? (a.Ictype == null || a.Ictype == FinalOrStage) : a.Ictype == FinalOrStage
+                //                 select a.IssueToIecd).FirstOrDefault();
 
                 if (bsCheckIC != null)
                 {
@@ -4195,7 +4203,7 @@ namespace IBS.Repositories.InspectionBilling
                             if (!wasOpen) command.Connection.Open();
                             try
                             {
-                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', UPDATEDBY =" + model.UserId + ",UPDATEDDATE='" + DateTime.Now + "' WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', UPDATEDBY =" +  model.UserId + ",UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
                                 command.ExecuteNonQuery();
                             }
                             finally
@@ -4895,7 +4903,7 @@ namespace IBS.Repositories.InspectionBilling
 
             if (ICInter != null)
             {
-                if(selectedConsigneeCd == ICInter.ConsigneeCd)
+                if (selectedConsigneeCd == ICInter.ConsigneeCd)
                 {
                     model.DocBkNo = ICInter.BkNo;
                     model.DocSetNo = ICInter.SetNo;
