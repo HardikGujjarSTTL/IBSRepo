@@ -46,6 +46,12 @@ namespace IBS.Helpers
                     item.UniqueFileName = FilePreFix + "_" + item.UniqueFileName;
                 }
 
+                if(item.DocumentCategoryID == (int)Enums.DocumentCategory.ICPhotoDigSign || item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadTestPlan ||
+                    item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue1 || item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue2)
+                {
+                    item.UniqueFileName = FilePreFix;
+                }
+
                 if (SpecificFileName != "")
                 {
                     string fileExtension = Path.GetExtension(item.UniqueFileName);

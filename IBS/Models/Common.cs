@@ -4415,6 +4415,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.T100Contracts
+                                         where a.Isdeleted != 1
                                          select
                                     new SelectListItem
                                     {
