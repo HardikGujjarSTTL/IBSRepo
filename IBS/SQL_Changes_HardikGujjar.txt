@@ -4580,3 +4580,501 @@ Group BY  t13.REGION_CODE,t12.BPO_TYPE,t12.BPO_REGION,t12.BPO_RLY,t20.BPO_CD,t12
  t06.CONSIGNEE_ADD1,t06.CONSIGNEE_ADD2,nvl2(t033.LOCATION,t033.LOCATION||' '||t033.CITY,t033.CITY),t20.IE_CD,
  nvl(t22.BILL_AMOUNT,0),nvl(t22.TDS,0),nvl(t22.TDS_SGST,0),nvl(t22.TDS_CGST,0),nvl(t22.TDS_IGST,0),nvl(t22.RETENTION_MONEY,0),nvl(t22.CNOTE_AMOUNT,0),nvl(t22.WRITE_OFF_AMT,0))
  
+--====================SAP=============
+create or replace PROCEDURE CREATE_SAP_QA_BPO_SELECTIVE
+(
+    pBPO_CD IN CHAR,
+    pID OUT NUMBER
+) IS
+    CURSOR c1 IS 
+        SELECT T12.BPO_CD,
+               DECODE(T12.BPO_REGION, 'N', 'NORTHERN', 'E', 'EASTERN', 'S', 'SOUTHERN', 'W', 'WESTERN', 'C', 'CENTRAL') BILL_CHASING_REGION,
+               T12.BPO_TYPE,
+               T12.BPO_NAME,
+               T12.BPO_RLY,
+               T12.BPO_ADD,
+               T03.LOCATION,
+               T03.CITY,
+               T92.STATE_NAME,
+               T92.SAP_STATE_CD,
+               T12.BILL_PASS_OFFICER,
+               T12.BPO_FEE_TYPE,
+               T12.BPO_FEE,
+               T12.BPO_TAX_TYPE,
+               T12.BPO_FLG,
+               T12.BPO_ADV_FLG,
+               T12.BPO_LOC_CD,
+               T12.BPO_ORGN,
+               T12.BPO_ADD1,
+               T12.BPO_ADD2,
+               T12.BPO_STATE,
+               NVL(TRIM(T12.PIN_CODE), '000000') BPO_PIN,
+               T12.BPO_PHONE,
+               T12.BPO_FAX,
+               T12.BPO_EMAIL,
+               T12.PAY_WINDOW_ID,
+               T12.GSTIN_NO
+        FROM T12_BILL_PAYING_OFFICER T12, T03_CITY T03, T92_STATE T92
+        WHERE T12.BPO_CITY_CD = T03.CITY_CD(+) AND T92.STATE_CD(+) = T03.STATE_CD
+        AND T12.BPO_CD = pBPO_CD
+        ORDER BY T12.BPO_CD;
+
+    r1 c1%ROWTYPE;
+    w_bpo_cd VARCHAR2(10) := NULL;
+    w_ctr VARCHAR2(200) := NULL;
+    w_location VARCHAR2(50) := NULL;
+    TYPE ADDARRAY IS VARRAY(5) OF CHAR(35);
+  W_NAME ADDARRAY := ADDARRAY();
+  W_ADDR ADDARRAY := ADDARRAY();
+  W_RLY ADDARRAY  := ADDARRAY();
+  W_ORGN ADDARRAY := ADDARRAY();
+    i NUMBER(3) := 0;
+    j INT;
+    counter NUMBER(5) := 0;
+    err_ctr NUMBER(5) := 0;
+    w_id NUMBER(13) := 0;
+BEGIN
+    SELECT MAX(NVL(ID, 0)) + 1 INTO w_id FROM SAP_QA_BPO;
+
+    FOR r1 IN c1
+    LOOP
+        counter := counter + 1;
+        w_bpo_cd := '10000' || r1.BPO_CD;
+        w_location := TRIM(r1.LOCATION);
+
+        -- BPO Name
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_NAME);
+        w_name := addarray();
+        WHILE j < 2 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_name.EXTEND;
+            w_name(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_name.EXTEND;
+        w_name(2) := TRIM(w_ctr);
+
+        -- Address Lines
+        err_ctr := 2;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_ADD);
+        IF (w_ctr = '' OR w_ctr IS NULL) THEN
+            IF (w_location = '' OR w_location IS NULL) THEN
+                w_ctr := r1.STATE_NAME;
+            ELSE
+                w_ctr := w_location;
+                w_location := '';
+            END IF;
+        END IF;
+
+        w_addr := addarray();
+        WHILE j < 3 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_addr.EXTEND;
+            w_addr(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_addr.EXTEND;
+        w_addr(3) := TRIM(w_ctr);
+
+        -- Organisation Name
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_ORGN);
+        w_orgn := addarray();
+        WHILE j < 2 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_orgn.EXTEND;
+            w_orgn(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_orgn.EXTEND;
+        w_orgn(2) := TRIM(w_ctr);
+
+        DELETE FROM SAP_QA_BPO WHERE SORT2_BPO_CD = W_BPO_CD;
+
+        INSERT INTO SAP_QA_BPO
+        (
+            SORT2_BPO_CD, BPO_TYPE, BPO_NAME1, BPO_NAME2, NAME3_BPO_RAILWAYS, NAME4_BPO_ORGN1,
+            REMARKS_BPO_ORGN2, SORT1_BPO_RAILWAYS, STREET1_BPO_ADD1, STREET2_BPO_ADD2,
+            STREET3_BPO_ADD3, STREET5_BPO_LOCATION, BPO_CITY, BPO_STATE, SAP_STATE_CD,
+            POSTAL_CODE_BPO_PIN, TEL_NUMBER_BPO_PHONE, SMTP_ADDR_BPO_EMAIL, STCD3, ID, CREATEDDATE
+        )
+        VALUES
+        (
+            w_bpo_cd, r1.BPO_TYPE, w_name(1), w_name(2), r1.BPO_RLY,
+            w_orgn(1), w_orgn(2), SUBSTR(r1.BPO_RLY, 1, 20), w_addr(1), w_addr(2),
+            w_addr(3), w_location, TRIM(r1.CITY), TRIM(r1.STATE_NAME), TRIM(r1.SAP_STATE_CD),
+            r1.BPO_PIN, r1.BPO_PHONE, r1.BPO_EMAIL, r1.GSTIN_NO, w_id, SYSDATE
+        );
+    END LOOP;
+
+    COMMIT;
+    pID := w_id;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('i=' || i || '  j=' || j || ' BPO CD-->' || w_bpo_cd || '  Error->'||counter||
+                             '--'||'Error Counter - >'||err_ctr||'---'||SQLCODE||'--'||SUBSTR(SQLERRM, 1, 200));
+        COMMIT;
+END;
+/
+
+
+    CREATE TABLE "SAP_QA_CONSIGNEE" 
+   (	"BUKRS" CHAR(4) DEFAULT '1000',
+	"VKORG" CHAR(4) DEFAULT '1000',
+	"VTWEG" CHAR(2) DEFAULT '10',
+	"SPART" CHAR(2) DEFAULT '20',
+	"KTOKD" CHAR(4) DEFAULT 'Z007',
+	"AD_TITLETX" CHAR(30) DEFAULT 'Company',
+	"NAME1_CONSIGNEE_DESIG" VARCHAR2(40),
+	"NAME2_CONSIGNEE_DEPT" VARCHAR2(35),
+	"NAME3_CONSIGNEE_FIRM1" VARCHAR2(35),
+	"NAME4_CONSIGNEE_FIRM2" VARCHAR2(50),
+	"REMARKS" CHAR(1) DEFAULT NULL,
+	"SORT1_CONSIGNEE_FIRM1" CHAR(35),
+	"SORT2_CONSIGNEE_CD" CHAR(10),
+	"HOUSE_NUM1" VARCHAR2(10) DEFAULT NULL,
+	"STREET1_CONSIGNEE_ADD1" VARCHAR2(35),
+	"STREET2_CONSIGNEE_ADD2" VARCHAR2(35),
+	"STREET3_CONSIGNEE_ADD3" VARCHAR2(35),
+	"STREET4_CONSIGNEE_ADD4" VARCHAR2(35),
+	"DISTRICT_CONSIGNEE_ADD5" VARCHAR2(35),
+	"STREET5_CONSIGNEE_LOCATION" VARCHAR2(40),
+	"POSTAL_CODE" VARCHAR2(10) DEFAULT '000000',
+	"CONSIGNEE_CITY" VARCHAR2(40),
+	"COUNTRY" VARCHAR2(3) DEFAULT 'IN',
+	"CONSIGNEE_STATE" VARCHAR2(40),
+	"SAP_STATE_CD" CHAR(2),
+	"LANGU" CHAR(2) DEFAULT 'EN',
+	"TEL_NUMBER" VARCHAR2(30) DEFAULT NULL,
+	"MOB_NUMBER" VARCHAR2(30) DEFAULT NULL,
+	"SMTP_ADDR" VARCHAR2(241) DEFAULT NULL,
+	"PAN_TAN_NO" VARCHAR2(10) DEFAULT NULL,
+	"CORPORATE_GROUP" VARCHAR2(10) DEFAULT NULL,
+	"CONSIGNEE_TYPE" CHAR(1),
+	"NAME_VP" CHAR(1) DEFAULT NULL,
+	"NAME1" CHAR(1) DEFAULT NULL,
+	"AD_STRSPP1" CHAR(1) DEFAULT NULL,
+	"AD_STREET" CHAR(1) DEFAULT NULL,
+	"POST_CODE1" CHAR(1) DEFAULT NULL,
+	"COUNTY" CHAR(1) DEFAULT NULL,
+	"REGION" CHAR(1) DEFAULT NULL,
+	"SPRAS" CHAR(1) DEFAULT NULL,
+	"TEL_PHON" CHAR(1) DEFAULT NULL,
+	"FAX" CHAR(1) DEFAULT NULL,
+	"EMAIL" CHAR(1) DEFAULT NULL,
+	"PARH1" CHAR(1) DEFAULT NULL,
+	"PARH2" CHAR(1) DEFAULT NULL,
+	"PARH3" CHAR(1) DEFAULT NULL,
+	"PAKN1" CHAR(1) DEFAULT NULL,
+	"PAKN2" CHAR(1) DEFAULT NULL,
+	"PAKN3" CHAR(1) DEFAULT NULL,
+	"AKONT" VARCHAR2(10) DEFAULT '23203110',
+	"SORT_KEY" CHAR(3) DEFAULT NULL,
+	"TERMS_OF_PAYMENT" CHAR(4) DEFAULT '0002',
+	"DUNNING_PROC" CHAR(4) DEFAULT '0001',
+	"DUNNING_LEVEL" CHAR(1) DEFAULT '1',
+	"ACCOUNT_STATEMENT" CHAR(1) DEFAULT NULL,
+	"WITHT" CHAR(2) DEFAULT 'C2',
+	"WT_WITHCD" CHAR(2) DEFAULT 'C2',
+	"WT_AGENT" CHAR(1) DEFAULT 'X',
+	"WT_AGTDF" CHAR(10) DEFAULT '01.04.2012',
+	"WT_AGTDT" CHAR(10) DEFAULT '31.03.9999',
+	"VKBUR" CHAR(4) DEFAULT NULL,
+	"KDGRP" CHAR(2) DEFAULT NULL,
+	"WAERS" VARCHAR2(5) DEFAULT 'INR',
+	"KALKS" CHAR(1) DEFAULT '1',
+	"LPRIO" CHAR(2) DEFAULT '02',
+	"KZAZU" CHAR(1) DEFAULT 'X',
+	"VSBED" CHAR(2) DEFAULT '01',
+	"DWERK_EXT" CHAR(1) DEFAULT NULL,
+	"ANTLF" NUMBER(1,0) DEFAULT NULL,
+	"INCO1" CHAR(1) DEFAULT NULL,
+	"ZTERM" CHAR(4) DEFAULT '0001',
+	"KKBER" CHAR(1) DEFAULT NULL,
+	"KTGRD" CHAR(2) DEFAULT '01',
+	"TAX1" CHAR(1) DEFAULT '1',
+	"TAX2" CHAR(1) DEFAULT '1',
+	"TAX3" CHAR(1) DEFAULT '1',
+	"TAX4" CHAR(1) DEFAULT '1',
+	"TAX5" CHAR(1) DEFAULT '1',
+	"TAX6" CHAR(1) DEFAULT '1',
+	"TAX7" CHAR(1) DEFAULT '1',
+	"TAX8" CHAR(1) DEFAULT '1',
+	"TAX9" CHAR(1) DEFAULT '1',
+	"KVGR1" CHAR(3) DEFAULT NULL,
+	"KVGR2" CHAR(3) DEFAULT NULL,
+	"KVGR3" CHAR(3) DEFAULT NULL,
+	"VEND_PER_NAME_1" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_TEL_1" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_NAME_2" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_TEL_2" VARCHAR2(35) DEFAULT NULL,
+	"VEND_REMARKS" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_EMAIL_1" VARCHAR2(35) DEFAULT NULL,
+	"STCD3" VARCHAR2(18) DEFAULT NULL,
+    ID	NUMBER(13,0),
+    CREATEDDATE	TIMESTAMP(6) WITH TIME ZONE,
+	CONSTRAINT "PK_CONSIGNEE_CODE" PRIMARY KEY ("SORT2_CONSIGNEE_CD") ENABLE
+   );
+
+
+
+   create or replace PROCEDURE CREATE_SAP_QA_CONSIGNE_SELECT (
+    pCONSIGNEE IN NUMBER,
+    pID OUT NUMBER
+) IS
+    CURSOR c1 IS
+        SELECT
+            T06.CONSIGNEE_CD,
+            T06.CONSIGNEE_TYPE,
+            T06.CONSIGNEE_DESIG,
+            T06.CONSIGNEE_DEPT,
+            T06.CONSIGNEE_FIRM,
+            T06.CONSIGNEE_ADD1,
+            T06.CONSIGNEE_ADD2,
+            T06.GSTIN_NO,
+            T03.LOCATION,
+            T03.CITY,
+            NVL(TRIM(T06.PIN_CODE), '000000') PIN_CODE,
+            T92.STATE_NAME,
+            T92.SAP_STATE_CD
+        FROM
+            T06_CONSIGNEE T06,
+            T03_CITY T03,
+            T92_STATE T92
+        WHERE
+            T03.CITY_CD(+) = T06.CONSIGNEE_CITY
+            AND T92.STATE_CD(+) = T03.STATE_CD
+            AND T06.CONSIGNEE_CD = pCONSIGNEE
+        ORDER BY
+            T06.CONSIGNEE_CD;
+    r1 c1%ROWTYPE;
+    w_consignee_cd VARCHAR2(10) := NULL;
+    w_ctr VARCHAR2(200) := NULL;
+    w_Location VARCHAR2(50) := NULL;
+    TYPE addarray IS VARRAY(5) OF CHAR(35);
+    w_name addarray := addarray();
+    w_addr addarray := addarray();
+    w_name_2 VARCHAR2(50) := NULL;
+    w_addr_5 VARCHAR2(50) := NULL;
+    i NUMBER(3) := 0;
+    j INT;
+    counter NUMBER(5) := 0;
+    err_ctr NUMBER(5) := 0;
+    w_id NUMBER(13) := 0;
+BEGIN
+    --SELECT MAX(NVL(ID, 0)) + 1 INTO w_id FROM SAP_QA_CONSIGNEE;
+    SELECT COALESCE(MAX(NVL(ID, 0)) + 1, 1) INTO w_id FROM SAP_QA_CONSIGNEE;
+
+
+    FOR r1 IN c1
+    LOOP
+        counter := counter + 1;
+        w_consignee_cd := '10' || LPAD(r1.CONSIGNEE_CD, 8, '0');
+        w_Location := TRIM(r1.LOCATION);
+
+        -- Consignee Firm Start
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.CONSIGNEE_FIRM);
+        w_name := addarray();
+
+        WHILE j < 2 LOOP
+            i := 35;
+
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ')' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ')') THEN
+                i := 34;
+
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+
+            w_name.EXTEND;
+            w_name(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+
+        w_name.EXTEND;
+        w_name_2 := TRIM(w_ctr);
+        -- Consignee Firm End
+
+        -- Address Lines Start
+        err_ctr := 2;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.CONSIGNEE_ADD1) || ' ' || TRIM(r1.CONSIGNEE_ADD2);
+        w_ctr := TRIM(w_ctr);
+
+        IF ((w_ctr = '') OR (w_ctr IS NULL)) THEN
+            IF ((w_Location = '') OR (w_Location IS NULL)) THEN
+                IF ((TRIM(r1.CITY) = '') OR (TRIM(r1.CITY) IS NULL)) THEN
+                    w_ctr := r1.STATE_NAME;
+                ELSE
+                    w_ctr := r1.CITY;
+                END IF;
+            ELSE
+                w_ctr := w_Location;
+                w_Location := '';
+            END IF;
+        END IF;
+
+        w_addr := addarray();
+
+        WHILE j < 5 LOOP
+            i := 35;
+
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ')' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ')') THEN
+                i := 34;
+
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+
+            w_addr.EXTEND;
+            w_addr(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+
+        w_addr.EXTEND;
+        w_addr_5 := TRIM(w_ctr);
+        -- Address Lines End
+
+        DELETE FROM SAP_QA_CONSIGNEE WHERE SORT2_CONSIGNEE_CD = w_consignee_cd;
+
+        INSERT INTO SAP_QA_CONSIGNEE (
+            SORT2_CONSIGNEE_CD,
+            CONSIGNEE_TYPE,
+            NAME1_CONSIGNEE_DESIG,
+            NAME2_CONSIGNEE_DEPT,
+            NAME3_CONSIGNEE_FIRM1,
+            NAME4_CONSIGNEE_FIRM2,
+            SORT1_CONSIGNEE_FIRM1,
+            STREET1_CONSIGNEE_ADD1,
+            STREET2_CONSIGNEE_ADD2,
+            STREET3_CONSIGNEE_ADD3,
+            STREET4_CONSIGNEE_ADD4,
+            DISTRICT_CONSIGNEE_ADD5,
+            STREET5_CONSIGNEE_LOCATION,
+            CONSIGNEE_CITY,
+            CONSIGNEE_STATE,
+            SAP_STATE_CD,
+            POSTAL_CODE,
+            STCD3,
+            ID,
+            CREATEDDATE
+        )
+        VALUES (
+            w_consignee_cd,
+            r1.CONSIGNEE_TYPE,
+            r1.CONSIGNEE_DESIG,
+            r1.CONSIGNEE_DEPT,
+            w_name(1),
+            w_name_2,
+            w_name(1),
+            w_addr(1),
+            w_addr(2),
+            w_addr(3),
+            w_addr(4),
+            w_addr_5,
+            w_Location,
+            TRIM(r1.CITY),
+            TRIM(r1.STATE_NAME),
+            r1.SAP_STATE_CD,
+            r1.PIN_CODE,
+            r1.GSTIN_NO,
+            w_id,
+            SYSDATE
+        );
+    END LOOP;
+
+    COMMIT;
+    pID := w_id;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('i=' || i || '  j=' || j || ' CONSIGNEE CD-->' || w_consignee_cd || '  Error->' || counter || '--' || 'Error Counter - >' || err_ctr || '---' || SQLCODE || '--' || SUBSTR(SQLERRM, 1, 200));
+        COMMIT;
+END;
+/
+
+create or replace PROCEDURE SP_GET_SAP_QA_CONSIGNE_SELECT (
+    P_ID IN NUMBER,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR)
+AS
+BEGIN
+    OPEN P_RESULT_CURSOR FOR 
+        SELECT  
+            BUKRS, VKORG, VTWEG, SPART, KTOKD, AD_TITLETX, 
+            NAME1_CONSIGNEE_DESIG, NAME2_CONSIGNEE_DEPT, NAME3_CONSIGNEE_FIRM1, NAME4_CONSIGNEE_FIRM2, 
+            REMARKS, SORT1_CONSIGNEE_FIRM1, SORT2_CONSIGNEE_CD, HOUSE_NUM1, STREET1_CONSIGNEE_ADD1, 
+            STREET2_CONSIGNEE_ADD2, STREET3_CONSIGNEE_ADD3, STREET4_CONSIGNEE_ADD4, DISTRICT_CONSIGNEE_ADD5, 
+            STREET5_CONSIGNEE_LOCATION, POSTAL_CODE, CONSIGNEE_CITY, COUNTRY, CONSIGNEE_STATE, 
+            SAP_STATE_CD, LANGU, TEL_NUMBER, MOB_NUMBER, SMTP_ADDR, PAN_TAN_NO, CORPORATE_GROUP, 
+            CONSIGNEE_TYPE, NAME_VP, NAME1, AD_STRSPP1, AD_STREET, POST_CODE1, COUNTY, REGION, 
+            SPRAS, TEL_PHON, FAX, EMAIL, PARH1, PARH2, PARH3, PAKN1, PAKN2, PAKN3, AKONT, 
+            SORT_KEY, TERMS_OF_PAYMENT, DUNNING_PROC, DUNNING_LEVEL, ACCOUNT_STATEMENT, WITHT, 
+            WT_WITHCD, WT_AGENT, WT_AGTDF, WT_AGTDT, VKBUR, KDGRP, WAERS, KALKS, LPRIO, 
+            KZAZU, VSBED, DWERK_EXT, ANTLF, INCO1, ZTERM, KKBER, KTGRD, TAX1, TAX2, TAX3, 
+            TAX4, TAX5, TAX6, TAX7, TAX8, TAX9, KVGR1, KVGR2, KVGR3, VEND_PER_NAME_1, 
+            VEND_PER_TEL_1, VEND_PER_NAME_2, VEND_PER_TEL_2, VEND_REMARKS, VEND_PER_EMAIL_1, 
+            STCD3 
+        FROM SAP_QA_CONSIGNEE 
+        WHERE ID = P_ID;
+
+END;
+
+/
+

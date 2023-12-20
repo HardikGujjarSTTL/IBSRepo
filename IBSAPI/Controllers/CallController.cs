@@ -208,7 +208,6 @@ namespace IBSAPI.Controllers
         {
             try
             {
-                Common.AddException("1", "1", "Call_API", "ICPhotoUpload", 1, string.Empty);
                 ICPhotoUploadRequestModel model = new ICPhotoUploadRequestModel();
                 model.CaseNo=CaseNo;
                 model.DocBkNo = DocBkNo;
@@ -252,12 +251,10 @@ namespace IBSAPI.Controllers
                     int Upload_Test_PlanDID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan;
                     int Upload_IC_Annexue1DID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1;
                     int Upload_IC_Annexue2DID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2;
-                    Common.AddException("2", "2", "Call_API", "ICPhotoUpload", 1, string.Empty);
                     if (ICPhotoDigitalSign.Length > 0)
                     {
                         if (ICPhotoDigitalSign.Name == "ICPhotoDigitalSign")
                         {
-                            Common.AddException("3", "3", "Call_API", "ICPhotoUpload", 1, string.Empty);
                             DocumentsList = new List<APPDocumentDTO>();
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign;
@@ -266,7 +263,6 @@ namespace IBSAPI.Controllers
                             DocumentsList.Add(aPP);
                             FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + ".PDF";
                             DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, ICPhoto_Dig_SignDID, IsStaging);
-                            Common.AddException("4", "4", "Call_API", "ICPhotoUpload", 1, string.Empty);
                         }
                     }
                     if (UploadTestPlan.Length > 0)

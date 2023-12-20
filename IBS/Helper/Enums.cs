@@ -681,6 +681,16 @@ namespace IBS.Helper
             [Description("JI CONSIGNEE COMPLAINTS")] COCOMPJI,
             [Description("Controlling Officer Wise IE")] COWISEIE,
         }
+
+        public enum SAPType
+        {
+            [Description("Multiple BPO")]
+            MultipleBPO,
+            [Description("Selective BPO")]
+            SelectiveBPO,
+            [Description("Consigne Select")]
+            ConsigneSelect,
+        }
     }
 
     public class EnumUtility<T>

@@ -10,14 +10,30 @@
 <div class="accordion-body">
     <div class="row my-0">
         <div class="col-md-4 mb-3">
-            <label for="txtBPO_Cd">BPO Code (From)</label>
+            <label for="Reference">User Type</label>
+            @Html.DropDownList("Type", new SelectList(IBS.Models.Common.GetSAPType(), "Value", "Text"), "--Select--", new { @onChange = "ChangeLable();" })
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="txtBPO_Cd" id="lblTitle">BPO Code</label>
             <input type="text" class="input" id="txtBPO_Cd" />
             <span class="text-danger field-validation-error" id="spnErrorBPO_Cd"></span>
         </div>
     </div>
     <div class="savenext-btn">
-        <a asp-controller="SAPIntegration" asp-action="Index" class="reset-btn">Cancel</a>
+        @* <a asp-controller="SAPIntegration" asp-action="Index" class="reset-btn">Cancel</a> *@
         <button type="button" class="save-btn active" onclick="SubmitExportExcelBPOData();">Export Excel</button>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-4 mb-3">
+            <label for="Reference">File</label>
+            <input type="file" class="form-control" id="fileUpload" />
+        </div>
+    </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="SubmitImportBPOData();">Import Excel</button>
     </div>
 </div>
 
@@ -29,10 +45,28 @@
         $(function () {
         });
 
+        function ChangeLable() {
+            if ($("#Type").val() == "ConsigneSelect") {
+                $("#lblTitle").text("CONSIGNEE");
+            }
+            else
+            {
+                $("#lblTitle").text("BPO Code");
+            }
+        }
+
         function SubmitExportExcelBPOData() {
-
+            var Type = $("#Type").val();
             var BPO_Cd = $("#txtBPO_Cd").val();
-
+            if (Type == "" || BPO_Cd =="") {
+                if (Type == "ConsigneSelect") {
+                    ShowHideMsgNew(false, "Type & Consignee required.");
+                }
+                else {
+                    ShowHideMsgNew(false, "Type & BPO code required.");
+                }
+                return;
+            }
             $("#spnErrorBPO_Cd").html("");
 
             if ($('#txtBPO_Cd').val() == '') {
@@ -40,8 +74,56 @@
                 return false;
             }
 
-            window.open('@Url.Action("ExportExcelBPO", "SAPIntegration")' + '?BPO_Cd=' + BPO_Cd, '_blank');
+            window.open('@Url.Action("ExportExcelBPO", "SAPIntegration")' + '?BPO_Cd=' + BPO_Cd + '&Type=' + Type, '_blank');
         }
 
+        function SubmitImportBPOData() {
+            var Type = $("#Type").val();
+            if (Type == "") {
+                if (Type == "ConsigneSelect") {
+                    ShowHideMsgNew(false, "Type is required.");
+                }
+                else {
+                    ShowHideMsgNew(false, "Type is required.");
+                }
+                return;
+            }
+            if ($("#fileUpload").get(0).files.length == 0 && $("#fileUpload").get(0).files.length == 0 && $("#fileUpload").get(0).files.length == 0) {
+                CustomAlert("Please Upload atleast one file", false);
+                return;
+            }
+            else {
+                UploadFile();
+            }
+        }
+
+        function UploadFile() {
+            var Type = $("#Type").val();
+            var fileUpload = $("#fileUpload").get(0);
+            var files = fileUpload.files;
+            if (files.length == 0) {
+
+            }
+            else {
+                var fileData = new FormData();
+                fileData.append(files[0].name, files[0]);
+                var url = '@Url.Action("UploadFile", "SAPIntegration")?Type=' + Type;
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                        $("#fileUpload").val(null);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                        $("#fileUpload").val(null);
+                    }
+                });
+            }
+        }
     </script>
 }
