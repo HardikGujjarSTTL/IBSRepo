@@ -20,4 +20,8 @@ public partial class BarcodeGenerated
     public string? Userid { get; set; }
 
     public string? Ipaddress { get; set; }
+
+    public int? CallSno { get; set; }
+
+    public DateTime? CallDate { get; set; }
 }

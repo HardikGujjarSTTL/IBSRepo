@@ -9,6 +9,9 @@ using IBSAPI.Helper;
 using Newtonsoft.Json;
 using System.Data;
 using System.Dynamic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace IBSAPI.Repositories
 {
@@ -95,6 +98,78 @@ namespace IBSAPI.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 caseDetailIEModel = JsonConvert.DeserializeObject<List<CaseDetailIEModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
             }
+            var secondQuery = (from cdt in context.T18CallDetails
+                               join csn in context.V06Consignees
+                               on cdt.ConsigneeCd equals csn.ConsigneeCd
+                               where cdt.CaseNo == Case_No &&
+                                     cdt.CallRecvDt == Convert.ToDateTime(CallRecvDt) &&
+                                     cdt.CallSno == CallSNo
+                               select new SelectListItem
+                               {
+                                   Value = csn.ConsigneeCd.ToString(),
+                                   Text = csn.ConsigneeCd + "-" + csn.Consignee
+                               }).Distinct().ToList();
+            if (secondQuery != null)
+            {
+                caseDetailIEModel.ConsigneeFirmList = secondQuery.ToList();
+            }
+
+            var ic_book = (from item in context.T10IcBooksets
+                           orderby item.IssueDt descending
+                           where item.IssueToIecd == IeCd
+                           select item).FirstOrDefault();
+
+            var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == Case_No.Trim() && ic.CallRecvDt == Convert.ToDateTime(CallRecvDt)
+                         && ic.CallSno == CallSNo).OrderByDescending(ic => ic.Datetime).FirstOrDefault();
+
+            if (ICInter != null)
+            {
+                //if (selectedConsigneeCd == ICInter.ConsigneeCd)
+                //{
+                caseDetailIEModel.BK_NO = ICInter.BkNo;
+                caseDetailIEModel.SET_NO = ICInter.SetNo;
+                caseDetailIEModel.Consignee = Convert.ToString(ICInter.ConsigneeCd);
+                caseDetailIEModel.QtyPassed = ICInter.QtyPassed;
+                caseDetailIEModel.QtyRejected = ICInter.QtyRejected;
+                //}
+            }
+            else
+            {
+                var dlt_IC = (from x in context.IcIntermediates
+                              orderby x.SetNo descending
+                              where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IeCd
+                              select x).FirstOrDefault();
+
+                if (dlt_IC != null)
+                {
+                    int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                    string incrementedSetNo = setNo.ToString("D3");
+                    var ic_bookset = (from item in context.T10IcBooksets
+                                      orderby item.IssueDt descending
+                                      where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                            Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                            item.IssueToIecd == dlt_IC.IeCd
+                                      select item).FirstOrDefault();
+
+                    if (ic_bookset != null)
+                    {
+                        caseDetailIEModel.BK_NO = ic_bookset.BkNo;
+                        caseDetailIEModel.SET_NO = Convert.ToString(incrementedSetNo);
+                    }
+                    else
+                    {
+                        caseDetailIEModel.BK_NO = "";
+                        caseDetailIEModel.SET_NO = "";
+                    }
+                }
+                else
+                {
+                    caseDetailIEModel.BK_NO = ic_book.BkNo;
+                    caseDetailIEModel.SET_NO = Convert.ToString(ic_book.SetNoFr);
+                }
+            }
+
             return caseDetailIEModel;
         }
 
@@ -162,7 +237,7 @@ namespace IBSAPI.Repositories
 
         #region CM Methods
         public List<RecentInspectionModel> Get_CM_RecentInspection(int CO_CD, DateTime CurrDate)
-        {             
+        {
             List<RecentInspectionModel> recentInspList = new();
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_VISITDATE", OracleDbType.Varchar2, CurrDate.ToString("dd/MM/yyyy"), ParameterDirection.Input);
@@ -202,12 +277,12 @@ namespace IBSAPI.Repositories
             return pendingInspList;
         }
 
-        public List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType,string Region, DateTime FromDate, DateTime ToDate)
+        public List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region, DateTime FromDate, DateTime ToDate)
         {
             List<PendingInspectionModel> pendingInspList = new();
             var FrmDT = FromDate.ToString("dd/MM/yyyy");
             var ToDT = ToDate.ToString("dd/MM/yyyy");
-            Region =  string.IsNullOrEmpty(Region) ? null : Region;
+            Region = string.IsNullOrEmpty(Region) ? null : Region;
             OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Rly_CD, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RLY_NONTYPE", OracleDbType.Varchar2, Rly_NonType, ParameterDirection.Input);
@@ -258,6 +333,134 @@ namespace IBSAPI.Repositories
                 id = objGNR_APPDocument.Id;
             }
             return id;
+        }
+
+        public int CallStatusFilesSave(ICPhotoUploadRequestModel model)
+        {
+            int id = 0;
+            var IcDetail = (from item in context.IcIntermediates
+                            where item.CaseNo == model.CaseNo.Trim() &&
+                                  item.CallSno == model.CallSno &&
+                                  item.CallRecvDt == model.CallRecvDt.Date &&
+                                  item.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                            select item).FirstOrDefault();
+
+            if (IcDetail == null)
+            {
+                var CallDetails = (from c in context.T18CallDetails
+                                   where c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt.Date
+                                   && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                   select c).ToList();
+                if (CallDetails.Count() > 0)
+                {
+                    foreach (var i in CallDetails)
+                    {
+                        IcIntermediate obj = new IcIntermediate();
+                        obj.CaseNo = model.CaseNo;
+                        obj.CallRecvDt = model.CallRecvDt;
+                        obj.CallSno = Convert.ToInt16(model.CallSno);
+                        obj.BkNo = model.DocBkNo;
+                        obj.SetNo = model.DocSetNo;
+                        obj.PoNo = model.PoNo;
+                        obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                        obj.UserId = model.userId;
+                        obj.ItemSrnoPo = i.ItemSrnoPo;
+                        obj.ItemDescPo = i.ItemDescPo;
+                        obj.QtyPassed = i.QtyPassed;
+                        obj.QtyRejected = i.QtyRejected;
+                        obj.QtyDue = i.QtyDue;
+                        obj.IeCd = Convert.ToInt32(model.IeCd);
+                        obj.Datetime = DateTime.Now;
+                        //obj.Createddate = DateTime.Now;
+                        //obj.Createdby = model.UserId;
+                        context.IcIntermediates.Add(obj);
+                        context.SaveChanges();
+                        id = 1;
+                    }
+                }
+            }
+            else
+            {
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
+                    if (!wasOpen) command.Connection.Open();
+                    try
+                    {
+                        command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', QTY_PASSED = '" + model.QtyPassed + "', QTY_REJECTED = '" + model.QtyRejected + "',UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + model.CallRecvDt.ToString("dd-MM-yy") + "', 'DD-MM-YY') AND CONSIGNEE_CD = " + Convert.ToInt32(model.Consignee);
+                        command.ExecuteNonQuery();
+                        id = 1;
+                    }
+                    finally
+                    {
+                        if (!wasOpen) command.Connection.Close();
+                    }
+                }
+            }
+            return id;
+        }
+
+        public BookNoSetNoModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, int selectedConsigneeCd, int IE_CD)
+        {
+            BookNoSetNoModel model = new BookNoSetNoModel();
+
+            var ic_book = (from item in context.T10IcBooksets
+                           orderby item.IssueDt descending
+                           where item.IssueToIecd == IE_CD
+                           select item).FirstOrDefault();
+
+            var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == CaseNo.Trim() && ic.CallRecvDt == Convert.ToDateTime(DesireDt)
+                         && ic.CallSno == CallSno).OrderByDescending(ic => ic.Datetime).ToList();
+
+            if (ICInter != null)
+            {
+                foreach (var item in ICInter)
+                {
+                    if (selectedConsigneeCd == item.ConsigneeCd)
+                    {
+                        model.DocBkNo = item.BkNo;
+                        model.DocSetNo = item.SetNo;
+                    }
+                }
+            }
+            else
+            {
+                var dlt_IC = (from x in context.IcIntermediates
+                              orderby x.SetNo descending
+                              where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
+                              select x).FirstOrDefault();
+
+                if (dlt_IC != null)
+                {
+                    int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                    string incrementedSetNo = setNo.ToString("D3");
+                    var ic_bookset = (from item in context.T10IcBooksets
+                                      orderby item.IssueDt descending
+                                      where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                            Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                            item.IssueToIecd == dlt_IC.IeCd
+                                      select item).FirstOrDefault();
+
+                    if (ic_bookset != null)
+                    {
+                        model.DocBkNo = ic_bookset.BkNo;
+                        model.DocSetNo = Convert.ToString(incrementedSetNo);
+                    }
+                    else
+                    {
+                        model.DocBkNo = "";
+                        model.DocSetNo = "";
+                    }
+                }
+                else
+                {
+                    model.DocBkNo = ic_book.BkNo;
+                    model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
+                }
+            }
+
+            return model;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno);
 
-        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno);
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno,int IE_CD);
 
         string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
@@ -66,7 +66,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
-        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd,int IE_CD);
 
         public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
 

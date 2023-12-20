@@ -126,4 +126,14 @@ public partial class IcIntermediate
     public string? ManType { get; set; }
 
     public string? ConsigneeDesg { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTimeOffset? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTimeOffset? Updateddate { get; set; }
+
+    public byte? Isdeleted { get; set; }
 }

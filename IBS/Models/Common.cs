@@ -4415,6 +4415,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.T100Contracts
+                                         where a.Isdeleted != 1
                                          select
                                     new SelectListItem
                                     {
@@ -4712,6 +4713,19 @@ namespace IBS.Models
                                                  Value = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway)
                                              }).ToList();
             return dropList.OrderBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetHolidayMaster()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T111HolidayMasters
+                                       orderby a.Id
+                                       select new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.FinancialYear),
+                                           Value = Convert.ToString(a.Id)
+                                       }).ToList();
+            return IE;
         }
     }
 

@@ -195,7 +195,7 @@
                         <div class="reference">
                             <label for="Name">Other Charges Type</label>
                             @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'OtChargePer');" })
-                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                            @* <span asp-validation-for="OtChargeType" class="text-danger"></span> *@
                         </div>
                     </div>
                     <div class="col-md-2 mb-3">

@@ -193,10 +193,10 @@
                         <label for="Reference">BK & Set No : </label>
                     </td>
                     <td>
-                        <input type="text" class="input" id="BkNo" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="BkNo" onkeypress="return isNumber(event)" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" class="input" id="SetNo" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="SetNo" onkeypress="return isNumber(event)" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
                     </td>
                 </tr>
                 @if (Model.ActionType != "C")
@@ -244,13 +244,13 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
-                                <input type="text" id="bknoaccpted" maxlength="4">
+                                <input type="text" asp-for="DocBkNo" onkeypress="return isNumber(event)" maxlength="4">
                                 <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Set No : </label>
-                                <input type="text" id="setnoaccpted" maxlength="3">
+                                <input type="text" asp-for="DocSetNo" onkeypress="return isNumber(event)" maxlength="3">
                                 <span asp-validation-for="DocSetNo" class="text-danger"></span>
 
                             </div>
@@ -548,17 +548,15 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
+                        $('#DocBkNo').val(data.DocBkNo);
+                        $('#DocSetNo').val(data.DocSetNo);
+
                         if (selectedValue == data.Consignee) {
-                            $('#bknoaccpted').val(data.DocBkNo);
-                            $('#setnoaccpted').val(data.DocSetNo);
-                            if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                            if ($('#DocBkNo').val() != "" && $('#DocSetNo').val() != "") {
                                 $('#ViewPrintIC').prop('disabled', false);
                                 $("#ViewPrintIC").css("cursor", "pointer");
                             }
-                        }
-                        else {
-                            $('#bknoaccpted').val("");
-                            $('#setnoaccpted').val("");
+                        } else {
                             $('#ViewPrintIC').prop('disabled', true);
                             $("#ViewPrintIC").css("cursor", "auto");
                         }
@@ -1097,8 +1095,8 @@
 
             SaveSingleDocuments("tab-2");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             if (bknoaccpted != "" && setnoaccpted != "") {
                 var ajaxData = AjaxModel();
@@ -1152,8 +1150,8 @@
         function Accepted() {
             var formData = AjaxModel();
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             //if (bknoaccpted != "" || setnoaccpted != "") {
             $.ajax({
@@ -1276,8 +1274,8 @@
             var formData = new FormData();
             SaveSingleDocuments("tab-1");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             if ($("#consigneeFirmDropdown").val() == '0') {
                 alert("Please select consignee !");
@@ -1413,8 +1411,8 @@
             var CallStatus = $('#CallStatusdrp').val();
             var ConsigneeFirm = $('#consigneeFirmDropdown').val();
             var LocalOutstation = $('#LocalOutstationdrp').val();
-            var DocBkNo = $('#bknoaccpted').val();
-            var DocSetNo = $('#setnoaccpted').val();
+            var DocBkNo = $('#DocBkNo').val();
+            var DocSetNo = $('#DocSetNo').val();
             var CaseNo = $('#caseno').val();
             var CallRecvDt = $('#CallRecvDt').val();
             var CallSno = $('#callsnos').val();
