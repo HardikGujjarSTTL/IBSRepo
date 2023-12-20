@@ -238,7 +238,8 @@ namespace IBS.Repositories
                 int maxID = context.Userroles.Max(x => x.Id) + 1;
                 Userrole obj = new Userrole();
                 obj.Id = maxID;
-                obj.UserId = Convert.ToString(model.User_ID);
+                //obj.UserId = Convert.ToString(model.User_ID);
+                obj.UserMasterId = Convert.ToInt32(model.User_ID);
                 obj.RoleId = Convert.ToInt32(model.RoleId);
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = Convert.ToInt32(model.Createdby);

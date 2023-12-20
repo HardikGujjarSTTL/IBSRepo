@@ -15,5 +15,5 @@ public partial class UserMaster
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public int? Createdby { get; set; }
+    public string? Createdby { get; set; }
 }

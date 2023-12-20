@@ -66,7 +66,7 @@ namespace IBS.Controllers.Vendor
                 if (model.VendCd == 0)
                 {
                     model.Createdby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID;
                     model.Region = Region;
                     model.VendCd = vendorRepository.SaveDetails(model);
                     AlertAddSuccess("Record Added Successfully.");
@@ -74,7 +74,7 @@ namespace IBS.Controllers.Vendor
                 else
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID;
                     model.Region = Region;
                     vendorRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");

@@ -42,13 +42,13 @@
                         @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--")
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="VendApprovalFr">Approval Period From</label>
+                        <label for="VendApprovalFr">Approval Period From <i class="text-danger">*</i></label>
                         <input type="text" class="datepicker" asp-for="VendApprovalFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
 
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="VendApprovalTo">Approval Period To</label>
+                        <label for="VendApprovalTo">Approval Period To <i class="text-danger">*</i></label>
                         <input type="text" class="datepicker" asp-for="VendApprovalTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                     </div>
