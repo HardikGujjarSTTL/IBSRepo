@@ -37,7 +37,6 @@ namespace IBS.Controllers.WebsitePages
             return Json(model);
         }
 
-        [HttpPost]
         public IActionResult PaymentIntegration(OnlinePaymentGateway model)
         {
             PayrequestModel.RootObject rt = new PayrequestModel.RootObject();
@@ -55,10 +54,10 @@ namespace IBS.Controllers.WebsitePages
             hd.platform = "FLASH";
 
             md.merchId = "8952";
-            //md.userId = Convert.ToString(UserId);
             md.userId = "317157";
             md.password = "Test@123";
-            md.merchTxnDate = DateTime.Now.ToString();
+            //md.merchTxnDate = "2023-12-12 20:46:00";
+            md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             md.merchTxnId = "test000123";
 
             pd.amount = Convert.ToString(model.Charges);
@@ -66,8 +65,8 @@ namespace IBS.Controllers.WebsitePages
             pd.custAccNo = "213232323";
             pd.txnCurrency = "INR";
 
-            cd.custEmail = "mailto:sagar.gopale@atomtech.in";
-            cd.custMobile = "8976286911";
+            cd.custEmail = model.Email;
+            cd.custMobile = model.Mobile;
 
             ex.udf1 = "";
             ex.udf2 = "";
@@ -82,7 +81,6 @@ namespace IBS.Controllers.WebsitePages
             pr.extras = ex;
 
             rt.payInstrument = pr;
-            //var json = new JavaScriptSerializer().Serialize(rt);
             var json = JsonConvert.SerializeObject(rt);
 
             string passphrase = "A4476C2062FFA58980DC8F79EB6A799E";
@@ -90,24 +88,8 @@ namespace IBS.Controllers.WebsitePages
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
             int keysize = 256;
-            // string plaintext = "{\"payInstrument\":{\"headDetails\":{\"version\":\"OTSv1.1\",\"payMode\":\"SL\",\"channel\":\"ECOMM\",\"api\":\"SALE\",\"stage\":1,\"platform\":\"WEB\"},\"merchDetails\":{\"merchId\":8952,\"userId\":\"\",\"password\":\"Test@123\",\"merchTxnId\":\"1234567890\",\"merchType\":\"R\",\"mccCode\":562,\"merchTxnDate\":\"2019-12-24 20:46:00\"},\"payDetails\":{\"prodDetails\":[{\"prodName\": \"NSE\",\"prodAmount\": 10.00}],\"amount\":10.00,\"surchargeAmount\":0.00,\"totalAmount\":10.00,\"custAccNo\":null,\"custAccIfsc\":null,\"clientCode\":\"12345\",\"txnCurrency\":\"INR\",\"remarks\":null,\"signature\":\"7c643bbd9418c23e972f5468377821d9f0486601e1749930816c409fddbc7beb5d2943d832b6382d3d4a8bd7755e914922fb85aa8c234210bf2993566686a46a\"},\"responseUrls\":{\"returnUrl\":\"http://172.21.21.136:9001/payment/ots/v1/merchresp\",\"mailto:cancelurl\":null,\"notificationurl\":null},\"paymodespecificdata\":{\"subchannel\":[\"bq\"],\"bankdetails\":null,\"emidetails\":null,\"multiproddetails\":null,\"carddetails\":null},\"extras\":{\"udf1\":null,\"udf2\":null,\"udf3\":null,\"udf4\":null,\"udf5\":null},\"custdetails\":{\"custfirstname\":null,\"custlastname\":null,\"custemail\":\"test@gm.com\",\"custMobile\":null,\"billingInfo\":null}}} ";
             string hashAlgorithm = "SHA1";
             string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
-
-
-            //Response.Redirect("https://caller.atomtech.in/ots/payment/txn?merchId=8952&encData=" + Encryptval);
-
-
-
-            //  string Decryptval = decrypt(Encryptval, passphrase, salt, iv, iterations);
-
-            //   Response.Redirect("https://caller.atomtech.in/ots/payment/txn?merchId=8952&encData=" + Encryptval);
-
-
-            // string data="{\"PayrequestModel\":{\"merchanyDetails\":{\"merchId\":\"8952\",\"userId\":\"\",\"password\":\"NCA@1234\",\"merchTxnDate\":\"2021-09-04 20:46:00\",\"merchTxnId\":\"test000123\"},\"payDetails\":{\"amount\":\"100\",\"product\":\"NSE\",\"custAccNo\":\"213232323\",\"txnCurrency\":\"INR\"},\"custDetails\":{\"custEmail\":\"sagar.gopale @atomtech.in\",\"custMobile\":\"8976286911\"},\"extras\":{\"udf1\":\"\",\"udf2\":\"\",\"udf3\":\"\",\"udf4\":\"\",\"udf5\":\"\"},\"headDetails\":{\"version\":\"OTSv1.1\",\"api\":\"AUTH\",\"platform\":\"FLASH\"}}}";
-
-
-
 
             string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=8952&encData=" + Encryptval;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
@@ -122,54 +104,37 @@ namespace IBS.Controllers.WebsitePages
             request.Method = "POST";
             request.ContentType = "application/json";
             request.ContentLength = data.Length;
-            //request.Timeout = 600000;
             Stream stream = request.GetRequestStream();
             stream.Write(data, 0, data.Length);
-            //Console.WriteLine(stream);
-            // Console.WriteLine(json);
             stream.Close();
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             string jsonresponse = response.ToString();
 
             StreamReader reader = new StreamReader(response.GetResponseStream());
-            ////  string jsonresponse = post;
             string temp = null;
             string status = "";
             while ((temp = reader.ReadLine()) != null)
             {
                 jsonresponse += temp;
             }
-            //InitiateOrderResEq.RootObject objectres = new InitiateOrderResEq.RootObject();
-            //JavaScriptSerializer serializer = new JavaScriptSerializer();
             var result = jsonresponse.Replace("System.Net.HttpWebResponse", "");
-            //// var result = "{\"initiateDigiOrderResponse\":{ \"msgHdr\":{ \"rslt\":\"OK\"},\"msgBdy\":{ \"sts\":\"ACPT\",\"txnId\":\"DIG2019039816365405440004\"}}}";
-            //  var  objectres = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Payverify.Payverify>(result);
 
             var uri = new Uri("http://atom.in?" + result);
-
-
             var query = HttpUtility.ParseQueryString(uri.Query);
 
             string encData = query.Get("encData");
-            // string  encData="5500FEA2F09DA7EF128CFE7D2D01F2533B8D8211ACDCEEE850A7943CF46D4A18FF153971B83983A1EBF8B48F36315222E33FED142A05BE8FD890492ED759983B173801C801A79B390C17E01354CA0752087CF1E71316E5F442FADA985C46B06DB8462928DB18BC8E7714EC6128340CB8690A185F590E47658C293FA2E73ADC77899D6E7B119E17005E625CF2258A6A74363EAA59A43FF785505A77D163DA232B1D2250C4A1A1C755E10D5991A2DB5B3C";
             string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
             string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
             string Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
-            //{ "atomTokenId":15000000085830,"responseDetails":{ "txnStatusCode":"OTS0000","txnMessage":"SUCCESS","txnDescription":"ATOM TOKEN ID HAS BEEN GENERATED SUCCESSFULLY"} }
             PayverifyModel.Payverify objectres = new PayverifyModel.Payverify();
             objectres = JsonConvert.DeserializeObject<PayverifyModel.Payverify>(Decryptval);
             string txnMessage = objectres.responseDetails.txnMessage;
 
             string Tok_id = objectres.atomTokenId;
 
-            //lbldata.Text = Decryptval;
-            //Label2.Text = Convert.ToString(Tok_id);
-            //txtmer.Text = "8952";
-            //txttok.Text = Tok_id;
-            //txtmob.Text = "8976286911";
-            //txtmail.Text = "mailto:suresh.kore@atomtech.in";
-
-            return Json(new { status = false, responseText = Tok_id });
+            model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
+            model.Tok_id = Tok_id;
+            return Json(new { status = false, response = model });
         }
 
         public string Encrypt(string plainText, string passphrase, string salt, Byte[] iv, int iterations)
@@ -242,6 +207,11 @@ namespace IBS.Controllers.WebsitePages
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
+        }
+
+        public IActionResult PaymentResponse()
+        {
+            return View();
         }
     }
 }
