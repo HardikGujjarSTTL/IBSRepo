@@ -21,6 +21,9 @@ namespace IBSAPI.Models
         public string EMail { get; set; }
         public string BK_NO { get; set; }
         public string SET_NO { get; set; }
+        public string? Consignee { get; set; }
+        public decimal? QtyPassed { get; set; }
+        public decimal? QtyRejected { get; set; }
         public List<PhotosModel> photosModel { get; set; }
         public List<PhotosModel> pdfModel { get; set; }
         public List<SelectListItem> ConsigneeFirmList { get; set; } = new List<SelectListItem>();

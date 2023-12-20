@@ -123,9 +123,11 @@ namespace IBSAPI.Repositories
 
         public List<CallStatusModel> Get_Call_Status_List()
         {
+            var allowedStatuses = new string[] { "M", "A", "R", "U", "S" };
             List<CallStatusModel> lstStatus = new();
 
             lstStatus = (from x in context.T21CallStatusCodes
+                         where allowedStatuses.Contains(x.CallStatusCd)
                          select new CallStatusModel
                          {
                              CallStatusCd = x.CallStatusCd,
