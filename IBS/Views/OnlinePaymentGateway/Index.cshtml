@@ -58,7 +58,7 @@
                         <label for="debitCard">Net Banking</label>
                     </div>
                     <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save">Pay Now</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="BtnPayNow()">Pay Now</button>
                     </div>
                 </div>
             </form>
@@ -101,6 +101,23 @@
                     }
                 });
             }
+        }
+
+        function BtnPayNow(){
+            var urlpath = "@Url.Action("PaymentIntegration", "OnlinePaymentGateway")";
+            var formData = $("#frmPaymentGateway").serialize();
+
+            $.ajax({
+                url: urlpath,
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
         }
 
     </script>
