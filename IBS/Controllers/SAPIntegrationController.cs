@@ -99,8 +99,14 @@ namespace IBS.Controllers
                     {
                         System.IO.File.Delete(DestinationPath);
                     }
-                    return Json(new { status = true, responseText = "Updated successfully" });
-                    //return new JsonResult("File Uploaded successfully!");
+                    if (id == 2)
+                    {
+                        return Json(new { status = false, responseText = "Please Upload the File Properly" });
+                    }
+                    else if (id == 1)
+                    {
+                        return Json(new { status = true, responseText = "Updated successfully" });
+                    }
                 }
             }
             catch (Exception ex)

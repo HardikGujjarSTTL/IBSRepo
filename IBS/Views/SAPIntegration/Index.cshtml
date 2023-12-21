@@ -115,8 +115,7 @@
                     contentType: false,
                     data: fileData,
                     success: function (response) {
-                        var res = response.responseJSON;
-                        ShowHideMsgNew(res.status, res.responseText);
+                        ShowHideMsgNew(response.status, response.responseText);
                         $("#fileUpload").val(null);
                     },
                     error: function (err) {
