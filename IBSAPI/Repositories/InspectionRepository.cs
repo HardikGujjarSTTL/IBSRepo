@@ -246,7 +246,7 @@ namespace IBSAPI.Repositories
             par[2] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDT, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("", par);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_PENDING_PO_FOR_CALL_API", par);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);

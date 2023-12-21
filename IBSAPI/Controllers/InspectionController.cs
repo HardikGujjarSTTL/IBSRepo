@@ -357,6 +357,7 @@ namespace IBSAPI.Controllers
             }
         }
 
+        [HttpGet("Get_Pending_PO_For_Call", Name = "Get_Pending_PO_For_Call")]
         public IActionResult Get_Pending_PO_For_Call(int Vend_Cd)
         {
             try
@@ -364,7 +365,7 @@ namespace IBSAPI.Controllers
                 DateTime currentDate = DateTime.Now;
                 DateTime FromDate = currentDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
-                var result = inspectionRepository.Get_Vendor_PendingInspection(Vend_Cd, FromDate, currentDate);
+                var result = inspectionRepository.Get_Pending_PO_For_Call(Vend_Cd, FromDate, currentDate);
                 if (result.Count() > 0)
                 {
                     var response = new
