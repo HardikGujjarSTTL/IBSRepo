@@ -114,12 +114,12 @@
                     processData: false,
                     contentType: false,
                     data: fileData,
-                    success: function (result) {
-                        alert(result);
+                    success: function (response) {
+                        ShowHideMsgNew(response.status, response.responseText);
                         $("#fileUpload").val(null);
                     },
                     error: function (err) {
-                        alert(err.statusText);
+                        ShowHideMsgNew(false, err.statusText);
                         $("#fileUpload").val(null);
                     }
                 });
