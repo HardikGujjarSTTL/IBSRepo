@@ -10,6 +10,7 @@ using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Configuration;
 using System.IO;
+using static IBSAPI.Helper.Enums;
 
 namespace IBSAPI.Controllers
 {
@@ -26,7 +27,7 @@ namespace IBSAPI.Controllers
         public IConfiguration Configuration { get; }
         #endregion
 
-        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment,  IConfiguration configuration, IInspectionRepository _inspectionRepository, IConfiguration _config)
+        public CallController(ICallRepository _callRepository, IWebHostEnvironment _environment, IConfiguration configuration, IInspectionRepository _inspectionRepository, IConfiguration _config)
         {
             callRepository = _callRepository;
             env = _environment;
@@ -80,7 +81,7 @@ namespace IBSAPI.Controllers
             try
             {
                 int PlanDHours = Convert.ToInt32(config.GetSection("MyAppSettings")["PlanDHours"]);
-                int id = callRepository.SheduleInspection(sheduleInspectionRequestModel,PlanDHours);
+                int id = callRepository.SheduleInspection(sheduleInspectionRequestModel, PlanDHours);
                 if (id == 999)
                 {
                     var response = new
@@ -202,14 +203,14 @@ namespace IBSAPI.Controllers
         [HttpPost("ICPhotoUpload")]
         [Consumes("multipart/form-data")]
         public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude,
-            string Consignee,decimal? QtyPassed,decimal? QtyRejected,DateTime call_Recv_DT,int CallSno,string PoNo,
-            int? IeCd,string userId
+            string Consignee, decimal? QtyPassed, decimal? QtyRejected, DateTime call_Recv_DT, int CallSno, string PoNo,
+            int? IeCd, string userId, string Call_Status
             , List<IFormFile> photos, IFormFile ICPhotoDigitalSign, IFormFile UploadTestPlan, IFormFile UploadICAnnexue1, IFormFile UploadICAnnexue2)
         {
             try
             {
                 ICPhotoUploadRequestModel model = new ICPhotoUploadRequestModel();
-                model.CaseNo=CaseNo;
+                model.CaseNo = CaseNo;
                 model.DocBkNo = DocBkNo;
                 model.DocSetNo = DocSetNo;
                 model.Consignee = Consignee;
@@ -234,7 +235,7 @@ namespace IBSAPI.Controllers
                             string fileExtension = Path.GetExtension(photo.FileName);
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             Guid newGuid = Guid.NewGuid();
-                            aPP.UniqueFileName = newGuid.ToString()+ fileExtension;
+                            aPP.UniqueFileName = newGuid.ToString() + fileExtension;
                             aPP.DocName = "IC Image " + i;
                             aPP.FileName = photo.FileName;
                             aPP.formFile = photo;
@@ -244,8 +245,8 @@ namespace IBSAPI.Controllers
                         }
                         i++;
                     }
-                    
-                    int retID =DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, null, FileName, string.Empty, 22, IsStaging);
+
+                    int retID = DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, null, FileName, string.Empty, 22, IsStaging);
 
                     int ICPhoto_Dig_SignDID = (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign;
                     int Upload_Test_PlanDID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan;
@@ -309,24 +310,65 @@ namespace IBSAPI.Controllers
                     }
 
                     int id = inspectionRepository.CallStatusFilesSave(model);
-                    if (id > 0)
+
+                    if ((Call_Status == "A" || Call_Status == "R") && id > 0)
                     {
-                        var response = new
+                        VenderCallStatusModel obj = new VenderCallStatusModel();
+                        obj.CaseNo = CaseNo;
+                        obj.DocBkNo = DocBkNo;
+                        obj.DocSetNo = DocSetNo;
+                        obj.Consignee = Consignee;
+                        //obj.QtyPassed = QtyPassed;
+                        //obj.QtyRejected = QtyRejected;
+                        obj.CallRecvDt = call_Recv_DT;
+                        obj.CallSno = CallSno;
+                        obj.PoNo = PoNo;
+                        //obj.IeCd = IeCd;
+                        obj.UserName = userId;
+                        obj.CallStatus = Call_Status;
+                        var msg = callRepository.CallStatusAcceptRej(obj);
+                        if (obj.AlertMsg == "Success")
                         {
-                            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                            message = "Successfully"
-                        };
-                        return Ok(response);
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                message = "Record Accepted Successfully !!"
+                            };
+                            return Ok(response);
+                            //return Json(new { status = true, responseText = "Record Accepted Successfully !!", Id = 1 });
+                        }
+                        else
+                        {
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.ValidationMessage,
+                                message = obj.AlertMsg
+                            };
+                            return BadRequest(response);
+                            //return Json(new { status = false, responseText = obj.AlertMsg });
+                        }
                     }
                     else
                     {
-                        var response = new
+                        if (id > 0)
                         {
-                            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                            message = "Something wrong"
-                        };
-                        return BadRequest(response);
-                    }
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                                message = "Successfully"
+                            };
+                            return Ok(response);
+                        }
+                        else
+                        {
+                            var response = new
+                            {
+                                resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                                message = "Something wrong"
+                            };
+                            return BadRequest(response);
+                        }
+                    }                    
                 }
                 else
                 {
