@@ -19,12 +19,12 @@ namespace IBSAPI.Interfaces
         #endregion
 
         #region CM Methods
-        List<RecentInspectionModel> Get_CM_RecentInspection(int CO_CD, DateTime CurrDate);
+        List<RecentInspectionModel> Get_CM_RecentInspection(int CO_CD, int IE_CD, DateTime CurrDate);
         #endregion
 
         #region Client Methods
         List<PendingInspectionModel> Get_Client_PendingInspection(string Rly_CD, string Rly_NonType, DateTime FromDate, DateTime ToDate);
-        List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region, DateTime FromDate, DateTime ToDate);
+        List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string PO_NO, string Region, DateTime FromDate, DateTime ToDate);
         #endregion
 
         List<PhotosModel> GetDocRecordsList(int DocumentCategoryID, string ApplicationID, string WebRootPath);

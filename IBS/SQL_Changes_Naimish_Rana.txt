@@ -1562,7 +1562,7 @@ BEGIN
     ORDER BY t17.Case_No,
              t17.Call_Recv_Dt,
              t17.Call_Sno;
-END;
+END GET_VENDOR_PENDINGINSPECTION_API;
 
 
 create or replace PROCEDURE GET_VENDOR_PENDING_PO_FOR_CALL_API 
@@ -1614,7 +1614,7 @@ BEGIN
     ORDER BY t17.Case_No,
              t17.Call_Recv_Dt,
              t17.Call_Sno;
-END;
+END GET_VENDOR_PENDING_PO_FOR_CALL_API;
 
 create or replace PROCEDURE GET_CLIENT_PENDINGINSPECTION_API 
 (
@@ -1656,7 +1656,7 @@ BEGIN
             t09.IE_Name,
             t21.CALL_STATUS_DESC
     ORDER BY t17.Call_Recv_Dt,t17.Case_No,t17.Call_Sno;
-END;
+END GET_CLIENT_PENDINGINSPECTION_API;
 
 create or replace PROCEDURE GET_CLIENT_REGION_WISE_PENDINGINSPECTION_API 
 (
@@ -1664,6 +1664,7 @@ create or replace PROCEDURE GET_CLIENT_REGION_WISE_PENDINGINSPECTION_API
   P_RLY_NONTYPE IN VARCHAR2, 
   P_FROMDATE IN VARCHAR2,
   P_TODATE IN VARCHAR2,
+  P_PO_NO IN VARCHAR2,
   P_REGION IN VARCHAR2,
   P_RESULT_CURSOR OUT SYS_REFCURSOR  
 ) AS 
@@ -1689,6 +1690,7 @@ BEGIN
         AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY') 
         AND T17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
         AND t17.CALL_STATUS IN ('M','U','S','W')
+        AND (P_PO_NO IS NULL OR (P_PO_NO IS NOT NULL AND t13.PO_NO LIKE '%'|| P_PO_NO ||'%'))
         AND (P_REGION IS NULL OR SUBSTR(T17.CASE_NO,1,1) = P_REGION)        
     GROUP BY t17.Case_No,
             t17.Call_Recv_Dt,
@@ -1696,15 +1698,16 @@ BEGIN
             t13.PO_NO,
             t13.PO_DT,
             t05.Vend_Name,
-            T09.IE_NAME
-           ,T21.CALL_STATUS_DESC
+            T09.IE_NAME,
+            T21.CALL_STATUS_DESC
     ORDER BY t17.Call_Recv_Dt DESC,t17.Case_No,t17.Call_Sno;
-END;
+END GET_CLIENT_REGION_WISE_PENDINGINSPECTION_API;
 
 create or replace PROCEDURE GET_CM_RECENTINSPECTION_API 
 (
   P_VISITDATE IN VARCHAR2, 
   P_CO_CD IN NUMBER, 
+  P_IE_CD IN NUMBER,
   P_RESULT_CURSOR OUT SYS_REFCURSOR 
 ) AS 
 BEGIN
@@ -1727,6 +1730,7 @@ BEGIN
     LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
     WHERE t47.VISIT_DT = TO_DATE(P_VISITDATE,'DD/MM/YYYY')--'06-11-23'
     AND t17.CO_CD = P_CO_CD --126
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t17.IE_CD = P_CO_CD))
     GROUP BY t17.Case_No,
             t17.Call_Recv_Dt,
             t17.Call_Sno,
@@ -1738,7 +1742,7 @@ BEGIN
     ORDER BY t17.Case_No,
             t17.Call_Recv_Dt,
             t17.Call_Sno;
-END;
+END GET_CM_RECENTINSPECTION_API;
 
 create or replace PROCEDURE GET_IE_COMPLETED_INSPECTION_API 
 (
@@ -1779,7 +1783,7 @@ BEGIN
         t17.DATETIME
     ORDER BY
         t17.DATETIME DESC;
-END;
+END GET_IE_COMPLETED_INSPECTION_API;
 
 create or replace PROCEDURE GET_DATE_WISE_RECENT_INSPECTION_API 
 (
@@ -1821,7 +1825,7 @@ BEGIN
         t47.Case_No,
         t47.Call_Recv_Dt,
         t47.Call_Sno;
-END;
+END GET_DATE_WISE_RECENT_INSPECTION_API;
 
 create or replace PROCEDURE GET_IE_PENDING_INSPECTION_API 
 (
@@ -1887,7 +1891,8 @@ BEGIN
         t03.City
     ORDER BY 
         t03.City;
-END;
+END GET_IE_PENDING_INSPECTION_API;
+
 
 create or replace PROCEDURE GET_IE_TODAY_INSPECTION_API 
 (
@@ -1940,7 +1945,7 @@ BEGIN
         t47.Case_No,
         t47.Call_Recv_Dt,
         t47.Call_Sno;
-END;
+END GET_IE_TODAY_INSPECTION_API;
 
 
 create or replace PROCEDURE GET_IE_TOMORROW_INSPECTION_API
@@ -1994,4 +1999,4 @@ BEGIN
         t47.Case_No,
         t47.Call_Recv_Dt,
         t47.Call_Sno;
-END;
+END GET_IE_TOMORROW_INSPECTION_API;
