@@ -209,12 +209,16 @@ namespace IBSAPI.Controllers
                 var totalInsp = dashBoardRepository.GetClientTotalInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totalCompletedInsp = dashBoardRepository.GetClientCompletedInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totalPendingInsp = dashBoardRepository.GetClientPendingInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totalRejectedInsp = dashBoardRepository.GetClientRejectedInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totalCancelledInsp = dashBoardRepository.GetClientCancelledInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
 
                 var result = new
                 {
                     Total_Inspection = totalInsp,
                     Completed_Inspection = totalCompletedInsp,
-                    Pending_Inspection = totalPendingInsp
+                    Pending_Inspection = totalPendingInsp,
+                    Rejected_Inspection = totalRejectedInsp,
+                    Cancelled_Inspection = totalCancelledInsp
                 };
 
                 var response = new
