@@ -356,16 +356,60 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+
+        [HttpGet("Get_Pending_PO_For_Call", Name = "Get_Pending_PO_For_Call")]
+        public IActionResult Get_Pending_PO_For_Call(int Vend_Cd)
+        {
+            try
+            {
+                DateTime currentDate = DateTime.Now;
+                DateTime FromDate = currentDate.AddMonths(-3);
+                FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
+                var result = inspectionRepository.Get_Pending_PO_For_Call(Vend_Cd, FromDate, currentDate);
+                if (result.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        totalRecord = result.Count(),
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        totalRecord = result.Count(),
+                        data = result
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_Vendor_PendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
         #endregion
 
         #region CM Methods
         [HttpGet("Get_CM_RecentInspection", Name = "Get_CM_RecentInspection")]
-        public IActionResult Get_CM_RecentInspection(int Co_Cd, DateTime CurrDate)
+        public IActionResult Get_CM_RecentInspection(int Co_Cd, int IE_CD, DateTime CurrDate)
         {
             try
             {
                 //var CurrDate = DateTime.Now;
-                var result = inspectionRepository.Get_CM_RecentInspection(Co_Cd, CurrDate);
+                var result = inspectionRepository.Get_CM_RecentInspection(Co_Cd, IE_CD, CurrDate);
                 if (result.Count() > 0)
                 {
                     var response = new
@@ -449,14 +493,14 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("Get_Client_Region_Wise_PendingInspection", Name = "Get_Client_Region_Wise_PendingInspection")]
-        public IActionResult Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region = "")
+        public IActionResult Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string PO_NO, string Region = "")
         {
             try
             {
                 DateTime ToDate = DateTime.Now;
                 DateTime FromDate = ToDate.AddMonths(-3);
                 FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
-                var result = inspectionRepository.Get_Client_Region_Wise_PendingInspection(Rly_CD, Rly_NonType, Region, FromDate, ToDate);
+                var result = inspectionRepository.Get_Client_Region_Wise_PendingInspection(Rly_CD, Rly_NonType, PO_NO, Region, FromDate, ToDate);
                 if (result.Count() > 0)
                 {
                     var response = new

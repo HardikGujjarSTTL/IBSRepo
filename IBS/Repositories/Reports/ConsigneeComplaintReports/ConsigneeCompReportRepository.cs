@@ -199,7 +199,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                     S_Code = Convert.ToString(row["S_Code"]),
                     IE = Convert.ToString(row["IE"]),
                     NO_OF_INSPECTION = Convert.ToInt32(row["NO_OF_INSPECTION"]),
-                    MATERIAL_VALUE = Convert.ToInt32(row["MATERIAL_VALUE"]),
+                    MATERIAL_VALUE = Convert.ToDecimal(row["MATERIAL_VALUE"]),
                     RECD = Convert.ToInt32(row["RECD"]),
                     FINALISED = Convert.ToInt32(row["FINALISED"]),
                     PENDING = Convert.ToInt32(row["PENDING"]),

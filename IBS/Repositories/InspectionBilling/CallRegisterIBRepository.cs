@@ -4899,15 +4899,18 @@ namespace IBS.Repositories.InspectionBilling
                            select item).FirstOrDefault();
 
             var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == CaseNo.Trim() && ic.CallRecvDt == Convert.ToDateTime(DesireDt)
-                         && ic.CallSno == CallSno).OrderByDescending(ic => ic.Datetime).FirstOrDefault();
+                         && ic.CallSno == CallSno).OrderByDescending(ic => ic.Datetime).ToList();
 
             if (ICInter != null)
             {
-                if (selectedConsigneeCd == ICInter.ConsigneeCd)
+                foreach (var item in ICInter)
                 {
-                    model.DocBkNo = ICInter.BkNo;
-                    model.DocSetNo = ICInter.SetNo;
-                    model.Consignee = Convert.ToString(ICInter.ConsigneeCd);
+                    if (selectedConsigneeCd == item.ConsigneeCd)
+                    {
+                        model.DocBkNo = item.BkNo;
+                        model.DocSetNo = item.SetNo;
+                        model.Consignee = Convert.ToString(item.ConsigneeCd);
+                    }
                 }
             }
             else
