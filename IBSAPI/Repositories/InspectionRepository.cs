@@ -34,7 +34,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_TODAYDATE", OracleDbType.Varchar2, currDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETTODAYINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_TODAY_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -53,7 +53,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_TOMORROWDATE", OracleDbType.Varchar2, tomoDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETTOMORROWINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_TOMORROW_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -72,7 +72,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_DATE", OracleDbType.Varchar2, CurrentDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETPENDINGINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_PENDING_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -185,7 +185,7 @@ namespace IBSAPI.Repositories
             par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETDATEWISERECENTINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_DATE_WISE_RECENT_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -202,7 +202,7 @@ namespace IBSAPI.Repositories
             par[0] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETCOMPLETEDINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_COMPLETED_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -226,6 +226,27 @@ namespace IBSAPI.Repositories
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_VENDOR_PENDINGINSPECTION_API", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                pendingInspList = JsonConvert.DeserializeObject<List<VendorPedingInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            return pendingInspList;
+        }
+
+        public List<VendorPedingInspectionModel> Get_Pending_PO_For_Call(int Vend_Cd, DateTime FromDate, DateTime ToDate)
+        {
+            List<VendorPedingInspectionModel> pendingInspList = new();
+            var FrmDT = FromDate.ToString("dd/MM/yyyy");
+            var ToDT = ToDate.ToString("dd/MM/yyyy");
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_VEND_CD", OracleDbType.Int32, Vend_Cd, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FrmDT, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDT, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("", par);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);

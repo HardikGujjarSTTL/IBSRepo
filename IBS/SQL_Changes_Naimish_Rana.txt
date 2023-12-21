@@ -1508,3 +1508,490 @@ BEGIN
     Order by a.CO_NAME,a.CALL_STATUS_DT,a.BK_NO,a.SET_NO;        
 END;
 ----------------------------------------------------- END Holiday Master -----------------------------------------------------
+
+
+----------------------------------------------------- * START MOBILE APP API * -----------------------------------------------------
+create or replace PROCEDURE GET_VENDOR_PENDINGINSPECTION_API 
+(
+  P_VEND_CD IN NUMBER, 
+  P_FROMDATE IN VARCHAR2, 
+  P_TODATE IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    -- Get last three months Pending data to current date
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  ROW_NUMBER() OVER(ORDER BY t17.Case_No) ROWNO,
+            t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            NVL(sum(t18.qty_to_insp),0) Qty,
+            t13.PO_NO,
+            t13.PO_DT,
+            t13.RLY_NONRLY,
+            t13.RLY_CD,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+            ),'Other')  Client_Name,
+            t09.IE_NAME,
+            t05.VEND_NAME,
+            t21.CALL_STATUS_DESC Status
+    FROM T17_CALL_REGISTER t17 
+    LEFT JOIN T18_CALL_DETAILS t18 on t18.case_no = t17.Case_No and  t18.Call_Recv_Dt = t17.Call_Recv_Dt and t18.Call_Sno = t17.Call_Sno 
+    LEFT JOIN T13_PO_MASTER t13 on t17.Case_No = t13.Case_No
+    LEFT JOIN T09_IE t09 on t17.IE_CD = t09.IE_CD
+    LEFT JOIN T05_VENDOR t05 on t17.mfg_cd = t05.VEND_CD
+    LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t17.mfg_cd = P_VEND_CD--19148 --84086
+    AND t17.Call_Status IN ('M', 'U', 'S', 'W')
+    AND TO_DATE(t17.CALL_RECV_DT) BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')
+--    AND TO_DATE(TO_CHAR(t17.CALL_RECV_DT,'DD/MM/YYYY'),'DD/MM/YYYY') >= To_Date(P_FROMDATE,'dd/mm/yyyy') --'01/08/2019'
+--    AND TO_DATE(TO_CHAR(t17.CALL_RECV_DT,'DD/MM/YYYY'),'DD/MM/YYYY') <= To_Date(P_TODATE,'dd/mm/yyyy') --'07/11/2023'
+    GROUP BY t17.Case_No,
+             t17.Call_Recv_Dt,
+             t17.Call_Sno,
+             t13.PO_NO,
+             t13.PO_DT,
+             t13.RLY_NONRLY,
+             t13.RLY_CD,
+             t09.IE_NAME,
+             t05.VEND_NAME,
+             t21.CALL_STATUS_DESC
+    ORDER BY t17.Case_No,
+             t17.Call_Recv_Dt,
+             t17.Call_Sno;
+END;
+
+
+create or replace PROCEDURE GET_VENDOR_PENDING_PO_FOR_CALL_API 
+(
+  P_VEND_CD IN NUMBER, 
+  P_FROMDATE IN VARCHAR2, 
+  P_TODATE IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    -- Get last three months Pending data to current date
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  ROW_NUMBER() OVER(ORDER BY t17.Case_No) ROWNO,
+            t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            NVL(sum(t18.qty_to_insp),0) Qty,
+            t13.PO_NO,
+            t13.PO_DT,
+            t13.RLY_NONRLY,
+            t13.RLY_CD,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+            ),'Other')  Client_Name,
+            t09.IE_NAME,
+            t05.VEND_NAME,
+            t21.CALL_STATUS_DESC Status
+    FROM T13_PO_MASTER t13
+    LEFT JOIN T17_CALL_REGISTER t17 on t13.Case_No = t17.Case_No
+    LEFT JOIN T18_CALL_DETAILS t18 on t18.case_no = t17.Case_No and  t18.Call_Recv_Dt = t17.Call_Recv_Dt and t18.Call_Sno = t17.Call_Sno 
+    LEFT JOIN T09_IE t09 on t17.IE_CD = t09.IE_CD
+    LEFT JOIN T05_VENDOR t05 on t17.mfg_cd = t05.VEND_CD
+    LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t17.mfg_cd = P_VEND_CD--19148 --84086
+    AND t17.Call_Status NOT IN ('M', 'U', 'S', 'W')
+    AND TO_DATE(t17.CALL_RECV_DT) BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')    
+    GROUP BY t17.Case_No,
+             t17.Call_Recv_Dt,
+             t17.Call_Sno,
+             t13.PO_NO,
+             t13.PO_DT,
+             t13.RLY_NONRLY,
+             t13.RLY_CD,
+             t09.IE_NAME,
+             t05.VEND_NAME,
+             t21.CALL_STATUS_DESC
+    ORDER BY t17.Case_No,
+             t17.Call_Recv_Dt,
+             t17.Call_Sno;
+END;
+
+create or replace PROCEDURE GET_CLIENT_PENDINGINSPECTION_API 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONTYPE IN VARCHAR2, 
+  P_FROMDATE IN VARCHAR2,
+  P_TODATE IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR  
+) AS 
+BEGIN
+    -- Get last three months data till current date
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.Vend_Name,        
+            t09.IE_Name,
+            SUM(t18.qty_to_insp) Qty,
+            t21.CALL_STATUS_DESC Status
+    FROM T17_CALL_REGISTER t17
+    LEFT JOIN T13_PO_MASTER t13 on t17.Case_No = t13.Case_No
+    LEFT JOIN T18_CALL_DETAILS t18 ON t17.Case_No = t18.Case_No AND t17.Call_Recv_Dt = t18.Call_Recv_Dt AND t17.Call_Sno = t18.Call_Sno
+    LEFT JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+    LEFT JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t13.RLY_CD = P_RLY_CD 
+        AND t13.RLY_NONRLY = P_RLY_NONTYPE
+        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY') 
+        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
+        AND t17.CALL_STATUS IN ('M','U','S','W')
+    GROUP BY t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.Vend_Name,
+            t09.IE_Name,
+            t21.CALL_STATUS_DESC
+    ORDER BY t17.Call_Recv_Dt,t17.Case_No,t17.Call_Sno;
+END;
+
+create or replace PROCEDURE GET_CLIENT_REGION_WISE_PENDINGINSPECTION_API 
+(
+  P_RLY_CD IN VARCHAR2, 
+  P_RLY_NONTYPE IN VARCHAR2, 
+  P_FROMDATE IN VARCHAR2,
+  P_TODATE IN VARCHAR2,
+  P_REGION IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR  
+) AS 
+BEGIN  
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.Vend_Name,        
+            T09.IE_NAME,
+            SUM(t18.qty_to_insp) Qty,
+            t21.CALL_STATUS_DESC Status
+    FROM T17_CALL_REGISTER t17
+    LEFT JOIN T13_PO_MASTER t13 on t17.Case_No = t13.Case_No
+    LEFT JOIN T18_CALL_DETAILS T18 ON T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    LEFT JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+    LEFT JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD    
+    WHERE t13.RLY_CD = P_RLY_CD 
+        AND t13.RLY_NONRLY = P_RLY_NONTYPE 
+        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY') 
+        AND T17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY') 
+        AND t17.CALL_STATUS IN ('M','U','S','W')
+        AND (P_REGION IS NULL OR SUBSTR(T17.CASE_NO,1,1) = P_REGION)        
+    GROUP BY t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.Vend_Name,
+            T09.IE_NAME
+           ,T21.CALL_STATUS_DESC
+    ORDER BY t17.Call_Recv_Dt DESC,t17.Case_No,t17.Call_Sno;
+END;
+
+create or replace PROCEDURE GET_CM_RECENTINSPECTION_API 
+(
+  P_VISITDATE IN VARCHAR2, 
+  P_CO_CD IN NUMBER, 
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    select  t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            sum(t18.qty_to_insp) Qty,
+            t13.PO_NO,
+            t13.PO_DT,
+            t09.IE_NAME,
+            t05.VEND_NAME,
+            t21.CALL_STATUS_DESC Status
+    FROM t47_ie_work_plan t47
+    JOIN T17_CALL_REGISTER t17 on t47.case_no = t17.Case_No and  t47.Call_Recv_Dt = t17.Call_Recv_Dt and t47.Call_Sno = t17.Call_Sno 
+    LEFT JOIN T18_CALL_DETAILS t18 on t18.case_no = t17.Case_No and  t18.Call_Recv_Dt = t17.Call_Recv_Dt and t18.Call_Sno = t17.Call_Sno 
+    LEFT JOIN T13_PO_MASTER t13 on t17.Case_No = t13.Case_No
+    LEFT JOIN T09_IE t09 on t17.IE_CD = t09.IE_CD
+    LEFT JOIN T05_VENDOR t05 on t17.mfg_cd = t05.VEND_CD
+    LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
+    WHERE t47.VISIT_DT = TO_DATE(P_VISITDATE,'DD/MM/YYYY')--'06-11-23'
+    AND t17.CO_CD = P_CO_CD --126
+    GROUP BY t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t09.IE_NAME,
+            t05.VEND_NAME,
+            t21.CALL_STATUS_DESC
+    ORDER BY t17.Case_No,
+            t17.Call_Recv_Dt,
+            t17.Call_Sno;
+END;
+
+create or replace PROCEDURE GET_IE_COMPLETED_INSPECTION_API 
+(
+  P_IECD IN NUMBER,
+--  P_TODAYDATE IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    SELECT
+        t17.Case_No,
+        t17.Call_Recv_Dt,
+        t17.Call_Sno,
+        t13.PO_NO,
+        t13.PO_DT,
+        t05.Vend_Name,        
+        SUM(t18.Qty_To_Insp) AS Qty,
+        t21.Call_Status_Desc AS Status,
+        t17.DATETIME
+    FROM T17_CALL_REGISTER t17 --T47_IE_WORK_PLAN t47 JOIN T17_CALL_REGISTER t17        
+--    ON t47.Case_No = t17.Case_No AND t47.Call_Recv_Dt = t17.Call_Recv_Dt AND t47.Call_Sno = t17.Call_Sno
+    LEFT JOIN T18_CALL_DETAILS t18 ON t17.Case_No = t18.Case_No AND t17.Call_Recv_Dt = t18.Call_Recv_Dt AND t17.Call_Sno = t18.Call_Sno
+    LEFT JOIN T13_PO_MASTER t13 ON t13.Case_No = t17.Case_No
+    LEFT JOIN T05_VENDOR t05 ON t17.Mfg_Cd = t05.Vend_Cd
+    LEFT JOIN T03_CITY t03 ON t05.Vend_City_Cd = t03.City_Cd
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD) --t17.Call_Status = t21.Call_Status_Cd
+    WHERE t17.Ie_Cd = P_IECD --670
+    AND t17.Call_Status IN ('A','R','C','G','B','T','PR','PRB','CB','RB')
+--    AND t17.DATETIME = TO_DATE(P_TODAYDATE, 'DD/MM/YYYY')
+    GROUP BY 
+        t17.Case_No,
+        t17.Call_Recv_Dt,
+        t17.Call_Sno,
+        t13.PO_NO,
+        t13.PO_DT,
+        t05.Vend_Name,    
+        t21.Call_Status_Desc,
+        t17.DATETIME
+    ORDER BY
+        t17.DATETIME DESC;
+END;
+
+create or replace PROCEDURE GET_DATE_WISE_RECENT_INSPECTION_API 
+(
+  P_FROMDATE IN VARCHAR2, 
+  P_TODATE IN VARCHAR2,
+  P_IECD IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t47.Case_No,
+            t47.Call_Recv_Dt,
+            t47.Call_Sno,
+            t13.PO_NO,
+            t13.PO_DT,
+            t05.Vend_Name,        
+            SUM(t18.Qty_To_Insp) AS Qty,
+            t21.Call_Status_Desc AS Status
+    FROM T47_IE_WORK_PLAN t47
+    JOIN T17_CALL_REGISTER t17 ON t47.Case_No = t17.Case_No AND t47.Call_Recv_Dt = t17.Call_Recv_Dt AND t47.Call_Sno = t17.Call_Sno
+    LEFT JOIN T18_CALL_DETAILS t18 ON t47.Case_No = t18.Case_No AND t47.Call_Recv_Dt = t18.Call_Recv_Dt AND t47.Call_Sno = t18.Call_Sno
+    LEFT JOIN T13_PO_MASTER t13 ON t13.Case_No = t47.Case_No
+    LEFT JOIN T05_VENDOR t05 ON t47.Mfg_Cd = t05.Vend_Cd
+    LEFT JOIN T03_CITY t03 ON t05.Vend_City_Cd = t03.City_Cd
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD) --t17.Call_Status = t21.Call_Status_Cd
+    WHERE t47.Ie_Cd = P_IECD --670
+    AND t47.Visit_Dt >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+    AND t47.Visit_Dt <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
+    GROUP BY 
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno,
+        t13.PO_NO,
+        t13.PO_DT,
+        t05.Vend_Name,    
+        t21.Call_Status_Desc
+    ORDER BY
+        t05.Vend_Name,
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno;
+END;
+
+create or replace PROCEDURE GET_IE_PENDING_INSPECTION_API 
+(
+  P_IECD IN VARCHAR2 
+, P_DATE IN VARCHAR2 
+, P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    SELECT
+        t17.Case_No,
+        t17.Call_Recv_Dt,
+        t17.Call_Sno,
+        t05.Vend_Name,
+        SUM(t18.Qty_To_Insp) as Qty,
+        t13.PO_NO,
+        t13.PO_DT,
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        NVL((
+            select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+            union
+            select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+        ),'Other')  Client_Name,
+        CASE
+            WHEN t17.Call_Status = 'M' THEN 'Pending'
+            WHEN t17.Call_Status = 'U' THEN 'Under Lab Testing'
+            WHEN t17.Call_Status = 'S' THEN 'Still Under Inspection'
+            WHEN t17.Call_Status = 'G' THEN 'Stage Inspection'
+            WHEN t17.Call_Status = 'W' THEN 'Withheld'
+            ELSE ''
+        END AS Status,
+        t03.City
+    FROM T17_CALL_REGISTER t17
+    LEFT JOIN T13_PO_MASTER t13 ON t17.Case_No = t13.Case_No
+    LEFT JOIN T18_CALL_DETAILS t18 ON t17.Case_No = t18.Case_No AND t17.Call_Recv_Dt = t18.Call_Recv_Dt AND t17.Call_Sno = t18.Call_Sno
+    LEFT JOIN T05_VENDOR t05 ON t17.Mfg_Cd = t05.Vend_Cd
+    LEFT JOIN T03_CITY t03 ON t05.Vend_City_Cd = t03.City_Cd
+    WHERE
+        SUBSTR(t17.Case_No, 1, 1) = 'N'
+        AND t17.IE_CD = P_IECD --670
+        AND t17.Call_Status IN ('M', 'U', 'S', 'W')
+        AND NOT EXISTS (
+            SELECT 1
+            FROM T47_IE_WORK_PLAN t47
+            WHERE
+                t17.Case_No = t47.Case_No
+                AND t17.Call_Recv_Dt = t47.Call_Recv_Dt
+                AND t17.Call_Sno = t47.Call_Sno
+                --AND t47.Visit_Dt = TO_DATE(P_DATE, 'DD/MM/YYYY')
+                and TO_DATE(t47.VISIT_DT,'DD-MM-YY') = TO_DATE(P_DATE,'DD-MM-YY')
+        )
+    GROUP BY
+        t17.Case_No,
+        t17.Call_Recv_Dt,
+        t17.Call_Sno,
+        t05.Vend_Name,
+        t13.PO_NO,
+        t13.PO_DT,
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        t17.Call_Status,
+        t03.City
+    ORDER BY 
+        t03.City;
+END;
+
+create or replace PROCEDURE GET_IE_TODAY_INSPECTION_API 
+(
+  P_IECD IN VARCHAR2 
+, P_TODAYDATE IN VARCHAR2 
+, P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    SELECT
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno,
+        t47.VISIT_DT AS PlanDt,
+        t13.PO_NO,
+        t13.PO_DT, 
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        t05.Vend_Name,
+        NVL((
+            select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+            union
+            select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+        ),'Other')  Client_Name,
+        SUM(t18.Qty_To_Insp) AS Qty,
+        t21.Call_Status_Desc AS Status
+    FROM T47_IE_WORK_PLAN t47
+    JOIN T17_CALL_REGISTER t17 ON  t47.Case_No = t17.Case_No AND t47.Call_Recv_Dt = t17.Call_Recv_Dt AND t47.Call_Sno = t17.Call_Sno
+    LEFT JOIN T18_CALL_DETAILS t18 ON t47.Case_No = t18.Case_No AND t47.Call_Recv_Dt = t18.Call_Recv_Dt AND t47.Call_Sno = t18.Call_Sno
+    LEFT JOIN T13_PO_MASTER t13 ON t13.Case_No = t47.Case_No
+    LEFT JOIN T05_VENDOR t05 ON t47.Mfg_Cd = t05.Vend_Cd
+    LEFT JOIN T03_CITY t03 ON t05.Vend_City_Cd = t03.City_Cd
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD) --t17.Call_Status = t21.Call_Status_Cd
+    WHERE t47.Ie_Cd = P_IECD --670
+--    AND t47.Visit_Dt = TO_DATE(P_TODAYDATE, 'DD/MM/YYYY')
+        AND TO_DATE(t47.VISIT_DT,'DD-MM-YY') = TO_DATE(P_TODAYDATE,'DD-MM-YY')
+    GROUP BY 
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno,
+        t47.VISIT_DT,
+        t13.PO_NO,
+        t13.PO_DT,
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        t05.Vend_Name,    
+        t21.Call_Status_Desc
+    ORDER BY
+        t05.Vend_Name,
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno;
+END;
+
+
+create or replace PROCEDURE GET_IE_TOMORROW_INSPECTION_API
+(
+  P_IECD IN VARCHAR2 
+, P_TOMORROWDATE IN VARCHAR2 
+, P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    SELECT
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno,
+        t47.VISIT_DT AS PlanDt,
+        t13.PO_NO,
+        t13.PO_DT, --t13.PO_DT,
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        t05.Vend_Name, 
+        NVL((
+            select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+            union
+            select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
+        ),'Other')  Client_Name,
+        SUM(t18.Qty_To_Insp) AS Qty,
+        t21.Call_Status_Desc AS Status
+    FROM T47_IE_WORK_PLAN t47
+    JOIN T17_CALL_REGISTER t17 ON  t47.Case_No = t17.Case_No AND t47.Call_Recv_Dt = t17.Call_Recv_Dt AND t47.Call_Sno = t17.Call_Sno
+    LEFT JOIN T18_CALL_DETAILS t18 ON t47.Case_No = t18.Case_No AND t47.Call_Recv_Dt = t18.Call_Recv_Dt AND t47.Call_Sno = t18.Call_Sno
+    LEFT JOIN T13_PO_MASTER t13 ON t13.Case_No = t47.Case_No
+    LEFT JOIN T05_VENDOR t05 ON t47.Mfg_Cd = t05.Vend_Cd
+    LEFT JOIN T03_CITY t03 ON t05.Vend_City_Cd = t03.City_Cd
+    LEFT JOIN T21_CALL_STATUS_CODES t21 ON TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD) --t17.Call_Status = t21.Call_Status_Cd
+    WHERE t47.Ie_Cd = P_IECD --670
+        --AND t47.Visit_Dt = TO_DATE(P_TOMORROWDATE, 'DD/MM/YYYY')
+        AND TO_DATE(t47.VISIT_DT,'DD-MM-YY') = TO_DATE(P_TOMORROWDATE,'DD-MM-YY')
+    GROUP BY 
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno,
+        t47.VISIT_DT,
+        t13.PO_NO,
+        t13.PO_DT,
+        t13.RLY_NONRLY,
+        t13.RLY_CD,
+        t05.Vend_Name,    
+        t21.Call_Status_Desc
+    ORDER BY
+        t05.Vend_Name,
+        t47.Case_No,
+        t47.Call_Recv_Dt,
+        t47.Call_Sno;
+END;

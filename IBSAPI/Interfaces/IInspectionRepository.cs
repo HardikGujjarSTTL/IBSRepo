@@ -15,6 +15,7 @@ namespace IBSAPI.Interfaces
 
         #region Vendor Methods
         List<VendorPedingInspectionModel> Get_Vendor_PendingInspection(int Vend_Cd, DateTime FromDate, DateTime ToDate);
+        List<VendorPedingInspectionModel> Get_Pending_PO_For_Call(int Vend_Cd, DateTime FromDate, DateTime ToDate);
         #endregion
 
         #region CM Methods

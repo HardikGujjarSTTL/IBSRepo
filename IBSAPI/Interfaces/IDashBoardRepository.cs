@@ -24,9 +24,9 @@ namespace IBSAPI.Interfaces
 
         #region CM DashBoard
         List<IEModel> Get_CM_Wise_IE(int CO_CD);
-        int Get_CM_TotalInspection(int CO_CD, string FromDate, string ToDate);
-        int Get_CM_PendingInspection(int CO_CD, string FromDate, string ToDate);
-        int Get_CM_RequestRejectedInspection(int CO_CD, string FromDate, string ToDate);
+        int Get_CM_TotalInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
+        int Get_CM_PendingInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
+        int Get_CM_RequestRejectedInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
         #endregion
     }
 }

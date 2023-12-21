@@ -356,6 +356,49 @@ namespace IBSAPI.Controllers
                 return Ok(response);
             }
         }
+
+        public IActionResult Get_Pending_PO_For_Call(int Vend_Cd)
+        {
+            try
+            {
+                DateTime currentDate = DateTime.Now;
+                DateTime FromDate = currentDate.AddMonths(-3);
+                FromDate = new DateTime(FromDate.Year, FromDate.Month, 1);
+                var result = inspectionRepository.Get_Vendor_PendingInspection(Vend_Cd, FromDate, currentDate);
+                if (result.Count() > 0)
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+                        message = "Data get successfully",
+                        totalRecord = result.Count(),
+                        data = result,
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new
+                    {
+                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                        message = "No Data Found",
+                        totalRecord = result.Count(),
+                        data = result
+                    };
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Inspection_API", "Get_Vendor_PendingInspection", 1, string.Empty);
+                var response = new
+                {
+                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+                    message = ex.Message.ToString(),
+                };
+                return Ok(response);
+            }
+        }
         #endregion
 
         #region CM Methods
