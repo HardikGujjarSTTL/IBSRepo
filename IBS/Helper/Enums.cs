@@ -644,7 +644,7 @@ namespace IBS.Helper
             [Description("IE Performance")] IE_X,
             [Description("Cluster Wise Performance Report")] CLUSTER_X,
             [Description("IC Submission Report")] ICSUBMIT,
-            [Description("Pending IC's Against Calls where Material has been Sccepted or Rejected")] CALLSWITHOUTIC,
+            [Description("Pending IC's Against Calls where Material has been Accepted or Rejected")] CALLSWITHOUTIC,
             [Description("CO Wise Super Surprise Summary")] SUPSURPSUMM,
             [Description("Overdue/Pending Calls")] PENDING_CALLS,
             [Description("CM and IE wise IC issued but not recieved")] COUNTIC,

@@ -100,28 +100,29 @@ namespace IBSAPI.Controllers
                 };
                 return Ok(response);
             }
-        }        
+        }
         #endregion
 
         #region CM        
         [HttpGet("Get_CM_Count", Name = "Get_CM")]
-        public IActionResult Get_CM(int CO_CD)
+        public IActionResult Get_CM(int CO_CD, int IE_CD)
         {
             try
             {
                 var startDate = Common.GetFinancialYearStartDate();
                 var ToDate = DateTime.Today.ToString("dd/MM/yyyy");
-                var totalInsp = dashBoardRepository.Get_CM_TotalInspection(CO_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
 
-                var totPendingInsp = dashBoardRepository.Get_CM_PendingInspection(CO_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
-
-                var totRejectedInsp = dashBoardRepository.Get_CM_RequestRejectedInspection(CO_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totalInsp = dashBoardRepository.Get_CM_TotalInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totPendingInsp = dashBoardRepository.Get_CM_PendingInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totRejectedInsp = dashBoardRepository.Get_CM_RequestRejectedInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totIE = dashBoardRepository.Get_CM_Wise_IE(CO_CD);
                 var result = new
                 {
                     Total_Inspection = totalInsp,
                     Total_Assign_Inspection = totalInsp,
                     Pending_Inspection = totPendingInsp,
-                    Rejected_Inspection = totRejectedInsp
+                    Rejected_Inspection = totRejectedInsp,
+                    No_Of_IE = totIE.Count()
                 };
 
                 var response = new
@@ -142,33 +143,33 @@ namespace IBSAPI.Controllers
                 };
                 return Ok(response);
             }
-        }        
-
-        [HttpGet("Get_CM_TotalIE_Count", Name = "GetCMTotalIE")]
-        public IActionResult GetCMTotalIE(int CO_CD)
-        {
-            try
-            {
-                var totalInsp = dashBoardRepository.Get_CM_Wise_IE(CO_CD);
-                var response = new
-                {
-                    resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                    message = "Data get successfully",
-                    data = totalInsp.Count()
-                };
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "DashBoard_API", "GetCMTotalIE", 1, string.Empty);
-                var response = new
-                {
-                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = ex.Message.ToString(),
-                };
-                return Ok(response);
-            }
         }
+
+        //[HttpGet("Get_CM_TotalIE_Count", Name = "GetCMTotalIE")]
+        //public IActionResult GetCMTotalIE(int CO_CD)
+        //{
+        //    try
+        //    {
+        //        var totalInsp = dashBoardRepository.Get_CM_Wise_IE(CO_CD);
+        //        var response = new
+        //        {
+        //            resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+        //            message = "Data get successfully",
+        //            data = totalInsp.Count()
+        //        };
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "DashBoard_API", "GetCMTotalIE", 1, string.Empty);
+        //        var response = new
+        //        {
+        //            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+        //            message = ex.Message.ToString(),
+        //        };
+        //        return Ok(response);
+        //    }
+        //}
 
         [HttpGet("Get_CM_Wise_IE_List", Name = "GetCMWiseIE")]
         public IActionResult GetCMWiseIE(int CO_CD)
@@ -198,7 +199,7 @@ namespace IBSAPI.Controllers
         #endregion
 
         #region Client
-        [HttpGet("Get_Client_Count", Name ="Get_Client")]
+        [HttpGet("Get_Client_Count", Name = "Get_Client")]
         public IActionResult Get_Client(string Rly_CD, string Rly_NoNType)
         {
             try
@@ -208,12 +209,16 @@ namespace IBSAPI.Controllers
                 var totalInsp = dashBoardRepository.GetClientTotalInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totalCompletedInsp = dashBoardRepository.GetClientCompletedInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totalPendingInsp = dashBoardRepository.GetClientPendingInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totalRejectedInsp = dashBoardRepository.GetClientRejectedInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
+                var totalCancelledInsp = dashBoardRepository.GetClientCancelledInspection(Rly_CD, Rly_NoNType, startDate.ToString("dd/MM/yyyy"), ToDate);
 
                 var result = new
                 {
                     Total_Inspection = totalInsp,
                     Completed_Inspection = totalCompletedInsp,
-                    Pending_Inspection = totalPendingInsp
+                    Pending_Inspection = totalPendingInsp,
+                    Rejected_Inspection = totalRejectedInsp,
+                    Cancelled_Inspection = totalCancelledInsp
                 };
 
                 var response = new
@@ -234,7 +239,7 @@ namespace IBSAPI.Controllers
                 };
                 return Ok(response);
             }
-        }        
+        }
         #endregion
     }
 }

@@ -43,7 +43,7 @@ namespace IBS.Controllers
                 ds = sapIntegrationRepository.ExportExcelConsigneSelect(BPO_Cd);
             }
 
-            return File(Helpers.CreateExcelFile.ExportToExcelDownload(ds), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName +".xls");
+            return File(Helpers.CreateExcelFile.ExportToExcelDownload(ds), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName + ".xls");
 
         }
 
@@ -53,8 +53,8 @@ namespace IBS.Controllers
             DataSet output = new DataSet();
             try
             {
+                int id = 0;
                 var files = Request.Form.Files;
-
                 if (files.Count > 0)
                 {
                     var file = files[0];
@@ -67,7 +67,6 @@ namespace IBS.Controllers
                     {
                         file.CopyTo(fileStream);
                     }
-
                     string excelCS = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={DestinationPath};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';";
                     using (OleDbConnection connExcel = new OleDbConnection(excelCS))
                     {
@@ -79,21 +78,44 @@ namespace IBS.Controllers
                         {
                             da.SelectCommand = new OleDbCommand($"SELECT * From [{dtExcelSchema.Rows[0]["TABLE_NAME"]}]");
                             da.SelectCommand.Connection = connExcel;
-
                             da.Fill(output);
                         }
+                        if (output != null && output.Tables.Count > 0 && output.Tables[0].Columns.Count > 0)
+                        {
+                            if (Type == "MultipleBPO" || Type == "SelectiveBPO")
+                            {
+                                id = sapIntegrationRepository.UpdateBPO(output);
+                            }
+                            else if (Type == "ConsigneSelect")
+                            {
+                                id = sapIntegrationRepository.UpdateConsigne(output);
+                            }
+                        }
+                        //DataTable dt = new DataTable();
+                        //dt = output.Tables[0];
                     }
 
-                    return new JsonResult("IMM File Uploaded successfully!");
+                    if (System.IO.File.Exists(DestinationPath))
+                    {
+                        System.IO.File.Delete(DestinationPath);
+                    }
+                    if (id == 2)
+                    {
+                        return Json(new { status = false, responseText = "Please Upload the File Properly" });
+                    }
+                    else if (id == 1)
+                    {
+                        return Json(new { status = true, responseText = "Updated successfully" });
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "SAPIntegration", "UploadIMMFile", 1, string.Empty);
-                return Json(ex);
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "SAPIntegration", "UploadFile", 1, string.Empty);
+                return Json(new { status = false, responseText = ex.Message.ToString() });
             }
 
-            return Json("Index");
+            return Json(new { status = false, responseText = "something wrong." });
         }
 
 
