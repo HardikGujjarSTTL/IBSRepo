@@ -9,5 +9,7 @@ namespace IBSAPI.Interfaces
         List<CallStatusModel> Get_Call_Status_List();
 
         int CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno);
+
+        VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model);
     }
 }
