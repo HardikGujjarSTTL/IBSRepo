@@ -263,8 +263,8 @@ namespace IBSAPI.Repositories
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("P_VISITDATE", OracleDbType.Varchar2, CurrDate.ToString("dd/MM/yyyy"), ParameterDirection.Input);
             par[1] = new OracleParameter("P_CO_CD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_IE_CD", OracleDbType.Int32, IE_CD, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("P_IE_CD", OracleDbType.Int32, IE_CD, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_CM_RECENTINSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)

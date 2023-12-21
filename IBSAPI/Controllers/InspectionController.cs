@@ -493,7 +493,7 @@ namespace IBSAPI.Controllers
         }
 
         [HttpGet("Get_Client_Region_Wise_PendingInspection", Name = "Get_Client_Region_Wise_PendingInspection")]
-        public IActionResult Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string PO_NO, string Region = "")
+        public IActionResult Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string? PO_NO, string Region = "")
         {
             try
             {
