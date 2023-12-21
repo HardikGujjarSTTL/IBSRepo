@@ -21680,7 +21680,8 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("\"IBSDEV\".\"USER_MASTER_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Createdby)
-                .HasPrecision(6)
+                .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
