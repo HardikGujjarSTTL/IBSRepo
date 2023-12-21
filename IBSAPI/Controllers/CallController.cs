@@ -255,6 +255,7 @@ namespace IBSAPI.Controllers
                     {
                         if (ICPhotoDigitalSign.Name == "ICPhotoDigitalSign")
                         {
+                            DocumentsList = new List<APPDocumentDTO>();
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.ICPhoto_Dig_Sign;
                             aPP.FileName = ICPhotoDigitalSign.FileName;
@@ -268,39 +269,42 @@ namespace IBSAPI.Controllers
                     {
                         if (UploadTestPlan.Name == "UploadTestPlan")
                         {
+                            DocumentsList = new List<APPDocumentDTO>();
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan;
                             aPP.FileName = ICPhotoDigitalSign.FileName;
                             aPP.formFile = ICPhotoDigitalSign;
                             DocumentsList.Add(aPP);
                             FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + ".PDF";
-                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadTestPlan).ToList(), Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, null, FileName, string.Empty, Upload_Test_PlanDID, IsStaging);
+                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, null, FileName, string.Empty, Upload_Test_PlanDID, IsStaging);
                         }
                     }
                     if (UploadICAnnexue1.Length > 0)
                     {
                         if (UploadICAnnexue1.Name == "UploadICAnnexue1")
                         {
+                            DocumentsList = new List<APPDocumentDTO>();
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1;
                             aPP.FileName = ICPhotoDigitalSign.FileName;
                             aPP.formFile = ICPhotoDigitalSign;
                             DocumentsList.Add(aPP);
                             FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "-A1.PDF";
-                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue1).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue1DID, IsStaging);
+                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue1DID, IsStaging);
                         }
                     }
                     if (UploadICAnnexue2.Length > 0)
                     {
                         if (UploadICAnnexue2.Name == "UploadICAnnexue2")
                         {
+                            DocumentsList = new List<APPDocumentDTO>();
                             APPDocumentDTO aPP = new APPDocumentDTO();
                             aPP.Documentid = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2;
                             aPP.FileName = ICPhotoDigitalSign.FileName;
                             aPP.formFile = ICPhotoDigitalSign;
                             DocumentsList.Add(aPP);
                             FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "-A2.PDF";
-                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue2).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue2DID, IsStaging);
+                            DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue2DID, IsStaging);
                         }
                     }
 
@@ -337,6 +341,7 @@ namespace IBSAPI.Controllers
             catch (Exception ex)
             {
                 // Handle exceptions
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "ICPhotoUpload", 1, string.Empty);
                 var response = new
                 {
                     resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,

@@ -4762,6 +4762,10 @@ namespace IBS.Models
                                        }).ToList();
             return IE;
         }
+        public static List<TextValueDropDownDTO> GetSAPType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SAPType)).ToList();
+        }
     }
 
     public static class DbContextHelper

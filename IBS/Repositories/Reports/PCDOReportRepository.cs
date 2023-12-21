@@ -205,7 +205,7 @@ namespace IBS.Repositories.Reports
 
         public ComplaintsMainModel GetComplaintsData(string wYrMth)
         {
-            OracleParameter[] par = new OracleParameter[7];
+            OracleParameter[] par = new OracleParameter[10];
             par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
             par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
             par[2] = new OracleParameter("p_Result_jIdisposedComplaints", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -213,7 +213,10 @@ namespace IBS.Repositories.Reports
             par[4] = new OracleParameter("p_Result_othercasesComplaintsModels", OracleDbType.RefCursor, ParameterDirection.Output);
             par[5] = new OracleParameter("p_Result_long_PendingModels", OracleDbType.RefCursor, ParameterDirection.Output);
             par[6] = new OracleParameter("p_Result_cR_REJModels", OracleDbType.RefCursor, ParameterDirection.Output);
-            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Complaints", par, 6);
+            par[7] = new OracleParameter("p_Result_othercasesComplaintsE", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_Result_othercasesComplaintsW", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[9] = new OracleParameter("p_Result_othercasesComplaintsS", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("sp_PCDOReport_Complaints", par, 9);
             ComplaintsMainModel model = new();
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -234,6 +237,16 @@ namespace IBS.Repositories.Reports
 
                 string serializeddt5 = JsonConvert.SerializeObject(ds.Tables[5], Formatting.Indented);
                 model.cR_REJModels = JsonConvert.DeserializeObject<List<CR_REJModel>>(serializeddt5, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                
+                string serializeddt6 = JsonConvert.SerializeObject(ds.Tables[6], Formatting.Indented);
+                model.othercasesComplaintsE = JsonConvert.DeserializeObject<List<OthercasesComplaintsModel>>(serializeddt6, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt7 = JsonConvert.SerializeObject(ds.Tables[7], Formatting.Indented);
+                model.othercasesComplaintsW = JsonConvert.DeserializeObject<List<OthercasesComplaintsModel>>(serializeddt7, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+                string serializeddt8 = JsonConvert.SerializeObject(ds.Tables[8], Formatting.Indented);
+                model.othercasesComplaintsS = JsonConvert.DeserializeObject<List<OthercasesComplaintsModel>>(serializeddt8, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
             }
             return model;
         }
