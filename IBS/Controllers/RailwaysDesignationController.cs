@@ -51,14 +51,14 @@ namespace IBS.Controllers
                     if (model.ID == 0)
                     {
                         model.Createdby = UserId;
-                        model.UserId = USER_ID.Substring(0, 8);
+                        model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                         railwaysDesignationRepository.SaveDetails(model);
                         AlertAddSuccess("Record Added Successfully.");
                     }
                     else
                     {
                         model.Updatedby = UserId;
-                        model.UserId = USER_ID.Substring(0, 8);
+                        model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                         railwaysDesignationRepository.SaveDetails(model);
                         AlertAddSuccess("Record Updated Successfully.");
                     }

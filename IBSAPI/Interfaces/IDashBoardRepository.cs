@@ -20,6 +20,8 @@ namespace IBSAPI.Interfaces
         int GetClientTotalInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         int GetClientCompletedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         int GetClientPendingInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientRejectedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientCancelledInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         #endregion
 
         #region CM DashBoard
