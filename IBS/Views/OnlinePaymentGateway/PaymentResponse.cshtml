@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="accordion-body p-4">
-            <form data-ajax="true" asp-antiforgery="true" data-ajax-method="Get" id="frmPaymentGateway" enctype="multipart/form-data">
+            <form data-ajax="true" asp-antiforgery="true" data-ajax-method="Get" id="frmPaymentResponse" enctype="multipart/form-data">
                 <div class="row">
                     <div class="row my-0">
                         <div class="col-md-12">
@@ -21,19 +21,19 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">MerchTxnRef:</label>
-                        <input type="text" class="input" ASP-FOR="CaseNo"  />
+                        <input type="text" class="input" ASP-FOR="MER_TXN_REF"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Merchant ID </label>
-                        <input type="text" class="input"  ASP-FOR="CallDate"  />
+                        <input type="text" class="input"  ASP-FOR="MerchantID"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Order Info. </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="OrderInfo"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Transaction Amount: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="TransactionAmount"  />
                     </div>
                     <label style="color: dodgerblue;font-weight: bold;text-decoration: underline;">Fields above are the primary request values.</label>
                     <label style="color: dodgerblue;font-weight: bold;text-decoration: underline;">Fields below are receipt data fields.</label>
@@ -41,39 +41,39 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Transaction Response Code:</label>
-                        <input type="text" class="input" ASP-FOR="CaseNo" />
+                        <input type="text" class="input" ASP-FOR="TranRespCode" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Transaction Response Code Description: </label>
-                        <input type="text" class="input" ASP-FOR="CallDate"  />
+                        <input type="text" class="input" ASP-FOR="TranRespCodeDesc"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Payment Server Message: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="PaymentServerMsg" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Acquirer Response Code: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="AcquirerRespCode"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Shopping Transaction Number: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="ShoppingTranNO"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Receipt Number: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="ReceiptNo"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Authorization ID: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="AuthorizationID"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Batch Number For This Transaction: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="BatchNo"  />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Card Type: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno"  />
+                        <input type="text" class="input" ASP-FOR="CardType"  />
                     </div>
                     <label style="color: dodgerblue;font-weight: bold;text-decoration: underline;">Fields above are for a Standard Transaction.</label>
                     <label style="color: dodgerblue;font-weight: bold;text-decoration: underline;">Fields below are additional fields for extra functionality.</label>
@@ -86,11 +86,11 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">CSC Result Code:</label>
-                        <input type="text" class="input" ASP-FOR="CaseNo" />
+                        <input type="text" class="input" ASP-FOR="CSCResultCode" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">CSC Result Description: </label>
-                        <input type="text" class="input" ASP-FOR="CallDate" />
+                        <input type="text" class="input" ASP-FOR="CSCResultDescrip" />
                     </div>
                     <div class="row my-0">
                         <div class="col-md-12">
@@ -99,35 +99,35 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS ECI: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="ECI" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS XID: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="XID" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS Enrolled: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="Enrolled" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS Status: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="Status" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS VerToken: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="VerToken" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS VerType: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="VerType" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS VerSecurityLevel: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="VerSecurityLevel" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">3DS VerStatus: </label>
-                        <input type="text" class="input" ASP-FOR="CallSno" />
+                        <input type="text" class="input" ASP-FOR="VerStatus" />
                     </div>
                 </div>
                 <div class="row">
@@ -138,14 +138,56 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Risk Overall Result:</label>
-                        <input type="text" class="input" ASP-FOR="CaseNo" />
+                        <input type="text" class="input" ASP-FOR="RiskOverallResult" />
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Transaction Reversal Result: </label>
-                        <input type="text" class="input" ASP-FOR="CallDate" />
+                        <input type="text" class="input" ASP-FOR="TranReversalResult" />
                     </div>
+                </div>
+                <div class="savenext-btn">
+                      <button type="button" class="save-btn active Permission_Save" onclick="generatePdf()">Receipt Download</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/atomcheckout.js"></script>
+
+    <script type="text/javascript">
+
+     function generatePdf() {
+        var formData = $("#frmPaymentResponse").serialize();
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "OnlinePaymentGateway")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: formData,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                var fileName = "PaymentReceipt";                
+                if(true) {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    </script>
+}
+
