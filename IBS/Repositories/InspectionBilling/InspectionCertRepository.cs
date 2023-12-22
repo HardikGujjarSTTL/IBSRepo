@@ -563,7 +563,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
                     //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
-                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
+                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToString(GetDetails.C.OtherInspDt) : null;
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -855,7 +855,8 @@ namespace IBS.Repositories.InspectionBilling
                         LegalName = t06.LegalName,
                         Pincode = t06.PinCode,
                         City = t03.City,
-                        State = t92.StateCd + "-" + t92.StateName
+                        State = t92.StateCd + "-" + t92.StateName,
+                        StateID = Convert.ToString(t92.StateCd)
                     };
 
             dTResult.data = query;
@@ -877,7 +878,8 @@ namespace IBS.Repositories.InspectionBilling
                         LegalName = t12.LegalName,
                         Pincode = t12.PinCode,
                         City = t03.City,
-                        State = t92.StateCd + "-" + t92.StateName
+                        State = t92.StateCd + "-" + t92.StateName,
+                        StateID = Convert.ToString(t92.StateCd)
                     };
 
             dTResult.data = query;
