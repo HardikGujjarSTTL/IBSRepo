@@ -80,7 +80,6 @@ namespace IBS.Repositories.WebsitePages
                 Datetime = DateTime.Now
             };
 
-
             context.OnlinePayments.Add(OnlinePayment);
             context.SaveChanges();
 
@@ -93,9 +92,22 @@ namespace IBS.Repositories.WebsitePages
 
             if (onlinePayment != null)
             {
-                onlinePayment.TransactionNo = "";
-                onlinePayment.RrnNo = "";
-                onlinePayment.Status = "Transaction Successful";
+                onlinePayment.TransactionNo = model.BankTXNID;
+                onlinePayment.RrnNo = null;
+                onlinePayment.Status = model.PaymentStatus;
+                onlinePayment.CustEmail = model.Email;
+                onlinePayment.CustMobile = model.Mobile;
+                onlinePayment.MerId = model.MerID;
+                onlinePayment.MerTxnDate = Convert.ToDateTime(model.merchTxnDate);
+                onlinePayment.MerTxnId = model.MERTXNID;
+                onlinePayment.AtomTxnId = model.AtomTXNID;
+                onlinePayment.CustAccNo = model.custAccNo;
+                onlinePayment.TxnCompleteDate = Convert.ToDateTime(model.TranDate);
+                onlinePayment.BankTxnId = model.BankTXNID;
+                onlinePayment.BankName = model.BankName;
+                onlinePayment.SubChannel = model.SubChannel;
+                onlinePayment.Description = model.Description;
+                onlinePayment.StatusCd = model.StatusCode;
 
                 context.SaveChanges();
             }

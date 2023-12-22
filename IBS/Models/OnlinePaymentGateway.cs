@@ -35,33 +35,21 @@ namespace IBS.Models
         [Required]
         [Display(Name = "Charges Type")]
         public string ChargesType { get; set; }
-        public int? ORDER_INFO { get; set; }
-        public string Tok_id { get; set; }
-        public string DATETIME { get; set; }
-        public string MerchantID { get; set; }
-        public string OrderInfo { get; set; }
-        public string TransactionAmount { get; set; }
-        public string TranRespCode { get; set; }
-        public string TranRespCodeDesc { get; set; }
-        public string PaymentServerMsg { get; set; }
-        public string AcquirerRespCode { get; set; }
-        public string ShoppingTranNO { get; set; }
-        public string ReceiptNo { get; set; }
-        public string AuthorizationID { get; set; }
-        public string BatchNo { get; set; }
-        public string CardType { get; set; }
-        public string CSCResultCode { get; set; }
-        public string CSCResultDescrip { get; set; }
-        public string ECI { get; set; }
-        public string XID { get; set; }
-        public string Enrolled { get; set; }
-        public string Status { get; set; }
-        public string VerToken { get; set; }
-        public string VerType { get; set; }
-        public string VerSecurityLevel { get; set; }
-        public string VerStatus { get; set; }
-        public string RiskOverallResult { get; set; }
-        public string TranReversalResult { get; set; }
+        public string Product { get; set; }
+        public string MERTXNID { get; set; }
         public string LocalURL { get; set; }
+        public string BankTXNID { get; set; }
+        public string BankName { get; set; }
+        public string PaymentStatus { get; set; }
+        public string TranDate { get; set; }
+        public string Tok_id { get; set; }
+        public string MerID { get; set; }
+        public string merchTxnDate { get; set; }
+        public string AtomTXNID { get; set; }
+        public string custAccNo { get; set; }
+        public int BankID { get; set; }
+        public string SubChannel { get; set; }
+        public string Description { get; set; }
+        public string StatusCode { get; set; }
     }
 }

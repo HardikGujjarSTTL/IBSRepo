@@ -3,7 +3,22 @@
 @{
     Layout = "~/Views/Shared/_FrontendLayout.cshtml";
 }
+<style>
+    #loader {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
 
+</style>
 <div class="container">
     <div class="innerContent">
         <div class="list-inner">
@@ -20,145 +35,40 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">MerchTxnRef:</label>
-                        <input type="text" class="input" ASP-FOR="MER_TXN_REF"  />
+                        <label for="Reference">MMP TRANSACTION: :</label>
+                        <input type="text" class="input" ASP-FOR="MER_TXN_REF" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Merchant ID </label>
-                        <input type="text" class="input"  ASP-FOR="MerchantID"  />
+                        <label for="Reference">MERCHANT TRANSACTION ID: </label>
+                        <input type="text" class="input" ASP-FOR="MERTXNID" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Order Info. </label>
-                        <input type="text" class="input" ASP-FOR="OrderInfo"  />
+                        <label for="Reference">TRANSACTION AMOUNT:  </label>
+                        <input type="text" class="input" ASP-FOR="Charges" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Transaction Amount: </label>
-                        <input type="text" class="input" ASP-FOR="TransactionAmount"  />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info text-center">
-                            <strong>Fields above are the primary request values.</strong><br />
-                            <strong>Fields below are receipt data fields.</strong>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Transaction Response Code:</label>
-                        <input type="text" class="input" ASP-FOR="TranRespCode" />
+                        <label for="Reference">PRODUCT:  </label>
+                        <input type="text" class="input" ASP-FOR="Product" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Transaction Response Code Description: </label>
-                        <input type="text" class="input" ASP-FOR="TranRespCodeDesc"  />
+                        <label for="Reference">TRANSACTION DATE:  </label>
+                        <input type="text" class="input" ASP-FOR="TranDate" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Payment Server Message: </label>
-                        <input type="text" class="input" ASP-FOR="PaymentServerMsg" />
+                        <label for="Reference">BANK TRANSACTION ID:  </label>
+                        <input type="text" class="input" ASP-FOR="BankTXNID" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Acquirer Response Code: </label>
-                        <input type="text" class="input" ASP-FOR="AcquirerRespCode"  />
+                        <label for="Reference">PAYMENT STATUS:  </label>
+                        <input type="text" class="input" ASP-FOR="PaymentStatus" readonly />
                     </div>
                     <div class="col-md-4 mb-4">
-                        <label for="Reference">Shopping Transaction Number: </label>
-                        <input type="text" class="input" ASP-FOR="ShoppingTranNO"  />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Receipt Number: </label>
-                        <input type="text" class="input" ASP-FOR="ReceiptNo"  />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Authorization ID: </label>
-                        <input type="text" class="input" ASP-FOR="AuthorizationID"  />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Batch Number For This Transaction: </label>
-                        <input type="text" class="input" ASP-FOR="BatchNo"  />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Card Type: </label>
-                        <input type="text" class="input" ASP-FOR="CardType"  />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info text-center">
-                            <strong>Fields above are for a Standard Transaction.</strong><br />
-                            <strong>Fields below are additional fields for extra functionality.</strong>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="row my-0">
-                        <div class="col-md-12">
-                            <h3 class="heading3 mb-4">CSC Data Fields</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">CSC Result Code:</label>
-                        <input type="text" class="input" ASP-FOR="CSCResultCode" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">CSC Result Description: </label>
-                        <input type="text" class="input" ASP-FOR="CSCResultDescrip" />
-                    </div>
-                    <div class="row my-0">
-                        <div class="col-md-12">
-                            <h3 class="heading3 mb-4">3DS Response Fields</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS ECI: </label>
-                        <input type="text" class="input" ASP-FOR="ECI" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS XID: </label>
-                        <input type="text" class="input" ASP-FOR="XID" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS Enrolled: </label>
-                        <input type="text" class="input" ASP-FOR="Enrolled" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS Status: </label>
-                        <input type="text" class="input" ASP-FOR="Status" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS VerToken: </label>
-                        <input type="text" class="input" ASP-FOR="VerToken" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS VerType: </label>
-                        <input type="text" class="input" ASP-FOR="VerType" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS VerSecurityLevel: </label>
-                        <input type="text" class="input" ASP-FOR="VerSecurityLevel" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">3DS VerStatus: </label>
-                        <input type="text" class="input" ASP-FOR="VerStatus" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="row my-0">
-                        <div class="col-md-12">
-                            <h3 class="heading3 mb-4">Risk Assessment Result Fields</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Risk Overall Result:</label>
-                        <input type="text" class="input" ASP-FOR="RiskOverallResult" />
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="Reference">Transaction Reversal Result: </label>
-                        <input type="text" class="input" ASP-FOR="TranReversalResult" />
+                        <label for="Reference">BANK NAME:  </label>
+                        <input type="text" class="input" ASP-FOR="BankName" readonly />
                     </div>
                 </div>
                 <div class="savenext-btn">
-                      <button type="button" class="save-btn active Permission_Save" onclick="generatePdf()">Receipt Download</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="generatePdf()">Receipt Download</button>
                 </div>
             </form>
         </div>
@@ -171,35 +81,43 @@
     <script src="~/js/atomcheckout.js"></script>
 
     <script type="text/javascript">
+        function showLoader() {
+            $("#loader").show();
+        }
 
-     function generatePdf() {
-        var formData = $("#frmPaymentResponse").serialize();
-        $.ajax({
-            url: "@Url.Action("GeneratePDF", "OnlinePaymentGateway")",
-            type: "POST",
-            contentType: "application/x-www-form-urlencoded",
-            data: formData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (result) {
-                var url = window.URL.createObjectURL(result);
-                var fileName = "PaymentReceipt";                
-                if(true) {
-                    var a = document.createElement('a');
-                    a.href = url;
-                    a.download = getExportFileName(fileName) + '.pdf';
-                    document.body.append(a);
-                    a.click();
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
+        function hideLoader() {
+            $("#loader").hide();
+        }
+        function generatePdf() {
+            var formData = $("#frmPaymentResponse").serialize();
+            showLoader();
+            $.ajax({
+                url: "@Url.Action("GeneratePDF", "OnlinePaymentGateway")",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: formData,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (result) {
+                    var url = window.URL.createObjectURL(result);
+                    var fileName = "PaymentReceipt";
+                    if (true) {
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = getExportFileName(fileName) + '.pdf';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                    hideLoader();
+                },
+                error: function (error) {
+                    console.error(error);
                 }
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
+            });
+        }
     </script>
 }
 

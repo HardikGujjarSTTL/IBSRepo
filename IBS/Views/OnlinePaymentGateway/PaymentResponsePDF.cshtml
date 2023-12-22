@@ -17,156 +17,36 @@
         <table class="borderTable" cellpadding="0" cellspacing="0" style="font-size:12px;">
             <tbody>
                 <tr>
-                    <td style="width:50%;"><strong>MerchTxnRef</strong></td>
+                    <td style="width:50%;"><strong>MMP TRANSACTION: </strong></td>
                     <td style="width:50%;">@Model.MER_TXN_REF</td>
                 </tr>
                 <tr>
-                    <td><strong>Merchant ID</strong></td>
-                    <td>@Model.MerchantID</td>
+                    <td><strong>MERCHANT TRANSACTION ID: </strong></td>
+                    <td>@Model.MERTXNID</td>
                 </tr>
                 <tr>
-                    <td><strong>Order Info.</strong></td>
-                    <td>@Model.OrderInfo</td>
+                    <td><strong>TRANSACTION AMOUNT: </strong></td>
+                    <td>@Model.Charges</td>
                 </tr>
                 <tr>
-                    <td><strong>Transaction Amount</strong></td>
-                    <td>@Model.TransactionAmount</td>
+                    <td><strong>PRODUCT: </strong></td>
+                    <td>@Model.Product</td>
                 </tr>
                 <tr>
-                    <td><strong>Transaction Response Code</strong></td>
-                    <td>@Model.TranRespCode</td>
+                    <td><strong>TRANSACTION DATE: </strong></td>
+                    <td>@Model.TranDate</td>
                 </tr>
                 <tr>
-                    <td><strong>Transaction Response Code Description</strong></td>
-                    <td>@Model.TranRespCodeDesc</td>
+                    <td><strong>BANK TRANSACTION ID: </strong></td>
+                    <td>@Model.BankTXNID</td>
                 </tr>
                 <tr>
-                    <td><strong>Payment Server Message</strong></td>
-                    <td>@Model.PaymentServerMsg</td>
+                    <td><strong>PAYMENT STATUS: </strong></td>
+                    <td>@Model.PaymentStatus</td>
                 </tr>
                 <tr>
-                    <td><strong>Acquirer Response Code</strong></td>
-                    <td>@Model.AcquirerRespCode</td>
-                </tr>
-                <tr>
-                    <td><strong>Shopping Transaction Number</strong></td>
-                    <td>@Model.ShoppingTranNO</td>
-                </tr>
-                <tr>
-                    <td><strong>Receipt Number</strong></td>
-                    <td>@Model.ReceiptNo</td>
-                </tr>
-                <tr>
-                    <td><strong>Authorization ID</strong></td>
-                    <td>@Model.AuthorizationID</td>
-                </tr>
-                <tr>
-                    <td><strong>Batch Number For This Transaction</strong></td>
-                    <td>@Model.BatchNo</td>
-                </tr>
-                <tr>
-                    <td><strong>Card Type</strong></td>
-                    <td>@Model.CardType</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12">
-            <h3 class="heading3 mb-4" style="color:#000">CSC Data Fields</h3>
-        </div>
-    </div>
-    <div class="tableOuter">
-        <table class="borderTable" cellpadding="0" cellspacing="0" style="font-size:12px;">
-            <tbody>
-                <tr>
-                    <td style="width:50%;"><strong>CSC Result Code</strong></td>
-                    <td style="width:50%;">@Model.CSCResultCode</td>
-                </tr>
-                <tr>
-                    <td><strong>CSC Result Description</strong></td>
-                    <td>@Model.CSCResultDescrip</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12">
-            <h3 class="heading3 mb-4" style="color:#000">3DS Response Fields</h3>
-        </div>
-    </div>
-    <div class="tableOuter">
-        <table class="borderTable" cellpadding="0" cellspacing="0" style="font-size:12px;">
-            <tbody>
-                <tr>
-                    <td style="width:50%;"><strong>CSC Result Code</strong></td>
-                    <td style="width:50%;">@Model.CSCResultCode</td>
-                </tr>
-                <tr>
-                    <td><strong>CSC Result Description</strong></td>
-                    <td>@Model.CSCResultDescrip</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12">
-            <h3 class="heading3 mb-4" style="color:#000">3DS Response Fields</h3>
-        </div>
-    </div>
-    <div class="tableOuter">
-        <table class="borderTable" cellpadding="0" cellspacing="0" style="font-size:12px;">
-            <tbody>
-                <tr>
-                    <td style="width:50%;"><strong>3DS ECI</strong></td>
-                    <td style="width:50%;">@Model.ECI</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS XID</strong></td>
-                    <td>@Model.XID</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS Enrolled</strong></td>
-                    <td>@Model.Enrolled</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS Status</strong></td>
-                    <td>@Model.Status</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS VerToken</strong></td>
-                    <td>@Model.VerToken</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS VerType</strong></td>
-                    <td>@Model.VerType</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS VerSecurityLevel</strong></td>
-                    <td>@Model.VerSecurityLevel</td>
-                </tr>
-                <tr>
-                    <td><strong>3DS VerStatus</strong></td>
-                    <td>@Model.VerStatus</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12">
-            <h3 class="heading3 mb-4" style="color:#000">Risk Assessment Result Fields</h3>
-        </div>
-    </div>
-    <div class="tableOuter">
-        <table class="borderTable" cellpadding="0" cellspacing="0" style="font-size:12px;">
-            <tbody>
-                <tr>
-                    <td style="width:50%;"><strong>Risk Overall Result</strong></td>
-                    <td style="width:50%;">@Model.RiskOverallResult</td>
-                </tr>
-                <tr>
-                    <td><strong>Transaction Reversal Result</strong></td>
-                    <td>@Model.TranReversalResult</td>
+                    <td><strong>BANK NAME: </strong></td>
+                    <td>@Model.BankName</td>
                 </tr>
             </tbody>
         </table>
