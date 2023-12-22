@@ -34,7 +34,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_TODAYDATE", OracleDbType.Varchar2, currDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETTODAYINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_TODAY_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -53,7 +53,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_TOMORROWDATE", OracleDbType.Varchar2, tomoDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETTOMORROWINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_TOMORROW_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -72,7 +72,7 @@ namespace IBSAPI.Repositories
             par[1] = new OracleParameter("P_DATE", OracleDbType.Varchar2, CurrentDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETPENDINGINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_PENDING_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -185,7 +185,7 @@ namespace IBSAPI.Repositories
             par[2] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
             par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETDATEWISERECENTINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_DATE_WISE_RECENT_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -202,7 +202,7 @@ namespace IBSAPI.Repositories
             par[0] = new OracleParameter("P_IECD", OracleDbType.Int32, IeCd, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GETCOMPLETEDINSPECTION_API", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_IE_COMPLETED_INSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
@@ -233,16 +233,38 @@ namespace IBSAPI.Repositories
             }
             return pendingInspList;
         }
+
+        public List<VendorPedingInspectionModel> Get_Pending_PO_For_Call(int Vend_Cd, DateTime FromDate, DateTime ToDate)
+        {
+            List<VendorPedingInspectionModel> pendingInspList = new();
+            var FrmDT = FromDate.ToString("dd/MM/yyyy");
+            var ToDT = ToDate.ToString("dd/MM/yyyy");
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("P_VEND_CD", OracleDbType.Int32, Vend_Cd, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FrmDT, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDT, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_PENDING_PO_FOR_CALL_API", par);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                pendingInspList = JsonConvert.DeserializeObject<List<VendorPedingInspectionModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+            }
+            return pendingInspList;
+        }
         #endregion
 
         #region CM Methods
-        public List<RecentInspectionModel> Get_CM_RecentInspection(int CO_CD, DateTime CurrDate)
+        public List<RecentInspectionModel> Get_CM_RecentInspection(int CO_CD, int IE_CD, DateTime CurrDate)
         {
             List<RecentInspectionModel> recentInspList = new();
-            OracleParameter[] par = new OracleParameter[3];
+            OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("P_VISITDATE", OracleDbType.Varchar2, CurrDate.ToString("dd/MM/yyyy"), ParameterDirection.Input);
             par[1] = new OracleParameter("P_CO_CD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("P_IE_CD", OracleDbType.Int32, IE_CD, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_CM_RECENTINSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)
@@ -277,19 +299,20 @@ namespace IBSAPI.Repositories
             return pendingInspList;
         }
 
-        public List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string Region, DateTime FromDate, DateTime ToDate)
+        public List<PendingInspectionModel> Get_Client_Region_Wise_PendingInspection(string Rly_CD, string Rly_NonType, string PO_NO, string Region, DateTime FromDate, DateTime ToDate)
         {
             List<PendingInspectionModel> pendingInspList = new();
             var FrmDT = FromDate.ToString("dd/MM/yyyy");
             var ToDT = ToDate.ToString("dd/MM/yyyy");
             Region = string.IsNullOrEmpty(Region) ? null : Region;
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("P_RLY_CD", OracleDbType.Varchar2, Rly_CD, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RLY_NONTYPE", OracleDbType.Varchar2, Rly_NonType, ParameterDirection.Input);
             par[2] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FrmDT, ParameterDirection.Input);
             par[3] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDT, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_PO_NO", OracleDbType.Varchar2, PO_NO, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_CLIENT_REGION_WISE_PENDINGINSPECTION_API", par, 1);
             if (ds != null && ds.Tables.Count > 0)

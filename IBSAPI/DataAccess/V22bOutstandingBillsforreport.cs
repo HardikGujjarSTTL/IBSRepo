@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBSAPI.DataAccess;
 
-public partial class V22bOutstandingBill
+public partial class V22bOutstandingBillsforreport
 {
     public string? RegionCode { get; set; }
 
