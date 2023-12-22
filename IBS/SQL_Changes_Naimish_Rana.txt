@@ -1575,45 +1575,18 @@ create or replace PROCEDURE GET_VENDOR_PENDING_PO_FOR_CALL_API
 BEGIN
     -- Get last three months Pending data to current date
     OPEN P_RESULT_CURSOR FOR
-    SELECT  ROW_NUMBER() OVER(ORDER BY t17.Case_No) ROWNO,
-            t17.Case_No,
+    SELECT  t17.Case_No,
             t17.Call_Recv_Dt,
             t17.Call_Sno,
-            NVL(sum(t18.qty_to_insp),0) Qty,
-            t13.PO_NO,
-            t13.PO_DT,
-            t13.RLY_NONRLY,
-            t13.RLY_CD,
-            NVL((
-                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
-                union
-                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and ROWNUM <= 1
-            ),'Other')  Client_Name,
-            t09.IE_NAME,
-            t05.VEND_NAME,
-            t21.CALL_STATUS_DESC Status
-    FROM T13_PO_MASTER t13
-    LEFT JOIN T17_CALL_REGISTER t17 on t13.Case_No = t17.Case_No
-    LEFT JOIN T18_CALL_DETAILS t18 on t18.case_no = t17.Case_No and  t18.Call_Recv_Dt = t17.Call_Recv_Dt and t18.Call_Sno = t17.Call_Sno 
-    LEFT JOIN T09_IE t09 on t17.IE_CD = t09.IE_CD
-    LEFT JOIN T05_VENDOR t05 on t17.mfg_cd = t05.VEND_CD
-    LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
-    WHERE t17.mfg_cd = P_VEND_CD--19148 --84086
-    AND t17.Call_Status NOT IN ('M', 'U', 'S', 'W')
-    AND TO_DATE(t17.CALL_RECV_DT) BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')    
-    GROUP BY t17.Case_No,
-             t17.Call_Recv_Dt,
-             t17.Call_Sno,
-             t13.PO_NO,
-             t13.PO_DT,
-             t13.RLY_NONRLY,
-             t13.RLY_CD,
-             t09.IE_NAME,
-             t05.VEND_NAME,
-             t21.CALL_STATUS_DESC
-    ORDER BY t17.Case_No,
-             t17.Call_Recv_Dt,
-             t17.Call_Sno;
+            t17.PO_NO,
+            t17.PO_DT,
+            t17.IE_SNAME IE_NAME,
+            t17.VENDOR VEND_NAME,
+            t17.CALL_STATUS Status
+    FROM T17_CALL_REGISTER_SEARCH_VIEW t17
+    WHERE VEND_CD = P_VEND_CD
+    AND t17.PO_DT BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')
+    ORDER BY t17.PO_DT DESC;
 END GET_VENDOR_PENDING_PO_FOR_CALL_API;
 
 create or replace PROCEDURE GET_CLIENT_PENDINGINSPECTION_API 

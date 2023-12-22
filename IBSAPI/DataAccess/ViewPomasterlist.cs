@@ -11,7 +11,7 @@ public partial class ViewPomasterlist
 
     public string? PoNo { get; set; }
 
-    public DateTime? PoDt { get; set; }
+    public string? PoDt { get; set; }
 
     public string? RlyCd { get; set; }
 
@@ -29,7 +29,5 @@ public partial class ViewPomasterlist
 
     public string? MainrlyCd { get; set; }
 
-    public string? RlyCds { get; set; }
-
-    public string? RegionCode { get; set; }
+    public string? Rlycds { get; set; }
 }
