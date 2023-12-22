@@ -2,10 +2,13 @@
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using IBS.Helper;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -13,10 +16,12 @@ namespace IBS.Controllers.WebsitePages
     {
         #region Variables
         private readonly IOnlinePaymentGatewayRepository onlinePaymentGatewayRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository)
+        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository, IWebHostEnvironment env)
         {
             onlinePaymentGatewayRepository = _onlinePaymentGatewayRepository;
+            this.env = env;
         }
         public IActionResult Index()
         {
@@ -53,8 +58,8 @@ namespace IBS.Controllers.WebsitePages
             hd.api = "AUTH";
             hd.platform = "FLASH";
 
-            md.merchId = "8952";
-            md.userId = "317157";
+            md.merchId = "317159";
+            md.userId = "317159";
             md.password = "Test@123";
             //md.merchTxnDate = "2023-12-12 20:46:00";
             md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -91,7 +96,7 @@ namespace IBS.Controllers.WebsitePages
             string hashAlgorithm = "SHA1";
             string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
 
-            string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=8952&encData=" + Encryptval;
+            string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
@@ -209,9 +214,45 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse()
+        public IActionResult PaymentResponse(OnlinePaymentGateway model)
         {
-            return View();
+            //model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            GlobalDeclaration.OnlinePaymentResponse = model;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(OnlinePaymentGateway model)
+        {
+            string htmlContent = string.Empty;
+            //OnlinePaymentGateway model = GlobalDeclaration.OnlinePaymentResponse;
+            htmlContent = await this.RenderViewToStringAsync("/Views/OnlinePaymentGateway/PaymentResponsePDF.cshtml", model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }
