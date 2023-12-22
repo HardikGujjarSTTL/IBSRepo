@@ -62,5 +62,6 @@ namespace IBS.Models
         public string VerStatus { get; set; }
         public string RiskOverallResult { get; set; }
         public string TranReversalResult { get; set; }
+        public string LocalURL { get; set; }
     }
 }

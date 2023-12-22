@@ -131,12 +131,13 @@
         function BtnPayNow() {
 
             if ($("#frmPaymentGateway").valid()) {
-               // var urlpath = "@Url.Action("PaymentIntegration", "OnlinePaymentGateway")";
+                // var urlpath = "@Url.Action("PaymentIntegration", "OnlinePaymentGateway")";
                 var formData = $("#frmPaymentGateway").serialize();
                 var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")" + "?" + formData;
-
                 $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
+                    debugger
                     var rb = response.response.Tok_id;
+                    returnUrl = response.response.LocalURL + returnUrl;
                     const options = {
                         "atomTokenId": rb,
                         "merchId": "317159",

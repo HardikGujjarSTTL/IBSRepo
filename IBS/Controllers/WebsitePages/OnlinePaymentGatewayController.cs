@@ -136,8 +136,11 @@ namespace IBS.Controllers.WebsitePages
             string txnMessage = objectres.responseDetails.txnMessage;
 
             string Tok_id = objectres.atomTokenId;
+            var url = Request.Scheme + Request.Host.Value;
+            model.LocalURL = url;
 
-            model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
+
+            //model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
             model.Tok_id = Tok_id;
             return Json(new { status = false, response = model });
         }
@@ -214,9 +217,10 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse(OnlinePaymentGateway model)
+        public IActionResult PaymentResponse(string VEND_CD, string CaseNo, string CallDate)
         {
             //model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            OnlinePaymentGateway model = new OnlinePaymentGateway();
             GlobalDeclaration.OnlinePaymentResponse = model;
             return View(model);
         }
