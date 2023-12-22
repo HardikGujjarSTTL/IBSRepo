@@ -59,23 +59,46 @@
             <tbody>
                 @{
                     int i = 1;
+                   
                 }
                 @if (Model != null && Model.Count > 0)
                 {
+                    string wPO_NO = "";
                     foreach (var item in Model)
                     {
-                        <tr>
-                            <td>@i</td>
-                            <td>@item.CASE_NO</td>
-                            <td>@item.PO_NO</td>
-                            <td>@item.PO_DT</td>
-                            <td>@item.CLIENT</td>
-                            <td>@item.VENDOR</td>
-                            <td>@item.CONSIGNEE</td>
-                            <td>@item.PO_VALUE</td>
-                            <td>@item.ITEM_DESC</td>
-                        </tr>
-                        i = i + 1;
+                        
+                        if (wPO_NO == item.PO_NO)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@item.ITEM_DESC</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td>@item.CASE_NO</td>
+                                <td>@item.PO_NO</td>
+                                <td>@item.PO_DT</td>
+                                <td>@item.CLIENT</td>
+                                <td>@item.VENDOR</td>
+                                <td>@item.CONSIGNEE</td>
+                                <td>@item.PO_VALUE</td>
+                                <td>@item.ITEM_DESC</td>
+                            </tr>
+                            wPO_NO = item.PO_NO;
+                            i = i + 1;
+                        }
+                       
+                        
                     }
                 }
             </tbody>
