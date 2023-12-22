@@ -32,4 +32,8 @@ public partial class T17CallRegisterSearchView
     public string? OnlineCallStatus { get; set; }
 
     public string? OfflineCallStatus { get; set; }
+
+    public string? ClientName { get; set; }
+
+    public string? IeName { get; set; }
 }

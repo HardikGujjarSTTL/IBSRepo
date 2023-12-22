@@ -625,5 +625,18 @@ namespace IBS.Controllers.InspectionBilling
             }
             return View(model);
         }
+
+        public IActionResult GetTaxTypeList(string StateCode)
+        {
+            if(StateCode == "7")
+            {
+                return Json(Common.GetTaxType_GST_07());
+            }
+            else
+            {
+                return Json(Common.GetTaxType_GST_O());
+            }
+            
+        }
     }
 }

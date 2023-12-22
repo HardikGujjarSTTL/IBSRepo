@@ -167,9 +167,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime LabTstRectDt { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
-        [DataType(DataType.Date)]
-        public DateTime? OtherInspDt { get; set; }
+        public string OtherInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -202,6 +200,8 @@ namespace IBS.Models
         public string City { get; set; }
 
         public string State { get; set; }
+
+        public string StateID { get; set; }
 
         public string SelectRadio { get; set; }
 
