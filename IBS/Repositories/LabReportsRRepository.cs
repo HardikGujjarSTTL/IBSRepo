@@ -366,28 +366,51 @@ namespace IBS.Repositories
             //    }
             //    model.lstLabReport = lstlab;
             //}
+            Decimal SumAMT = 0, Sumamount = 0, Sumsgst = 0, Sumcgst = 0, Sumigst = 0, SumGST = 0;
             LabReportsModel LabReportsModel = new();
             if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
             {
 
-                DataRow row = ds.Tables[1].Rows[0];
-                LabReportsModel = new LabReportsModel
+                //DataRow sum = ds.Tables[0].Rows[0];
+
+                foreach (DataRow sum in ds.Tables[0].Rows)
                 {
-                    SumAMT = Convert.ToString(row["SumAMT"]),
-                    Sumamount = Convert.ToString(row["Sumamount"]),
-                    Sumsgst = Convert.ToString(row["Sumsgst"]),
-                    Sumcgst = Convert.ToString(row["Sumcgst"]),
-                    Sumigst = Convert.ToString(row["Sumigst"]),
-                    SumGST = Convert.ToString(row["SumGST"])
-                };
+                    if (sum["INC_TYPE"].ToString() == "N")
+                    {
+                        SumAMT += Convert.ToDecimal(sum["Total_AMT"]);
+                        Sumamount += Convert.ToDecimal(sum["INV_amount"]);
+                        Sumsgst += Convert.ToDecimal(sum["INV_sgst"]);
+                        Sumcgst += Convert.ToDecimal(sum["INV_cgst"]);
+                        Sumigst += Convert.ToDecimal(sum["INV_igst"]);
+                        SumGST += Convert.ToDecimal(sum["Total_GST"]);
+                    }
+                    else if (sum["INC_TYPE"].ToString() == "C")
+                    {
+                        SumAMT -= Convert.ToDecimal(sum["Total_AMT"]);
+                        Sumamount -= Convert.ToDecimal(sum["INV_amount"]);
+                        Sumsgst -= Convert.ToDecimal(sum["INV_sgst"]);
+                        Sumcgst -= Convert.ToDecimal(sum["INV_cgst"]);
+                        Sumigst -= Convert.ToDecimal(sum["INV_igst"]);
+                        SumGST -= Convert.ToDecimal(sum["Total_GST"]);
+                    }
+                }
+                //LabReportsModel = new LabReportsModel
+                //{
+                //    SumAMT = Convert.ToString(row["SumAMT"]),
+                //    Sumamount = Convert.ToString(row["Sumamount"]),
+                //    Sumsgst = Convert.ToString(row["Sumsgst"]),
+                //    Sumcgst = Convert.ToString(row["Sumcgst"]),
+                //    Sumigst = Convert.ToString(row["Sumigst"]),
+                //    SumGST = Convert.ToString(row["SumGST"])
+                //};
 
             }
-            model.SumAMT = LabReportsModel.SumAMT;
-            model.Sumamount = LabReportsModel.Sumamount;
-            model.Sumsgst = LabReportsModel.Sumsgst;
-            model.Sumcgst = LabReportsModel.Sumcgst;
-            model.Sumigst = LabReportsModel.Sumigst;
-            model.SumGST = LabReportsModel.SumGST;
+            model.SumAMT = SumAMT.ToString();
+            model.Sumamount = Sumamount.ToString();
+            model.Sumsgst = Sumsgst.ToString();
+            model.Sumcgst = Sumcgst.ToString();
+            model.Sumigst = Sumigst.ToString();
+            model.SumGST = SumGST.ToString();
             return model;
         }
         string dateconcate20(string dt)
