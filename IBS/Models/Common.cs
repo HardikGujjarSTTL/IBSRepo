@@ -3589,6 +3589,14 @@ namespace IBS.Models
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
             single = new SelectListItem();
+            single.Text = "2610/- (For PO Value less than 5 lakhs)";
+            single.Value = "2610";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "5450/- (Man day for RINL)";
+            single.Value = "5450";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
             single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
             single.Value = "0.522";
             textValueDropDownDTO.Add(single);
@@ -4263,6 +4271,16 @@ namespace IBS.Models
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST)).ToList();
         }
+
+        public static IEnumerable<TextValueDropDownDTO> GetTaxType_GST_07()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST_07)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetTaxType_GST_O()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST_O)).ToList();
+        }
+
 
         public static string[] GetVenderDetails(int VendCd)
         {

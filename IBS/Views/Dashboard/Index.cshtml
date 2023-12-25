@@ -207,7 +207,7 @@
                             <div class="dash-count">
                                 <div class="total-amount">@Model.NotRecievedCount</div>
                                 <div class="total-inner">
-                                    Issued IC Not received<br /> in office
+                                    Issued IC Not<br /> received in office
                                 </div>
                             </div>
                         </div>
@@ -222,8 +222,7 @@
                             <div class="dash-count">
                                 <div class="total-amount">@Model.ICISSUERECEIVEOFFICENOTBILL</div>
                                 <div class="total-inner">
-                                    Issued IC and
-                                    received in office Not billed<br /> IC
+                                    Issued IC and received in office Not billed IC
                                 </div>
                             </div>
                         </div>
@@ -852,7 +851,15 @@
                         enabled: true,
                         distance: -50,
                         //color: '#fff',
-                        format: '<b>{point.y}</b>'
+                        //format: '<b>{point.y}</b>'
+                        formatter: function () {
+                            if (this.y > 0) {
+                                return this.y
+                            }
+                            else{
+                                return ''
+                            }
+                        }
                     }
                 },
             },

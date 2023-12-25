@@ -2,10 +2,15 @@
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using IBS.Helper;
+using System.Collections.Specialized;
+using System.Globalization;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -13,10 +18,12 @@ namespace IBS.Controllers.WebsitePages
     {
         #region Variables
         private readonly IOnlinePaymentGatewayRepository onlinePaymentGatewayRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository)
+        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository, IWebHostEnvironment env)
         {
             onlinePaymentGatewayRepository = _onlinePaymentGatewayRepository;
+            this.env = env;
         }
         public IActionResult Index()
         {
@@ -48,13 +55,12 @@ namespace IBS.Controllers.WebsitePages
             PayrequestModel.Extras ex = new PayrequestModel.Extras();
 
             PayrequestModel.Payrequest pr = new PayrequestModel.Payrequest();
-
             hd.version = "OTSv1.1";
             hd.api = "AUTH";
             hd.platform = "FLASH";
 
-            md.merchId = "8952";
-            md.userId = "317157";
+            md.merchId = "317159";
+            md.userId = "317159";
             md.password = "Test@123";
             //md.merchTxnDate = "2023-12-12 20:46:00";
             md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -91,7 +97,7 @@ namespace IBS.Controllers.WebsitePages
             string hashAlgorithm = "SHA1";
             string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
 
-            string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=8952&encData=" + Encryptval;
+            string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
@@ -131,6 +137,8 @@ namespace IBS.Controllers.WebsitePages
             string txnMessage = objectres.responseDetails.txnMessage;
 
             string Tok_id = objectres.atomTokenId;
+            var url = Request.Scheme + "://" + Request.Host.Value;
+            model.LocalURL = url;
 
             model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
             model.Tok_id = Tok_id;
@@ -209,9 +217,79 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse()
+        public IActionResult PaymentResponse(string mef_ref)
         {
-            return View();
+            OnlinePaymentGateway model = new();
+            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            int iterations = 65536;
+            int keysize = 256;
+            string hashAlgorithm = "SHA1";
+            string encdata = Request.Form["encdata"];
+            string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
+            PayresponseModel.Rootobject root = new PayresponseModel.Rootobject();
+            PayresponseModel.Parent objectres = new PayresponseModel.Parent();
+
+            objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
+
+            model.MER_TXN_REF = mef_ref;
+            model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
+            model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
+            model.Product = objectres.payInstrument.payDetails.product;
+            DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
+            model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+            model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+            model.BankName = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+            model.PaymentStatus = objectres.payInstrument.responseDetails.message;
+            model.Email = objectres.payInstrument.custDetails.custEmail;
+            model.Mobile = objectres.payInstrument.custDetails.custMobile;
+            model.MerID= objectres.payInstrument.merchDetails.merchId;
+            model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
+            model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
+            model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
+            model.BankID = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankId;
+            model.SubChannel = objectres.payInstrument.payModeSpecificData.subChannel[0];
+            model.Description = objectres.payInstrument.responseDetails.description;
+            model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
+
+            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            GlobalDeclaration.OnlinePaymentResponse = model;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(OnlinePaymentGateway model)
+        {
+            string htmlContent = string.Empty;
+            //OnlinePaymentGateway model = GlobalDeclaration.OnlinePaymentResponse;
+            htmlContent = await this.RenderViewToStringAsync("/Views/OnlinePaymentGateway/PaymentResponsePDF.cshtml", model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }

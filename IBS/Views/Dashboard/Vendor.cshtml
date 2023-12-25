@@ -359,7 +359,15 @@
                         enabled: true,
                         distance: -50,
                         //color: '#fff',
-                        format: '<b>{point.y}</b>'
+                        //format: '<b>{point.y}</b>'
+                        formatter: function () {
+                            if (this.y > 0) {
+                                return this.y
+                            }
+                            else {
+                                return ''
+                            }
+                        }
                     }
                 },
             },

@@ -28,11 +28,28 @@ namespace IBS.Models
         public string? Location { get; set; }
         public string? City { get; set; }
         public int? VEND_CD { get; set; }
+        [Required]
+        [Display(Name = "Charges")]
         public decimal? Charges { get; set; }
         public string MER_TXN_REF { get; set; }
+        [Required]
+        [Display(Name = "Charges Type")]
         public string ChargesType { get; set; }
-        public int? ORDER_INFO { get; set; }
+        public string Product { get; set; }
+        public string MERTXNID { get; set; }
+        public string LocalURL { get; set; }
+        public string BankTXNID { get; set; }
+        public string BankName { get; set; }
+        public string PaymentStatus { get; set; }
+        public string TranDate { get; set; }
         public string Tok_id { get; set; }
-        public string DATETIME { get; set; }
+        public string MerID { get; set; }
+        public string merchTxnDate { get; set; }
+        public string AtomTXNID { get; set; }
+        public string custAccNo { get; set; }
+        public int BankID { get; set; }
+        public string SubChannel { get; set; }
+        public string Description { get; set; }
+        public string StatusCode { get; set; }
     }
 }

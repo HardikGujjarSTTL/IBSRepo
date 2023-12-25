@@ -335,7 +335,7 @@ $(document).ready( function(){
 	});
 
 
-	$('a').not(".litebox").filter(function () {
+	$('a').not(".litebox, .galleryBox a").filter(function () {
 		return this.hostname && this.hostname !== location.hostname;
 	}).click(function (e) {
 		e.preventDefault();

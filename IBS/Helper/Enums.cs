@@ -573,6 +573,26 @@ namespace IBS.Helper
             Z,
         }
 
+        public enum TaxType_GST_07
+        {
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
+            [Description("NO GST")]
+            X,
+        }
+
+        public enum TaxType_GST_O
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("NO GST")]
+            X,
+        }
+
         public enum Criteria
         {
             [Description("PO Date")]
@@ -890,5 +910,6 @@ namespace IBS.Helper
 
         public static IEWorkPlanModel IEWorkPlan { get; set; }
         public static RecieptVoucherModel BankStatement { get; set; }
+        public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
     }
 }

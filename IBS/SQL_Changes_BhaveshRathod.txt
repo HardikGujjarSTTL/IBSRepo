@@ -5765,3 +5765,21 @@ END;
 /
 
 ALTER TABLE USER_MASTER MODIFY CREATEDBY VARCHAR2(50 BYTE);
+
+
+ CREATE OR REPLACE FORCE EDITIONABLE VIEW "T17_CALL_REGISTER_SEARCH_VIEW" ("VEND_CD", "CASE_NO", "CALL_RECV_DT", "CALL_INSTALL_NO", "CALL_SNO", "CALL_STATUS", "CALL_LETTER_NO", "REMARKS", "PO_NO", "PO_DT", "IE_SNAME", "VENDOR", "ONLINE_CALL_STATUS", "OFFLINE_CALL_STATUS","Client_Name") AS 
+  select P.VEND_CD,P.CASE_NO,C.CALL_RECV_DT CALL_RECV_DT,
+C.CALL_INSTALL_NO,C.CALL_SNO,
+decode(C.CALL_STATUS,'M','Pending','A','Accepted','R','Rejection','C','Cancelled','U','Under Lab Testing','S','Still Under Inspection','G','Stage Inspection')
+||decode(C.CALL_CANCEL_STATUS,'N',' (Non Chargeable)','C',' (Chargeable)','')CALL_STATUS,C.CALL_LETTER_NO,P.REMARKS,
+P.PO_NO,
+P.PO_DT PO_DT,I.IE_SNAME,(V.VEND_NAME||'('||NVL2(T.LOCATION,T.LOCATION||' : '||T.CITY,T.CITY)||')')VENDOR,
+V.ONLINE_CALL_STATUS,V.OFFLINE_CALL_STATUS,
+NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = P.RLY_CD and P.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = P.RLY_CD and P.RLY_NONRLY <> 'R' and ROWNUM <= 1
+            ),'Other')  Client_Name
+from T17_CALL_REGISTER C, T13_PO_MASTER P,T09_IE I, T05_VENDOR V,T03_CITY T 
+where P.CASE_NO=C.CASE_NO(+) and C.IE_CD=I.IE_CD(+) and P.VEND_CD=V.VEND_CD 
+and V.VEND_CITY_CD=T.CITY_CD;

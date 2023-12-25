@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
@@ -65,7 +66,7 @@ namespace IBS.Repositories.WebsitePages
             string merNo = ds.Tables[0].Rows[0]["MERNO"].ToString();
 
             string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5,'0');
-
+            model.MER_TXN_REF = mer_ref;
             var OnlinePayment = new OnlinePayment
             {
                 MerTxnRef = mer_ref,
@@ -79,10 +80,37 @@ namespace IBS.Repositories.WebsitePages
                 Datetime = DateTime.Now
             };
 
-
             context.OnlinePayments.Add(OnlinePayment);
             context.SaveChanges();
 
+            return model;
+        }
+
+        public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model)
+        {
+            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == model.MER_TXN_REF.Trim());
+
+            if (onlinePayment != null)
+            {
+                onlinePayment.TransactionNo = model.BankTXNID;
+                onlinePayment.RrnNo = null;
+                onlinePayment.Status = model.PaymentStatus;
+                onlinePayment.CustEmail = model.Email;
+                onlinePayment.CustMobile = model.Mobile;
+                onlinePayment.MerId = model.MerID;
+                onlinePayment.MerTxnDate = Convert.ToDateTime(model.merchTxnDate);
+                onlinePayment.MerTxnId = model.MERTXNID;
+                onlinePayment.AtomTxnId = model.AtomTXNID;
+                onlinePayment.CustAccNo = model.custAccNo;
+                onlinePayment.TxnCompleteDate = Convert.ToDateTime(model.TranDate);
+                onlinePayment.BankTxnId = model.BankTXNID;
+                onlinePayment.BankName = model.BankName;
+                onlinePayment.SubChannel = model.SubChannel;
+                onlinePayment.Description = model.Description;
+                onlinePayment.StatusCd = model.StatusCode;
+
+                context.SaveChanges();
+            }
             return model;
         }
     }

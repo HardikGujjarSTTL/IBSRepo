@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IBSAPI.DataAccess;
 
-public partial class Userrole
+public partial class Userrolestemp
 {
     public int Id { get; set; }
 
@@ -22,6 +22,4 @@ public partial class Userrole
     public byte? Isdeleted { get; set; }
 
     public string? UserId { get; set; }
-
-    public long? UserMasterId { get; set; }
 }

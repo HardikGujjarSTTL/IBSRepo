@@ -37,7 +37,7 @@ public partial class IcIntermediateHistory
 
     public string? File10 { get; set; }
 
-    public byte? ItemSrnoPo { get; set; }
+    public int? ItemSrnoPo { get; set; }
 
     public string? ItemDescPo { get; set; }
 
@@ -89,7 +89,7 @@ public partial class IcIntermediateHistory
 
     public byte[]? IeStampImage1 { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public int? NumVisits { get; set; }
 

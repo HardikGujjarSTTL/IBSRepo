@@ -148,7 +148,7 @@
                         <label for="Reference">Consignee</label>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-12">
                     @Html.DropDownListFor(model => model.Consignee, new SelectList(IBS.Models.Common.GetConsignee(Model.Caseno) , "Value", "Text"))
                 </div>
             </div>
@@ -252,13 +252,13 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Bkno">Book No. <span class="text-danger">*</span></label>
-                        <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="Bkno" maxlength="4" style="text-transform: uppercase;">
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Setno">Set No. <span class="text-danger">*</span></label>
-                        <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;">
+                        <input type="text" class="input" asp-for="Setno" maxlength="3" style="text-transform: uppercase;">
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -329,7 +329,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Other Insp Dates</label>
-                        <input type="text" class="datepicker" asp-for="OtherInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                        <input type="text" class="input" asp-for="OtherInspDt" maxlength="100">
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -377,7 +377,9 @@
                 <a asp-controller="InspectionCert" asp-action="Index" class="reset-btn">Cancel</a>
             </div>
         </div>
-
+        <div class="alert alert-warning center">
+            BILL ITEM DETAILS
+        </div>
         <div id="divgrid">
             <section class="table-section">
                 <div class="task-listinput">
@@ -650,6 +652,10 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#CallDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#ICSubmitDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+
             $('#OuterDivOrBody').delegate('#chkABill', 'change', function () {
                 if (this.checked) {
                     $("#chkABill").val('A');
@@ -668,7 +674,6 @@
                 $(".RlyBpoFee").hide();
                 $(".BpoFee").show();
             }
-
 
             var GSTNo = $("#GstinNo").val();
             if (GSTNo == "") {
@@ -782,7 +787,6 @@
                 data: { "BpoCd": BpoCd },
                 success: function (contacts) {
                     $("#Bpo").html(""); // clear before appending new list
-                    //$("#Bpo").append($('<option></option>').val(0).html("--Select--"));
                     if (contacts && contacts.length > 0) {
                         if (Bpo > 0) {
                             $.each(contacts, function (i, cnt) {
@@ -798,6 +802,31 @@
                 }
             });
         });
+
+
+        function StateWiseGST(StateCode) {
+            $.ajax({
+                url: '@Url.Action("GetTaxTypeList", "InspectionCert")',
+                type: "GET",
+                dataType: "JSON",
+                data: { "StateCode": StateCode },
+                success: function (contacts) {
+                    $("#TaxType").html("");
+                    if (contacts && contacts.length > 0) {
+                        if (TaxType > 0) {
+                            $.each(contacts, function (i, cnt) {
+                                $("#TaxType").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                            $("#TaxType").val(Bpo);
+                        } else {
+                            $.each(contacts, function (i, cnt) {
+                                $("#TaxType").append($('<option></option>').val(cnt.Value).html(cnt.Text));
+                            });
+                        }
+                    }
+                }
+            });
+        }
 
         function GSTNUpdate() {
             var ConsigneeGST = $("input[name='ConsigneeGST']:checked").val();
@@ -855,6 +884,7 @@
                                         $("#City").val(contacts.data[0].City);
                                         $("#State").val(contacts.data[0].State);
                                         $("#Pincode").val(contacts.data[0].Pincode);
+                                        StateWiseGST(contacts.data[0].StateID);
                                     }
                                 }
                             }
@@ -882,6 +912,7 @@
                                     $("#City").val(contacts.data[0].City);
                                     $("#State").val(contacts.data[0].State);
                                     $("#Pincode").val(contacts.data[0].Pincode);
+                                    StateWiseGST(contacts.data[0].StateID);
                                 }
                             }
                         });
@@ -1410,7 +1441,8 @@
 
         function onBpoFeeType() {
             var BpoFeeType = $("#BpoFeeType").val();
-            if(BpoFeeType == "P")
+
+            if ($("#BpoType").val() == "R" && $("#BpoFeeType").val() == "P" && $("#IcTypeId").val() == 1)
             {
                 $(".RlyBpoFee").show();
                 $(".BpoFee").hide();
@@ -1420,6 +1452,17 @@
                 $(".RlyBpoFee").hide();
                 $(".BpoFee").show();
             }
+
+            // if(BpoFeeType == "P")
+            // {
+            //     $(".RlyBpoFee").show();
+            //     $(".BpoFee").hide();
+            // }
+            // else
+            // {
+            //     $(".RlyBpoFee").hide();
+            //     $(".BpoFee").show();
+            // }
         }
 
     </script>
