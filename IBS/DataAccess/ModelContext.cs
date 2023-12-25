@@ -7402,10 +7402,22 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Amount)
                 .HasColumnType("NUMBER(12,2)")
                 .HasColumnName("AMOUNT");
+            entity.Property(e => e.AtomTxnId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ATOM_TXN_ID");
             entity.Property(e => e.AuthCd)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasColumnName("AUTH_CD");
+            entity.Property(e => e.BankName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("BANK_NAME");
+            entity.Property(e => e.BankTxnId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BANK_TXN_ID");
             entity.Property(e => e.CallRecvDt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALL_RECV_DT");
@@ -7422,9 +7434,36 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CHARGES_TYPE");
+            entity.Property(e => e.CustAccNo)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CUST_ACC_NO");
+            entity.Property(e => e.CustEmail)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("CUST_EMAIL");
+            entity.Property(e => e.CustMobile)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CUST_MOBILE");
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.MerId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MER_ID");
+            entity.Property(e => e.MerTxnDate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("MER_TXN_DATE");
+            entity.Property(e => e.MerTxnId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MER_TXN_ID");
             entity.Property(e => e.OrderInfo)
                 .HasPrecision(5)
                 .HasColumnName("ORDER_INFO");
@@ -7436,10 +7475,21 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(75)
                 .IsUnicode(false)
                 .HasColumnName("STATUS");
+            entity.Property(e => e.StatusCd)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("STATUS_CD");
+            entity.Property(e => e.SubChannel)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("SUB_CHANNEL");
             entity.Property(e => e.TransactionNo)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("TRANSACTION_NO");
+            entity.Property(e => e.TxnCompleteDate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("TXN_COMPLETE_DATE");
             entity.Property(e => e.VendCd)
                 .HasPrecision(6)
                 .HasColumnName("VEND_CD");

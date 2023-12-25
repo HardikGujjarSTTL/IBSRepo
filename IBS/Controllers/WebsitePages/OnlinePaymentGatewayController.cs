@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using IBS.Helper;
+using System.Collections.Specialized;
+using System.Globalization;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -53,7 +55,6 @@ namespace IBS.Controllers.WebsitePages
             PayrequestModel.Extras ex = new PayrequestModel.Extras();
 
             PayrequestModel.Payrequest pr = new PayrequestModel.Payrequest();
-
             hd.version = "OTSv1.1";
             hd.api = "AUTH";
             hd.platform = "FLASH";
@@ -136,6 +137,8 @@ namespace IBS.Controllers.WebsitePages
             string txnMessage = objectres.responseDetails.txnMessage;
 
             string Tok_id = objectres.atomTokenId;
+            var url = Request.Scheme + "://" + Request.Host.Value;
+            model.LocalURL = url;
 
             model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
             model.Tok_id = Tok_id;
@@ -214,9 +217,43 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse(OnlinePaymentGateway model)
+        public IActionResult PaymentResponse(string mef_ref)
         {
-            //model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            OnlinePaymentGateway model = new();
+            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            int iterations = 65536;
+            int keysize = 256;
+            string hashAlgorithm = "SHA1";
+            string encdata = Request.Form["encdata"];
+            string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
+            PayresponseModel.Rootobject root = new PayresponseModel.Rootobject();
+            PayresponseModel.Parent objectres = new PayresponseModel.Parent();
+
+            objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
+
+            model.MER_TXN_REF = mef_ref;
+            model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
+            model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
+            model.Product = objectres.payInstrument.payDetails.product;
+            DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
+            model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+            model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+            model.BankName = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+            model.PaymentStatus = objectres.payInstrument.responseDetails.message;
+            model.Email = objectres.payInstrument.custDetails.custEmail;
+            model.Mobile = objectres.payInstrument.custDetails.custMobile;
+            model.MerID= objectres.payInstrument.merchDetails.merchId;
+            model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
+            model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
+            model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
+            model.BankID = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankId;
+            model.SubChannel = objectres.payInstrument.payModeSpecificData.subChannel[0];
+            model.Description = objectres.payInstrument.responseDetails.description;
+            model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
+
+            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
             GlobalDeclaration.OnlinePaymentResponse = model;
             return View(model);
         }
