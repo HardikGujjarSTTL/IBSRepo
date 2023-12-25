@@ -30,7 +30,7 @@
                         <label for="rdbPSU" class="billInvoiceClass"><input type="radio" class="billInvoiceClass" id="rdbPSU" name="Railway" value="Invoice_No"> PSU</label>
                     </li>
                     <li>
-                        <label for="rdbPrivate" class="billInvoiceClass"><input type="radio" class="rdbSGovt" id="rdbPrivate" name="Railway" value="Invoice_No"> State Government</label>
+                        <label for="rdbstate" class="billInvoiceClass"><input type="radio" class="rdbSGovt" id="rdbstate" name="Railway" value="Invoice_No"> State Government</label>
                     </li>
                 </ul>
             </div>
@@ -99,7 +99,7 @@
             else if ($("#rdbPSU").is(":checked")) {
                 type = 'U';
             }
-            else if ($("#rdbPrivate").is(":checked")) {
+            else if ($("#rdbstate").is(":checked")) {
                 type = 'S';
             }
             var p_wAgency = type;
