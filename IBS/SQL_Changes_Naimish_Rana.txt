@@ -1565,28 +1565,56 @@ BEGIN
 END GET_VENDOR_PENDINGINSPECTION_API;
 
 
-create or replace PROCEDURE GET_VENDOR_PENDING_PO_FOR_CALL_API 
-(
-  P_VEND_CD IN NUMBER, 
-  P_FROMDATE IN VARCHAR2, 
-  P_TODATE IN VARCHAR2,
-  P_RESULT_CURSOR OUT SYS_REFCURSOR 
-) AS 
+CREATE OR REPLACE PROCEDURE GET_VENDOR_PENDING_PO_FOR_CALL_API (
+    P_VEND_CD       IN NUMBER,
+    P_FROMDATE      IN VARCHAR2,
+    P_TODATE        IN VARCHAR2,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
 BEGIN
     -- Get last three months Pending data to current date
-    OPEN P_RESULT_CURSOR FOR
-    SELECT  t17.Case_No,
+    OPEN P_RESULT_CURSOR FOR 
+    SELECT  t13.Case_No,
             t17.Call_Recv_Dt,
             t17.Call_Sno,
-            t17.PO_NO,
-            t17.PO_DT,
-            t17.IE_SNAME IE_NAME,
-            t17.VENDOR VEND_NAME,
-            t17.CALL_STATUS Status
-    FROM T17_CALL_REGISTER_SEARCH_VIEW t17
-    WHERE VEND_CD = P_VEND_CD
-    AND t17.PO_DT BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')
-    ORDER BY t17.PO_DT DESC;
+            t13.PO_NO,
+            t13.PO_DT,
+            t09.IE_NAME,
+            NVL(
+                    (
+                        SELECT RAILWAY Client 
+                        FROM T91_RAILWAYS 
+                        WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R'
+                        UNION ALL
+                        SELECT DISTINCT BPO_ORGN Client 
+                        FROM T12_BILL_PAYING_OFFICER 
+                        WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+                    ),
+                    'Other'
+            ) AS Client_Name,
+            decode(t17.call_status, 
+                'M', 'Pending', 
+                'A', 'Accepted',
+                'R', 'Rejection', 
+                'C', 'Cancelled', 
+                'U', 'Under Lab Testing', 
+                'S', 'Still Under Inspection', 
+                'G', 'Stage Inspection Accepted',
+                'W', 'Withheld', 
+                'B', 'Accepted and Billed', 
+                'T', 'Stage Rejection', 
+                'PR', 'Partially Passed and Rejected', 
+                'PRB', 'Partially Passed and Rejected and Billed',
+                'CB', 'Cancelled and Billed', 
+                'RB', 'Rejected and Billed'
+            ) AS Status
+    FROM t13_po_master t13
+    LEFT JOIN t17_call_register t17 ON t13.case_no = t17.case_no AND t17.CALL_STATUS IN ('A', 'R', 'U', 'S')
+    LEFT JOIN t09_ie t09 ON t17.IE_CD = t09.IE_CD
+    JOIN t05_vendor t05 ON t13.VEND_CD = t05.VEND_CD
+    WHERE t13.vend_cd = P_VEND_CD
+    AND t13.po_dt BETWEEN TO_DATE(P_FROMDATE,'DD/MM/YYYY') AND TO_DATE(P_TODATE,'DD/MM/YYYY')
+    ORDER BY t13.po_dt DESC;
 END GET_VENDOR_PENDING_PO_FOR_CALL_API;
 
 create or replace PROCEDURE GET_CLIENT_PENDINGINSPECTION_API 
