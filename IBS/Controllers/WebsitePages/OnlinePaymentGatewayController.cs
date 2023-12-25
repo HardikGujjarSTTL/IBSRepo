@@ -11,6 +11,7 @@ using System.Web;
 using IBS.Helper;
 using System.Collections.Specialized;
 using System.Globalization;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -19,11 +20,13 @@ namespace IBS.Controllers.WebsitePages
         #region Variables
         private readonly IOnlinePaymentGatewayRepository onlinePaymentGatewayRepository;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
         #endregion
-        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository, IWebHostEnvironment env)
+        public OnlinePaymentGatewayController(IOnlinePaymentGatewayRepository _onlinePaymentGatewayRepository, IWebHostEnvironment env, IConfiguration _config)
         {
             onlinePaymentGatewayRepository = _onlinePaymentGatewayRepository;
             this.env = env;
+            config = _config;
         }
         public IActionResult Index()
         {
@@ -34,13 +37,6 @@ namespace IBS.Controllers.WebsitePages
         public IActionResult VerifyPayment(OnlinePaymentGateway model)
         {
             model = onlinePaymentGatewayRepository.VerifyByCaseNo(model);
-
-            if (model.AlertMsg != null)
-            {
-                AlertAlreadyExist(model.AlertMsg);
-                return View("Index", model);
-            }
-
             return Json(model);
         }
 
@@ -59,8 +55,9 @@ namespace IBS.Controllers.WebsitePages
             hd.api = "AUTH";
             hd.platform = "FLASH";
 
-            md.merchId = "317159";
-            md.userId = "317159";
+            //md.merchId = "317159";
+            md.merchId = config.GetSection("PaymentSetting")["merchId"];
+            md.userId = config.GetSection("PaymentSetting")["merchId"];
             md.password = "Test@123";
             //md.merchTxnDate = "2023-12-12 20:46:00";
             md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
