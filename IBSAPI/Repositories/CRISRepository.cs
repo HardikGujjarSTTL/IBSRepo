@@ -205,7 +205,7 @@ namespace IBSAPI.Repositories
                     basic_value = Convert.ToDecimal(row["basic_value"]),
                     value = Convert.ToDecimal(row["value"]),
                     INVOICE_PDF = "http://49.50.102.182/signed/" + Convert.ToString(row["bill_no"]) + ".pdf",
-                    IC_PDF = "http://rites.ritesinsp.com/RBS/BILL_IC/" + Convert.ToString(row["case_no"]) + "-" + Convert.ToString(row["bk_no"]) ?? null + "-" + Convert.ToString(row["set_no"]) ?? null + ".PDF",
+                    IC_PDF = "http://rites.ritesinsp.com/RBS/BILL_IC/" + Convert.ToString(row["case_no"]) + "-" + Convert.ToString(row["bk_no"]) + "-" + Convert.ToString(row["set_no"]) + ".PDF",
                     PO_PDF = "http://rites.ritesinsp.com/RBS/CASE_NO/" + Convert.ToString(row["case_no"]) + ".PDF",
                     BILLDESC = "RITES INSPECTION BILL",
                     PARTYSTATE = Convert.ToString(row["partygstin"]).Substring(0, 2) ?? "",
