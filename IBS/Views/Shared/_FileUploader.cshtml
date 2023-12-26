@@ -116,7 +116,7 @@
                                                                        data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))"
                                                                             style="width: 100%;padding: 5px 10px;padding-right: 20px;font-weight: 400; border:1px solid #d1d1d1!important; border-radius: 4px;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
 
-                                                                <label style="font-size:14px; font-style:italic;" for="@("Brw_" + uniqueId)">
+                                                                <label style="font-size:14px;" for="@("Brw_" + uniqueId)">
                                 @*@(Model.IBS_DocumentList[i].DocumentName)
                                     <span >
                                         @(Model.IBS_DocumentList[i].IsMandatory ? "*" : "")
