@@ -27,7 +27,7 @@ namespace IBS.Repositories.InspectionBilling
         int callval = 0;
         int e_status = 0;
 
-        public DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string RegionCode)
         {
             DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
             IQueryable<VenderCallRegisterModel>? query = null;
@@ -101,31 +101,72 @@ namespace IBS.Repositories.InspectionBilling
             {
                 str1 = "l.CaseNo,l.CallRecvDt";
             }
-            query = from l in context.ViewGetCallRegCancellations
-                    where l.RegionCode == GetRegionCode
-                          && (CaseNo == null || CaseNo == "" || l.CaseNo == CaseNo)
-                          && (CallRecvDt == null || CallRecvDt == "" || l.CallRecvDt == _CallRecvDt)
-                          && (PoNo == null || PoNo == "" || l.PoNo == PoNo)
-                          && (PoDt == null || PoDt == "" || l.PoDt == _PoDt)
-                          && (Vendor == null || Vendor == "" || l.Vendor == Vendor)
-                          && (CallLetterNo == null || CallLetterNo == "" || l.CallLetterNo == CallLetterNo)
-                          && (CallSno == null || CallSno == "" || l.CallSno == Convert.ToInt32(CallSno))
-                    orderby str1
-                    select new VenderCallRegisterModel
+
+            OracleParameter[] par = new OracleParameter[9];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_caseno", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_callrecvdt", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_pono", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_podt", OracleDbType.Date, _PoDt, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_vendor", OracleDbType.Varchar2, Vendor, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_callletterno", OracleDbType.Varchar2, CallLetterNo, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_CALL_REG_CANCELLATION", par, 1);
+
+            List<VenderCallRegisterModel> modelList = new List<VenderCallRegisterModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    VenderCallRegisterModel model = new VenderCallRegisterModel
                     {
-                        CaseNo = l.CaseNo,
-                        CallRecvDt = l.CallRecvDt,
-                        CallInstallNo = l.CallInstallNo,
-                        CallSno = Convert.ToInt16(l.CallSno),
-                        CallStatus = l.CallStatus,
-                        CallLetterNo = l.CallLetterNo,
-                        Remarks = l.Remarks,
-                        PoNo = l.PoNo,
-                        PoDt = l.PoDt,
-                        IeSname = l.IeSname,
-                        Vendor = l.Vendor,
-                        RegionCode = l.RegionCode,
+                        CaseNo = Convert.ToString(row["CASE_NO"]),
+                        CallRecvDt = Convert.ToString(row["CALL_RECV_DT"]) == "" ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
+                        CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]) == null ? 0 : Convert.ToInt32(row["CALL_INSTALL_NO"]),
+                        CallSno = Convert.ToInt32(row["CALL_SNO"]) == null ? 0 : Convert.ToInt32(row["CALL_SNO"]),
+                        CallStatus = Convert.ToString(row["CALL_STATUS"]),
+                        CallLetterNo = Convert.ToString(row["CALL_LETTER_NO"]),
+                        Remarks = Convert.ToString(row["REMARKS"]),
+                        PoNo = Convert.ToString(row["PO_NO"]),
+                        PoDt = Convert.ToString(row["PO_DT"]) == "" ? null : Convert.ToDateTime(row["PO_DT"]),
+                        IeSname = Convert.ToString(row["IE_SNAME"]),
+                        Vendor = Convert.ToString(row["VENDOR"]),
+                        RegionCode = Convert.ToString(row["REGION_CODE"]),
+
                     };
+                    modelList.Add(model);
+                }
+            }
+
+            //query = from l in context.ViewGetCallRegCancellations
+            //        where l.RegionCode == RegionCode
+            //              && (CaseNo == null || CaseNo == "" || l.CaseNo == CaseNo)
+            //              && (CallRecvDt == null || CallRecvDt == "" || l.CallRecvDt == _CallRecvDt)
+            //              && (PoNo == null || PoNo == "" || l.PoNo == PoNo)
+            //              && (PoDt == null || PoDt == "" || l.PoDt == _PoDt)
+            //              && (Vendor == null || Vendor == "" || l.Vendor == Vendor)
+            //              && (CallLetterNo == null || CallLetterNo == "" || l.CallLetterNo == CallLetterNo)
+            //              && (CallSno == null || CallSno == "" || l.CallSno == Convert.ToInt32(CallSno))
+            //        orderby str1
+            //        select new VenderCallRegisterModel
+            //        {
+            //            CaseNo = l.CaseNo,
+            //            CallRecvDt = l.CallRecvDt,
+            //            CallInstallNo = l.CallInstallNo,
+            //            CallSno = Convert.ToInt16(l.CallSno),
+            //            CallStatus = l.CallStatus,
+            //            CallLetterNo = l.CallLetterNo,
+            //            Remarks = l.Remarks,
+            //            PoNo = l.PoNo,
+            //            PoDt = l.PoDt,
+            //            IeSname = l.IeSname,
+            //            Vendor = l.Vendor,
+            //            RegionCode = l.RegionCode,
+            //        };
+
+            query = modelList.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 

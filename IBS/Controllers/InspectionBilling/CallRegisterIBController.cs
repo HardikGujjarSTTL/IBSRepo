@@ -18,6 +18,7 @@ namespace IBS.Controllers.InspectionBilling
         private readonly IConfiguration _config;
 
         #endregion
+
         public CallRegisterIBController(ICallRegisterIBRepository _callregisterRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             callregisterRepository = _callregisterRepository;

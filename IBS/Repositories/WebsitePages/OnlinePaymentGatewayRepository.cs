@@ -19,30 +19,23 @@ namespace IBS.Repositories.WebsitePages
 
         public OnlinePaymentGateway VerifyByCaseNo(OnlinePaymentGateway model)
         {
-            var GetPODetails = (from p in context.T13PoMasters
-                                join v in context.T05Vendors on p.VendCd equals v.VendCd
-                                join c in context.T03Cities on v.VendCityCd equals c.CityCd
-                                join r in context.T17CallRegisters on p.CaseNo equals r.CaseNo
-                                where r.CaseNo == model.CaseNo &&
-                                      r.CallRecvDt == model.CallDate &&
-                                      r.CallSno == model.CallSno
-                                select new OnlinePaymentGateway
-                                {
-                                    PO_NO = p.PoNo + "  &  " + p.PoDt.Value.ToString("dd/MM/yyyy"),
-                                    PO_DT = p.PoDt,
-                                    VEND_CD = v.VendCd,
-                                    VEND_NAME = $"{v.VendName.Trim()}/{v.VendAdd1.Trim()}/{(c.Location != null ? c.Location + " / " : "")}{c.City}",
-                                }).FirstOrDefault();
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_caseno", OracleDbType.Varchar2, model.CaseNo, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_calldate", OracleDbType.Varchar2,model.CallDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_callsno", OracleDbType.Varchar2, model.CallSno, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            if (GetPODetails == null)
+            var ds = DataAccessDB.GetDataSet("GetPODetailsForPaymentGateway", par, 1);
+
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                model.AlertMsg = "Record not found for the given Case No. and Call Recieve Date & Call Sno. !!!";
+                model.PO_NO = ds.Tables[0].Rows[0]["PO_NO"]?.ToString();
+                model.VEND_NAME = ds.Tables[0].Rows[0]["VEND_NAME"]?.ToString();
+                model.VEND_CD = ds.Tables[0].Rows[0]["VEND_CD"] as int?; 
             }
             else
             {
-                model.PO_NO = GetPODetails.PO_NO;
-                model.VEND_NAME = GetPODetails.VEND_NAME;
-                model.VEND_CD = GetPODetails.VEND_CD;
+                model.AlertMsg = "Record not found for the given Case No. and Call Receive Date & Call Sno. !!!";
             }
 
             return model;
@@ -65,7 +58,7 @@ namespace IBS.Repositories.WebsitePages
                 MerTxnRef = mer_ref,
                 OrderInfo = model.VEND_CD.HasValue ? (short?)model.VEND_CD.Value : null,
                 CaseNo = model.CaseNo.Trim(),
-                CallRecvDt = model.CallDate,
+                CallRecvDt = Convert.ToDateTime(model.CallDate),
                 CallSno = model.CallSno.HasValue ? (short?)model.CallSno.Value : null,
                 VendCd = model.VEND_CD.HasValue ? (short?)model.VEND_CD.Value : null,
                 Amount = model.Charges,

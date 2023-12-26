@@ -1392,9 +1392,9 @@ namespace IBS.Repositories.InspectionBilling
             query = from c in context.T18CallDetails
                     join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                     join u in context.T04Uoms on p.UomCd equals u.UomCd
-                    join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
-                    from intermediate in intermediateGroup.DefaultIfEmpty()
-                    where c.ItemSrnoPo == p.ItemSrno
+                    //join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                    //from intermediate in intermediateGroup.DefaultIfEmpty()
+                    where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == p.CaseNo && p.UomCd == u.UomCd
                        && c.CaseNo == Caseno
                        && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
                        && c.CallSno == Convert.ToInt16(Callsno)
@@ -1408,10 +1408,14 @@ namespace IBS.Repositories.InspectionBilling
                         QtyOrdered = c.QtyOrdered,
                         CumQtyPrevOffered = c.CumQtyPrevOffered,
                         CumQtyPrevPassed = c.CumQtyPrevPassed,
-                        QtyToInsp = (intermediate.QtyToInsp != 0) ? intermediate.QtyToInsp : c.QtyToInsp,
-                        QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
-                        QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
-                        QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
+                        //QtyToInsp = (intermediate.QtyToInsp != 0) ? intermediate.QtyToInsp : c.QtyToInsp,
+                        //QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
+                        //QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
+                        //QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
+                        QtyToInsp = (c.QtyToInsp != 0) ? c.QtyToInsp : c.QtyToInsp,
+                        QtyPassed = (c.QtyPassed != 0) ? c.QtyPassed : c.QtyPassed,
+                        QtyRejected = (c.QtyRejected != 0) ? c.QtyRejected : c.QtyRejected,
+                        QtyDue = (c.QtyDue != 0) ? c.QtyDue : c.QtyDue,
                         Rate = p.Rate,
                         SalesTaxPer = p.SalesTaxPer,
                         SalesTax = p.SalesTax,
