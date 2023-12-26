@@ -1,14 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Helper;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.Web;
 namespace IBS.Controllers.InspectionBilling
 {
     [Authorization]
@@ -110,7 +103,7 @@ namespace IBS.Controllers.InspectionBilling
             return Json(data);
         }
 
-        [HttpPost]        
+        [HttpPost]
         [Authorization("IC_Receipt", "Index", "edit")]
         public IActionResult ICReceiptSave(IC_ReceiptModel model)
         {
@@ -151,7 +144,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 flag = false;
                 msg = "Oops Somthing Went Wrong !!";
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());                
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "IC_Receipt", "ICReceiptSave", 1, GetIPAddress());
             }
             return Json(new { status = flag, responseText = msg });
         }

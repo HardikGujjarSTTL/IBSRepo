@@ -1,10 +1,10 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Helpers;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using IBS.Helper;
 using Newtonsoft.Json;
-using IBS.Helpers;
 
 namespace IBS.Controllers
 {
@@ -281,7 +281,7 @@ namespace IBS.Controllers
             try
             {
                 string UserId = inspectionEngineers.GetUserID(IeEmpNo);
-                if(UserId == "1")
+                if (UserId == "1")
                 {
                     return Json(new { status = true, responseText = "Already Existing!!!." });
                 }

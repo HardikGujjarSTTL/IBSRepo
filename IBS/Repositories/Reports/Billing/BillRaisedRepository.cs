@@ -1,20 +1,10 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.IO;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace IBS.Repositories.Reports.Billing
 {

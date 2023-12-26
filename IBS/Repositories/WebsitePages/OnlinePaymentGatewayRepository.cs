@@ -1,16 +1,9 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.InkML;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.WebsitePages;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -37,7 +30,7 @@ namespace IBS.Repositories.WebsitePages
                                 {
                                     PO_NO = p.PoNo + "  &  " + p.PoDt.Value.ToString("dd/MM/yyyy"),
                                     PO_DT = p.PoDt,
-                                    VEND_CD=v.VendCd,
+                                    VEND_CD = v.VendCd,
                                     VEND_NAME = $"{v.VendName.Trim()}/{v.VendAdd1.Trim()}/{(c.Location != null ? c.Location + " / " : "")}{c.City}",
                                 }).FirstOrDefault();
 
@@ -65,7 +58,7 @@ namespace IBS.Repositories.WebsitePages
 
             string merNo = ds.Tables[0].Rows[0]["MERNO"].ToString();
 
-            string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5,'0');
+            string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5, '0');
             model.MER_TXN_REF = mer_ref;
             var OnlinePayment = new OnlinePayment
             {

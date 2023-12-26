@@ -4,7 +4,6 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Models;
-using IBS.Repositories.Administration;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -63,7 +62,7 @@ namespace IBS.Controllers.Administration
                     #region File Upload Profile Picture
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        
+
                         int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.Browse_the_Document_to_Upload };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                         DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdminUserUploadDoc), env, iDocument, "AdminUserUploadDoc", string.Empty, DocumentIds);

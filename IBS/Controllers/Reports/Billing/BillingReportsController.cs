@@ -1,13 +1,8 @@
-﻿using IBS.Interfaces.Reports.Billing;
+﻿using IBS.Helper;
+using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Web;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using IBS.Helper;
 
 namespace IBS.Controllers.Reports.Billing
 {

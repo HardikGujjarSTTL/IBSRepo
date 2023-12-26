@@ -1,9 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -82,10 +80,10 @@ namespace IBS.Repositories
             //        from l in joinedItems.DefaultIfEmpty()
             //        where l == null || l.Isdeleted == 0
             query = from l in context.T61ItemMasters
-                        join a in context.IbsAppdocuments on l.ItemCd equals a.Applicationid into joinedItems
-                        from a in joinedItems.DefaultIfEmpty()
-                        where l.Isdeleted == 0 || l.Isdeleted == null
-                        
+                    join a in context.IbsAppdocuments on l.ItemCd equals a.Applicationid into joinedItems
+                    from a in joinedItems.DefaultIfEmpty()
+                    where l.Isdeleted == 0 || l.Isdeleted == null
+
                     select new MasterItemsListFormModel
                     {
                         ItemCd = l.ItemCd,

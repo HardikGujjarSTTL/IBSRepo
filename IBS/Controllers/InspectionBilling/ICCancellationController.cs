@@ -5,7 +5,6 @@ using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -44,7 +43,7 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [Authorization("ICCancellation", "Index", "view")]
-        public IActionResult Manage(string REGION,string BK_NO,string SET_NO)
+        public IActionResult Manage(string REGION, string BK_NO, string SET_NO)
         {
             ICCancellationModel model = new();
             string Region = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
@@ -75,7 +74,7 @@ namespace IBS.Controllers.InspectionBilling
         {
             try
             {
-                if (iCCancellationRepository.Remove(REGION, BK_NO, SET_NO,UserId))
+                if (iCCancellationRepository.Remove(REGION, BK_NO, SET_NO, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -109,7 +108,7 @@ namespace IBS.Controllers.InspectionBilling
                 else
                 {
                     model.Createdby = UserId;
-                    if(RoleName == "Inspection Engineer (IE)")
+                    if (RoleName == "Inspection Engineer (IE)")
                     {
                         model.Status = false;
                     }
@@ -120,7 +119,7 @@ namespace IBS.Controllers.InspectionBilling
                     id = iCCancellationRepository.ICCancellationSave(model);
                     AlertAddSuccess("IC Cancellation Inserted Successfully.");
                 }
-                if (id >0)
+                if (id > 0)
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {

@@ -1,8 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -119,7 +117,7 @@ namespace IBS.Controllers
             if (id > 0)
             {
                 model = holidayMasterRepository.Detail_FindByID(id);
-            }            
+            }
             return View(model);
         }
 
@@ -166,7 +164,7 @@ namespace IBS.Controllers
                 model.USER_NAME = UserName;
                 model.USER_ID = UserId;
                 var res = holidayMasterRepository.HolidayDetailDelete(id, model);
-                if (res > 0) 
+                if (res > 0)
                     AlertDeletedSuccess();
                 else
                     AlertDanger();

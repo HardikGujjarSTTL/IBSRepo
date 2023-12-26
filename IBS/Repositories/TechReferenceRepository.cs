@@ -1,17 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
-using System.Data;
-using System.Diagnostics.Contracts;
-using IBS.Helper;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using NuGet.Protocol.Core.Types;
-using System.Drawing;
-using System.Collections.Generic;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -174,7 +168,7 @@ namespace IBS.Repositories
 
         public int TechRefDetailsInsertUpdate(TechReferenceModel model, string rgn)
         {
-            int Id=0;
+            int Id = 0;
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("IN_TECH_DT", OracleDbType.Varchar2, model.TechDate.ToString().Replace("/", ""), ParameterDirection.Input);
             par[1] = new OracleParameter("IN_REGION_CD", OracleDbType.Varchar2, model.RegionCd, ParameterDirection.Input);
@@ -187,7 +181,7 @@ namespace IBS.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model1 = JsonConvert.DeserializeObject<List<TechReferenceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
             }
-            var _TechRef= context.T66TechRefs.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var _TechRef = context.T66TechRefs.Where(x => x.Id == model.Id).FirstOrDefault();
             #region Tech save and update
             if (_TechRef == null)
             {

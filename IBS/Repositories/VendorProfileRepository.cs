@@ -2,10 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
 
 namespace IBS.Repositories
@@ -25,9 +23,9 @@ namespace IBS.Repositories
                                  where m.VendCd == VendCd
                                  select new VendorModel
                                  {
-                                     VendCd= m.VendCd,
+                                     VendCd = m.VendCd,
                                      VendName = m.VendName,
-                                     VendAdd1 =  m.VendAdd1,
+                                     VendAdd1 = m.VendAdd1,
                                      VendAdd2 = m.VendAdd2,
                                      VendCityCd = m.VendCityCd,
                                      VendApproval = m.VendApproval,
@@ -154,7 +152,7 @@ namespace IBS.Repositories
             }
             else
             {
-                if(isSameVendor)
+                if (isSameVendor)
                 {
                     t05Vendors.VendAdd1 = model.VendAdd1;
                     t05Vendors.VendAdd2 = model.VendAdd2;

@@ -1,13 +1,9 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -175,7 +171,7 @@ namespace IBS.Controllers
             {
                 PaymentID = VOUCHER_NO
             };
-           
+
             return View(model);
         }
         public IActionResult PrintLabPayment(LabPaymentFormModel paymentFormModel, string VOUCHER_NO, string Lab)
@@ -196,7 +192,7 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             paymentFormModel.Regin = GetRegionCode;
-            
+
             //List<LabPaymentFormModel> dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
             dTResult = LabPaymentRepository.PrintLabPayment(paymentFormModel);
             return PartialView(dTResult);

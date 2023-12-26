@@ -1,11 +1,6 @@
-﻿using IBS.Helper;
-using IBS.Helpers;
-using IBS.Interfaces;
-using IBS.Interfaces.WebsitePages;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {

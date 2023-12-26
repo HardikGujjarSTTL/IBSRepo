@@ -1,9 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers
 {
@@ -106,7 +104,7 @@ namespace IBS.Controllers
             }
             return Json(state);
         }
-        
+
         [HttpPost]
         [Authorization("ConsigneePurchase", "Index", "delete")]
         public IActionResult Delete(int id)

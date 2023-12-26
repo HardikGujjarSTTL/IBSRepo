@@ -2,14 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -31,7 +26,7 @@ namespace IBS.Repositories
             //var orderCriteria = string.Empty;
             //var orderAscendingDirection = true;
 
-            
+
             //if (dtParameters.Order != null)
             //{
             //    // in this example we just default sort on the 1st column
@@ -55,14 +50,14 @@ namespace IBS.Repositories
             par[2] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_BILL_DETAILS", par, 2);
-            
+
             List<ReturnedBillsModel> modelList = new List<ReturnedBillsModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
                     ReturnedBillsModel model = new ReturnedBillsModel
-                    {                        
+                    {
                         BillNo = Convert.ToString(row["BILL_NO"]),
                         BillDate = Convert.ToString(row["BILL_DT"]),
                         BpoRly = Convert.ToString(row["BPO_RLY"]),
@@ -116,7 +111,7 @@ namespace IBS.Repositories
 
             //using (var dbContext = context.Database.GetDbConnection())
             //{
-                
+
             //}
 
             //return dTResult;
@@ -154,9 +149,9 @@ namespace IBS.Repositories
         }
         public string GetSrNo(string InvoiceNo)
         {
-            
+
             string query = "Select max(ITEM_SRNO) from T86_LAB_INVOICE_DETAILS where INVOICE_NO='" + InvoiceNo + "'";
-            string ds = GetDateString(query);            
+            string ds = GetDateString(query);
             return ds.ToString();
 
         }
@@ -194,24 +189,24 @@ namespace IBS.Repositories
         public LabInvoiceDownloadModel Getdtreg(string InvoiceNo)
         {
 
-            
-                OracleParameter[] par = new OracleParameter[1];
-                
-                var query = "SELECT TO_CHAR(INVOICE_DT, 'yyyymm') AS INVOICE_DT, REGION_CODE FROM T55_LAB_INVOICE WHERE INVOICE_NO ='"+ InvoiceNo + "'";
 
-                DataSet ds = GetDataset(query);
+            OracleParameter[] par = new OracleParameter[1];
 
-                LabInvoiceDownloadModel model = new LabInvoiceDownloadModel();
+            var query = "SELECT TO_CHAR(INVOICE_DT, 'yyyymm') AS INVOICE_DT, REGION_CODE FROM T55_LAB_INVOICE WHERE INVOICE_NO ='" + InvoiceNo + "'";
 
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                {
-                    DataRow row = ds.Tables[0].Rows[0];
-                    model.INVOICE_DT = Convert.ToString(row["INVOICE_DT"]);
-                    model.Resign = Convert.ToString(row["REGION_CODE"]);
-                }
+            DataSet ds = GetDataset(query);
 
-                return model;
-            
+            LabInvoiceDownloadModel model = new LabInvoiceDownloadModel();
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+                model.INVOICE_DT = Convert.ToString(row["INVOICE_DT"]);
+                model.Resign = Convert.ToString(row["REGION_CODE"]);
+            }
+
+            return model;
+
         }
         public DataSet Getdata(string CaseNo, string RegNo, string InvoiceNo, string TranNo)
         {
@@ -225,8 +220,8 @@ namespace IBS.Repositories
                 par[2] = new OracleParameter("p_SamNo", OracleDbType.Date, RegNo, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_TN", OracleDbType.Varchar2, TranNo, ParameterDirection.Input);
                 par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Input);
-                
-                 ds = DataAccessDB.GetDataSet("LabInvoiceDownload", par, 4);
+
+                ds = DataAccessDB.GetDataSet("LabInvoiceDownload", par, 4);
             }
             catch (Exception ex)
             {

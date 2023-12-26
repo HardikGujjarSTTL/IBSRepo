@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public CityMasterModel FindByID(int CityCd);
 
-        DTResult<CityMasterModel>GetCityMasterList(DTParameters dtParameters);
+        DTResult<CityMasterModel> GetCityMasterList(DTParameters dtParameters);
 
         public int SaveDetails(CityMasterModel model);
 

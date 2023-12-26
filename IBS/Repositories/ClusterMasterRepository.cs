@@ -37,7 +37,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<ClusterMasterModel> GetClusterMasterList(DTParameters dtParameters , string Region)
+        public DTResult<ClusterMasterModel> GetClusterMasterList(DTParameters dtParameters, string Region)
         {
 
             DTResult<ClusterMasterModel> dTResult = new() { draw = 0 };

@@ -4,7 +4,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using static IBS.Helper.Enums;
 using System.Data;
 
 namespace IBS.Repositories
@@ -185,47 +184,47 @@ namespace IBS.Repositories
         {
             DEO_CRIS_PO_MasterDetailsModel model = new DEO_CRIS_PO_MasterDetailsModel();
             model = (from d in context.ImmsRitesPoDetails
-                          join h in context.ImmsRitesPoHdrs on new { d.ImmsPokey, d.ImmsRlyCd } equals new { h.ImmsPokey, h.ImmsRlyCd }
-                          join u in context.T04Uoms on d.ImmsUomCd equals u.ImmsUomCd into uomGroup
-                          from uom in uomGroup.DefaultIfEmpty()
-                          where d.ImmsPokey == Convert.ToInt32(IMMS_POKEY)
-                          && d.ImmsRlyCd == IMMS_RLY_CD
-                          && d.ItemSrno == ITEM_SRNO
-                          select new DEO_CRIS_PO_MasterDetailsModel
-                          {
-                              IMMS_POKEY = d.ImmsPokey,
-                              IMMS_RLY_CD = d.ImmsRlyCd,
-                              ITEM_SRNO = d.ItemSrno,
-                              ITEM_DESC = d.ItemDesc.Replace("'", "").Substring(0, 400),
-                              ConsigneeCd = d.ConsigneeCd ?? 0,
-                              IMMS_CONSIGNEE_CD = d.ImmsConsigneeCd,
-                              Consignee = d.ImmsConsigneeCd + "-" + d.ImmsConsigneeName + "/" + d.ImmsConsigneeDetail,
-                              BpoCd = h.BpoCd,
-                              IMMS_BPO_CD = h.ImmsBpoCd,
-                              Bpo = h.ImmsBpoName + "/" + h.ImmsBpoDetail,
-                              Qty = d.Qty,
-                              UomCd = d.UomCd ?? 0,
-                              UOM = Convert.ToString(uom.UomCd),
-                              IMMS_UOM_CD = d.ImmsUomCd,
-                              IMMS_UOM_DESC = d.ImmsUomDesc,
-                              Rate = d.Rate,
-                              BasicValue = d.BasicValue,
-                              SalesTaxPer = d.SalesTaxPer,
-                              SalesTax = d.SalesTax,
-                              ExciseType = d.ExciseType,
-                              ExcisePer = d.ExcisePer,
-                              Excise = d.Excise,
-                              OT_CHARGE_TYPE = d.OtChargeType,
-                              OT_CHARGE_PER = d.OtChargePer,
-                              OT_CHARGES = d.OtCharges,
-                              Value = d.Value,
-                              DelvDt = d.DelvDt,
-                              ExtDelvDt = d.ExtDelvDt,
-                              PlNo = d.PlNo,
-                              DiscountType=d.DiscountType,
-                              DiscountPer = d.DiscountPer,
-                              Discount = d.Discount
-                          }).FirstOrDefault();
+                     join h in context.ImmsRitesPoHdrs on new { d.ImmsPokey, d.ImmsRlyCd } equals new { h.ImmsPokey, h.ImmsRlyCd }
+                     join u in context.T04Uoms on d.ImmsUomCd equals u.ImmsUomCd into uomGroup
+                     from uom in uomGroup.DefaultIfEmpty()
+                     where d.ImmsPokey == Convert.ToInt32(IMMS_POKEY)
+                     && d.ImmsRlyCd == IMMS_RLY_CD
+                     && d.ItemSrno == ITEM_SRNO
+                     select new DEO_CRIS_PO_MasterDetailsModel
+                     {
+                         IMMS_POKEY = d.ImmsPokey,
+                         IMMS_RLY_CD = d.ImmsRlyCd,
+                         ITEM_SRNO = d.ItemSrno,
+                         ITEM_DESC = d.ItemDesc.Replace("'", "").Substring(0, 400),
+                         ConsigneeCd = d.ConsigneeCd ?? 0,
+                         IMMS_CONSIGNEE_CD = d.ImmsConsigneeCd,
+                         Consignee = d.ImmsConsigneeCd + "-" + d.ImmsConsigneeName + "/" + d.ImmsConsigneeDetail,
+                         BpoCd = h.BpoCd,
+                         IMMS_BPO_CD = h.ImmsBpoCd,
+                         Bpo = h.ImmsBpoName + "/" + h.ImmsBpoDetail,
+                         Qty = d.Qty,
+                         UomCd = d.UomCd ?? 0,
+                         UOM = Convert.ToString(uom.UomCd),
+                         IMMS_UOM_CD = d.ImmsUomCd,
+                         IMMS_UOM_DESC = d.ImmsUomDesc,
+                         Rate = d.Rate,
+                         BasicValue = d.BasicValue,
+                         SalesTaxPer = d.SalesTaxPer,
+                         SalesTax = d.SalesTax,
+                         ExciseType = d.ExciseType,
+                         ExcisePer = d.ExcisePer,
+                         Excise = d.Excise,
+                         OT_CHARGE_TYPE = d.OtChargeType,
+                         OT_CHARGE_PER = d.OtChargePer,
+                         OT_CHARGES = d.OtCharges,
+                         Value = d.Value,
+                         DelvDt = d.DelvDt,
+                         ExtDelvDt = d.ExtDelvDt,
+                         PlNo = d.PlNo,
+                         DiscountType = d.DiscountType,
+                         DiscountPer = d.DiscountPer,
+                         Discount = d.Discount
+                     }).FirstOrDefault();
 
             return model;
         }

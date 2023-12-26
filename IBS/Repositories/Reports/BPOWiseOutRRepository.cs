@@ -2,14 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using OfficeOpenXml;
 using Oracle.ManagedDataAccess.Client;
-using PuppeteerSharp;
 using System.Data;
-using System.Drawing;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace IBS.Repositories.Reports
 {
@@ -39,7 +34,7 @@ namespace IBS.Repositories.Reports
         //        par[9] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
         //        var ds = DataAccessDB.GetDataSet("BPO_OUTSTANDING_BILLS_REPORT", par, 9);
-                
+
         ////            var columns = new string[]
         ////{
         ////    "BILL_NO", "BILL_DT", "BILL_AMOUNT", "BK_NO", "SET_NO", "TOTAL_TDS",

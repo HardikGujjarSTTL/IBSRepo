@@ -1,13 +1,8 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -22,12 +17,12 @@ namespace IBS.Controllers
             LabSamInfoReportRepository = _LabSamInfoReportRepository;
             _webHostEnvironment = webHostEnvironment;
         }
-        
+
         public IActionResult LabSamInfoReport()
         {
-           
+
             return View();
-        }        
+        }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
@@ -43,6 +38,6 @@ namespace IBS.Controllers
             }
             return Json(dTResult);
         }
-        
+
     }
 }

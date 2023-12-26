@@ -1,10 +1,8 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Policy;
 
 namespace IBS.Controllers
 {
@@ -184,7 +182,7 @@ namespace IBS.Controllers
                 bool objRet = purchesorderRepository.DetailsUpdate(model);
                 if (objRet == true)
                 {
-                    return Json(new { status = true, responseText = msg});
+                    return Json(new { status = true, responseText = msg });
                 }
             }
             catch (Exception ex)
@@ -368,7 +366,7 @@ namespace IBS.Controllers
 
 
         [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
-        public IActionResult PODetails(string IMMS_POKEY,string IMMS_RLY_CD)
+        public IActionResult PODetails(string IMMS_POKEY, string IMMS_RLY_CD)
         {
             DEO_CRIS_PurchesOrderModel model = new();
             model = purchesorderRepository.FindByID(IMMS_POKEY, IMMS_RLY_CD);
@@ -398,7 +396,7 @@ namespace IBS.Controllers
             {
                 string msg = "PO Master Details Updated Successfully.";
                 model.Updatedby = UserId;
-                model.UserId =Convert.ToString(UserId);
+                model.UserId = Convert.ToString(UserId);
                 int i = purchesorderRepository.POMasterSubDetailsInsertUpdate(model);
                 if (i > 0)
                 {

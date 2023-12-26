@@ -1,13 +1,11 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
     public interface IReturnedBillsRepository
     {
 
-        DTResult<ReturnedBillsModel> GetReturnedBills(DTParameters dtParameters, string OrgType ,string Org);
-        
+        DTResult<ReturnedBillsModel> GetReturnedBills(DTParameters dtParameters, string OrgType, string Org);
+
     }
 }

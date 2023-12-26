@@ -1,9 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
 
 namespace IBS.Controllers
 {
@@ -26,7 +24,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Allow_Old_Bill_DateModel> dTResult = allowoldbilldateRepository.GetMessageList(dtParameters,GetRegionCode);
+            DTResult<Allow_Old_Bill_DateModel> dTResult = allowoldbilldateRepository.GetMessageList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
 

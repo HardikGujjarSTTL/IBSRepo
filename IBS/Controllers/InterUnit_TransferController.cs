@@ -31,7 +31,7 @@ namespace IBS.Controllers
             {
                 AlertDanger(data.ErrorMsg);
                 return RedirectToAction("Index");
-                
+
             }
             else
             {

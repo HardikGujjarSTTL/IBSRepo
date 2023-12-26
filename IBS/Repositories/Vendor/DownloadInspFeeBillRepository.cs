@@ -4,7 +4,6 @@ using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories.Vendor
 {
@@ -89,7 +88,7 @@ namespace IBS.Repositories.Vendor
             par[7] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GET_INSPECTION_BILL_DETAILS_DOWNL", par, 1);
-            if(ds!=null)
+            if (ds != null)
             {
                 DataTable dt = ds.Tables[0];
                 List<DownloadInspectionFeeBillModel> list = dt.AsEnumerable().Select(row => new DownloadInspectionFeeBillModel
@@ -119,7 +118,7 @@ namespace IBS.Repositories.Vendor
 
                 dTResult.draw = dtParameters.Draw;
             }
-            
+
 
             return dTResult;
         }

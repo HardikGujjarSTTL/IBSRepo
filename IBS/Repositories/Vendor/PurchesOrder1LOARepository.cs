@@ -2,19 +2,11 @@
 using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data;
-using System.Dynamic;
 using System.Globalization;
-using System.Reflection.Emit;
 
 namespace IBS.Repositories.Vendor
 {
@@ -346,7 +338,7 @@ namespace IBS.Repositories.Vendor
 
                 dTResult.draw = dtParameters.Draw;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -359,7 +351,7 @@ namespace IBS.Repositories.Vendor
             var PoDetails = context.T15PoDetails.Find(model.CaseNo, model.ItemSrno);
 
             int CallCount = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrnoPo == model.ItemSrno).Count();
-            var CallDetails = context.T18CallDetails.Where(x=>x.CaseNo == model.CaseNo && x.ItemSrnoPo == model.ItemSrno).FirstOrDefault();
+            var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == model.CaseNo && x.ItemSrnoPo == model.ItemSrno).FirstOrDefault();
 
             #region save
             if (PoDetails == null)
@@ -429,7 +421,7 @@ namespace IBS.Repositories.Vendor
             #endregion
 
             #region Call Details Update
-            if(CallCount > 0)
+            if (CallCount > 0)
             {
                 if (CallDetails != null)
                 {

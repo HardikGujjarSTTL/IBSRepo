@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -9,7 +8,7 @@ namespace IBS.Controllers
     public class ClientMasterController : BaseController
     {
         #region Variables
-        private readonly IClientMasterRepository clientMasterRepository ;
+        private readonly IClientMasterRepository clientMasterRepository;
         #endregion
         public ClientMasterController(IClientMasterRepository _clientMasterRepository)
         {
@@ -24,7 +23,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<Clientmaster> dTResult  = clientMasterRepository.GetClientList(dtParameters);
+            DTResult<Clientmaster> dTResult = clientMasterRepository.GetClientList(dtParameters);
             return Json(dTResult);
         }
 
@@ -48,21 +47,21 @@ namespace IBS.Controllers
                 if (model.Id > 0)
                 {
                     model.Updatedby = UserId;
-                   int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
-                    if(i > 0)
+                    int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    if (i > 0)
                     {
                         AlertAddSuccess("Record Updated Successfully.");
                     }
                     else
                     {
                         AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
-                        return View("Manage",model);
+                        return View("Manage", model);
                     }
                 }
                 else
                 {
                     model.Createdby = UserId;
-                   int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
+                    int i = clientMasterRepository.ClientDetailsInsertUpdate(model);
                     if (i > 0)
                     {
                         AlertAddSuccess("Record Add Successfully.");

@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -63,7 +57,7 @@ namespace IBS.Repositories
             {
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
-                    string PReciept = Path.GetFullPath("PReciept/" + row["case_no"].ToString() +"_"+ row["call_sno"].ToString() + "_" + row["call_doc_dt"].ToString() + ".PDF");
+                    string PReciept = Path.GetFullPath("PReciept/" + row["case_no"].ToString() + "_" + row["call_sno"].ToString() + "_" + row["call_doc_dt"].ToString() + ".PDF");
                     string LAB = Path.GetFullPath("LAB/" + row["case_no"].ToString() + "_" + row["call_sno"].ToString() + "_" + row["call_doc_dt"].ToString() + ".PDF");
                     string ICPath = PReciept;
                     string CaseNoPath = LAB;

@@ -1,8 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using System.Diagnostics.Metrics;
-using System.Drawing;
 
 namespace IBS.Repositories.Vendor
 {
@@ -140,7 +138,7 @@ namespace IBS.Repositories.Vendor
             string basePath_PLAN = Path.Combine(Directory.GetCurrentDirectory(), "RBS", "TESTPLAN");
 
 
-            var FilePath = context.ViewCalldetailsforspecificpoReports.Where(x=>x.L5noPo == L5NoPo && x.RlyNonrly == RlyNorly && x.RlyCd == RlyCd && x.PoDt == _PoDt && x.VendCd == Convert.ToInt32(UserName)).FirstOrDefault();
+            var FilePath = context.ViewCalldetailsforspecificpoReports.Where(x => x.L5noPo == L5NoPo && x.RlyNonrly == RlyNorly && x.RlyCd == RlyCd && x.PoDt == _PoDt && x.VendCd == Convert.ToInt32(UserName)).FirstOrDefault();
 
             string jpgPath = Path.Combine(basePath_IC, $"{FilePath.IcPhoto}.JPG");
             string pdfPath = Path.Combine(basePath_IC, $"{FilePath.IcPhoto}.PDF");
@@ -173,13 +171,13 @@ namespace IBS.Repositories.Vendor
                         Remark = l.Remark,
                         CallStatus = l.CallStatus,
                         Colour = l.Colour,
-                        MfgPers = l.MfgPers,    
+                        MfgPers = l.MfgPers,
                         MfgPhone = l.MfgPhone,
                         CallSno = l.CallSno,
                         Hologram = l.Hologram,
 
-                        IcPhoto = jpgPath == null && pdfPath == null ? "" : jpgPath != null ? "/RBS/BILL_IC/" + l.IcPhoto + ".JPG" : pdfPath != null ? "/RBS/BILL_IC/" + l.IcPhoto + ".PDF" 
-                        : fpath3_jpg != null ? "/RBS/TESTPLAN/" + l.IcPhoto + ".JPG" : fpath3_pdf != null ? "/RBS/TESTPLAN/" + l.IcPhoto + ".PDF" 
+                        IcPhoto = jpgPath == null && pdfPath == null ? "" : jpgPath != null ? "/RBS/BILL_IC/" + l.IcPhoto + ".JPG" : pdfPath != null ? "/RBS/BILL_IC/" + l.IcPhoto + ".PDF"
+                        : fpath3_jpg != null ? "/RBS/TESTPLAN/" + l.IcPhoto + ".JPG" : fpath3_pdf != null ? "/RBS/TESTPLAN/" + l.IcPhoto + ".PDF"
                         : fpath1_jpg != null ? "/RBS/BILL_IC/" + l.IcPhotoA1 + ".JPG" : fpath1_pdf != null ? "/RBS/BILL_IC/" + l.IcPhotoA1 + ".PDF"
                         : fpath2_jpg != null ? "/RBS/BILL_IC/" + l.IcPhotoA2 + ".JPG" : fpath2_pdf != null ? "/RBS/BILL_IC/" + l.IcPhotoA2 + ".PDF" : "",
 

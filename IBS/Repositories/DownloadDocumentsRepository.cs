@@ -56,7 +56,7 @@ namespace IBS.Repositories
             }
             DocType = DocType.ToString() == null ? string.Empty : DocType.ToString();
             DocSubType = DocSubType.ToString() == null ? string.Empty : DocSubType.ToString();
-            DocSearch = DocSearch.ToString()==null ? string.Empty : DocSearch;
+            DocSearch = DocSearch.ToString() == null ? string.Empty : DocSearch;
 
             query = from l in context.T76DocumentCatalogs
                     where l.DocType.Contains(DocType) && l.DocSubType.Contains(DocSubType) && l.DocumentName.Contains(DocSearch)

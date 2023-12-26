@@ -1,14 +1,9 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -40,7 +35,7 @@ namespace IBS.Controllers
                 var Region = GetRegionCode;
                 var User = UserId.ToString();
                 dTResult = LabInvoiceRptRepository.Getdtreg(RegNo, GetRegionCode, User);
-                
+
             }
             catch (Exception ex)
             {

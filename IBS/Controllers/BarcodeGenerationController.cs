@@ -1,14 +1,10 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
 using iTextSharp.text.pdf;
-using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using System.Drawing.Imaging;
-using System.Text;
-using System.Drawing;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers
 {
@@ -140,7 +136,7 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GenerateBarcode(string Barcode, int quantity,string caseno,int callsno,string calldate)
+        public IActionResult GenerateBarcode(string Barcode, int quantity, string caseno, int callsno, string calldate)
         {
             SaveBarcodeGenerated(Barcode, quantity, caseno, callsno, calldate);
             List<System.Drawing.Image> images = new List<System.Drawing.Image>();
@@ -179,7 +175,7 @@ namespace IBS.Controllers
             string IPADDRESS = this.HttpContext.Connection.RemoteIpAddress.ToString();
             string USERID = Convert.ToString(UserId);
             string CREATEDBY = UserName.Trim();
-            
+
             try
             {
                 bool dTResult = BarcodeGen.SaveBarcodeGenerated(Barcode, quantity, caseno, callsno, calldate, IPADDRESS, USERID, CREATEDBY);
@@ -250,18 +246,18 @@ namespace IBS.Controllers
                 document.Open();
 
                 foreach (System.Drawing.Image image in images)
-                {                    
+                {
                     var img = iTextSharp.text.Image.GetInstance(ImageToByteArray(image));
                     document.Add(img);
-                    document.NewPage(); 
-                    
+                    document.NewPage();
+
                 }
 
                 if (document.IsOpen()) document.Close();
                 return ms.ToArray();
             }
         }
-        
+
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
             MemoryStream ms = new MemoryStream();

@@ -4,14 +4,7 @@ using IBS.DataAccess;
 using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
-using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
@@ -36,15 +29,15 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("SuperSurpirseForm", "Index", "view")]
-        public IActionResult SuperSurpirseManage(string CaseNo,string CallDt,string CallSNo,int Count)
+        public IActionResult SuperSurpirseManage(string CaseNo, string CallDt, string CallSNo, int Count)
         {
             SuperSurpirseFormModel SuperSurpirseFormModel = new SuperSurpirseFormModel();
             try
-            {   
+            {
                 SuperSurpirseFormModel.Regin = GetRegionCode;
                 SuperSurpirseFormModel = SuperSurpirseFormRepository.LoadSuperData(SuperSurpirseFormModel, CaseNo, CallDt, CallSNo);
                 SuperSurpirseFormModel.Regin = GetRegionCode;
-                if(Count == 1)
+                if (Count == 1)
                 {
                     ViewBag.Count = 1;
                 }
@@ -67,7 +60,7 @@ namespace IBS.Controllers
             try
             {
                 string Regin = GetRegionCode;
-                 dTResult = SuperSurpirseFormRepository.GetSuperFormData(dtParameters, Regin);
+                dTResult = SuperSurpirseFormRepository.GetSuperFormData(dtParameters, Regin);
                 var Caseno = dtParameters.AdditionalValues?.GetValueOrDefault("CaseNo");
                 var CallDt = dtParameters.AdditionalValues?.GetValueOrDefault("CallDate");
                 var CallSNo = dtParameters.AdditionalValues?.GetValueOrDefault("CallSNo");
@@ -84,7 +77,7 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "SuperSurpirseForm", "LoadTable", 1, GetIPAddress());
             }
             return Json(dTResult);
-        }       
+        }
         [HttpPost]
         [Authorization("SuperSurpirseForm", "Index", "edit")]
         public IActionResult Save(SuperSurpirseFormModel SuperSurpirseFormModel)

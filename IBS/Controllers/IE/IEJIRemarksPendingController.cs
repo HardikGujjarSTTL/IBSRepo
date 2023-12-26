@@ -1,5 +1,4 @@
-﻿using IBS.Interfaces;
-using IBS.Interfaces.IE;
+﻿using IBS.Interfaces.IE;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 

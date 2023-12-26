@@ -5,18 +5,9 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Dynamic;
 using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.Inspection_Billing
 {
@@ -335,7 +326,7 @@ namespace IBS.Repositories.Inspection_Billing
                                 .Where(x => x.CaseNo == model.CASE_NO && x.CallRecvDt == callRecvDt && x.CallSno == Convert.ToInt32(model.CALL_SNO))
                                 .Select(x => x).FirstOrDefault();
 
-                    if(_data != null)
+                    if (_data != null)
                     {
                         _data.Remarks = model.REMARKS;
                         _data.IeCd = IE;
@@ -347,7 +338,7 @@ namespace IBS.Repositories.Inspection_Billing
                         _data.Updatedby = Convert.ToString(uModel.UserID);
                         _data.Updateddate = DateTime.Now;
                         context.SaveChanges();
-                    }                    
+                    }
 
                     if (cl_exist == 0)
                     {

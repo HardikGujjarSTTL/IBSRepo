@@ -1,9 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Dynamic;
-using System.Reflection.PortableExecutable;
 
 namespace IBS.Controllers
 {
@@ -21,7 +18,7 @@ namespace IBS.Controllers
             ViewBag.pTTo = pDtTo;
             string wRegion = pDtTo;
             wRegion = GetRegionCode;
-             UserID = UserId;
+            UserID = UserId;
             string wRgn_Name = "";
 
             if (pSortKey == "V")
@@ -48,7 +45,7 @@ namespace IBS.Controllers
             { wRgn_Name = "CENTRAL REGION"; }
             else
             { wRgn_Name = "--x--"; }
-            Calls_Marked_ReportModel dTResult = callmarkedreportrepository.Query1(pDtFr, pDtTo, wRegion, pSortKey , UserID, wRgn_Name);
+            Calls_Marked_ReportModel dTResult = callmarkedreportrepository.Query1(pDtFr, pDtTo, wRegion, pSortKey, UserID, wRgn_Name);
             return View(dTResult);
         }
 

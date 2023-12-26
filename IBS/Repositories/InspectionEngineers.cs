@@ -1,10 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Connections.Features;
-using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Xml.Linq;
 
 namespace IBS.Repositories
 {

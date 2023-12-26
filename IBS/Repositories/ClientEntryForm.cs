@@ -35,7 +35,7 @@ namespace IBS.Repositories
             }
         }
 
-        public DTResult<ClientEntryFormModel>GetClientEntryFormList(DTParameters dtParameters)
+        public DTResult<ClientEntryFormModel> GetClientEntryFormList(DTParameters dtParameters)
         {
 
             DTResult<ClientEntryFormModel> dTResult = new() { draw = 0 };
@@ -99,7 +99,7 @@ namespace IBS.Repositories
             var roles = context.T32ClientLogins.Find(Convert.ToByte(Mobile));
             if (roles == null) { return false; }
 
-           // roles.Isdeleted = Convert.ToByte(true);
+            // roles.Isdeleted = Convert.ToByte(true);
             roles.Updatedby = Convert.ToInt32(UserID);
             roles.Updateddate = DateTime.Now;
             context.SaveChanges();
@@ -112,8 +112,8 @@ namespace IBS.Repositories
             var CEF = context.T32ClientLogins.Where(x => x.Mobile == model.Mobile).FirstOrDefault();
             #region Role save
             //if (CEF == null || CEF.Mobile == 0)
-                if (CEF == null )
-                {
+            if (CEF == null)
+            {
                 T32ClientLogin obj = new T32ClientLogin();
 
                 obj.Organisation = model.Organisation;
@@ -123,7 +123,7 @@ namespace IBS.Repositories
                 obj.Email = model.Email;
                 obj.Mobile = model.Mobile;
                 obj.Createdby = model.Createdby;
-               // obj.Isdeleted = Convert.ToByte(false);
+                // obj.Isdeleted = Convert.ToByte(false);
                 obj.Createddate = DateTime.Now;
                 context.T32ClientLogins.Add(obj);
                 context.SaveChanges();

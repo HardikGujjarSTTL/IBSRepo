@@ -1,16 +1,10 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
 using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -54,10 +48,10 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        public IActionResult BindCourseName(string TrainingType,string TrainingArea)
+        public IActionResult BindCourseName(string TrainingType, string TrainingArea)
         {
             string Regin = GetRegionCode;
-            List<SelectListItem> CourseName = Common.CourseName(Regin,TrainingType, TrainingArea);
+            List<SelectListItem> CourseName = Common.CourseName(Regin, TrainingType, TrainingArea);
             return Json(new { status = true, list = CourseName });
         }
         [HttpPost]

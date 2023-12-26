@@ -1,16 +1,14 @@
-﻿using IBS.Interfaces.WebsitePages;
+﻿using IBS.Helper;
+using IBS.Interfaces.WebsitePages;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using IBS.Helper;
-using System.Collections.Specialized;
-using System.Globalization;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -93,8 +91,6 @@ namespace IBS.Controllers.WebsitePages
             string salt = "A4476C2062FFA58980DC8F79EB6A799E";
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
-            int keysize = 256;
-            string hashAlgorithm = "SHA1";
             string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
 
             string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
@@ -118,7 +114,6 @@ namespace IBS.Controllers.WebsitePages
 
             StreamReader reader = new StreamReader(response.GetResponseStream());
             string temp = null;
-            string status = "";
             while ((temp = reader.ReadLine()) != null)
             {
                 jsonresponse += temp;
@@ -222,8 +217,6 @@ namespace IBS.Controllers.WebsitePages
             OnlinePaymentGateway model = new();
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
-            int keysize = 256;
-            string hashAlgorithm = "SHA1";
             string encdata = Request.Form["encdata"];
             string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
             string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
@@ -244,7 +237,7 @@ namespace IBS.Controllers.WebsitePages
             model.PaymentStatus = objectres.payInstrument.responseDetails.message;
             model.Email = objectres.payInstrument.custDetails.custEmail;
             model.Mobile = objectres.payInstrument.custDetails.custMobile;
-            model.MerID= objectres.payInstrument.merchDetails.merchId;
+            model.MerID = objectres.payInstrument.merchDetails.merchId;
             model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
             model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
             model.custAccNo = objectres.payInstrument.payDetails.custAccNo;

@@ -1,7 +1,5 @@
 ﻿using IBS.Interfaces.IE;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories.IE;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.IE

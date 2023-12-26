@@ -2,18 +2,11 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
+using Oracle.ManagedDataAccess.Types;
 using System.Data;
 using System.Globalization;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
-using System.Globalization;
-using Oracle.ManagedDataAccess.Types;
 
 namespace IBS.Repositories
 {
@@ -364,7 +357,7 @@ namespace IBS.Repositories
             if (model.InvoiceNo == null)
             {
 
-               
+
                 string InvoiceNo = Generate_Invoice_Bill_No(model);
                 int SrNo = Getsrno(InvoiceNo);
                 model.InvoiceDt = DateTime.Now.ToString("MM/dd/yyyy");
@@ -412,7 +405,7 @@ namespace IBS.Repositories
                 model.TestingCharges = Convert.ToString(Testing_Charges_N);
                 //insert lab invoice detail
                 LabInvoiceDetailsNew(model, InvoiceNo, SrNo, AMT_RATE_N, Testingfee);
-               
+
                 //select lab invoice
                 var result = context.T55LabInvoices
                     .Where(invoice => invoice.InvoiceNo == InvoiceNo)
@@ -423,15 +416,15 @@ namespace IBS.Repositories
                         invoice.TotalIgst,
                         invoice.BillAmount
                     })
-                    .FirstOrDefault(); 
+                    .FirstOrDefault();
 
-                            if (result != null)
-                            {
-                                 totalCgst = Convert.ToDecimal(result.TotalCgst);
-                                 totalSgst = Convert.ToDecimal(result.TotalSgst);
-                                 totalIgst = Convert.ToDecimal(result.TotalIgst);
-                                 billAmount = Convert.ToDecimal(result.BillAmount);
-                            }
+                if (result != null)
+                {
+                    totalCgst = Convert.ToDecimal(result.TotalCgst);
+                    totalSgst = Convert.ToDecimal(result.TotalSgst);
+                    totalIgst = Convert.ToDecimal(result.TotalIgst);
+                    billAmount = Convert.ToDecimal(result.BillAmount);
+                }
                 totalCgst += Convert.ToDecimal(model.CGST.Trim());
                 totalSgst += Convert.ToDecimal(model.SGST.Trim());
                 totalIgst += Convert.ToDecimal(model.IGST.Trim());
@@ -449,7 +442,7 @@ namespace IBS.Repositories
 
                     context.SaveChanges();
                 }
-               
+
             }
             return Id;
         }
@@ -477,7 +470,7 @@ namespace IBS.Repositories
             }
             return true;
         }
-        public bool LabInvoiceDetailsNew(LabInvoiceModel model, string InvoiceNo, int SrNo, decimal AMT_RATE_N,string Testingfee)
+        public bool LabInvoiceDetailsNew(LabInvoiceModel model, string InvoiceNo, int SrNo, decimal AMT_RATE_N, string Testingfee)
         {
             try
             {

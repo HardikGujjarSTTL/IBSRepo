@@ -3,13 +3,8 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Dynamic;
-using System.Net.NetworkInformation;
 
 namespace IBS.Controllers.Vendor
 {

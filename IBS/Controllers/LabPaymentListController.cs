@@ -1,12 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace IBS.Controllers
 {
@@ -42,7 +37,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [Authorization("LabPaymentList", "LabPaymentList", "view")]
-        public IActionResult LabPaymentApproval(string CaseNo,string CallSno,string CallRecvDt)
+        public IActionResult LabPaymentApproval(string CaseNo, string CallSno, string CallRecvDt)
         {
             ViewBag.CaseNo = CaseNo;
             ViewBag.CallSno = CallSno;

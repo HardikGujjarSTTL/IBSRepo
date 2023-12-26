@@ -68,13 +68,13 @@ namespace IBS.Repositories.IE
             SetNo = SetNo.ToString() == "" ? string.Empty : SetNo.ToString();
 
             query = from p in context.ViewGetIcphotoencloseds
-                    where p.RegionCode == GetRegionCode 
+                    where p.RegionCode == GetRegionCode
                     && (string.IsNullOrEmpty(CaseNo) || p.CaseNo == CaseNo)
                     && (string.IsNullOrEmpty(CallRecvDt) || p.CallRecvDt == DateTime.ParseExact(CallRecvDt, "dd/MM/yyyy", null))
                     && (string.IsNullOrEmpty(CallSno) || p.CallSno == int.Parse(CallSno))
                     && (string.IsNullOrEmpty(BkNo) || p.BkNo == BkNo)
                     && (string.IsNullOrEmpty(SetNo) || p.SetNo == SetNo)
-                    && (p.IeCd == (int)GetIeCd)
+                    && (p.IeCd == GetIeCd)
 
                     select new ICPhotoEnclosedModel
                     {

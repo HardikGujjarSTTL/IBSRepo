@@ -2,15 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -22,13 +16,13 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-       
+
         public DetailsofPurchaserWiseInspModel SummaryInsp(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string FromDate, string ToDate, string ForParticular, string lstParticular, string Regin, string TextPurchaser)
         {
 
             DetailsofPurchaserWiseInspModel model = new();
             List<DetailsofPurchaserWiseInspModel> lstSummary = new();
-                       
+
 
             OracleParameter[] par = new OracleParameter[11];
             par[0] = new OracleParameter("P_REGION_CODE", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
@@ -44,7 +38,7 @@ namespace IBS.Repositories
             par[10] = new OracleParameter("P_DetailsPurchase_INFO", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_DetailsPurchase_INFO", par, 10);
-           
+
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);

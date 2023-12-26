@@ -1,5 +1,4 @@
 ﻿using IBS.Models;
-using IBS.Repositories;
 
 namespace IBS.Interfaces
 {

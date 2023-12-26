@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -36,7 +35,7 @@ namespace IBS.Controllers
             {
                 model.TypeCb = Type;
             }
-            model.RegionCd= Region;
+            model.RegionCd = Region;
             return View(model);
         }
 
@@ -47,7 +46,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [Authorization("ClientContract", "Index", "delete")]
-        public IActionResult Delete(int id,string Type)
+        public IActionResult Delete(int id, string Type)
         {
             try
             {
@@ -61,7 +60,7 @@ namespace IBS.Controllers
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "ClientContract", "Delete", 1, GetIPAddress());
                 AlertDanger();
             }
-            return RedirectToAction("Index", new { type= Type });
+            return RedirectToAction("Index", new { type = Type });
         }
 
         [HttpPost]

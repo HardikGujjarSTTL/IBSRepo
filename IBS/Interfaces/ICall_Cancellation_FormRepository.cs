@@ -8,6 +8,6 @@ namespace IBS.Interfaces
         public Call_Cancellation_FormModel GetINSP(string caseNo = "", string callRecvDate = "", string callSno = "");
         public Call_Cancellation_FormModel Combined(string caseNo = "", string callRecvDate = "", string callSno = "");
         public string SaveDetails(Call_Cancellation_FormModel model, string selectedvalues, string Uname);
-        public string delete_details(string caseNo,string calldate, string callsno);
+        public string delete_details(string caseNo, string calldate, string callsno);
     }
 }

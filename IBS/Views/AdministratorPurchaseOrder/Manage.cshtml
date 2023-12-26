@@ -327,7 +327,9 @@
             });
 
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
-                FillPurchaserCdForEdit('@Model.PurchaserCd');
+                if ('@Model.PurchaserCd' != null && '@Model.PurchaserCd' != "") {
+                    FillPurchaserCdForEdit('@Model.PurchaserCd');
+                }
                 fill_manufacturer('@Model.PoiCd');
             }
         });

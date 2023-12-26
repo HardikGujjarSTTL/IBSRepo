@@ -3,7 +3,6 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
@@ -13,7 +12,7 @@ namespace IBS.Controllers
     public class ComplaintApprovalController : BaseController
     {
         #region Variables
-        private readonly IComplaintApprovalRepository complaintApprovalRepository ;
+        private readonly IComplaintApprovalRepository complaintApprovalRepository;
         #endregion
 
         private readonly IDocument iDocument;
@@ -38,7 +37,7 @@ namespace IBS.Controllers
         }
 
         [Authorization("ComplaintApproval", "Index", "view")]
-        public IActionResult Manage(string TEMP_COMPLAINT_ID,string SetNo,string BKNo,string CaseNo)
+        public IActionResult Manage(string TEMP_COMPLAINT_ID, string SetNo, string BKNo, string CaseNo)
         {
             OnlineComplaints model = new();
 
@@ -70,7 +69,7 @@ namespace IBS.Controllers
             string msg = "";
             try
             {
-                 msg = complaintApprovalRepository.RejectComp(model);
+                msg = complaintApprovalRepository.RejectComp(model);
             }
             catch (Exception ex)
             {
@@ -101,7 +100,7 @@ namespace IBS.Controllers
             }
             if (msg == "Success")
             {
-                msg ="Accepted!";
+                msg = "Accepted!";
             }
             else
             {
@@ -118,7 +117,7 @@ namespace IBS.Controllers
             model.UpdatedBy = UserId;
             model.UserId = UserName.Substring(0, 8);
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);
-            return Json(new { status = true, responseText = msg, redirectToIndex = true});
+            return Json(new { status = true, responseText = msg, redirectToIndex = true });
         }
     }
 }
