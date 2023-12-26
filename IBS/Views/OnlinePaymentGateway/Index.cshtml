@@ -87,19 +87,13 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/atomcheckout.js"></script>
-<script src="~/js/functions.js"></script>
     <script type="text/javascript">
 
         jQuery(document).ready(function ($) {
-
-
-            $(".datepicker").datepicker();
-
             $("#PayNowId").hide();
         });
 
         function BtnVerify() {
-            debugger;
             $("#spnErrorCaseNo").html("");
             $("#spnErrorCallDate").html("");
             $("#spnErrorCallSno").html("");
@@ -195,11 +189,12 @@
                 var CallSNo = $("#CallSno").val();
                 var ChargesType = $("#ChargesType").val();
                 var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
-                returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
-                returnUrl += "&CaseNo=" + CaseNo +
-                             "&CallDate=" + CallDate +
-                             "&CallSno=" + CallSno +
-                             "&ChargesType=" + ChargesType;
+                returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref) + "&CaseNo=" + CaseNo + "&CallDate=" + CallDate + "&CallSno=" + CallSno +
+                            "&ChargesType=" + ChargesType;
+                //returnUrl += "&CaseNo=" + CaseNo +
+                //             "&CallDate=" + CallDate +
+                //             "&CallSno=" + CallSno +
+                //             "&ChargesType=" + ChargesType;
                 const options = {
                     "atomTokenId": rb,
                     "merchId": response.response.MerID,
