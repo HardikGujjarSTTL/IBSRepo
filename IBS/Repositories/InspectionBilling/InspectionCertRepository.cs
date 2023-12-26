@@ -730,7 +730,8 @@ namespace IBS.Repositories.InspectionBilling
                             }
                             if (model.IcTypeId == 9 && query3.CnoteBillNo != null)
                             {
-                                model.BillNo = query3.CnoteBillNo;
+                                //model.BillNo = query3.CnoteBillNo;
+                                model.CnoteBillNo = query3.CnoteBillNo;
                             }
                             if (query3.SentToSap == "X" || query3.BillFinalised == "Y")
                             {

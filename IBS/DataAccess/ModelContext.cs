@@ -13899,7 +13899,7 @@ public partial class ModelContext : DbContext
                 .ToView("T17_CALL_REGISTER_SEARCH_VIEW");
 
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterNo)
                 .HasMaxLength(30)
@@ -25169,7 +25169,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("C_STATUS");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterNo)
                 .HasMaxLength(30)
@@ -25339,7 +25339,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("BPO");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterDt)
                 .HasMaxLength(10)

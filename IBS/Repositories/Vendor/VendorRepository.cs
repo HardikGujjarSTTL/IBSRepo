@@ -223,7 +223,7 @@ namespace IBS.Repositories.Vendor
                 User.Name = model.VendName;
                 User.UserType = "VENDOR";
                 User.Createddate = DateTime.Now.Date;
-                User.Createdby = model.UserId;
+                //User.Createdby = model.UserId;
                 
                 context.UserMasters.Add(User);
                 context.SaveChanges();
@@ -231,7 +231,7 @@ namespace IBS.Repositories.Vendor
             else
             {
                 UserDetails.Name = model.VendName;
-                UserDetails.Createdby = model.UserId;
+                //UserDetails.Createdby = model.UserId;
                 context.SaveChanges();
             }
         }
