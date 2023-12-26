@@ -1,15 +1,9 @@
-﻿using IBS.Interfaces.Inspection_Billing;
-using IBS.Interfaces.Reports;
-using Microsoft.AspNetCore.Mvc;
-using IBS.Models;
-using System.Drawing;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Net.Mail;
-using IBS.Filters;
-using static IBS.Helper.Enums;
+﻿using IBS.Filters;
 using IBS.Interfaces;
+using IBS.Interfaces.Inspection_Billing;
+using IBS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.InspectionBilling
 {

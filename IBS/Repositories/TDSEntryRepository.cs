@@ -1,7 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -45,7 +44,7 @@ namespace IBS.Repositories
             if (t22Bill != null)
             {
                 decimal wtotOld = t22Bill.Tds ?? 0 + t22Bill.RetentionMoney ?? 0 + t22Bill.WriteOffAmt ?? 0 + t22Bill.TdsCgst ?? 0 + t22Bill.TdsSgst ?? 0 + t22Bill.TdsIgst ?? 0;
-                decimal wtotNew = model.TDS + model.Retention_Money + model.WrtOffAmount + model.TDSCGST + model.TDSSGST  + model.TDSIGST;
+                decimal wtotNew = model.TDS + model.Retention_Money + model.WrtOffAmount + model.TDSCGST + model.TDSSGST + model.TDSIGST;
                 decimal BillAmtCleared = (t22Bill.BillAmtCleared ?? 0 - wtotOld) + wtotNew;
 
                 t22Bill.Tds = model.TDS;

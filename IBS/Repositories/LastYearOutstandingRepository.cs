@@ -1,16 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
-using System.Data;
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using IBS.Helper;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Diagnostics.Metrics;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -24,7 +19,7 @@ namespace IBS.Repositories
         }
 
         public LastYearOutstandingModel FindByID(string LYPer, string rgnCode)
-        {  
+        {
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[3];
@@ -38,13 +33,13 @@ namespace IBS.Repositories
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<LastYearOutstandingModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                } 
+                }
                 return model;
-            } 
+            }
         }
- 
+
         public DTResult<LastYearOutstandingModel> GetLastYearOutstandingList(DTParameters dtParameters, string RgnCd)
-        { 
+        {
             DTResult<LastYearOutstandingModel> dTResult = new() { draw = 0 };
             IQueryable<LastYearOutstandingModel>? query = null;
 
@@ -74,16 +69,16 @@ namespace IBS.Repositories
                     select new LastYearOutstandingModel
                     {
                         //Id = l.Id,
-                        Ly_Per = l.LyPer,                         
+                        Ly_Per = l.LyPer,
                         Ly_Outs = l.LyOuts,
                         User_Id = l.UserId,
-                        Datetime = l.Datetime,                                                                     
+                        Datetime = l.Datetime,
                         //Isdeleted = l.Isdeleted,
                         //Createdby = l.Createdby,
                         //Createddate = l.Createddate,
                         //Updatedby= l.Updatedby,
                         //Updateddate= l.Updateddate,
-            };
+                    };
 
             dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
@@ -94,11 +89,11 @@ namespace IBS.Repositories
 
         public bool Remove(string LyPer, string strRgn)
         {
-             
+
             var _LyPer = (from m in context.T84OutsLies
-                              where m.LyPer == LyPer
-                             && m.RegionCode == strRgn
-                             select m).FirstOrDefault();
+                          where m.LyPer == LyPer
+                         && m.RegionCode == strRgn
+                          select m).FirstOrDefault();
 
             if (_LyPer == null) { return false; }
 
@@ -122,14 +117,14 @@ namespace IBS.Repositories
             {
                 T84OutsLy obj = new T84OutsLy();
                 obj.LyPer = model.Ly_Per;
-                obj.LyOuts = model.Ly_Outs; 
+                obj.LyOuts = model.Ly_Outs;
                 obj.UserId = model.User_Id;
                 obj.RegionCode = model.Region_Code;
                 obj.Isdeleted = false;
                 //obj.Createdby = model.UserId;
                 //obj.Createddate = DateTime.Now;
-               // obj.Updatedby = model.UserId;
-               // obj.Updateddate = DateTime.Now;
+                // obj.Updatedby = model.UserId;
+                // obj.Updateddate = DateTime.Now;
                 context.T84OutsLies.Add(obj);
                 context.SaveChanges();
                 Id = (obj.LyPer);
@@ -137,13 +132,13 @@ namespace IBS.Repositories
             else
             {
                 //_BeTarget.LyPer = model.LyPer;
-                _BeTarget.LyOuts = model.Ly_Outs;                 
+                _BeTarget.LyOuts = model.Ly_Outs;
                 //_BeTarget.Updatedby = model.UserId;
                 //_BeTarget.Updateddate = DateTime.Now;
                 Id = _BeTarget.LyPer;
                 context.SaveChanges();
             }
-            
+
             return Id;
             #endregion
         }

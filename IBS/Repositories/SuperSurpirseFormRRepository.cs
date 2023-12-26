@@ -2,18 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Xml.Linq;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -35,7 +26,7 @@ namespace IBS.Repositories
             var exists = context.T44SuperSurprises
                 .FirstOrDefault(s => s.CaseNo == Caseno && s.CallRecvDt == CallDt && s.CallSno == CallSNo);
             int count = 0;
-            if(exists != null)
+            if (exists != null)
             {
                 count = 1;
             }
@@ -228,7 +219,7 @@ namespace IBS.Repositories
             var CallDt = Convert.ToDateTime(SuperSurpirseFormModel.CallDt).ToString("MM/dd/yyyy");
             var SuperDt = Convert.ToDateTime(SuperSurpirseFormModel.SuperSurpriseDt).ToString("MM/dd/yyyy");
 
-            
+
             if (SuperSurpirseFormModel.SuperSurpriseNo == null && SuperSurpirseFormModel.SuperSurpriseDt != null)
             {
 
@@ -279,7 +270,7 @@ namespace IBS.Repositories
                 par[0] = new OracleParameter("IN_REGION_CD", OracleDbType.NVarchar2, SuperSurpirseFormModel.Regin, ParameterDirection.Input);
                 par[1] = new OracleParameter("IN_SUPER_SURPRISE_DT", OracleDbType.Date, SuperDt, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                
+
                 var ds = DataAccessDB.GetDataSet("GENERATE_SUPER_SURPRISE_NO3", par, 2);
 
                 SuperSurpirseFormModel model = new();
@@ -289,9 +280,9 @@ namespace IBS.Repositories
                     DataRow row = ds.Tables[0].Rows[0];
                     model = new SuperSurpirseFormModel
                     {
-                        SuperSurpriseNo = Convert.ToString(row["SUPER_SURPRISE_NO"]),                       
+                        SuperSurpriseNo = Convert.ToString(row["SUPER_SURPRISE_NO"]),
                     };
-                    
+
                 }
                 var SuperSurpriseNo = model.SuperSurpriseNo.Trim();
                 return SuperSurpriseNo;

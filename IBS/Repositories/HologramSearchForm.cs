@@ -1,9 +1,7 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
 
 namespace IBS.Repositories
@@ -183,7 +181,7 @@ namespace IBS.Repositories
         public int CheckDate(string IEDate)
         {
             int result = 0;
-            
+
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             using (var command = context.Database.GetDbConnection().CreateCommand())
             {
@@ -229,7 +227,7 @@ namespace IBS.Repositories
                             (sto >= Convert.ToInt32(h.HgNoFr) && sto <= Convert.ToInt32(h.HgNoTo)) ||
                             (sfr < Convert.ToInt32(h.HgNoFr) && sto > Convert.ToInt32(h.HgNoTo))) &&
                             h.HgRegion == model.HgRegion)
-                        .Count();                
+                        .Count();
             }
             return count;
         }
@@ -237,7 +235,7 @@ namespace IBS.Repositories
         public string IEIssueOrNot(string IE)
         {
             var result = "";
-            
+
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             using (var command = context.Database.GetDbConnection().CreateCommand())
             {
@@ -264,7 +262,7 @@ namespace IBS.Repositories
         public int MatchHologram(string HgNoFr, string HgNoTo, string Region)
         {
             int count = 0;
-            var result = "";            
+            var result = "";
 
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             using (var command = context.Database.GetDbConnection().CreateCommand())

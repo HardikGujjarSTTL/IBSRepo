@@ -2,11 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {
@@ -63,7 +59,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T34CentralItemMasters
-                    where l.Isdeleted == 0 
+                    where l.Isdeleted == 0
                     select new CentralItemMasterModel
                     {
                         Id = l.Id,
@@ -109,7 +105,7 @@ namespace IBS.Repositories
                 obj.RailCd = model.RailCd;
                 obj.RailDesc = model.RailDesc;
                 obj.RailLengthMeter = model.RailLengthMeter;
-                obj.UserId =model.UserId;
+                obj.UserId = model.UserId;
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = model.Createdby;
                 obj.Createddate = DateTime.Now;
@@ -133,9 +129,10 @@ namespace IBS.Repositories
 
         public bool CheckAlreadyExist(CentralItemMasterModel model)
         {
-            var t34CentralItemMaster =(from m in context.T34CentralItemMasters
-                                       where m.RailCd == model.RailCd && m.Id != model.Id select m).ToList();
-            if(t34CentralItemMaster != null && t34CentralItemMaster.Count != 0) 
+            var t34CentralItemMaster = (from m in context.T34CentralItemMasters
+                                        where m.RailCd == model.RailCd && m.Id != model.Id
+                                        select m).ToList();
+            if (t34CentralItemMaster != null && t34CentralItemMaster.Count != 0)
             {
                 return true;
             }
@@ -150,7 +147,7 @@ namespace IBS.Repositories
         public CentralItemDetailModel FindDetailsByID(int ID)
         {
             CentralItemDetailModel model = new();
-            T35CentralItemDetail t35CentralItemDetail = context.T35CentralItemDetails .Find(ID);
+            T35CentralItemDetail t35CentralItemDetail = context.T35CentralItemDetails.Find(ID);
 
             if (t35CentralItemDetail == null)
                 throw new Exception("Record Not found");
@@ -192,7 +189,7 @@ namespace IBS.Repositories
                 orderCriteria = "Id";
                 orderAscendingDirection = true;
             }
-            int RailId=0;
+            int RailId = 0;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["RailId"]))
             {
                 RailId = Convert.ToInt32(dtParameters.AdditionalValues["RailId"]);

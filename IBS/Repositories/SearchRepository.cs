@@ -2,10 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -97,7 +95,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string caseno = null, pono = null, podt = null, bkno = null, setno = null, calldt =null, billno = null, billdt = null, billamount = null, bpo = null, consignee = null, vendor = null, IENAME = null, callsno = null;
+            string caseno = null, pono = null, podt = null, bkno = null, setno = null, calldt = null, billno = null, billdt = null, billamount = null, bpo = null, consignee = null, vendor = null, IENAME = null, callsno = null;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["caseno"]))
             {
                 caseno = Convert.ToString(dtParameters.AdditionalValues["caseno"]);
@@ -177,7 +175,7 @@ namespace IBS.Repositories
             par[14] = new OracleParameter("p_bill_amt", OracleDbType.Int32, billamount, ParameterDirection.Input);
             par[15] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("GetSearchAllData", par, 1);
-            
+
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
@@ -185,18 +183,18 @@ namespace IBS.Repositories
                 {
                     CaseNo = row["CASE_NO"].ToString(),
                     PONO = row["PO_NO"].ToString(),
-                    PODT = DateTime.TryParse(row["PO_DT"].ToString(), out var poDt) ? (DateTime?)poDt : null,
+                    PODT = DateTime.TryParse(row["PO_DT"].ToString(), out var poDt) ? poDt : null,
                     Consignee = row["CONSIGNEE"].ToString(),
-                    BPO = row["BPO_CD"] != DBNull.Value ? Convert.ToInt32(row["BPO_CD"]) : (int?)null,
-                    Calldt = DateTime.TryParse(row["CALL_RECV_DT"].ToString(), out var calldt) ? (DateTime?)calldt : null,
-                    CallSno = row["CALL_SNO"] != DBNull.Value ? Convert.ToInt32(row["CALL_SNO"]) : (int?)null,
+                    BPO = row["BPO_CD"] != DBNull.Value ? Convert.ToInt32(row["BPO_CD"]) : null,
+                    Calldt = DateTime.TryParse(row["CALL_RECV_DT"].ToString(), out var calldt) ? calldt : null,
+                    CallSno = row["CALL_SNO"] != DBNull.Value ? Convert.ToInt32(row["CALL_SNO"]) : null,
                     BKNO = row["BK_NO"].ToString(),
                     SetNo = row["SET_NO"].ToString(),
                     BillNo = row["BILL_NO"].ToString(),
-                    BillDt = DateTime.TryParse(row["BILL_DT"].ToString(), out var billDt) ? (DateTime?)billDt : null,
+                    BillDt = DateTime.TryParse(row["BILL_DT"].ToString(), out var billDt) ? billDt : null,
                     IEName = row["IE_SNAME"].ToString(),
-                    BillAmount = row["BILL_AMOUNT"] != DBNull.Value ? Convert.ToDecimal(row["BILL_AMOUNT"]) : (decimal?)null,
-                    InspFee = row["INSP_FEE"] != DBNull.Value ? Convert.ToDecimal(row["INSP_FEE"]) : (decimal?)null
+                    BillAmount = row["BILL_AMOUNT"] != DBNull.Value ? Convert.ToDecimal(row["BILL_AMOUNT"]) : null,
+                    InspFee = row["INSP_FEE"] != DBNull.Value ? Convert.ToDecimal(row["INSP_FEE"]) : null
                 }).ToList();
 
                 query = list.AsQueryable();
@@ -230,7 +228,7 @@ namespace IBS.Repositories
         public int CONSIGNEE_CD { get; set; }
         public string CONSIGNEE { get; set; }
     }
-    
+
     public class VendorCls
     {
         public int VEND_CD { get; set; }

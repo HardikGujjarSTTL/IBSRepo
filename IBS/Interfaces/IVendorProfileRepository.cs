@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
@@ -8,6 +7,6 @@ namespace IBS.Interfaces
         public VendorModel FindByID(int VendCd);
         DTResult<VendorlistModel> GetVendorList(DTParameters dtParameters);
         bool Remove(int VEND_CD, int UserID);
-        int VendorDetailsInsertUpdate(VendorModel model,bool isSameVendor);
+        int VendorDetailsInsertUpdate(VendorModel model, bool isSameVendor);
     }
 }

@@ -2,9 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 

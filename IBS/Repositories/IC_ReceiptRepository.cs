@@ -1,17 +1,11 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
 
 namespace IBS.Repositories
 {

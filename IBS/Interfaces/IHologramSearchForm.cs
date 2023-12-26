@@ -1,12 +1,11 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
     public interface IHologramSearchForm
     {
         HologramSearchFormModel FindByID(string HgNoFr, string HgNoTo, string Region);
-        DTResult<HologramSearchFormModel>GetHologramSearchFormList(DTParameters dtParameters, string region);
+        DTResult<HologramSearchFormModel> GetHologramSearchFormList(DTParameters dtParameters, string region);
         bool Remove(HologramSearchFormModel model);
         int SaveDetails(HologramSearchFormModel model);
         int CheckDate(string IEDate);

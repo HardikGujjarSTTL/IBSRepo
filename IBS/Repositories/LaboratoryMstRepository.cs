@@ -1,11 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -52,7 +48,7 @@ namespace IBS.Repositories
                         LabId = l.LabId,
                         LabName = l.LabName,
                         LabAddress = l.LabAddress,
-                        LabCity =l.City
+                        LabCity = l.City
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -69,9 +65,9 @@ namespace IBS.Repositories
 
             return dTResult;
         }
-        public LaboratoryMstModel FindByID(int LabId)            
+        public LaboratoryMstModel FindByID(int LabId)
         {
-            
+
             LaboratoryMstModel model = new();
             var Lab = context.T65LaboratoryMasters.Find(LabId);
 
@@ -101,14 +97,14 @@ namespace IBS.Repositories
         {
             //DateTime from = Convert.ToDateTime(model.LabApprovalFr);
             //DateTime to = Convert.ToDateTime(model.LabApprovalTo);
-            
+
             int Id = 0;
             //byte labid = Convert.ToByte("-1");
             ////var Lab = context.T65LaboratoryMasters.Find(Convert.ToInt32(model.LabId));
             //var Lab = (from r in context.T65LaboratoryMasters where r.LabId == labid select r).FirstOrDefault();
 
             //byte labid = Convert.ToByte(null);
-            
+
             var Lab = context.T65LaboratoryMasters.Find(model.LabId);
 
             #region Lab save
@@ -139,7 +135,7 @@ namespace IBS.Repositories
             else
             {
 
-               // Lab.LabId = Convert.ToByte(model.LabId);
+                // Lab.LabId = Convert.ToByte(model.LabId);
                 Lab.LabName = model.LabName;
                 Lab.LabAddress = model.LabAddress;
                 Lab.LabCity = Convert.ToInt32(model.LabCity);

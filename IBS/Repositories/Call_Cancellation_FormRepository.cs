@@ -1,10 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Dynamic;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -17,7 +13,7 @@ namespace IBS.Repositories
         }
         public Call_Cancellation_FormModel GetPOS(string caseNo = "", string callRecvDate = "", string callSno = "")
         {
-           
+
             Call_Cancellation_FormModel model = new();
 
             var query = from po in context.T13PoMasters
@@ -25,17 +21,17 @@ namespace IBS.Repositories
                         where po.CaseNo == caseNo
                         select new Call_Cancellation_FormModel
                         {
-                           PO_NO = po.PoNo,
+                            PO_NO = po.PoNo,
                             PO_DT = Convert.ToString(po.PoDt),
-                           VENDOR =  vendor.VendName,
-                           CASE_NO = caseNo,
-                           CALL_DATE = callRecvDate,
-                           CALL_SNO = callSno
-                           
+                            VENDOR = vendor.VendName,
+                            CASE_NO = caseNo,
+                            CALL_DATE = callRecvDate,
+                            CALL_SNO = callSno
+
                         };
 
             // Execute the query and retrieve the results
-             model = query.FirstOrDefault();
+            model = query.FirstOrDefault();
             return model;
         }
 
@@ -62,7 +58,7 @@ namespace IBS.Repositories
             Call_Cancellation_FormModel model = GetPOS(caseNo, callRecvDate, callSno);
             var result2 = GetINSP(caseNo, callRecvDate, callSno);
             var result3 = GetCallDetails(caseNo, callRecvDate, callSno);
-            if(result3 != null)
+            if (result3 != null)
             {
                 model.CANCEL_CD_1 = result3.CANCEL_CD_1;
                 //model.CANCEL_CD_2 = result3.CANCEL_CD_2;
@@ -79,11 +75,11 @@ namespace IBS.Repositories
                 model.DOCS_SUBMITTED = result3.DOCS_SUBMITTED;
                 model.CALL_CANCEL_STATUS = result3.CALL_CANCEL_STATUS;
                 model.CANCEL_DESC = result3.CANCEL_DESC;
-                if(result3.CANCEL_CD_1 == Convert.ToString(1))
+                if (result3.CANCEL_CD_1 == Convert.ToString(1))
                 {
                     model.Chk1 = true;
                 }
-                else if(result3.CANCEL_CD_1 == Convert.ToString(2))
+                else if (result3.CANCEL_CD_1 == Convert.ToString(2))
                 {
                     model.Chk2 = true;
                 }
@@ -128,7 +124,7 @@ namespace IBS.Repositories
                     model.Chk12 = true;
                 }
             }
-            if(result2 != null)
+            if (result2 != null)
             {
                 model.Inspection_Engineer = result2.Inspection_Engineer;
             }
@@ -161,11 +157,11 @@ namespace IBS.Repositories
                             CANCEL_CD_11 = Convert.ToString(t19.CancelCd11),
                             CANCEL_DESC = t19.CancelDesc,
                             CANCEL_DATE = Convert.ToString(t19.CancelDate),
-                            DOCS_SUBMITTED = t19.DocsSubmitted ?? "", 
+                            DOCS_SUBMITTED = t19.DocsSubmitted ?? "",
                             CALL_CANCEL_STATUS = t17.CallCancelStatus ?? ""
                         };
 
-          
+
 
 
             model = query.FirstOrDefault();
@@ -173,7 +169,7 @@ namespace IBS.Repositories
             return model;
 
         }
-        public string SaveDetails(Call_Cancellation_FormModel model,string selectedvalues , string Uname)
+        public string SaveDetails(Call_Cancellation_FormModel model, string selectedvalues, string Uname)
         {
 
             int chkbox = 0;
@@ -184,7 +180,7 @@ namespace IBS.Repositories
             var callCancelEntity = context.T19CallCancels
                 .Where(e => e.CaseNo == caseNo && e.CallRecvDt == callRecvDt && e.CallSno == Convert.ToByte(model.CALL_SNO))
                 .FirstOrDefault();
-            if(model.Chk1 == true)
+            if (model.Chk1 == true)
             {
                 chkbox = 1;
             }
@@ -232,7 +228,7 @@ namespace IBS.Repositories
             {
                 chkbox = 12;
             }
-            
+
 
             if (callCancelEntity != null)
             {
@@ -255,7 +251,7 @@ namespace IBS.Repositories
                 // Save changes to the database
                 context.SaveChanges();
 
-                SaveDetails2( model,  selectedvalues,  Uname);
+                SaveDetails2(model, selectedvalues, Uname);
             }
 
             return caseNo;
@@ -287,14 +283,14 @@ namespace IBS.Repositories
 
         public string delete_details(string caseNo, string calldate, string callsno)
         {
-          
+
 
 
 
 
             var query = context.T19CallCancels
          .Where(callCancel => callCancel.CaseNo == caseNo
-                           && callCancel.CallRecvDt ==Convert.ToDateTime(calldate)
+                           && callCancel.CallRecvDt == Convert.ToDateTime(calldate)
                            && callCancel.CallSno == Convert.ToByte(callsno));
 
             context.T19CallCancels.RemoveRange(query);

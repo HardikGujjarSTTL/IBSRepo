@@ -1,17 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging.Signing;
-using System.Buffers.Text;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Globalization;
-using System.Numerics;
-using IBS.Helper;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -254,7 +248,7 @@ namespace IBS.Repositories
                             //var jvDetail = (from m in context.T29JvDetails
                             //                where m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD)
                             //                select m).FirstOrDefault();
-                            var jvDetail = context.T29JvDetails.Where(m => m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD) && m.Id == item.ID).FirstOrDefault();                                          
+                            var jvDetail = context.T29JvDetails.Where(m => m.VchrNo == model.JV_NO && m.AccCd == Convert.ToInt32(item.ACC_CD) && m.Id == item.ID).FirstOrDefault();
                             if (jvDetail != null)
                             {
                                 jvDetail.AccCd = Convert.ToInt32(item.ACC_CD);

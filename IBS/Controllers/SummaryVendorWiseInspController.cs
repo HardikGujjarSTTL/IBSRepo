@@ -1,14 +1,6 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -27,9 +19,9 @@ namespace IBS.Controllers
 
             return View();
         }
-        public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular)
+        public IActionResult Manage(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular)
         {
-            SummaryVendorWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate,ForGiven = ForGiven,ReportBasedon = ReportBasedon,MaterialValue = MaterialValue,ForParticular = ForParticular,lstParticular = lstParticular };
+            SummaryVendorWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate, ForGiven = ForGiven, ReportBasedon = ReportBasedon, MaterialValue = MaterialValue, ForParticular = ForParticular, lstParticular = lstParticular };
             if (ReportType != "") model.ReportTitle = "Summary of Vendor Wise Inspections";
             return View(model);
         }
@@ -37,9 +29,9 @@ namespace IBS.Controllers
         {
             ViewBag.From = FromDate;
             ViewBag.To = ToDate;
-            
+
             ViewBag.year = Year;
-            if(Convert.ToBoolean(ReportBasedon) == true)
+            if (Convert.ToBoolean(ReportBasedon) == true)
             {
                 ViewBag.ReportBase = "Report Based on IC Date & Sorted on Vendor";
             }
@@ -57,7 +49,7 @@ namespace IBS.Controllers
                 {
                     ViewBag.ReportBase = "Report Based on BILL Date & Sorted on Material Value Descending";
                 }
-                    
+
             }
             if (Month != null)
             {
@@ -75,9 +67,9 @@ namespace IBS.Controllers
             }
 
             string Region = GetRegionCode;
-            if(Region == "N")
+            if (Region == "N")
             { ViewBag.Region = "NORTHERN REGION"; }
-            else if(Region == "S")
+            else if (Region == "S")
             { ViewBag.Region = "SOUTHERN REGION"; }
             else if (Region == "E")
             { ViewBag.Region = "EASTERN REGION"; }
@@ -86,10 +78,10 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            SummaryVendorWiseInspModel model = SummaryVendorWiseInspRepository.SummaryVendorWiseInsp( ReportType,  Month,  Year,  ForGiven,  ReportBasedon,MaterialValue,  FromDate,  ToDate,  ForParticular,  lstParticular ,Region);
+            SummaryVendorWiseInspModel model = SummaryVendorWiseInspRepository.SummaryVendorWiseInsp(ReportType, Month, Year, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, ForParticular, lstParticular, Region);
             return PartialView(model);
         }
-        
+
 
     }
 }

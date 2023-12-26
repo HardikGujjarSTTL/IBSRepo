@@ -2,16 +2,10 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -78,42 +72,42 @@ namespace IBS.Repositories
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstlab = JsonConvert.DeserializeObject<List<DownloadBillsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                     model.BpoRly = Convert.ToString(ds.Tables[0].Rows[0]["BpoRly"]);
-                     model.PoNo = Convert.ToString(ds.Tables[0].Rows[0]["PoNo"]);
-                     model.PoDt = Convert.ToString(ds.Tables[0].Rows[0]["PoDt"]);
-                     model.CaseNo = Convert.ToString(ds.Tables[0].Rows[0]["CaseNo"]);
-                     model.PoOrLetter = Convert.ToString(ds.Tables[0].Rows[0]["PoOrLetter"]);
-                     model.BpoName = Convert.ToString(ds.Tables[0].Rows[0]["BpoName"]);
-                     model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["BillNo"]);
-                     model.BillDt = Convert.ToString(ds.Tables[0].Rows[0]["BillDt"]);
-                     model.InvoiceNo = Convert.ToString(ds.Tables[0].Rows[0]["InvoiceNo"]);
-                     model.AuDesc = Convert.ToString(ds.Tables[0].Rows[0]["AuDesc"]);
-                     model.IcNo = Convert.ToString(ds.Tables[0].Rows[0]["IcNo"]);
-                     model.IcDt = Convert.ToString(ds.Tables[0].Rows[0]["IcDt"]);
-                     model.BkNo = Convert.ToString(ds.Tables[0].Rows[0]["BkNo"]);
-                     model.SetNo = Convert.ToString(ds.Tables[0].Rows[0]["SetNo"]);
-                     model.BillAmount = Convert.ToString(ds.Tables[0].Rows[0]["BillAmount"]);
-                     model.AmountOutstanding = Convert.ToString(ds.Tables[0].Rows[0]["AmountOutstanding"]);
-                     model.DigBillGenDate = Convert.ToString(ds.Tables[0].Rows[0]["DigBillGenDate"]);
-                     model.OnlineInvoice = Convert.ToString(ds.Tables[0].Rows[0]["OnlineInvoice"]);
-                     model.IcPhoto = Convert.ToString(ds.Tables[0].Rows[0]["IcPhoto"]);
-                     model.ImmsRlyCd = Convert.ToString(ds.Tables[0].Rows[0]["ImmsRlyCd"]);
-                     model.TotalTds = Convert.ToString(ds.Tables[0].Rows[0]["TotalTds"]);
-                     model.RetentionMoney = Convert.ToString(ds.Tables[0].Rows[0]["RetentionMoney"]);
-                     model.WriteOffAmt = Convert.ToString(ds.Tables[0].Rows[0]["WriteOffAmt"]);
-                     model.AmountPosted = Convert.ToString(ds.Tables[0].Rows[0]["AmountPosted"]);
-                     model.AmountRealised = Convert.ToString(ds.Tables[0].Rows[0]["AmountRealised"]);
-                     model.Consignee = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
-                     model.Bpo = Convert.ToString(ds.Tables[0].Rows[0]["Bpo"]);
-                     model.Vendor = Convert.ToString(ds.Tables[0].Rows[0]["Vendor"]);
-                     model.IeName = Convert.ToString(ds.Tables[0].Rows[0]["IeName"]);
-                     model.RecipientGstinNo = Convert.ToString(ds.Tables[0].Rows[0]["RecipientGstinNo"]);
-                     model.PoYr = Convert.ToString(ds.Tables[0].Rows[0]["PoYr"]);
-                     model.PoSource = Convert.ToString(ds.Tables[0].Rows[0]["PoSource"]);
-                     model.ICExists = IC;
-                     model.CaseNoExists = CaseNo;
-                     model.ICPATH = ICPath;
-                     model.CASENOPATH = CaseNoPath;
+                    model.BpoRly = Convert.ToString(ds.Tables[0].Rows[0]["BpoRly"]);
+                    model.PoNo = Convert.ToString(ds.Tables[0].Rows[0]["PoNo"]);
+                    model.PoDt = Convert.ToString(ds.Tables[0].Rows[0]["PoDt"]);
+                    model.CaseNo = Convert.ToString(ds.Tables[0].Rows[0]["CaseNo"]);
+                    model.PoOrLetter = Convert.ToString(ds.Tables[0].Rows[0]["PoOrLetter"]);
+                    model.BpoName = Convert.ToString(ds.Tables[0].Rows[0]["BpoName"]);
+                    model.BillNo = Convert.ToString(ds.Tables[0].Rows[0]["BillNo"]);
+                    model.BillDt = Convert.ToString(ds.Tables[0].Rows[0]["BillDt"]);
+                    model.InvoiceNo = Convert.ToString(ds.Tables[0].Rows[0]["InvoiceNo"]);
+                    model.AuDesc = Convert.ToString(ds.Tables[0].Rows[0]["AuDesc"]);
+                    model.IcNo = Convert.ToString(ds.Tables[0].Rows[0]["IcNo"]);
+                    model.IcDt = Convert.ToString(ds.Tables[0].Rows[0]["IcDt"]);
+                    model.BkNo = Convert.ToString(ds.Tables[0].Rows[0]["BkNo"]);
+                    model.SetNo = Convert.ToString(ds.Tables[0].Rows[0]["SetNo"]);
+                    model.BillAmount = Convert.ToString(ds.Tables[0].Rows[0]["BillAmount"]);
+                    model.AmountOutstanding = Convert.ToString(ds.Tables[0].Rows[0]["AmountOutstanding"]);
+                    model.DigBillGenDate = Convert.ToString(ds.Tables[0].Rows[0]["DigBillGenDate"]);
+                    model.OnlineInvoice = Convert.ToString(ds.Tables[0].Rows[0]["OnlineInvoice"]);
+                    model.IcPhoto = Convert.ToString(ds.Tables[0].Rows[0]["IcPhoto"]);
+                    model.ImmsRlyCd = Convert.ToString(ds.Tables[0].Rows[0]["ImmsRlyCd"]);
+                    model.TotalTds = Convert.ToString(ds.Tables[0].Rows[0]["TotalTds"]);
+                    model.RetentionMoney = Convert.ToString(ds.Tables[0].Rows[0]["RetentionMoney"]);
+                    model.WriteOffAmt = Convert.ToString(ds.Tables[0].Rows[0]["WriteOffAmt"]);
+                    model.AmountPosted = Convert.ToString(ds.Tables[0].Rows[0]["AmountPosted"]);
+                    model.AmountRealised = Convert.ToString(ds.Tables[0].Rows[0]["AmountRealised"]);
+                    model.Consignee = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
+                    model.Bpo = Convert.ToString(ds.Tables[0].Rows[0]["Bpo"]);
+                    model.Vendor = Convert.ToString(ds.Tables[0].Rows[0]["Vendor"]);
+                    model.IeName = Convert.ToString(ds.Tables[0].Rows[0]["IeName"]);
+                    model.RecipientGstinNo = Convert.ToString(ds.Tables[0].Rows[0]["RecipientGstinNo"]);
+                    model.PoYr = Convert.ToString(ds.Tables[0].Rows[0]["PoYr"]);
+                    model.PoSource = Convert.ToString(ds.Tables[0].Rows[0]["PoSource"]);
+                    model.ICExists = IC;
+                    model.CaseNoExists = CaseNo;
+                    model.ICPATH = ICPath;
+                    model.CASENOPATH = CaseNoPath;
 
                 }
                 model.lstbillReport = lstlab;
@@ -333,9 +327,9 @@ namespace IBS.Repositories
         }
         public string GetSrNo(string InvoiceNo)
         {
-            
+
             string query = "Select max(ITEM_SRNO) from T86_LAB_INVOICE_DETAILS where INVOICE_NO='" + InvoiceNo + "'";
-            string ds = GetDateString(query);            
+            string ds = GetDateString(query);
             return ds.ToString();
 
         }
@@ -373,24 +367,24 @@ namespace IBS.Repositories
         public LabInvoiceDownloadModel Getdtreg(string InvoiceNo)
         {
 
-            
-                OracleParameter[] par = new OracleParameter[1];
-                
-                var query = "SELECT TO_CHAR(INVOICE_DT, 'yyyymm') AS INVOICE_DT, REGION_CODE FROM T55_LAB_INVOICE WHERE INVOICE_NO ='"+ InvoiceNo + "'";
 
-                DataSet ds = GetDataset(query);
+            OracleParameter[] par = new OracleParameter[1];
 
-                LabInvoiceDownloadModel model = new LabInvoiceDownloadModel();
+            var query = "SELECT TO_CHAR(INVOICE_DT, 'yyyymm') AS INVOICE_DT, REGION_CODE FROM T55_LAB_INVOICE WHERE INVOICE_NO ='" + InvoiceNo + "'";
 
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                {
-                    DataRow row = ds.Tables[0].Rows[0];
-                    model.INVOICE_DT = Convert.ToString(row["INVOICE_DT"]);
-                    model.Resign = Convert.ToString(row["REGION_CODE"]);
-                }
+            DataSet ds = GetDataset(query);
 
-                return model;
-            
+            LabInvoiceDownloadModel model = new LabInvoiceDownloadModel();
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow row = ds.Tables[0].Rows[0];
+                model.INVOICE_DT = Convert.ToString(row["INVOICE_DT"]);
+                model.Resign = Convert.ToString(row["REGION_CODE"]);
+            }
+
+            return model;
+
         }
         public DataSet Getdata(string CaseNo, string RegNo, string InvoiceNo, string TranNo)
         {
@@ -404,8 +398,8 @@ namespace IBS.Repositories
                 par[2] = new OracleParameter("p_SamNo", OracleDbType.Date, RegNo, ParameterDirection.Input);
                 par[3] = new OracleParameter("p_TN", OracleDbType.Varchar2, TranNo, ParameterDirection.Input);
                 par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Input);
-                
-                 ds = DataAccessDB.GetDataSet("LabInvoiceDownload", par, 4);
+
+                ds = DataAccessDB.GetDataSet("LabInvoiceDownload", par, 4);
             }
             catch (Exception ex)
             {

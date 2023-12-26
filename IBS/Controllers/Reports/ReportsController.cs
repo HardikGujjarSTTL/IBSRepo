@@ -3,9 +3,6 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
@@ -240,7 +237,7 @@ namespace IBS.Controllers.Reports
             }
             return PartialView(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {

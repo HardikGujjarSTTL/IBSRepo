@@ -1,7 +1,5 @@
-﻿using IBS.Interfaces;
-using IBS.Interfaces.Vendor;
+﻿using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Vendor
@@ -37,7 +35,7 @@ namespace IBS.Controllers.Vendor
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string CaseNo, byte ItemSrno, string type, string PoDt,int lstItemDesc)
+        public IActionResult Manage(string CaseNo, byte ItemSrno, string type, string PoDt, int lstItemDesc)
         {
             PurchesOrder1LOAModel model = new();
             if (CaseNo != null)

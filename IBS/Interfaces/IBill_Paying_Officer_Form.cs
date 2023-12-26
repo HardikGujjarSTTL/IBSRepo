@@ -2,7 +2,7 @@
 
 namespace IBS.Interfaces
 {
-    public interface IBill_Paying_Officer_Form 
+    public interface IBill_Paying_Officer_Form
     {
         public Bill_Paying_Officer_FormModel FindByID(string BpoCd);
 
@@ -12,6 +12,6 @@ namespace IBS.Interfaces
 
         string BPOSave(Bill_Paying_Officer_FormModel model);
 
-        string GetState (int BpoCityCd);
+        string GetState(int BpoCityCd);
     }
 }

@@ -1,12 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -33,7 +28,7 @@ namespace IBS.Repositories
             }
             else
             {
-                model.VCHR_DT = model.VCHR_DT = string.IsNullOrEmpty(tenant2.VchrDt?.ToShortDateString())? "": tenant2.VchrDt?.ToShortDateString();
+                model.VCHR_DT = model.VCHR_DT = string.IsNullOrEmpty(tenant2.VchrDt?.ToShortDateString()) ? "" : tenant2.VchrDt?.ToShortDateString();
                 model.BANK_CD = Convert.ToString(tenant.BankCd);
                 model.CHQ_NO = tenant.ChqNo;
                 model.CHQ_DT = tenant.ChqDt.ToString("dd/mm/yyyy");
@@ -130,7 +125,7 @@ namespace IBS.Repositories
                 //           voucher=l.VchrNo  
                 //          };
 
-                
+
                 //string voucher1 = (from l in context.T24Rvs
                 //                where l.VchrNo.Substring(0, 5) == ss
                 //                select l.VchrNo.Substring(6, 8)).Max();
@@ -155,7 +150,7 @@ namespace IBS.Repositories
             }
             var GetValue = context.T24Rvs.Find(model.VCHR_NO);
 
-            var GetValue2 = context.T25RvDetails.Find(Convert.ToInt32(model.BANK_CD), model.CHQ_NO,Convert.ToDateTime(model.CHQ_DT));
+            var GetValue2 = context.T25RvDetails.Find(Convert.ToInt32(model.BANK_CD), model.CHQ_NO, Convert.ToDateTime(model.CHQ_DT));
 
             var GetValue3 = context.T13PoMasters.Find(model.CASE_NO);
 
@@ -177,16 +172,16 @@ namespace IBS.Repositories
 
                 T25RvDetail obj = new T25RvDetail();
                 obj.VchrNo = Convert.ToString(VCHR_NO);
-                obj.AccCd = Convert.ToInt32(model.ACC_CD);                
+                obj.AccCd = Convert.ToInt32(model.ACC_CD);
                 obj.BankCd = Convert.ToInt32(model.BANK_CD);
                 obj.ChqNo = model.CHQ_NO;
                 obj.ChqDt = Convert.ToDateTime(DateTime.ParseExact(model.CHQ_DT, "MM/dd/yyyy", null).ToString("dd/MM/yyyy"));
                 obj.Narration = model.NARRATION;
                 obj.SampleNo = model.SAMPLE_NO;
-                obj.Amount = Convert.ToDecimal(model.AMOUNT);                
+                obj.Amount = Convert.ToDecimal(model.AMOUNT);
                 obj.SuspenseAmt = Convert.ToDecimal(model.AMOUNT);
                 obj.BpoCd = model.BPO_CD;
-                obj.CaseNo = model.CASE_NO;               
+                obj.CaseNo = model.CASE_NO;
                 //  obj.CaseNo = model.CASE_NO;
                 obj.BpoType = model.BPO_TYPE;
                 obj.UserId = model.USER_ID;
@@ -228,7 +223,7 @@ namespace IBS.Repositories
                 GetValue2.BpoCd = model.BPO_CD;
                 // GetValue2.CaseNo = model.CASE_NO;               
                 GetValue2.BpoType = model.BPO_TYPE;
-                
+
 
                 //context.T25RvDetails.Add(obj);
                 context.SaveChanges();
@@ -275,25 +270,25 @@ namespace IBS.Repositories
             if (txtCSNO != "" && txtCSNO != null)
             {
 
-            
-            var query = from b in context.T12BillPayingOfficers
-                        join p in context.T14PoBpos on b.BpoCd equals p.BpoCd
-                        join d in context.T03Cities on b.BpoCityCd equals d.CityCd
-                        where p.CaseNo == txtCSNO.ToUpper()
-                        orderby b.BpoName
-                        select new
-                        {
-                            BpoCd = b.BpoCd,
-                            BpoName = b.BpoName + "/" + (b.BpoAdd ?? "") + "/" + (d.Location ?? d.City) + "/" + b.BpoRly
-                        };
 
-            var distinctQuery = query.Distinct();
+                var query = from b in context.T12BillPayingOfficers
+                            join p in context.T14PoBpos on b.BpoCd equals p.BpoCd
+                            join d in context.T03Cities on b.BpoCityCd equals d.CityCd
+                            where p.CaseNo == txtCSNO.ToUpper()
+                            orderby b.BpoName
+                            select new
+                            {
+                                BpoCd = b.BpoCd,
+                                BpoName = b.BpoName + "/" + (b.BpoAdd ?? "") + "/" + (d.Location ?? d.City) + "/" + b.BpoRly
+                            };
 
-             DropdownValues = distinctQuery.AsEnumerable().Select(item => new BPOlist
-            {
-                value = item.BpoCd.ToString(),
-                text = item.BpoName
-            }).ToList();
+                var distinctQuery = query.Distinct();
+
+                DropdownValues = distinctQuery.AsEnumerable().Select(item => new BPOlist
+                {
+                    value = item.BpoCd.ToString(),
+                    text = item.BpoName
+                }).ToList();
             }
             return DropdownValues;
 

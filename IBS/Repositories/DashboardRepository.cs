@@ -2,16 +2,11 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
-using System.Security.Cryptography;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -2740,7 +2735,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string FromDate = "", ToDate = "", ActionType = "";
+            string FromDate = "", ToDate = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
             {
                 FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);

@@ -4,14 +4,7 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace GSDMWeb.Controllers.Master
 {
@@ -443,7 +436,7 @@ namespace GSDMWeb.Controllers.Master
                     bytes = null;
                     return false;
                 }
-                decimal size = Math.Round(((decimal)fileUpload.Length / (decimal)1024), 2);
+                decimal size = Math.Round((fileUpload.Length / (decimal)1024), 2);
                 if (size < 1 || size > FileSize)
                 {
                     //Functions.AlertMessage(this.Page, Constants.GeneralMessages.SupportedImageType);

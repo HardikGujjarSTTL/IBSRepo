@@ -1,16 +1,10 @@
-﻿using IBS.Interfaces.InspectionBilling;
-using IBS.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using IBS.Models;
-using IBS.Repositories.Vendor;
-using IBS.Repositories;
-using System.Dynamic;
-using IBS.Helper;
-using IBS.Filters;
+﻿using IBS.Helper;
 using IBS.Helpers;
-using IBS.Repositories.Administration;
+using IBS.Interfaces;
+using IBS.Interfaces.InspectionBilling;
+using IBS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using IBS.DataAccess;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -628,7 +622,7 @@ namespace IBS.Controllers.InspectionBilling
 
         public IActionResult GetTaxTypeList(string StateCode)
         {
-            if(StateCode == "7")
+            if (StateCode == "7")
             {
                 return Json(Common.GetTaxType_GST_07());
             }
@@ -636,7 +630,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 return Json(Common.GetTaxType_GST_O());
             }
-            
+
         }
     }
 }

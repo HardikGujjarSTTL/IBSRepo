@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -34,7 +33,7 @@ namespace IBS.Controllers
             //var Call_SNO = "3";
             //var CONSIGNEE_CD = "39";
             //var ACTIONAR = "A";
-            
+
             var CASE_NO = "";
             var Call_Recv_dt = "";
             var Call_SNO = "";
@@ -213,7 +212,7 @@ namespace IBS.Controllers
                 model.Date = Date;
                 model.IECD = Convert.ToString(Iecd);
                 lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Insert");
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm, "Insert");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
@@ -240,7 +239,7 @@ namespace IBS.Controllers
 
                 var data = lstPoAhm.Where(x => x.Sno == Sno).Select(x => x).FirstOrDefault();
                 lstPoAhm.Remove(data);
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Delete");
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm, "Delete");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Delete Successfully." });

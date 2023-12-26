@@ -1,6 +1,5 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
-using IBS.Models;
 
 namespace IBS.Repositories
 {

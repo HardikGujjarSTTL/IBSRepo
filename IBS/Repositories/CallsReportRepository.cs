@@ -89,7 +89,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public Statement_IeVendorWiseModel Statement_IeVendorWise(string ReportType, string frmDate, string toDate , string Region)
+        public Statement_IeVendorWiseModel Statement_IeVendorWise(string ReportType, string frmDate, string toDate, string Region)
         {
 
             Statement_IeVendorWiseModel model = new();
@@ -129,14 +129,14 @@ namespace IBS.Repositories
                         orderby t17.CallCancelStatus, t09.IeName, v05.Vendor, t19.CancelDate
                         select new Statement_IeVendorWiseModel
                         {
-                          RLY_CD = t13.RlyCd,
-                          IE_NAME = t09.IeName,
-                           VENDOR =  v05.Vendor,
-                           CASE_NO = t19.CaseNo,
-                           CALL_RECV_DT = t19.CallRecvDt,
-                           CANCEL_DT = Convert.ToDateTime(t19.CancelDate),
+                            RLY_CD = t13.RlyCd,
+                            IE_NAME = t09.IeName,
+                            VENDOR = v05.Vendor,
+                            CASE_NO = t19.CaseNo,
+                            CALL_RECV_DT = t19.CallRecvDt,
+                            CANCEL_DT = Convert.ToDateTime(t19.CancelDate),
                             CALL_CANCEL_STATUS = t17.CallCancelStatus == "C" ? "Chargeable" : "Non-Chargeable",
-                           CALL_CANCEL_CHARGES = t17.CallCancelCharges,
+                            CALL_CANCEL_CHARGES = t17.CallCancelCharges,
                             CANCEL_REASON = string.Join(" ", new[]
                             {
                                 (t19.CancelCd1 == 0 ? " " : $"(1) {t11_01.CancelDesc}"),
@@ -154,10 +154,10 @@ namespace IBS.Repositories
                             })
                         };
 
-           
+
             var result = query.ToList();
 
-           model.statement_IeVendorWiseModels = result;
+            model.statement_IeVendorWiseModels = result;
 
 
 
@@ -165,7 +165,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public Statement_IeVendorWiseModel Statement_OverdueCalls(string ReportType, string WiseRadio, string IeStatus, int Days, string includeNSIC, string pendingCallsOnly , string Region)
+        public Statement_IeVendorWiseModel Statement_OverdueCalls(string ReportType, string WiseRadio, string IeStatus, int Days, string includeNSIC, string pendingCallsOnly, string Region)
         {
 
             Statement_IeVendorWiseModel model = new();
@@ -175,28 +175,28 @@ namespace IBS.Repositories
             model.ToDate = Convert.ToString(DateTime.Now);
             model.ReportType = ReportType;
             var query = (from t17 in context.T17CallRegisters
-                        join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
-                        join v05 in context.V05Vendors on t17.CoCd equals v05.VendCd
-                        join t21 in context.T21CallStatusCodes on t17.CallStatus equals t21.CallStatusCd
-                        join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
-                        join t08 in context.T08IeControllOfficers on t17.CoCd equals t08.CoCd
-                         where t17.CallRecvDt > new DateTime(2013, 1, 1) 
+                         join t09 in context.T09Ies on t17.IeCd equals t09.IeCd
+                         join v05 in context.V05Vendors on t17.CoCd equals v05.VendCd
+                         join t21 in context.T21CallStatusCodes on t17.CallStatus equals t21.CallStatusCd
+                         join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                         join t08 in context.T08IeControllOfficers on t17.CoCd equals t08.CoCd
+                         where t17.CallRecvDt > new DateTime(2013, 1, 1)
                                && t17.RegionCode == Region
                          select new Statement_IeVendorWiseModel
-                        {
+                         {
 
-                            ReportType = ReportType,
-                            CASE_NO = t17.CaseNo,
-                            CALL_RECV_DT = Convert.ToDateTime(t17.CallRecvDt),
-                            CALL_SNO = t17.CallSno,
-                            CALL_STATUS_DESC = t21.CallStatusDesc,
-                            VENDOR = v05.Vendor,
-                            IE_NAME = t09.IeName,
-                            CALL_STATUS_DATE = Convert.ToDateTime(t17.CallStatusDt),
-                            CO_NAME = t08.CoName,
-                            RLY_CD = t13.RlyCd,
-                            DESIRE_DT = Convert.ToDateTime(t13.Datetime)
-                        }).Take(10000);
+                             ReportType = ReportType,
+                             CASE_NO = t17.CaseNo,
+                             CALL_RECV_DT = Convert.ToDateTime(t17.CallRecvDt),
+                             CALL_SNO = t17.CallSno,
+                             CALL_STATUS_DESC = t21.CallStatusDesc,
+                             VENDOR = v05.Vendor,
+                             IE_NAME = t09.IeName,
+                             CALL_STATUS_DATE = Convert.ToDateTime(t17.CallStatusDt),
+                             CO_NAME = t08.CoName,
+                             RLY_CD = t13.RlyCd,
+                             DESIRE_DT = Convert.ToDateTime(t13.Datetime)
+                         }).Take(10000);
 
 
 
@@ -229,28 +229,28 @@ namespace IBS.Repositories
             string formattedDate1 = parsedDate1.ToString("yyyyMMdd");
 
             var query = from t17 in context.T17CallRegisters
-                         join t19 in context.T19CallCancels on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t19.CaseNo, t19.CallRecvDt, t19.CallSno }
-                         join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
+                        join t19 in context.T19CallCancels on new { t17.CaseNo, t17.CallRecvDt, t17.CallSno } equals new { t19.CaseNo, t19.CallRecvDt, t19.CallSno }
+                        join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
                         where t17.CallStatus == "C" && t19.DocsSubmitted == "Y" &&
                               t19.Datetime >= DateTime.ParseExact(formattedDate, "yyyyMMdd", CultureInfo.InvariantCulture) &&
                               t19.Datetime <= DateTime.ParseExact(formattedDate1, "yyyyMMdd", CultureInfo.InvariantCulture) &&
                               t17.CaseNo.StartsWith(Region)
                         orderby t19.CancelDate
-                         select new Statement_IeVendorWiseModel
-                         {
-                             CASE_NO = t17.CaseNo,
-                             CALL_RECV_DT = t17.CallRecvDt,
-                             CALL_DT_CONCAT = t17.CallRecvDt,
-                             CALL_SNO = t17.CallSno,
-                             MFG_CD = Convert.ToString(t17.MfgCd),
-                             MFG_PLACE = t17.MfgPlace,
-                             CO_CD = t17.CoCd ?? 0,
-                             MFG = t05.VendName,
-                             DESIRE_DATE = Convert.ToString(t17.Datetime),
-                             USER_ID = t19.UserId,
-                             APPROVAL_DATE = Convert.ToDateTime(t19.Datetime),
-                             CANC_DOC = $"CALL_CANCELLATION_DOCUMENTS/{t17.CaseNo}-{t17.CallRecvDt.ToString("yyyyMMdd")}-{t17.CallSno}.PDF"
-                         };
+                        select new Statement_IeVendorWiseModel
+                        {
+                            CASE_NO = t17.CaseNo,
+                            CALL_RECV_DT = t17.CallRecvDt,
+                            CALL_DT_CONCAT = t17.CallRecvDt,
+                            CALL_SNO = t17.CallSno,
+                            MFG_CD = Convert.ToString(t17.MfgCd),
+                            MFG_PLACE = t17.MfgPlace,
+                            CO_CD = t17.CoCd ?? 0,
+                            MFG = t05.VendName,
+                            DESIRE_DATE = Convert.ToString(t17.Datetime),
+                            USER_ID = t19.UserId,
+                            APPROVAL_DATE = Convert.ToDateTime(t19.Datetime),
+                            CANC_DOC = $"CALL_CANCELLATION_DOCUMENTS/{t17.CaseNo}-{t17.CallRecvDt.ToString("yyyyMMdd")}-{t17.CallSno}.PDF"
+                        };
 
 
 
@@ -263,7 +263,7 @@ namespace IBS.Repositories
 
 
             return model;
-           
+
         }
 
         public Statement_IeVendorWiseModel Statement_SpecificPO(string ReportType, string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD)
@@ -336,83 +336,83 @@ namespace IBS.Repositories
             return model;
         }
 
-        public Statement_IeVendorWiseModel Statement_CallMarked(string ReportType,string frmDate,string toDate,string wSortkEy,string Region)
+        public Statement_IeVendorWiseModel Statement_CallMarked(string ReportType, string frmDate, string toDate, string wSortkEy, string Region)
         {
 
             Statement_IeVendorWiseModel model = new();
             List<Statement_IeVendorWiseModel> statement_IeVendorWiseModels = new();
             var query = (from t051 in context.T05Vendors
-                        from t17 in context.T17CallRegisters
-                        from t18 in context.T18CallDetails
-                        from t13 in context.T13PoMasters
-                        from t06 in context.T06Consignees.Where(c => c.ConsigneeCd == t13.PurchaserCd).DefaultIfEmpty()
-                        from t09 in context.T09Ies
-                        from t052 in context.T05Vendors.Where(v => v.VendCd == t17.MfgCd).DefaultIfEmpty()
-                        from t03 in context.T03Cities.Where(c => c.CityCd == t051.VendCityCd)
-                        from t032 in context.T03Cities.Where(c => c.CityCd == t052.VendCityCd).DefaultIfEmpty()
-                        from t08 in context.T08IeControllOfficers.Where(o => o.CoCd == t09.IeCoCd).DefaultIfEmpty()
-                        from t21 in context.T21CallStatusCodes.Where(s => s.CallStatusCd == t17.CallStatus)
-                        from t15 in context.T15PoDetails.Where(d => d.CaseNo == t13.CaseNo)
-                        where t051.VendCd == t13.VendCd &&
-                              t13.CaseNo == t15.CaseNo &&
-                              t15.CaseNo == t18.CaseNo &&
-                              t15.ItemSrno == t18.ItemSrnoPo &&
-                              t13.CaseNo == t17.CaseNo &&
-                              t09.IeCd == t17.IeCd &&
-                              t18.CallRecvDt == t17.CallRecvDt &&
-                              t18.CallSno == t17.CallSno &&
-                              (t17.CallMarkDt >= Convert.ToDateTime(frmDate) && t17.CallMarkDt <= Convert.ToDateTime(toDate)) &&
-                              t18.ItemSrnoPo == context.T18CallDetails
-                                                       .Where(b => b.CaseNo == t18.CaseNo &&
-                                                                   b.CallRecvDt == t18.CallRecvDt &&
-                                                                   b.CallSno == t18.CallSno)
-                                                       .Min(b => b.ItemSrnoPo) &&
-                              t17.RegionCode == Region
-                        orderby (wSortkEy == "V" ? t051.VendName : ""), t17.CallMarkDt, t17.CallSno
-                        select new Statement_IeVendorWiseModel
-                        {
+                         from t17 in context.T17CallRegisters
+                         from t18 in context.T18CallDetails
+                         from t13 in context.T13PoMasters
+                         from t06 in context.T06Consignees.Where(c => c.ConsigneeCd == t13.PurchaserCd).DefaultIfEmpty()
+                         from t09 in context.T09Ies
+                         from t052 in context.T05Vendors.Where(v => v.VendCd == t17.MfgCd).DefaultIfEmpty()
+                         from t03 in context.T03Cities.Where(c => c.CityCd == t051.VendCityCd)
+                         from t032 in context.T03Cities.Where(c => c.CityCd == t052.VendCityCd).DefaultIfEmpty()
+                         from t08 in context.T08IeControllOfficers.Where(o => o.CoCd == t09.IeCoCd).DefaultIfEmpty()
+                         from t21 in context.T21CallStatusCodes.Where(s => s.CallStatusCd == t17.CallStatus)
+                         from t15 in context.T15PoDetails.Where(d => d.CaseNo == t13.CaseNo)
+                         where t051.VendCd == t13.VendCd &&
+                               t13.CaseNo == t15.CaseNo &&
+                               t15.CaseNo == t18.CaseNo &&
+                               t15.ItemSrno == t18.ItemSrnoPo &&
+                               t13.CaseNo == t17.CaseNo &&
+                               t09.IeCd == t17.IeCd &&
+                               t18.CallRecvDt == t17.CallRecvDt &&
+                               t18.CallSno == t17.CallSno &&
+                               (t17.CallMarkDt >= Convert.ToDateTime(frmDate) && t17.CallMarkDt <= Convert.ToDateTime(toDate)) &&
+                               t18.ItemSrnoPo == context.T18CallDetails
+                                                        .Where(b => b.CaseNo == t18.CaseNo &&
+                                                                    b.CallRecvDt == t18.CallRecvDt &&
+                                                                    b.CallSno == t18.CallSno)
+                                                        .Min(b => b.ItemSrnoPo) &&
+                               t17.RegionCode == Region
+                         orderby (wSortkEy == "V" ? t051.VendName : ""), t17.CallMarkDt, t17.CallSno
+                         select new Statement_IeVendorWiseModel
+                         {
 
-                            VENDOR = t051.VendName.Trim() + (t03.City != null ? "," + t03.City.Trim() : ""),
-                            MANUFACTURER = t052.VendName.Trim() + (t032.City != null ? "," + t032.City.Trim() : ""),
-                            VEND_CD = Convert.ToInt32(t051.VendCd),
-                            MFG_CD = Convert.ToString(t052.VendCd),
-                            CONSIGNEE = t06.ConsigneeDesig + " " + t06.ConsigneeFirm,
-                            ITEM_DESC_PO = t18.ItemDescPo,
-                            QTY_TO_INSP = Convert.ToString(t18.QtyToInsp),
-                            EXT_DELV_DT = Convert.ToDateTime(t15.ExtDelvDt),
-                            CALL_MARK_DT = Convert.ToDateTime(t17.CallMarkDt),
-                            IE_NAME = t09.IeName,
-                            IE_PHONE_NO = t09.IePhoneNo,
-                            PO_NO = t13.PoNo,
-                            PO_DT = Convert.ToDateTime(t13.PoDt),
-                            CASE_NO = t17.CaseNo,
-                            REMARK = t17.Remarks,
-                            COLOUR = t21.CallStatusColor,
-                            MFG_PERS = t052.VendContactPer1,
-                            MFG_PHONE = t052.VendContactTel1,
-                            CALL_SNO = t17.CallSno,
-                            COUNT = context.T18CallDetails.Count(a => a.CaseNo == t18.CaseNo && a.CallRecvDt == t18.CallRecvDt && a.CallSno == t18.CallSno),
-                            CO_NAME = t08.CoPhoneNo != null ? t08.CoName.Trim() + " (Mob: " + t08.CoPhoneNo + ")" : t08.CoName.Trim(),
-                            CALL_STATUS = (
-                                t21.CallStatusDesc +
-                                (t21.CallStatusCd == "A" ?
-                                    (t17.BkNo != null ?
-                                        " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ") Dt: " + t17.CallStatusDt :
-                                        "")
-                                    : (t21.CallStatusCd == "B" ?
-                                        " (Accepted on Dt:" + t17.CallStatusDt + ")"
-                                        : (t21.CallStatusCd == "R" ?
-                                            (t17.BkNo != null ?
-                                                " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ")"
-                                                : "")
-                                            : (t21.CallStatusCd == "G" ?
-                                                " Dt: " + t17.CallStatusDt
-                                                : " on " + t17.CallStatusDt))))
-                                + (t17.CallCancelStatus == "N" ? " (Non Chargeable)" : (t17.CallCancelStatus == "C" ? " (Chargeable)" : "")
+                             VENDOR = t051.VendName.Trim() + (t03.City != null ? "," + t03.City.Trim() : ""),
+                             MANUFACTURER = t052.VendName.Trim() + (t032.City != null ? "," + t032.City.Trim() : ""),
+                             VEND_CD = Convert.ToInt32(t051.VendCd),
+                             MFG_CD = Convert.ToString(t052.VendCd),
+                             CONSIGNEE = t06.ConsigneeDesig + " " + t06.ConsigneeFirm,
+                             ITEM_DESC_PO = t18.ItemDescPo,
+                             QTY_TO_INSP = Convert.ToString(t18.QtyToInsp),
+                             EXT_DELV_DT = Convert.ToDateTime(t15.ExtDelvDt),
+                             CALL_MARK_DT = Convert.ToDateTime(t17.CallMarkDt),
+                             IE_NAME = t09.IeName,
+                             IE_PHONE_NO = t09.IePhoneNo,
+                             PO_NO = t13.PoNo,
+                             PO_DT = Convert.ToDateTime(t13.PoDt),
+                             CASE_NO = t17.CaseNo,
+                             REMARK = t17.Remarks,
+                             COLOUR = t21.CallStatusColor,
+                             MFG_PERS = t052.VendContactPer1,
+                             MFG_PHONE = t052.VendContactTel1,
+                             CALL_SNO = t17.CallSno,
+                             COUNT = context.T18CallDetails.Count(a => a.CaseNo == t18.CaseNo && a.CallRecvDt == t18.CallRecvDt && a.CallSno == t18.CallSno),
+                             CO_NAME = t08.CoPhoneNo != null ? t08.CoName.Trim() + " (Mob: " + t08.CoPhoneNo + ")" : t08.CoName.Trim(),
+                             CALL_STATUS = (
+                                 t21.CallStatusDesc +
+                                 (t21.CallStatusCd == "A" ?
+                                     (t17.BkNo != null ?
+                                         " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ") Dt: " + t17.CallStatusDt :
+                                         "")
+                                     : (t21.CallStatusCd == "B" ?
+                                         " (Accepted on Dt:" + t17.CallStatusDt + ")"
+                                         : (t21.CallStatusCd == "R" ?
+                                             (t17.BkNo != null ?
+                                                 " (BookSet-" + t17.BkNo + "/" + t17.SetNo + ")"
+                                                 : "")
+                                             : (t21.CallStatusCd == "G" ?
+                                                 " Dt: " + t17.CallStatusDt
+                                                 : " on " + t17.CallStatusDt))))
+                                 + (t17.CallCancelStatus == "N" ? " (Non Chargeable)" : (t17.CallCancelStatus == "C" ? " (Chargeable)" : "")
 
-                              ))
+                               ))
 
-                        }).Take(10000);
+                         }).Take(10000);
 
 
 

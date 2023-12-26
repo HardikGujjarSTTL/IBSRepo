@@ -6,9 +6,9 @@ namespace IBS.Interfaces
     {
         public LastYearOutstandingModel FindByID(string LyPer, string RegionCode);
         DTResult<LastYearOutstandingModel> GetLastYearOutstandingList(DTParameters dtParameters, string RegionCode);
-        
+
         bool Remove(string LyPer, string strRgn);
-        
+
         string LastYearOutstandingDetailsInsertUpdate(LastYearOutstandingModel model);
     }
 }

@@ -2,15 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -27,7 +21,7 @@ namespace IBS.Repositories
 
             InspectionStatusModel model = new();
             List<InspectionStatusModel> lstSummary = new();
-                       
+
 
             OracleParameter[] par = new OracleParameter[11];
             par[0] = new OracleParameter("P_REGION_CODE", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
@@ -195,7 +189,7 @@ namespace IBS.Repositories
                     model.ITEM_DESC_PO = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC_PO"]);
                     model.QTY_PASSED = Convert.ToString(ds.Tables[0].Rows[0]["QTY_PASSED"]);
                     model.QTY_REJECTED = Convert.ToString(ds.Tables[0].Rows[0]["QTY_REJECTED"]);
-                   
+
                 }
                 model.lstSummaryConreport = lstSummary;
             }
@@ -317,7 +311,7 @@ namespace IBS.Repositories
 
                 }
                 model.lstSummaryConreport = lstSummary;
-                CallsDetailsPO(ReportType, PO_NO,PO_DT, RLY_NONRLY,RLY_CD);
+                CallsDetailsPO(ReportType, PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
             }
             //if (ds.Tables[1].Rows.Count != 0)
             //{

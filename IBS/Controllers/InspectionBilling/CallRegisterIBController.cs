@@ -3,21 +3,15 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
 using IBS.Models.Reports;
 using IBS.Repositories;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Dynamic;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -31,6 +25,7 @@ namespace IBS.Controllers.InspectionBilling
         private readonly IConfiguration _config;
 
         #endregion
+
         public CallRegisterIBController(ICallRegisterIBRepository _callregisterRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             callregisterRepository = _callregisterRepository;
@@ -108,7 +103,7 @@ namespace IBS.Controllers.InspectionBilling
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "CallRegisterIB", "Manage", 1, GetIPAddress());
             }
-            
+
             return View(model);
         }
 
@@ -661,7 +656,7 @@ namespace IBS.Controllers.InspectionBilling
                 if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo;
-                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };                    
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.IC_Photos_Upload1 };
                     DocumentHelper.SaveICFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICPHOTOS), env, iDocument, FileName, string.Empty, DocumentIds);
                 }
                 model.AlertMsg = "Upload done Successfully!!!";
@@ -802,7 +797,7 @@ namespace IBS.Controllers.InspectionBilling
                     model.UserName = Convert.ToString(UserName);
                     string msg = callregisterRepository.Save(model, DocumentsList);
 
-                    if(msg == "Success")
+                    if (msg == "Success")
                     {
                         if (model.CallStatus == "G" || model.CallStatus == "T")
                         {

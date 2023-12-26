@@ -1,15 +1,9 @@
-﻿using Humanizer;
-using IBS.Helper;
-using IBS.Interfaces;
+﻿using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using System.Collections.Generic;
+using PuppeteerSharp.Media;
 using System.Data;
 
 namespace IBS.Controllers.Reports.Queries
@@ -210,7 +204,7 @@ namespace IBS.Controllers.Reports.Queries
         {
             return View();
         }
-        public IActionResult TableItemWiseInspectionsForTenderQueries(string ItemDesc1, string ItemDesc2, string ItemDesc3, string ItemDesc4, string ItemDesc5, DateTime frmDt, DateTime toDt, string OneRegion,string Client, string RCode)
+        public IActionResult TableItemWiseInspectionsForTenderQueries(string ItemDesc1, string ItemDesc2, string ItemDesc3, string ItemDesc4, string ItemDesc5, DateTime frmDt, DateTime toDt, string OneRegion, string Client, string RCode)
         {
             try
             {
@@ -244,7 +238,7 @@ namespace IBS.Controllers.Reports.Queries
                 if (Region == "Q")
                     wRegion = "QA Corporate";
 
-                
+
                 string wClient = "", wIcPeriod = "";
                 string pClient = "", pIcPeriod = "";
                 double w_tot_VALUE = 0;
@@ -264,26 +258,26 @@ namespace IBS.Controllers.Reports.Queries
 
                 items_searched = items_searched + ".";
                 if (OneRegion == "true") { wRegion = "Northern,Western,Eastern & Southern Region"; }
-                html+="<br><table border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse;' bordercolor='#111111' width='100%'>";
-                html+="<tr><td width='100%' colspan='8'>";
-                html+="<H5 align='center'><font face='Verdana'>" + wRegion + "</font><br></p>";
-                html+="<H5 align='center'><font face='Verdana'>Client Wise Inspections For the Period : " + model.frmDt.ToString("dd/MM/yyy") + " to " + model.toDt.ToString("dd/MM/yyy") + "</font><br></p>";
-                html+="</td>";
-                html+="</tr>";
-                html+="<tr><td width='100%' colspan='8'>";
-                html+="<H5 align='center'><font face='Verdana'>Item(s) Searched: " + items_searched + " </font><br></p>";
-                html+="</td>";
-                html+="</tr>";
-                html+="<tr>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>S.NO.</font></b></th>";
-                html+="<th width='10%' valign='top'><b><font size='1' face='Verdana'>CLIENT</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>INSPECTION PERIOD</font></b></th>";
-                html+="<th width='15%' valign='top'><b><font size='1' face='Verdana'>ITEM</font></b></th>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY PASSED</font></b></th>";
-                html+="<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY REJECTED</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>MATERIAL VALUE</font></b></th>";
-                html+="<th width='7%' valign='top'><b><font size='1' face='Verdana'>NO OF INSPECTIONS</font></b></th>";
-                html+="</tr></font>";
+                html += "<br><table border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse;' bordercolor='#111111' width='100%'>";
+                html += "<tr><td width='100%' colspan='8'>";
+                html += "<H5 align='center'><font face='Verdana'>" + wRegion + "</font><br></p>";
+                html += "<H5 align='center'><font face='Verdana'>Client Wise Inspections For the Period : " + model.frmDt.ToString("dd/MM/yyy") + " to " + model.toDt.ToString("dd/MM/yyy") + "</font><br></p>";
+                html += "</td>";
+                html += "</tr>";
+                html += "<tr><td width='100%' colspan='8'>";
+                html += "<H5 align='center'><font face='Verdana'>Item(s) Searched: " + items_searched + " </font><br></p>";
+                html += "</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th width='5%' valign='top'><b><font size='1' face='Verdana'>S.NO.</font></b></th>";
+                html += "<th width='10%' valign='top'><b><font size='1' face='Verdana'>CLIENT</font></b></th>";
+                html += "<th width='7%' valign='top'><b><font size='1' face='Verdana'>INSPECTION PERIOD</font></b></th>";
+                html += "<th width='15%' valign='top'><b><font size='1' face='Verdana'>ITEM</font></b></th>";
+                html += "<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY PASSED</font></b></th>";
+                html += "<th width='5%' valign='top'><b><font size='1' face='Verdana'>QTY REJECTED</font></b></th>";
+                html += "<th width='7%' valign='top'><b><font size='1' face='Verdana'>MATERIAL VALUE</font></b></th>";
+                html += "<th width='7%' valign='top'><b><font size='1' face='Verdana'>NO OF INSPECTIONS</font></b></th>";
+                html += "</tr></font>";
                 var reader = dt.CreateDataReader();
                 while (reader.Read())
                 {
@@ -297,11 +291,11 @@ namespace IBS.Controllers.Reports.Queries
                         }
                         else
                         {
-                            html+="<tr>";
-                            html+="<td width='5%' valign='top' align='center' colspan=6> <font size='1' face='Verdana'><b><font size='1' face='Verdana'>Total For The Inspection Period: " + wIcPeriod + "</font></b></td>";
-                            html+="<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>"; html += w_tot_VALUE; html += "</td>";
-                            html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html += w_tot_NO_OF_INSP; html += "</td>";
-                            html+="</tr>";
+                            html += "<tr>";
+                            html += "<td width='5%' valign='top' align='center' colspan=6> <font size='1' face='Verdana'><b><font size='1' face='Verdana'>Total For The Inspection Period: " + wIcPeriod + "</font></b></td>";
+                            html += "<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>"; html += w_tot_VALUE; html += "</td>";
+                            html += "<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"; html += w_tot_NO_OF_INSP; html += "</td>";
+                            html += "</tr>";
                             w_tot_NO_OF_INSP = 0;
                             w_tot_VALUE = 0;
                             wIcPeriod = reader["IC_PERIOD"].ToString();
@@ -315,25 +309,25 @@ namespace IBS.Controllers.Reports.Queries
                         pClient = reader["BPO_RLY"].ToString();
                         pIcPeriod = reader["IC_PERIOD"].ToString();
                     }
-                    html+="<tr>";
-                    html+="<td width='5%' valign='top' align='center'> <font size='1' face='Verdana'>" + wSno + "</td>";
-                    html+="<td width='10%' valign='top' align='center'> <font size='1' face='Verdana'>"+ pClient +"</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>" + pIcPeriod + "</td>";
-                    html+="<td width='15%' valign='top' align='left'> <font size='1' face='Verdana'>"+ reader["ITEM_DESC"].ToString()+"</td>";
-                    html+="<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>"+ reader["QTY_PASS"].ToString()+" "+ reader["UOM_S_DESC"].ToString()+"</td>";
-                    html+="<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>"+ reader["QTY_REJ"].ToString()+" "+ reader["UOM_S_DESC"].ToString()+"</td>";
-                    html+="<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>"+ reader["VALUE"].ToString() +"</td>";
-                    html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>"+ reader["NO_OF_INSP"].ToString() +"</td>";
+                    html += "<tr>";
+                    html += "<td width='5%' valign='top' align='center'> <font size='1' face='Verdana'>" + wSno + "</td>";
+                    html += "<td width='10%' valign='top' align='center'> <font size='1' face='Verdana'>" + pClient + "</td>";
+                    html += "<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>" + pIcPeriod + "</td>";
+                    html += "<td width='15%' valign='top' align='left'> <font size='1' face='Verdana'>" + reader["ITEM_DESC"].ToString() + "</td>";
+                    html += "<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>" + reader["QTY_PASS"].ToString() + " " + reader["UOM_S_DESC"].ToString() + "</td>";
+                    html += "<td width='5%' valign='top' align='right'> <font size='1' face='Verdana'>" + reader["QTY_REJ"].ToString() + " " + reader["UOM_S_DESC"].ToString() + "</td>";
+                    html += "<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>" + reader["VALUE"].ToString() + "</td>";
+                    html += "<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>" + reader["NO_OF_INSP"].ToString() + "</td>";
                     w_tot_VALUE = w_tot_VALUE + Convert.ToDouble(reader["VALUE"].ToString());
                     w_tot_NO_OF_INSP = w_tot_NO_OF_INSP + Convert.ToInt32(reader["NO_OF_INSP"].ToString());
-                    html+="</tr>";
+                    html += "</tr>";
                 };
-                html+="<tr>";
-                html+="<td width='5%' valign='top' align='center' colspan=6> <font size='1' face='Verdana'><b><font size='1' face='Verdana'>Total For The Inspection Period: " + wIcPeriod + "</font></b></td>";
-                html+="<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>" + w_tot_VALUE + "</td>";
-                html+="<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>" + w_tot_NO_OF_INSP +"</td>";
-                html+="</tr>";
-                html+="</table>";
+                html += "<tr>";
+                html += "<td width='5%' valign='top' align='center' colspan=6> <font size='1' face='Verdana'><b><font size='1' face='Verdana'>Total For The Inspection Period: " + wIcPeriod + "</font></b></td>";
+                html += "<td width='7%' valign='top' align='right'> <font size='1' face='Verdana'>" + w_tot_VALUE + "</td>";
+                html += "<td width='7%' valign='top' align='center'> <font size='1' face='Verdana'>" + w_tot_NO_OF_INSP + "</td>";
+                html += "</tr>";
+                html += "</table>";
 
                 ViewBag.html = html;
 

@@ -44,7 +44,7 @@ namespace IBS.Controllers
             List<Consignee> dTResult = searchRepository.GetConsigneeList(Prefix);
             return Json(dTResult);
         }
-        
+
         [HttpPost]
         public JsonResult GetVendorData(string Prefix)
         {

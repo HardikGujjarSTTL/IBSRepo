@@ -1,7 +1,6 @@
 ﻿using IBS.Interfaces.InspectionBilling;
-using Microsoft.AspNetCore.Mvc;
 using IBS.Models;
-using IBS.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -233,7 +232,7 @@ namespace IBS.Controllers.InspectionBilling
         //    return Json(dTResult);
         //}
 
-        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd,string BillAdType)
+        public IActionResult GetFeeCalculation(string Caseno, string Callrecvdt, int Callsno, string Consignee, string BillNo, decimal AdjustmentFee, int ConsigneeCd, string BillAdType)
         {
             InspectionCertModel model = new();
             try

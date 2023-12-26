@@ -1,7 +1,5 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
-using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.ConsigneeComplaintReports;
 using IBS.Models;
 using IBS.Models.Reports;
@@ -87,7 +85,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                         BillNo = row.Field<string>("BILL_NO"),
                         BillDate = DateTime.TryParseExact(row.Field<string>("BILL_DT"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
                             ? dateValue
-                            : (DateTime?)null,
+                            : null,
                         CaseNo = row.Field<string>("CASE_NO"),
                         EngName = row.Field<string>("IE_NAME"),
                         VENDOR = row.Field<string>("VENDOR"),
@@ -98,7 +96,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                         INSPFEE = row.Field<decimal>("INSP_FEE").ToString(), // Convert to string if needed
                         ICDate = DateTime.TryParseExact(row.Field<string>("IC_DT"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
                         ? dateValues
-                        : (DateTime?)null
+                        : null
                     };
                     listcong.Add(valueInsp);
                     recCount++;
@@ -251,7 +249,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                 }).ToList();
                 foreach (var item in listcong)
                 {
-                    item.Total = (decimal)item.Upheld + (decimal)item.Sorting + (decimal)item.Rectification + (decimal)item.PriceReduction;
+                    item.Total = item.Upheld + item.Sorting + item.Rectification + item.PriceReduction;
                 }
                 model.lstDefectCodeList = listcong;
             }
@@ -262,7 +260,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
             return model;
         }
 
-        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string actiondrp, string actioncodedrp, string actionjidrp,int IeCd)
+        public ConsigneeCompReports GetCompPeriodData(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string actiondrp, string actioncodedrp, string actionjidrp, int IeCd)
         {
             ConsigneeCompReports model = new();
             List<ConsigneeComplaintsReportModel> lstConsigneeComplaints = new();
@@ -361,7 +359,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                     JiSno = row.Field<string>("JI_SNO"),
                     ComplaintDate = DateTime.TryParseExact(row.Field<string>("COMPLAINT_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue)
                     ? dateValue
-                    : (DateTime?)null,
+                    : null,
                     Consignee = row.Field<string>("CONSIGNEE"),
                     PO_NO = row.Field<string>("PO"),
                     ie_name = row.Field<string>("IE_NAME"),
@@ -376,7 +374,7 @@ namespace IBS.Repositories.Reports.ConsigneeComplaintReports
                     Remarks = row.Field<string>("IE_JI_REMARKS"),
                     JIDate = DateTime.TryParseExact(row.Field<string>("JI_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValues)
                     ? dateValues
-                    : (DateTime?)null,
+                    : null,
                     NoJiOther = row.Field<string>("ACTION"),
                     JiStatusDesc = row.Field<string>("JI_STATUS"),
                     CoName = row.Field<string>("CO_NAME"),

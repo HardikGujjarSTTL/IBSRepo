@@ -1,38 +1,10 @@
-﻿using Humanizer;
-using IBS.Controllers;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.DotNet.Scaffolding.Shared.Project;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.VisualBasic;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Dynamic;
-using System.Globalization;
-using System.Reflection;
-using System.Security.Cryptography;
-
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -47,7 +19,7 @@ namespace IBS.Repositories
             this.pSendMailRepository = pSendMailRepository;
         }
 
-        public ConsigneeComplaints FindByID(string CASE_NO,string BK_NO,string SET_NO)
+        public ConsigneeComplaints FindByID(string CASE_NO, string BK_NO, string SET_NO)
         {
             ConsigneeComplaints model = new ConsigneeComplaints();
             DataTable dt = new DataTable();
@@ -92,32 +64,32 @@ namespace IBS.Repositories
             if (ds != null)
             {
                 model.CASE_NO = list[0].CASE_NO;
-                    model.ComplaintDate = list[0].ComplaintDate;
-                    model.PO_DT = list[0].PO_DT;
-                    model.ComplaintId = list[0].ComplaintId;
-                    model.FormattedPO_DT = list[0].PO_DT?.ToString("MM-dd-yyyy");
-                    model.FormattedComplaintDate = list[0].ComplaintDate?.ToString("MM-dd-yyyy");
-                    model.PO_NO = list[0].PO_NO;
-                    model.VEND_NAME = list[0].VEND_NAME;
-                    model.ConsigneeCd = list[0].ConsigneeCd;
-                    model.VendCd = list[0].VendCd;
-                    model.InspRegion = regiondata;
-                    model.BK_NO = list[0].BK_NO;
-                    model.SET_NO = list[0].SET_NO;
-                    model.ie_name = list[0].ie_name;
-                    model.CoName = list[0].CoName;
-                    model.Consignee = list[0].Consignee;
-                    model.FormattedIC_DATE = list[0].FormattedIC_DATE;
-                    model.RejMemoDt = list[0].RejMemoDt;
-                    model.RejMemoNo = list[0].RejMemoNo;
-                    model.Railway = list[0].Railway;
-                    model.IC_NO = list[0].IC_NO;
-                    model.ItemDesc = list[0].ItemDesc;
-                    model.QtyOffered = list[0].QtyOffered;
-                    model.QtyRejected = list[0].QtyRejected;
-                    model.Rate = list[0].Rate;
-                    model.RejectionReason = list[0].RejectionReason;
-                    model.InspectionBy = list[0].InspectionBy;
+                model.ComplaintDate = list[0].ComplaintDate;
+                model.PO_DT = list[0].PO_DT;
+                model.ComplaintId = list[0].ComplaintId;
+                model.FormattedPO_DT = list[0].PO_DT?.ToString("MM-dd-yyyy");
+                model.FormattedComplaintDate = list[0].ComplaintDate?.ToString("MM-dd-yyyy");
+                model.PO_NO = list[0].PO_NO;
+                model.VEND_NAME = list[0].VEND_NAME;
+                model.ConsigneeCd = list[0].ConsigneeCd;
+                model.VendCd = list[0].VendCd;
+                model.InspRegion = regiondata;
+                model.BK_NO = list[0].BK_NO;
+                model.SET_NO = list[0].SET_NO;
+                model.ie_name = list[0].ie_name;
+                model.CoName = list[0].CoName;
+                model.Consignee = list[0].Consignee;
+                model.FormattedIC_DATE = list[0].FormattedIC_DATE;
+                model.RejMemoDt = list[0].RejMemoDt;
+                model.RejMemoNo = list[0].RejMemoNo;
+                model.Railway = list[0].Railway;
+                model.IC_NO = list[0].IC_NO;
+                model.ItemDesc = list[0].ItemDesc;
+                model.QtyOffered = list[0].QtyOffered;
+                model.QtyRejected = list[0].QtyRejected;
+                model.Rate = list[0].Rate;
+                model.RejectionReason = list[0].RejectionReason;
+                model.InspectionBy = list[0].InspectionBy;
             }
             return model;
         }
@@ -289,7 +261,7 @@ namespace IBS.Repositories
 
             string PoNo = "", PoDt = "";
 
-           
+
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
             {
                 PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
@@ -337,7 +309,7 @@ namespace IBS.Repositories
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
 
             dTResult.draw = dtParameters.Draw;
-           
+
             return dTResult;
         }
 
@@ -426,7 +398,7 @@ namespace IBS.Repositories
                 {
                     throw ex;
                 }
-               
+
             }
             #endregion
             return Complaintid;
@@ -458,7 +430,7 @@ namespace IBS.Repositories
 
         public string FinalDisposal(ConsigneeComplaints model)
         {
-            if(model.DARPurpose == "I" || model.DARPurpose == "J")
+            if (model.DARPurpose == "I" || model.DARPurpose == "J")
             {
                 var existingRecord = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -507,9 +479,9 @@ namespace IBS.Repositories
             return model.ComplaintId;
         }
 
-        public string JIOutCome(ConsigneeComplaints model) 
-        { 
-            if(model.JIDateConclusion != null)
+        public string JIOutCome(ConsigneeComplaints model)
+        {
+            if (model.JIDateConclusion != null)
             {
                 var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -520,7 +492,7 @@ namespace IBS.Repositories
                     complaint.DefectCd = model.DefectDesc;
                     if (ushort.TryParse(model.JiStatusCd, out ushort parsedValue))
                     {
-                        byte? byteValue = parsedValue > byte.MaxValue ? (byte?)null : (byte)parsedValue;
+                        byte? byteValue = parsedValue > byte.MaxValue ? null : (byte)parsedValue;
                         complaint.JiStatusCd = byteValue;
                     }
                     complaint.Status = model.Status;
@@ -541,7 +513,7 @@ namespace IBS.Repositories
         {
             string Complaintid = "";
 
-            if(model.AcceptRejornot != "C")
+            if (model.AcceptRejornot != "C")
             {
                 if ((model.AcceptRejornot == "Y") && (model.JIInspRegion != ""))
                 {
@@ -569,7 +541,7 @@ namespace IBS.Repositories
 
                 if (model.AcceptRejornot == "Y")
                 {
-                    if(model.JiStatusDesc != "" && model.JiStatusDesc != null)
+                    if (model.JiStatusDesc != "" && model.JiStatusDesc != null)
                     {
                         var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -582,11 +554,11 @@ namespace IBS.Repositories
                             complaint.JiIeCd = byte.Parse(model.InspER);
                             complaint.JiDt = model.JIDate;
                             complaint.JiFixDt = model.JiFixDt;
-                            complaint.UserId = model.UserId; 
+                            complaint.UserId = model.UserId;
                             complaint.Datetime = DateTime.Now;
                             complaint.Updatedby = Convert.ToInt32(model.UserId);
                             complaint.Updateddate = DateTime.Now;
-                            context.SaveChanges(); 
+                            context.SaveChanges();
                         }
                     }
                     else
@@ -853,7 +825,7 @@ namespace IBS.Repositories
                         join t09 in context.T09Ies on t20.IeCd equals t09.IeCd
                         join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
                         where t20.CaseNo == model.CASE_NO && t20.BkNo == model.BK_NO && t20.SetNo == model.SET_NO
-                        select new 
+                        select new
                         {
                             IeName = t09.IeName,
                             IeEmail = t09.IeEmail,
@@ -864,9 +836,9 @@ namespace IBS.Repositories
 
             if (result != null)
             {
-                 ie_name = result.IeName;
-                 ie_email = result.IeEmail;
-                 co_email = result.CoEmail;
+                ie_name = result.IeName;
+                ie_email = result.IeEmail;
+                co_email = result.CoEmail;
             }
 
             string mail_body = $@"Dear Sir,<br><br> Complaint No: {model.ComplaintId}, Dated: {model.ComplaintDate} <br> Consignee: {model.Consignee} <br> PO No. - {model.PO_NO} <br> Book No -  {model.BK_NO} & Set No - {model.SET_NO} <br> Vendor - {model.VEND_NAME} <br> Item- {model.ItemDesc} <br> Rejected Qty - {model.QtyRejected} <br> Rejection Memo No. {model.RejMemoNo} Dated: {model.RejMemoDt} <br> Reason for Rejection - {model.RejectionReason}. <br><br> The JI case No. {model.JiSno} has been concluded as {model.JiStatusDesc}. <br>Details of the case have been uploaded on the following link: <a href='http://rites.ritesinsp.com/RBS/COMPLAINTS_REPORT/{""}'><b>JI Report</b></a> <br> NATIONAL INSPECTION HELP LINE NUMBER: 1800 425 7000 (TOLL FREE). <br><br> {wRegion}.";

@@ -29,17 +29,17 @@
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Case No. </label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="CaseNo" maxlength="50" />
-                        <span asp-validation-for="CaseNo" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorCaseNo"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Call Date </label><i class="text-danger">*</i>
-                        <input type="text" class="datepicker"  ASP-FOR="CallDate" maxlength="20" />
-                        <span asp-validation-for="CallDate" class="text-danger"></span>
+                        <input type="text" class="datepicker" ASP-FOR="CallDate" maxlength="20" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorCallDate"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Call SNo. </label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="CallSno" maxlength="5" onkeypress="return isNumber(event)" />
-                        <span asp-validation-for="CallSno" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorCallSno"></span>
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -57,22 +57,22 @@
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Charges Type</label><i class="text-danger">*</i>
                         @Html.DropDownListFor(model => model.ChargesType, new SelectList(IBS.Models.Common.ChargesType() , "Value", "Text"),"--Select--", new { id = "ChargesType" })
-                        <span asp-validation-for="ChargesType" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorChargesType"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Email</label><i class="text-danger">*</i>
                         <input type="email" class="input" ASP-FOR="Email" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorEmail"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Mobile No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Mobile" onkeypress="return isNumber(event)" maxlength="10" />
-                        <span asp-validation-for="Mobile" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorMobile"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Charges (Rs. Only)</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Charges" onkeypress="return isNumberWithDot(event)" maxlength="10" />
-                        <span asp-validation-for="Charges" class="text-danger"></span>
+                        <span class="text-danger field-validation-error" id="spnErrorCharges"></span>
                     </div>
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active Permission_Save" onclick="BtnPayNow()">Pay Now</button>
@@ -87,66 +87,113 @@
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/atomcheckout.js"></script>
-   @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  @*  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
-
+   
+    <script src="~/js/functions.js"></script>
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            //$(".datepicker").datepicker();
+        jQuery(document).ready(function ($) {
+
+
+            $(".datepicker").datepicker();
+
             $("#PayNowId").hide();
         });
-        function BtnVerify() {
 
-            if ($("#frmPaymentGateway").valid()) {
-                var urlpath = "@Url.Action("VerifyPayment", "OnlinePaymentGateway")";
-                var formData = $("#frmPaymentGateway").serialize();
-                $(".spinner").show();
-                $.ajax({
-                    url: urlpath,
-                    type: 'GET',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.PO_NO != null) {
-                            $("#PO_NO").val(data.PO_NO);
-                            $("#VEND_NAME").val(data.VEND_NAME);
-                            $("#VEND_CD").val(data.VEND_CD);
-                            $("#PayNowId").show();
-                        } else {
-                            ShowHideMsgNew(false, data.AlertMsg);
-                            $("#PayNowId").hide();
-                            return;
-                        }
-                        $(".spinner").hide();
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                    }
-                });
+        function BtnVerify() {
+            debugger;
+            $("#spnErrorCaseNo").html("");
+            $("#spnErrorCallDate").html("");
+            $("#spnErrorCallSno").html("");
+
+            var IsValid = true;
+
+            if ($("#CaseNo").val() == "") {
+                $("#spnErrorCaseNo").html("Case No. is Required.");
+                IsValid = false;
             }
+            if ($("#CallDate").val() == "") {
+                $("#spnErrorCallDate").html("Call Date is Required.");
+                IsValid = false;
+            }
+            if ($("#CallSno").val() == "") {
+                $("#spnErrorCallSno").html("Call SNo. is Required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            var urlpath = "@Url.Action("VerifyPayment", "OnlinePaymentGateway")";
+            var formData = $("#frmPaymentGateway").serialize();
+            $(".spinner").show();
+            $.ajax({
+                url: urlpath,
+                type: 'GET',
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.PO_NO != null) {
+                        $("#PO_NO").val(data.PO_NO);
+                        $("#VEND_NAME").val(data.VEND_NAME);
+                        $("#VEND_CD").val(data.VEND_CD);
+                        $("#PayNowId").show();
+                    } else {
+                        ShowHideMsgNew(false, data.AlertMsg);
+                        $(".spinner").hide();
+                        $("#PayNowId").hide();
+                        return;
+                    }
+                    $(".spinner").hide();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
         }
 
         function BtnPayNow() {
-            if ($("#frmPaymentGateway").valid()) {
-                var formData = $("#frmPaymentGateway").serialize();
-                $(".spinner").show();
-                $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
-                    var rb = response.response.Tok_id;
-                    var mef_ref = response.response.MER_TXN_REF;
-                    var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
-                    returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
-                    const options = {
-                        "atomTokenId": rb,
-                        "merchId": "317159",
-                        "custEmail": response.response.Email,
-                        "custMobile": response.response.Mobile,
-                        "returnUrl": returnUrl
-                    }
-                    let atom = new AtomPaynetz(options, 'uat');
-                    $(".spinner").hide();
-                });
+
+            $("#spnErrorChargesType").html("");
+            $("#spnErrorEmail").html("");
+            $("#spnErrorMobile").html("");
+            $("#spnErrorCharges").html("");
+
+            var IsValid = true;
+
+            if ($("#ChargesType").val() == "") {
+                $("#spnErrorChargesType").html("Charges Type is Required.");
+                IsValid = false;
             }
+            if ($("#Email").val() == "") {
+                $("#spnErrorEmail").html("Email is Required.");
+                IsValid = false;
+            }
+            if ($("#Mobile").val() == "") {
+                $("#spnErrorMobile").html("Mobile NO. is Required.");
+                IsValid = false;
+            }
+            if ($("#Charges").val() == "") {
+                $("#spnErrorCharges").html("Charges is Required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+            var formData = $("#frmPaymentGateway").serialize();
+            $(".spinner").show();
+            $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
+                var rb = response.response.Tok_id;
+                var mef_ref = response.response.MER_TXN_REF;
+                var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
+                returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
+                const options = {
+                    "atomTokenId": rb,
+                    "merchId": "317159",
+                    "custEmail": response.response.Email,
+                    "custMobile": response.response.Mobile,
+                    "returnUrl": returnUrl
+                }
+                let atom = new AtomPaynetz(options, 'uat');
+                $(".spinner").hide();
+            });
         }
 
     </script>

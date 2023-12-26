@@ -1,15 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -28,9 +20,9 @@ namespace IBS.Controllers
 
             return View();
         }
-        public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string FromDate,string ToDate,string ForParticular,string lstParticular, string TextPurchaser)
+        public IActionResult Manage(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string FromDate, string ToDate, string ForParticular, string lstParticular, string TextPurchaser)
         {
-            DetailsofPurchaserWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate,ForGiven = ForGiven,ReportBasedon = ReportBasedon,ForParticular = ForParticular,lstParticular = lstParticular,TextPurchase = TextPurchaser };
+            DetailsofPurchaserWiseInspModel model = new() { ReportType = ReportType, Month = Month, Year = Year, FromDt = FromDate, ToDt = ToDate, ForGiven = ForGiven, ReportBasedon = ReportBasedon, ForParticular = ForParticular, lstParticular = lstParticular, TextPurchase = TextPurchaser };
             if (ReportType != "") model.ReportTitle = "SUMMARY OF INSPECTIONS FOR RTI";
             return View(model);
         }
@@ -38,9 +30,9 @@ namespace IBS.Controllers
         {
             ViewBag.From = FromDate;
             ViewBag.To = ToDate;
-            
+
             ViewBag.year = Year;
-            if(Convert.ToBoolean(ReportBasedon) == true)
+            if (Convert.ToBoolean(ReportBasedon) == true)
             {
                 ViewBag.ReportBase = "Report Based on IC Date";
             }
@@ -48,7 +40,7 @@ namespace IBS.Controllers
             {
                 ViewBag.ReportBase = "Report Based on BILL Date";
             }
-            
+
             if (Month != null)
             {
                 string[] monthNames = new string[]
@@ -65,9 +57,9 @@ namespace IBS.Controllers
             }
 
             string Region = GetRegionCode;
-            if(Region == "N")
+            if (Region == "N")
             { ViewBag.Region = "NORTHERN REGION"; }
-            else if(Region == "S")
+            else if (Region == "S")
             { ViewBag.Region = "SOUTHERN REGION"; }
             else if (Region == "E")
             { ViewBag.Region = "EASTERN REGION"; }
@@ -76,7 +68,7 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            DetailsofPurchaserWiseInspModel model = DetailsofPurchaserWiseInspRepository.SummaryInsp( ReportType,  Month,  Year,  ForGiven,  ReportBasedon,  FromDate,  ToDate,  ForParticular,  lstParticular ,Region,TextPurchaser);
+            DetailsofPurchaserWiseInspModel model = DetailsofPurchaserWiseInspRepository.SummaryInsp(ReportType, Month, Year, ForGiven, ReportBasedon, FromDate, ToDate, ForParticular, lstParticular, Region, TextPurchaser);
             return PartialView(model);
         }
         [HttpGet]

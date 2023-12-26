@@ -1,11 +1,7 @@
-﻿    using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
 using System.Data;
-using System.Diagnostics.Contracts;
 
 namespace IBS.Repositories
 {
@@ -30,11 +26,11 @@ namespace IBS.Repositories
                 model.ContractNo = tenant.ContractNo;
                 model.ContractPanalty = tenant.ContractPanalty;
                 model.ContractCm = tenant.ContractCm;
-                model.ExpOr =  tenant.ExpOr;
+                model.ExpOr = tenant.ExpOr;
                 model.ClientName = tenant.ClientName;
                 model.ContInspFee = tenant.ContInspFee;
                 model.ContPerFrom = Convert.ToDateTime(tenant.ContPerFrom);
-                model.Status =  tenant.Status;
+                model.Status = tenant.Status;
                 model.ContractSpecialCondn = tenant.ContractSpecialCondn;
                 model.Datetime = tenant.Datetime;
                 model.OfferDt = tenant.OfferDt;
@@ -43,7 +39,7 @@ namespace IBS.Repositories
                 model.ContractFee = tenant.ContractFee;
                 model.ContractFeeNum = tenant.ContractFeeNum;
                 model.ScopeOfWork = tenant.ScopeOfWork;
-                model.UserId= tenant.UserId;
+                model.UserId = tenant.UserId;
                 model.ContSignDt = tenant.ContSignDt;
                 //model.Isdeleted = tenant.Isdeleted;
                 //model.Createddate = tenant.Createddate;
@@ -55,7 +51,7 @@ namespace IBS.Repositories
         }
 
         public DTResult<ContractModel> GetContractList(DTParameters dtParameters)
-        { 
+        {
             DTResult<ContractModel> dTResult = new() { draw = 0 };
             IQueryable<ContractModel>? query = null;
 
@@ -84,7 +80,7 @@ namespace IBS.Repositories
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new ContractModel
                     {
-                        ContractId = l.ContractId,                         
+                        ContractId = l.ContractId,
                         ContractNo = l.ContractNo,
                         ContractPanalty = l.ContractPanalty,
                         ContractCm = l.ContractCm,
@@ -102,13 +98,13 @@ namespace IBS.Repositories
                         ContractFeeNum = l.ContractFeeNum,
                         ScopeOfWork = l.ScopeOfWork,
                         UserId = l.UserId,
-                        ContSignDt = Convert.ToDateTime(l.ContSignDt),                        
+                        ContSignDt = Convert.ToDateTime(l.ContSignDt),
                         Isdeleted = l.Isdeleted,
                         Createdby = l.Createdby,
                         Createddate = l.Createddate,
-                        Updatedby= l.Updatedby,
-                        Updateddate= l.Updateddate,
-            };
+                        Updatedby = l.Updatedby,
+                        Updateddate = l.Updateddate,
+                    };
 
             dTResult.recordsTotal = query.Count();
 
@@ -137,12 +133,12 @@ namespace IBS.Repositories
 
         public int ContractDetailsInsertUpdate(ContractModel model)
         {
-            int ContractId = 0; 
+            int ContractId = 0;
             var _contract = context.T57OngoingContracts.Find(model.ContractId);
             #region Contract save
             if (_contract == null)
             {
-                int maxID = context.T57OngoingContracts.Max(x => x.ContractId)+1;
+                int maxID = context.T57OngoingContracts.Max(x => x.ContractId) + 1;
                 T57OngoingContract obj = new T57OngoingContract();
                 obj.ContractId = maxID;
                 obj.ContractNo = model.ContractNo;
@@ -163,7 +159,7 @@ namespace IBS.Repositories
                 obj.ScopeOfWork = model.ScopeOfWork;
                 obj.UserId = model.UserId;
                 obj.ContSignDt = model.ContSignDt;
-                 
+
                 //obj.Contractname = model.Contractname;
                 //obj.Contractdescription = model.Contractdescription;
                 //obj.Issysadmin = Convert.ToByte(model.Issysadmin);
@@ -178,25 +174,25 @@ namespace IBS.Repositories
                 ContractId = Convert.ToInt32(obj.ContractId);
             }
             else
-            {   
-               _contract.ContractNo = model.ContractNo;
-               _contract.ContractPanalty = model.ContractPanalty;
-               _contract.ContractCm = model.ContractCm;
-               _contract.ExpOr = model.ExpOr;
-               _contract.ClientName = model.ClientName;
-               _contract.ContInspFee = model.ContInspFee;
-               _contract.ContPerFrom = Convert.ToDateTime(model.ContPerFrom);
-               _contract.Status = model.Status;
-               _contract.ContractSpecialCondn = model.ContractSpecialCondn;
-               _contract.Datetime = model.Datetime;
-               _contract.OfferDt = model.OfferDt;
-               _contract.ContPerTo = model.ContPerTo;
-               _contract.RegionCode = model.RegionCode;
-               _contract.ContractFee = model.ContractFee;
-               _contract.ContractFeeNum = model.ContractFeeNum;
-               _contract.ScopeOfWork = model.ScopeOfWork;
-               _contract.UserId = model.UserId;
-               _contract.ContSignDt = model.ContSignDt;
+            {
+                _contract.ContractNo = model.ContractNo;
+                _contract.ContractPanalty = model.ContractPanalty;
+                _contract.ContractCm = model.ContractCm;
+                _contract.ExpOr = model.ExpOr;
+                _contract.ClientName = model.ClientName;
+                _contract.ContInspFee = model.ContInspFee;
+                _contract.ContPerFrom = Convert.ToDateTime(model.ContPerFrom);
+                _contract.Status = model.Status;
+                _contract.ContractSpecialCondn = model.ContractSpecialCondn;
+                _contract.Datetime = model.Datetime;
+                _contract.OfferDt = model.OfferDt;
+                _contract.ContPerTo = model.ContPerTo;
+                _contract.RegionCode = model.RegionCode;
+                _contract.ContractFee = model.ContractFee;
+                _contract.ContractFeeNum = model.ContractFeeNum;
+                _contract.ScopeOfWork = model.ScopeOfWork;
+                _contract.UserId = model.UserId;
+                _contract.ContSignDt = model.ContSignDt;
                 ContractId = Convert.ToInt32(_contract.ContractId);
                 context.SaveChanges();
             }

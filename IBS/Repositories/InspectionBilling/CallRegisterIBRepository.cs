@@ -2,25 +2,15 @@
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
-using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Build.Framework;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 //using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Dynamic;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
-using NuGet.Protocol.Plugins;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -37,7 +27,7 @@ namespace IBS.Repositories.InspectionBilling
         int callval = 0;
         int e_status = 0;
 
-        public DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string RegionCode)
         {
             DTResult<VenderCallRegisterModel> dTResult = new() { draw = 0 };
             IQueryable<VenderCallRegisterModel>? query = null;
@@ -111,31 +101,72 @@ namespace IBS.Repositories.InspectionBilling
             {
                 str1 = "l.CaseNo,l.CallRecvDt";
             }
-            query = from l in context.ViewGetCallRegCancellations
-                    where l.RegionCode == GetRegionCode
-                          && (CaseNo == null || CaseNo == "" || l.CaseNo == CaseNo)
-                          && (CallRecvDt == null || CallRecvDt == "" || l.CallRecvDt == _CallRecvDt)
-                          && (PoNo == null || PoNo == "" || l.PoNo == PoNo)
-                          && (PoDt == null || PoDt == "" || l.PoDt == _PoDt)
-                          && (Vendor == null || Vendor == "" || l.Vendor == Vendor)
-                          && (CallLetterNo == null || CallLetterNo == "" || l.CallLetterNo == CallLetterNo)
-                          && (CallSno == null || CallSno == "" || l.CallSno == Convert.ToInt32(CallSno))
-                    orderby str1
-                    select new VenderCallRegisterModel
+
+            OracleParameter[] par = new OracleParameter[9];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_caseno", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_callrecvdt", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_pono", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_podt", OracleDbType.Date, _PoDt, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_vendor", OracleDbType.Varchar2, Vendor, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_callletterno", OracleDbType.Varchar2, CallLetterNo, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
+            par[8] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_CALL_REG_CANCELLATION", par, 1);
+
+            List<VenderCallRegisterModel> modelList = new List<VenderCallRegisterModel>();
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    VenderCallRegisterModel model = new VenderCallRegisterModel
                     {
-                        CaseNo = l.CaseNo,
-                        CallRecvDt = l.CallRecvDt,
-                        CallInstallNo = l.CallInstallNo,
-                        CallSno = Convert.ToInt16(l.CallSno),
-                        CallStatus = l.CallStatus,
-                        CallLetterNo = l.CallLetterNo,
-                        Remarks = l.Remarks,
-                        PoNo = l.PoNo,
-                        PoDt = l.PoDt,
-                        IeSname = l.IeSname,
-                        Vendor = l.Vendor,
-                        RegionCode = l.RegionCode,
+                        CaseNo = Convert.ToString(row["CASE_NO"]),
+                        CallRecvDt = Convert.ToString(row["CALL_RECV_DT"]) == "" ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
+                        CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]) == null ? 0 : Convert.ToInt32(row["CALL_INSTALL_NO"]),
+                        CallSno = Convert.ToInt32(row["CALL_SNO"]) == null ? 0 : Convert.ToInt32(row["CALL_SNO"]),
+                        CallStatus = Convert.ToString(row["CALL_STATUS"]),
+                        CallLetterNo = Convert.ToString(row["CALL_LETTER_NO"]),
+                        Remarks = Convert.ToString(row["REMARKS"]),
+                        PoNo = Convert.ToString(row["PO_NO"]),
+                        PoDt = Convert.ToString(row["PO_DT"]) == "" ? null : Convert.ToDateTime(row["PO_DT"]),
+                        IeSname = Convert.ToString(row["IE_SNAME"]),
+                        Vendor = Convert.ToString(row["VENDOR"]),
+                        RegionCode = Convert.ToString(row["REGION_CODE"]),
+
                     };
+                    modelList.Add(model);
+                }
+            }
+
+            //query = from l in context.ViewGetCallRegCancellations
+            //        where l.RegionCode == RegionCode
+            //              && (CaseNo == null || CaseNo == "" || l.CaseNo == CaseNo)
+            //              && (CallRecvDt == null || CallRecvDt == "" || l.CallRecvDt == _CallRecvDt)
+            //              && (PoNo == null || PoNo == "" || l.PoNo == PoNo)
+            //              && (PoDt == null || PoDt == "" || l.PoDt == _PoDt)
+            //              && (Vendor == null || Vendor == "" || l.Vendor == Vendor)
+            //              && (CallLetterNo == null || CallLetterNo == "" || l.CallLetterNo == CallLetterNo)
+            //              && (CallSno == null || CallSno == "" || l.CallSno == Convert.ToInt32(CallSno))
+            //        orderby str1
+            //        select new VenderCallRegisterModel
+            //        {
+            //            CaseNo = l.CaseNo,
+            //            CallRecvDt = l.CallRecvDt,
+            //            CallInstallNo = l.CallInstallNo,
+            //            CallSno = Convert.ToInt16(l.CallSno),
+            //            CallStatus = l.CallStatus,
+            //            CallLetterNo = l.CallLetterNo,
+            //            Remarks = l.Remarks,
+            //            PoNo = l.PoNo,
+            //            PoDt = l.PoDt,
+            //            IeSname = l.IeSname,
+            //            Vendor = l.Vendor,
+            //            RegionCode = l.RegionCode,
+            //        };
+
+            query = modelList.AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 
@@ -454,13 +485,7 @@ namespace IBS.Repositories.InspectionBilling
 
         public string RegiserCallSave(VenderCallRegisterModel model)
         {
-
-
-            string IE_name = null;
-            int ie_cd = 0;
-
             string ID = "";
-            int CD = 0;
             //ie_cd = FindIeCODE(model);
             string department1 = model.DepartmentCode;
             if (department1 == "M")
@@ -491,9 +516,6 @@ namespace IBS.Repositories.InspectionBilling
                 int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallLetterNo == model.CallLetterNo && x.RegionCode == model.SetRegionCode).Count();
                 if (cmdCL == 0)
                 {
-                    var w_item_rdso = "";
-                    var w_vend_rdso = "";
-                    var w_stag = "";
                     var w_stage_or_final = "";
 
                     //var str3 = context.T17CallRegisters.Where(x => x.CallRecvDt == model.CallRecvDt && x.RegionCode == model.SetRegionCode).FirstOrDefault();
@@ -715,7 +737,6 @@ namespace IBS.Repositories.InspectionBilling
         int FindIeCODE(VenderCallRegisterModel model)
         {
             string department1 = string.Empty;
-            int strval = 0;
             int Clustercode = 0;
             int vcode = 0;
             int cl_exist = 0;
@@ -1498,7 +1519,6 @@ namespace IBS.Repositories.InspectionBilling
 
         public void Vendor_Rej_Email(VenderCallStatusModel model)
         {
-            string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
             string sender = "";
@@ -1727,7 +1747,6 @@ namespace IBS.Repositories.InspectionBilling
                 try
                 {
                     smtpClient.Send(mail);
-                    email = "success";
                 }
                 catch (Exception ex)
                 {
@@ -1747,13 +1766,27 @@ namespace IBS.Repositories.InspectionBilling
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
-            string sender = "";
 
-            if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; }
-            else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
-            else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
-            else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
-            else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
+            if (Case_Region == "N")
+            {
+                wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665";
+            }
+            else if (Case_Region == "S")
+            {
+                wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359";
+            }
+            else if (Case_Region == "E")
+            {
+                wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704";
+            }
+            else if (Case_Region == "W")
+            {
+                wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>";
+            }
+            else if (Case_Region == "C")
+            {
+                wRegion = "Central Region";
+            }
 
             var query = from t13 in context.T13PoMasters
                         join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
@@ -1895,7 +1928,6 @@ namespace IBS.Repositories.InspectionBilling
                 days_to_ic = Convert.ToInt32(result4[0].DaysToIc);
                 item_cd = result4[0].ItemCd;
             }
-            string can_reasons = "";
             string manu_name = "", manu_add = "";
             var manufacturerInfo = (from t17 in context.T17CallRegisters
                                     join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd
@@ -3128,7 +3160,6 @@ namespace IBS.Repositories.InspectionBilling
 
         public string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList)
         {
-            string str = "";
             string w_call_cancel_status = "";
             var wFifoVoilateReason = model.ReasonFIFO;
             var document = "";
@@ -3198,7 +3229,6 @@ namespace IBS.Repositories.InspectionBilling
                                  select item).Count();
                     if (count > 0)
                     {
-                        string updateQuery = "";
                         using (var trans = context.Database.BeginTransaction())
                         {
                             try
@@ -4028,11 +4058,11 @@ namespace IBS.Repositories.InspectionBilling
 
 
                 var bsCheckIC = (from a in context.T10IcBooksets
-                                  where a.BkNo.Trim() == model.DocBkNo.Trim()
-                                  && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
-                                  && a.IssueToIecd == Convert.ToInt32(model.IeCd)
-                                  && (a.Ictype ?? "F") == FinalOrStage
-                                  select a.IssueToIecd).FirstOrDefault();
+                                 where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                 && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
+                                 && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                                 && (a.Ictype ?? "F") == FinalOrStage
+                                 select a.IssueToIecd).FirstOrDefault();
 
                 //var bsCheckIC = (from a in context.T10IcBooksets
                 //                 where a.BkNo.Trim() == model.DocBkNo.Trim()
@@ -4170,7 +4200,7 @@ namespace IBS.Repositories.InspectionBilling
                             if (!wasOpen) command.Connection.Open();
                             try
                             {
-                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', UPDATEDBY =" +  model.UserId + ",UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
+                                command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', UPDATEDBY =" + model.UserId + ",UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + CallRecvDate.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') AND CONSIGNEE_CD = " + Convert.ToInt32(model.ConsigneeFirm);
                                 command.ExecuteNonQuery();
                             }
                             finally
@@ -4458,7 +4488,7 @@ namespace IBS.Repositories.InspectionBilling
 
                             if (callRegister != null)
                             {
-                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? (short?)null : Convert.ToInt16(model.CallCancelCharges);
+                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? null : Convert.ToInt16(model.CallCancelCharges);
                                 callRegister.CallStatus = model.CallStatus;
                                 callRegister.CallStatusDt = model.CallStatusDt;
                                 callRegister.CallCancelStatus = model.CallCancelStatus;
@@ -4641,7 +4671,7 @@ namespace IBS.Repositories.InspectionBilling
 
                             if (callRegister != null)
                             {
-                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? (short?)null : Convert.ToInt16(model.CallCancelCharges);
+                                short? cancelCharges = string.IsNullOrEmpty(model.CallCancelCharges) ? null : Convert.ToInt16(model.CallCancelCharges);
                                 callRegister.CallStatus = model.CallStatus;
                                 callRegister.CallStatusDt = model.CallStatusDt;
                                 callRegister.CallCancelStatus = model.CallCancelStatus;
@@ -4922,7 +4952,6 @@ namespace IBS.Repositories.InspectionBilling
 
         public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
         {
-            string msg = "";
             double w_cancharges = 0;
             VenderCallStatusModel model = new();
             string formattedCallRecvDt = "";
@@ -4946,8 +4975,8 @@ namespace IBS.Repositories.InspectionBilling
                                   t18.CallRecvDt,
                                   t18.CallSno,
                                   Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
-                          ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
-                          : (decimal)0
+                          ? ((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp
+                          : 0
                               })
                           .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
                           .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
@@ -5075,8 +5104,8 @@ namespace IBS.Repositories.InspectionBilling
                                 t18.CallRecvDt,
                                 t18.CallSno,
                                 Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
-                        ? (decimal)(((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp)
-                        : (decimal)0
+                        ? ((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp
+                        : 0
                             })
                               .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
                               .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })

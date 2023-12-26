@@ -2,19 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
-using System;
-using System.Configuration;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -463,16 +453,16 @@ namespace IBS.Repositories
             //var reqdt = Convert.ToDateTime(LABREGISTERModel.TestReportRequestDate).ToString("MM/dd/yyyy");
             //var recdt = Convert.ToDateTime(LABREGISTERModel.TestReportReceiveDate).ToString("MM/dd/yyyy");
             //var sampdt = Convert.ToDateTime(LABREGISTERModel.SampleDispatchLabDate).ToString("MM/dd/yyyy");
-            
+
             if (LABREGISTERModel.TestToBe == "D")
             {
                 LABREGISTERModel.Test = LABREGISTERModel.TestTobeCon;
             }
-            
+
             try
             {
                 OracleParameter[] par = new OracleParameter[18];
-                
+
                 par[0] = new OracleParameter("p_SAMPLE_REG_NO", OracleDbType.Varchar2, LABREGISTERModel.SampleRegNo, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_SNO", OracleDbType.Varchar2, LABREGISTERModel.SNO, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_ITEM_DESC", OracleDbType.Varchar2, LABREGISTERModel.ItemDesc, ParameterDirection.Input);
@@ -525,25 +515,25 @@ namespace IBS.Repositories
                 par[16] = new OracleParameter("p_DATETIME", OracleDbType.Date, DateTime.Now.ToString("MM/dd/yyyy"), ParameterDirection.Input);
                 par[17] = new OracleParameter("p_DISCIPLINE_ID", OracleDbType.Varchar2, LABREGISTERModel.DISCIPLINE_ID, ParameterDirection.Input);
                 var ds = DataAccessDB.ExecuteNonQuery("SP_UPDATE_LAB_DETAILS_51", par, 1);
-                
+
                 SaveDataDetails2(LABREGISTERModel);
 
             }
             catch (Exception ex)
             {
-                
+
 
             }
-            
+
             return true;
         }
         public bool SaveDataDetails2(LABREGISTERModel LABREGISTERModel)
         {
-            
+
             try
             {
                 OracleParameter[] par = new OracleParameter[7];
-                
+
                 par[0] = new OracleParameter("p_TOTAL_TESTING_FEE", OracleDbType.Varchar2, LABREGISTERModel.DTestingFee, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_TOTAL_SERVICE_TAX", OracleDbType.Varchar2, LABREGISTERModel.DServiceTax, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_TOTAL_HANDLING_CHARGES", OracleDbType.Varchar2, LABREGISTERModel.DHandlingCharges, ParameterDirection.Input);
@@ -555,10 +545,10 @@ namespace IBS.Repositories
             }
             catch (Exception ex)
             {
-                
+
 
             }
-            
+
             return true;
         }
         public static string GetDateString(string sqlQuery)

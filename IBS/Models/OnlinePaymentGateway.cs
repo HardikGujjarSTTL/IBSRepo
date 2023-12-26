@@ -9,7 +9,9 @@ namespace IBS.Models
         public string CaseNo { get; set; }
         [Required]
         [Display(Name = "Call Date")]
-        public DateTime CallDate { get; set; }
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        //[DataType(DataType.Date)]
+        public string CallDate { get; set; }
         [Required]
         [Display(Name = "Call Sno")]
         public int? CallSno { get; set; }

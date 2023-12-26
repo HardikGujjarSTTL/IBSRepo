@@ -2,7 +2,6 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace IBS.Repositories
 {

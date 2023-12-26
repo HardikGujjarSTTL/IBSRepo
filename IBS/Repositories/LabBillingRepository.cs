@@ -1,15 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
-using System.Data;
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using IBS.Helper;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -22,8 +18,8 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public LabBillingModel FindByID(string LabBillPer,string rgnCode)
-        {  
+        public LabBillingModel FindByID(string LabBillPer, string rgnCode)
+        {
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[3];
@@ -37,13 +33,13 @@ namespace IBS.Repositories
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<LabBillingModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                } 
+                }
                 return model;
-            } 
+            }
         }
- 
+
         public DTResult<LabBillingModel> GetLabBillingList(DTParameters dtParameters, string RgnCd)
-        { 
+        {
             DTResult<LabBillingModel> dTResult = new() { draw = 0 };
             IQueryable<LabBillingModel>? query = null;
 
@@ -76,13 +72,13 @@ namespace IBS.Repositories
                         Lab_Exp = l.LabExp,
                         Lab_Bill_Per = l.LabBillPer,
                         User_Id = l.UserId,
-                        Datetime = l.Datetime,                                                                     
+                        Datetime = l.Datetime,
                         //Isdeleted = l.Isdeleted,
                         //Createdby = l.Createdby,
                         //Createddate = l.Createddate,
                         //Updatedby= l.Updatedby,
                         //Updateddate= l.Updateddate,
-            };
+                    };
 
             dTResult.recordsTotal = query.Count();
             if (!string.IsNullOrEmpty(searchBy))
@@ -96,13 +92,13 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public bool Remove(string LabBillPer, string strRgn,int UserID)
+        public bool Remove(string LabBillPer, string strRgn, int UserID)
         {
             //var _contracts = context.T59LabExps.Find(LabBillPer);
             var _contracts = (from m in context.T59LabExps
-                             where m.LabBillPer == LabBillPer
-                             && m.RegionCode == strRgn
-                             select m).FirstOrDefault();
+                              where m.LabBillPer == LabBillPer
+                              && m.RegionCode == strRgn
+                              select m).FirstOrDefault();
 
             if (_contracts == null) { return false; }
 
@@ -117,10 +113,10 @@ namespace IBS.Repositories
         {
             var Id = "";
             model.Lab_Bill_Per = model.LabBillPerYear + model.LabBillPerMon;
-              
+
             //var _contract = context.T59LabExps.Find(model.Lab_Bill_Per,model.Region_Code);
-            var _contract = (from m in context.T59LabExps 
-                             where m.LabBillPer == model.Lab_Bill_Per 
+            var _contract = (from m in context.T59LabExps
+                             where m.LabBillPer == model.Lab_Bill_Per
                              && m.RegionCode == model.Region_Code
                              select m).FirstOrDefault();
 
@@ -151,7 +147,7 @@ namespace IBS.Repositories
                 Id = _contract.LabBillPer;
                 context.SaveChanges();
             }
-            
+
             return Id;
             #endregion
         }

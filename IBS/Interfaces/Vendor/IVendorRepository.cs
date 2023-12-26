@@ -2,7 +2,7 @@
 
 namespace IBS.Interfaces.Vendor
 {
-    public interface IVendorRepository 
+    public interface IVendorRepository
     {
         public VendorMasterModel FindByID(int Id);
 
