@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Call Date </label><i class="text-danger">*</i>
-                        <input type="text" class="datepicker"  ASP-FOR="CallDate" maxlength="20" placeholder="DD/MM/YYYY"/>
+                        <input type="text" class="datepicker" ASP-FOR="CallDate" maxlength="20" placeholder="DD/MM/YYYY" />
                         <span class="text-danger field-validation-error" id="spnErrorCallDate"></span>
                     </div>
                     <div class="col-md-4 mb-4">
@@ -88,19 +88,19 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/atomcheckout.js"></script>
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  @*  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 
 
     <script type="text/javascript">
 
         jQuery(document).ready(function ($) {
-            $("#CallDate").datepicker({
-                dateFormat: 'dd/mm/yy' 
-            });
+            
+
             $("#PayNowId").hide();
         });
+
         function BtnVerify() {
             debugger;
             $("#spnErrorCaseNo").html("");
@@ -122,31 +122,31 @@
                 IsValid = false;
             }
             if (!IsValid) return;
-                var urlpath = "@Url.Action("VerifyPayment", "OnlinePaymentGateway")";
-                var formData = $("#frmPaymentGateway").serialize();
-                $(".spinner").show();
-                $.ajax({
-                    url: urlpath,
-                    type: 'GET',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.PO_NO != null) {
-                            $("#PO_NO").val(data.PO_NO);
-                            $("#VEND_NAME").val(data.VEND_NAME);
-                            $("#VEND_CD").val(data.VEND_CD);
-                            $("#PayNowId").show();
-                        } else {
-                            ShowHideMsgNew(false, data.AlertMsg);
-                            $(".spinner").hide();
-                            $("#PayNowId").hide();
-                            return;
-                        }
+            var urlpath = "@Url.Action("VerifyPayment", "OnlinePaymentGateway")";
+            var formData = $("#frmPaymentGateway").serialize();
+            $(".spinner").show();
+            $.ajax({
+                url: urlpath,
+                type: 'GET',
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.PO_NO != null) {
+                        $("#PO_NO").val(data.PO_NO);
+                        $("#VEND_NAME").val(data.VEND_NAME);
+                        $("#VEND_CD").val(data.VEND_CD);
+                        $("#PayNowId").show();
+                    } else {
+                        ShowHideMsgNew(false, data.AlertMsg);
                         $(".spinner").hide();
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
+                        $("#PayNowId").hide();
+                        return;
                     }
-                });
+                    $(".spinner").hide();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
         }
 
         function BtnPayNow() {
@@ -175,23 +175,23 @@
                 IsValid = false;
             }
             if (!IsValid) return;
-                var formData = $("#frmPaymentGateway").serialize();
-                $(".spinner").show();
-                $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
-                    var rb = response.response.Tok_id;
-                    var mef_ref = response.response.MER_TXN_REF;
-                    var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
-                    returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
-                    const options = {
-                        "atomTokenId": rb,
-                        "merchId": "317159",
-                        "custEmail": response.response.Email,
-                        "custMobile": response.response.Mobile,
-                        "returnUrl": returnUrl
-                    }
-                    let atom = new AtomPaynetz(options, 'uat');
-                    $(".spinner").hide();
-                });
+            var formData = $("#frmPaymentGateway").serialize();
+            $(".spinner").show();
+            $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
+                var rb = response.response.Tok_id;
+                var mef_ref = response.response.MER_TXN_REF;
+                var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
+                returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
+                const options = {
+                    "atomTokenId": rb,
+                    "merchId": "317159",
+                    "custEmail": response.response.Email,
+                    "custMobile": response.response.Mobile,
+                    "returnUrl": returnUrl
+                }
+                let atom = new AtomPaynetz(options, 'uat');
+                $(".spinner").hide();
+            });
         }
 
     </script>

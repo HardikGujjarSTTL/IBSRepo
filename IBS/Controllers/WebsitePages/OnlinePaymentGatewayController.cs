@@ -55,11 +55,9 @@ namespace IBS.Controllers.WebsitePages
             hd.api = "AUTH";
             hd.platform = "FLASH";
 
-            //md.merchId = "317159";
-            md.merchId = config.GetSection("PaymentSetting")["merchId"];
-            md.userId = config.GetSection("PaymentSetting")["merchId"];
+            md.merchId = config.GetSection("PaymentConfig")["merchId"];
+            md.userId = config.GetSection("PaymentConfig")["merchId"];
             md.password = "Test@123";
-            //md.merchTxnDate = "2023-12-12 20:46:00";
             md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             md.merchTxnId = "test000123";
 
