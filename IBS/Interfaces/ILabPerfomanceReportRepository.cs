@@ -1,13 +1,11 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
     public interface ILabPerfomanceReportRepository
     {
 
-        DTResult<LabPerfomanceReport> labPerformanceReport(DTParameters dtParameters,string Regin);
-       
+        DTResult<LabPerfomanceReport> labPerformanceReport(DTParameters dtParameters, string Regin);
+
     }
 }

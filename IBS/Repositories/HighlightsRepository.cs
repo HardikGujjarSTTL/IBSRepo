@@ -1,15 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
-using System.Data;
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using IBS.Helper;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace IBS.Repositories
 {
@@ -23,7 +19,7 @@ namespace IBS.Repositories
         }
 
         public HighlightsModel FindByID(string HighDt, string rgnCode)
-        {  
+        {
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[3];
@@ -37,13 +33,13 @@ namespace IBS.Repositories
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     model = JsonConvert.DeserializeObject<List<HighlightsModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).FirstOrDefault();
-                } 
+                }
                 return model;
-            } 
+            }
         }
- 
+
         public DTResult<HighlightsModel> GetHighlightsList(DTParameters dtParameters, string RgnCd)
-        { 
+        {
             DTResult<HighlightsModel> dTResult = new() { draw = 0 };
             IQueryable<HighlightsModel>? query = null;
 
@@ -76,8 +72,8 @@ namespace IBS.Repositories
                         Hight_Text = l.HightText,
                         High_Dt = l.HighDt,
                         User_Id = l.UserId,
-                        Datetime = l.Datetime,   
-            };
+                        Datetime = l.Datetime,
+                    };
 
             dTResult.recordsTotal = query.Count();
             dTResult.recordsFiltered = query.Count();
@@ -86,13 +82,13 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public bool Remove(string HighDt, string strRgn,int UserID)
+        public bool Remove(string HighDt, string strRgn, int UserID)
         {
             //var _contracts = context.T59LabExps.Find(LabBillPer);
             var _contracts = (from m in context.T67Highlights
                               where m.HighDt == HighDt
                              && m.RegionCode == strRgn
-                             select m).FirstOrDefault();
+                              select m).FirstOrDefault();
 
             if (_contracts == null) { return false; }
 
@@ -106,11 +102,11 @@ namespace IBS.Repositories
         public string HighlightsDetailsInsertUpdate(HighlightsModel model)
         {
             var Id = "";
-            model.High_Dt = model.HighDtYear + model.HighDtMon; 
+            model.High_Dt = model.HighDtYear + model.HighDtMon;
             var _High = (from m in context.T67Highlights
-                             where m.HighDt == model.High_Dt
-                             && m.RegionCode == model.Region_Code
-                             select m).FirstOrDefault();
+                         where m.HighDt == model.High_Dt
+                         && m.RegionCode == model.Region_Code
+                         select m).FirstOrDefault();
 
             #region Contract save
             if (_High == null)
@@ -136,7 +132,7 @@ namespace IBS.Repositories
                 Id = _High.HighDt;
                 context.SaveChanges();
             }
-            
+
             return Id;
             #endregion
         }

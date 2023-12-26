@@ -1,9 +1,10 @@
-﻿using IBS.Interfaces.WebsitePages;
+﻿using IBS.Helper;
+using IBS.Interfaces.WebsitePages;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -113,7 +114,6 @@ namespace IBS.Controllers.WebsitePages
 
             StreamReader reader = new StreamReader(response.GetResponseStream());
             string temp = null;
-            string status = "";
             while ((temp = reader.ReadLine()) != null)
             {
                 jsonresponse += temp;
@@ -239,7 +239,7 @@ namespace IBS.Controllers.WebsitePages
             model.PaymentStatus = objectres.payInstrument.responseDetails.message;
             model.Email = objectres.payInstrument.custDetails.custEmail;
             model.Mobile = objectres.payInstrument.custDetails.custMobile;
-            model.MerID= objectres.payInstrument.merchDetails.merchId;
+            model.MerID = objectres.payInstrument.merchDetails.merchId;
             model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
             model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
             model.custAccNo = objectres.payInstrument.payDetails.custAccNo;

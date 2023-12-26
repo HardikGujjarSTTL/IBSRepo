@@ -1,12 +1,11 @@
-﻿using IBS.Models;
+﻿using IBS.Helper;
+using IBS.Interfaces;
+using IBS.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using IBS.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Text;
-using IBS.Helper;
-using IBS.DataAccess;
 
 namespace IBS.Controllers
 {
@@ -192,14 +191,14 @@ namespace IBS.Controllers
             return View(loginModel);
         }
 
-        public IActionResult ResetPassword(string id,string UserType)
+        public IActionResult ResetPassword(string id, string UserType)
         {
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(UserType))
             {
                 id = Common.DecryptQueryString(id.ToString());
                 UserType = Common.DecryptQueryString(UserType.ToString());
             }
-            ResetPasswordModel resetPassword = new() { UserId = id , UserType = UserType };
+            ResetPasswordModel resetPassword = new() { UserId = id, UserType = UserType };
             return View(resetPassword);
         }
 

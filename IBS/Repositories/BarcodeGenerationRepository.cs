@@ -2,17 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using static IBS.Helper.Enums;
 namespace IBS.Repositories
 {
     public class BarcodeGenerationRepository : IBarcodeGeneration
@@ -188,7 +180,7 @@ namespace IBS.Repositories
             var CALL_RECV_DT = Convert.ToDateTime(BarcodeGenerate.CALL_RECV_DT).ToString("MM/dd/yyyy");
             var TARGETED_DATE = Convert.ToDateTime(BarcodeGenerate.TARGETED_DATE).ToString("MM/dd/yyyy");
             var CURRENT_DATE = Convert.ToDateTime(BarcodeGenerate.CURRENT_DATE).ToString("MM/dd/yyyy");
-            
+
 
             try
             {
@@ -253,7 +245,7 @@ namespace IBS.Repositories
                 {
                     using (OracleCommand cmd = new OracleCommand("New_BarcodeGenarate", (OracleConnection)conn1))
                     {
-                       
+
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
                         OracleParameter outParam = new OracleParameter("transaction_number", OracleDbType.Varchar2, 255);
@@ -270,7 +262,7 @@ namespace IBS.Repositories
             {
                 return BarcodeGenerate.BARCODE;
             }
-            
+
 
             return BarcodeGenerate.BARCODE;
         }
@@ -278,11 +270,9 @@ namespace IBS.Repositories
         {
             string DisID = dtParameters.AdditionalValues?.GetValueOrDefault("DisId");
             DTResult<BarcodeGenerate> dTResult = new() { draw = 0 };
-            IQueryable<BarcodeGenerate>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
 
             //var query1 = (from l in context.TestTables
             //              where l.DisciplineId == Convert.ToInt32(DisID)

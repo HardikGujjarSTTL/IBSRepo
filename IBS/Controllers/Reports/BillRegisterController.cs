@@ -1,7 +1,5 @@
-﻿using IBS.Interfaces;
-using IBS.Interfaces.Reports;
+﻿using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Reports
@@ -29,7 +27,7 @@ namespace IBS.Controllers.Reports
         }
 
         [HttpPost]
-        public IActionResult ProcessDataTable(BillRegisterModel model,string commaSeparatedString, string Region)
+        public IActionResult ProcessDataTable(BillRegisterModel model, string commaSeparatedString, string Region)
         {
             try
             {

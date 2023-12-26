@@ -16,6 +16,6 @@ namespace IBS.Interfaces.Vendor
 
         DTResult<CallRegisterModel> GetCallDetailsList(DTParameters dtParameters);
 
-        int DetailsSave(CallRegisterModel model,int UserId);
+        int DetailsSave(CallRegisterModel model, int UserId);
     }
 }

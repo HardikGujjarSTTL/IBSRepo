@@ -2,10 +2,8 @@
 using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using static IBS.Helper.Enums;
 
 namespace IBS.Controllers.Reports
 {

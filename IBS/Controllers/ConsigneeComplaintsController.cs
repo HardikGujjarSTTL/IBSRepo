@@ -1,21 +1,10 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
-using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Controllers
 {
@@ -36,7 +25,7 @@ namespace IBS.Controllers
             return View();
         }
         [Authorization("ConsigneeComplaints", "Index", "view")]
-        public IActionResult Manage(string CASE_NO, string BK_NO,string SET_NO,string ComplaintId)
+        public IActionResult Manage(string CASE_NO, string BK_NO, string SET_NO, string ComplaintId)
         {
             ConsigneeComplaints model = new();
 
@@ -126,7 +115,7 @@ namespace IBS.Controllers
                 string i = consigneeComplaints.ComplaintsDetailsInsertUpdate(model);
                 if (i != "")
                 {
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }
             }
             catch (Exception ex)
@@ -156,8 +145,8 @@ namespace IBS.Controllers
                 }
                 else
                 {
-                     msg = "Invalid Selection.\\n\\n Valid options are --> [Yes / No] ";
-                    return Json(new { status = false, responseText = msg});
+                    msg = "Invalid Selection.\\n\\n Valid options are --> [Yes / No] ";
+                    return Json(new { status = false, responseText = msg });
                 }
             }
             catch (Exception ex)
@@ -195,7 +184,7 @@ namespace IBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("ConsigneeComplaints", "Index", "edit")]
-        public IActionResult JIOutCome(ConsigneeComplaints model, IFormCollection FrmCollection) 
+        public IActionResult JIOutCome(ConsigneeComplaints model, IFormCollection FrmCollection)
         {
             try
             {
@@ -219,7 +208,7 @@ namespace IBS.Controllers
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), env, iDocument, FileName, string.Empty, DocumentIds);
                         }
                     }
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }
             }
             catch (Exception ex)
@@ -255,7 +244,7 @@ namespace IBS.Controllers
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, FileName, string.Empty, DocumentIds);
                         }
                     }
-                    return Json(new { status = true, responseText = msg, redirectToIndex = true});
+                    return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }
             }
             catch (Exception ex)
@@ -277,10 +266,10 @@ namespace IBS.Controllers
                 DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
             }
             var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
-             msg = "Select file to upload.";
+            msg = "Select file to upload.";
             if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
             {
-                if(DocumentsList.Count > 1)
+                if (DocumentsList.Count > 1)
                 {
                     if (DocumentsList[0].DocName == "Upload JI Case")
                     {

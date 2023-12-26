@@ -1,20 +1,12 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports;
-using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
 using IBS.Models.Reports;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.Reports
 {
@@ -42,7 +34,7 @@ namespace IBS.Repositories.Reports
             return list;
         }
 
-        public COHighlightMainModel GetCOHighlightData(string p_CumYrMth, string p_wYrMth, string p_byear, int p_dmonth, string p_lstdate, string p_CumYrPast,string p_wYrMth_Past)
+        public COHighlightMainModel GetCOHighlightData(string p_CumYrMth, string p_wYrMth, string p_byear, int p_dmonth, string p_lstdate, string p_CumYrPast, string p_wYrMth_Past)
         {
             OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_CumYrMth", OracleDbType.Varchar2, p_CumYrMth, ParameterDirection.Input);
@@ -69,7 +61,7 @@ namespace IBS.Repositories.Reports
         public List<FinancialBillingModel> GetFinancialBillingData(int dmonth, string wYrMth_Past, string CumYrPast, string wYrMth, string CumYrMth, int byear)
         {
             OracleParameter[] par = new OracleParameter[7];
-            par[0] = new OracleParameter("dmonth", OracleDbType.Varchar2,Convert.ToString(dmonth), ParameterDirection.Input);
+            par[0] = new OracleParameter("dmonth", OracleDbType.Varchar2, Convert.ToString(dmonth), ParameterDirection.Input);
             par[1] = new OracleParameter("wYrMth_Past", OracleDbType.Varchar2, wYrMth_Past, ParameterDirection.Input);
             par[2] = new OracleParameter("CumYrPast", OracleDbType.Varchar2, CumYrPast, ParameterDirection.Input);
             par[3] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);
@@ -87,7 +79,7 @@ namespace IBS.Repositories.Reports
         }
         void process_realisations(string wYrMth)
         {
-            
+
 
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             try
@@ -320,7 +312,7 @@ namespace IBS.Repositories.Reports
 
                 string serializeddt5 = JsonConvert.SerializeObject(ds.Tables[5], Formatting.Indented);
                 model.cR_REJModels = JsonConvert.DeserializeObject<List<CR_REJModel>>(serializeddt5, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                
+
                 string serializeddt6 = JsonConvert.SerializeObject(ds.Tables[6], Formatting.Indented);
                 model.othercasesComplaintsE = JsonConvert.DeserializeObject<List<OthercasesComplaintsModel>>(serializeddt6, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
@@ -479,7 +471,7 @@ namespace IBS.Repositories.Reports
             return list;
         }
 
-        public TrainingMainModel GetTrainingData(string wYrMth,string CumYrMth)
+        public TrainingMainModel GetTrainingData(string wYrMth, string CumYrMth)
         {
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("wYrMth", OracleDbType.Varchar2, wYrMth, ParameterDirection.Input);

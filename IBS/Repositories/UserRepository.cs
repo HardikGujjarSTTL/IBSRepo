@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
-using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -430,7 +424,7 @@ namespace IBS.Repositories
             }
             else if (resetPassword.UserType == "VENDOR")
             {
-                var user = context.T05Vendors.Where(x=>x.VendCd == Convert.ToInt32(resetPassword.UserId)).FirstOrDefault();
+                var user = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(resetPassword.UserId)).FirstOrDefault();
                 if (user != null)
                 {
                     user.VendPwd = resetPassword.ConfirmPassword;

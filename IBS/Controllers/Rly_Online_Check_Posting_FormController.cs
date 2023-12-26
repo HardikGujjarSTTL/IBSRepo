@@ -22,13 +22,13 @@ namespace IBS.Controllers
 
         }
 
-    
+
 
         [HttpPost]
         public IActionResult ChequePost([FromBody] DTParameters dtParameters)
         {
             string Region = GetRegionCode;
-            DTResult<Rly_Online_Check_Posting_Form_Model> dTResult = rlychkpostingrepository.BillList(dtParameters , Region);
+            DTResult<Rly_Online_Check_Posting_Form_Model> dTResult = rlychkpostingrepository.BillList(dtParameters, Region);
 
             return Json(dTResult);
 
@@ -40,14 +40,15 @@ namespace IBS.Controllers
         public IActionResult Submit([FromBody] RequestDataModel requestData)
         {
             string Uname = Convert.ToString(UserId);
-            string i = rlychkpostingrepository.Submit(requestData , Uname);
-            if(i == Convert.ToString(true))
+            string i = rlychkpostingrepository.Submit(requestData, Uname);
+            if (i == Convert.ToString(true))
             {
                 return Json(i);
             }
-            else { 
+            else
+            {
 
-            return null;
+                return null;
 
             }
         }

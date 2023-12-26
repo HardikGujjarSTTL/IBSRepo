@@ -4,7 +4,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -102,7 +101,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string clientname = "", ShortCode="";
+            string clientname = "", ShortCode = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["clientname"]))
             {
                 clientname = Convert.ToString(dtParameters.AdditionalValues["clientname"]);

@@ -2,14 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -241,17 +236,17 @@ namespace IBS.Repositories
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstlab = JsonConvert.DeserializeObject<List<ClientCallRptModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                        model.VendorName = Convert.ToString(ds.Tables[0].Rows[0]["VendorName"]);
-                        model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
-                        model.PO_DT = Convert.ToString(ds.Tables[0].Rows[0]["PO_DT"]);
-                        model.ITEM_DESC = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC"]);
-                        model.QTY_TO_INSP = Convert.ToString(ds.Tables[0].Rows[0]["QTY_TO_INSP"]);
-                        model.QTY_REJECTED = Convert.ToString(ds.Tables[0].Rows[0]["QTY_REJECTED"]);
-                        model.REASON_REJECT = Convert.ToString(ds.Tables[0].Rows[0]["REASON_REJECT"]);
-                        model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
-                        model.IE_NAME = Convert.ToString(ds.Tables[0].Rows[0]["IE_NAME"]);
-                        model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
-                        model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
+                    model.VendorName = Convert.ToString(ds.Tables[0].Rows[0]["VendorName"]);
+                    model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
+                    model.PO_DT = Convert.ToString(ds.Tables[0].Rows[0]["PO_DT"]);
+                    model.ITEM_DESC = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC"]);
+                    model.QTY_TO_INSP = Convert.ToString(ds.Tables[0].Rows[0]["QTY_TO_INSP"]);
+                    model.QTY_REJECTED = Convert.ToString(ds.Tables[0].Rows[0]["QTY_REJECTED"]);
+                    model.REASON_REJECT = Convert.ToString(ds.Tables[0].Rows[0]["REASON_REJECT"]);
+                    model.IC_DT = Convert.ToString(ds.Tables[0].Rows[0]["IC_DT"]);
+                    model.IE_NAME = Convert.ToString(ds.Tables[0].Rows[0]["IE_NAME"]);
+                    model.BK_NO = Convert.ToString(ds.Tables[0].Rows[0]["BK_NO"]);
+                    model.SET_NO = Convert.ToString(ds.Tables[0].Rows[0]["SET_NO"]);
                 }
                 model.lstreport = lstlab;
             }
@@ -272,7 +267,7 @@ namespace IBS.Repositories
             par[4] = new OracleParameter("p_status", OracleDbType.Varchar2, ReportStatus, ParameterDirection.Input);
             par[5] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-           var ds = DataAccessDB.GetDataSet("DropdownSelected_ClientCallRpt", par, 5);
+            var ds = DataAccessDB.GetDataSet("DropdownSelected_ClientCallRpt", par, 5);
 
 
             if (ds.Tables[0].Rows.Count != 0)
@@ -282,32 +277,32 @@ namespace IBS.Repositories
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     lstlab = JsonConvert.DeserializeObject<List<ClientCallRptModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                        model.Vendor = Convert.ToString(ds.Tables[0].Rows[0]["Vendor"]);
-                        model.Manufacturer = Convert.ToString(ds.Tables[0].Rows[0]["Manufacturer"]);
-                        model.VEND_CD = Convert.ToString(ds.Tables[0].Rows[0]["VEND_CD"]);
-                        model.MFG_CD = Convert.ToString(ds.Tables[0].Rows[0]["MFG_CD"]);
-                        model.Consignee = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
-                        model.ITEM_DESC_PO = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC_PO"]);
-                        model.QTY_TO_INSP = Convert.ToString(ds.Tables[0].Rows[0]["QTY_TO_INSP"]);
-                        model.CALL_MARK_DT = Convert.ToString(ds.Tables[0].Rows[0]["CALL_MARK_DT"]);
-                        model.IE_NAME = Convert.ToString(ds.Tables[0].Rows[0]["IE_NAME"]);
-                        model.IE_PHONE_NO = Convert.ToString(ds.Tables[0].Rows[0]["IE_PHONE_NO"]);
-                        model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
-                        model.PO_DATE = Convert.ToString(ds.Tables[0].Rows[0]["PO_DATE"]);
-                        model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
-                        model.REMARK = Convert.ToString(ds.Tables[0].Rows[0]["REMARK"]);
-                        model.DESIRE_DT = Convert.ToString(ds.Tables[0].Rows[0]["DESIRE_DT"]);
-                        model.CALL_STATUS = Convert.ToString(ds.Tables[0].Rows[0]["CALL_STATUS"]);
-                        model.COLOUR = Convert.ToString(ds.Tables[0].Rows[0]["COLOUR"]);
-                        model.MFG_PERS = Convert.ToString(ds.Tables[0].Rows[0]["MFG_PERS"]);
-                        model.MFG_PHONE = Convert.ToString(ds.Tables[0].Rows[0]["MFG_PHONE"]);
-                        model.CALL_SNO = Convert.ToString(ds.Tables[0].Rows[0]["CALL_SNO"]);
-                        model.HOLOGRAM = Convert.ToString(ds.Tables[0].Rows[0]["HOLOGRAM"]);
-                        model.IC_PHOTO = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO"]);
-                        model.IC_PHOTO_A1 = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO_A1"]);
-                        model.IC_PHOTO_A2 = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO_A2"]);
-                        //model.COUNT = Convert.ToInt32(ds.Tables[0].Rows[0]["COUNT"]);
-                        model.CO_NAME = Convert.ToString(ds.Tables[0].Rows[0]["CO_NAME"]);
+                    model.Vendor = Convert.ToString(ds.Tables[0].Rows[0]["Vendor"]);
+                    model.Manufacturer = Convert.ToString(ds.Tables[0].Rows[0]["Manufacturer"]);
+                    model.VEND_CD = Convert.ToString(ds.Tables[0].Rows[0]["VEND_CD"]);
+                    model.MFG_CD = Convert.ToString(ds.Tables[0].Rows[0]["MFG_CD"]);
+                    model.Consignee = Convert.ToString(ds.Tables[0].Rows[0]["Consignee"]);
+                    model.ITEM_DESC_PO = Convert.ToString(ds.Tables[0].Rows[0]["ITEM_DESC_PO"]);
+                    model.QTY_TO_INSP = Convert.ToString(ds.Tables[0].Rows[0]["QTY_TO_INSP"]);
+                    model.CALL_MARK_DT = Convert.ToString(ds.Tables[0].Rows[0]["CALL_MARK_DT"]);
+                    model.IE_NAME = Convert.ToString(ds.Tables[0].Rows[0]["IE_NAME"]);
+                    model.IE_PHONE_NO = Convert.ToString(ds.Tables[0].Rows[0]["IE_PHONE_NO"]);
+                    model.PO_NO = Convert.ToString(ds.Tables[0].Rows[0]["PO_NO"]);
+                    model.PO_DATE = Convert.ToString(ds.Tables[0].Rows[0]["PO_DATE"]);
+                    model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
+                    model.REMARK = Convert.ToString(ds.Tables[0].Rows[0]["REMARK"]);
+                    model.DESIRE_DT = Convert.ToString(ds.Tables[0].Rows[0]["DESIRE_DT"]);
+                    model.CALL_STATUS = Convert.ToString(ds.Tables[0].Rows[0]["CALL_STATUS"]);
+                    model.COLOUR = Convert.ToString(ds.Tables[0].Rows[0]["COLOUR"]);
+                    model.MFG_PERS = Convert.ToString(ds.Tables[0].Rows[0]["MFG_PERS"]);
+                    model.MFG_PHONE = Convert.ToString(ds.Tables[0].Rows[0]["MFG_PHONE"]);
+                    model.CALL_SNO = Convert.ToString(ds.Tables[0].Rows[0]["CALL_SNO"]);
+                    model.HOLOGRAM = Convert.ToString(ds.Tables[0].Rows[0]["HOLOGRAM"]);
+                    model.IC_PHOTO = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO"]);
+                    model.IC_PHOTO_A1 = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO_A1"]);
+                    model.IC_PHOTO_A2 = Convert.ToString(ds.Tables[0].Rows[0]["IC_PHOTO_A2"]);
+                    //model.COUNT = Convert.ToInt32(ds.Tables[0].Rows[0]["COUNT"]);
+                    model.CO_NAME = Convert.ToString(ds.Tables[0].Rows[0]["CO_NAME"]);
                 }
                 model.lstreport = lstlab;
             }

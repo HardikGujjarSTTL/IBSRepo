@@ -1,16 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
-using System.Data;
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using IBS.Helper;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Diagnostics.Metrics;
+using System.Data;
 
 namespace IBS.Repositories
 {

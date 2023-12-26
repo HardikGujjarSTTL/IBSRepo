@@ -4,7 +4,6 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -268,11 +267,11 @@ namespace IBS.Controllers.InspectionBilling
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
                         string SpecificFileName = id.Trim();
-                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order};
-                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x=>x.Documentid == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
+                        int[] DocumentIdCases = { (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order };
+                        List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList();
                         //if (DocumentsCaseList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
                         //}
 
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification,
@@ -280,7 +279,7 @@ namespace IBS.Controllers.InspectionBilling
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.Upload_a_scanned_copy_of_Purchase_Order).ToList(); ;
                         //if (DocumentsList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
                         //}
                     }
                     return Json(new { status = true, responseText = msg });
@@ -562,10 +561,10 @@ namespace IBS.Controllers.InspectionBilling
         {
             try
             {
-                AdministratorPurchaseOrderModel model=new AdministratorPurchaseOrderModel();
+                AdministratorPurchaseOrderModel model = new AdministratorPurchaseOrderModel();
                 string msg = "PO Date Updated Successfully.";
                 model.CaseNo = CaseNo;
-                model.PoDtNew =Convert.ToDateTime(PoDtNew);
+                model.PoDtNew = Convert.ToDateTime(PoDtNew);
                 string id = pIAdministratorPurchaseOrderRepository.UpdatePODate(model);
                 if (id != null)
                 {

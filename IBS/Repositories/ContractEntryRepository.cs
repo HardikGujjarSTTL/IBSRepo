@@ -2,12 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -138,7 +134,7 @@ namespace IBS.Repositories
                 ClientCode = Client[0].Trim();
                 clientname = Client[1].Trim();
             }
-            
+
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_clienttype", OracleDbType.Varchar2, Clienttype, ParameterDirection.Input);
             par[1] = new OracleParameter("p_clientcode", OracleDbType.Varchar2, ClientCode, ParameterDirection.Input);

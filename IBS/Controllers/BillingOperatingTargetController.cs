@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -35,7 +34,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<BillingOperatingTargetModel> dTResult = billingOperatingTargetRepository.GetBillingOperatingTargetList(dtParameters,GetRegionCode);
+            DTResult<BillingOperatingTargetModel> dTResult = billingOperatingTargetRepository.GetBillingOperatingTargetList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
         [Authorization("BillingOperatingTarget", "Index", "delete")]
@@ -43,7 +42,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if(billingOperatingTargetRepository.Remove(_highDt, GetRegionCode))
+                if (billingOperatingTargetRepository.Remove(_highDt, GetRegionCode))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();

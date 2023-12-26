@@ -1,9 +1,5 @@
-﻿using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Vendor;
-using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers

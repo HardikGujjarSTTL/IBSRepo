@@ -1,10 +1,7 @@
 ﻿using IBS.Filters;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
 
 namespace IBS.Controllers
 {
@@ -27,7 +24,7 @@ namespace IBS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-       
+
 
         public IActionResult InterUnitRecieptSave(InterUnitRecieptModel model)
         {
@@ -48,7 +45,7 @@ namespace IBS.Controllers
                 {
                     VCHR_NO = i;
                     VCHR_DT = i;
-                    return Json(new { status = true, responseText = msg, vchrNo = VCHR_NO , vchr_dt = VCHR_DT });
+                    return Json(new { status = true, responseText = msg, vchrNo = VCHR_NO, vchr_dt = VCHR_DT });
                 }
             }
 
@@ -56,18 +53,18 @@ namespace IBS.Controllers
             {
                 // Common.AddException(ex.ToString(), ex.Message.ToString(), "Contract", "ContractDetailsSave", 1, GetIPAddress());
             }
-            return Json(new { status = false, VCHR_NO = VCHR_NO , responseText = "Oops Somthing Went Wrong !!" });
+            return Json(new { status = false, VCHR_NO = VCHR_NO, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-      
+
 
         public IActionResult Manage(string VCHR_NO, int BANK_CD, string CHQ_NO, string CHQ_DT, string VCHR_DT)
         {
             InterUnitRecieptModel model = new();
             if (VCHR_NO != "" && VCHR_NO != null)
             {
-                 model.Action= "M";
-                model = interunitrecieptrepository.FindByID(VCHR_NO, BANK_CD, CHQ_NO, CHQ_DT,VCHR_DT);
+                model.Action = "M";
+                model = interunitrecieptrepository.FindByID(VCHR_NO, BANK_CD, CHQ_NO, CHQ_DT, VCHR_DT);
             }
             else
             {
@@ -76,16 +73,16 @@ namespace IBS.Controllers
             return View(model);
 
 
-            
+
         }
 
 
-        
+
 
         public IActionResult RecieptList([FromBody] DTParameters dtParameters)
         {
             var Region = GetRegionCode;
-            DTResult<InterUnitRecieptModel> dTResult = interunitrecieptrepository.RecieptList(dtParameters,Region);
+            DTResult<InterUnitRecieptModel> dTResult = interunitrecieptrepository.RecieptList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -159,23 +156,23 @@ namespace IBS.Controllers
             return View(bPOmodel);
         }
 
-            public IActionResult Delete(string VCHR_NO, string CHQ_NO, string CHQ_DT, int BANK_CD)
+        public IActionResult Delete(string VCHR_NO, string CHQ_NO, string CHQ_DT, int BANK_CD)
+        {
+            try
             {
-                try
-                {
-                    int U_ID = Convert.ToInt32(UserId);
-                    if (interunitrecieptrepository.Remove(VCHR_NO, CHQ_NO , CHQ_DT , BANK_CD, U_ID))
-                        AlertDeletedSuccess();
-                    else
-                        AlertDanger();
-                }
-                catch (Exception ex)
-                {
-                    Common.AddException(ex.ToString(), ex.Message.ToString(), "InterUnitReceipt", "Delete", 1, GetIPAddress());
+                int U_ID = Convert.ToInt32(UserId);
+                if (interunitrecieptrepository.Remove(VCHR_NO, CHQ_NO, CHQ_DT, BANK_CD, U_ID))
+                    AlertDeletedSuccess();
+                else
                     AlertDanger();
-                }
-                return RedirectToAction("Index");
             }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InterUnitReceipt", "Delete", 1, GetIPAddress());
+                AlertDanger();
+            }
+            return RedirectToAction("Index");
+        }
 
 
 

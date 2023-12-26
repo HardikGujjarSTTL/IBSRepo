@@ -16,15 +16,15 @@ namespace IBS.Repositories
         public MAapproveModel FindByID(string CaseNo, string MaNo, string MaDtc, byte MaSno)
         {
             MAapproveModel model = new();
-            string first = MaDtc.Substring(0,2);
+            string first = MaDtc.Substring(0, 2);
             string second = MaDtc.Substring(2, 2);
             string third = MaDtc.Substring(4, 4);
             string conc = first + "-" + second + "-" + third;
             string SetMaDt = conc.ToString();
-            
+
             var GetValuePO = (from v in context.VendPoMaMasters
                               join d in context.VendPoMaDetails on v.CaseNo equals d.CaseNo
-                              where v.CaseNo == d.CaseNo && v.MaNo == v.MaNo 
+                              where v.CaseNo == d.CaseNo && v.MaNo == v.MaNo
                               && v.MaDt == Convert.ToDateTime(SetMaDt)
                               && v.CaseNo == CaseNo && v.MaNo == MaNo
                               && d.MaStatus == "P" && d.MaSno == MaSno

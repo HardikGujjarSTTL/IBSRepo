@@ -142,7 +142,7 @@ namespace IBS.Repositories
         {
             T90RlyDesignation railwayDesignation = context.T90RlyDesignations.Where(x => x.Id == id).FirstOrDefault();
 
-            if(railwayDesignation != null)
+            if (railwayDesignation != null)
             {
                 if (context.T06Consignees.Any(x => x.ConsigneeDesig == railwayDesignation.RlyDesigCd && x.ConsigneeType == "R"))
                 {

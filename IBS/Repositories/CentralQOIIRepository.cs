@@ -1,11 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
 using System.Data;
-using System.Diagnostics.Contracts;
 
 namespace IBS.Repositories
 {
@@ -21,8 +17,8 @@ namespace IBS.Repositories
         {
             CentralQOIIModel model = new();
             T79CentralQoinsp t79CentralQoinsp = (from t in context.T79CentralQoinsps
-                                           where t.Client == Client && t.QoiDate == QtyDate && t.Weight == Weight && t.QoiLength == QoiLength
-                                           select t).FirstOrDefault();
+                                                 where t.Client == Client && t.QoiDate == QtyDate && t.Weight == Weight && t.QoiLength == QoiLength
+                                                 select t).FirstOrDefault();
 
             if (t79CentralQoinsp == null)
                 throw new Exception("Central QOII Record Not found");
@@ -106,8 +102,8 @@ namespace IBS.Repositories
         public bool Remove(string Client, string QtyDate, int UserID, string Weight, string QoiLength)
         {
             T79CentralQoinsp objDelete = (from t in context.T79CentralQoinsps
-                                       where t.Client == Client && t.QoiDate == QtyDate && t.Weight == Weight && t.QoiLength == QoiLength
-                                       select t).FirstOrDefault();
+                                          where t.Client == Client && t.QoiDate == QtyDate && t.Weight == Weight && t.QoiLength == QoiLength
+                                          select t).FirstOrDefault();
             if (objDelete == null) { return false; }
             objDelete.Isdeleted = Convert.ToByte(true);
             objDelete.Updatedby = Convert.ToInt32(UserID);
@@ -121,15 +117,15 @@ namespace IBS.Repositories
             string Client = "";
 
             T79CentralQoinsp objExist = (from t in context.T79CentralQoinsps
-                                      where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
-                                      select t).FirstOrDefault();
+                                         where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
+                                         select t).FirstOrDefault();
             if (model.IsEdited == false && objExist != null)
             {
                 return "Already Exist";
             }
             T79CentralQoinsp objAdd = (from t in context.T79CentralQoinsps
-                                    where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
-                                    select t).FirstOrDefault();
+                                       where t.Client == model.Clients && t.QoiDate == model.QoiDate && t.Weight == model.Weights && t.QoiLength == model.QoiLengths
+                                       select t).FirstOrDefault();
             #region Contract save
             if (objAdd == null)
             {

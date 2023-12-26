@@ -1,13 +1,9 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Helper;
+﻿using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.WebsitePages;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace IBS.Controllers.WebsitePages
@@ -44,12 +40,12 @@ namespace IBS.Controllers.WebsitePages
             return View();
         }
 
-        public ActionResult GetItems(string ItemSno, string bkno,string setno,string InspRegionDropdown)
+        public ActionResult GetItems(string ItemSno, string bkno, string setno, string InspRegionDropdown)
         {
             var json = "";
             try
             {
-                 json = _onlineComplaintsRepository.GetItems(ItemSno, bkno, setno, InspRegionDropdown);
+                json = _onlineComplaintsRepository.GetItems(ItemSno, bkno, setno, InspRegionDropdown);
             }
             catch (Exception ex)
             {
@@ -72,7 +68,7 @@ namespace IBS.Controllers.WebsitePages
                     List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                     DocumentHelper.SaveFiles(Convert.ToString(Compid), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
                 }
-                return Json(new { status = true , responseText = "Complaint Add Successfully!!"});
+                return Json(new { status = true, responseText = "Complaint Add Successfully!!" });
             }
             catch (Exception ex)
             {

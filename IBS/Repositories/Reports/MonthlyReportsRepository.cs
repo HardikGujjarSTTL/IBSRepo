@@ -1,10 +1,8 @@
 ﻿using IBS.Helper;
 using IBS.Interfaces.Reports;
-using IBS.Models;
 using IBS.Models.Reports;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
 
 namespace IBS.Repositories.Reports
@@ -19,7 +17,7 @@ namespace IBS.Repositories.Reports
             model.FromDate = FromDate;
             model.ToDate = ToDate;
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
-            
+
             OracleParameter[] parameter = new OracleParameter[5];
             parameter[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
             parameter[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
@@ -47,7 +45,7 @@ namespace IBS.Repositories.Reports
 
             OracleParameter[] parameter = new OracleParameter[4];
             parameter[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, model.Display_FromDate, ParameterDirection.Input);
-            parameter[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);            
+            parameter[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, model.Display_ToDate, ParameterDirection.Input);
             parameter[2] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             parameter[3] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             DataSet ds = DataAccessDB.GetDataSet("SP_GET_REINSPECTIONICS", parameter);
