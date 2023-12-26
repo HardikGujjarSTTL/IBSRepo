@@ -15,6 +15,7 @@
         public string Organisation { get; set; }
         public string OrgnType { get; set; }
         public int CO_CD { get; set; }
+        public int ID { get; set; }
     }
 
     public class UserSessionModel
