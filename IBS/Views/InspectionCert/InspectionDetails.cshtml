@@ -168,11 +168,11 @@
                                 <div class="remecheckbox">
                                     <ul class="radioListForm">
                                         <li>
-                                            <input type="radio" asp-for="ConsigneeGST" value="rdbConsignee" id="ConsigneeGST_Y" />
+                                            <input type="radio" asp-for="ConsigneeGST" value="rdbConsignee" id="ConsigneeGST_Y" onchange="ConsigneeGSTChanged();" />
                                             <label for="ConsigneeGST_Y">Consignee GSTIN</label>
                                         </li>
                                         <li>
-                                            <input type="radio" asp-for="ConsigneeGST" value="rdbBPO" id="ConsigneeGST_N" />
+                                            <input type="radio" asp-for="ConsigneeGST" value="rdbBPO" id="ConsigneeGST_N" onchange="ConsigneeGSTChanged();" />
                                             <label for="ConsigneeGST_N">BPO GSTIN</label>
                                         </li>
                                     </ul>
@@ -217,14 +217,14 @@
                         @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType(), "Value", "Text"), "--Select--")
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 divCnoteBill" style="display:none;">
                     <div class="reference">
-                        <label for="BillNo">Bill No. for which Credit Note is biegn prepared</label>
+                        <label for="BillNo">Bill No. for which Credit Note is biegn prepared <span class="text-danger">*</span></label>
                         <input type="text" class="input" asp-for="CnoteBillNo" maxlength="100" style="text-transform: uppercase;" onchange="OnBillNoChanged()">
                         <span id="spnBillNo" class="darkRedBoldText"></span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 divCnoteBill" style="display:none;">
                     <div class="reference">
                         <label for="Reference"><br /></label>
                         <div class="savenext-btn">
@@ -685,11 +685,12 @@
                 $("#IrfcBpo").hide();
                 $("#lblIrfcBpo").hide();
                 $("#ConsigneeGST_Y").prop("checked", true);
-                $("input[name='ConsigneeGST']").prop('disabled', true);
+                // $("input[name='ConsigneeGST']").prop('disabled', true);
             }
             else {
                 $("#IrfcBpo").show();
                 $("#lblIrfcBpo").show();
+                $("input[name='ConsigneeGST']").prop('disabled', true);
             }
             if ($("#STS").val() != "X") {
                 //$("#btnGBill").text("Update Bill");
@@ -703,6 +704,18 @@
             if ($("#BillDt").val() != "") {
                 $("#btnBillDtUpdate").show();
             }
+            if ($("#IcTypeId").val() == "9") {
+                $(".divCnoteBill").show();
+            }
+
+            $("#IcTypeId").change(function () {
+                if ($("#IcTypeId").val() == "9") {
+                    $(".divCnoteBill").show();
+                }
+                else {
+                    $(".divCnoteBill").hide();
+                }
+            });
 
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
@@ -736,7 +749,7 @@
                     $("#BillNo").text("Update Bill");
                     ShowHideMsgNew(true, "The bill has been generated for this IC Vide Bill No : " + $("#BillNo").val());
                 }
-                $("#btnSave").hide();
+                // $("#btnSave").hide();
             }
             if (actiontype == "D") {
                 $("#btnDelete").show();
@@ -761,16 +774,18 @@
             if ($("#IrfcFunded").val() == "Y") {
                 $("#IrfcBpo").show();
                 $("#lblIrfcBpo").show();
-                $("input[name='ConsigneeGST']").prop('disabled', false);
+                $("input[name='ConsigneeGST']").prop('disabled', true);
                 $("#btnGSTNUpdate").prop('disabled', false);
+                $("#ConsigneeGST_Y").prop("checked", false);
+                $("#ConsigneeGST_N").prop("checked", false);
             }
             else {
                 $("#IrfcBpo").hide();
                 $("#lblIrfcBpo").hide();
-                $("input[name='ConsigneeGST']").prop('disabled', true);
+                $("input[name='ConsigneeGST']").prop('disabled', false);
                 $("#btnGSTNUpdate").prop('disabled', true);
                 $("#ConsigneeGST_Y").val("rdbConsignee");
-                $("#ConsigneeGST_Y").prop("checked", true);
+                // $("#ConsigneeGST_Y").prop("checked", true);
                 ConsigneeGSTChanged();
                 $('input[type=radio][name=ConsigneeGST]').change();
             }
@@ -856,11 +871,12 @@
         }
 
         function ConsigneeGSTChanged() {
+            debugger
             $('input[type=radio][name=ConsigneeGST]').change(function () {
                 var ConsigneeCd = $("#Consignee").val();
-                if ($("#IrfcFunded").val() == "Y") {
+                if ($("#IrfcFunded").val() == "N") {
                     if (this.value === 'rdbBPO') {
-                        var BPOCd = $("#IrfcBpo").val();
+                        var BPOCd = $("#BpoCd").val();
                         $.ajax({
                             url: '@Url.Action("GetBPO", "InspectionCert")',
                             type: "GET",
@@ -888,9 +904,7 @@
                             }
                         });
                     }
-                }
-                else {
-                    if (this.value === 'rdbConsignee') {
+                    else {
                         $.ajax({
                             url: '@Url.Action("GetConsignee", "InspectionCert")',
                             type: "GET",
