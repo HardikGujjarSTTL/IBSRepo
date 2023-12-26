@@ -3742,40 +3742,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                     send_Vendor_Email(model);
                 }
-            }
-            #region Comment Code
-            //if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno > 0)
-            //{
-            //    T17CallRegister t17 = context.T17CallRegisters.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
-            //    if (t17 != null)
-            //    {
-            //        t17.CallStatus = model.CallStatus;
-            //        if (model.ActionType == "C")
-            //        {
-            //            t17.CallStatusDt = model.CallStatusDt != null ? model.CallStatusDt : DateTime.Now.Date;
-            //            t17.DtInspDesire = model.DesireDt;
-            //            t17.BkNo = model.BkNo;
-            //            t17.SetNo = model.SetNo;
-            //        }
-            //        t17.UpdateAllowed = model.UpdateAllowed == "Y" ? "" : model.UpdateAllowed;
-            //        t17.Updatedby = model.Updatedby;
-            //        t17.Updateddate = DateTime.Now;
-            //        context.SaveChanges();
-            //        if (model.CallStatus == "M" || model.CallStatus == "A")
-            //        {
-            //            IcIntermediate ic = context.IcIntermediates.Where(x => x.CaseNo == model.CaseNo && x.CallRecvDt == model.CallRecvDt && x.CallSno == model.CallSno).FirstOrDefault();
-            //            if (ic != null)
-            //            {
-            //                ic.ConsgnCallStatus = model.CallStatus;
-            //                ic.UserId = model.UserId;
-            //                ic.Datetime = DateTime.Now.Date;
-            //                context.SaveChanges();
-            //            }
-            //        }
-            //        str = model.CaseNo;
-            //    }
-            //}
-            #endregion
+            }            
             return model.AlertMsg;//str;
         }
 

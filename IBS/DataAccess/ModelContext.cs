@@ -4254,7 +4254,7 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("null")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnType("DATE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.CumQtyPrevOffered)
                 .ValueGeneratedOnAdd()
@@ -4483,7 +4483,7 @@ public partial class ModelContext : DbContext
                 .HasDefaultValueSql("null")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(8)
@@ -13367,7 +13367,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CALL_CANCEL_STATUS");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CALL_INSTALL_NO");
@@ -13899,7 +13899,7 @@ public partial class ModelContext : DbContext
                 .ToView("T17_CALL_REGISTER_SEARCH_VIEW");
 
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterNo)
                 .HasMaxLength(30)
@@ -25169,7 +25169,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("C_STATUS");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterNo)
                 .HasMaxLength(30)
@@ -25339,7 +25339,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("BPO");
             entity.Property(e => e.CallInstallNo)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("CALL_INSTALL_NO");
             entity.Property(e => e.CallLetterDt)
                 .HasMaxLength(10)

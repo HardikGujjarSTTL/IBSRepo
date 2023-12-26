@@ -129,11 +129,11 @@ public partial class IcIntermediate
 
     public int? Createdby { get; set; }
 
-    public DateTimeOffset? Createddate { get; set; }
+    public DateTime? Createddate { get; set; }
 
     public int? Updatedby { get; set; }
 
-    public DateTimeOffset? Updateddate { get; set; }
+    public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
 }

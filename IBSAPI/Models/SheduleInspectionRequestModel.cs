@@ -35,6 +35,8 @@ namespace IBSAPI.Models
         public string? PoNo { get; set; }
         public int? IeCd { get; set; }
         public string userId { get; set; }
+        public int User_Id { get; set; }
+        public string AlertMsg { get; set; }
     }
 
     public class BookNoSetNoModel

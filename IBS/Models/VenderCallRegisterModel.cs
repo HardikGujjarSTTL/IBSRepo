@@ -15,7 +15,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? CallRecvDt { get; set; }
 
-        public byte? CallInstallNo { get; set; }
+        public int? CallInstallNo { get; set; }
 
         public int? CallSno { get; set; }
 
@@ -315,7 +315,7 @@ namespace IBS.Models
 
         public string? CallLetterDt { get; set; }
 
-        public byte? CallInstallNo { get; set; }
+        public int? CallInstallNo { get; set; }
 
         public string? OnlineCall { get; set; }
 

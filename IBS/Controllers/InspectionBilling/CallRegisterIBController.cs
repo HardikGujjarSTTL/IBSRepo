@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
@@ -9,6 +10,7 @@ using IBS.Repositories;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Vendor;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ using System.Dynamic;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class CallRegisterIBController : BaseController
     {
         #region Variables

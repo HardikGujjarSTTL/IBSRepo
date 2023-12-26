@@ -27,7 +27,7 @@ public partial class T17CallRegister
 
     public string? CallRemarkStatus { get; set; }
 
-    public byte? CallInstallNo { get; set; }
+    public int? CallInstallNo { get; set; }
 
     public string? RegionCode { get; set; }
 
