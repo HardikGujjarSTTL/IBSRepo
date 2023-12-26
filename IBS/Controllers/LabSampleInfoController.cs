@@ -1,11 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -44,7 +40,7 @@ namespace IBS.Controllers
         }
         public IActionResult LabSampleDtl(string CaseNo, string CallRdt, string CallSno, string Flag)
         {
-            ViewBag.CaseNo = CaseNo; 
+            ViewBag.CaseNo = CaseNo;
             ViewBag.CallRdt = CallRdt;
             ViewBag.Sno = CallSno;
             ViewBag.Flag = Flag;
@@ -95,7 +91,7 @@ namespace IBS.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string fn = "", MyFile = "";
                     string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
                     MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
                     fn = Path.GetFileName(file.FileName);
@@ -107,7 +103,7 @@ namespace IBS.Controllers
                         result = LabSampleInfoRepository.UploadDate(LabSampleInfoModel);
                     }
                 }
-               
+
                 result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
                 if (result == false)
                 {
@@ -152,7 +148,7 @@ namespace IBS.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string fn = "", MyFile = "";
                     string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
                     MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
                     fn = Path.GetFileName(file.FileName);
@@ -165,7 +161,7 @@ namespace IBS.Controllers
                     }
 
                 }
-                
+
                 result = LabSampleInfoRepository.UpdateDetails(LabSampleInfoModel);
                 if (result == false)
                 {
@@ -210,11 +206,11 @@ namespace IBS.Controllers
             string dt1 = myYear + myDay + myMonth;
             return (dt1);
         }
-        public IActionResult DownloadFile(string caseno,string calldt,string csno,string filename)
+        public IActionResult DownloadFile(string caseno, string calldt, string csno, string filename)
         {
             try
             {
-                string fn = "", MyFile = "", fx = "", fl = "";
+                string fn = "", MyFile = "";
                 string mdt = dateconcate2(calldt.Trim());
                 MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
                 fn = Path.GetFileName(filename);

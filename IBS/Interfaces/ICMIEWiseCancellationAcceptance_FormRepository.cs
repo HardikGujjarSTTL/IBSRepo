@@ -11,4 +11,3 @@ namespace IBS.Interfaces
         public string update(CMIEWiseCancellationAcceptance_FormModel model, string Uname);
     }
 }
-    

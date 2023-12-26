@@ -1,12 +1,10 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
+using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using Newtonsoft.Json;
-using IBS.Interfaces.Inspection_Billing;
 
 namespace IBS.Repositories.Inspection_Billing
 {
@@ -197,7 +195,7 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.Createddate = DateTime.Now;
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
-                obj.Contractid=model.Contractid;
+                obj.Contractid = model.Contractid;
                 context.T13PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -384,8 +382,8 @@ namespace IBS.Repositories.Inspection_Billing
             if (count > 0)
             {
                 maxSrNo = (from pm in context.T15PoDetails
-                               where pm.CaseNo == CaseNo
-                               select pm.ItemSrno).Max() + 1;
+                           where pm.CaseNo == CaseNo
+                           select pm.ItemSrno).Max() + 1;
             }
             return maxSrNo;
         }

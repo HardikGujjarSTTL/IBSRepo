@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
 
@@ -20,13 +19,17 @@ namespace IBS.Repositories
             //MmpPomaDtl user = context.MmpPomaDtls.Find(Rly, Makey, Slno);
 
             var GetValuePO = (from h in context.ImmsRitesPoHdrs
-                                  join r in context.T91Railways on h.RlyCd equals r.RlyCd
-                                  join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
-                                  join d in context.MmpPomaDtls on m.Makey equals d.Makey
-                                  where d.Rly == Rly && d.Makey == Makey && d.Slno == Slno
-                                  select new {
-                                      h,r,m,d
-                                  }
+                              join r in context.T91Railways on h.RlyCd equals r.RlyCd
+                              join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
+                              join d in context.MmpPomaDtls on m.Makey equals d.Makey
+                              where d.Rly == Rly && d.Makey == Makey && d.Slno == Slno
+                              select new
+                              {
+                                  h,
+                                  r,
+                                  m,
+                                  d
+                              }
                   ).ToList();
 
             if (GetValuePO == null)
@@ -96,7 +99,7 @@ namespace IBS.Repositories
                     join m in context.MmpPomaHdrs on h.ImmsPokey equals m.Pokey
                     join d in context.MmpPomaDtls on m.Makey equals d.Makey
                     where h.ImmsPokey == m.Pokey && h.ImmsRlyCd == m.Rly && m.Makey == d.Makey && m.Rly == d.Rly && h.ImmsRlyCd == r.ImmsRlyCd
-                    && h.RitesCaseNo != null 
+                    && h.RitesCaseNo != null
                     && d.MaStatus == null
                     && h.RegionCode == GetRegionCode && m.MaDate > Convert.ToDateTime(MaDt1) && m.MaDate > Convert.ToDateTime(MaDt2)
 

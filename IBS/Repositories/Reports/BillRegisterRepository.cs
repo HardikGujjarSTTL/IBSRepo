@@ -5,8 +5,6 @@ using IBS.Models;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace IBS.Repositories.Reports
 {

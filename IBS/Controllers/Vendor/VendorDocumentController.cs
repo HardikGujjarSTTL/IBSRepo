@@ -3,7 +3,6 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -87,7 +86,7 @@ namespace IBS.Controllers.Vendor
                 if (DocType != null)
                 {
                     model = pVendorDocumentRepository.FindByID(VendCd, DocType);
-                    maxSrNo= pVendorDocumentRepository.GetmaxSrNo(VendCd, DocType);
+                    maxSrNo = pVendorDocumentRepository.GetmaxSrNo(VendCd, DocType);
                 }
                 if (model != null)
                 {
@@ -145,7 +144,7 @@ namespace IBS.Controllers.Vendor
                 }
                 if (DocType == "C")
                 {
-                    model.EquipClbrCertSno =Convert.ToByte(maxSrNo);
+                    model.EquipClbrCertSno = Convert.ToByte(maxSrNo);
                     return PartialView("_CalibrationRecordsVendDocument", model);
                 }
                 else
@@ -169,7 +168,7 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
-        public IActionResult EditVendorCalibration(int VendCd,string DocType,string EquipMkSl,string CalibCertNo,int EquipClbrCertSno )
+        public IActionResult EditVendorCalibration(int VendCd, string DocType, string EquipMkSl, string CalibCertNo, int EquipClbrCertSno)
         {
             try
             {

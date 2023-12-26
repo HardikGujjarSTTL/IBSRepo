@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public MasterItemsPLFormModel FindByID(string PlNo);
 
-        DTResult<MasterItemsPLFormModel>GetMasterItemsPLFormList(DTParameters dtParameters);
+        DTResult<MasterItemsPLFormModel> GetMasterItemsPLFormList(DTParameters dtParameters);
 
         public void SaveDetails(MasterItemsPLFormModel model);
 

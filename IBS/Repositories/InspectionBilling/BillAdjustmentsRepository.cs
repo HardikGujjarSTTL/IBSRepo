@@ -2,11 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Dynamic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -383,7 +380,7 @@ namespace IBS.Repositories.InspectionBilling
 
         public InspectionCertModel FindByItemID(string Caseno, DateTime Callrecvdt, int Callsno, int ItemSrnoPo)
         {
-            InspectionCertModel model = new(); 
+            InspectionCertModel model = new();
             var query = (from c in context.T18CallDetails
                          join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                          join u in context.T04Uoms on p.UomCd equals u.UomCd
@@ -634,7 +631,7 @@ namespace IBS.Repositories.InspectionBilling
                 //{
                 //    c_note_bno = model.BillNo;
                 //}
-                
+
                 if (model.IcTypeId == 9)
                 {
                     c_note_bno = model.BillNo;
@@ -803,7 +800,7 @@ namespace IBS.Repositories.InspectionBilling
                         w_ret_amt = Convert.ToDouble(Cnote_bill_dtls.RetentionMoney);
                         w_writeoff_amt = Convert.ToDouble(Cnote_bill_dtls.WriteOffAmt);
                     }
-                    decimal totalBillAmount = context.T22Bills.Where(x => x.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => (decimal?)x.BillAmount ?? 0).DefaultIfEmpty().Sum();
+                    decimal totalBillAmount = context.T22Bills.Where(x => x.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => x.BillAmount ?? 0).DefaultIfEmpty().Sum();
                     decimal cmdCNoteAmt = Math.Abs(totalBillAmount);
                     int w_cnote_amt = Convert.ToInt32(cmdCNoteAmt);
 
@@ -826,7 +823,7 @@ namespace IBS.Repositories.InspectionBilling
                         context.SaveChanges();
                     }
 
-                    
+
 
                     var AType = context.T22AdjustmentBills.Where(x => x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).FirstOrDefault();
                     if (AType == null)
@@ -855,9 +852,9 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         strUpdateCnoteAmt.AmountReceived = w_cnote_amt;
                         strUpdateCnoteAmt.BillAmtCleared = w_cnote_amt;
-                        
+
                         strUpdateCnoteAmt.Billadtype = model.BillAdType;
-                        
+
                         int Aid = context.T22AdjustmentBills.Where(x => x.BillNoN == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => x.Aid).FirstOrDefault();
                         strUpdateCnoteAmt.ReferenceAid = Aid;
 
@@ -1202,7 +1199,7 @@ namespace IBS.Repositories.InspectionBilling
                         discountamount = 0;
                     }
                     //Exise Calculation
-                    if(BillAdType == "Credit")
+                    if (BillAdType == "Credit")
                     {
                         if (qtyOffNow == qty)
                         {

@@ -3,7 +3,6 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -38,7 +37,7 @@ namespace IBS.Controllers.Vendor
             {
                 VendCd = Convert.ToInt32(IBS.Helper.SessionHelper.UserModelDTO.UserName);
             }
-            if(VEND_CD > 0)
+            if (VEND_CD > 0)
             {
                 VendCd = VEND_CD;
             }
@@ -107,7 +106,7 @@ namespace IBS.Controllers.Vendor
                 {
                     msg = "Vendor Updated Successfully.";
                 }
-                int id = vendorProfileRepository.VendorDetailsInsertUpdate(model, (VendCd == model.VendCd && userType == "vendor") ? true :false);
+                int id = vendorProfileRepository.VendorDetailsInsertUpdate(model, (VendCd == model.VendCd && userType == "vendor") ? true : false);
                 if (id > 0)
                 {
                     #region File Upload Profile Picture

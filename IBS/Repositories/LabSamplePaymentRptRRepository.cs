@@ -2,15 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -91,7 +85,7 @@ namespace IBS.Repositories
         //        }
         //    }
 
-            
+
         //    query = modelList.AsQueryable();
 
         //    dTResult.recordsTotal = query.Count();
@@ -109,7 +103,7 @@ namespace IBS.Repositories
 
         //    return dTResult;
 
-            
+
         //}
         public LabSamplePaymentRptModel GetPaymentReport(string ReportType, string wFrmDtO, string wToDt, string Status, string rbsrdt, string Regin)
         {
@@ -136,7 +130,7 @@ namespace IBS.Repositories
                     lstlab = JsonConvert.DeserializeObject<List<LabSamplePaymentRptModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
 
-                    
+
                     model.sample_reg_no = Convert.ToString(ds.Tables[0].Rows[0]["sample_reg_no"]);
                     model.call_recv_dt = Convert.ToString(ds.Tables[0].Rows[0]["call_recv_dt"]);
                     model.case_no = Convert.ToString(ds.Tables[0].Rows[0]["case_no"]);

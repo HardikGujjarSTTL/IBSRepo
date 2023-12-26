@@ -1,8 +1,6 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -26,7 +24,7 @@ namespace IBS.Controllers
         public IActionResult Manage(int ID)
         {
             CentralRejectionStatusModel model = new();
-            if (ID>0)
+            if (ID > 0)
             {
                 model = CentralRejectionStatusRepository.FindByID(ID);
             }

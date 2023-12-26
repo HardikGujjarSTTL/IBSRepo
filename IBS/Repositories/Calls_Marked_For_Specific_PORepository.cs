@@ -1,16 +1,13 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 //using NPOI.SS.Formula.Functions;
-using System.Drawing;
-using System.Reflection.PortableExecutable;
 
 namespace IBS.Repositories
 {
     public class Calls_Marked_For_Specific_PORepository : ICalls_Marked_For_Specific_PORepository
     {
-        private readonly ModelContext context;  
+        private readonly ModelContext context;
         public Calls_Marked_For_Specific_PORepository(ModelContext context)
         {
             this.context = context;
@@ -27,35 +24,35 @@ namespace IBS.Repositories
 
 
 
-             query = (from t13 in context.T13PoMasters
-                         join t17 in context.T17CallRegisters on t13.CaseNo equals t17.CaseNo
-                         where t13.RlyNonrly == railwaytypes &&
-                               t13.RlyCd == railwaytypes1 &&
-                               t13.PoDt == podt
-                         group new { t13, t17 } by new
-                         {
-                             t13.L5noPo,
-                             t13.PoNo,
-                             t13.PoDt,
-                             t13.RlyNonrly,
-                             t13.RlyCd
-                         } into grouped
-                         orderby grouped.Key.PoDt
-                         select new Calls_Marked_For_Specific_POModel
-                         {
-                             L5NO_PO = grouped.Key.L5noPo,
-                             PO_NO = grouped.Key.PoNo,
-                             PO_DT = Convert.ToString(grouped.Key.PoDt),
-                             RLY_NONRLY = grouped.Key.RlyNonrly,
-                             RLY_CD = grouped.Key.RlyCd
-                         });
+            query = (from t13 in context.T13PoMasters
+                     join t17 in context.T17CallRegisters on t13.CaseNo equals t17.CaseNo
+                     where t13.RlyNonrly == railwaytypes &&
+                           t13.RlyCd == railwaytypes1 &&
+                           t13.PoDt == podt
+                     group new { t13, t17 } by new
+                     {
+                         t13.L5noPo,
+                         t13.PoNo,
+                         t13.PoDt,
+                         t13.RlyNonrly,
+                         t13.RlyCd
+                     } into grouped
+                     orderby grouped.Key.PoDt
+                     select new Calls_Marked_For_Specific_POModel
+                     {
+                         L5NO_PO = grouped.Key.L5noPo,
+                         PO_NO = grouped.Key.PoNo,
+                         PO_DT = Convert.ToString(grouped.Key.PoDt),
+                         RLY_NONRLY = grouped.Key.RlyNonrly,
+                         RLY_CD = grouped.Key.RlyCd
+                     });
 
             query = query.Distinct();
 
-           
+
             var result = query.ToList();
             dTResult.data = result;
-          
+
             return dTResult;
         }
 
@@ -66,11 +63,11 @@ namespace IBS.Repositories
                         orderby railway.RlyCd
                         select new railway_dropdown
                         {
-                            RLY_CD = railway.RlyCd, 
+                            RLY_CD = railway.RlyCd,
                             RAILWAY_ORGN = railway.Railway
                         };
 
-           
+
             return query.ToList();
         }
 
@@ -151,7 +148,7 @@ namespace IBS.Repositories
                                 : (t21.CallStatusCd == "G" ? " Dt: " + t17.CallStatusDt
                                 : (t21.CallStatusCd == "C" ? " on " + t17.CallStatusDt : ""))))
                                 + (t17.CallCancelStatus == "N" ? " (Non Chargeable)" : (t17.CallCancelStatus == "C" ? " (Chargeable)" : "")))
-                           
+
                         };
 
             // Execute the query and retrieve the results
@@ -159,7 +156,7 @@ namespace IBS.Repositories
 
             model.lstSpecificPOs = result;
             return model;
-            
+
         }
     }
 }

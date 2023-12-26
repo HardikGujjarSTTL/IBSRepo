@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public VendorClusterModel FindByID(int VendorCode, string DepartmentCode);
 
-        DTResult<VendorClusterModel>GetVendorClusterList(DTParameters dtParameters);
+        DTResult<VendorClusterModel> GetVendorClusterList(DTParameters dtParameters);
 
         public VendorDetailsModel GetVendorDetails(string VendorCodeName);
 

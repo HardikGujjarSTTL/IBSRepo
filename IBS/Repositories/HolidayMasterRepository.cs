@@ -110,8 +110,8 @@ namespace IBS.Repositories
         public int HolidayMasterDelete(int id, HolidayMasterModel model)
         {
             T111HolidayMaster holiday = (from a in context.T111HolidayMasters
-                                        where a.Id == id
-                                        select a).FirstOrDefault();
+                                         where a.Id == id
+                                         select a).FirstOrDefault();
             if (holiday != null)
             {
                 holiday.Isdeleted = 1;
@@ -228,8 +228,8 @@ namespace IBS.Repositories
         public int HolidayDetailDelete(int id, HolidayDetailModel model)
         {
             T112HolidayDetail holiday = (from a in context.T112HolidayDetails
-                                        where a.Id == id
-                                        select a).FirstOrDefault();
+                                         where a.Id == id
+                                         select a).FirstOrDefault();
             if (holiday != null)
             {
                 holiday.Isdeleted = 1;

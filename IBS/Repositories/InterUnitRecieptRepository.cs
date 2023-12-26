@@ -3,7 +3,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using System.Data;
 using System.Globalization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -245,7 +244,7 @@ namespace IBS.Repositories
 
                 var maxSNO = context.T25RvDetails
                    .Where(rv => rv.VchrNo == VCHR_NO)
-                   .Select(rv => (int?)rv.Sno)
+                   .Select(rv => rv.Sno)
                    .Max() ?? 0;
 
                 maxSNO = maxSNO + 1;

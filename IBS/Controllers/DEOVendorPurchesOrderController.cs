@@ -4,13 +4,9 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using System.Drawing;
-using static IBS.Helper.Enums;
-using static iTextSharp.text.pdf.AcroFields;
 
 namespace IBS.Controllers
 {

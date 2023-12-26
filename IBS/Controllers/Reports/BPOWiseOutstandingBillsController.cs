@@ -1,21 +1,9 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using System;
-using System.Drawing;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using IBS.Interfaces.Reports;
-using System.Data;
-using OfficeOpenXml;
-using System.IO;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports
 {
@@ -55,7 +43,7 @@ namespace IBS.Controllers.Reports
                 PrivateSector = PrivateSector,
                 TypeofOutStandingBills = TypeofOutStandingBills
             };
-            if (ReportType == "BPO") model.ReportTitle = "OUTSTANDING BILLS";            
+            if (ReportType == "BPO") model.ReportTitle = "OUTSTANDING BILLS";
             return View(model);
         }
         public IActionResult BPOWiseOutBills(string ReportType, string FromDt, string ToDt, string BpoCd, string BpoType, string BpoRly, string BpoRegion, Boolean Railway, Boolean PSU, Boolean StateGovt, Boolean ForeignRailways, Boolean PrivateSector, string TypeofOutStandingBills)

@@ -18,6 +18,6 @@ namespace IBS.Interfaces.IE
 
         DTResult<DailyWorkPlanModel> GetLoadTableNonInspection(DTParameters dtParameters, string Region, int GetIeCd);
 
-        string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region,string UserName);
+        string ReasonSave(DateTime? NwpDt, string Reason, int GetIeCd, string Region, string UserName);
     }
 }

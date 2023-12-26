@@ -78,7 +78,7 @@ namespace IBS.Repositories
                     {
                         CoCd = co.CoCd,
                         CoName = co.CoName,
-                        CoDesig = co.CoDesig,   
+                        CoDesig = co.CoDesig,
                         CoDesigName = d.RDesignation,
                         CoPhoneNo = co.CoPhoneNo,
                         CoEmail = co.CoEmail,

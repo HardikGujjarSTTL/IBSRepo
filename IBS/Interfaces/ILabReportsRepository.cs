@@ -1,6 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {

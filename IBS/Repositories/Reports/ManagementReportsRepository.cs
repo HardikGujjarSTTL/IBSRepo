@@ -293,7 +293,7 @@ namespace IBS.Repositories.Reports
                 ID = index + 1,
                 CASE_NO = item.CaseNo,
                 CALL_RECV_DT = item.CallRecvDt,
-                CALL_SNO = (int)item.CallSno,
+                CALL_SNO = item.CallSno,
                 STATUS = item.STATUS,
                 IE_NAME = item.IeName,
                 IE_STATUS = item.IE_STATUS

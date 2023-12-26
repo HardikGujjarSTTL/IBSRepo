@@ -1,11 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -44,7 +40,7 @@ namespace IBS.Controllers
         [Authorization("LabBillFinalisation", "LabBillFinalisationForm", "edit")]
         public JsonResult UpdateBill([FromBody] LabBillFinalisationModel LabBillFinalisationModel)
         {
-            
+
             try
             {
                 bool result;

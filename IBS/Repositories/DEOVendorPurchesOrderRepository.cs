@@ -70,7 +70,7 @@ namespace IBS.Repositories
                         //Updatedby = p.Updatedby,
                         //VendCdNavigation = v,
                         VendName = v.VendName,
-                        RealCaseNo=p.RealCaseNo
+                        RealCaseNo = p.RealCaseNo
 
                     };
 

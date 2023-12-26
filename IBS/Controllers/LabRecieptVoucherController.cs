@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -87,7 +86,7 @@ namespace IBS.Controllers
                     var result = "";
                     if (txtCSNO != "" && txtCSNO != null)
                     {
-                         result = LabRecieptVoucherRepository.ChkCSNO(txtCSNO, lstBPO, out Narrt);
+                        result = LabRecieptVoucherRepository.ChkCSNO(txtCSNO, lstBPO, out Narrt);
                     }
                     if (result == "")
                     {
@@ -103,7 +102,7 @@ namespace IBS.Controllers
                 else
                 {
                     ViewBag.ShowBPO = true;
-                    
+
                 }
             }
             catch (Exception ex)

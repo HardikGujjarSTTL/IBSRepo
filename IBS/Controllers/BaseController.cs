@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 

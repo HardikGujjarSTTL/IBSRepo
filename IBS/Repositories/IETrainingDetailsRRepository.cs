@@ -2,17 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -251,10 +243,10 @@ namespace IBS.Repositories
             IETrainingDetailsModel model = FindByID(ie);
 
             string iec;
-            string Query = "select IE_CD from TRAINEE_EMPLOYEE_MASTER where IE_CD='"+ IETrainingDetailsModel.Name + "'";
+            string Query = "select IE_CD from TRAINEE_EMPLOYEE_MASTER where IE_CD='" + IETrainingDetailsModel.Name + "'";
 
             iec = GetDateString(Query);
-            if(iec == null )
+            if (iec == null)
             {
                 var trainingDetail = new TraineeEmployeeMaster
                 {
@@ -331,7 +323,7 @@ namespace IBS.Repositories
                     //par[0] = new OracleParameter("p_ie_cd", OracleDbType.Int16, iecode, ParameterDirection.Input);
                     //par[1] = new OracleParameter("p_course_id", OracleDbType.Varchar2, IETrainingDetailsModel.course_name, ParameterDirection.Input);
                     //var ds1 = DataAccessDB.ExecuteNonQuery(Query, par, 1);
-                   
+
                     int iecode = Convert.ToInt32(IETrainingDetailsModel.Name);
                     var count = context.TrainingDetails
                            .Where(item =>

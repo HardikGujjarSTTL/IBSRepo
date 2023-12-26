@@ -1,6 +1,5 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +42,8 @@ namespace IBS.Controllers.Reports
         }
         public IActionResult Report(bool MonthWise, bool DateWise, string Month, string Year, string FromDate, string ToDate, bool BillDate, bool IEName, bool IcDt, bool FInspDt, bool LFnspDt, bool AllIE, bool PartiIE, string IECD, string ReportTitle)
         {
-            InspectionBillingDelayReportModel model = new() {
+            InspectionBillingDelayReportModel model = new()
+            {
                 MonthWise = MonthWise,
                 DateWise = DateWise,
                 Month = Month,
@@ -93,7 +93,7 @@ namespace IBS.Controllers.Reports
                 IECD = IECD,
                 ReportTitle = ReportTitle,
                 Region = wRegion
-            };            
+            };
             obj.InspBillDelayList = inspectionBillingDelayRepository.Get_Inspection_Billing_Delay(obj, GetUserInfo);
             return PartialView(obj);
         }

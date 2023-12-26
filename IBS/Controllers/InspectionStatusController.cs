@@ -1,17 +1,10 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using System;
-using System.Drawing;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers
 {
@@ -33,7 +26,7 @@ namespace IBS.Controllers
             ViewBag.Region = Region;
             return View();
         }
-        public IActionResult Manage(string ReportType, string Month, string Year,string ForGiven,string ReportBasedon,string MaterialValue,string FromDate,string ToDate,string ForParticular,string lstParticular, string HFromDate, string HToDate, string TextPurchaser,string rdbGIE,string rdbForMonth,string ForGPer,string ddlVender,string PO_NO,string PO_DT,string RLY_NONRLY,string RLY_CD)
+        public IActionResult Manage(string ReportType, string Month, string Year, string ForGiven, string ReportBasedon, string MaterialValue, string FromDate, string ToDate, string ForParticular, string lstParticular, string HFromDate, string HToDate, string TextPurchaser, string rdbGIE, string rdbForMonth, string ForGPer, string ddlVender, string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD)
         {
             //DateTime originalDate = DateTime.ParseExact(PO_DT, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
             DateTime originalDate;
@@ -44,20 +37,29 @@ namespace IBS.Controllers
             }
             else
             {
-                
-                originalDate = DateTime.MinValue; 
+
+                originalDate = DateTime.MinValue;
             }
             string formattedDate = originalDate.ToString("MM/dd/yyyy");
-            InspectionStatusModel model = new() 
-            { 
-                ReportType = ReportType, Month = Month, Year = Year,
-                FromDt = FromDate, ToDt = ToDate,ForGiven = ForGiven,
-                ReportBasedon = ReportBasedon,MaterialValue = MaterialValue,
-                ForParticular = ForParticular,lstParticular = lstParticular, 
-                TextPurchase = TextPurchaser ,rdbGIE = rdbGIE,
+            InspectionStatusModel model = new()
+            {
+                ReportType = ReportType,
+                Month = Month,
+                Year = Year,
+                FromDt = FromDate,
+                ToDt = ToDate,
+                ForGiven = ForGiven,
+                ReportBasedon = ReportBasedon,
+                MaterialValue = MaterialValue,
+                ForParticular = ForParticular,
+                lstParticular = lstParticular,
+                TextPurchase = TextPurchaser,
+                rdbGIE = rdbGIE,
                 rdbForMonth = rdbForMonth,
                 ForGPer = ForGPer,
-                ddlVender = ddlVender,PO_NO = PO_NO,PO_DT = formattedDate,
+                ddlVender = ddlVender,
+                PO_NO = PO_NO,
+                PO_DT = formattedDate,
                 RLY_NONRLY = RLY_NONRLY,
                 RLY_CD = RLY_CD,
                 HFromDate = HFromDate,
@@ -75,9 +77,9 @@ namespace IBS.Controllers
             ViewBag.From = HFromDate;
             ViewBag.To = HToDate;
             ViewBag.ReportType = ReportType;
-            
+
             ViewBag.year = Year;
-            if(Convert.ToBoolean(ReportBasedon) == true)
+            if (Convert.ToBoolean(ReportBasedon) == true)
             {
                 ViewBag.ReportBase = "Report Based on IC Date & Sorted on Consignee";
             }
@@ -95,7 +97,7 @@ namespace IBS.Controllers
                 {
                     ViewBag.ReportBase = "Report Based on BILL Date & Sorted on Material Value Descending";
                 }
-                    
+
             }
             if (Month != null)
             {
@@ -113,9 +115,9 @@ namespace IBS.Controllers
             }
 
             string Region = GetRegionCode;
-            if(Region == "N")
+            if (Region == "N")
             { ViewBag.Region = "NORTHERN REGION"; }
-            else if(Region == "S")
+            else if (Region == "S")
             { ViewBag.Region = "SOUTHERN REGION"; }
             else if (Region == "E")
             { ViewBag.Region = "EASTERN REGION"; }
@@ -124,7 +126,7 @@ namespace IBS.Controllers
             else if (Region == "C")
             { ViewBag.Region = "CENTRAL REGION"; }
             // DTResult<SummaryConsigneeWiseInspModel> dTResult = SummaryConsigneeWiseInspRepository.SummaryConsigneeWiseInsp(dtParameters, Regin);
-            InspectionStatusModel model = InspectionStatusRepository.SummaryConsigneeWiseInsp( ReportType,  Month,  Year,  ForGiven,  ReportBasedon,MaterialValue,  FromDate,  ToDate,  ForParticular,  lstParticular ,Region);
+            InspectionStatusModel model = InspectionStatusRepository.SummaryConsigneeWiseInsp(ReportType, Month, Year, ForGiven, ReportBasedon, MaterialValue, FromDate, ToDate, ForParticular, lstParticular, Region);
             return PartialView(model);
         }
 
@@ -236,7 +238,7 @@ namespace IBS.Controllers
             ViewBag.To = ToDate;
 
             ViewBag.year = Year;
-            
+
             if (Month != null)
             {
                 string[] monthNames = new string[]

@@ -2,10 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using NuGet.Protocol.Plugins;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -94,7 +91,7 @@ namespace IBS.Repositories
             SendMailModel.To = tosender;
             SendMailModel.From = model.Email;
             SendMailModel.Subject = model.Subject;
-            SendMailModel.Message = model.Description + "\n\n Name: " + model.Name + "\n\n Mobile No. : " +  model.MobileNo;
+            SendMailModel.Message = model.Description + "\n\n Name: " + model.Name + "\n\n Mobile No. : " + model.MobileNo;
 
             bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
         }

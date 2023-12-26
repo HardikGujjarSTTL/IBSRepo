@@ -3,16 +3,8 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text.RegularExpressions;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -24,7 +16,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<LabPaymentFormModel> GetLabPayments(DTParameters dtParameters,string Regin)
+        public DTResult<LabPaymentFormModel> GetLabPayments(DTParameters dtParameters, string Regin)
         {
 
             //using (var dbContext = context.Database.GetDbConnection())
@@ -83,14 +75,14 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             LabPaymentFormModel labPaymentFormModel = new LabPaymentFormModel();
-            if(dtParameters.AdditionalValues?.GetValueOrDefault("PaymentDt") == "")
+            if (dtParameters.AdditionalValues?.GetValueOrDefault("PaymentDt") == "")
             {
                 labPaymentFormModel.PaymentDt = null;
             }
             else
             {
                 labPaymentFormModel.PaymentDt = dtParameters.AdditionalValues?.GetValueOrDefault("PaymentID");
-               
+
             }
 
             OracleParameter[] par = new OracleParameter[5];
@@ -162,7 +154,7 @@ namespace IBS.Repositories
                 orderCriteria = "SAMPLE_REG_NO";
                 orderAscendingDirection = true;
             }
-            
+
 
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("p_LabID", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("Lab"), ParameterDirection.Input);
@@ -438,7 +430,7 @@ namespace IBS.Repositories
         }
         public bool UpdatePayment(LabPaymentFormModel LabPaymentFormModel)
         {
-            
+
             string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
 
@@ -455,7 +447,7 @@ namespace IBS.Repositories
                 par[5] = new OracleParameter("p_payment_id", OracleDbType.Varchar2, LabPaymentFormModel.PaymentID, ParameterDirection.Input);
 
                 var ds = DataAccessDB.ExecuteNonQuery("UPDATE_PAYMENT_DETAILS", par, 1);
-                
+
             }
             catch (Exception ex)
             {
@@ -518,8 +510,8 @@ namespace IBS.Repositories
                         Lab = Convert.ToString(row["LAB_NAME"]),
 
                     };
-                    
-                    
+
+
                 }
                 List<LabPaymentFormModel> lstlab = context.T51LabRegisterDetails
                     .Where(l => l.PaymentId == paymentFormModel.PaymentID && l.SampleRegNo.StartsWith(paymentFormModel.Regin))
@@ -578,7 +570,7 @@ namespace IBS.Repositories
 
             //return dTResult;
         }
-        public DTResult<LabPaymentFormModel> PrintLoadTable(DTParameters dtParameters,string Region)
+        public DTResult<LabPaymentFormModel> PrintLoadTable(DTParameters dtParameters, string Region)
         {
             string DisID = dtParameters.AdditionalValues?.GetValueOrDefault("pyid");
             DTResult<LabPaymentFormModel> dTResult = new() { draw = 0 };
@@ -589,17 +581,17 @@ namespace IBS.Repositories
             //var orderAscendingDirection = true;
 
             query = from l in context.T51LabRegisterDetails
-                          where l.PaymentId == DisID && l.SampleRegNo.StartsWith(Region)
-                          select new LabPaymentFormModel
-                          {
-                              AccountCd = "642",
-                              SubCd = "",
-                              SBUCd = "20",
-                              ProjectCd = "",
-                              SAMPLE_REG_NO = Convert.ToString(l.SampleRegNo),
-                              Amount = Convert.ToString(l.AmountReceived)
-                             
-                          };
+                    where l.PaymentId == DisID && l.SampleRegNo.StartsWith(Region)
+                    select new LabPaymentFormModel
+                    {
+                        AccountCd = "642",
+                        SubCd = "",
+                        SBUCd = "20",
+                        ProjectCd = "",
+                        SAMPLE_REG_NO = Convert.ToString(l.SampleRegNo),
+                        Amount = Convert.ToString(l.AmountReceived)
+
+                    };
 
             var result = query.ToList();
 

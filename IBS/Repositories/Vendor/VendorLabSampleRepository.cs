@@ -2,19 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
-using System;
-using System.Configuration;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace IBS.Repositories
@@ -171,7 +161,7 @@ namespace IBS.Repositories
             {
                 labelexist = "B";
             }
-            if(labelexist == "Y")
+            if (labelexist == "Y")
             {
                 labelexist = "S";
             }

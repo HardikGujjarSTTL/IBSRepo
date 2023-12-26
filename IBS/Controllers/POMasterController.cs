@@ -4,12 +4,11 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
-namespace IBS.Controllers.Vendor
+namespace IBS.Controllers
 {
     [Authorization]
     public class POMasterController : BaseController
@@ -155,13 +154,13 @@ namespace IBS.Controllers.Vendor
                         List<APPDocumentDTO> DocumentsCaseList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid == (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsCaseList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsCaseList, Enums.GetEnumDescription(Enums.FolderPath.VendorPO), env, iDocument, string.Empty, SpecificFileName, DocumentIdCases);
                         //}
                         int[] DocumentIds = { (int)Enums.DocumentPurchaseOrderForm.DrawingSpecification, (int)Enums.DocumentPurchaseOrderForm.Amendment, (int)Enums.DocumentPurchaseOrderForm.ParentLOA };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]).Where(x => x.Documentid != (int)Enums.DocumentPurchaseOrderForm.CopyOfPurchaseOrder).ToList();
                         //if (DocumentsList.Count > 0)
                         //{
-                            DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
                         //}
                     }
                     return Json(new { status = true, responseText = msg });
@@ -447,7 +446,7 @@ namespace IBS.Controllers.Vendor
             try
             {
                 bool IsDigit = false;
-                if(ConsigneeSearch == null || ConsigneeSearch == "" || ConsigneeSearch.Length <= 1)
+                if (ConsigneeSearch == null || ConsigneeSearch == "" || ConsigneeSearch.Length <= 1)
                 {
                     return Json(new { status = false, responseText = "Please Enter Atleast 2 Charaters in Search Criteria!!!" });
                 }

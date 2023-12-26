@@ -1,19 +1,12 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
+using IBS.Interfaces.Reports.ConsigneeComplaintReports;
 using IBS.Models;
 using IBS.Models.Reports;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using IBS.Interfaces;
-using IBS.Interfaces.Reports.ConsigneeComplaintReports;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
-using System.Numerics;
-using NuGet.Protocol.Plugins;
-using IBS.Repositories.Reports;
-using IBS.Interfaces.Reports;
 using Newtonsoft.Json;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports.ConsigneeComplaintReports
 {
@@ -43,7 +36,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             }
             catch (Exception ex)
             {
-               // Common.AddException(ex.ToString(), ex.Message.ToString(), "ComplaintsJIRequiredReport", "GetClientType", 1, GetIPAddress());
+                // Common.AddException(ex.ToString(), ex.Message.ToString(), "ComplaintsJIRequiredReport", "GetClientType", 1, GetIPAddress());
             }
             return Json(json);
         }
@@ -89,7 +82,8 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnallaction") && !string.IsNullOrEmpty(formCollection["hdnallaction"])) model.allaction = Convert.ToString(formCollection["hdnallaction"]);
                 if (formCollection.Keys.Contains("hdnParticularAction") && !string.IsNullOrEmpty(formCollection["hdnParticularAction"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularAction"]);
                 if (formCollection.Keys.Contains("hdnParticularActiondrp") && !string.IsNullOrEmpty(formCollection["hdnParticularActiondrp"])) model.actiondrp = Convert.ToString(formCollection["hdnParticularActiondrp"]);
-            } if (model.ReportType == "COMPJI")
+            }
+            if (model.ReportType == "COMPJI")
             {
                 if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToString(formCollection["hdnFromDate"]);
                 if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToString(formCollection["hdnToDate"]);
@@ -125,7 +119,8 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnvendor") && !string.IsNullOrEmpty(formCollection["hdnvendor"])) model.vendor = Convert.ToString(formCollection["hdnvendor"]);
                 if (formCollection.Keys.Contains("hdnItem") && !string.IsNullOrEmpty(formCollection["hdnItem"])) model.Item = Convert.ToString(formCollection["hdnItem"]);
                 if (formCollection.Keys.Contains("hdnconsignee") && !string.IsNullOrEmpty(formCollection["hdnconsignee"])) model.consignee = Convert.ToString(formCollection["hdnconsignee"]);
-            }if (model.ReportType == "CORP")
+            }
+            if (model.ReportType == "CORP")
             {
                 if (formCollection.Keys.Contains("hdncompfromdtcorp") && !string.IsNullOrEmpty(formCollection["hdncompfromdtcorp"])) model.FromDate = Convert.ToString(formCollection["hdncompfromdtcorp"]);
                 if (formCollection.Keys.Contains("hdncomptodtcorp") && !string.IsNullOrEmpty(formCollection["hdncomptodtcorp"])) model.ToDate = Convert.ToString(formCollection["hdncomptodtcorp"]);
@@ -172,14 +167,14 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             if (ReportType == "TOPJI") model.ReportTitle = "JI Topsheet";
             return View("Manage", model);
         }
-        
+
         public IActionResult ManageByDefectCode(string ReportType, DateTime FromDate, DateTime ToDate)
         {
             ConsigneeCompReports model = new() { ReportType = ReportType, FromDate = FromDate.ToString(), ToDate = ToDate.ToString() };
             if (ReportType == "DCWACOMPS") model.ReportTitle = "DEFECT CODE WISE ANALYSIS OF COMPLAINTS";
             return View("Manage", model);
         }
-        
+
         public IActionResult ManageByCOCOMP(string ReportType, string FinancialYearsText, string FinancialYearsValue)
         {
             ConsigneeCompReports model = new() { ReportType = ReportType, FinancialYearsText = FinancialYearsText, FinancialYearsValue = FinancialYearsValue };
@@ -187,11 +182,11 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             return View("Manage", model);
         }
 
-        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string InspRegion, string JIInspRegion,string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
+        public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
             int IeCd = SessionHelper.UserModelDTO.IeCd;
-            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, InspRegion, JIInspRegion, JIInspReqRegion, actiondrp, actioncodedrp, actionjidrp,IeCd);
+            ConsigneeCompReports model = consigneeCompReportRepository.GetCompPeriodData(FromDate, ToDate, InspRegion, JIInspRegion, JIInspReqRegion, actiondrp, actioncodedrp, actionjidrp, IeCd);
 
             region = (InspRegion == "All") ? "AllRegion" :
                      (InspRegion == "N") ? "Northern Region" :
@@ -338,23 +333,28 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             {
                 ConsigneeCompReports model = GlobalDeclaration.ConsigneeCompPeriod;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/ComplaintsByPeriod.cshtml", model);
-            }else if (ReportType == "COMPJI")
+            }
+            else if (ReportType == "COMPJI")
             {
                 JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/ComplaintRecieved.cshtml", model);
-            }else if (ReportType == "TOPJI")
+            }
+            else if (ReportType == "TOPJI")
             {
                 ConsigneeComplaints model = GlobalDeclaration.ConsigneeComplaint;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/JIComplaintsReport.cshtml", model);
-            }else if (ReportType == "DCWACOMPS")
+            }
+            else if (ReportType == "DCWACOMPS")
             {
                 DefectCodeReport model = GlobalDeclaration.DefectCodeReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/DefectCodeReport.cshtml", model);
-            }else if (ReportType == "COCOMPJI")
+            }
+            else if (ReportType == "COCOMPJI")
             {
                 JIRequiredReport model = GlobalDeclaration.JIRequiredReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/JICompReport.cshtml", model);
-            }else if (ReportType == "TOPNHIGH")
+            }
+            else if (ReportType == "TOPNHIGH")
             {
                 HighValueInspReport model = GlobalDeclaration.HighValueInspReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/ConsigneeCompReport/TopNHighValueInsp.cshtml", model);

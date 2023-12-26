@@ -1,9 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Metrics;
-using System.Drawing;
 
 namespace IBS.Repositories
 {
@@ -15,7 +12,7 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public Calls_Marked_ReportModel Query1(string pDtFr, string pDtTo, string pRegion, string pSortKey , int UserID , string wRgn_Name)
+        public Calls_Marked_ReportModel Query1(string pDtFr, string pDtTo, string pRegion, string pSortKey, int UserID, string wRgn_Name)
         {
             //string wSortHdr = "";
             Calls_Marked_ReportModel model = new();
@@ -67,7 +64,7 @@ namespace IBS.Repositories
                         orderby (pSortKey == "V" ? t051.VendName : ""), t17.CallMarkDt, t17.CallSno
                         select new Calls_Marked_ReportModel
                         {
-                           
+
                             VENDOR = t051.VendName.Trim() + (t03.City != null ? "," + t03.City.Trim() : ""),
                             MANUFACTURER = t052.VendName.Trim() + (t032.City != null ? "," + t032.City.Trim() : ""),
                             VEND_CD = Convert.ToString(t051.VendCd),
@@ -105,14 +102,14 @@ namespace IBS.Repositories
                                                 " Dt: " + t17.CallStatusDt
                                                 : " on " + t17.CallStatusDt))))
                                 + (t17.CallCancelStatus == "N" ? " (Non Chargeable)" : (t17.CallCancelStatus == "C" ? " (Chargeable)" : "")
-                           
+
                               ))
 
                         };
 
 
             // Execute the LINQ query
-           
+
 
             model = query.FirstOrDefault();
             return model;

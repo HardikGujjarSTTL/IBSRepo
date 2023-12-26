@@ -1,10 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Transaction;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Transaction
@@ -29,7 +26,7 @@ namespace IBS.Controllers.Transaction
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            ViewBag.Region= wRegion;
+            ViewBag.Region = wRegion;
             return View();
         }
         [Authorization("CentralRegionBillingInformation", "Index", "view")]
@@ -51,7 +48,7 @@ namespace IBS.Controllers.Transaction
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string Region= SessionHelper.UserModelDTO.Region;
+            string Region = SessionHelper.UserModelDTO.Region;
             DTResult<CentralRegionBillingInformationListModel> dTResult = centralRegionBillingInformationRepository.GetBillingInformationList(dtParameters, Region);
             return Json(dTResult);
         }
@@ -60,7 +57,7 @@ namespace IBS.Controllers.Transaction
         {
             try
             {
-                if (centralRegionBillingInformationRepository.Remove(id,UserId))
+                if (centralRegionBillingInformationRepository.Remove(id, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -78,7 +75,7 @@ namespace IBS.Controllers.Transaction
         {
             try
             {
-                if(centralRegionBillingInformationRepository.AlreadyExist(BillNo))
+                if (centralRegionBillingInformationRepository.AlreadyExist(BillNo))
                 {
                     return Json(new { status = false, responseText = "Bill No Already Exist." });
                 }

@@ -2,20 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
-using System;
-using System.Configuration;
 using System.Data;
-using System.Dynamic;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace IBS.Repositories
@@ -155,16 +144,16 @@ namespace IBS.Repositories
             string Hlink = "";
             string sqlQuery = "SELECT DECODE(DOC_STATUS_VEND,'Y','UPLOADED','NOT UPLOADED') FROM T110_LAB_DOC WHERE  case_no='" + CaseNo.Trim() + "' and to_char(call_recv_dt,'dd/mm/yyyy')='" + CallRdt.Trim() + "' and call_sno='" + CallSno.Trim() + "'";
             PaymentSlip = GetDateString(sqlQuery);
-            if(PaymentSlip != null)
+            if (PaymentSlip != null)
             {
-                
+
                 string sqlQuery1 = "SELECT DECODE(DOC_STATUS_FIN,'A','APPROVED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS'),'R','REJECTED'||' On: '||to_char(DOC_APP_DATETIME,'dd/mm/yyyy-HH24:MI:SS')||DOC_REJ_REMARK,'PENDING') FROM T110_LAB_DOC WHERE  case_no='" + CaseNo.Trim() + "' and to_char(call_recv_dt,'dd/mm/yyyy')='" + CallRdt.Trim() + "' and call_sno='" + CallSno.Trim() + "'";
                 PaymentStatus = GetDateString(sqlQuery1);
             }
             else
             {
                 PaymentSlip = "Not Uploaded";
-                    PaymentStatus = "Not Approved";
+                PaymentStatus = "Not Approved";
             }
             Hlink = Showfile(CaseNo, CallRdt, CallSno);
             using (var dbContext = context.Database.GetDbConnection())
@@ -199,10 +188,10 @@ namespace IBS.Repositories
                         Remarks = Convert.ToString(row["remarks"]),
                         PaymentSlip = PaymentSlip,
                         PaymentStatus = PaymentStatus,
-                        Hyperlink2  = Hlink,
+                        Hyperlink2 = Hlink,
                     };
                 }
-                
+
                 return model;
             }
         }
@@ -212,7 +201,7 @@ namespace IBS.Repositories
             string MyFile_ex = "";
             string mdt_ex = dateconcate2(CallRdt.Trim());
             MyFile_ex = CaseNo.Trim() + '_' + CallSno.Trim() + '_' + mdt_ex;
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB",  MyFile_ex + ".PDF");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile_ex + ".PDF");
             if (File.Exists(filePath) == false)
             {
                 link = "false";
@@ -220,11 +209,11 @@ namespace IBS.Repositories
             else
             {
                 link = filePath;
-               
+
             }
             return link;
         }
-            public static string GetDateString(string sqlQuery)
+        public static string GetDateString(string sqlQuery)
         {
             ModelContext context = new ModelContext(DbContextHelper.GetDbContextOptions());
             string dateResult = null;
@@ -257,14 +246,14 @@ namespace IBS.Repositories
         }
         public bool SaveDataDetails(LabSampleInfoModel LabSampleInfoModel)
         {
-            
+
             string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
 
             ss = GetDateString(sqlQuery);
             try
             {
-                
+
                 OracleParameter[] par = new OracleParameter[11];
                 par[0] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, LabSampleInfoModel.CaseNo, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_CallDT", OracleDbType.Date, LabSampleInfoModel.CallRecDt, ParameterDirection.Input);
@@ -274,10 +263,10 @@ namespace IBS.Repositories
                 par[5] = new OracleParameter("p_SampleReceiptDT", OracleDbType.Date, LabSampleInfoModel.DateofRecSample, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_TestingFee", OracleDbType.Varchar2, LabSampleInfoModel.TotalTFee, ParameterDirection.Input);
                 par[7] = new OracleParameter("p_LikelyTRDt", OracleDbType.Date, LabSampleInfoModel.LikelyDt, ParameterDirection.Input);
-                par[8] = new OracleParameter("p_Remarks", OracleDbType.Varchar2, LabSampleInfoModel.Remarks, ParameterDirection.Input);               
+                par[8] = new OracleParameter("p_Remarks", OracleDbType.Varchar2, LabSampleInfoModel.Remarks, ParameterDirection.Input);
                 par[9] = new OracleParameter("p_UserId", OracleDbType.Varchar2, LabSampleInfoModel.UName, ParameterDirection.Input);
                 par[10] = new OracleParameter("p_DateTime", OracleDbType.Date, ss, ParameterDirection.Input);
-               
+
 
                 var ds = DataAccessDB.ExecuteNonQuery("InsertLabSampleInfo", par, 1);
             }
@@ -310,10 +299,10 @@ namespace IBS.Repositories
 
         public bool UpdateDetails(LabSampleInfoModel LabSampleInfoModel)
         {
-            
+
             //if (LabSampleInfoModel.UploadLab != null && LabSampleInfoModel.UploadLab.Length > 0)
             //{
-                
+
             //    List<string> savedFilePaths = new List<string>();
             //    string fn = "", MyFile = "", fx = "", fl = "";
             //    string mdt = dateconcate(LabSampleInfoModel.CallRecDt);
@@ -330,9 +319,9 @@ namespace IBS.Repositories
             //        }
             //        savedFilePaths.Add(saveLocation);
             //    }
-                
+
             //}
-                string ss;
+            string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
 
             ss = GetDateString(sqlQuery);
@@ -362,18 +351,18 @@ namespace IBS.Repositories
             return true;
         }
 
-        public string CheckExist(string CaseNo, string CallRdt, string CallSno,string Regin)
+        public string CheckExist(string CaseNo, string CallRdt, string CallSno, string Regin)
         {
-            
+
             string query = "SELECT COUNT(*) FROM T109_LAB_SAMPLE_INFO T109 " +
                            "WHERE TO_CHAR(T109.CALL_RECV_DT, 'dd/mm/yyyy') = '" + CallRdt + "' " +
                            "AND T109.case_no = '" + CaseNo + "' AND T109.call_sno = '" + CallSno + "' AND " +
                            "SUBSTR(T109.case_no, 1, 1) = '" + Regin + "'";
 
-            
+
             string count = GetDateString(query);
 
-            
+
             //string nextSerialNumber = (count + 1).ToString();
 
             return count;

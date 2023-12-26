@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -51,7 +45,7 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("wDtFr", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wFrmDtO"), ParameterDirection.Input);
             par[1] = new OracleParameter("wDtTo", OracleDbType.NVarchar2, dtParameters.AdditionalValues?.GetValueOrDefault("wToDt"), ParameterDirection.Input);
-            par[2] = new OracleParameter("region", OracleDbType.NVarchar2,Regin , ParameterDirection.Input);
+            par[2] = new OracleParameter("region", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);
             par[3] = new OracleParameter("cur", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GetOnlinePaymentReport", par, 3);

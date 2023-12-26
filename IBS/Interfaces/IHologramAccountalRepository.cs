@@ -1,6 +1,5 @@
 ﻿using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
 
 namespace IBS.Interfaces
 {

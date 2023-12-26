@@ -1,7 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace IBS.Repositories

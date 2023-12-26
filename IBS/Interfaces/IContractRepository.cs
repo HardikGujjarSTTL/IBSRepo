@@ -6,9 +6,9 @@ namespace IBS.Interfaces
     {
         public ContractModel FindByID(int ContractId);
         DTResult<ContractModel> GetContractList(DTParameters dtParameters);
-        
+
         bool Remove(int ContractId, int UserID);
-        
+
         int ContractDetailsInsertUpdate(ContractModel model);
     }
 }
