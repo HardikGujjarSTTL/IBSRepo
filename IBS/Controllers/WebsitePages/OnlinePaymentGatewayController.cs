@@ -134,9 +134,9 @@ namespace IBS.Controllers.WebsitePages
             string Tok_id = objectres.atomTokenId;
             var url = Request.Scheme + "://" + Request.Host.Value;
             model.LocalURL = url;
+            model.Tok_id = Tok_id;
 
             model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
-            model.Tok_id = Tok_id;
             return Json(new { status = false, response = model });
         }
 
@@ -212,7 +212,7 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse(string mef_ref,string CaseNo,string CallDate,string CallSno,string ChargesType)
+        public IActionResult PaymentResponse(string id)
         {
             OnlinePaymentGateway model = new();
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
@@ -228,7 +228,6 @@ namespace IBS.Controllers.WebsitePages
 
             objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
 
-            model.MER_TXN_REF = mef_ref;
             model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
             model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
             model.Product = objectres.payInstrument.payDetails.product;
@@ -248,7 +247,7 @@ namespace IBS.Controllers.WebsitePages
             model.Description = objectres.payInstrument.responseDetails.description;
             model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
 
-            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model, id);
 
             GlobalDeclaration.OnlinePaymentResponse = model;
             return View(model);
