@@ -358,66 +358,240 @@ namespace IBSAPI.Repositories
             return id;
         }
 
-        public int CallStatusFilesSave(ICPhotoUploadRequestModel model)
+        public int IcIntermediateSave(ICPhotoUploadRequestModel model, List<IFormFile> photos, IFormFile ICPhotoDigitalSign, IFormFile UploadTestPlan, IFormFile UploadICAnnexue1, IFormFile UploadICAnnexue2)
         {
-            int id = 0;
-            var IcDetail = (from item in context.IcIntermediates
-                            where item.CaseNo == model.CaseNo.Trim() &&
-                                  item.CallSno == model.CallSno &&
-                                  item.CallRecvDt == model.CallRecvDt.Date &&
-                                  item.ConsigneeCd == Convert.ToInt32(model.Consignee)
-                            select item).FirstOrDefault();
 
-            if (IcDetail == null)
+            int consignee_cd = 0;
+            ImageFiles filesimg = new ImageFiles();
+            string formattedCallRecvDt = "";
+            int id = 0;
+            using (var trans = context.Database.BeginTransaction())
             {
-                var CallDetails = (from c in context.T18CallDetails
-                                   where c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt.Date
-                                   && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.Consignee)
-                                   select c).ToList();
-                if (CallDetails.Count() > 0)
+                try
                 {
-                    foreach (var i in CallDetails)
+                    if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
                     {
-                        IcIntermediate obj = new IcIntermediate();
-                        obj.CaseNo = model.CaseNo;
-                        obj.CallRecvDt = model.CallRecvDt;
-                        obj.CallSno = Convert.ToInt16(model.CallSno);
-                        obj.BkNo = model.DocBkNo;
-                        obj.SetNo = model.DocSetNo;
-                        obj.PoNo = model.PoNo;
-                        obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
-                        obj.UserId = model.userId;
-                        obj.ItemSrnoPo = i.ItemSrnoPo;
-                        obj.ItemDescPo = i.ItemDescPo;
-                        obj.QtyPassed = i.QtyPassed;
-                        obj.QtyRejected = i.QtyRejected;
-                        obj.QtyDue = i.QtyDue;
-                        obj.IeCd = Convert.ToInt32(model.IeCd);
-                        obj.Datetime = DateTime.Now;
-                        //obj.Createddate = DateTime.Now;
-                        //obj.Createdby = model.UserId;
-                        context.IcIntermediates.Add(obj);
-                        context.SaveChanges();
-                        id = 1;
+                        DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString().Replace("-", "/"), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+                    }
+
+                    if (model.DocBkNo != null && model.DocSetNo != null)
+                    {
+                        var FinalOrStage = context.T17CallRegisters
+                                            .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                                            .Select(cr => cr.FinalOrStage)
+                                            .FirstOrDefault() ?? "F";
+
+                        var docSetNo = Convert.ToInt32(model.DocSetNo);
+
+                        var bsCheckIC = (from a in context.T10IcBooksets
+                                         where a.BkNo.Trim() == model.DocBkNo.Trim()
+                                         && (docSetNo >= Convert.ToInt32(a.SetNoFr) && docSetNo <= Convert.ToInt32(a.SetNoTo))
+                                         && a.IssueToIecd == Convert.ToInt32(model.IeCd)
+                                         && (a.Ictype ?? "F") == FinalOrStage
+                                         select a.IssueToIecd).FirstOrDefault();
+                        if (bsCheckIC != null)
+                        {
+                            var query = context.IcIntermediates
+                                    .Where(ici => ici.CaseNo == model.CaseNo &&
+                                                  ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                                  ici.CallSno == model.CallSno &&
+                                                  ici.BkNo == model.DocBkNo &&
+                                                  ici.SetNo == model.DocSetNo)
+                                    .OrderBy(ici => ici.Datetime)
+                                    .Select(ici => ici.ConsigneeCd)
+                                    .FirstOrDefault();
+
+                            consignee_cd = query;
+
+                            if (consignee_cd > 0)
+                            {
+                                if (consignee_cd.ToString() != model.Consignee)
+                                {
+                                    model.AlertMsg = "Please Enter other book no. or set no. same is used for consignee " + consignee_cd + " !!!";
+                                    id = 0;
+                                    return id;
+                                }
+                            }
+
+                            string FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "-";
+
+                            //Add Code for Image Upload Code
+                            if (photos.Count > 0)
+                            {
+                                filesimg.File_1 = photos.Count >= 1 ? FileName + "01.JPG" : "";
+                                filesimg.File_2 = photos.Count >= 2 ? FileName + "02.JPG" : "";
+                                filesimg.File_3 = photos.Count >= 3 ? FileName + "03.JPG" : "";
+                                filesimg.File_4 = photos.Count >= 4 ? FileName + "04.JPG" : "";
+                                filesimg.File_5 = photos.Count >= 5 ? FileName + "05.JPG" : "";
+                                filesimg.File_6 = photos.Count >= 6 ? FileName + "06.JPG" : "";
+                                filesimg.File_7 = photos.Count >= 7 ? FileName + "07.JPG" : "";
+                                filesimg.File_8 = photos.Count >= 8 ? FileName + "08.JPG" : "";
+                                filesimg.File_9 = photos.Count >= 9 ? FileName + "09.JPG" : "";
+                                filesimg.File_10 = photos.Count >= 10 ? FileName + "10.JPG" : "";
+                            }
+
+                            var IcDetail = (from item in context.IcIntermediates
+                                            where item.CaseNo == model.CaseNo.Trim() &&
+                                                  item.CallSno == model.CallSno &&
+                                                  item.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&//model.CallRecvDt.Date &&
+                                                  item.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                            select item).FirstOrDefault();
+                            if (IcDetail == null)
+                            {
+                                var CallDetails = (from c in context.T18CallDetails
+                                                   where c.CaseNo == model.CaseNo && c.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) //model.CallRecvDt.Date
+                                                   && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                                   select c).ToList();
+                                if (CallDetails.Count() > 0)
+                                {
+                                    foreach (var i in CallDetails)
+                                    {
+                                        IcIntermediate obj = new IcIntermediate();
+                                        obj.CaseNo = model.CaseNo;
+                                        obj.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                        obj.CallSno = Convert.ToInt16(model.CallSno);
+                                        obj.BkNo = model.DocBkNo;
+                                        obj.SetNo = model.DocSetNo;
+                                        obj.PoNo = model.PoNo;
+                                        obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                                        obj.UserId = model.userId;
+                                        obj.ItemSrnoPo = i.ItemSrnoPo;
+                                        obj.ItemDescPo = i.ItemDescPo;
+                                        obj.QtyPassed = i.QtyPassed;
+                                        obj.QtyRejected = i.QtyRejected;
+                                        obj.QtyDue = i.QtyDue;
+                                        obj.IeCd = Convert.ToInt32(model.IeCd);
+                                        obj.Datetime = DateTime.Now;
+                                        obj.Createddate = DateTime.Now;
+                                        obj.Createdby = model.User_Id;
+                                        context.IcIntermediates.Add(obj);
+                                        context.SaveChanges();
+                                        id = 1;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (var command = context.Database.GetDbConnection().CreateCommand())
+                                {
+                                    bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
+                                    if (!wasOpen) command.Connection.Open();
+                                    try
+                                    {
+                                        command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', QTY_PASSED = '" + model.QtyPassed + "', QTY_REJECTED = '" + model.QtyRejected + "',UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + model.CallRecvDt.ToString("dd-MM-yy") + "', 'DD-MM-YY') AND CONSIGNEE_CD = " + Convert.ToInt32(model.Consignee);
+                                        command.ExecuteNonQuery();
+                                        id = 1;
+                                    }
+                                    finally
+                                    {
+                                        if (!wasOpen) command.Connection.Close();
+                                    }
+                                }
+                            }
+
+                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+                            string PDFFineName = model.CaseNo.Trim() + "-" + model.DocBkNo + "-" + model.DocSetNo;
+                            if (recordExists == null)
+                            {
+                                T49IcPhotoEnclosed obj = new T49IcPhotoEnclosed();
+
+                                obj.CaseNo = model.CaseNo;
+                                obj.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                obj.CallSno = (short?)model.CallSno;
+                                obj.BkNo = model.DocBkNo;
+                                obj.SetNo = model.DocSetNo;
+                                obj.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                                obj.Datetime = DateTime.Now;
+                                obj.UserId = model.userId;
+                                obj.File1 = filesimg.File_1;
+                                obj.File2 = filesimg.File_2;
+                                obj.File3 = filesimg.File_3;
+                                obj.File4 = filesimg.File_4;
+                                obj.File5 = filesimg.File_5;
+                                obj.File6 = filesimg.File_6;
+                                obj.File7 = filesimg.File_7;
+                                obj.File8 = filesimg.File_8;
+                                obj.File9 = filesimg.File_9;
+                                obj.File10 = filesimg.File_10;
+                                obj.IcPhoto = !string.IsNullOrEmpty(ICPhotoDigitalSign.Name) ? PDFFineName + ".pdf" : "";
+                                obj.IcPhotoA1 = !string.IsNullOrEmpty(UploadICAnnexue1.Name) ? PDFFineName + "-A1.PDF" : "";
+                                obj.IcPhotoA2 = !string.IsNullOrEmpty(UploadICAnnexue2.Name) ? PDFFineName + "-A2.PDF" : "";
+                                context.T49IcPhotoEncloseds.Add(obj);
+                                context.SaveChanges();
+                            }
+                            else
+                            {
+                                recordExists.CaseNo = model.CaseNo;
+                                recordExists.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                recordExists.CallSno = (short?)model.CallSno;
+                                recordExists.BkNo = model.DocBkNo;
+                                recordExists.SetNo = model.DocSetNo;
+                                recordExists.ConsigneeCd = Convert.ToInt32(model.Consignee);
+                                recordExists.Datetime = DateTime.Now;
+                                recordExists.UserId = model.userId;
+                                recordExists.File1 = filesimg.File_1;
+                                recordExists.File2 = filesimg.File_2;
+                                recordExists.File3 = filesimg.File_3;
+                                recordExists.File4 = filesimg.File_4;
+                                recordExists.File5 = filesimg.File_5;
+                                recordExists.File6 = filesimg.File_6;
+                                recordExists.File7 = filesimg.File_7;
+                                recordExists.File8 = filesimg.File_8;
+                                recordExists.File9 = filesimg.File_9;
+                                recordExists.File10 = filesimg.File_10;
+                                recordExists.IcPhoto = !string.IsNullOrEmpty(ICPhotoDigitalSign.Name) ? PDFFineName + ".pdf" : "";
+                                recordExists.IcPhotoA1 = !string.IsNullOrEmpty(UploadICAnnexue1.Name) ? PDFFineName + "-A1.PDF" : "";
+                                recordExists.IcPhotoA2 = !string.IsNullOrEmpty(UploadICAnnexue2.Name) ? PDFFineName + "-A2.PDF" : "";
+                                context.SaveChanges();
+                            }
+
+                            var IcDetail1 = (from ic in context.IcIntermediates
+                                             where ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.ConsigneeCd == Convert.ToInt32(model.Consignee)
+                                             select ic).FirstOrDefault();
+
+                            if (IcDetail1 != null)
+                            {
+                                IcDetail1.File1 = filesimg.File_1;
+                                IcDetail1.File2 = filesimg.File_2;
+                                IcDetail1.File3 = filesimg.File_3;
+                                IcDetail1.File4 = filesimg.File_4;
+                                IcDetail1.File5 = filesimg.File_5;
+                                IcDetail1.File6 = filesimg.File_6;
+                                IcDetail1.File7 = filesimg.File_7;
+                                IcDetail1.File8 = filesimg.File_8;
+                                IcDetail1.File9 = filesimg.File_9;
+                                IcDetail1.File10 = filesimg.File_10;
+                                IcDetail.Updatedby = model.User_Id;
+                                IcDetail.Updateddate = DateTime.Now;
+                                context.SaveChanges();
+                            }
+                            model.AlertMsg = "Success";
+                            id = 1;                            
+                            trans.Commit();
+                        }
+                        else
+                        {
+                            model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                            id = 0;
+                            trans.Rollback();
+                            return id;
+                        }
+                    }
+                    else
+                    {
+                        model.AlertMsg = "Please enter valid book no. and set no. !";
+                        id = 0;
+                        trans.Rollback();
+                        return id;
                     }
                 }
-            }
-            else
-            {
-                using (var command = context.Database.GetDbConnection().CreateCommand())
+                catch (Exception)
                 {
-                    bool wasOpen = command.Connection.State == System.Data.ConnectionState.Open;
-                    if (!wasOpen) command.Connection.Open();
-                    try
-                    {
-                        command.CommandText = "UPDATE IC_INTERMEDIATE SET BK_NO = '" + model.DocBkNo + "', SET_NO = '" + model.DocSetNo + "', QTY_PASSED = '" + model.QtyPassed + "', QTY_REJECTED = '" + model.QtyRejected + "',UPDATEDDATE=TO_date('" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'dd/mm/yyyy') WHERE CASE_NO = '" + model.CaseNo + "' AND CALL_SNO = '" + model.CallSno + "' AND CALL_RECV_DT = TO_date('" + model.CallRecvDt.ToString("dd-MM-yy") + "', 'DD-MM-YY') AND CONSIGNEE_CD = " + Convert.ToInt32(model.Consignee);
-                        command.ExecuteNonQuery();
-                        id = 1;
-                    }
-                    finally
-                    {
-                        if (!wasOpen) command.Connection.Close();
-                    }
+                    model.AlertMsg = "Something went wrong !!";
+                    id = 0;
+                    trans.Rollback();
                 }
             }
             return id;

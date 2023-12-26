@@ -115,14 +115,14 @@ namespace IBSAPI.Controllers
                 var totalInsp = dashBoardRepository.Get_CM_TotalInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totPendingInsp = dashBoardRepository.Get_CM_PendingInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
                 var totRejectedInsp = dashBoardRepository.Get_CM_RequestRejectedInspection(CO_CD, IE_CD, startDate.ToString("dd/MM/yyyy"), ToDate);
-                var totIE = dashBoardRepository.Get_CM_Wise_IE(CO_CD);
+                var totIE = dashBoardRepository.Get_CM_Wise_IE(CO_CD).Count() - 1;
                 var result = new
                 {
                     Total_Inspection = totalInsp,
                     Total_Assign_Inspection = totalInsp,
                     Pending_Inspection = totPendingInsp,
                     Rejected_Inspection = totRejectedInsp,
-                    No_Of_IE = totIE.Count()
+                    No_Of_IE = totIE
                 };
 
                 var response = new

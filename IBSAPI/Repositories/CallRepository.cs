@@ -125,7 +125,9 @@ namespace IBSAPI.Repositories
 
         public List<CallStatusModel> Get_Call_Status_List()
         {
-            var allowedStatuses = new string[] { "M", "A", "R", "U", "S" };
+
+
+            var allowedStatuses = new string[] { "M", "A", "R", "U", "S", "G", "W", "T", "PR" };
             List<CallStatusModel> lstStatus = new();
 
             lstStatus = (from x in context.T21CallStatusCodes
@@ -229,6 +231,8 @@ namespace IBSAPI.Repositories
                                 existingEntity.QtyPassed = entity.QtyPassed;
                                 existingEntity.QtyRejected = entity.QtyRejected;
                                 existingEntity.QtyDue = entity.QtyDue;
+                                existingEntity.Updatedby = Convert.ToString(model.UserId);
+                                existingEntity.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
                         }
@@ -267,7 +271,8 @@ namespace IBSAPI.Repositories
                     existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
                     existingRecord.FifoVoilateReason = model.ReasonFIFO;
                     existingRecord.LocalOrOuts = wRejType;
-
+                    existingRecord.Updatedby = Convert.ToString(model.UserId);
+                    existingRecord.Updateddate = DateTime.Now;
                     context.SaveChanges();
                 }
 
@@ -537,6 +542,89 @@ namespace IBSAPI.Repositories
             }
 
             // return email;
+        }
+
+        public string Save(VenderCallStatusModel model, string document)
+        {
+            if (model.CallStatus == "G" || model.CallStatus == "T")
+            {
+                string bsCheck = "";
+                if (!string.IsNullOrEmpty(model.CallStatus) && !string.IsNullOrEmpty(model.SetNo))
+                {
+                    bsCheck = context.T10IcBooksets
+                                  .Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo
+                                  && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
+                                  && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                  .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+
+                    var ICTYPE = context.T10IcBooksets
+                                .Where(item => item.BkNo == model.BkNo && item.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                .Select(item => item.Ictype)
+                                .FirstOrDefault();
+
+                    if (ICTYPE == "F")
+                    {
+                        model.AlertMsg = "This Book number and Set number are Finalized.";
+                        return model.AlertMsg;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
+                {
+                    var t17Detail = from a in context.T17CallRegisters
+                                    where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                                    select a;
+                    if (t17Detail.Count() > 0)
+                    {
+                        foreach (var row in t17Detail)
+                        {
+                            row.CallStatus = model.CallStatus;
+                            row.CallStatusDt = model.CallStatusDt;
+                            row.CallCancelStatus = null;
+                            row.BkNo = model.BkNo;
+                            row.SetNo = model.SetNo;
+                            row.UserId = model.UserName;
+                            row.Datetime = DateTime.Now;
+                            row.FifoVoilateReason = model.ReasonFIFO;
+                            row.Updatedby = Convert.ToString(model.UserId);
+                            row.Updateddate = DateTime.Now;
+                            context.SaveChanges();
+                        }
+                        model.AlertMsg = "Success";
+                    }
+                }
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                }
+                else if (string.IsNullOrEmpty(model.BkNo) || string.IsNullOrEmpty(model.SetNo) || document != " ")
+                {
+                    model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
+                }
+            }
+            else
+            {
+                var detail = from a in context.T17CallRegisters
+                             where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                             select a;
+                if (detail.Count() > 0)
+                {
+                    foreach (var item in detail)
+                    {
+                        item.CallStatus = model.CallStatus;
+                        item.CallStatusDt = model.CallStatusDt;
+                        //item.CallCancelStatus = w_call_cancel_status;
+                        item.UserId = model.UserName;
+                        item.Datetime = DateTime.Now;
+                        item.FifoVoilateReason = model.ReasonFIFO;
+                        item.Updatedby = Convert.ToString(model.UserId);
+                        item.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                    }
+                }
+                model.AlertMsg = "Success";
+            }
+            return model.AlertMsg;
         }
     }
 }

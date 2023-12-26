@@ -2,6 +2,14 @@
 --=============================================================================================================================================
 --By Naimish Rana
 --=============================================================================================================================================
+--ALTER TABLE IC_INTERMEDIATE ADD CREATEDBY  NUMBER(6,0) DEFAULT null;
+--ALTER TABLE IC_INTERMEDIATE ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+--ALTER TABLE IC_INTERMEDIATE ADD UPDATEDBY  NUMBER(6,0) DEFAULT null;
+--ALTER TABLE IC_INTERMEDIATE ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
+--ALTER TABLE IC_INTERMEDIATE ADD ISDELETED NUMBER(2,0) DEFAULT 0;
+
+--ALTER TABLE IC_INTERMEDIATE MODIFY CREATEDDATE DATE;
+--ALTER TABLE IC_INTERMEDIATE MODIFY UPDATEDDATE DATE;
 
 create or replace FUNCTION GET_FINANCIAL_YEAR_START_DATE
 RETURN DATE 
@@ -1731,7 +1739,7 @@ BEGIN
     LEFT JOIN T21_CALL_STATUS_CODES t21 on TRIM(t17.CALL_STATUS) = TRIM(t21.CALL_STATUS_CD)
     WHERE t47.VISIT_DT = TO_DATE(P_VISITDATE,'DD/MM/YYYY')--'06-11-23'
     AND t17.CO_CD = P_CO_CD --126
-    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t17.IE_CD = P_CO_CD))
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t17.IE_CD = P_IE_CD))
     GROUP BY t17.Case_No,
             t17.Call_Recv_Dt,
             t17.Call_Sno,
