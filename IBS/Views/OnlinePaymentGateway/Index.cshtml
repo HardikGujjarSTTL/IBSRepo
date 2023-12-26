@@ -88,15 +88,9 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/atomcheckout.js"></script>
 
-  @*  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
-
-
     <script type="text/javascript">
 
         jQuery(document).ready(function ($) {
-            
 
             $("#PayNowId").hide();
         });
@@ -136,6 +130,9 @@
                         $("#VEND_NAME").val(data.VEND_NAME);
                         $("#VEND_CD").val(data.VEND_CD);
                         $("#PayNowId").show();
+                        $("#CaseNo").prop("disabled", true);
+                        $("#CallDate").prop("disabled", true);
+                        $("#CallSno").prop("disabled", true);
                     } else {
                         ShowHideMsgNew(false, data.AlertMsg);
                         $(".spinner").hide();
@@ -174,22 +171,41 @@
                 $("#spnErrorCharges").html("Charges is Required.");
                 IsValid = false;
             }
+            debugger;
             if (!IsValid) return;
             var formData = $("#frmPaymentGateway").serialize();
+            var casenoValue = $("#CaseNo").val();
+            formData += "&CaseNo=" + encodeURIComponent(casenoValue);
+
+            var CallDateValue = $("#CallDate").val();
+            formData += "&CallDate=" + encodeURIComponent(CallDateValue);
+
+            var CallSnoValue = $("#CallSno").val();
+            formData += "&CallSno=" + encodeURIComponent(CallSnoValue);
+
             $(".spinner").show();
             $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
                 var rb = response.response.Tok_id;
                 var mef_ref = response.response.MER_TXN_REF;
+                var CaseNo = $("#CaseNo").val();
+                var CallDate = $("#CallDate").val();
+                var CallSNo = $("#CallSno").val();
+                var ChargesType = $("#ChargesType").val();
                 var returnUrl = "@Url.Action("PaymentResponse", "OnlinePaymentGateway")";
                 returnUrl = response.response.LocalURL + returnUrl + "?mef_ref=" + encodeURIComponent(mef_ref);
+                returnUrl += "&CaseNo=" + CaseNo +
+                             "&CallDate=" + CallDate +
+                             "&CallSno=" + CallSno +
+                             "&ChargesType=" + ChargesType;
                 const options = {
                     "atomTokenId": rb,
-                    "merchId": "317159",
+                    "merchId": response.response.MerID,
                     "custEmail": response.response.Email,
                     "custMobile": response.response.Mobile,
                     "returnUrl": returnUrl
                 }
                 let atom = new AtomPaynetz(options, 'uat');
+                ShowHideMsgNew(true, "Payment Details Add Successfully");
                 $(".spinner").hide();
             });
         }

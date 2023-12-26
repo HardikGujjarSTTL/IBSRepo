@@ -72,7 +72,7 @@ namespace IBS.Repositories.WebsitePages
                 ChargesType = model.ChargesType,
                 Datetime = DateTime.Now
             };
-
+            model.AlertMsg = "Success";
             context.OnlinePayments.Add(OnlinePayment);
             context.SaveChanges();
 
@@ -101,8 +101,8 @@ namespace IBS.Repositories.WebsitePages
                 onlinePayment.SubChannel = model.SubChannel;
                 onlinePayment.Description = model.Description;
                 onlinePayment.StatusCd = model.StatusCode;
-
                 context.SaveChanges();
+                model.AlertMsg = "Success";
             }
             return model;
         }
