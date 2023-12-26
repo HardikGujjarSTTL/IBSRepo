@@ -211,15 +211,21 @@ namespace IBSAPI.Repositories
         #region CM
         public List<IEModel> Get_CM_Wise_IE(int CO_CD)
         {
-            List<IEModel> lstIE = new();
-            var IeList = (from x in context.T09Ies
+            List<IEModel> lstIE = new List<IEModel>() { };
+
+            IEModel model = new();
+            model.IE_CD = 0;
+            model.IE_Name = "All";
+
+            lstIE = (from x in context.T09Ies
                           where x.IeCoCd == CO_CD
                           select new IEModel
                           {
                               IE_CD = x.IeCd,
                               IE_Name = x.IeName
                           }).ToList();
-            return IeList;
+            lstIE.Add(model);
+            return lstIE.OrderBy(x => x.IE_Name).ToList();
         }
 
         public int Get_CM_TotalInspection(int CO_CD, int IE_CD, string FromDate, string ToDate)
@@ -241,7 +247,7 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
             var totalInsp = (from x in context.T17CallRegisters
                              where x.CoCd == CO_CD && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
-                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT                             
+                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
                              && validCallStatus.Contains(x.CallStatus)
                              select x).Count();
             return totalInsp;
@@ -254,7 +260,7 @@ namespace IBSAPI.Repositories
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
             var totalInsp = (from x in context.T17CallRegisters
                              where x.CoCd == CO_CD && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
-                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT                             
+                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
                              && validCallStatus.Contains(x.CallStatus)
                              select x).Count();
             return totalInsp;
