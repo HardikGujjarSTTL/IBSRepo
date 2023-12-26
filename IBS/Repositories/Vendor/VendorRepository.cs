@@ -148,7 +148,7 @@ namespace IBS.Repositories.Vendor
                     VendGstno = model.GSTNO,
                     VendTanno = model.TANNO,
                     VendPanno = model.PANNO,
-                    VendPwd = model.VendCd.ToString(),
+                    VendPwd = "Rites123",
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
