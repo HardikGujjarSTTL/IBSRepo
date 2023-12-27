@@ -526,9 +526,9 @@ namespace IBSAPI.Repositories
                                 obj.File8 = filesimg.File_8;
                                 obj.File9 = filesimg.File_9;
                                 obj.File10 = filesimg.File_10;
-                                obj.IcPhoto = !string.IsNullOrEmpty(ICPhotoDigitalSign.Name) ? PDFFineName + ".pdf" : "";
-                                obj.IcPhotoA1 = !string.IsNullOrEmpty(UploadICAnnexue1.Name) ? PDFFineName + "-A1.PDF" : "";
-                                obj.IcPhotoA2 = !string.IsNullOrEmpty(UploadICAnnexue2.Name) ? PDFFineName + "-A2.PDF" : "";
+                                obj.IcPhoto = ICPhotoDigitalSign != null ? PDFFineName + ".pdf" : "";
+                                obj.IcPhotoA1 = UploadICAnnexue1 != null ? PDFFineName + "-A1.PDF" : "";
+                                obj.IcPhotoA2 = UploadICAnnexue2 != null ? PDFFineName + "-A2.PDF" : "";
                                 context.T49IcPhotoEncloseds.Add(obj);
                                 context.SaveChanges();
                             }
@@ -552,9 +552,9 @@ namespace IBSAPI.Repositories
                                 recordExists.File8 = filesimg.File_8;
                                 recordExists.File9 = filesimg.File_9;
                                 recordExists.File10 = filesimg.File_10;
-                                recordExists.IcPhoto = !string.IsNullOrEmpty(ICPhotoDigitalSign.Name) ? PDFFineName + ".pdf" : "";
-                                recordExists.IcPhotoA1 = !string.IsNullOrEmpty(UploadICAnnexue1.Name) ? PDFFineName + "-A1.PDF" : "";
-                                recordExists.IcPhotoA2 = !string.IsNullOrEmpty(UploadICAnnexue2.Name) ? PDFFineName + "-A2.PDF" : "";
+                                recordExists.IcPhoto = ICPhotoDigitalSign != null ? PDFFineName + ".pdf" : "";
+                                recordExists.IcPhotoA1 = UploadICAnnexue1 != null ? PDFFineName + "-A1.PDF" : "";
+                                recordExists.IcPhotoA2 = UploadICAnnexue2 != null ? PDFFineName + "-A2.PDF" : "";
                                 context.SaveChanges();
                             }
 
