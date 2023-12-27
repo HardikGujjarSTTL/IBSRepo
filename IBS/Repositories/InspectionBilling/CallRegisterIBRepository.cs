@@ -3000,7 +3000,40 @@ namespace IBS.Repositories.InspectionBilling
                 model.BkNo = Status.BkNo;
                 model.SetNo = Status.SetNo;
                 model.DesireDt = Status.DesireDt;
-                model.CallStatusDt = Status.CallStatusDt != null ? Status.CallStatusDt : CallStatusDt;
+                model.CallStatusDt = CallStatusDt;
+            }
+
+            if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
+            {
+                var bookdetail = (from item in context.T10IcBooksets
+                               orderby item.IssueDt descending
+                               where item.IssueToIecd == IE_CD
+                               select item).FirstOrDefault();
+
+                var calldetail = (from x in context.T17CallRegisters
+                              orderby x.SetNo descending
+                              where x.BkNo.Trim() == bookdetail.BkNo.Trim() && x.IeCd == IE_CD
+                              select x).FirstOrDefault();
+
+                if (calldetail != null)
+                {
+                    int setNo = Convert.ToInt32(calldetail.SetNo) + 1;
+
+                    string incrementedSetNo = setNo.ToString("D3");
+
+                    var ic_bookset = (from item in context.T10IcBooksets
+                                      orderby item.IssueDt descending
+                                      where item.BkNo.Trim().ToUpper() == calldetail.BkNo &&
+                                            Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                            item.IssueToIecd == calldetail.IeCd
+                                      select item).FirstOrDefault();
+
+                    if (ic_bookset != null)
+                    {
+                        model.BkNo = ic_bookset.BkNo;
+                        model.SetNo = Convert.ToString(incrementedSetNo);
+                    }
+                }
             }
 
             if (Status.CallStatus == "M" || Status.CallStatus == "U" || Status.CallStatus == "S")
@@ -3021,13 +3054,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
             }
-            //var selectConsigneeFirmList = new List<SelectListItem>
-            //{
-            //    new SelectListItem { Value = "0", Text = "Select Consignee" }
-            //};
-
-            //var firstQuery = selectConsigneeFirmList.AsQueryable();
-
+           
             var secondQuery = (from cdt in context.T18CallDetails
                                join csn in context.V06Consignees
                                on cdt.ConsigneeCd equals csn.ConsigneeCd
@@ -3040,28 +3067,7 @@ namespace IBS.Repositories.InspectionBilling
                                    Text = csn.ConsigneeCd + "-" + csn.Consignee
                                }).Distinct().ToList();
 
-            // Set ConsigneeFirmList to the query result
             model.ConsigneeFirmList = secondQuery.ToList();
-
-            //var queryResult = context.IcIntermediates
-            //            .Where(ici => ici.CaseNo == CaseNo &&
-            //                          ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
-            //                          ici.CallSno == CallSno)
-            //            .OrderByDescending(ici => ici.Datetime)
-            //            .FirstOrDefault();
-
-            //if (queryResult != null)
-            //{
-            //    model.DocBkNo = queryResult.BkNo;
-            //    model.DocSetNo = queryResult.SetNo;
-
-            //}
-            //else
-            //{
-            //    model.DocBkNo = "";
-            //    model.DocSetNo = "";
-
-            //}
 
             var CancelData = (from l in context.T19CallCancels
                               join c in context.T17CallRegisters on new { l.CaseNo, l.CallSno, l.CallRecvDt } equals new { c.CaseNo, c.CallSno, c.CallRecvDt }
@@ -4898,7 +4904,7 @@ namespace IBS.Repositories.InspectionBilling
             var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == CaseNo.Trim() && ic.CallRecvDt == Convert.ToDateTime(DesireDt)
                          && ic.CallSno == CallSno).OrderByDescending(ic => ic.Datetime).ToList();
 
-            if (ICInter != null)
+            if (ICInter.Count > 0)
             {
                 foreach (var item in ICInter)
                 {
