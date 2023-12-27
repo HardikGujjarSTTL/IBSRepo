@@ -236,31 +236,31 @@ namespace IBSAPI.Controllers
             }
         }
 
-        [HttpGet("EncryptedText")]
-        public IActionResult EncryptedText(string text, string UniqueId)
-        {
-            string result = Common.getEncryptedText(text, UniqueId);
+        //[HttpGet("EncryptedText")]
+        //public IActionResult EncryptedText(string text, string UniqueId)
+        //{
+        //    string result = Common.getEncryptedText(text, UniqueId);
 
-            var response = new
-            {
-                message = result
-            };
+        //    var response = new
+        //    {
+        //        message = result
+        //    };
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        [HttpGet("DecryptedText")]
-        public IActionResult DecryptedText(string text, string UniqueId)
-        {
-            string result = Common.getDecryptedText(text, UniqueId);
+        //[HttpGet("DecryptedText")]
+        //public IActionResult DecryptedText(string text, string UniqueId)
+        //{
+        //    string result = Common.getDecryptedText(text, UniqueId);
 
-            var response = new
-            {
-                message = result
-            };
+        //    var response = new
+        //    {
+        //        message = result
+        //    };
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         private string GetErrorList(ModelStateDictionary modelState)
         {
