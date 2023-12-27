@@ -8,6 +8,6 @@ namespace IBS.Interfaces.WebsitePages
 
         public OnlinePaymentGateway PaymentIntergreationSave(OnlinePaymentGateway model);
 
-        public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model);
+        public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model,string id);
     }
 }

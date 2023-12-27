@@ -7483,6 +7483,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("SUB_CHANNEL");
+            entity.Property(e => e.TokId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("TOK_ID");
             entity.Property(e => e.TransactionNo)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -10125,7 +10129,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("VEND_PANNO");
             entity.Property(e => e.VendPwd)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("VEND_PWD");
