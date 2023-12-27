@@ -12,6 +12,7 @@ using System.Dynamic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace IBSAPI.Repositories
 {
@@ -380,17 +381,16 @@ namespace IBSAPI.Repositories
             {
                 try
                 {
-                    if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
-                    {
-                        DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString().Replace("-", "/"), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                        formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
-                    }
+                    //if (model.CallRecvDt != null && model.CallRecvDt != DateTime.MinValue)
+                    //{
+                    //    DateTime parsedFromDate = DateTime.ParseExact(model.CallRecvDt.ToString().Replace("-", "/"), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    //    formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+                    //}
 
                     if (model.DocBkNo != null && model.DocSetNo != null)
                     {
                         var FinalOrStage = context.T17CallRegisters
-                                            .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt))
+                                            .Where(cr => cr.CaseNo == model.CaseNo && cr.CallSno == model.CallSno && cr.CallRecvDt == model.CallRecvDt.Date)
                                             .Select(cr => cr.FinalOrStage)
                                             .FirstOrDefault() ?? "F";
 
@@ -406,7 +406,7 @@ namespace IBSAPI.Repositories
                         {
                             var query = context.IcIntermediates
                                     .Where(ici => ici.CaseNo == model.CaseNo &&
-                                                  ici.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&
+                                                  ici.CallRecvDt == model.CallRecvDt.Date &&
                                                   ici.CallSno == model.CallSno &&
                                                   ici.BkNo == model.DocBkNo &&
                                                   ici.SetNo == model.DocSetNo)
@@ -446,13 +446,13 @@ namespace IBSAPI.Repositories
                             var IcDetail = (from item in context.IcIntermediates
                                             where item.CaseNo == model.CaseNo.Trim() &&
                                                   item.CallSno == model.CallSno &&
-                                                  item.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) &&//model.CallRecvDt.Date &&
+                                                  item.CallRecvDt == model.CallRecvDt.Date &&//model.CallRecvDt.Date &&
                                                   item.ConsigneeCd == Convert.ToInt32(model.Consignee)
                                             select item).FirstOrDefault();
                             if (IcDetail == null)
                             {
                                 var CallDetails = (from c in context.T18CallDetails
-                                                   where c.CaseNo == model.CaseNo && c.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) //model.CallRecvDt.Date
+                                                   where c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt.Date
                                                    && c.CallSno == model.CallSno && c.ConsigneeCd == Convert.ToInt32(model.Consignee)
                                                    select c).ToList();
                                 if (CallDetails.Count() > 0)
@@ -461,7 +461,7 @@ namespace IBSAPI.Repositories
                                     {
                                         IcIntermediate obj = new IcIntermediate();
                                         obj.CaseNo = model.CaseNo;
-                                        obj.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                        obj.CallRecvDt = model.CallRecvDt;
                                         obj.CallSno = Convert.ToInt16(model.CallSno);
                                         obj.BkNo = model.DocBkNo;
                                         obj.SetNo = model.DocSetNo;
@@ -502,14 +502,14 @@ namespace IBSAPI.Repositories
                                 }
                             }
 
-                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt)).FirstOrDefault();
+                            var recordExists = context.T49IcPhotoEncloseds.Where(x => x.CaseNo == model.CaseNo && x.BkNo == model.DocBkNo && x.SetNo == model.DocSetNo && x.CallSno == model.CallSno && x.CallRecvDt == model.CallRecvDt.Date).FirstOrDefault();
                             string PDFFineName = model.CaseNo.Trim() + "-" + model.DocBkNo + "-" + model.DocSetNo;
                             if (recordExists == null)
                             {
                                 T49IcPhotoEnclosed obj = new T49IcPhotoEnclosed();
 
                                 obj.CaseNo = model.CaseNo;
-                                obj.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                obj.CallRecvDt = model.CallRecvDt;
                                 obj.CallSno = (short?)model.CallSno;
                                 obj.BkNo = model.DocBkNo;
                                 obj.SetNo = model.DocSetNo;
@@ -535,7 +535,7 @@ namespace IBSAPI.Repositories
                             else
                             {
                                 recordExists.CaseNo = model.CaseNo;
-                                recordExists.CallRecvDt = Convert.ToDateTime(formattedCallRecvDt); //model.CallRecvDt;
+                                recordExists.CallRecvDt = model.CallRecvDt;
                                 recordExists.CallSno = (short?)model.CallSno;
                                 recordExists.BkNo = model.DocBkNo;
                                 recordExists.SetNo = model.DocSetNo;
@@ -598,9 +598,10 @@ namespace IBSAPI.Repositories
                         return id;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    model.AlertMsg = "Something went wrong !!";
+                    Common.AddException(ex.ToString(), ex.Message.ToString(), "Call_API", "ICPhotoUpload", 1, string.Empty);
+                    model.AlertMsg = ex.Message.ToString();
                     id = 0;
                     trans.Rollback();
                 }
