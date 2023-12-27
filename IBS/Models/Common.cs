@@ -17,6 +17,7 @@ using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
+using IBSAPI.Helper;
 
 namespace IBS.Models
 {
@@ -140,6 +141,33 @@ namespace IBS.Models
                 return string.Empty;
         }
 
+        public static string getEncryptedText(string _dencryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
+        }
+
+        public static string getDecryptedText(string _encryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.decrypt(_encryptedText, encUniqueIdKey, encIv);
+        }
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());

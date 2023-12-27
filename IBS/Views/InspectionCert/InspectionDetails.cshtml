@@ -706,11 +706,22 @@
             }
             if ($("#IcTypeId").val() == "9") {
                 $(".divCnoteBill").show();
+                if ($("#CnoteBillNo").val() != null) {
+                    $("#IcTypeId").prop('disabled', true);
+                    $("#CnoteBillNo").prop('disabled', true);
+                    $("#btnBillVerify").hide();
+                }
+                else {
+                    $("#IcTypeId").prop('disabled', false);
+                    $("#CnoteBillNo").prop('disabled', false);
+                    $("#btnBillVerify").show();
+                }
             }
 
             $("#IcTypeId").change(function () {
                 if ($("#IcTypeId").val() == "9") {
                     $(".divCnoteBill").show();
+
                 }
                 else {
                     $(".divCnoteBill").hide();

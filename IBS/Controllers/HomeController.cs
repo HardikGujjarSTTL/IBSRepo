@@ -30,6 +30,9 @@ namespace IBS.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
+            //string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
+            //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
+
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
             if (userMaster != null)
             {

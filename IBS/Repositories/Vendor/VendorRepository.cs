@@ -230,7 +230,7 @@ namespace IBS.Repositories.Vendor
             else
             {
                 UserDetails.Name = model.VendName;
-                UserDetails.Createdby = model.UserId;
+                //UserDetails.Createdby = model.UserId;
                 context.SaveChanges();
             }
         }

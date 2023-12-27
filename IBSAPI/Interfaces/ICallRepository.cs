@@ -11,5 +11,7 @@ namespace IBSAPI.Interfaces
         int CancelInspection(int IeCd, string CaseNo, DateTime PlanDt, DateTime CallRecvDt, int CallSno);
 
         VenderCallStatusModel CallStatusAcceptRej(VenderCallStatusModel model);
+
+        string Save(VenderCallStatusModel model, string document);
     }
 }
