@@ -305,6 +305,10 @@ namespace IBSAPI.Repositories
 
         public void Vendor_Rej_Email(VenderCallStatusModel model)
         {
+            string MailID = Convert.ToString(config.GetSection("AppSettings")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("AppSettings")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("AppSettings")["MailSmtpClient"]);
+
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
@@ -410,190 +414,154 @@ namespace IBSAPI.Repositories
 
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-
-                bool isSend = false;
                 if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.To = manu_mail;
-                    sendMailModel.Bcc = "nrinspn@gmail.com";
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    // Create a MailMessage object
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(manu_mail);
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
+
+                    // Create a SmtpClient
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                                                                                                                       // Send the email
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle the exception (log, display error message, etc.)
+                    }
+                    finally
+                    {
+                        // Dispose of resources
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
 
-                //// Create a MailMessage object
-                //MailMessage mail = new MailMessage();
-                //mail.To.Add(manu_mail);
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                //mail.Subject = "Your Call for Inspection By RITES";
-                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                //mail.Body = mail_body;
 
-                //// Create a SmtpClient
-                //SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                //smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                //                                                                                                   // Send the email
-                //try
-                //{
-                //    smtpClient.Send(mail);
-                //}
-                //catch (Exception ex)
-                //{
-                //    // Handle the exception (log, display error message, etc.)
-                //}
-                //finally
-                //{
-                //    // Dispose of resources
-                //    mail.Dispose();
-                //    smtpClient.Dispose();
-                //}
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                bool isSend = false;
                 if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.To = vend_email + "," + manu_mail;
-                    sendMailModel.Bcc = "nrinspn@gmail.com";
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    // Create a MailMessage object
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(vend_email);
+                    mail.To.Add(manu_mail);
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
+
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
 
-                //// Create a MailMessage object
-                //MailMessage mail = new MailMessage();
-                //mail.To.Add(vend_email);
-                //mail.To.Add(manu_mail);
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                //mail.Subject = "Your Call for Inspection By RITES";
-                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                //mail.Body = mail_body;
 
-                //SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                //smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-
-                //try
-                //{
-                //    smtpClient.Send(mail);
-                //}
-                //catch (Exception ex)
-                //{
-                //}
-                //finally
-                //{
-                //    mail.Dispose();
-                //    smtpClient.Dispose();
-                //}
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                bool isSend = false;
                 if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.To = vend_email + "," + manu_mail;
-                    sendMailModel.Bcc = "nrinspn@gmail.com";
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    MailMessage mail = new MailMessage();
+                    if (string.IsNullOrEmpty(vend_email))
+                    {
+                        mail.To.Add(manu_mail);
+                    }
+                    else if (string.IsNullOrEmpty(manu_mail))
+                    {
+                        mail.To.Add(vend_email);
+                    }
+                    else
+                    {
+                        mail.To.Add(vend_email);
+                        mail.To.Add(manu_mail);
+                    }
+
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
 
-                //MailMessage mail = new MailMessage();
-                //if (string.IsNullOrEmpty(vend_email))
-                //{
-                //    mail.To.Add(manu_mail);
-                //}
-                //else if (string.IsNullOrEmpty(manu_mail))
-                //{
-                //    mail.To.Add(vend_email);
-                //}
-                //else
-                //{
-                //    mail.To.Add(vend_email);
-                //    mail.To.Add(manu_mail);
-                //}
 
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                //mail.Subject = "Your Call for Inspection By RITES";
-                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                //mail.Body = mail_body;
-                //SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                //smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                //try
-                //{
-                //    smtpClient.Send(mail);
-                //}
-                //catch (Exception ex)
-                //{
-                //}
-                //finally
-                //{
-                //    mail.Dispose();
-                //    smtpClient.Dispose();
-                //}
             }
 
             if (vend_email == "" && manu_mail == "")
             {
                 mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
 
-                bool isSend = false;
                 if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.To = ie_co_email;
+                    MailMessage mail = new MailMessage();
+                    mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+
+                    mail.To.Add(ie_co_email);
                     if (Case_Region == "N")
                     {
-                        sendMailModel.Bcc = ie_email + "," + "nrinspn@gmail.com,nrinspn.fin@rites.com";
+                        mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
                     }
                     else
                     {
-                        sendMailModel.Bcc = ie_email + "," + "nrinspn@gmail.com";
+                        mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
                     }
-                    sendMailModel.Subject = "Your Call for Inspection By RITES has Rejected.";
-                    sendMailModel.Message = mail_body;
-                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    mail.From = new MailAddress(sender);
+                    mail.Subject = "Your Call for Inspection By RITES has Rejected.";
+                    mail.Body = mail_body;
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    try
+                    {
+                        smtpClient.Send(mail);
+                        email = "success";
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
 
-                //MailMessage mail = new MailMessage();
-                //mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
-
-                //mail.To.Add(ie_co_email);
-                //if (Case_Region == "N")
-                //{
-                //    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
-                //}
-                //else
-                //{
-                //    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
-                //}
-                //mail.From = new MailAddress(sender);
-                //mail.Subject = "Your Call for Inspection By RITES has Rejected.";
-                //mail.Body = mail_body;
-                //SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                //smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                //try
-                //{
-                //    smtpClient.Send(mail);
-                //    email = "success";
-                //}
-                //catch (Exception ex)
-                //{
-                //}
-                //finally
-                //{
-                //    mail.Dispose();
-                //    smtpClient.Dispose();
-                //}
+                
             }
 
             // return email;
