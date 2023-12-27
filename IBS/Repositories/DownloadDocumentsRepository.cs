@@ -1,6 +1,7 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IBS.Repositories
 {
@@ -29,14 +30,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "DocumentNo";
+                    orderCriteria = "IssueDt";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "DocumentNo";
+                orderCriteria = "IssueDt";
                 orderAscendingDirection = true;
             }
             string DocType = "";
@@ -58,9 +59,8 @@ namespace IBS.Repositories
             DocSubType = DocSubType.ToString() == null ? string.Empty : DocSubType.ToString();
             DocSearch = DocSearch.ToString() == null ? string.Empty : DocSearch;
 
-            query = from l in context.T76DocumentCatalogs
+            query = (from l in context.T76DocumentCatalogs
                     where l.DocType.Contains(DocType) && l.DocSubType.Contains(DocSubType) && l.DocumentName.Contains(DocSearch)
-                    //where l.DocType == DocType
                     select new DownloadDocumentsModel
                     {
                         DocType = l.DocType,
@@ -75,7 +75,7 @@ namespace IBS.Repositories
                         UserId = l.UserId,
                         Datetime = l.Datetime,
                         Region = l.Region
-                    };
+                    }).OrderByDescending(l => l.IssueDt);
 
             dTResult.recordsTotal = query.Count();
 
