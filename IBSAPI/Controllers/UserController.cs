@@ -85,6 +85,8 @@ namespace IBSAPI.Controllers
         {
             try
             {
+                //Request data From API Call: { "userName":"xooqI2rMSkJhnoKUK3Mk6A==","password":"nW5Vpw8haNf4jVujAk6EBg==","uniqueId":"6c84fb90-12c4-11e1-840d-7b25c5ee775a","userType":"UsOipb/vg3tIZatKwSPQBQ=="}
+
                 //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
                 //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
                 string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);

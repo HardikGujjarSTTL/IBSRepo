@@ -7,6 +7,8 @@ namespace IBS.Interfaces
         public void Add(UserModel model);
 
         public UserModel FindByID(string UserId);
+        public UserModel FindByUserID(string UserId, string LoginType);
+        public List<UserModel> FindByUserType(string LoginType);
 
         public void Update(UserModel model);
 
@@ -16,7 +18,7 @@ namespace IBS.Interfaces
 
         public UserSessionModel FindByLoginDetail(LoginModel model);
 
-        public void ChangePassword(int UserId, String NewPassword);
+        public void ChangePassword(string UserId, String NewPassword, string UserType);
 
         public UserSessionModel FindByUsernameOrEmail(string UserName, string UserType);
 
