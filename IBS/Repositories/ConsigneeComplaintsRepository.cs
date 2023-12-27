@@ -5,6 +5,7 @@ using IBS.Models;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -12,11 +13,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public ConsigneeComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public ConsigneeComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
         public ConsigneeComplaints FindByID(string CASE_NO, string BK_NO, string SET_NO)
@@ -783,8 +786,11 @@ namespace IBS.Repositories
                 //SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
                 //SendMailModel.Message = mail_body;
             }
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
         }
 
         public void send_Conclusion_Email(ConsigneeComplaints model)
@@ -926,8 +932,11 @@ namespace IBS.Repositories
                 //SendMailModel.Subject = "Consignee Complaint Has Concluded";
                 //SendMailModel.Message = mail_body;
             }
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
         }
     }
 }

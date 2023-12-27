@@ -616,6 +616,7 @@ namespace IBS.Repositories.InspectionBilling
                 if (T20 != null)
                 {
                     T20.BpoCd = model.Bpo;
+                    T20.IcTypeId = model.IcTypeId;
                     context.SaveChanges();
                 }
             }

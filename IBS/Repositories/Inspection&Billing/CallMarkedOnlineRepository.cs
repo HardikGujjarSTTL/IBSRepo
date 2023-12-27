@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories.Inspection_Billing
 {
@@ -16,11 +17,14 @@ namespace IBS.Repositories.Inspection_Billing
         private readonly ModelContext context;
         private readonly IConfiguration configuration;
         private readonly ISendMailRepository pSendMailRepository;
-        public CallMarkedOnlineRepository(ModelContext context, IConfiguration configuration, ISendMailRepository pSendMailRepository)
+        private readonly IConfiguration config;
+
+        public CallMarkedOnlineRepository(ModelContext context, IConfiguration configuration, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.configuration = configuration;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
         public DTResult<CallMarkedOnlineModel> Get_Call_Marked_Online(DTParameters dtParameters, string Region)
         {
@@ -825,18 +829,8 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
-            }
-            else if (vend_cd != mfg_cd)
-            {
-                if (vend_email == "")
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -844,30 +838,56 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.Bcc = BCC;
                     sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
+                }
+            }
+            else if (vend_cd != mfg_cd)
+            {
+                if (vend_email == "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
                 else if (manu_mail == "")
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    bool isSend = false;
+                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
                 else
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email + "," + manu_mail;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    bool isSend = false;
+                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email + "," + manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
             }
             return email;
@@ -941,29 +961,8 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
-            }
-            else if (vend_cd != mfg_cd)
-            {
-                if (vend_email != "")
-                {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
-                }
-                else if (manu_mail != "")
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -971,8 +970,41 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.Bcc = BCC;
                     sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
+                }
+            }
+            else if (vend_cd != mfg_cd)
+            {
+                if (vend_email != "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
+                }
+                else if (manu_mail != "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
             }
             return email;
@@ -1204,43 +1236,55 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
+                }
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                sendMailModel.To = vend_email + "," + manu_mail;
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    sendMailModel.To = vend_email + "," + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
+                }
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                if (vend_email == "")
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    sendMailModel.To = manu_mail;
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    if (vend_email == "")
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (manu_mail == "")
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
                 }
-                else if (manu_mail == "")
-                {
-                    sendMailModel.To = vend_email;
-                }
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
             }
 
             var controlling_email = (from t08 in context.T08IeControllOfficers
@@ -1271,18 +1315,22 @@ namespace IBS.Repositories.Inspection_Billing
 
             if (!string.IsNullOrEmpty(controlling_email))
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                sendMailModel.To = controlling_email;
-                if (ie_email != "")
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    sendMailModel.CC = ie_email;
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    sendMailModel.To = controlling_email;
+                    if (ie_email != "")
+                    {
+                        sendMailModel.CC = ie_email;
+                    }
+                    //sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
                 }
-                //sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
             }
             return email;
         }
