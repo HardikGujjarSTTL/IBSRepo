@@ -87,9 +87,10 @@ namespace IBSAPI.Models
 
         public static string getEncryptedText(string _dencryptedText, string UniqueId)
         {
-            string key = "GM2SO0DB2MD0TECV";
+            //string key = "GM2SO0DB2MD0TECV";
             string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
-            String UniqueIdKey = UniqueId + key;
+            //String UniqueIdKey = UniqueId + key;
+            String UniqueIdKey = UniqueId;
 
             String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
             //String encIv = CryptLib.getHashSha256(iv, 16);
@@ -101,9 +102,10 @@ namespace IBSAPI.Models
 
         public static string getDecryptedText(string _encryptedText, string UniqueId)
         {
-            string key = "GM2SO0DB2MD0TECV";
+            //string key = "GM2SO0DB2MD0TECV";
             string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
-            String UniqueIdKey = UniqueId + key;
+            //String UniqueIdKey = UniqueId + key;
+            String UniqueIdKey = UniqueId;
 
             String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
             //String encIv = CryptLib.getHashSha256(iv, 16);
