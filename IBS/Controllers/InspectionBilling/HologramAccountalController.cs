@@ -1,13 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Dynamic;
-using System.Globalization;
-using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -194,7 +188,7 @@ namespace IBS.Controllers.InspectionBilling
                 var userName = Convert.ToString(GetUserInfo.UserName);
                 var userID = Convert.ToInt32(GetUserInfo.UserID);
                 var region = Convert.ToString(GetUserInfo.Region);
-                Model.USER_NAME = userName.Substring(0,8);
+                Model.USER_NAME = userName.Substring(0, 8);
                 Model.USER_ID = userID;
                 Model.HG_REGION = region;
                 message = hologramaccountRepository.CheckDuplicateHologram(Model);
@@ -231,7 +225,7 @@ namespace IBS.Controllers.InspectionBilling
             }
             return Json(new { _msg = message, _result = result });
         }
-        
+
         [Authorization("HologramAccountal", "Index", "delete")]
         public IActionResult HologramAccountalDetailDelete(HologramAccountalModel Model)
         {

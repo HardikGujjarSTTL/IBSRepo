@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -41,28 +40,28 @@ namespace IBS.Controllers
                 if (model.Id > 0)
                 {
                     model.Updatedby = UserId;
-                    int i=nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
+                    int i = nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
                     if (i > 0)
                     {
                         AlertAddSuccess("Record Updated Successfully.");
                     }
                     else
                     {
-                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        AlertAlreadyExist("This BPO Orgnatation,BPO Railway And BPO Type Are Already Exist !!!");
                         return View("Manage", model);
                     }
                 }
                 else
                 {
                     model.Createdby = UserId;
-                    int i=nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
+                    int i = nonRlyClientMasterRepository.ClientDetailsInsertUpdate(model);
                     if (i > 0)
                     {
                         AlertAddSuccess("Record Add Successfully.");
                     }
                     else
                     {
-                        AlertAlreadyExist("Entry Already Exist For Given Mobile!!!");
+                        AlertAlreadyExist("This BPO Orgnatation,BPO Railway And BPO Type Are Already Exist !!!");
                         return View("Manage", model);
                     }
                 }

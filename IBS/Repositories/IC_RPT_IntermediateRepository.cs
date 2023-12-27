@@ -4,14 +4,9 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -439,7 +434,7 @@ namespace IBS.Repositories
 
         public bool SaveDetail(IC_RPT_IntermediateModel model, UserSessionModel user)
         {
-            DateTime callRecDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);            
+            DateTime callRecDt = DateTime.ParseExact(model.Display_Call_Recv_dt, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (user.Region != "C")
             {
                 model.MAN_TYPE = "";
@@ -720,7 +715,7 @@ namespace IBS.Repositories
 
         private string GetFormatedAmend(string amend)
         {
-            string formatedamend = "";            
+            string formatedamend = "";
             if (amend != null && amend.Trim() != "")
             {
                 string[] arrAmend = amend.Split(';');

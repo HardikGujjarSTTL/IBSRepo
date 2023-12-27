@@ -97,8 +97,11 @@
                                         }
                                         else
                                         {
-                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".TIF";
-                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".PDF";
+                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+
+                                            urlTif = $"{urlTif}/{item.CASE_NO}.TIF";
+                                            urlPdf = $"{urlPdf}/{item.CASE_NO}.PDF";
                                             if (item.IsTIF == true)
                                             {
                                                 <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt' target='_blank'><font size='1' face='Verdana'> @item.CASE_NO </font></a></div>
@@ -122,8 +125,11 @@
                                         }
                                         else
                                         {
-                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".TIF";
-                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + @item.CASE_NO + ".PDF";
+                                            var urlTif = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+                                            var urlPdf = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+
+                                            urlTif = $"{urlTif}/{item.CASE_NO}.TIF";
+                                            urlPdf = $"{urlPdf}/{item.CASE_NO}.PDF";
                                             if (item.IsTIF == true)
                                             {
                                                 <div width='10%' valign='top' align='center'><a href='@urlTif' Font-Names='Verdana' Font-Size='8pt'><font size='1' face='Verdana' target='_blank'> @item.CASE_NO </font></a></div>

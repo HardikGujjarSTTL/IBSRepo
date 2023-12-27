@@ -2,11 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Dynamic;
 
 namespace IBS.Controllers
 {
@@ -356,7 +352,7 @@ namespace IBS.Controllers
             DTResult<LoListingModel> dTResult = dashboardRepository.GetLoCallListingDetails(dtParameters, UserName.Trim());
             return Json(dTResult);
         }
-        
+
         public IActionResult CMDARListing()
         {
             return View();
@@ -413,7 +409,7 @@ namespace IBS.Controllers
             DTResult<CMDFOListing> dTResult = dashboardRepository.CMDFO_List(dtParameters);
             return Json(dTResult);
         }
-        
+
         public IActionResult Dashboard_CMGeneral_ViewAll_List()
         {
             return View();
@@ -426,7 +422,7 @@ namespace IBS.Controllers
             DTResult<DashboardModel> dTResult = dashboardRepository.Dashboard_CMGeneral_ViewAll_List(dtParameters, COCD);
             return Json(dTResult);
         }
-        
+
         public IActionResult Dashboard_CMDFO_ViewAll_List(string Type)
         {
             AdminViewAllList model = new();
@@ -444,13 +440,13 @@ namespace IBS.Controllers
         public IActionResult Dashboard_CM_JI_ViewAll_List(string Type)
         {
             CM_JI_ViewAll_Model model = new CM_JI_ViewAll_Model();
-            model.Type = Type;  
+            model.Type = Type;
             return View(model);
         }
 
         [HttpPost]
         public IActionResult LoadDashboard_CM_JI_ViewAll_List([FromBody] DTParameters dtParameters)
-        {            
+        {
             DTResult<CM_JI_ViewAll_Model> dTResult = dashboardRepository.Dashboard_CM_JI_ViewAll_List(dtParameters, SessionHelper.UserModelDTO.CoCd);
             return Json(dTResult);
         }

@@ -1,9 +1,6 @@
 ﻿using IBS.Filters;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers

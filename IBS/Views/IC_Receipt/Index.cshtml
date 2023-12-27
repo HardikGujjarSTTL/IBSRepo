@@ -29,7 +29,7 @@
                         <div class="col-md-5 mb-4">
                             <label for="Reference">IE To Whom Issued</label>
                             @*<input type="text" class="input" asp-for="SET_NO" maxlength="200" />*@
-                            @Html.DropDownListFor(model => model.IE_CD, new SelectList(ViewBag.Status, "Value", "Text"),"--Select--")
+                            @Html.DropDownListFor(model => model.IE_CD, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Model.REGION), "Value", "Text"),"--Select--")
                             <span asp-validation-for="IE_CD" class="text-danger"></span>
                         </div>
                         <div class="col-md-3 mb-4">
@@ -154,20 +154,31 @@
         }
 
         function Save() {
-            var formData = new FormData($("#frmICReceipt")[0]);
-            $.ajax({
-                url: "@Url.Action("ICReceiptSave", "IC_Receipt")",
-                type: "POST",
-                dataType: "JSON",
-                data: formData,
-                processData: false, // Prevent jQuery from converting the data to a string
-                contentType: false,
-                success: function (response) {
-                    if (response == "") {
-                        alert("Record Save Successfull");
-                    } else {
-                        alert(response);
-                    }
+            //var formData = new FormData($("#frmICReceipt")[0]);
+            //$.ajax({
+            //    url: "@Url.Action("ICReceiptSave", "IC_Receipt")",
+            //    type: "POST",
+            //    dataType: "JSON",
+            //    data: formData,
+            //    processData: false, // Prevent jQuery from converting the data to a string
+            //    contentType: false,
+            //    success: function (response) {
+            //        if (response == "") {
+            //            alert("Record Save Successfull");
+            //        } else {
+            //            alert(response);
+            //        }
+            //    }
+            //});
+
+            var formData = $("#frmICReceipt").serialize();
+            $.post("@Url.Action("ICReceiptSave", "IC_Receipt")", formData, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                    setTimeout(
+                        function () {
+                            window.location.href = '@Url.Action("Index", "IC_Receipt")';
+                        }, 2000);
                 }
             });
         }
@@ -197,7 +208,7 @@
         function BindDataTable() {
             var BK_NO = $("#BK_NO").val();
             var SET_NO = $("#SET_NO").val();
-            var IE_CD = "";
+            var IE_CD = $("#IE_CD").val();
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -256,8 +267,8 @@
 
         function SelectDetails(BKNO, SETNO) {
             $.ajax({
-                //url: '@Url.Action("Get_Selected_IC_Receipt_Detail", "IC_Receipt")?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
-                url: '/IC_Receipt/Get_Selected_IC_Receipt_Detail?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
+                url: '@Url.Action("Get_Selected_IC_Receipt_Detail", "IC_Receipt")?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
+                //url: '/IC_Receipt/Get_Selected_IC_Receipt_Detail?BK_NO=' + BKNO + "&SET_NO=" + SETNO,
                 type: "POST",
                 dataType: "JSON",
                 //data: details,
@@ -271,6 +282,7 @@
                         $("#btnDelete").css("display", "block");
                         $("#BK_NO").val(data.BK_NO);
                         $("#SET_NO").val(data.SET_NO);
+                        $("#IE_CD").val(data.IE_CD);
                         $("#IC_SUBMIT_DT").val(data.IC_SUBMIT_DT);
                         $("#REMARKS").val(data.REMARKS);
                         $("#REMARKS_DT").val(data.REMARKS_DT);

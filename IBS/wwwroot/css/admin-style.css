@@ -891,7 +891,7 @@ font-size: 14px; height: 43px !important; line-height: 41px; width: 100%; color:
 .loginForm .inputIcon input { border: 1px solid #cccccc; border-radius: 6px; height: 43px; background: #fff; font-size: 14px; line-height: 26px; padding: 7px 10px; width: 100%; color: #848484; }
 .loginForm .fa { font-size: 20px; color: #575D63; }
 .remember .input { color: #C8CBD8; height: 20px; width: 20px; border-radius: 5px; }
-.remember { display: flex; align-items: center; font-weight: 500; font-family: 'Poppins'; justify-content: space-between;margin-right: 20px; }
+.remember { display: flex; align-items: center; font-weight: 500; font-family: 'Poppins'; justify-content: space-between;}
 .remecheckbox { display: flex; align-items: center; font-size: 14px; color: #646464; }
 .remember a.link1 { color: #323232; font-size: 14px; text-decoration: none; font-weight: 400; }
 .remember a.link1:hover { color:#F66A2F; }
@@ -1527,3 +1527,4 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .normalText{ font-weight:normal; color:#323232; font-size:14px;}
 .highlightBox{ background:#eaf8ff;}
 .highlightBox .borderTable tr:nth-child(even) td{ background:#f7f7f7;}
+select.form-control, select{appearance:auto!important;-webkit-appearance:auto!important;-moz-appearance:auto!important; font-family:Arial, Helvetica, sans-serif;}

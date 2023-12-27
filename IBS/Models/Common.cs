@@ -17,6 +17,7 @@ using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
+using IBSAPI.Helper;
 
 namespace IBS.Models
 {
@@ -140,6 +141,33 @@ namespace IBS.Models
                 return string.Empty;
         }
 
+        public static string getEncryptedText(string _dencryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
+        }
+
+        public static string getDecryptedText(string _encryptedText, string UniqueId)
+        {
+            string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            String UniqueIdKey = UniqueId + key;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.decrypt(_encryptedText, encUniqueIdKey, encIv);
+        }
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -391,6 +419,43 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
+
+        public static List<TextValueDropDownDTO> ChargesType()
+        {
+            //List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            //SelectListItem single = new SelectListItem();
+            //single.Text = "Customer's Advance";
+            //single.Value = "A";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Call Cancellation Charge";
+            //single.Value = "C";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Rejection Charges";
+            //single.Value = "R";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Lab Charges";
+            //single.Value = "L";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Revalidation Of IC";
+            //single.Value = "V";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Duplicate IC";
+            //single.Value = "D";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "NSIC Call Charges";
+            //single.Value = "N";
+            //textValueDropDownDTO.Add(single);
+            //return textValueDropDownDTO.ToList();
+
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ChargesType)).ToList();
+        }
+
         public static List<SelectListItem> BPORegion()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -1607,15 +1672,16 @@ namespace IBS.Models
 
         }
 
-        public static List<SelectListItem> GetClientName()
+        public static List<SelectListItem> GetClientName(string Type, string SearchValue)
         {
             ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> distinctUserNames = modelContext.T32ClientLogins
-                    .Select(t => new SelectListItem { Value = t.UserName, Text = t.UserName })
+            List<SelectListItem> distinctUserNames = modelContext.T12BillPayingOfficers
+                    .OrderBy(t => t.BpoOrgn)
+                    .Where(t => t.BpoType.Trim() == Type && t.BpoOrgn.ToLower().Contains(SearchValue.ToLower()))
+                    .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
                     .Distinct()
                     .ToList();
-            return distinctUserNames;
-
+            return distinctUserNames.OrderBy(x => x.Text).ToList();
         }
 
         public static List<SelectListItem> GetNCCode(string NCRClass)
@@ -3553,6 +3619,14 @@ namespace IBS.Models
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
             single = new SelectListItem();
+            single.Text = "2610/- (For PO Value less than 5 lakhs)";
+            single.Value = "2610";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "5450/- (Man day for RINL)";
+            single.Value = "5450";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
             single.Text = "0.522% (For PO Value between 5 Lakhs to 1 Crore)";
             single.Value = "0.522";
             textValueDropDownDTO.Add(single);
@@ -4228,6 +4302,16 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST)).ToList();
         }
 
+        public static IEnumerable<TextValueDropDownDTO> GetTaxType_GST_07()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST_07)).ToList();
+        }
+        public static IEnumerable<TextValueDropDownDTO> GetTaxType_GST_O()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST_O)).ToList();
+        }
+
+
         public static string[] GetVenderDetails(int VendCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
@@ -4414,6 +4498,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.T100Contracts
+                                         where a.Isdeleted != 1
                                          select
                                     new SelectListItem
                                     {
@@ -4670,6 +4755,64 @@ namespace IBS.Models
                             .Distinct()
                             .ToList();
             return city;
+        }
+
+        public static List<SelectListItem> SetClientName(string ClientType, string ClientName)
+        {
+            var Client = ClientName.Split("=");
+            var ClientCode = Client.Count() > 0 ? Client[0].Trim() : "";
+            var ClientOrg = Client.Count() > 0 ? Client[1].Trim() : "";
+            List<SelectListItem> lstClient = new List<SelectListItem>();
+            if (ClientType == "R")
+            {
+                ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+                lstClient = modelContext.T91Railways
+                        .Where(x => x.RlyCd.Trim() == ClientCode.Trim() && x.Railway.Trim() == ClientOrg.Trim())
+                        .Select(x => new SelectListItem { Value = x.RlyCd.Trim() + " = " + x.Railway.Trim(), Text = x.RlyCd.Trim() + " = " + x.Railway.Trim() })
+                        .ToList();
+            }
+            else
+            {
+                ModelContext modelContext = new ModelContext(DbContextHelper.GetDbContextOptions());
+                lstClient = modelContext.T12BillPayingOfficers
+                        .Where(t => t.BpoType.Trim() == ClientType && t.BpoOrgn.Trim() == ClientOrg.Trim())
+                        .Select(t => new SelectListItem { Value = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim(), Text = t.BpoRly.Trim() + " = " + t.BpoOrgn.Trim() })
+                        .Distinct()
+                        .ToList();
+
+            }
+            return lstClient;
+        }
+
+        public static List<SelectListItem> GetRailwayWithCode(string searchTerm)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> dropList = (from a in ModelContext.T91Railways
+                                             where a.Railway.ToLower().Contains(searchTerm.ToLower())
+                                             orderby a.Railway
+                                             select new SelectListItem
+                                             {
+                                                 Text = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway),
+                                                 Value = Convert.ToString(a.RlyCd) + " = " + Convert.ToString(a.Railway)
+                                             }).ToList();
+            return dropList.OrderBy(x => x.Text).ToList();
+        }
+
+        public static List<SelectListItem> GetHolidayMaster()
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> IE = (from a in ModelContext.T111HolidayMasters
+                                       orderby a.Id
+                                       select new SelectListItem
+                                       {
+                                           Text = Convert.ToString(a.FinancialYear),
+                                           Value = Convert.ToString(a.Id)
+                                       }).ToList();
+            return IE;
+        }
+        public static List<TextValueDropDownDTO> GetSAPType()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SAPType)).ToList();
         }
     }
 

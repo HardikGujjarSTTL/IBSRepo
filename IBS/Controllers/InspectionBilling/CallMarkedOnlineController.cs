@@ -1,15 +1,9 @@
-﻿using IBS.Interfaces.Inspection_Billing;
-using IBS.Interfaces.Reports;
-using Microsoft.AspNetCore.Mvc;
-using IBS.Models;
-using System.Drawing;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Net.Mail;
-using IBS.Filters;
-using static IBS.Helper.Enums;
+﻿using IBS.Filters;
 using IBS.Interfaces;
+using IBS.Interfaces.Inspection_Billing;
+using IBS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -21,14 +15,16 @@ namespace IBS.Controllers.InspectionBilling
         private readonly IWebHostEnvironment env;
         //private readonly IConfiguration _config;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
         #endregion
 
-        public CallMarkedOnlineController(ICallMarkedOnlineRepository _callMarkedOnlineRepository, IWebHostEnvironment _environment, ISendMailRepository _pSendMailRepository)
+        public CallMarkedOnlineController(ICallMarkedOnlineRepository _callMarkedOnlineRepository, IWebHostEnvironment _environment, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             callMarkedOnlineRepository = _callMarkedOnlineRepository;
             env = _environment;
             //_config = configuration;
             pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
 
 
@@ -146,11 +142,17 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 result = callMarkedOnlineRepository.Call_Marked_Online_Save(Model, GetUserInfo);
-                //callMarkedOnlineRepository.Send_Vendor_Email(Model, GetUserInfo.Region);
-                //if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
-                //{
-                //    var res = callMarkedOnlineRepository.send_IE_smsAsync(Model);
-                //}
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    callMarkedOnlineRepository.Send_Vendor_Email(Model, GetUserInfo.Region);
+                }
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendSMS"]) == true)
+                {
+                    if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
+                    {
+                        var res = callMarkedOnlineRepository.send_IE_smsAsync(Model);
+                    }
+                }
             }
             catch (Exception ex)
             {

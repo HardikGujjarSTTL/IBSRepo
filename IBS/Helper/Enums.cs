@@ -573,6 +573,26 @@ namespace IBS.Helper
             Z,
         }
 
+        public enum TaxType_GST_07
+        {
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
+            [Description("NO GST")]
+            X,
+        }
+
+        public enum TaxType_GST_O
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("NO GST")]
+            X,
+        }
+
         public enum Criteria
         {
             [Description("PO Date")]
@@ -644,7 +664,7 @@ namespace IBS.Helper
             [Description("IE Performance")] IE_X,
             [Description("Cluster Wise Performance Report")] CLUSTER_X,
             [Description("IC Submission Report")] ICSUBMIT,
-            [Description("Pending IC's Against Calls where Material has been Sccepted or Rejected")] CALLSWITHOUTIC,
+            [Description("Pending IC's Against Calls where Material has been Accepted or Rejected")] CALLSWITHOUTIC,
             [Description("CO Wise Super Surprise Summary")] SUPSURPSUMM,
             [Description("Overdue/Pending Calls")] PENDING_CALLS,
             [Description("CM and IE wise IC issued but not recieved")] COUNTIC,
@@ -680,6 +700,34 @@ namespace IBS.Helper
             [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
             [Description("JI CONSIGNEE COMPLAINTS")] COCOMPJI,
             [Description("Controlling Officer Wise IE")] COWISEIE,
+        }
+
+        public enum SAPType
+        {
+            [Description("Multiple BPO")]
+            MultipleBPO,
+            [Description("Selective BPO")]
+            SelectiveBPO,
+            [Description("Consigne Select")]
+            ConsigneSelect,
+        }
+
+        public enum ChargesType
+        {
+            [Description("Customer's Advance")]
+            A,
+            [Description("Call Cancellation Charge")]
+            C,
+            [Description("Rejection Charges")]
+            R,
+            [Description("Lab Charges")]
+            L,
+            [Description("Revalidation Of IC")]
+            V,
+            [Description("Duplicate IC")]
+            D,
+            [Description("NSIC Call Charges")]
+            N,
         }
     }
 
@@ -880,5 +928,6 @@ namespace IBS.Helper
 
         public static IEWorkPlanModel IEWorkPlan { get; set; }
         public static RecieptVoucherModel BankStatement { get; set; }
+        public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
     }
 }

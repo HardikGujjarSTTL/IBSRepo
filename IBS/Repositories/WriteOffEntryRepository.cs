@@ -1,23 +1,9 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
-using System.Globalization;
-using System.Net.Mail;
-using System.Net;
-using System.Numerics;
-using Microsoft.AspNetCore.Http;
-using IBS.Models.Reports;
-using IBS.Interfaces.Reports;
 
 namespace IBS.Repositories
 {
@@ -74,7 +60,7 @@ namespace IBS.Repositories
                 DataTable dt = new DataTable();
 
                 DataSet ds;
-               
+
                 OracleParameter[] par = new OracleParameter[4];
                 par[0] = new OracleParameter("p_frm_dt", OracleDbType.Varchar2, FrmDt, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_to_dt", OracleDbType.Varchar2, ToDt, ParameterDirection.Input);
@@ -94,7 +80,7 @@ namespace IBS.Repositories
                         BillAmtRec = Convert.ToDecimal(row["AMOUNT_RECEIVED"]),
                         BillAmtClr = Convert.ToDecimal(row["BILL_AMT_CLEARED"]),
                         WRITE_OFF_AMT = (row["WRITE_OFF_AMT"] != DBNull.Value) ? Convert.ToDecimal(row["WRITE_OFF_AMT"]) : 0,
-                }).ToList();
+                    }).ToList();
 
                     query = list.AsQueryable();
 
@@ -169,7 +155,7 @@ namespace IBS.Repositories
             var WritemAsterdetails = (from r in context.WriteOffDetails where r.Id == Convert.ToInt32(modeldetails.ID) select r).FirstOrDefault();
             int? WriteID = 0;
 
-            if(WritemAsterdetails == null)
+            if (WritemAsterdetails == null)
             {
                 foreach (var updateData in dataArr)
                 {

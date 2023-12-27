@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
-using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -430,7 +424,7 @@ namespace IBS.Repositories
             }
             else if (resetPassword.UserType == "VENDOR")
             {
-                var user = context.T05Vendors.Where(x=>x.VendCd == Convert.ToInt32(resetPassword.UserId)).FirstOrDefault();
+                var user = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(resetPassword.UserId)).FirstOrDefault();
                 if (user != null)
                 {
                     user.VendPwd = resetPassword.ConfirmPassword;
@@ -672,10 +666,10 @@ namespace IBS.Repositories
                         ActionName = row.Field<string>("ACTIONNAME"),
                         IconPath = row.Field<string>("ICONPATH"),
                         Role_Id = row.Field<Int32>("ROLE_ID"),
-                        AddAccess = row.Field<decimal>("IsAdd") == 1 ? true : false,
-                        EditAccess = row.Field<decimal>("IsEdit") == 1 ? true : false,
-                        DeleteAccess = row.Field<decimal>("PIsDelete") == 1 ? true : false,
-                        ViewAccess = row.Field<decimal>("IsView") == 1 ? true : false,
+                        AddAccess = row.Field<Int32>("IsAdd") == 1 ? true : false,
+                        EditAccess = row.Field<Int32>("IsEdit") == 1 ? true : false,
+                        DeleteAccess = row.Field<Int32>("PIsDelete") == 1 ? true : false,
+                        ViewAccess = row.Field<Int32>("IsView") == 1 ? true : false,
                     }));
                 }
             }

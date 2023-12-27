@@ -1,7 +1,5 @@
-﻿using IBS.DataAccess;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -60,7 +58,7 @@ namespace IBS.Controllers
             {
                 string msg = "Client Entry Form Inserted Successfully.";
 
-               // if (model.Mobile > 0) 
+                // if (model.Mobile > 0) 
                 {
                     msg = "Client Entry Form Updated Successfully.";
                     model.Updatedby = UserId;

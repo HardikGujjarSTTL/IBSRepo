@@ -85,6 +85,7 @@ builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Reposi
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
 //builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
 builder.Services.AddScoped<IOnlineComplaintsRepository, OnlineComplaintsRepository>();
+builder.Services.AddScoped<IOnlinePaymentGatewayRepository, OnlinePaymentGatewayRepository>();
 builder.Services.AddScoped<IFeedbackSuggestionRepository, FeedbackSuggestionRepository>();
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
@@ -251,6 +252,7 @@ builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRReposi
 
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
+builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
 var app = builder.Build();
 

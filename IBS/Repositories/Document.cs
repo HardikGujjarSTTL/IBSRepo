@@ -1,7 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using System;
 
 namespace IBS.Repositories
 {
@@ -97,7 +96,7 @@ namespace IBS.Repositories
             {
                 return 0;
             }
-            
+
         }
 
         public void DeleteAllFiles(string ApplicationID)

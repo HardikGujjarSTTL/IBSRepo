@@ -1,9 +1,6 @@
 ﻿using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace IBS.Controllers.Vendor
 {
@@ -81,7 +78,7 @@ namespace IBS.Controllers.Vendor
                     model.Updatedby = Convert.ToString(UserId);
                 }
 
-                int i = callregisterRepository.DetailsSave(model,UserId);
+                int i = callregisterRepository.DetailsSave(model, UserId);
                 if (i > 0)
                 {
                     return Json(new { success = true, responseText = msg, Status = i });
@@ -94,6 +91,6 @@ namespace IBS.Controllers.Vendor
             return Json(new { success = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        
+
     }
 }

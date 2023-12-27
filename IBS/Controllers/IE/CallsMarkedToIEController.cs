@@ -1,10 +1,7 @@
-﻿using IBS.DataAccess;
+﻿using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using IBS.Helper;
 
 namespace IBS.Controllers.IE
 {

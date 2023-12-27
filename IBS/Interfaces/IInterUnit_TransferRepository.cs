@@ -1,8 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Drawing;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {

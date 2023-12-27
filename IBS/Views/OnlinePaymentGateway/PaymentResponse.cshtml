@@ -1,0 +1,139 @@
+﻿@model IBS.Models.OnlinePaymentGateway
+
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
+<style>
+    #loader {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1031;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+</style>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<div class="spinner" id="spinner" style="font-size:150px;display:none"><i class="fa fa-spinner fa-spin"></i></div>
+<div class="container">
+    <div class="innerContent">
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>3-Party Transaction</h2>
+            </div>
+        </div>
+        <div class="accordion-body p-4">
+            <form data-ajax="true" asp-antiforgery="true" data-ajax-method="Get" id="frmPaymentResponse" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="row my-0">
+                        <div class="col-md-12">
+                            <h3 class="heading3 mb-4">Transaction Receipt Fields</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Case No :</label>
+                        <input type="text" class="input" ASP-FOR="CaseNo" readonly />
+                    </div>
+                     <div class="col-md-4 mb-4">
+                        <label for="Reference">Call Date :</label>
+                        <input type="text" class="input" ASP-FOR="CallDate" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Call Sno :</label>
+                        <input type="text" class="input" ASP-FOR="CallSno" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Charges Type :</label>
+                        <input type="text" class="input" ASP-FOR="ChargesType" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Merchant Transaction Ref:</label>
+                        <input type="text" class="input" ASP-FOR="MER_TXN_REF" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">MERCHANT TRANSACTION ID: </label>
+                        <input type="text" class="input" ASP-FOR="MERTXNID" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">TRANSACTION AMOUNT:  </label>
+                        <input type="text" class="input" ASP-FOR="Charges" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">TRANSACTION DATE:  </label>
+                        <input type="text" class="input" ASP-FOR="TranDate" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">BANK TRANSACTION ID:  </label>
+                        <input type="text" class="input" ASP-FOR="BankTXNID" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">PAYMENT STATUS:  </label>
+                        <input type="text" class="input" ASP-FOR="PaymentStatus" readonly />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">BANK NAME:  </label>
+                        <input type="text" class="input" ASP-FOR="BankName" readonly />
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="generatePdf()">Receipt Download</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/atomcheckout.js"></script>
+
+    <script type="text/javascript">
+       
+        function generatePdf() {
+            var formData = $("#frmPaymentResponse").serialize();
+            $(".spinner").show();
+            $.ajax({
+                url: "@Url.Action("GeneratePDF", "OnlinePaymentGateway")",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: formData,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (result) {
+                    var url = window.URL.createObjectURL(result);
+                    var fileName = "PaymentReceipt";
+                    if (true) {
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = getExportFileName(fileName) + '.pdf';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                    $(".spinner").hide();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+}
+

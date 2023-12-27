@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Vendor
 {
@@ -148,7 +147,7 @@ namespace IBS.Repositories.Vendor
                     VendGstno = model.GSTNO,
                     VendTanno = model.TANNO,
                     VendPanno = model.PANNO,
-                    VendPwd = model.VendCd.ToString(),
+                    VendPwd = "Rites123",
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
@@ -193,9 +192,9 @@ namespace IBS.Repositories.Vendor
 
                     context.SaveChanges();
                 }
-
             }
-            UserUpdate(model);
+            //UserUpdate(model);
+            RoleEntry(model);
             return model.VendCd;
         }
 
@@ -212,6 +211,28 @@ namespace IBS.Repositories.Vendor
                 ID = "0";
             }
             return ID;
+        }
+        public void RoleEntry(VendorMasterModel model)
+        {
+            var UserDetails = context.UserMasters.Where(x => x.UserId == Convert.ToString(model.VendCd)).FirstOrDefault();
+            if (UserDetails == null)
+            {
+                UserMaster User = new();
+                User.UserId = Convert.ToString(model.VendCd);
+                User.Name = model.VendName;
+                User.UserType = "VENDOR";
+                User.Createddate = DateTime.Now.Date;
+                User.Createdby = model.UserId;
+
+                context.UserMasters.Add(User);
+                context.SaveChanges();
+            }
+            else
+            {
+                UserDetails.Name = model.VendName;
+                //UserDetails.Createdby = model.UserId;
+                context.SaveChanges();
+            }
         }
 
         public void UserUpdate(VendorMasterModel model)

@@ -1,12 +1,12 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces.Reports;
+using IBS.Models;
 using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using IBS.Helper;
-using IBS.Models;
 using Newtonsoft.Json;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports
 {

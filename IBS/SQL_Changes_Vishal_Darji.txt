@@ -1,18 +1,18 @@
-=============================================================================================================================================
-Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
-=============================================================================================================================================
+--=============================================================================================================================================
+--Scaffold-DbContext "Data Source=(DESCRIPTION=(ADDRESS_LIST= (ADDRESS=(COMMUNITY=tcpcom.world)(PROTOCOL=tcp)(HOST=192.168.0.215)(PORT=1521)))(CONNECT_DATA=(SID=orcl))); User ID=IBSDev;Password=IBSDev" Oracle.EntityFrameworkCore -OutputDir DataAccess -Force
+--=============================================================================================================================================
 
-ALTER TABLE T91_RAILWAYS drop column ISDELETED;
+--ALTER TABLE T91_RAILWAYS drop column ISDELETED;
 
-update menu_master set controllername = 'RailwaysDesignation' where controllername = 'Rly_Designation_Form'
+--update menu_master set controllername = 'RailwaysDesignation' where controllername = 'Rly_Designation_Form';
 
 ALTER TABLE t94_bank MODIFY FMIS_BANK_CD NUMBER(6,0);
 
-UPDATE menu_master set controllername= 'VendorCluster', actionname= 'Index' WHERE ID = 93;
+--UPDATE menu_master set controllername= 'VendorCluster', actionname= 'Index' WHERE ID = 93;
 
 ALTER TABLE T100_VENDER_CLUSTER MODIFY CLUSTER_CODE NUMBER(6,0);
 
-update menu_master set controllername= 'MasterItemsPLForm', actionname= 'Index' WHERE title like '%Master Items PL Form%';
+--update menu_master set controllername= 'MasterItemsPLForm', actionname= 'Index' WHERE title like '%Master Items PL Form%';
 
 ALTER TABLE T10_IC_BOOKSET ADD ID NUMBER(6,0);
 CREATE SEQUENCE T10_IC_BOOKSET_seq START WITH 1 INCREMENT BY 1 CACHE 20;
@@ -20,11 +20,11 @@ UPDATE T10_IC_BOOKSET SET ID = T10_IC_BOOKSET_seq.nextval;
 ALTER TABLE T10_IC_BOOKSET MODIFY ID NUMBER(6,0) DEFAULT T10_IC_BOOKSET_seq.nextval;
 ALTER TABLE T10_IC_BOOKSET ADD CONSTRAINT T10_IC_BOOKSET_pk  PRIMARY KEY (ID);
 
-update menu_master set controllername= 'Vendor', actionname= 'Index' WHERE ID = 86;
+--update menu_master set controllername= 'Vendor', actionname= 'Index' WHERE ID = 86;
 
-UPDATE menu_master SET controllername= 'InspectionFeeBill', actionname= 'Index' WHERE ID = 103;
+--UPDATE menu_master SET controllername= 'InspectionFeeBill', actionname= 'Index' WHERE ID = 103;
 
-UPDATE menu_master SET controllername= 'BillFinalisationForm', actionname= 'Index' WHERE ID = 155;
+--UPDATE menu_master SET controllername= 'BillFinalisationForm', actionname= 'Index' WHERE ID = 155;
 
 
 ALTER TABLE T108_REMARKED_CALLS ADD ID NUMBER(6,0);
@@ -42,7 +42,7 @@ ALTER TABLE t18_call_details MODIFY ITEM_SRNO_PO NUMBER(6,0);
 
 ALTER TABLE t15_po_detail MODIFY ITEM_SRNO NUMBER(6,0);
 
-Create new Procedure ==> SP_GET_CALL_REMARK_APPROVAL_DETAILS;
+--Create new Procedure ==> SP_GET_CALL_REMARK_APPROVAL_DETAILS;
 
 ALTER TABLE t17_call_register MODIFY co_cd NUMBER(6,0);
 
@@ -63,39 +63,39 @@ ALTER TABLE T09_IE ADD IE_JOB_TYPE CHAR(1);
 
 ALTER TABLE T101_IE_CLUSTER MODIFY CLUSTER_CODE NUMBER(6,0);
 
-Create new Procedure ==> SP_GET_IE_PERFORMANCE_DETAILS
+--Create new Procedure ==> SP_GET_IE_PERFORMANCE_DETAILS
 
-UPDATE menu_master set actionname = 'Index?ReportType=IE_X' WHERE ID = 15;
+--UPDATE menu_master set actionname = 'Index?ReportType=IE_X' WHERE ID = 15;
 
-INSERT INTO menu_master VALUES(435, 14, 'ManagementReports', 'Index?ReportType=CLUSTER_X', 'Cluster Performance', null, null, null, 1, 16, null, 1);
+--INSERT INTO menu_master VALUES(435, 14, 'ManagementReports', 'Index?ReportType=CLUSTER_X', 'Cluster Performance', null, null, null, 1, 16, null, 1);
 
-INSERT INTO menurolemapping VALUES(1727, 1, 435, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO menurolemapping VALUES(1727, 1, 435, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_CLUSTER_PERFORMANCE_DETAILS
+--Create new Procedure ==> SP_GET_CLUSTER_PERFORMANCE_DETAILS
 
-INSERT INTO menu_master VALUES(444, 14, 'ManagementReports', 'Index?ReportType=RWB', 'Region Wise Billing Summary', null, null, null, 1, 20, null, 1);
+--INSERT INTO menu_master VALUES(444, 14, 'ManagementReports', 'Index?ReportType=RWB', 'Region Wise Billing Summary', null, null, null, 1, 20, null, 1);
 
-INSERT INTO menurolemapping VALUES(1777, 1, 444, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO menurolemapping VALUES(1777, 1, 444, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_REGION_WISE_BILLING_SUMMARY
+--Create new Procedure ==> SP_GET_REGION_WISE_BILLING_SUMMARY
 
-Create new Procedure ==> SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT
+--Create new Procedure ==> SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT
 
-INSERT INTO MENU_MASTER VALUES(447, 14, 'ManagementReports', 'Index?ReportType=R', 'Region Wise Comparison of Outstanding and Suspense', null, null, null, 1, 23, null, 1);
+--INSERT INTO MENU_MASTER VALUES(447, 14, 'ManagementReports', 'Index?ReportType=R', 'Region Wise Comparison of Outstanding and Suspense', null, null, null, 1, 23, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(1892, 1, 447, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(1892, 1, 447, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(467, 14, 'ManagementReports', 'Index?ReportType=ICSUBMIT', 'IC Submission Report', null, null, null, 1, 27, null, 1);
+--INSERT INTO MENU_MASTER VALUES(467, 14, 'ManagementReports', 'Index?ReportType=ICSUBMIT', 'IC Submission Report', null, null, null, 1, 27, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(1907, 1, 467, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(1907, 1, 467, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(477, 14, 'ManagementReports', 'Index?ReportType=SUPSUR', 'Super Surprise Details', null, null, null, 1, 29, null, 1);
+--INSERT INTO MENU_MASTER VALUES(477, 14, 'ManagementReports', 'Index?ReportType=SUPSUR', 'Super Surprise Details', null, null, null, 1, 29, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(1953, 1, 477, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(1953, 1, 477, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(478, 14, 'ManagementReports', 'Index?ReportType=SUPSURPSUMM', 'CO Wise Super Surprise Summary', null, null, null, 1, 30, null, 1);
+--INSERT INTO MENU_MASTER VALUES(478, 14, 'ManagementReports', 'Index?ReportType=SUPSURPSUMM', 'CO Wise Super Surprise Summary', null, null, null, 1, 30, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(1954, 1, 478, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(1954, 1, 478, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
 ALTER TABLE T44_SUPER_SURPRISE MODIFY IE_CD NUMBER(6,0);
 
@@ -129,57 +129,64 @@ ALTER TABLE T62_MASTER_ITEM_PLNO ADD DRAWING_NO  VARCHAR2(30)
 
 ALTER TABLE T62_MASTER_ITEM_PLNO ADD SPECIFICATION_NO  VARCHAR2(30)
 
-INSERT INTO MENU_MASTER VALUES(522, 487, 'ManagementReports', 'Index?ReportType=CONSIGN_REJECT', 'Online Consignee Rejection Report', null, null, null, 1, 7, null, 1);
+--INSERT INTO MENU_MASTER VALUES(522, 487, 'ManagementReports', 'Index?ReportType=CONSIGN_REJECT', 'Online Consignee Rejection Report', null, null, null, 1, 7, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2783, 1, 522, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2783, 1, 522, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(529, 487, 'ManagementReports', 'Index?ReportType=X', 'Outstanding of One Region Over Other', null, null, null, 1, 8, null, 1);
+--INSERT INTO MENU_MASTER VALUES(529, 487, 'ManagementReports', 'Index?ReportType=X', 'Outstanding of One Region Over Other', null, null, null, 1, 8, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2784, 1, 529, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2784, 1, 529, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(530, 487, 'ManagementReports', 'Index?ReportType=CLIENTWISEREJ', 'Client wise Rejection IC''s (All Regions)', null, null, null, 1, 9, null, 1);
+--INSERT INTO MENU_MASTER VALUES(530, 487, 'ManagementReports', 'Index?ReportType=CLIENTWISEREJ', 'Client wise Rejection IC''s (All Regions)', null, null, null, 1, 9, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2785, 1, 530, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2785, 1, 530, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
 ALTER TABLE T23_BILL_ITEMS MODIFY ITEM_SRNO NUMBER(6,0);
 
-INSERT INTO MENU_MASTER VALUES(531, 487, 'ManagementReports', 'Index?ReportType=NON_CONFORMITY', 'Format for Non Conformity Report (IE WISE)', null, null, null, 1, 10, null, 1);
+--INSERT INTO MENU_MASTER VALUES(531, 487, 'ManagementReports', 'Index?ReportType=NON_CONFORMITY', 'Format for Non Conformity Report (IE WISE)', null, null, null, 1, 10, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2786, 1, 531, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2786, 1, 531, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_NON_CONFORMITY_DATA
+--Create new Procedure ==> SP_GET_NON_CONFORMITY_DATA
 
-INSERT INTO MENU_MASTER VALUES(532, 487, 'ManagementReports', 'Index?ReportType=PENDING_CALLS', 'Overdue/Pending Calls', null, null, null, 1, 11, null, 1);
+--INSERT INTO MENU_MASTER VALUES(532, 487, 'ManagementReports', 'Index?ReportType=PENDING_CALLS', 'Overdue/Pending Calls', null, null, null, 1, 11, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2787, 1, 532, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2787, 1, 532, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_PENDING_CALLS_DATA
+--Create new Procedure ==> SP_GET_PENDING_CALLS_DATA
 
-INSERT INTO MENU_MASTER VALUES(533, 487, 'ManagementReports', 'Index?ReportType=COUNTIC', 'CM and IE wise IC issued but not recieved', null, null, null, 1, 12, null, 1);
+--INSERT INTO MENU_MASTER VALUES(533, 487, 'ManagementReports', 'Index?ReportType=COUNTIC', 'CM and IE wise IC issued but not recieved', null, null, null, 1, 12, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2788, 1, 533, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2788, 1, 533, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==>SP_GET_IC_ISSUED_NOT_RECEIVED_DATA
+--Create new Procedure ==>SP_GET_IC_ISSUED_NOT_RECEIVED_DATA
 
-INSERT INTO MENU_MASTER VALUES(534, 487, 'ManagementReports', 'Index?ReportType=HIGHVALUE', 'Tentative Inspection Fee Wise Pending Call', null, null, null, 1, 13, null, 1);
+--INSERT INTO MENU_MASTER VALUES(534, 487, 'ManagementReports', 'Index?ReportType=HIGHVALUE', 'Tentative Inspection Fee Wise Pending Call', null, null, null, 1, 13, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2789, 1, 534, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2789, 1, 534, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_INSPECTION_FEE_WISE_PENDING_CALLS_DATA
+--Create new Procedure ==> SP_GET_INSPECTION_FEE_WISE_PENDING_CALLS_DATA
 
-INSERT INTO MENU_MASTER VALUES(535, 487, 'ManagementReports', 'Index?ReportType=REMARKING', 'Call Remarking', null, null, null, 1, 14, null, 1);
+--INSERT INTO MENU_MASTER VALUES(535, 487, 'ManagementReports', 'Index?ReportType=REMARKING', 'Call Remarking', null, null, null, 1, 14, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2790, 1, 535, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2790, 1, 535, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-INSERT INTO MENU_MASTER VALUES(536, 487, 'ManagementReports', 'Index?ReportType=CALL_DETAILS', 'Call Details Dashborad', null, null, null, 1, 15, null, 1);
+--INSERT INTO MENU_MASTER VALUES(536, 487, 'ManagementReports', 'Index?ReportType=CALL_DETAILS', 'Call Details Dashborad', null, null, null, 1, 15, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2791, 1, 536, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2791, 1, 536, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
 
-Create new Procedure ==> SP_GET_CALLS_DETAILS_DATA
+--Create new Procedure ==> SP_GET_CALLS_DETAILS_DATA
 
-INSERT INTO MENU_MASTER VALUES(541, 115, 'WriteOffEntry', 'Index', 'Write off Entry', null, null, null, 1, 18, null, 1);
+--INSERT INTO MENU_MASTER VALUES(541, 115, 'WriteOffEntry', 'Index', 'Write off Entry', null, null, null, 1, 18, null, 1);
 
-INSERT INTO MENUROLEMAPPING VALUES(2796, 1, 541, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+--INSERT INTO MENUROLEMAPPING VALUES(2796, 1, 541, 1, 255, '14-09-23 10:59:00.251963000 PM +05:30', null, null, 0, 0, 1, 1, 1);
+
+CREATE TABLE WRITE_OFF_DETAILS (
+    ID NUMBER(6,0) DEFAULT WRITE_OFF_DETAILS_SEQ.NEXTVAL,
+    WRITE_OFF_MASTER_ID NUMBER(6,0),
+    BILL_NO VARCHAR2(10 BYTE),
+    WRITE_OFF_AMOUNT NUMBER(13,2)
+);
 
 CREATE SEQUENCE WRITE_OFF_DETAILS_seq START WITH 1 INCREMENT BY 1 CACHE 20;
 UPDATE WRITE_OFF_DETAILS SET ID = WRITE_OFF_DETAILS_seq.nextval;
@@ -206,46 +213,2507 @@ UPDATE T90_RLY_DESIGNATION SET ID = T90_RLY_DESIGNATION_seq.nextval;
 alter table T90_RLY_DESIGNATION modify id number(6,0) default T90_RLY_DESIGNATION_SEQ.NEXTVAL;
 alter table T90_RLY_DESIGNATION modify ID number(6,0) NOT NULL;
 
-INSERT INTO USER_MASTER_TEMP(ROLEID, MASTERID)
+/*INSERT INTO USER_MASTER_TEMP(ROLEID, MASTERID)
 SELECT DISTINCT U.ID AS RoleID, M.ID AS MasterID
 FROM USERROLES U
-INNER JOIN USER_MASTER M ON TRIM(M.USER_ID) = TRIM(U.USER_ID);
+INNER JOIN USER_MASTER M ON TRIM(M.USER_ID) = TRIM(U.USER_ID);*/
 
 
-==============================================================================================================================
-CREATE TABLE USER_MASTER (
-  ID          NUMBER(13,0) GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  USER_ID     VARCHAR2(100),
-  NAME        VARCHAR2(100),
-  USER_TYPE    VARCHAR2(20),
-  CREATEDDATE TIMESTAMP(6) WITH TIME ZONE,
-  CREATEDBY   NUMBER(6,0)
-);
+create or replace PROCEDURE SP_GET_CALL_REMARK_APPROVAL_DETAILS(
+    p_CALL_RECV_DT IN DATE,
+    p_CASE_NO      IN VARCHAR2,
+    p_CALL_SNO     IN NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN p_result_cursor FOR SELECT case_no, call_sno, call_recv_dt, client_RLY, RLY, ROUND(pending_since) pending_since, insp_desire_dt, MIN(ext_delv_dt) ext_delv_dt, SUM(MAT_VALUE) MAT_VALUE FROM
+  (SELECT t17.case_no case_no,
+    t17.call_sno call_sno,
+    t17.call_recv_dt,
+    t13.rly_cd client_RLY,
+    DECODE(t13.rly_nonrly, 'R', 'Railway', 'Non Railway') RLY,
+    (sysdate - t17.call_recv_dt) pending_since,
+    dt_insp_desire insp_desire_dt,
+    t15.ext_delv_dt ext_delv_dt,
+    (ROUND((t15.value / t15.qty), 2) * t18.QTY_TO_INSP) MAT_VALUE
+  FROM t13_po_master t13,
+    t17_call_register t17,
+    t18_call_details t18,
+    t15_po_detail t15
+  WHERE t17.case_no    = t13.case_no
+  AND t17.case_no      = t18.case_no
+  AND t17.call_sno     = t18.call_sno
+  AND t17.call_recv_dt = t18.call_recv_dt
+  AND t17.case_no      = t15.case_no
+  AND t15.ITEM_SRNO    = T18.ITEM_SRNO_PO
+  AND T15.CONSIGNEE_CD = T18.CONSIGNEE_CD
+  AND T17.CALL_RECV_DT = p_CALL_RECV_DT
+  AND T17.case_no      = p_CASE_NO
+  AND T17.call_sno     = p_CALL_SNO
+  ) GROUP BY case_no, call_sno, call_recv_dt, client_RLY, RLY, pending_since, insp_desire_dt, ext_delv_dt;
+END SP_GET_CALL_REMARK_APPROVAL_DETAILS;
+/
+
+create or replace PROCEDURE SP_GET_IE_PERFORMANCE_DETAILS(
+    p_FROM_DT IN DATE,
+    p_TO_DT IN DATE,
+    p_REGION IN VARCHAR2,
+    p_IE_CD IN NUMBER,
+    p_result_cursor1 OUT SYS_REFCURSOR,
+    p_result_cursor2 OUT SYS_REFCURSOR
+    )
+IS
+  w_rejection_issued NUMBER := 0;
+  w_total_ic NUMBER := 0;
+  w_calls_attended_within NUMBER := 0;
+  w_calls_attended_beyond NUMBER := 0;
+  
+BEGIN
+  OPEN p_result_cursor1 FOR 
+  
+  SELECT IE_NAME
+	,DEPT
+	,SUM(C3) C3
+	,SUM(C7) C7
+	,SUM(CM7) CM7
+	,SUM(C10) C10
+	,SUM(C0) C0
+	,SUM(INSP_FEE) INSP_FEE
+	,SUM(MATERIAL_VALUE) MATERIAL_VALUE
+	,ROUND(DECODE(SUM(C0), 0, 0, SUM(INSP_FEE) / SUM(C0)), 2) AVERAGE_FEE
+	,SUM(CALLS) CALLS
+	,SUM(CALL_CANCEL) CALL_CANCEL
+	,SUM(REJECTIONS) REJECTIONS
+FROM (
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,(COUNT(*)) C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+		,T22_BILL C
+	WHERE A.IE_CD = B.IE_CD
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (NVL(IC_DT, '31-Dec-9999') - NVL(LAST_INSP_DT, '01-Jan-2005')) > 1
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,(COUNT(*)) C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+		,T22_BILL C
+	WHERE A.IE_CD = B.IE_CD
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (NVL(first_insp_dt, '31-Dec-9999') - NVL(call_dt, '01-Jan-2005')) <= 7
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME 
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,(COUNT(*)) CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+		,T22_BILL C
+	WHERE A.IE_CD = B.IE_CD
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (NVL(first_insp_dt, '31-Dec-9999') - NVL(call_dt, '01-Jan-2005')) > 7
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,(COUNT(*)) C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+		,T22_BILL C
+	WHERE A.IE_CD = B.IE_CD
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (NVL(IC_SUBMIT_DT, '31-Dec-9999') - NVL(IC_DT, '01-Jan-2005')) > 7
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,(COUNT(*)) C0
+		,SUM(NVL(C.INSP_FEE, 0)) INSP_FEE
+		,SUM(NVL(C.MATERIAL_VALUE, 0)) MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+		,T22_BILL C
+	WHERE A.IE_CD = B.IE_CD
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,COUNT(*) CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER A
+		,T09_IE B
+	WHERE A.IE_CD = B.IE_CD
+		AND (
+			A.CALL_MARK_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND A.REGION_CODE = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(C.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,COUNT(*) CALL_CANCEL
+		,0 REJECTIONS
+	FROM T19_CALL_CANCEL A
+		,T17_CALL_REGISTER B
+		,T09_IE C
+	WHERE A.CASE_NO = B.CASE_NO
+		AND A.CALL_RECV_DT = B.CALL_RECV_DT
+		AND A.CALL_SNO = B.CALL_SNO
+		AND B.IE_CD = C.IE_CD
+		AND (
+			A.CANCEL_DATE BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND B.IE_CD = P_IE_CD))
+	GROUP BY IE_NAME
+		,DECODE(C.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,COUNT(*) REJECTIONS
+	FROM T20_IC A
+		,T09_IE B
+	WHERE A.IE_CD = B.IE_CD
+		AND A.ic_type_id = 2
+		AND SUBSTR(A.CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND A.IE_CD = P_IE_CD))
+		AND A.bill_no IN (
+			SELECT bill_no
+			FROM t22_bill
+			WHERE (
+					bill_dt BETWEEN p_FROM_DT
+						AND p_TO_DT
+					)
+				AND SUBSTR(bill_no, 1, 1) = p_REGION
+			)
+	GROUP BY IE_NAME
+		,DECODE(B.IE_DEPARTMENT, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	)
+GROUP BY IE_NAME
+	,DEPT
+ORDER BY IE_NAME;
+
+  SELECT COUNT(*)
+    INTO w_rejection_issued
+    FROM t20_ic
+    WHERE ic_type_id = 2
+    AND SUBSTR(CASE_NO, 1, 1) = P_REGION
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t20_ic.IE_CD = P_IE_CD))
+    AND bill_no IN (
+      SELECT bill_no
+      FROM t22_bill
+      WHERE (
+          bill_dt BETWEEN p_FROM_DT
+            AND p_TO_DT
+          )
+        AND SUBSTR(bill_no, 1, 1) = p_REGION
+      );
+    
+  SELECT COUNT(*)
+  INTO w_total_ic
+  FROM T20_IC
+  WHERE (P_IE_CD = 0 OR (P_IE_CD <> 0 AND T20_IC.IE_CD = P_IE_CD))
+  AND bill_no IN (
+  SELECT bill_no
+  FROM t22_bill
+  WHERE (
+      bill_dt BETWEEN p_FROM_DT
+        AND p_TO_DT
+      )
+    AND SUBSTR(bill_no, 1, 1) = p_REGION
+  );
+  
+  SELECT COUNT(*)
+  INTO w_calls_attended_within
+  FROM t20_ic
+  WHERE (NVL(FIRST_INSP_DT, '31-Dec-9999') - NVL(CALL_DT, '01-Jan-2005')) <= 7
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t20_ic.IE_CD = P_IE_CD))
+    AND bill_no IN (
+      SELECT bill_no
+      FROM t22_bill
+      WHERE (
+          bill_dt BETWEEN p_FROM_DT
+            AND p_TO_DT
+          )
+        AND SUBSTR(bill_no, 1, 1) = p_REGION
+      );
+      
+  SELECT COUNT(*)
+  INTO w_calls_attended_beyond
+  FROM t20_ic
+  WHERE (FIRST_INSP_DT - CALL_DT > 7)
+    AND (P_IE_CD = 0 OR (P_IE_CD <> 0 AND t20_ic.IE_CD = P_IE_CD))
+    AND bill_no IN (
+      SELECT bill_no
+      FROM t22_bill
+      WHERE (
+          bill_dt BETWEEN p_FROM_DT
+            AND p_TO_DT
+          )
+        AND SUBSTR(bill_no, 1, 1) = p_REGION
+      );
+      
+  OPEN p_result_cursor2 FOR 
+  
+  SELECT w_rejection_issued REJECTIONS_ISSUED, w_total_ic TOTAL_IC, w_calls_attended_within CALLS_ATTENDED_WITHIN, w_calls_attended_beyond CALLS_ATTENDED_BEYOND from dual;
+
+END SP_GET_IE_PERFORMANCE_DETAILS;
+/
+
+create or replace PROCEDURE SP_GET_CLUSTER_PERFORMANCE_DETAILS(
+    p_FROM_DT IN DATE,
+    p_TO_DT IN DATE,
+    p_REGION IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+    )
+IS
+BEGIN
+  OPEN p_result_cursor FOR 
+  
+  SELECT CLUSTER_NAME
+	,DEPT
+	,sum(C3) C3
+	,sum(C7) C7
+	,sum(CM7) CM7
+	,sum(C10) C10
+	,sum(C0) C0
+	,sum(INSP_FEE) INSP_FEE
+	,sum(MATERIAL_VALUE) MATERIAL_VALUE
+	,round(decode(sum(C0), 0, 0, sum(INSP_FEE) / sum(C0)), 2) AVERAGE_FEE
+	,sum(CALLS) CALLS
+	,sum(CALL_CANCEL) CALL_CANCEL
+	,sum(REJECTIONS) REJECTIONS
+FROM (
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,(COUNT(*)) C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+		,T22_BILL C
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (nvl(IC_DT, '31-Dec-9999') - nvl(LAST_INSP_DT, '01-Jan-2005')) > 1
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,(count(*)) C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+		,T22_BILL C
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (nvl(first_insp_dt, '31-Dec-9999') - nvl(call_dt, '01-Jan-2005')) <= 7
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,(count(*)) CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+		,T22_BILL C
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (nvl(first_insp_dt, '31-Dec-9999') - nvl(call_dt, '01-Jan-2005')) > 7
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,(COUNT(*)) C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+		,T22_BILL C
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND (nvl(IC_SUBMIT_DT, '31-Dec-9999') - nvl(IC_DT, '01-Jan-2005')) > 7
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,(COUNT(*)) C0
+		,sum(nvl(C.INSP_FEE, 0)) INSP_FEE
+		,sum(nvl(C.MATERIAL_VALUE, 0)) MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+		,T22_BILL C
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND C.BILL_NO = A.BILL_NO
+		AND (
+			C.BILL_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,COUNT(*) CALLS
+		,0 CALL_CANCEL
+		,0 REJECTIONS
+	FROM T17_CALL_REGISTER A
+		,T99_CLUSTER_MASTER B
+	WHERE A.CLUSTER_CODE = B.CLUSTER_CODE
+		AND (
+			A.CALL_MARK_DT BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND B.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(C.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,COUNT(*) CALL_CANCEL
+		,0 REJECTIONS
+	FROM T19_CALL_CANCEL A
+		,T17_CALL_REGISTER B
+		,T99_CLUSTER_MASTER C
+	WHERE A.CASE_NO = B.CASE_NO
+		AND A.CALL_RECV_DT = B.CALL_RECV_DT
+		AND A.CALL_SNO = B.CALL_SNO
+		AND B.CLUSTER_CODE = C.CLUSTER_CODE
+		AND (
+			A.CANCEL_DATE BETWEEN p_FROM_DT
+				AND p_TO_DT
+			)
+		AND C.region_code = p_REGION
+	GROUP BY CLUSTER_NAME
+		,decode(C.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	
+	UNION ALL
+	
+	SELECT CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others') DEPT
+		,0 C3
+		,0 C7
+		,0 CM7
+		,0 C10
+		,0 C0
+		,0 INSP_FEE
+		,0 MATERIAL_VALUE
+		,0 CALLS
+		,0 CALL_CANCEL
+		,COUNT(*) REJECTIONS
+	FROM T17_CALL_REGISTER D
+		,T20_IC A
+		,T99_CLUSTER_MASTER B
+	WHERE D.CASE_NO = A.CASE_NO
+		AND D.CALL_RECV_DT = A.CALL_RECV_DT
+		AND D.CALL_SNO = A.CALL_SNO
+		AND D.CLUSTER_CODE = B.CLUSTER_CODE
+		AND A.ic_type_id = 2
+		AND B.region_code = p_REGION
+		AND A.bill_no IN (
+			SELECT bill_no
+			FROM t22_bill
+			WHERE (
+					bill_dt BETWEEN p_FROM_DT
+						AND p_TO_DT
+					)
+				AND SUBSTR(bill_no, 1, 1) = p_REGION
+			)
+	GROUP BY CLUSTER_NAME
+		,decode(B.DEPARTMENT_NAME, 'C', 'Civil', 'E', 'Electrical', 'M', 'Mechanical', 'L', 'Metallergy', 'Others')
+	)
+GROUP BY CLUSTER_NAME
+	,DEPT
+ORDER BY DEPT
+	,CLUSTER_NAME;
 
 
-CREATE SEQUENCE USER_MASTER_seq START WITH 1 INCREMENT BY 1 CACHE 20;
-UPDATE USER_MASTER SET ID = USER_MASTER_SEQ.NEXTVAL;
-ALTER TABLE USER_MASTER MODIFY ID NUMBER(13,0) DEFAULT USER_MASTER_SEQ.NEXTVAL;
-ALTER TABLE USER_MASTER ADD CONSTRAINT USER_MASTER_pk  PRIMARY KEY (ID);
+END SP_GET_CLUSTER_PERFORMANCE_DETAILS;
+/
 
-ALTER SEQUENCE USER_MASTER_SEQ RESTART START WITH 1;
+create or replace PROCEDURE SP_GET_REGION_WISE_BILLING_SUMMARY(
+    p_FROM_DT IN VARCHAR2,
+    p_TO_DT IN VARCHAR2,
+    p_result_cursor1 OUT SYS_REFCURSOR,
+    p_result_cursor2 OUT SYS_REFCURSOR
+    )
+IS
+BEGIN
+  OPEN p_result_cursor1 FOR 
+  
+  SELECT SECTOR
+    ,sum(NR_INSP_FEE) NR_FEE
+    ,sum(NR_STAX) NR_TAX
+    ,sum(NR_BILL_AMOUNT) NR_BILL_AMT
+    ,sum(NR_NO_OF_BILLLS) NR_BILLLS
+    ,sum(WR_INSP_FEE) WR_FEE
+    ,sum(WR_STAX) WR_TAX
+    ,sum(WR_BILL_AMOUNT) WR_BILL_AMT
+    ,sum(WR_NO_OF_BILLLS) WR_BILLLS
+    ,sum(ER_INSP_FEE) ER_FEE
+    ,sum(ER_STAX) ER_TAX
+    ,sum(ER_BILL_AMOUNT) ER_BILL_AMT
+    ,sum(ER_NO_OF_BILLLS) ER_BILLLS
+    ,sum(SR_INSP_FEE) SR_FEE
+    ,sum(SR_STAX) SR_TAX
+    ,sum(SR_BILL_AMOUNT) SR_BILL_AMT
+    ,sum(SR_NO_OF_BILLLS) SR_BILLLS
+    ,sum(CR_INSP_FEE) CR_FEE
+    ,sum(CR_STAX) CR_TAX
+    ,sum(CR_BILL_AMOUNT) CR_BILL_AMT
+    ,sum(CR_NO_OF_BILLLS) CR_BILLLS
+  FROM (
+    SELECT SECTOR
+      ,sum(NVL(INSP_FEE, 0)) NR_INSP_FEE
+      ,(sum(NVL(SERVICE_TAX, 0)) + sum(NVL(EDU_CESS, 0)) + sum(NVL(SHE_CESS, 0)) + sum(NVL(SWACHH_BHARAT_CESS, 0)) + sum(NVL(KRISHI_KALYAN_CESS, 0)) + sum(NVL(IGST, 0)) + sum(NVL(CGST, 0)) + sum(NVL(SGST, 0))) NR_STAX
+      ,sum(NVL(BILL_AMOUNT, 0)) NR_BILL_AMOUNT
+      ,sum(NVL(NO_OF_BILLLS, 0)) NR_NO_OF_BILLLS
+      ,0 WR_INSP_FEE
+      ,0 WR_STAX
+      ,0 WR_BILL_AMOUNT
+      ,0 WR_NO_OF_BILLLS
+      ,0 ER_INSP_FEE
+      ,0 ER_STAX
+      ,0 ER_BILL_AMOUNT
+      ,0 ER_NO_OF_BILLLS
+      ,0 SR_INSP_FEE
+      ,0 SR_STAX
+      ,0 SR_BILL_AMOUNT
+      ,0 SR_NO_OF_BILLLS
+      ,0 CR_INSP_FEE
+      ,0 CR_STAX
+      ,0 CR_BILL_AMOUNT
+      ,0 CR_NO_OF_BILLLS
+    FROM V22A_BILLING_SUMMARY
+    WHERE REGION_CODE = 'N'
+      AND BILLING_YR_MTH BETWEEN p_FROM_DT
+        AND p_TO_DT
+    GROUP BY SECTOR
+    
+    UNION ALL
+    
+    SELECT SECTOR
+      ,0 NR_INSP_FEE
+      ,0 NR_STAX
+      ,0 NR_BILL_AMOUNT
+      ,0 NR_NO_OF_BILLLS
+      ,sum(NVL(INSP_FEE, 0)) WR_INSP_FEE
+      ,(sum(NVL(SERVICE_TAX, 0)) + sum(NVL(EDU_CESS, 0)) + sum(NVL(SHE_CESS, 0)) + sum(NVL(SWACHH_BHARAT_CESS, 0)) + sum(NVL(KRISHI_KALYAN_CESS, 0)) + sum(NVL(IGST, 0)) + sum(NVL(CGST, 0)) + sum(NVL(SGST, 0))) WR_STAX
+      ,sum(NVL(BILL_AMOUNT, 0)) WR_BILL_AMOUNT
+      ,sum(NVL(NO_OF_BILLLS, 0)) WR_NO_OF_BILLLS
+      ,0 ER_INSP_FEE
+      ,0 ER_STAX
+      ,0 ER_BILL_AMOUNT
+      ,0 ER_NO_OF_BILLLS
+      ,0 SR_INSP_FEE
+      ,0 SR_STAX
+      ,0 SR_BILL_AMOUNT
+      ,0 SR_NO_OF_BILLLS
+      ,0 CR_INSP_FEE
+      ,0 CR_STAX
+      ,0 CR_BILL_AMOUNT
+      ,0 CR_NO_OF_BILLLS
+    FROM V22A_BILLING_SUMMARY
+    WHERE REGION_CODE = 'W'
+      AND BILLING_YR_MTH BETWEEN p_FROM_DT
+        AND p_TO_DT
+    GROUP BY SECTOR
+    
+    UNION ALL
+    
+    SELECT SECTOR
+      ,0 NR_INSP_FEE
+      ,0 NR_STAX
+      ,0 NR_BILL_AMOUNT
+      ,0 NR_NO_OF_BILLLS
+      ,0 WR_INSP_FEE
+      ,0 WR_STAX
+      ,0 WR_BILL_AMOUNT
+      ,0 WR_NO_OF_BILLLS
+      ,sum(NVL(INSP_FEE, 0)) ER_INSP_FEE
+      ,(sum(NVL(SERVICE_TAX, 0)) + sum(NVL(EDU_CESS, 0)) + sum(NVL(SHE_CESS, 0)) + sum(NVL(SWACHH_BHARAT_CESS, 0)) + sum(NVL(KRISHI_KALYAN_CESS, 0)) + sum(NVL(IGST, 0)) + sum(NVL(CGST, 0)) + sum(NVL(SGST, 0))) ER_STAX
+      ,sum(NVL(BILL_AMOUNT, 0)) ER_BILL_AMOUNT
+      ,sum(NVL(NO_OF_BILLLS, 0)) ER_NO_OF_BILLLS
+      ,0 SR_INSP_FEE
+      ,0 SR_STAX
+      ,0 SR_BILL_AMOUNT
+      ,0 SR_NO_OF_BILLLS
+      ,0 CR_INSP_FEE
+      ,0 CR_STAX
+      ,0 CR_BILL_AMOUNT
+      ,0 CR_NO_OF_BILLLS
+    FROM V22A_BILLING_SUMMARY
+    WHERE REGION_CODE = 'E'
+      AND BILLING_YR_MTH BETWEEN p_FROM_DT
+        AND p_TO_DT
+    GROUP BY SECTOR
+    
+    UNION ALL
+    
+    SELECT SECTOR
+      ,0 NR_INSP_FEE
+      ,0 NR_STAX
+      ,0 NR_BILL_AMOUNT
+      ,0 NR_NO_OF_BILLLS
+      ,0 WR_INSP_FEE
+      ,0 WR_STAX
+      ,0 WR_BILL_AMOUNT
+      ,0 WR_NO_OF_BILLLS
+      ,0 ER_INSP_FEE
+      ,0 ER_STAX
+      ,0 ER_BILL_AMOUNT
+      ,0 ER_NO_OF_BILLLS
+      ,sum(NVL(INSP_FEE, 0)) SR_INSP_FEE
+      ,(sum(NVL(SERVICE_TAX, 0)) + sum(NVL(EDU_CESS, 0)) + sum(NVL(SHE_CESS, 0)) + sum(NVL(SWACHH_BHARAT_CESS, 0)) + sum(NVL(KRISHI_KALYAN_CESS, 0)) + sum(NVL(IGST, 0)) + sum(NVL(CGST, 0)) + sum(NVL(SGST, 0))) SR_STAX
+      ,sum(NVL(BILL_AMOUNT, 0)) SR_BILL_AMOUNT
+      ,sum(NVL(NO_OF_BILLLS, 0)) SR_NO_OF_BILLLS
+      ,0 CR_INSP_FEE
+      ,0 CR_STAX
+      ,0 CR_BILL_AMOUNT
+      ,0 CR_NO_OF_BILLLS
+    FROM V22A_BILLING_SUMMARY
+    WHERE REGION_CODE = 'S'
+      AND BILLING_YR_MTH BETWEEN p_FROM_DT
+        AND p_TO_DT
+    GROUP BY SECTOR
+    
+    UNION ALL
+    
+    SELECT SECTOR
+      ,0 NR_INSP_FEE
+      ,0 NR_STAX
+      ,0 NR_BILL_AMOUNT
+      ,0 NR_NO_OF_BILLLS
+      ,0 WR_INSP_FEE
+      ,0 WR_STAX
+      ,0 WR_BILL_AMOUNT
+      ,0 WR_NO_OF_BILLLS
+      ,0 ER_INSP_FEE
+      ,0 ER_STAX
+      ,0 ER_BILL_AMOUNT
+      ,0 ER_NO_OF_BILLLS
+      ,0 SR_INSP_FEE
+      ,0 SR_STAX
+      ,0 SR_BILL_AMOUNT
+      ,0 SR_NO_OF_BILLLS
+      ,sum(NVL(INSP_FEE, 0)) CR_INSP_FEE
+      ,(sum(NVL(SERVICE_TAX, 0)) + sum(NVL(EDU_CESS, 0)) + sum(NVL(SHE_CESS, 0)) + sum(NVL(SWACHH_BHARAT_CESS, 0)) + sum(NVL(KRISHI_KALYAN_CESS, 0)) + sum(NVL(IGST, 0)) + sum(NVL(CGST, 0)) + sum(NVL(SGST, 0))) CR_STAX
+      ,sum(NVL(BILL_AMOUNT, 0)) CR_BILL_AMOUNT
+      ,sum(NVL(NO_OF_BILLLS, 0)) CR_NO_OF_BILLLS
+    FROM V22A_BILLING_SUMMARY
+    WHERE REGION_CODE = 'C'
+      AND BILLING_YR_MTH BETWEEN p_FROM_DT
+        AND p_TO_DT
+    GROUP BY SECTOR
+	)
+  GROUP BY SECTOR;
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT USER_ID, USER_NAME, 'USERS', SYSDATE, 1 FROM T02_USERS WHERE MIGTYPE IS NULL;
+  OPEN p_result_cursor2 FOR 
+  
+  SELECT t13.REGION_CODE SECTOR
+    ,sum(nvl(t22.INSP_FEE, 0)) INSP_FEE
+    ,sum(nvl(t22.BILL_AMOUNT, 0)) BILL_AMOUNT
+    ,count(*) NO_OF_BILLLS
+  FROM T22_BILL t22
+    ,T20_IC t20
+    ,T13_PO_MASTER t13
+  WHERE t22.BILL_NO = t20.BILL_NO
+    AND t22.CASE_NO = t13.CASE_NO
+    AND t13.RLY_NONRLY = 'R'
+    AND nvl(t22.BILL_AMOUNT, 0) < 100
+    AND (
+      to_char(BILL_DT, 'YYYYMM') BETWEEN p_FROM_DT
+        AND p_TO_DT
+      )
+  GROUP BY t13.REGION_CODE;
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT USER_ID, USER_NAME, 'USERS', SYSDATE, 1 FROM T02_USERS WHERE MIGTYPE = 'CM';
+END SP_GET_REGION_WISE_BILLING_SUMMARY;
+/
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT IE_EMP_NO, IE_NAME, 'IE', SYSDATE, 1 FROM T09_IE WHERE IE_EMP_NO IS NOT NULL AND IE_STATUS IS NULL;
+create or replace PROCEDURE SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT(
+    p_FROM_DT IN DATE,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN p_result_cursor FOR SELECT DECODE(BPO_TYPE, 'R', '1Railway', 'U', '2PSU', 'P', '3Private', 'F', '4Foreign Railway', 'S', '5State Government', '6Un-Accounted') BPO_TYPE ,BPO_RLY ,BPO_ORGN ,BPO_TYPE BPO_TYPE_CD ,SUM(NR_OUTSTANDING) NR_OUTSTANDING ,SUM(WR_OUTSTANDING) WR_OUTSTANDING ,SUM(ER_OUTSTANDING) ER_OUTSTANDING ,SUM(SR_OUTSTANDING) SR_OUTSTANDING ,SUM(CR_OUTSTANDING) CR_OUTSTANDING ,SUM(TOT_SUSPENSE_NR) TOT_SUSPENSE_NR ,SUM(TOT_SUSPENSE_WR) TOT_SUSPENSE_WR ,SUM(TOT_SUSPENSE_ER) TOT_SUSPENSE_ER ,SUM(TOT_SUSPENSE_SR) TOT_SUSPENSE_SR ,SUM(TOT_SUSPENSE_CR) TOT_SUSPENSE_CR ,(SUM(NR_OUTSTANDING) +SUM(WR_OUTSTANDING)+SUM(SR_OUTSTANDING)+SUM(ER_OUTSTANDING)+SUM(CR_OUTSTANDING)) TOT_ALL_OUTSTANDING ,(SUM(TOT_SUSPENSE_NR)+SUM(TOT_SUSPENSE_WR)+SUM(TOT_SUSPENSE_SR)+SUM(TOT_SUSPENSE_ER)+SUM(TOT_SUSPENSE_CR)) TOT_ALL_SUSPENSE FROM
+  (SELECT BPO_TYPE ,
+    BPO_CD ,
+    BPO_RLY ,
+    BPO_ORGN ,
+    NVL(AMOUNT_OUTSTANDING, 0) NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM V22B_OUTSTANDING_BILLS
+  WHERE AMOUNT_OUTSTANDING > 0
+  AND BILL_DT             <= p_FROM_DT
+  AND REGION_CODE          = 'N'
+  UNION ALL
+  SELECT BPO_TYPE ,
+    BPO_CD ,
+    BPO_RLY ,
+    BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    NVL(AMOUNT_OUTSTANDING, 0) WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM V22B_OUTSTANDING_BILLS
+  WHERE AMOUNT_OUTSTANDING > 0
+  AND BILL_DT             <= p_FROM_DT
+  AND REGION_CODE          = 'W'
+  UNION ALL
+  SELECT BPO_TYPE ,
+    BPO_CD ,
+    BPO_RLY ,
+    BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    NVL(AMOUNT_OUTSTANDING, 0) ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM V22B_OUTSTANDING_BILLS
+  WHERE AMOUNT_OUTSTANDING > 0
+  AND BILL_DT             <= p_FROM_DT
+  AND REGION_CODE          = 'E'
+  UNION ALL
+  SELECT BPO_TYPE ,
+    BPO_CD ,
+    BPO_RLY ,
+    BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    NVL(AMOUNT_OUTSTANDING, 0) SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM V22B_OUTSTANDING_BILLS
+  WHERE AMOUNT_OUTSTANDING > 0
+  AND BILL_DT             <= p_FROM_DT
+  AND REGION_CODE          = 'S'
+  UNION ALL
+  SELECT BPO_TYPE ,
+    BPO_CD ,
+    BPO_RLY ,
+    BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    NVL(AMOUNT_OUTSTANDING, 0) CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM V22B_OUTSTANDING_BILLS
+  WHERE AMOUNT_OUTSTANDING > 0
+  AND BILL_DT             <= p_FROM_DT
+  AND REGION_CODE          = 'C'
+  UNION ALL
+  SELECT T12.BPO_TYPE BPO_TYPE ,
+    NVL(T25.BPO_CD, '00000') BPO_CD ,
+    T12.BPO_RLY BPO_RLY ,
+    T12.BPO_ORGN BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    NVL(T25.SUSPENSE_AMT, 0) TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM T25_RV_DETAILS T25 ,
+    T12_BILL_PAYING_OFFICER T12
+  WHERE ( T25.ACC_CD NOT       IN ( 2709 ,2210 ,2212 ) )
+  AND SUBSTR(T25.VCHR_NO, 1, 1) = 'N'
+  AND NVL(T25.BPO_CD, '00000')  = T12.BPO_CD
+  AND NVL(T25.SUSPENSE_AMT, 0) <> 0
+  UNION ALL
+  SELECT T12.BPO_TYPE BPO_TYPE ,
+    NVL(T25.BPO_CD, '00000') BPO_CD ,
+    T12.BPO_RLY BPO_RLY ,
+    T12.BPO_ORGN BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    NVL(T25.SUSPENSE_AMT, 0) TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM T25_RV_DETAILS T25 ,
+    T12_BILL_PAYING_OFFICER T12
+  WHERE ( T25.ACC_CD NOT       IN ( 2709 ,2210 ,2212 ) )
+  AND SUBSTR(T25.VCHR_NO, 1, 1) = 'W'
+  AND NVL(T25.BPO_CD, '00000')  = T12.BPO_CD
+  AND NVL(T25.SUSPENSE_AMT, 0) <> 0
+  UNION ALL
+  SELECT T12.BPO_TYPE BPO_TYPE ,
+    NVL(T25.BPO_CD, '00000') BPO_CD ,
+    T12.BPO_RLY BPO_RLY ,
+    T12.BPO_ORGN BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    NVL(T25.SUSPENSE_AMT, 0) TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM T25_RV_DETAILS T25 ,
+    T12_BILL_PAYING_OFFICER T12
+  WHERE ( T25.ACC_CD NOT       IN ( 2709 ,2210 ,2212 ) )
+  AND SUBSTR(T25.VCHR_NO, 1, 1) = 'E'
+  AND NVL(T25.BPO_CD, '00000')  = T12.BPO_CD
+  AND NVL(T25.SUSPENSE_AMT, 0) <> 0
+  UNION ALL
+  SELECT T12.BPO_TYPE BPO_TYPE ,
+    NVL(T25.BPO_CD, '00000') BPO_CD ,
+    T12.BPO_RLY BPO_RLY ,
+    T12.BPO_ORGN BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    NVL(T25.SUSPENSE_AMT, 0) TOT_SUSPENSE_SR ,
+    0 TOT_SUSPENSE_CR
+  FROM T25_RV_DETAILS T25 ,
+    T12_BILL_PAYING_OFFICER T12
+  WHERE ( T25.ACC_CD NOT       IN ( 2709 ,2210 ,2212 ) )
+  AND SUBSTR(T25.VCHR_NO, 1, 1) = 'S'
+  AND NVL(T25.BPO_CD, '00000')  = T12.BPO_CD
+  AND NVL(T25.SUSPENSE_AMT, 0) <> 0
+  UNION ALL
+  SELECT T12.BPO_TYPE BPO_TYPE ,
+    NVL(T25.BPO_CD, '00000') BPO_CD ,
+    T12.BPO_RLY BPO_RLY ,
+    T12.BPO_ORGN BPO_ORGN ,
+    0 NR_OUTSTANDING ,
+    0 WR_OUTSTANDING ,
+    0 ER_OUTSTANDING ,
+    0 SR_OUTSTANDING ,
+    0 CR_OUTSTANDING ,
+    0 TOT_SUSPENSE_NR ,
+    0 TOT_SUSPENSE_WR ,
+    0 TOT_SUSPENSE_ER ,
+    0 TOT_SUSPENSE_SR ,
+    NVL(T25.SUSPENSE_AMT, 0) TOT_SUSPENSE_CR
+  FROM T25_RV_DETAILS T25 ,
+    T12_BILL_PAYING_OFFICER T12
+  WHERE ( T25.ACC_CD NOT       IN ( 2709 ,2210 ,2212 ) )
+  AND SUBSTR(T25.VCHR_NO, 1, 1) = 'C'
+  AND NVL(T25.BPO_CD, '00000')  = T12.BPO_CD
+  AND NVL(T25.SUSPENSE_AMT, 0) <> 0
+  ) group by BPO_TYPE ,BPO_RLY ,BPO_ORGN ORDER BY BPO_TYPE ,BPO_RLY;
+END SP_GET_REGION_WISE_COMPARISON_OUTSTANDING_RPT;
+/
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT VEND_CD, VEND_NAME, 'VENDOR', SYSDATE, 1 FROM T05_VENDOR;
+create or replace PROCEDURE SP_GET_NON_CONFORMITY_DATA(
+    p_FROM_DT IN VARCHAR2,
+    P_TO_DT   IN VARCHAR2,
+    p_IE_CD   IN NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN p_result_cursor FOR 
+  SELECT IE_CD, NCR_MON, NCR_MM, SUM(A01) A01, SUM(A02) A02, SUM(A03) A03, SUM(A04) A04, SUM(A05) A05, SUM(A06) A06, SUM(A07) A07, SUM(A08) A08, SUM(A09) A09, SUM(A10) A10, SUM(A11) A11, SUM(A12) A12, SUM(A99) A99, SUM(B01) B01, SUM(B02) B02, SUM(B03) B03, SUM(B04) B04, SUM(B05) B05, SUM(B06) B06, SUM(B07) B07, SUM(B08) B08, SUM(B09) B09, SUM(B10) B10, SUM(B11) B11, SUM(B12) B12, SUM(B13) B13, SUM(B14) B14, SUM(B99) B99, SUM(C01) C01, SUM(C02) C02, SUM(C03) C03, SUM(C04) C04, SUM(C05) C05, SUM(C06) C06, SUM(C99) C99 FROM
+  (SELECT IE_CD,
+    NCR_MON,
+    NCR_MM,
+    SUM(A01) A01,
+    SUM(A02) A02,
+    SUM(A03) A03,
+    SUM(A04) A04,
+    SUM(A05) A05,
+    SUM(A06) A06,
+    SUM(A07) A07,
+    SUM(A08) A08,
+    SUM(A09) A09,
+    SUM(A10) A10,
+    SUM(A11) A11,
+    SUM(A12) A12,
+    SUM(A99) A99,
+    0 B01,
+    0 B02,
+    0 B03,
+    0 B04,
+    0 B05,
+    0 B06,
+    0 B07,
+    0 B08,
+    0 B09,
+    0 B10,
+    0 B11,
+    0 B12,
+    0 B13,
+    0 B14,
+    0 B99,
+    0 C01,
+    0 C02,
+    0 C03,
+    0 C04,
+    0 C05,
+    0 C06,
+    0 C99
+  FROM
+    (SELECT COUNT(*) A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A01'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      COUNT(*) A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A02'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      COUNT(*) A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A03'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      COUNT(*) A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A04'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      COUNT(*) A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A05'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      COUNT(*) A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A06'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      COUNT(*) A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A07'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      COUNT(*) A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A08'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      COUNT(*) A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A09'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      COUNT(*) A10,
+      0 A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A10'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      COUNT(*) A11,
+      0 A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A11'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      COUNT(*) A12,
+      0 A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A12'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 A01,
+      0 A02,
+      0 A03,
+      0 A04,
+      0 A05,
+      0 A06,
+      0 A07,
+      0 A08,
+      0 A09,
+      0 A10,
+      0 A11,
+      0 A12,
+      COUNT(*) A99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='A99'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    )
+  GROUP BY IE_CD,
+    NCR_MON,
+    NCR_MM
+  UNION ALL
+  SELECT IE_CD,
+    NCR_MON,
+    NCR_MM,
+    0 A01,
+    0 A02,
+    0 A03,
+    0 A04,
+    0 A05,
+    0 A06,
+    0 A07,
+    0 A08,
+    0 A09,
+    0 A10,
+    0 A11,
+    0 A12,
+    0 A99,
+    SUM(B01) B01,
+    SUM(B02) B02,
+    SUM(B03) B03,
+    SUM(B04) B04,
+    SUM(B05) B05,
+    SUM(B06) B06,
+    SUM(B07) B07,
+    SUM(B08) B08,
+    SUM(B09) B09,
+    SUM(B10) B10,
+    SUM(B11) B11,
+    SUM(B12) B12,
+    SUM(B13) B13,
+    SUM(B14) B14,
+    SUM(B99) B99,
+    0 C01,
+    0 C02,
+    0 C03,
+    0 C04,
+    0 C05,
+    0 C06,
+    0 C99
+  FROM
+    (SELECT COUNT(*) B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B01'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      COUNT(*) B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B02'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      COUNT(*) B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B03'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      COUNT(*) B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B04'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      COUNT(*) B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B05'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      COUNT(*) B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B06'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      COUNT(*) B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B07'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      COUNT(*) B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B08'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      COUNT(*) B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B09'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      COUNT(*) B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B10'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      COUNT(*) B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B11'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      COUNT(*) B12,
+      0 B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B12'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      COUNT(*) B13,
+      0 B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B13'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      COUNT(*) B14,
+      0 B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B14'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 B01,
+      0 B02,
+      0 B03,
+      0 B04,
+      0 B05,
+      0 B06,
+      0 B07,
+      0 B08,
+      0 B09,
+      0 B10,
+      0 B11,
+      0 B12,
+      0 B13,
+      0 B14,
+      COUNT(*) B99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='B99'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    )
+  GROUP BY IE_CD,
+    NCR_MON,
+    NCR_MM
+  UNION ALL
+  SELECT IE_CD,
+    NCR_MON,
+    NCR_MM,
+    0 A01,
+    0 A02,
+    0 A03,
+    0 A04,
+    0 A05,
+    0 A06,
+    0 A07,
+    0 A08,
+    0 A09,
+    0 A10,
+    0 A11,
+    0 A12,
+    0 A99,
+    0 B01,
+    0 B02,
+    0 B03,
+    0 B04,
+    0 B05,
+    0 B06,
+    0 B07,
+    0 B08,
+    0 B09,
+    0 B10,
+    0 B11,
+    0 B12,
+    0 B13,
+    0 B14,
+    0 B99,
+    SUM(C01) C01,
+    SUM(C02) C02,
+    SUM(C03) C03,
+    SUM(C04) C04,
+    SUM(C05) C05,
+    SUM(C06) C06,
+    SUM(C99) C99
+  FROM
+    (SELECT COUNT(*) C01,
+      0 C02,
+      0 C03,
+      0 C04,
+      0 C05,
+      0 C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C01'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      COUNT(*) C02,
+      0 C03,
+      0 C04,
+      0 C05,
+      0 C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C02'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      0 C02,
+      COUNT(*) C03,
+      0 C04,
+      0 C05,
+      0 C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C03'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      0 C02,
+      0 C03,
+      COUNT(*) C04,
+      0 C05,
+      0 C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C04'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      0 C02,
+      0 C03,
+      0 C04,
+      COUNT(*) C05,
+      0 C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C05'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      0 C02,
+      0 C03,
+      0 C04,
+      0 C05,
+      COUNT(*) C06,
+      0 C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C06'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    UNION ALL
+    SELECT 0 C01,
+      0 C02,
+      0 C03,
+      0 C04,
+      0 C05,
+      0 C06,
+      COUNT(*) C99,
+      IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON') NCR_MON,
+      TO_CHAR(NC_DT,'YYYYMM') NCR_MM
+    FROM T41_NC_MASTER T41,
+      T42_NC_DETAIL T42
+    WHERE T41.NC_NO=T42.NC_NO
+    AND IE_CD      =p_IE_CD
+    AND REGION_CODE='N'
+    AND TO_CHAR(NC_DT,'YYYYMM') BETWEEN p_FROM_DT AND p_TO_DT
+    AND NC_CD='C99'
+    GROUP BY IE_CD,
+      TO_CHAR(NC_DT,'YYYYMON'),
+      TO_CHAR(NC_DT,'YYYYMM')
+    )
+  GROUP BY IE_CD,
+    NCR_MON,
+    NCR_MM
+  ) GROUP BY IE_CD, NCR_MON, NCR_MM ORDER BY NCR_MM;
+  
+END SP_GET_NON_CONFORMITY_DATA;
+/
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT MOBILE, USER_NAME, 'CLIENT_LOGIN', SYSDATE, 1 FROM T32_CLIENT_LOGIN;
+create or replace PROCEDURE SP_GET_PENDING_CALLS_DATA(
+    p_DT IN DATE,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  open P_RESULT_CURSOR for 
+  SELECT DECODE(region,'N','NR','E','ER','W','WR','S','SR','C','CR')region, DECODE(region,'N','A','E','B','W','C','S','D','C','E')Serial_Code, SUM(GRO_SEVEN_INSP)GRO_SEVEN_INSP, SUM(GRO_SEVEN_NSIC)GRO_SEVEN_NSIC, SUM(GRO_FIVE_INSP)GRO_FIVE_INSP, SUM(GRO_FIVE_NSIC)GRO_FIVE_NSIC, SUM(GRP_SEVEN_INSP)GRP_SEVEN_INSP, SUM(GRP_SEVEN_NSIC)GRP_SEVEN_NSIC, SUM(GRP_FIVE_INSP)GRP_FIVE_INSP, SUM(GRP_FIVE_NSIC)GRP_FIVE_NSIC FROM
+  (SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    COUNT(*) GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS       IN ('U','S','W')
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>7
+  AND T13.RLY_CD        <>'NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    COUNT(*) GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS       IN ('U','S','W')
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>7
+  AND T13.RLY_CD         ='NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    COUNT(*) GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS       IN ('U','S','W')
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>5
+  AND T13.RLY_CD        <>'NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    COUNT(*) GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS       IN ('U','S','W')
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>5
+  AND T13.RLY_CD         ='NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    COUNT(*) GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS        ='M'
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>7
+  AND T13.RLY_CD        <>'NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    COUNT(*) GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS        ='M'
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>7
+  AND T13.RLY_CD         ='NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    COUNT(*) GRP_FIVE_INSP,
+    0 GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS        ='M'
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>5
+  AND T13.RLY_CD        <>'NSIC'
+  GROUP BY T13.REGION_CODE
+  UNION ALL
+  SELECT T13.REGION_CODE region,
+    T13.REGION_CODE Serial_Code,
+    0 GRO_SEVEN_INSP,
+    0 GRO_SEVEN_NSIC,
+    0 GRO_FIVE_INSP,
+    0 GRO_FIVE_NSIC,
+    0 GRP_SEVEN_INSP,
+    0 GRP_SEVEN_NSIC,
+    0 GRP_FIVE_INSP,
+    COUNT(*) GRP_FIVE_NSIC
+  FROM T13_PO_MASTER T13,
+    T17_CALL_REGISTER T17
+  WHERE T13.CASE_NO      =T17.CASE_NO
+  AND CALL_STATUS        ='M'
+  AND T17.CALL_RECV_DT   >'31-MAR-19'
+  AND p_DT-DT_INSP_DESIRE>5
+  AND T13.RLY_CD         ='NSIC'
+  GROUP BY T13.REGION_CODE
+  ) group by REGION ORDER BY Serial_Code;
+END SP_GET_PENDING_CALLS_DATA;
+/
 
-INSERT INTO USER_MASTER(USER_ID, NAME, USER_TYPE, CREATEDDATE, CREATEDBY)
-SELECT MOBILE, LO_NAME, 'LO_LOGIN', SYSDATE, 1 FROM T105_LO_LOGIN;
+create or replace PROCEDURE SP_GET_IC_ISSUED_NOT_RECEIVED_DATA(
+    p_FROM_DT IN DATE,
+    p_TO_DT   IN DATE,
+    p_REGION  IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN p_result_cursor FOR SELECT CO_NAME, IE_NAME, COUNT(*) NO_IC FROM
+  (SELECT TO_CHAR(CALL_STATUS_DT,'dd/mm/yyyy') IC_ISSUED_DT,
+    a.BK_NO,
+    a.SET_NO,
+    a.IE_NAME,
+    a.CO_NAME
+  FROM
+    (SELECT T17.CASE_NO,
+      T17.CALL_STATUS_DT,
+      'dd/mm/yyyy',
+      T17.BK_NO,
+      T17.SET_NO,
+      T09.IE_NAME,
+      T08.CO_NAME
+    FROM T17_CALL_REGISTER T17
+    LEFT JOIN T30_IC_RECEIVED T30
+    ON (T17.BK_NO      = T30.BK_NO
+    AND T17.SET_NO     =T30.SET_NO
+    AND T17.REGION_CODE=T30.REGION),
+      T09_IE T09,
+      T08_IE_CONTROLL_OFFICER T08
+    WHERE (T30.BK_NO          IS NULL
+    AND T30.SET_NO            IS NULL
+    AND T30.REGION            IS NULL)
+    AND T17.IE_CD              =T09.IE_CD
+    AND T09.IE_CO_CD           =T08.CO_CD
+    AND SUBSTR(T17.CASE_NO,1,1)=p_REGION
+    AND T17.CALL_STATUS       IN ('A','R')
+    AND (T17.CALL_STATUS_DT BETWEEN p_FROM_DT AND p_TO_DT )
+    ) a
+  LEFT JOIN T20_IC T20
+  ON (a.BK_NO       =T20.BK_NO
+  AND a.SET_NO      =T20.SET_NO
+  AND a.CASE_NO     =T20.CASE_NO)
+  WHERE (T20.BK_NO IS NULL
+  AND T20.SET_NO   IS NULL
+  AND T20.CASE_NO  IS NULL)
+  ORDER BY a.IE_NAME,
+    a.CALL_STATUS_DT,
+    a.BK_NO,
+    a.SET_NO
+  ) GROUP BY CO_NAME, IE_NAME ORDER BY CO_NAME, IE_NAME;
+END SP_GET_IC_ISSUED_NOT_RECEIVED_DATA;
+/
 
-==============================================================================================================================
+create or replace PROCEDURE SP_GET_INSPECTION_FEE_WISE_PENDING_CALLS_DATA(
+    p_FROM_DT IN DATE,
+    p_TO_DT   IN DATE,
+    p_REGION  IN VARCHAR2,
+    p_CO_CD   IN INT,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN p_result_cursor FOR SELECT case_no, call_sno, call_recv_dt, ie_name, co_name, client_RLY, RLY,ROUND(pending_since) pending_since,insp_desire_dt insp_desire_date,MIN(ext_delv_dt) ext_delv_date, SUM(MAT_VALUE) MAT_VALUE, SUM(INSP_FEE) INSP_FEE FROM
+  (SELECT t17.case_no case_no,
+    t17.call_sno call_sno,
+    t17.call_recv_dt,
+    t09.ie_name ie_name,
+    t08.co_name,
+    t13.rly_cd client_RLY,
+    DECODE(t13.rly_nonrly,'R','Railway','Non Railway') RLY,
+    (sysdate-t17.call_recv_dt) pending_since,
+    dt_insp_desire insp_desire_dt,
+    t15.ext_delv_dt ext_delv_dt,
+    ROUND((t15.value/t15.qty),2) rate,
+    QTY_TO_INSP,
+    ROUND((ROUND((t15.value                       /t15.qty),2)*QTY_TO_INSP),2) MAT_VALUE,
+    DECODE(rly_nonrly,'R',ROUND(((ROUND((t15.value/t15.qty),2)*QTY_TO_INSP)*(.167/100)),2),ROUND(((ROUND((t15.value/t15.qty),2)*QTY_TO_INSP)*(.7/100)),2)) Insp_Fee
+  FROM t13_po_master t13,
+    t17_call_register t17,
+    t18_call_details t18,
+    t15_po_detail t15,
+    t09_ie t09,
+    t08_ie_controll_officer t08
+  WHERE t17.case_no   = t13.case_no
+  AND t17.case_no     = t18.case_no
+  AND t17.call_sno    = t18.call_sno
+  AND t17.call_recv_dt= t18.call_recv_dt
+  AND T17.CASE_NO     =T15.CASE_NO
+  AND T17.IE_CD       = T09.IE_CD
+  AND T17.CO_CD       = T08.CO_CD
+  AND T15.ITEM_SRNO   =T18.ITEM_SRNO_PO
+  AND T15.CONSIGNEE_CD=T18.CONSIGNEE_CD
+  AND T17.CALL_STATUS ='M'
+  AND T17.REGION_CODE =P_REGION
+  AND (T17.CALL_RECV_DT BETWEEN P_FROM_DT AND P_TO_DT)
+  AND (T13.PO_DT>'26-NOV-2022')
+  AND 1         = (
+    CASE
+      WHEN p_CO_CD = 0
+      THEN 1
+      WHEN p_CO_CD = T08.CO_CD
+      THEN 1
+      ELSE 0
+    END )
+    
+  UNION ALL
+  
+  SELECT t17.case_no case_no,
+    t17.call_sno call_sno,
+    t17.call_recv_dt call_recv_dt,
+    t09.ie_name ie_name,
+    t08.co_name,
+    t13.rly_cd client_RLY,
+    DECODE(t13.rly_nonrly,'R','Railway','Non Railway') RLY,
+    (sysdate-t17.call_recv_dt) pending_since,
+    dt_insp_desire insp_desire_dt,
+    t15.ext_delv_dt ext_delv_dt,
+    ROUND((t15.value/t15.qty),2) rate,
+    QTY_TO_INSP,
+    ROUND((ROUND((t15.value                       /t15.qty),2)*QTY_TO_INSP),2) MAT_VALUE,
+    DECODE(rly_nonrly,'R',ROUND(((ROUND((t15.value/t15.qty),2)*QTY_TO_INSP)*(.9/100)),2),ROUND(((ROUND((t15.value/t15.qty),2)*QTY_TO_INSP)*(.7/100)),2)) Insp_Fee
+  FROM t13_po_master t13,
+    t17_call_register t17,
+    t18_call_details t18,
+    t15_po_detail t15,
+    t09_ie t09,
+    t08_ie_controll_officer t08
+  WHERE t17.case_no   = t13.case_no
+  AND t17.case_no     = t18.case_no
+  AND t17.call_sno    = t18.call_sno
+  AND t17.call_recv_dt= t18.call_recv_dt
+  AND T17.CASE_NO     =T15.CASE_NO
+  AND T17.IE_CD       = T09.IE_CD
+  AND T17.CO_CD       = T08.CO_CD
+  AND T15.ITEM_SRNO   =T18.ITEM_SRNO_PO
+  AND T15.CONSIGNEE_CD=T18.CONSIGNEE_CD
+  AND T17.CALL_STATUS ='M'
+  AND T17.REGION_CODE =P_REGION
+  AND (T17.CALL_RECV_DT BETWEEN P_FROM_DT AND P_TO_DT)
+  AND (T13.PO_DT<='26-NOV-2022')
+  AND 1          = (
+    CASE
+      WHEN p_CO_CD = 0
+      THEN 1
+      WHEN p_CO_CD = T08.CO_CD
+      THEN 1
+      ELSE 0
+    END )
+  )GROUP BY CASE_NO, CALL_SNO, CALL_RECV_DT, IE_NAME, CO_NAME, CLIENT_RLY, RLY,PENDING_SINCE,INSP_DESIRE_DT,EXT_DELV_DT;
+END SP_GET_INSPECTION_FEE_WISE_PENDING_CALLS_DATA;
+/
+
+create or replace PROCEDURE SP_GET_CALLS_DETAILS_DATA(
+    p_REGION IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR )
+IS
+BEGIN
+  OPEN P_RESULT_CURSOR FOR SELECT DECODE(IE_Dept,'M','Mechanical','E','Electrical') IE_Dept, SUM(call_marked) call_marked, SUM(Call_Attended) Call_Attended, SUM(Call_Pending) Call_Pending, SUM(Ie_No) Ie_No,
+  CASE
+  WHEN SUM(Ie_No) = 0 THEN
+    0
+  ELSE
+    ROUND(SUM(Call_Pending)/SUM(Ie_No),2)
+  END
+AS
+  Avg_Pen FROM
+  (SELECT t09.ie_department IE_Dept,
+    COUNT(*) call_marked,
+    0 Call_Attended,
+    0 Call_Pending,
+    0 IE_No
+  FROM t17_call_register t17,
+    t09_ie t09
+  WHERE t17.ie_cd =t09.ie_cd AND t09.ie_department IN ('M','E') AND t17.region_code =p_REGION AND TO_CHAR(t17.call_recv_dt,'DD/MM/YYYY')=TO_CHAR(sysdate-1,'DD/MM/YYYY')
+  GROUP BY T09.Ie_Department
+  UNION ALL
+  SELECT t09.ie_department IE_Dept,
+    0 call_marked,
+    COUNT(*) Call_Attended,
+    0 Call_Pending,
+    0 IE_No
+  FROM t47_ie_work_plan t47,
+    t09_ie t09
+  WHERE t47.ie_cd =t09.ie_cd AND t09.ie_department IN ('M','E') AND TO_CHAR(t47.visit_dt,'DD/MM/YYYY')=TO_CHAR(sysdate-1,'DD/MM/YYYY') AND t47.region_code =p_REGION
+  GROUP BY t09.ie_department
+  UNION ALL
+  SELECT t09.ie_department IE_Dept,
+    0 call_marked,
+    0 Call_Attended,
+    COUNT(*) Call_Pending,
+    0 IE_No
+  FROM t17_call_register t17,
+    t09_ie t09
+  WHERE t17.ie_cd =t09.ie_cd AND t17.call_status ='M' AND t17.region_code =p_REGION AND TO_CHAR(t17.call_recv_dt,'YYYYMMDD')>='20220101' AND t09.ie_department IN ('M','E')
+  GROUP BY T09.Ie_Department
+  UNION ALL
+  SELECT t09.ie_department IE_Dept,
+    0 call_marked,
+    0 Call_Attended,
+    0 Call_Pending,
+    COUNT(DISTINCT(T47.IE_CD)) IE_No
+  FROM t47_IE_WORK_PLAN T47,
+    T09_IE T09
+  WHERE t47.ie_cd = t09.ie_cd AND T09.Ie_Department IN ('M','E') AND TO_CHAR(T47.Visit_Dt,'YYYYMM')=TO_CHAR(sysdate,'YYYYMM') AND T47.Region_Code =p_REGION
+  GROUP BY T09.Ie_Department
+  ) GROUP BY IE_DEPT ORDER BY IE_Dept;
+END SP_GET_CALLS_DETAILS_DATA;
+/
+

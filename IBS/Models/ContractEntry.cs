@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class ContractEntry
     {
@@ -7,7 +9,11 @@
         public DateTime? LETTER_DATE { get; set; }
         public DateTime? TPFROM { get; set; }
         public DateTime? TPTO { get; set; }
-        public string? CLIENTTYPE { get; set; }
+
+        [Required(ErrorMessage ="Organization Type is required")]
+        public string CLIENTTYPE { get; set; }
+
+        [Required(ErrorMessage = "Organization Name is required")]
         public string? CLIENTNAME { get; set; }
         public int? INSPFEE { get; set; }
         public int? MANDAYBASIS { get; set; }
@@ -22,5 +28,6 @@
         public int? IsDeleted { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? updatedDate { get; set; }
+        public string CLIENTCODE { get; set; }
     }
 }

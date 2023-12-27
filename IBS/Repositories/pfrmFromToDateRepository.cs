@@ -45,7 +45,7 @@ namespace IBS.Repositories
 
                 string ToDate = null, FromDate = null;
 
-                
+
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
                 {
                     FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
@@ -58,13 +58,13 @@ namespace IBS.Repositories
                 DataTable dt = new DataTable();
 
                 DataSet ds;
-               
-                    OracleParameter[] par = new OracleParameter[3];
-                    par[0] = new OracleParameter("p_start_date", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
-                    par[1] = new OracleParameter("p_end_date", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
-                    ds = DataAccessDB.GetDataSet("CMWiseICDetail", par, 1);
-               
+
+                OracleParameter[] par = new OracleParameter[3];
+                par[0] = new OracleParameter("p_start_date", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_end_date", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+                ds = DataAccessDB.GetDataSet("CMWiseICDetail", par, 1);
+
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -78,7 +78,7 @@ namespace IBS.Repositories
                         IE_NAME = row.Field<string>("IE_NAME"),
                         CO_NAME = row.Field<string>("CO_NAME"),
                         IC_ISSUED_DT = DateTime.ParseExact(row["IC_ISSUED_DT"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                }).ToList();
+                    }).ToList();
 
                     query = list.AsQueryable();
 

@@ -14,7 +14,7 @@ namespace IBS.Interfaces
 
         string DetailsInsertUpdate(InspectionEngineersModel model);
 
-        string GetMatch(int IeCd,string Region);
+        string GetMatch(int IeCd, string Region);
 
         string DeleteIe(int IeCd);
 

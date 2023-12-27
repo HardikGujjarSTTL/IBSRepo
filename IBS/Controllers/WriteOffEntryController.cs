@@ -1,10 +1,7 @@
-﻿using IBS.Helper;
-using IBS.Interfaces.Reports;
-using IBS.Models.Reports;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using IBS.Filters;
-using IBS.Interfaces;
 
 namespace IBS.Controllers
 {
@@ -37,13 +34,13 @@ namespace IBS.Controllers
         {
             try
             {
-                if(dataArr != null && dataArr.Count > 0)
+                if (dataArr != null && dataArr.Count > 0)
                 {
                     WriteOfMaster model = new WriteOfMaster();
                     model.CreatedBy = UserId;
                     model.CreatedDT = DateTime.Now;
 
-                    writeOffEntryRepository.UpdateWriteAmtDetails(dataArr,model);
+                    writeOffEntryRepository.UpdateWriteAmtDetails(dataArr, model);
                     AlertAddSuccess("Record Updated Successfully.");
                     return Json(new { success = true });
                 }

@@ -1,11 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -65,7 +61,7 @@ namespace IBS.Controllers
                     //string myFileEx = $"{CaseNo.Trim()}_{CallSno.Trim()}_{mdtEx}";
 
                     //string fpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Payment", $"{myFileEx}.PDF");
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string MyFile = "";
                     string mdt = dateconcate(CallRdt.Trim());
                     MyFile = CaseNo.Trim() + '_' + CallSno.Trim() + '_' + mdt;
                     String filePath = null;
@@ -134,7 +130,7 @@ namespace IBS.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string fn = "", MyFile = "";
                     string mdt = dateconcate1(LabSampleInfoModel.CallRecDt.Trim());
                     MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
                     fn = Path.GetFileName(file.FileName);
@@ -192,7 +188,7 @@ namespace IBS.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string fn = "", MyFile = "";
                     string mdt = dateconcate1(LabSampleInfoModel.CallRecDt.Trim());
                     MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
                     fn = Path.GetFileName(file.FileName);
@@ -229,24 +225,25 @@ namespace IBS.Controllers
         }
         public IActionResult DownloadFile(string caseno, string calldt, string csno, string filename)
         {
-            try { 
-            string fn = "", MyFile = "", fx = "", fl = "";
-            string mdt = dateconcate(calldt.Trim());
-            MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
-            fn = Path.GetFileName(filename);
-            String filePath = null;
-            filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
-
-            if (System.IO.File.Exists(filePath))
+            try
             {
-                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                string fn = "", MyFile = "";
+                string mdt = dateconcate(calldt.Trim());
+                MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
+                fn = Path.GetFileName(filename);
+                String filePath = null;
+                filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", "PReciept", MyFile + ".PDF");
 
-                return File(fileBytes, "application/pdf", fn);
-            }
-            else
-            {
-                return NotFound(); // Or return another result indicating the file does not exist
-            }
+                if (System.IO.File.Exists(filePath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                    return File(fileBytes, "application/pdf", fn);
+                }
+                else
+                {
+                    return NotFound(); // Or return another result indicating the file does not exist
+                }
             }
             catch (Exception ex)
             {

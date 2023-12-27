@@ -22,4 +22,6 @@ public partial class Userrole
     public byte? Isdeleted { get; set; }
 
     public string? UserId { get; set; }
+
+    public long? UserMasterId { get; set; }
 }

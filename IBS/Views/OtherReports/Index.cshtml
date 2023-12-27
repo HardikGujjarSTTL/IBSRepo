@@ -512,7 +512,7 @@
                         <div class="col-md-3">
                             <div class="input-search">
                                 <label for="FromDate">Month</label>
-                                @Html.DropDownList("monthVENDPER", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "monthVENDPER" })
+                                @Html.DropDownList("monthVENDPER", new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--" ,new { id = "monthVENDPER" })
                                 <span class="text-danger field-validation-error" id="spnErrormonth"></span>
                             </div>
                         </div>
@@ -835,7 +835,7 @@
         $(document).ready(function () {
             $("#ddlsupercmUE").hide();
             $("#ddlienameUE").hide();
-            $("#AllIEUE").hide();
+            $("#AllIEUE").show();
             $("#AllCMWiseUE").hide();
             $("#divdate").hide();
             $("#iecmname").hide();
@@ -848,14 +848,16 @@
 
             $("#vendorVENDPER").autocomplete({
                 source: function (request, response) {
+                    debugger
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                       // url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })
@@ -1394,6 +1396,7 @@
         }
 
         function ViewReportIEWISET() {
+            debugger
             var ReportType = '@ReportType';
             var IENAME = $('#IENAME').val();
             var TrainingArea = $('#TrainingArea').val();
@@ -1560,7 +1563,7 @@
             var vendor = $('#vendorVENDPER').val();
             var indexOfHyphen = vendor.indexOf("-");
             var vendcd = vendor.substr(0, indexOfHyphen).trim();
-            var monthtxt = $('#monthVENDPER option:selected').text();
+            var monthtxt = $('#monthVENDPER option:selected').text() == "--Select--" ? null : $('#monthVENDPER option:selected').text();
 
             $('#frmVENDPER').find("#hdnReportType").val(ReportType);
             $('#frmVENDPER').find("#hdnFromDate").val(FromDate);

@@ -432,7 +432,7 @@
         public string CaseNo { get; set; }  
         public DateTime CallRecvDt { get; set; }  
         public DateTime? PoDt { get; set; }  
-        public byte? CallInstallNo { get; set; }  
+        public int? CallInstallNo { get; set; }  
         public int CallSno { get; set; }  
         public string CallStatus { get; set; }  
         public string CallLetterNo { get; set; }  

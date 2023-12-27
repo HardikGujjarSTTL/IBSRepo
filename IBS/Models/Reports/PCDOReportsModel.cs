@@ -197,6 +197,9 @@
         public List<JIdisposedComplaintsModel> jIdisposedComplaintsModels { get; set; }
         public List<BreakupComplaintsModel> breakupComplaintsModels { get; set; }
         public List<OthercasesComplaintsModel> othercasesComplaintsModels { get; set; }
+        public List<OthercasesComplaintsModel> othercasesComplaintsE { get; set; }
+        public List<OthercasesComplaintsModel> othercasesComplaintsW { get; set; }
+        public List<OthercasesComplaintsModel> othercasesComplaintsS { get; set; }
         public List<Long_pendingModel> long_PendingModels { get; set; }
         public List<CR_REJModel> cR_REJModels { get; set; }
     }

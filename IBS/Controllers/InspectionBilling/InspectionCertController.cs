@@ -1,16 +1,10 @@
-﻿using IBS.Interfaces.InspectionBilling;
-using IBS.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using IBS.Models;
-using IBS.Repositories.Vendor;
-using IBS.Repositories;
-using System.Dynamic;
-using IBS.Helper;
-using IBS.Filters;
+﻿using IBS.Helper;
 using IBS.Helpers;
-using IBS.Repositories.Administration;
+using IBS.Interfaces;
+using IBS.Interfaces.InspectionBilling;
+using IBS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using IBS.DataAccess;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -624,6 +618,19 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ChangeConsignee", 1, GetIPAddress());
             }
             return View(model);
+        }
+
+        public IActionResult GetTaxTypeList(string StateCode)
+        {
+            if (StateCode == "7")
+            {
+                return Json(Common.GetTaxType_GST_07());
+            }
+            else
+            {
+                return Json(Common.GetTaxType_GST_O());
+            }
+
         }
     }
 }

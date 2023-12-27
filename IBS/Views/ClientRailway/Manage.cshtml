@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manage";
+    var Types = Model.Type;
 }
 
 <div class="list-inner">
@@ -20,7 +21,14 @@
                 <input hidden asp-for="Type"/>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Railway Code<i class="text-danger">*</i></label>
-                    <input type="text" class="input" asp-for="RLY_CD" />
+                    @if (Types == "U")
+                    {
+                        <input type="text" class="input" asp-for="RLY_CD" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="input" asp-for="RLY_CD" />
+                    }
                     <span asp-validation-for="RLY_CD" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -47,6 +55,13 @@
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
+
+        //$(document).ready(function () {
+        //    var Type = $("#Type").val();
+        //    if(Type == "U"){
+        //        $('#RLY_CD').prop('disabled', true);
+        //    }
+        //});
 
         function SaveRailway() {
             if ($("#frmRailways").valid()) {

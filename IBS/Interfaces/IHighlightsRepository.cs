@@ -6,9 +6,9 @@ namespace IBS.Interfaces
     {
         public HighlightsModel FindByID(string HighDt, string RegionCode);
         DTResult<HighlightsModel> GetHighlightsList(DTParameters dtParameters, string RegionCode);
-        
-        bool Remove(string HighDt, string strRgn,int UserID);
-        
+
+        bool Remove(string HighDt, string strRgn, int UserID);
+
         string HighlightsDetailsInsertUpdate(HighlightsModel model);
     }
 }

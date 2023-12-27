@@ -1,7 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces.Administration;
 using IBS.Models;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Administration
 {
@@ -23,7 +22,7 @@ namespace IBS.Repositories.Administration
                               select x.FId).Max();
 
             string FildID = model.DocType + model.DocSubType + (Convert.ToInt32(MAXid ?? 0) + 1).ToString("D4");
-            if(string.IsNullOrEmpty(model.DocSubType))
+            if (string.IsNullOrEmpty(model.DocSubType))
             {
                 FildID = model.DocType + (Convert.ToInt32(MAXid ?? 0) + 1).ToString("D5");
             }

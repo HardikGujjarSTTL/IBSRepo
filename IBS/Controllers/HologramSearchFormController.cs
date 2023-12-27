@@ -1,8 +1,6 @@
-﻿using Humanizer;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -56,7 +54,7 @@ namespace IBS.Controllers
             try
             {
                 var model = new HologramSearchFormModel();
-                model.HgNoFr = Hg_No_Fr.Substring(1,7);
+                model.HgNoFr = Hg_No_Fr.Substring(1, 7);
                 model.HgNoTo = Hg_No_To.Substring(1, 7);
                 model.HgRegion = GetUserInfo.Region;
                 model.Updatedby = UserId;
@@ -157,13 +155,13 @@ namespace IBS.Controllers
             string errorMsg = "";
             Hg_No_Fr = Hg_No_Fr.Substring(1, 7);
             Hg_No_To = Hg_No_To.Substring(1, 7);
-            var res = hologramSearchForm.MatchHologram(Hg_No_Fr, Hg_No_To, GetUserInfo.Region);            
+            var res = hologramSearchForm.MatchHologram(Hg_No_Fr, Hg_No_To, GetUserInfo.Region);
             if (res == 0)
             {
                 errorMsg = "No Record Found of Entered Hologram No From. and Hologram No.To!!!";
                 //return Json(new { status = false, responseText =  });
             }
-            else if(res == 1)
+            else if (res == 1)
             {
                 errorMsg = "You Are Not Authorised to Update/Delete Hologram data Issued to Other Regions!!!";
                 //return Json(new { status = false, responseText = "You Are Not Authorised to Update/Delete Hologram data Issued to Other Regions!!!" });

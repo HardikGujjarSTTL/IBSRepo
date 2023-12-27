@@ -20,13 +20,15 @@ namespace IBSAPI.Interfaces
         int GetClientTotalInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         int GetClientCompletedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         int GetClientPendingInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientRejectedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
+        int GetClientCancelledInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate);
         #endregion
 
         #region CM DashBoard
         List<IEModel> Get_CM_Wise_IE(int CO_CD);
-        int Get_CM_TotalInspection(int CO_CD, string FromDate, string ToDate);
-        int Get_CM_PendingInspection(int CO_CD, string FromDate, string ToDate);
-        int Get_CM_RequestRejectedInspection(int CO_CD, string FromDate, string ToDate);
+        int Get_CM_TotalInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
+        int Get_CM_PendingInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
+        int Get_CM_RequestRejectedInspection(int CO_CD, int IE_CD, string FromDate, string ToDate);
         #endregion
     }
 }

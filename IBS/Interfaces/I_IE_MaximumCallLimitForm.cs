@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public IE_MaximumCallLimitFormModel FindByID(string RegionCode);
 
-        DTResult<IE_MaximumCallLimitFormModel>GetIE_MaximumCallLimitFormList(DTParameters dtParameters, string Region);
+        DTResult<IE_MaximumCallLimitFormModel> GetIE_MaximumCallLimitFormList(DTParameters dtParameters, string Region);
 
         bool Remove(int RegionCode, int UserID);
 

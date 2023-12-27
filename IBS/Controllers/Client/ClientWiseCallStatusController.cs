@@ -1,21 +1,8 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using System;
-using System.Drawing;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using IBS.Interfaces.Reports;
-using System.Data;
-using OfficeOpenXml;
-using System.IO;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Client
 {
@@ -46,7 +33,7 @@ namespace IBS.Controllers.Client
                 CallCode = ReportStatus
             };
             if (ReportType == "ClientWise") model.ReportTitle = "CLIENT WISE CALL DETAILS";
-            else if (ReportType == "VendorWise") model.ReportTitle = "VENDOR WISE REJECTION";            
+            else if (ReportType == "VendorWise") model.ReportTitle = "VENDOR WISE REJECTION";
             return View(model);
         }
         public IActionResult ClientCallStatusReport(string FromDate, string ToDate, string ReportStatus)
@@ -70,7 +57,7 @@ namespace IBS.Controllers.Client
                 else if (Region == "C")
                 { ViewBag.Region = "CENTRAL REGION"; }
 
-                model = ClientCallStatusRepository.GetCallStatusC( FromDate,  ToDate,  ReportStatus, OrgType, Org);
+                model = ClientCallStatusRepository.GetCallStatusC(FromDate, ToDate, ReportStatus, OrgType, Org);
             }
             catch (Exception ex)
             {
@@ -79,7 +66,7 @@ namespace IBS.Controllers.Client
             return PartialView(model);
             //string actionValue = HttpContext.Request.Query["Action"];
             //ViewBag.Action = actionValue;
-            
+
         }
         public IActionResult VendorCallStatusReport(string FromDate, string ToDate, string ReportStatus)
         {

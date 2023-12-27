@@ -1,13 +1,10 @@
 ﻿using IBS.Filters;
-using IBS.Interfaces.Reports;
-using IBS.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Models;
-using IBS.Models.Reports;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers.Reports.RealisationPayments
 {

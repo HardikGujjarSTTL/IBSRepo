@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -28,13 +26,13 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string id,string Type)
+        public IActionResult Manage(string id, string Type)
         {
             Railway model = new();
             if (!string.IsNullOrEmpty(id))
             {
-                model.Type = Type;
                 model = railwayRepository.FindRailwayByID(id);
+                model.Type = Type;
             }
             return View(model);
         }
@@ -49,21 +47,16 @@ namespace IBS.Controllers
                 model.USERID = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                 if (model.Type == "U")
                 {
-                    model.Updatedby = UserId; 
+                    model.Updatedby = UserId;
                     int i = railwayRepository.RailwayInsertUpdate(model);
                     if (i == 2)
                     {
                         AlertAddSuccess("Record Updated Successfully.");
                     }
-                    else if(i == 0)
-                    {
-                        AlertAlreadyExist("This Railway Code Is Already Exist!!!");
-                        return View("Manage", model);
-                    }
                 }
-                else 
+                else
                 {
-                    model.Createdby = UserId; 
+                    model.Createdby = UserId;
                     int i = railwayRepository.RailwayInsertUpdate(model);
                     if (i == 1)
                     {

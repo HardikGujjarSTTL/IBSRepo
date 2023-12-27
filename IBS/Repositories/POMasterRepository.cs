@@ -2,10 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using Newtonsoft.Json;
 
 namespace IBS.Repositories
 {
@@ -117,7 +116,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd,string RlyNonrly)
+        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd, string RlyNonrly)
         {
 
             DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
@@ -145,7 +144,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from POMaster in context.ViewPomasterlists
-                    where POMaster.Rlycds == rly_cd && POMaster.RlyNonrly== RlyNonrly
+                    where POMaster.Rlycds == rly_cd && POMaster.RlyNonrly == RlyNonrly
                     && POMaster.Isdeleted != Convert.ToByte(true)
                     select new PO_MasterModel
                     {
@@ -358,7 +357,7 @@ namespace IBS.Repositories
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
                 model.Contractid = POMaster.Contractid;
-                model.Isstageinspection =Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 return model;
             }
@@ -673,25 +672,25 @@ namespace IBS.Repositories
             return result;
         }
 
-        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid,int DocumentID)
+        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid, int DocumentID)
         {
             IBS_DocumentDTO aPPDocument = (from x in context.IbsAppdocuments
-                                                       where x.Applicationid == Convert.ToString(Applicationid)
-                                                       && x.Documentid == DocumentID
-                                          select new IBS_DocumentDTO
-                                          {
-                                              ID = x.Id,
-                                              DocumentCategory = x.Documentcategory,
-                                              APPDocumentID = x.Id,
-                                              ApplicationID = x.Applicationid,
-                                              DocumentID = x.Documentid ?? 0,
-                                              RelativePath = x.Relativepath,
-                                              FileID = x.Fileid,
-                                              Extension = x.Extension,
-                                              FileDisplayName = x.Filedisplayname,
-                                              IsOtherDoc = x.Isotherdoc,
-                                              OtherDocumentName = x.Otherdocumentname,
-                                          }).FirstOrDefault();
+                                           where x.Applicationid == Convert.ToString(Applicationid)
+                                           && x.Documentid == DocumentID
+                                           select new IBS_DocumentDTO
+                                           {
+                                               ID = x.Id,
+                                               DocumentCategory = x.Documentcategory,
+                                               APPDocumentID = x.Id,
+                                               ApplicationID = x.Applicationid,
+                                               DocumentID = x.Documentid ?? 0,
+                                               RelativePath = x.Relativepath,
+                                               FileID = x.Fileid,
+                                               Extension = x.Extension,
+                                               FileDisplayName = x.Filedisplayname,
+                                               IsOtherDoc = x.Isotherdoc,
+                                               OtherDocumentName = x.Otherdocumentname,
+                                           }).FirstOrDefault();
             return aPPDocument;
         }
 

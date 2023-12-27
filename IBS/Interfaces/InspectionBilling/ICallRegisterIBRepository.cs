@@ -1,6 +1,4 @@
 ﻿using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace IBS.Interfaces.InspectionBilling
 {
@@ -24,7 +22,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
 
-        string send_Vendor_Email(VenderCallStatusModel model);
+        string send_Vendor_Email(VenderCallRegisterModel model);
 
         string RegiserCallDelete(VenderCallRegisterModel model);
 
@@ -40,11 +38,11 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallCancellationModel CancelCallFindByIDM(string CaseNo, string CallRecvDt, int CallSno, string ActionType);
 
-        string CallCancellationSave(VenderCallCancellationModel model,  string UserName);
+        string CallCancellationSave(VenderCallCancellationModel model, string UserName);
 
         string CallCancelDelete(string CaseNo, string CallRecvDt, int CallSno);
 
-        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno);
+        public VenderCallStatusModel FindCallStatus(string CaseNo, DateTime? CallRecvDt, int CallSno, int IE_CD);
 
         string Save(VenderCallStatusModel model, List<APPDocumentDTO> DocumentsList);
 
@@ -66,11 +64,11 @@ namespace IBS.Interfaces.InspectionBilling
 
         bool CallDetailsRemove(VendrorCallDetailsModel model);
 
-        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd);
+        public VenderCallStatusModel GetBkNoAndSetNoByConsignee(string CaseNo, DateTime? DesireDt, int CallSno, VenderCallStatusModel model, int selectedConsigneeCd, int IE_CD);
 
         public VenderCallStatusModel GetCancelChargeByStatus(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
 
-        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue,string IeCd,string Region);
+        public VenderCallStatusModel GetRlyDrp(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue, string IeCd, string Region);
 
         public VenderCallStatusModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
         bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD);

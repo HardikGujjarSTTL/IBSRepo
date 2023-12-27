@@ -22,7 +22,7 @@ namespace IBS.Repositories.IE
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            
+
             if (dtParameters.Order != null)
             {
                 // in this example we just default sort on the 1st column
@@ -42,10 +42,10 @@ namespace IBS.Repositories.IE
 
 
             query = from l in context.ViewGetPendingJiComplaints
-                    where 
-                    l.ComplaintDt == DateTime.ParseExact("01-04-2013", "dd/MM/yyyy", null) 
+                    where
+                    l.ComplaintDt == DateTime.ParseExact("01-04-2013", "dd/MM/yyyy", null)
                     && l.JiRequired == "Y" && l.JiFixDt >= DateTime.Now
-                    && l.IeCd == GetIeCd 
+                    && l.IeCd == GetIeCd
                     && (l.IeJiRemarks ?? "X") == "X"
                     select new IEJIRemarksPendingModel
                     {

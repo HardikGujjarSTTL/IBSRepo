@@ -2,15 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
-using System.Drawing;
-using System.Net;
-using System.Dynamic;
-using System.Globalization;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -563,7 +556,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
                     //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
-                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToDateTime(GetDetails.C.OtherInspDt) : null;
+                    model.OtherInspDt = !string.IsNullOrEmpty(GetDetails.C.OtherInspDt) ? Convert.ToString(GetDetails.C.OtherInspDt) : null;
                     model.StampPattern = GetDetails.C.StampPattern;
                     model.ReasonReject = GetDetails.C.ReasonReject;
                     model.BillNo = GetDetails.C.BillNo;
@@ -730,7 +723,8 @@ namespace IBS.Repositories.InspectionBilling
                             }
                             if (model.IcTypeId == 9 && query3.CnoteBillNo != null)
                             {
-                                model.BillNo = query3.CnoteBillNo;
+                                //model.BillNo = query3.CnoteBillNo;
+                                model.CnoteBillNo = query3.CnoteBillNo;
                             }
                             if (query3.SentToSap == "X" || query3.BillFinalised == "Y")
                             {
@@ -855,7 +849,8 @@ namespace IBS.Repositories.InspectionBilling
                         LegalName = t06.LegalName,
                         Pincode = t06.PinCode,
                         City = t03.City,
-                        State = t92.StateCd + "-" + t92.StateName
+                        State = t92.StateCd + "-" + t92.StateName,
+                        StateID = Convert.ToString(t92.StateCd)
                     };
 
             dTResult.data = query;
@@ -877,7 +872,8 @@ namespace IBS.Repositories.InspectionBilling
                         LegalName = t12.LegalName,
                         Pincode = t12.PinCode,
                         City = t03.City,
-                        State = t92.StateCd + "-" + t92.StateName
+                        State = t92.StateCd + "-" + t92.StateName,
+                        StateID = Convert.ToString(t92.StateCd)
                     };
 
             dTResult.data = query;
@@ -1397,9 +1393,9 @@ namespace IBS.Repositories.InspectionBilling
             query = from c in context.T18CallDetails
                     join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                     join u in context.T04Uoms on p.UomCd equals u.UomCd
-                    join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
-                    from intermediate in intermediateGroup.DefaultIfEmpty()
-                    where c.ItemSrnoPo == p.ItemSrno
+                    //join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                    //from intermediate in intermediateGroup.DefaultIfEmpty()
+                    where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == p.CaseNo && p.UomCd == u.UomCd
                        && c.CaseNo == Caseno
                        && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
                        && c.CallSno == Convert.ToInt16(Callsno)
@@ -1413,10 +1409,14 @@ namespace IBS.Repositories.InspectionBilling
                         QtyOrdered = c.QtyOrdered,
                         CumQtyPrevOffered = c.CumQtyPrevOffered,
                         CumQtyPrevPassed = c.CumQtyPrevPassed,
-                        QtyToInsp = (intermediate.QtyToInsp != 0) ? intermediate.QtyToInsp : c.QtyToInsp,
-                        QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
-                        QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
-                        QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
+                        //QtyToInsp = (intermediate.QtyToInsp != 0) ? intermediate.QtyToInsp : c.QtyToInsp,
+                        //QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
+                        //QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
+                        //QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
+                        QtyToInsp = (c.QtyToInsp != 0) ? c.QtyToInsp : c.QtyToInsp,
+                        QtyPassed = (c.QtyPassed != 0) ? c.QtyPassed : c.QtyPassed,
+                        QtyRejected = (c.QtyRejected != 0) ? c.QtyRejected : c.QtyRejected,
+                        QtyDue = (c.QtyDue != 0) ? c.QtyDue : c.QtyDue,
                         Rate = p.Rate,
                         SalesTaxPer = p.SalesTaxPer,
                         SalesTax = p.SalesTax,
@@ -1858,7 +1858,7 @@ namespace IBS.Repositories.InspectionBilling
                         w_ret_amt = Convert.ToDouble(Cnote_bill_dtls.RetentionMoney);
                         w_writeoff_amt = Convert.ToDouble(Cnote_bill_dtls.WriteOffAmt);
                     }
-                    decimal totalBillAmount = context.T22Bills.Where(x => x.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => (decimal?)x.BillAmount ?? 0).DefaultIfEmpty().Sum();
+                    decimal totalBillAmount = context.T22Bills.Where(x => x.BillNo == Convert.ToString(ds.Tables[0].Rows[0]["OUT_BILL"])).Select(x => x.BillAmount ?? 0).DefaultIfEmpty().Sum();
                     decimal cmdCNoteAmt = Math.Abs(totalBillAmount);
                     int w_cnote_amt = Convert.ToInt32(cmdCNoteAmt);
 
@@ -2106,18 +2106,18 @@ namespace IBS.Repositories.InspectionBilling
 
 
             var query = (from c in context.T18CallDetails
-                        join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
-                        join u in context.T04Uoms on p.UomCd equals u.UomCd
-                        join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
-                        from intermediate in intermediateGroup.DefaultIfEmpty()
-                        where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
-                        select new
-                        {
-                            c,
-                            p,
-                            u,
-                            intermediate
-                        }).FirstOrDefault();
+                         join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                         join u in context.T04Uoms on p.UomCd equals u.UomCd
+                         join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                         from intermediate in intermediateGroup.DefaultIfEmpty()
+                         where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
+                         select new
+                         {
+                             c,
+                             p,
+                             u,
+                             intermediate
+                         }).FirstOrDefault();
             //var query = (from c in context.T18CallDetails
             //             join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
             //             join u in context.T04Uoms on p.UomCd equals u.UomCd

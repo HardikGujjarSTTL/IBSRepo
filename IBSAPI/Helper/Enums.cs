@@ -38,6 +38,10 @@ namespace IBSAPI.Helper
         public enum DocumentCategory : int
         {
             ICPHOTOS = 22,
+            ICPhotoDigSign = 23,
+            UploadTestPlan = 24,
+            UploadICAnnexue1 = 25,
+            UploadICAnnexue2 = 26,
         }
         public enum DocumentCategory_CANRegisrtation : int
         {
@@ -52,6 +56,9 @@ namespace IBSAPI.Helper
             IC_Photos_Upload9 = 31,
             IC_Photos_Upload10 = 32,
             ICPhoto_Dig_Sign = 33,
+            Upload_Test_Plan = 34,
+            Upload_IC_Annexue1 = 35,
+            Upload_IC_Annexue2 = 36,
         }
 
         public enum FolderPath
@@ -59,7 +66,11 @@ namespace IBSAPI.Helper
             [Description("/ReadWriteData/Files/TempUploadedFiles")]
             TempFilePath = 1,
             [Description("/ReadWriteData/IC_PHOTOS")]
-            ICPHOTOS = 30
+            ICPHOTOS = 30,
+            [Description("/ReadWriteData/BILL_IC")]
+            BILLIC = 25,
+            [Description("/ReadWriteData/TESTPLAN")]
+            TESTPLAN = 26,
         }
         public enum UserTypeLogin
         {

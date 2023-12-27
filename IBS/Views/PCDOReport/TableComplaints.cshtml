@@ -185,58 +185,161 @@
                 @if (i == 0)
                 {
                     <li><span class="labelName">(i) Northern Region</span></li>
-                    region_cd = "N";
+                    <table class="borderTable">
+                        <tr>
+                            <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                            <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Recd. During the month</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Disposed during the month</font></b></th>
+                        </tr>
+
+                        @{
+                            Int32 count = 1;
+                            Int32 tg1 = 0, tg2 = 0;
+                        }
+                        @if (Model.othercasesComplaintsModels != null && Model.othercasesComplaintsModels.Count > 0)
+                        {
+                            @* foreach (var item in Model.othercasesComplaintsModels.Where(x => x.region == region_cd)) *@
+                            foreach (var item in Model.othercasesComplaintsModels)
+                            {
+                                <tr>
+                                    <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                                    <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Rec_Com_JI</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Des_req_JI</font></b></td>
+                                </tr>
+                                count = count + 1;
+                                tg1 = tg1 + Convert.ToInt32(@item.Rec_Com_JI);
+                                tg2 = tg2 + Convert.ToInt32(@item.Des_req_JI);
+                            }
+                            <tr>
+                                <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'></font></b></td>
+                                <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
+                            </tr>
+                        }
+                    </table>
                 }
                 else if (i == 1)
                 {
                     <li><span class="labelName">(ii) Eastern Region</span></li>
-                    region_cd = "E";
+                    <table class="borderTable">
+                        <tr>
+                            <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                            <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Recd. During the month</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Disposed during the month</font></b></th>
+                        </tr>
+
+                        @{
+                            Int32 count = 1;
+                            Int32 tg1 = 0, tg2 = 0;
+                        }
+                        @if (Model.othercasesComplaintsE != null && Model.othercasesComplaintsE.Count > 0)
+                        {
+                            @* foreach (var item in Model.othercasesComplaintsModels.Where(x => x.region == region_cd)) *@
+                            foreach (var item in Model.othercasesComplaintsE)
+                            {
+                                <tr>
+                                    <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                                    <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Rec_Com_JI</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Des_req_JI</font></b></td>
+                                </tr>
+                                count = count + 1;
+                                tg1 = tg1 + Convert.ToInt32(@item.Rec_Com_JI);
+                                tg2 = tg2 + Convert.ToInt32(@item.Des_req_JI);
+                            }
+                            <tr>
+                                <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'></font></b></td>
+                                <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
+                            </tr>
+                        }
+                    </table>
                 }
                 else if (i == 2)
                 {
                     <li><span class="labelName">(iii) Western Region</span></li>
-                    region_cd = "W";
+                    <table class="borderTable">
+                        <tr>
+                            <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                            <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Recd. During the month</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Disposed during the month</font></b></th>
+                        </tr>
+
+                        @{
+                            Int32 count = 1;
+                            Int32 tg1 = 0, tg2 = 0;
+                        }
+                        @if (Model.othercasesComplaintsW != null && Model.othercasesComplaintsW.Count > 0)
+                        {
+                            @* foreach (var item in Model.othercasesComplaintsModels.Where(x => x.region == region_cd)) *@
+                            foreach (var item in Model.othercasesComplaintsW)
+                            {
+                                <tr>
+                                    <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                                    <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Rec_Com_JI</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Des_req_JI</font></b></td>
+                                </tr>
+                                count = count + 1;
+                                tg1 = tg1 + Convert.ToInt32(@item.Rec_Com_JI);
+                                tg2 = tg2 + Convert.ToInt32(@item.Des_req_JI);
+                            }
+                            <tr>
+                                <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'></font></b></td>
+                                <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
+                            </tr>
+                        }
+                    </table>
                 }
                 else if (i == 3)
                 {
                     <li><span class="labelName">(iv) Southern Region</span></li>
-                    region_cd = "S";
+                    <table class="borderTable">
+                        <tr>
+                            <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                            <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Recd. During the month</font></b></th>
+                            <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Disposed during the month</font></b></th>
+                        </tr>
+
+                        @{
+                            Int32 count = 1;
+                            Int32 tg1 = 0, tg2 = 0;
+                        }
+                        @if (Model.othercasesComplaintsS != null && Model.othercasesComplaintsS.Count > 0)
+                        {
+                            @* foreach (var item in Model.othercasesComplaintsModels.Where(x => x.region == region_cd)) *@
+                            foreach (var item in Model.othercasesComplaintsS)
+                            {
+                                <tr>
+                                    <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                                    <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Rec_Com_JI</font></b></td>
+                                    <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Des_req_JI</font></b></td>
+                                </tr>
+                                count = count + 1;
+                                tg1 = tg1 + Convert.ToInt32(@item.Rec_Com_JI);
+                                tg2 = tg2 + Convert.ToInt32(@item.Des_req_JI);
+                            }
+                            <tr>
+                                <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'></font></b></td>
+                                <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
+                                <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
+                            </tr>
+                        }
+                    </table>
                 }
             </ul>
-            <table class="borderTable">
-                <tr>
-                    <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
-                    <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Region</font></b></th>
-                    <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Recd. During the month</font></b></th>
-                    <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Disposed during the month</font></b></th>
-                </tr>
-
-                @{
-                    Int32 count = 1;
-                    Int32 tg1 = 0, tg2 = 0;
-                }
-                @if (Model.othercasesComplaintsModels != null && Model.othercasesComplaintsModels.Count > 0)
-                {
-                    foreach (var item in Model.othercasesComplaintsModels.Where(x => x.region_cd == region_cd))
-                    {
-                        <tr>
-                            <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
-                            <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
-                            <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Rec_Com_JI</font></b></td>
-                            <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.Des_req_JI</font></b></td>
-                        </tr>
-                        count = count + 1;
-                        tg1 = tg1 + Convert.ToInt32(@item.Rec_Com_JI);
-                        tg2 = tg2 + Convert.ToInt32(@item.Des_req_JI);
-                    }
-                    <tr>
-                        <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'></font></b></td>
-                        <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Total</font></b></td>
-                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
-                        <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
-                    </tr>
-                }
-            </table>
+           
         }
 
         <ul class="reportLabelList center">
