@@ -30,14 +30,14 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "DocumentNo";
+                    orderCriteria = "IssueDt";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
                 // if we have an empty search then just order the results by Id ascending
-                orderCriteria = "DocumentNo";
+                orderCriteria = "IssueDt";
                 orderAscendingDirection = true;
             }
             string DocType = "";
