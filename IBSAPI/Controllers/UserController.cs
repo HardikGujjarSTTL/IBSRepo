@@ -23,14 +23,17 @@ namespace IBSAPI.Controllers
         private readonly ITokenServices tokenServices;
         private readonly ISendMailRepository pSendMailRepository;
         public IConfiguration Configuration { get; }
+        private readonly IConfiguration config;
+
         #endregion
-        public UserController(IUserRepository _userRepository, IWebHostEnvironment env, ITokenServices _tokenServices, IConfiguration configuration, ISendMailRepository _pSendMailRepository)
+        public UserController(IUserRepository _userRepository, IWebHostEnvironment env, ITokenServices _tokenServices, IConfiguration configuration, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             userRepository = _userRepository;
             _env = env;
             tokenServices = _tokenServices;
             Configuration = configuration;
             pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
 
         [HttpPost("SignIn", Name = "SignIn")]
@@ -144,16 +147,20 @@ namespace IBSAPI.Controllers
                     if (userMaster.Email != null && userMaster.Email != "")
                     {
                         string RootHostName = HttpContext.Request.Host.Value;
-                        string WebRootPath = "https://"+ RootHostName + "/IBS2/Home/ResetPassword?id=";
+                        string WebRootPath = "https://" + RootHostName + "/IBS2/Home/ResetPassword?id=";
                         string rootPath = /*Configuration["MyAppSettings:ResetPasswordPath"]*/ WebRootPath + Common.EncryptQueryString(Convert.ToString(userMaster.FPUserID)) + "&UserType=" + Convert.ToString(forgotPasswordModel.UserType);
                         string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
                         body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", rootPath);
 
-                        SendMailModel sendMailModel = new SendMailModel();
-                        sendMailModel.To = userMaster.Email;
-                        sendMailModel.Subject = "Reset Password on IBS";
-                        sendMailModel.Message = body;
-                        bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        bool isSend = false;
+                        if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                        {
+                            SendMailModel sendMailModel = new SendMailModel();
+                            sendMailModel.To = userMaster.Email;
+                            sendMailModel.Subject = "Reset Password on IBS";
+                            sendMailModel.Message = body;
+                            isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        }
 
                         if (isSend)
                         {
