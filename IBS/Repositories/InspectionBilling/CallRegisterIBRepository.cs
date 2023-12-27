@@ -1761,7 +1761,7 @@ namespace IBS.Repositories.InspectionBilling
             // return email;
         }
 
-        public string send_Vendor_Email(VenderCallStatusModel model)
+        public string send_Vendor_Email(VenderCallRegisterModel model)
         {
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);

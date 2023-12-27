@@ -5,6 +5,7 @@ using IBS.Models;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -12,11 +13,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public ComplaintApprovalRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public ComplaintApprovalRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
         public string GetItems(string InspRegionDropdown)
@@ -403,13 +406,17 @@ namespace IBS.Repositories
 
             string mailBody = "Dear Sir/Madam,\n\n Online Consignee Complaint vide Rej Memo Letter dated:  " + complaint.RejMemoNo + " for JI of material against PO No. - " + model.Contract + " dated - " + model.Date + ", on date: " + complaint.TempComplaintDt + ". The Complaint is rejected due to following Reason:- " + model.Reasonforreject + ", so Complaint not registered. \n\n Thanks for using RITES Inspection Services. \n NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). \n\n" + wRegion + ".";
 
-            SendMailModel SendMailModel = new SendMailModel();
-            SendMailModel.To = complaint.ConsigneeEmail; ;
-            SendMailModel.From = "nrinspn@gmail.com"; ;
-            SendMailModel.Subject = "Your Consignee Complaint For RITES";
-            SendMailModel.Message = mailBody;
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                SendMailModel SendMailModel = new SendMailModel();
+                SendMailModel.To = complaint.ConsigneeEmail; ;
+                SendMailModel.From = "nrinspn@gmail.com"; ;
+                SendMailModel.Subject = "Your Consignee Complaint For RITES";
+                SendMailModel.Message = mailBody;
 
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
 
         }
 

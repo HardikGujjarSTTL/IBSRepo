@@ -12,11 +12,13 @@ namespace IBS.Controllers
         #region Variables
         private readonly IDEOCRISPurchesOrderWCaseNoRepository purchesorderRepository;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
         #endregion
-        public DEOCRISPurchesOrderMAWCaseNoController(IDEOCRISPurchesOrderWCaseNoRepository _purchesorderRepository, ISendMailRepository _pSendMailRepository)
+        public DEOCRISPurchesOrderMAWCaseNoController(IDEOCRISPurchesOrderWCaseNoRepository _purchesorderRepository, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             purchesorderRepository = _purchesorderRepository;
             pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
         [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
         public IActionResult Index()
@@ -286,14 +288,18 @@ namespace IBS.Controllers
             {
                 sender = "ritescqa@rites.com";
             }
-            SendMailModel sendMailModel = new SendMailModel();
-            // sender for local mail testing
-            sender = "hardiksilvertouch007@outlook.com";
-            sendMailModel.From = sender;
-            sendMailModel.To = vendorEmail;
-            sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
-            sendMailModel.Message = mail_body;
-            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                // sender for local mail testing
+                sender = "hardiksilvertouch007@outlook.com";
+                sendMailModel.From = sender;
+                sendMailModel.To = vendorEmail;
+                sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
+                sendMailModel.Message = mail_body;
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
             return isSend;
         }
 

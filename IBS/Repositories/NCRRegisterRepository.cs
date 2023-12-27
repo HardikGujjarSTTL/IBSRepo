@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
 using System.Net.Mail;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -15,11 +16,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public NCRRegisterRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public NCRRegisterRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
         public DTResult<NCRRegister> GetDataList(DTParameters dtParameters)
         {
@@ -618,14 +621,18 @@ namespace IBS.Repositories
             mail1.Subject = "Non Conformities Register";
             mail1.Body = NC_REASONS + "\n" + wRegion;
             rsender = "hardiksilvertouch007@outlook.com";
-            SendMailModel sendMailModel = new SendMailModel();
-            //rsender = rsender;
-            sendMailModel.From = rsender;
-            sendMailModel.To = emailAddresses;
-            sendMailModel.Subject = "Non Conformities Register";
-            sendMailModel.Message = NC_REASONS + "\n" + wRegion; ;
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                //rsender = rsender;
+                sendMailModel.From = rsender;
+                sendMailModel.To = emailAddresses;
+                sendMailModel.Subject = "Non Conformities Register";
+                sendMailModel.Message = NC_REASONS + "\n" + wRegion; ;
 
-            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
 
             return isSend;
         }

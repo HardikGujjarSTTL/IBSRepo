@@ -20,9 +20,10 @@ namespace IBS.Controllers
         private readonly IUploadDocRepository uploaddocRepository;
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
         #endregion
 
-        public DEOVendorPurchesOrderController(IDEOVendorPurchesOrderRepository _deovendorpurchesRepository, IPOMasterRepository _pOMasterRepository, ISendMailRepository _pSendMailRepository, IUploadDocRepository _uploaddocRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment)
+        public DEOVendorPurchesOrderController(IDEOVendorPurchesOrderRepository _deovendorpurchesRepository, IPOMasterRepository _pOMasterRepository, ISendMailRepository _pSendMailRepository, IUploadDocRepository _uploaddocRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration _config)
         {
             deovendorpurchesRepository = _deovendorpurchesRepository;
             pOMasterRepository = _pOMasterRepository;
@@ -30,6 +31,7 @@ namespace IBS.Controllers
             uploaddocRepository = _uploaddocRepository;
             iDocument = _iDocumentRepository;
             env = _environment;
+            this.config = _config;
         }
 
         [Authorization("DEOVendorPurchesOrder", "Index", "view")]
@@ -721,14 +723,18 @@ namespace IBS.Controllers
             {
                 sender = "ritescqa@rites.com";
             }
-            SendMailModel sendMailModel = new SendMailModel();
-            // sender for local mail testing
-            sender = "hardiksilvertouch007@outlook.com";
-            sendMailModel.From = sender;
-            sendMailModel.To = vendorEmail;
-            sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
-            sendMailModel.Message = mail_body;
-            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                // sender for local mail testing
+                sender = "hardiksilvertouch007@outlook.com";
+                sendMailModel.From = sender;
+                sendMailModel.To = vendorEmail;
+                sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
+                sendMailModel.Message = mail_body;
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
             return isSend;
         }
     }
