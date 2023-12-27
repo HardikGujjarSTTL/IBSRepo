@@ -88,7 +88,10 @@ namespace IBS.Repositories.WebsitePages
                               }).FirstOrDefault();
 
             model.CaseNo = GetPayment.CaseNo;
-            model.CallDate = GetPayment.CallDate;
+            if (DateTime.TryParse(GetPayment.CallDate, out DateTime parsedDate))
+            {
+                model.CallDate = parsedDate.ToString("dd/MM/yyyy");
+            }
             model.CallSno = GetPayment.CallSno;
             model.MER_TXN_REF = GetPayment.MER_TXN_REF;
             
