@@ -49,6 +49,28 @@ namespace IBS.Controllers.Reports.Queries
                 if (Region == "Q")
                     Regiontext = "QA Corporate";
 
+                string wlAgency = "";
+
+                if (p_wAgency == "R")
+                {
+                    wlAgency = "Railway";
+                }
+                else if (p_wAgency == "P")
+                {
+                    wlAgency = "Private";
+                }
+                else if (p_wAgency == "U")
+                {
+                    wlAgency = "PSU";
+                }
+                else if (p_wAgency == "F")
+                {
+                    wlAgency = "Foreign Railway";
+                }
+                else if (p_wAgency == "S")
+                {
+                    wlAgency = "State Government";
+                }
                 string wPoValue = "";
                 if (Convert.ToInt32(p_wFrmAmt) > 0)
                 { wPoValue = "between " + p_wFrmAmt + " and " + p_wToAmt; }
@@ -56,7 +78,8 @@ namespace IBS.Controllers.Reports.Queries
                 { wPoValue = " less than or equal to " + p_wToAmt; }
 
                 ViewBag.Region = Regiontext;
-                ViewBag.Title = p_wClient + " (" + Regiontext + ") Purchase Orders of Value " + wPoValue + " for the Period : " + p_frmDt.ToString("dd/MM/yyy") + " TO " + p_toDt.ToString("dd/MM/yyy");
+                //ViewBag.Title = p_wClient + " (" + Regiontext + ") Purchase Orders of Value " + wPoValue + " for the Period : " + p_frmDt.ToString("dd/MM/yyy") + " TO " + p_toDt.ToString("dd/MM/yyy");
+                ViewBag.Title = wlAgency + " Purchase Orders of Value " + wPoValue + " for the Period : " + p_frmDt.ToString("dd/MM/yyy") + " TO " + p_toDt.ToString("dd/MM/yyy");
                 List<PurchaseOrdersofSpecificValueModel> model = purchaseOrdersofSpecificValuesRepository.GetDataList(p_wAgency, p_frmDt, p_toDt, p_SelCriteria, p_wClient, p_wFrmAmt, p_wToAmt, Region);
                 //return PartialView("_TableDetailed", model);
                 return View(model);
