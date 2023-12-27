@@ -203,9 +203,9 @@ namespace IBSAPI.Controllers
 
         [HttpPost("ICPhotoUpload")]
         [Consumes("multipart/form-data")]
-        public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude,
-            string Consignee, decimal? QtyPassed, decimal? QtyRejected, DateTime call_Recv_DT, int CallSno, string PoNo,
-            int? IeCd, string userId, int User_Id, string Call_Status, string ReasonFIFO, List<IFormFile>? photos, IFormFile? ICPhotoDigitalSign, IFormFile? UploadTestPlan, IFormFile? UploadICAnnexue1, IFormFile? UploadICAnnexue2)
+        public IActionResult ICPhotoUpload(string CaseNo, string? DocBkNo, string? DocSetNo, decimal? Latitude, decimal? Longitude,
+            string? Consignee, decimal? QtyPassed, decimal? QtyRejected, DateTime call_Recv_DT, int CallSno, string PoNo,
+            int? IeCd, string userId, int User_Id, string Call_Status, string? ReasonFIFO, List<IFormFile>? photos, IFormFile? ICPhotoDigitalSign, IFormFile? UploadTestPlan, IFormFile? UploadICAnnexue1, IFormFile? UploadICAnnexue2)
         {
             try
             {
