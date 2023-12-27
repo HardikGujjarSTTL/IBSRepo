@@ -88,6 +88,9 @@
         } else if ('@ReportType' == 'IEICPHOTO') {
             loadIEWorkPhoto();
             fileName = 'Photo Submitted By IE';
+        }else if ('@ReportType' == 'DSC') {
+            loadDSCExp();
+            fileName = 'SUMMARY OF IE WISE DSC GETTING EXPIRED DURING THE MONTH/PERIOD';
         }
     });
 
@@ -235,6 +238,13 @@
 
     function loadCOIEWiseCalls(){
         $("#dvReportViewer").load("@Url.Action("CoIeWiseCalls")", { Case_No: '@Model.Case_No', Call_Recv_Date: '@Model.Call_Recv_Date', Call_SNo: '@Model.Call_SNo' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });        
+    }   
+    
+    function loadDSCExp() {
+        $("#dvReportViewer").load("@Url.Action("DSCExpReport")", { DSCMonth: '@Model.DSCMonth', DSCYear: '@Model.DSCYear', DSCToMonth: '@Model.DSCToMonth', DSCToYear: '@Model.DSCToYear', DSCMonthText: '@Model.DSCMonthText', DSCToMonthText: '@Model.DSCToMonthText' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });        

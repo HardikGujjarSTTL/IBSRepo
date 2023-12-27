@@ -65,6 +65,12 @@
         public string CallSno { get; set; }
         public string BKNO { get; set; }
         public string SETNO { get; set; }
+        public string DSCMonth { get; set; }
+        public int DSCYear { get; set; }
+        public string DSCToMonth { get; set; }
+        public int DSCToYear { get; set; }
+        public string DSCMonthText { get; set; }
+        public string DSCToMonthText { get; set; }
     }
 
     public class ControllingOfficerIEModel
