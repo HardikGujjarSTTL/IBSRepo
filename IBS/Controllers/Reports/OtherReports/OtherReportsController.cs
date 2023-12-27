@@ -141,6 +141,7 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnToDateUE") && !string.IsNullOrEmpty(formCollection["hdnToDateUE"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDateUE"]);
                 if (formCollection.Keys.Contains("hdnAllIEsUE") && !string.IsNullOrEmpty(formCollection["hdnAllIEsUE"])) model.AllIEs = Convert.ToString(formCollection["hdnAllIEsUE"]);
                 if (formCollection.Keys.Contains("hdnParticularCMsUE") && !string.IsNullOrEmpty(formCollection["hdnParticularCMsUE"])) model.ParticularCMs = Convert.ToString(formCollection["hdnParticularCMsUE"]);
+                if (formCollection.Keys.Contains("hdnParticularIEsUE") && !string.IsNullOrEmpty(formCollection["hdnParticularIEsUE"])) model.ParticularIEs = Convert.ToString(formCollection["hdnParticularIEsUE"]);
                 if (formCollection.Keys.Contains("hdnIEWiseUE") && !string.IsNullOrEmpty(formCollection["hdnIEWiseUE"])) model.IEWise = Convert.ToString(formCollection["hdnIEWiseUE"]);
                 if (formCollection.Keys.Contains("hdnCMWiseUE") && !string.IsNullOrEmpty(formCollection["hdnCMWiseUE"])) model.CMWise = Convert.ToString(formCollection["hdnCMWiseUE"]);
                 if (formCollection.Keys.Contains("hdnSortedIEUE") && !string.IsNullOrEmpty(formCollection["hdnSortedIEUE"])) model.SortedIE = Convert.ToString(formCollection["hdnSortedIEUE"]);
