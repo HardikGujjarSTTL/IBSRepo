@@ -110,8 +110,8 @@ namespace IBS.Repositories
         public int HolidayMasterDelete(int id, HolidayMasterModel model)
         {
             T111HolidayMaster holiday = (from a in context.T111HolidayMasters
-                                        where a.Id == id
-                                        select a).FirstOrDefault();
+                                         where a.Id == id
+                                         select a).FirstOrDefault();
             if (holiday != null)
             {
                 holiday.Isdeleted = 1;
@@ -154,13 +154,13 @@ namespace IBS.Repositories
             var Holiday_ID = !string.IsNullOrEmpty(dtParameters.AdditionalValues["HOLIDAY_ID"]) ? Convert.ToInt32(dtParameters.AdditionalValues["HOLIDAY_ID"]) : 0;
 
             query = from a in context.T112HolidayDetails
-                    join b in context.T111HolidayMasters on a.HolidayId equals b.Id
-                    where a.HolidayId == Holiday_ID && (a.Isdeleted ?? 0) == 0
+                    //join b in context.T111HolidayMasters on a.HolidayId equals b.Id
+                    //where a.HolidayId == Holiday_ID && (a.Isdeleted ?? 0) == 0
                     select new HolidayDetailModel
                     {
                         ID = a.Id,
-                        FINANCIAL_YEAR = b.FinancialYear,
-                        HOLIDAY_ID = a.HolidayId,
+                        //FINANCIAL_YEAR = b.FinancialYear,
+                        //HOLIDAY_ID = a.HolidayId,
                         HOLIDAY_DT = Convert.ToDateTime(a.HolidayDt),
                         HOLIDAY_DESC = a.HolidayDesc,
                         USER_NAME = a.UserId
@@ -183,7 +183,7 @@ namespace IBS.Repositories
                      where a.Id == id
                      select new HolidayDetailModel
                      {
-                         HOLIDAY_ID = a.HolidayId,
+                         //HOLIDAY_ID = a.HolidayId,
                          HOLIDAY_DT = a.HolidayDt,
                          HOLIDAY_DESC = a.HolidayDesc
                      }).FirstOrDefault();
@@ -196,7 +196,7 @@ namespace IBS.Repositories
             {
                 T112HolidayDetail holiday = new()
                 {
-                    HolidayId = Convert.ToInt32(model.HOLIDAY_ID),
+                    //HolidayId = Convert.ToInt32(model.HOLIDAY_ID),
                     HolidayDt = model.HOLIDAY_DT,
                     HolidayDesc = model.HOLIDAY_DESC,
                     UserId = model.USER_NAME.Length > 8 ? model.USER_NAME.Substring(0, 8) : model.USER_NAME,
@@ -212,7 +212,7 @@ namespace IBS.Repositories
                 T112HolidayDetail holiday = context.T112HolidayDetails.Find(model.ID);
                 if (holiday != null)
                 {
-                    holiday.HolidayId = Convert.ToInt32(model.HOLIDAY_ID);
+                    //holiday.HolidayId = Convert.ToInt32(model.HOLIDAY_ID);
                     holiday.HolidayDt = model.HOLIDAY_DT;
                     holiday.HolidayDesc = model.HOLIDAY_DESC;
                     holiday.UserId = model.USER_NAME.Length > 8 ? model.USER_NAME.Substring(0, 8) : model.USER_NAME;
@@ -228,8 +228,8 @@ namespace IBS.Repositories
         public int HolidayDetailDelete(int id, HolidayDetailModel model)
         {
             T112HolidayDetail holiday = (from a in context.T112HolidayDetails
-                                        where a.Id == id
-                                        select a).FirstOrDefault();
+                                         where a.Id == id
+                                         select a).FirstOrDefault();
             if (holiday != null)
             {
                 holiday.Isdeleted = 1;

@@ -6,7 +6,7 @@ namespace IBS.Interfaces.Vendor
     {
         public PurchesOrder1LOAModel FindByID(string CaseNo);
 
-        public PurchesOrder1LOAModel FindByDetail(string CaseNo, byte ItemSrno, string type, string PoDt,int lstItemDesc);
+        public PurchesOrder1LOAModel FindByDetail(string CaseNo, byte ItemSrno, string type, string PoDt, int lstItemDesc);
 
         DTResult<PurchesOrder1LOAModel> FindByUOMDetail(decimal id);
 

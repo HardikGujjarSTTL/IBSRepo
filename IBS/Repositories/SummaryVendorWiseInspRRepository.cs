@@ -2,15 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -115,7 +109,7 @@ namespace IBS.Repositories
 
             SummaryVendorWiseInspModel model = new();
             List<SummaryVendorWiseInspModel> lstSummary = new();
-                       
+
 
             OracleParameter[] par = new OracleParameter[11];
             par[0] = new OracleParameter("P_REGION_CODE", OracleDbType.NVarchar2, Regin, ParameterDirection.Input);

@@ -1,14 +1,21 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using IBS.Models.Reports;
+using IBS.Repositories;
+using IBS.Repositories.InspectionBilling;
+using IBS.Repositories.Reports;
+using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 
 namespace IBS.Controllers.InspectionBilling
 {
+    [Authorization]
     public class CallRegisterIBController : BaseController
     {
         #region Variables
@@ -138,16 +145,22 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.e_status == 1 && model.RejCanCall == null)
                 {
                     //Bhavesh Code SMS & Mail Code comment.
-                    //if (model.IeCd > 0)
-                    //{
-                    //    Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
-                    //    AlertDanger("SMS Send Success...");
-                    //}
-                    //string emailResult = callregisterRepository.send_Vendor_Email(model);
-                    //if (emailResult == "success")
-                    //{
-                    //    AlertDanger("Mail Send Success...");
-                    //}
+                    if (Convert.ToBoolean(_config.GetSection("AppSettings")["SendMail"]) == true)
+                    {
+                        if (model.IeCd > 0)
+                        {
+                            Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
+                            AlertDanger("SMS Send Success...");
+                        }
+                    }
+                    if (Convert.ToBoolean(_config.GetSection("AppSettings")["SendSMS"]) == true)
+                    {
+                        string emailResult = callregisterRepository.send_Vendor_Email(model);
+                        if (emailResult == "success")
+                        {
+                            AlertDanger("Mail Send Success...");
+                        }
+                    }
                 }
                 if (i != null)
                 {

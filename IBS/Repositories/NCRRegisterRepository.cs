@@ -1,23 +1,14 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Globalization;
 using System.Net.Mail;
-using System.Net;
-using System.Numerics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using static IBS.Helper.Enums;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -25,11 +16,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public NCRRegisterRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public NCRRegisterRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
         public DTResult<NCRRegister> GetDataList(DTParameters dtParameters)
         {
@@ -112,7 +105,7 @@ namespace IBS.Repositories
                         IE_SNAME = row.Field<string>("IE_SNAME"),
                         CALL_RECV_DT = DateTime.TryParseExact(row.Field<string>("CALL_RECV_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime callRecvDate)
                 ? callRecvDate
-                : (DateTime?)null,
+                : null,
                         CONSIGNEE = row.Field<string>("CONSIGNEE"),
                     }).ToList();
 
@@ -201,7 +194,6 @@ namespace IBS.Repositories
         {
             NCRRegister model = new NCRRegister();
             DataTable dt = new DataTable();
-            string msg = "";
             if (NCNO != "" && NCNO != null)
             {
                 OracleParameter[] par = new OracleParameter[2];
@@ -247,9 +239,9 @@ namespace IBS.Repositories
                                 ? Convert.ToInt32(firstRow["QTY_PASSED"])
                                 : 0;
 
-                                                    model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
-                                ? Convert.ToString(firstRow["ITEM_DESC_PO"])
-                                : string.Empty;
+                        model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
+    ? Convert.ToString(firstRow["ITEM_DESC_PO"])
+    : string.Empty;
 
                         if (firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value)
                         {
@@ -326,7 +318,6 @@ namespace IBS.Repositories
                 }
                 else
                 {
-                    msg = "Data Not Found";
                 }
             }
 
@@ -423,8 +414,6 @@ namespace IBS.Repositories
 
         public NCRRegister Saveupdate(NCRRegister model, bool isRadioChecked, string extractedText)
         {
-            string msg = "";
-
             DataTable dt = new DataTable();
             string genrate_NCNO = "";
             string ErrCD = "";
@@ -448,14 +437,13 @@ namespace IBS.Repositories
                          where t.CaseNo == model.CaseNo.Trim() &&
                                t.BkNo == model.BKNo.Trim() &&
                                t.SetNo == model.SetNo.Trim()
-                         select (int?)t.CoCd).FirstOrDefault();
+                         select t.CoCd).FirstOrDefault();
 
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
             if (ErrCD == "-1")
             {
-                msg = "NC Details not available";
             }
             else
             {
@@ -485,7 +473,6 @@ namespace IBS.Repositories
                     obj.RegionCode = model.SetRegionCode;
                     context.T41NcMasters.Add(obj);
                     context.SaveChanges();
-                    msg = "Record Saved Successfully";
                 }
                 else
                 {
@@ -534,7 +521,6 @@ namespace IBS.Repositories
 
         public NCRRegister SaveMoreNC(NCRRegister model, string extractedText)
         {
-            string msg = "";
             var maxNcCdSno = context.T42NcDetails
                         .Where(detail => detail.NcNo == model.NC_NO)
                         .Select(detail => (int?)detail.NcCdSno) // Project to nullable int
@@ -635,14 +621,18 @@ namespace IBS.Repositories
             mail1.Subject = "Non Conformities Register";
             mail1.Body = NC_REASONS + "\n" + wRegion;
             rsender = "hardiksilvertouch007@outlook.com";
-            SendMailModel sendMailModel = new SendMailModel();
-            //rsender = rsender;
-            sendMailModel.From = rsender;
-            sendMailModel.To = emailAddresses;
-            sendMailModel.Subject = "Non Conformities Register";
-            sendMailModel.Message = NC_REASONS + "\n" + wRegion; ;
+            bool isSend = false;
+            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                //rsender = rsender;
+                sendMailModel.From = rsender;
+                sendMailModel.To = emailAddresses;
+                sendMailModel.Subject = "Non Conformities Register";
+                sendMailModel.Message = NC_REASONS + "\n" + wRegion; ;
 
-            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
 
             return isSend;
         }

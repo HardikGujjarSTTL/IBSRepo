@@ -2,9 +2,7 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
-using System.Security.Claims;
 
 namespace IBS.Repositories
 {
@@ -22,14 +20,14 @@ namespace IBS.Repositories
 
             string CLAIM_NO = (dtParameters.AdditionalValues?.GetValueOrDefault("CLAIM_NO"));
             string CLAIM_DT = dtParameters.AdditionalValues?.GetValueOrDefault("CLAIM_DT");
-            int IE = dtParameters.AdditionalValues?.GetValueOrDefault("IE") == "" ? 0  : Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("IE"));
-  
+            int IE = dtParameters.AdditionalValues?.GetValueOrDefault("IE") == "" ? 0 : Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("IE"));
+
 
             var query1 = (from t45 in context.T45ClaimMasters
                           join t09 in context.T09Ies on t45.IeCd equals t09.IeCd
                           where (string.IsNullOrEmpty(CLAIM_NO) || t45.ClaimNo == CLAIM_NO.Trim())
                              && (string.IsNullOrEmpty(CLAIM_DT) || t45.ClaimDt == DateTime.ParseExact(CLAIM_DT.Trim(), "dd/MM/yyyy", null))
-                             && (IE==0 || t45.IeCd == IE)
+                             && (IE == 0 || t45.IeCd == IE)
                           select new IECliamFormModel
                           {
                               CLAIM_NO = t45.ClaimNo,
@@ -39,7 +37,7 @@ namespace IBS.Repositories
                               ID = t45.Id,
                               PAYMENT_VOUCHER_NUMBER = t45.PaymentVchrNo,
                               PAYMENT_VOUCHER_DATE = Convert.ToString(t45.PaymentVchrDt)
-                              
+
                           }).ToList();
 
             var result = query1.ToList();
@@ -72,7 +70,7 @@ namespace IBS.Repositories
                    AMOUNT_ADMITTED = Convert.ToInt32(t.AmtAdmitted),
                    AMOUNT_DISALLOWED = Convert.ToInt32(t.AmtDisallowed),
                    REMARKS = t.Remarks
-               }) .ToList();
+               }).ToList();
 
 
             var result = claimDetails.ToList();
@@ -84,7 +82,7 @@ namespace IBS.Repositories
         }
 
         public string InsertIE(IECliamFormModel model, string Region, int uname)
-            {
+        {
             var Period_From = string.Concat(model.PERIOD_FROM_YEAR, model.PERIOD_FROM_MONTH);
             var Period_To = string.Concat(model.PERIOD_TO_YEAR, model.PERIOD_TO_MONTH);
 
@@ -99,7 +97,7 @@ namespace IBS.Repositories
 
 
             var GetValue = context.T45ClaimMasters.Find(Convert.ToDecimal(uname));
-            var GetValue2 = context.T46ClaimDetails.Find(model.CLAIM_NO,model.CLAIM_HEAD);
+            var GetValue2 = context.T46ClaimDetails.Find(model.CLAIM_NO, model.CLAIM_HEAD);
 
             if (GetValue == null)
             {
@@ -136,7 +134,7 @@ namespace IBS.Repositories
                 context.SaveChanges();
 
             }
-            else 
+            else
             {
                 T46ClaimDetail data = new T46ClaimDetail();
                 data.ClaimNo = model.CLAIM_NO;
@@ -154,7 +152,7 @@ namespace IBS.Repositories
         }
 
         public IECliamFormModel FindByID(string CLAIM_NO, string ACTION, decimal ID)
-            {
+        {
 
 
 
@@ -178,7 +176,7 @@ namespace IBS.Repositories
                 model.IE = Convert.ToInt32(tenant1.IeCd);
                 model.PERIOD_FROM = Convert.ToInt32(tenant1.PeriodFrom);
                 model.PERIOD_TO = Convert.ToInt32(tenant1.PeriodTo);
-                
+
 
 
             }
@@ -235,13 +233,13 @@ namespace IBS.Repositories
             return OUT_CLAIM_NO;
         }
 
-        public string Payment_Save(string CLAIM_NO , string VCHR_NO , string VCHR_DT)
+        public string Payment_Save(string CLAIM_NO, string VCHR_NO, string VCHR_DT)
         {
             DateTime parsedDate;
             string date = Convert.ToString(DateTime.TryParseExact(VCHR_DT, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate));
             var claimMaster = context.T45ClaimMasters.FirstOrDefault(c => c.ClaimNo == CLAIM_NO);
 
-            if(claimMaster != null)
+            if (claimMaster != null)
             {
                 claimMaster.PaymentVchrNo = VCHR_NO;
                 claimMaster.PaymentVchrDt = parsedDate;

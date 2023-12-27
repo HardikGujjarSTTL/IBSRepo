@@ -2,11 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {
@@ -30,7 +28,7 @@ namespace IBS.Repositories
                 model.RoleId = role.RoleId;
                 model.Rolename = role.Rolename;
                 model.Roledescription = role.Roledescription;
-                model.Issysadmin =Convert.ToBoolean(role.Issysadmin);
+                model.Issysadmin = Convert.ToBoolean(role.Issysadmin);
                 model.Isactive = Convert.ToBoolean(role.Isactive);
                 model.Isdeleted = role.Isdeleted;
                 return model;
@@ -65,7 +63,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Roles
-                    where l.Isdeleted == 0 
+                    where l.Isdeleted == 0
                     select new RoleModel
                     {
                         RoleId = l.RoleId,
@@ -78,7 +76,7 @@ namespace IBS.Repositories
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
                         Updatedby = l.Updatedby,
-                        EncryptedRoleId=Common.EncryptQueryString(l.RoleId.ToString())
+                        EncryptedRoleId = Common.EncryptQueryString(l.RoleId.ToString())
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -197,7 +195,7 @@ namespace IBS.Repositories
                         RoleId = l.RoleId,
                         Rolename = r.Rolename,
                         //User_ID = l.UserId,
-                        User_ID =Convert.ToString(l.UserMasterId),
+                        User_ID = Convert.ToString(l.UserMasterId),
                         UserName = u.Name,
                         Id = l.Id
                     };
@@ -265,7 +263,7 @@ namespace IBS.Repositories
         public MenuroleMappingModel FindMenuRoleMappingByID(int ID)
         {
             MenuroleMappingModel model = new();
-            Menurolemapping role = context.Menurolemappings.Where(x=>x.Roleid == ID).FirstOrDefault();
+            Menurolemapping role = context.Menurolemappings.Where(x => x.Roleid == ID).FirstOrDefault();
 
             if (role == null)
                 throw new Exception("Menu Role Mapping Not found");

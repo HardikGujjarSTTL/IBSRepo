@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Vendor
 {
@@ -224,14 +223,14 @@ namespace IBS.Repositories.Vendor
                 User.UserType = "VENDOR";
                 User.Createddate = DateTime.Now.Date;
                 User.Createdby = model.UserId;
-                
+
                 context.UserMasters.Add(User);
                 context.SaveChanges();
             }
             else
             {
                 UserDetails.Name = model.VendName;
-                UserDetails.Createdby = model.UserId;
+                //UserDetails.Createdby = model.UserId;
                 context.SaveChanges();
             }
         }

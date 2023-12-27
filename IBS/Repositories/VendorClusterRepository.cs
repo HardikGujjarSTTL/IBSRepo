@@ -2,7 +2,6 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 namespace IBS.Repositories
 {
     public class VendorClusterRepository : IVendorClusterRepository

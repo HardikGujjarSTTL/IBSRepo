@@ -1,15 +1,13 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.OtherReports;
+using IBS.Models;
 using IBS.Models.Reports;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Security.Cryptography;
 
 namespace IBS.Repositories.Reports.OtherReports
 {
@@ -329,7 +327,7 @@ namespace IBS.Repositories.Reports.OtherReports
                     }).ToList();
                     foreach (var item in listcong)
                     {
-                        item.Total = (decimal)item.Total_Minor + (decimal)item.Total_Major + (decimal)item.Total_Critical;
+                        item.Total = item.Total_Minor + item.Total_Major + item.Total_Critical;
                     }
                     model.lstAllNCRCMIE = listcong;
                 }

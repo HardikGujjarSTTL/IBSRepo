@@ -4,8 +4,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Xml.Linq;
 
 namespace IBS.Repositories
 {

@@ -1,10 +1,8 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NuGet.Packaging.Signing;
 
 namespace IBS.Controllers
 {
@@ -68,7 +66,7 @@ namespace IBS.Controllers
                 model.Roleid = Convert.ToInt32(RoleId);
                 foreach (var item in selectedItems)
                 {
-                    model.Menuid =Convert.ToInt32(item.ID);
+                    model.Menuid = Convert.ToInt32(item.ID);
                     model.detail = item.detail;
                     model.Isadd = item.Isadd;
                     model.Isedit = item.Isedit;

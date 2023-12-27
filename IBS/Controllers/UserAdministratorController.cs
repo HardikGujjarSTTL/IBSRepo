@@ -1,10 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -44,7 +41,7 @@ namespace IBS.Controllers
                 model = userRepository.FindByID(UserId);
             }
 
-            return View(model); 
+            return View(model);
         }
 
         [Authorization("UserAdministrator", "UserMaster", "delete")]
@@ -77,7 +74,7 @@ namespace IBS.Controllers
                 if (model.ID > 0)
                 {
                     msg = "User Updated Successfully.";
-                    model.Updatedby =Convert.ToString(UserId);
+                    model.Updatedby = Convert.ToString(UserId);
                 }
                 model.Createdby = Convert.ToString(UserId);
                 int i = userRepository.UserDetailsInsertUpdate(model);

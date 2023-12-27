@@ -1,15 +1,10 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Transaction;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Transaction
 {
@@ -116,7 +111,7 @@ namespace IBS.Repositories.Transaction
             par[4] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GetBillData", par, 1);
-            
+
             DataTable dt = ds.Tables[0];
 
 
@@ -143,7 +138,7 @@ namespace IBS.Repositories.Transaction
 
             return dTResult;
         }
-        public bool Remove(string BILL_NO,int UserId)
+        public bool Remove(string BILL_NO, int UserId)
         {
             var t36Bill = context.T36Bills.Find(BILL_NO);
             if (t36Bill == null) { return false; }

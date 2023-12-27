@@ -1,13 +1,10 @@
-﻿using IBS.DataAccess;
-using IBS.Helper;
+﻿using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using System.Drawing;
 
 namespace IBS.Controllers
 {
@@ -87,7 +84,7 @@ namespace IBS.Controllers
                 model.Createdby = UserId;
                 model.Updatedby = UserId;
 
-                string i ="";
+                string i = "";
                 if (model.ItemCd == null)
                 {
                     i = masterItemsListForm.DtlInsertUpdate(model, Region, GetIeCd);

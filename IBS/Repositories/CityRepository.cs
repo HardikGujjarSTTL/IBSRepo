@@ -1,4 +1,4 @@
-﻿    using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
@@ -70,7 +70,7 @@ namespace IBS.Repositories
                     where (!string.IsNullOrEmpty(Location) ? c.Location.ToLower().Contains(Location.ToLower()) : true)
                     && (!string.IsNullOrEmpty(City) ? c.City.ToLower().Contains(City.ToLower()) : true)
                     && (!string.IsNullOrEmpty(Pincode) ? c.PinCode.ToLower().Contains(Pincode.ToLower()) : true)
-                    && ((StateCd != null) ? c.StateCd ==  StateCd : true)
+                    && ((StateCd != null) ? c.StateCd == StateCd : true)
                     select new CityMasterModel
                     {
                         CityCd = c.CityCd,

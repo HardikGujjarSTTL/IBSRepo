@@ -1,16 +1,10 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.InkML;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.WebsitePages;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.Storage;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -28,7 +22,7 @@ namespace IBS.Repositories.WebsitePages
         {
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_caseno", OracleDbType.Varchar2, model.CaseNo, ParameterDirection.Input);
-            par[1] = new OracleParameter("p_calldate", OracleDbType.Varchar2,model.CallDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_calldate", OracleDbType.Varchar2, model.CallDate, ParameterDirection.Input);
             par[2] = new OracleParameter("p_callsno", OracleDbType.Varchar2, model.CallSno, ParameterDirection.Input);
             par[3] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -38,7 +32,7 @@ namespace IBS.Repositories.WebsitePages
             {
                 model.PO_NO = ds.Tables[0].Rows[0]["PO_NO"]?.ToString();
                 model.VEND_NAME = ds.Tables[0].Rows[0]["VEND_NAME"]?.ToString();
-                model.VEND_CD = ds.Tables[0].Rows[0]["VEND_CD"] as int?; 
+                model.VEND_CD = ds.Tables[0].Rows[0]["VEND_CD"] as int?;
             }
             else
             {
@@ -58,7 +52,7 @@ namespace IBS.Repositories.WebsitePages
 
             string merNo = ds.Tables[0].Rows[0]["MERNO"].ToString();
 
-            string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5,'0');
+            string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5, '0');
             model.MER_TXN_REF = mer_ref;
             var OnlinePayment = new OnlinePayment
             {
@@ -70,18 +64,40 @@ namespace IBS.Repositories.WebsitePages
                 VendCd = model.VEND_CD.HasValue ? (short?)model.VEND_CD.Value : null,
                 Amount = model.Charges,
                 ChargesType = model.ChargesType,
-                Datetime = DateTime.Now
+                Datetime = DateTime.Now,
+                TokId = model.Tok_id
             };
-
+            model.AlertMsg = "Success";
             context.OnlinePayments.Add(OnlinePayment);
             context.SaveChanges();
 
             return model;
         }
 
-        public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model)
+        public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model, string id)
         {
-            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == model.MER_TXN_REF.Trim());
+            var GetPayment = (from op in context.OnlinePayments
+                              where op.TokId == id
+                              select new OnlinePaymentGateway
+                              {
+                                  CaseNo = op.CaseNo,
+                                  CallDate = op.CallRecvDt.ToString(),
+                                  CallSno = op.CallSno,
+                                  ChargesType = op.ChargesType,
+                                  MER_TXN_REF = op.MerTxnRef
+                              }).FirstOrDefault();
+
+            model.CaseNo = GetPayment.CaseNo;
+            if (DateTime.TryParse(GetPayment.CallDate, out DateTime parsedDate))
+            {
+                model.CallDate = parsedDate.ToString("dd/MM/yyyy");
+            }
+            model.CallSno = GetPayment.CallSno;
+            model.MER_TXN_REF = GetPayment.MER_TXN_REF;
+            
+            model.ChargesType = EnumUtility<Enums.ChargesType>.GetDescriptionByKey(GetPayment.ChargesType);
+
+            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == GetPayment.MER_TXN_REF);
 
             if (onlinePayment != null)
             {
@@ -101,8 +117,8 @@ namespace IBS.Repositories.WebsitePages
                 onlinePayment.SubChannel = model.SubChannel;
                 onlinePayment.Description = model.Description;
                 onlinePayment.StatusCd = model.StatusCode;
-
                 context.SaveChanges();
+                model.AlertMsg = "Success";
             }
             return model;
         }

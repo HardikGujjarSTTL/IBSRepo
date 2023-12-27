@@ -1,7 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers
 {
@@ -19,7 +18,7 @@ namespace IBS.Controllers
             string Region = GetRegionCode;
             CMIEWiseCancellationAcceptance_FormModel dTResult = cmiewisecancellationacceptanceformrepository.GetIEsByRegionAndCO(selectedValue, Region);
 
-            
+
 
             return Json(dTResult);
         }
@@ -28,25 +27,25 @@ namespace IBS.Controllers
         {
             string Region = GetRegionCode;
             int selectedOption = Convert.ToInt32(dtParameters.AdditionalValues?.GetValueOrDefault("selectedOption"));
-          if(selectedOption == 1)
-          {
+            if (selectedOption == 1)
+            {
                 DTResult<CMIEWiseCancellationAcceptance_FormModel> dTResult = cmiewisecancellationacceptanceformrepository.CMIEWTable(dtParameters, Region);
                 return Json(dTResult);
-          }
-          else
-          {
+            }
+            else
+            {
                 DTResult<CMIEWiseCancellationAcceptance_FormModel> dTResult = cmiewisecancellationacceptanceformrepository.CMIEWTable1(dtParameters, Region);
                 return Json(dTResult);
-          }
+            }
 
 
-            
+
         }
 
         [HttpPost]
         public IActionResult update(string selectedCASENO, string selectedCALL_RECV_DATE, string selectedCALL_SNO)
         {
-            
+
             CMIEWiseCancellationAcceptance_FormModel model = new CMIEWiseCancellationAcceptance_FormModel();
             model.CASE_NO = Request.Form["CASE_NO"];
             model.CALL_RECV_DATE = Request.Form["CALL_RECV_DATE"];

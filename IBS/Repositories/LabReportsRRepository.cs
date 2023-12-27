@@ -2,19 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Dynamic;
-using System.Globalization;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
-using static IBS.Helper.Enums;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Repositories
 {
@@ -52,7 +41,7 @@ namespace IBS.Repositories
             par[14] = new OracleParameter("p_rdbLabWise", OracleDbType.Boolean, rdbLabWise, ParameterDirection.Input);
             par[15] = new OracleParameter("p_rdbPLab", OracleDbType.Boolean, rdbPLab, ParameterDirection.Input);
             par[16] = new OracleParameter("p_lstLab", OracleDbType.NVarchar2, lstLab, ParameterDirection.Input);
-            par[17] = new OracleParameter("p_Disciplinewise", OracleDbType.Boolean,Disciplinewise, ParameterDirection.Input);
+            par[17] = new OracleParameter("p_Disciplinewise", OracleDbType.Boolean, Disciplinewise, ParameterDirection.Input);
             par[18] = new OracleParameter("p_rdbPDis", OracleDbType.Boolean, rdbPDis, ParameterDirection.Input);
             par[19] = new OracleParameter("p_Discipline", OracleDbType.NVarchar2, Discipline, ParameterDirection.Input);
             par[20] = new OracleParameter("p_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
@@ -60,7 +49,7 @@ namespace IBS.Repositories
             var ds = DataAccessDB.GetDataSet("LabRegisterReport", par, 20);
             //int totalTestingFee = Convert.ToInt32(par[17].Value);
             DataTable dt = ds.Tables[0];
-            
+
             lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
             {
                 SAMPLE_REG_NO = row["SAMPLE_REG_NO"].ToString(),
@@ -92,8 +81,8 @@ namespace IBS.Repositories
             }).ToList();
             foreach (var item in lstlab)
             {
-                
-                
+
+
                 if (reg == item.SAMPLE_REG_NO)
                 {
                     item.AMOUNT_RECIEVED = "";
@@ -122,7 +111,7 @@ namespace IBS.Repositories
 
             return model;
         }
-        
+
         public LabReportsModel LabPerformanceReport(string ReportType, string wFrmDtO, string wToDt, string Regin)
         {
 
@@ -209,7 +198,7 @@ namespace IBS.Repositories
                 CHQ_CASE_NO = Convert.ToString(row["CHQ_CASE_NO"]),
                 AMOUNT_ADJUSTED = Convert.ToString(row["AMOUNT_ADJUSTED"]),
                 SUSPENSE_AMT = Convert.ToString(row["SUSPENSE_AMT"]),
-        }).ToList();
+            }).ToList();
             model.lstLabReport = lstlab;
             //if (ds.Tables[0].Rows.Count != 0)
             //{
@@ -272,7 +261,7 @@ namespace IBS.Repositories
                 TYPE = Convert.ToString(row["TYPE"]),
                 STATUS = Convert.ToString(row["STATUS"]),
                 DATETIME = Convert.ToString(row["DATETIME"]),
-        }).ToList();
+            }).ToList();
             model.lstLabReport = lstlab;
             //if (ds.Tables[0].Rows.Count != 0)
             //{
@@ -318,25 +307,25 @@ namespace IBS.Repositories
             DataTable dt = ds.Tables[0];
             lstlab = dt.AsEnumerable().Select(row => new LabReportsModel
             {
-                 BPO_NAME = row["BPO_NAME"].ToString(),
-                 recipient_gstin_no = row["recipient_gstin_no"].ToString(),
-                 St_cd = row["St_cd"].ToString(),
-                 invoice_no = row["invoice_no"].ToString(),
-                 invoice_dt = row["invoice_dt"].ToString(),
-                 Total_AMT = Convert.ToString(row["Total_AMT"]),
-                 INV_TYPE = row["INV_TYPE"].ToString(),
-                 HSN_CD = row["HSN_CD"].ToString(),
-                 INV_amount = Convert.ToString(row["INV_amount"]),
-                 INV_sgst = Convert.ToString(row["INV_sgst"]),
-                 INV_cgst = Convert.ToString(row["INV_cgst"]),
-                 INV_igst = Convert.ToString(row["INV_igst"]),
-                 INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
-                 INC_TYPE = row["INC_TYPE"].ToString(),
-                 Total_GST = Convert.ToString(row["Total_GST"]),
-                 IRN_NO = row["IRN_NO"].ToString(),
-                 BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
-                 BILL_SENT = row["BILL_SENT"].ToString(),
-        }).ToList();
+                BPO_NAME = row["BPO_NAME"].ToString(),
+                recipient_gstin_no = row["recipient_gstin_no"].ToString(),
+                St_cd = row["St_cd"].ToString(),
+                invoice_no = row["invoice_no"].ToString(),
+                invoice_dt = row["invoice_dt"].ToString(),
+                Total_AMT = Convert.ToString(row["Total_AMT"]),
+                INV_TYPE = row["INV_TYPE"].ToString(),
+                HSN_CD = row["HSN_CD"].ToString(),
+                INV_amount = Convert.ToString(row["INV_amount"]),
+                INV_sgst = Convert.ToString(row["INV_sgst"]),
+                INV_cgst = Convert.ToString(row["INV_cgst"]),
+                INV_igst = Convert.ToString(row["INV_igst"]),
+                INVOICE_TYPE = row["INVOICE_TYPE"].ToString(),
+                INC_TYPE = row["INC_TYPE"].ToString(),
+                Total_GST = Convert.ToString(row["Total_GST"]),
+                IRN_NO = row["IRN_NO"].ToString(),
+                BILL_FINALIZE = row["BILL_FINALIZE"].ToString(),
+                BILL_SENT = row["BILL_SENT"].ToString(),
+            }).ToList();
             model.lstLabReport = lstlab;
             //if (ds.Tables[0].Rows.Count != 0)
             //{
@@ -456,11 +445,11 @@ namespace IBS.Repositories
                 var callsno = "";
                 var calldocdt = "";
 
-                caseno = row["case_no"].ToString(); 
-                callsno = row["call_sno"].ToString(); 
-                calldocdt = row["call_doc_dt"].ToString(); 
+                caseno = row["case_no"].ToString();
+                callsno = row["call_sno"].ToString();
+                calldocdt = row["call_doc_dt"].ToString();
 
-                string fn = "", MyFile = "", MyFile2 = "";
+                string MyFile = "", MyFile2 = "";
                 string mdt = dateconcate20(calldocdt.Trim());
                 string mdt2 = dateconcate21(calldocdt.Trim());
 
@@ -586,7 +575,7 @@ namespace IBS.Repositories
 
             }).ToList();
             model.lstBarcodeReport = lstlab;
-            
+
             return model;
         }
     }

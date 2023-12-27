@@ -1,13 +1,8 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces.IE;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 using System.Globalization;
-using System.Linq;
-using System.Numerics;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories.IE
 {

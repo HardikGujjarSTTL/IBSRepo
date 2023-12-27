@@ -1,13 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Dynamic;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace IBS.Controllers
 {
@@ -26,7 +20,7 @@ namespace IBS.Controllers
         public IActionResult Index()
         {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
-            
+
             return View(lABREGISTERModel);
         }
         [Authorization("LabRegisterForm", "Index", "view")]
@@ -48,8 +42,8 @@ namespace IBS.Controllers
             return View(lABREGISTERModel);
         }
         [HttpPost]
-        public IActionResult LoaddataModify(string RegNo,string CaseNo,string CallDt,string CallSno)
-        {           
+        public IActionResult LoaddataModify(string RegNo, string CaseNo, string CallDt, string CallSno)
+        {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
             try
             {
@@ -124,7 +118,7 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [Authorization("LabRegisterForm", "Index", "view")]
-        public IActionResult LabRegisterFormNew(string CaseNo,string CallRdt, string CallSno)
+        public IActionResult LabRegisterFormNew(string CaseNo, string CallRdt, string CallSno)
         {
             LABREGISTERModel lABREGISTERModel = new LABREGISTERModel();
             lABREGISTERModel.CaseNo = CaseNo;
@@ -154,7 +148,7 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [Authorization("LabRegisterForm", "Index", "edit")]
-        public bool SaveDataDetails([FromBody]LABREGISTERModel LABREGISTERModel)
+        public bool SaveDataDetails([FromBody] LABREGISTERModel LABREGISTERModel)
         {
             try
             {
@@ -276,7 +270,7 @@ namespace IBS.Controllers
                 lABREGISTERModel.Region = GetRegionCode;
                 lABREGISTERModel.UName = UserId.ToString();
                 Results = LabRegFormRepository.PrintInvoice(RegNo, lABREGISTERModel);
-                
+
             }
             catch (Exception ex)
             {

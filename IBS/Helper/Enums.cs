@@ -711,6 +711,24 @@ namespace IBS.Helper
             [Description("Consigne Select")]
             ConsigneSelect,
         }
+
+        public enum ChargesType
+        {
+            [Description("Customer's Advance")]
+            A,
+            [Description("Call Cancellation Charge")]
+            C,
+            [Description("Rejection Charges")]
+            R,
+            [Description("Lab Charges")]
+            L,
+            [Description("Revalidation Of IC")]
+            V,
+            [Description("Duplicate IC")]
+            D,
+            [Description("NSIC Call Charges")]
+            N,
+        }
     }
 
     public class EnumUtility<T>

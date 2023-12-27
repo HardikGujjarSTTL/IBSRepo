@@ -1,6 +1,5 @@
 ﻿using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

@@ -1,9 +1,10 @@
-﻿using IBS.Interfaces.WebsitePages;
+﻿using IBS.Helper;
+using IBS.Interfaces.WebsitePages;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -57,14 +58,14 @@ namespace IBS.Controllers.WebsitePages
 
             md.merchId = config.GetSection("PaymentConfig")["merchId"];
             md.userId = config.GetSection("PaymentConfig")["merchId"];
-            md.password = "Test@123";
+            md.password = config.GetSection("PaymentConfig")["password"];
             md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            md.merchTxnId = "test000123";
-
+            md.merchTxnId = config.GetSection("PaymentConfig")["merchTxnId"];
+            model.MerID = md.merchId;
             pd.amount = Convert.ToString(model.Charges);
-            pd.product = "NSE";
-            pd.custAccNo = "213232323";
-            pd.txnCurrency = "INR";
+            pd.product = config.GetSection("PaymentConfig")["product"];
+            pd.custAccNo = config.GetSection("PaymentConfig")["custAccNo"];
+            pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
 
             cd.custEmail = model.Email;
             cd.custMobile = model.Mobile;
@@ -84,12 +85,12 @@ namespace IBS.Controllers.WebsitePages
             rt.payInstrument = pr;
             var json = JsonConvert.SerializeObject(rt);
 
-            string passphrase = "A4476C2062FFA58980DC8F79EB6A799E";
-            string salt = "A4476C2062FFA58980DC8F79EB6A799E";
+            string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
+            string salt = config.GetSection("PaymentConfig")["Encrypt"];
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
             int keysize = 256;
-            string hashAlgorithm = "SHA1";
+            string hashAlgorithm = config.GetSection("PaymentConfig")["hashAlgorithm"];
             string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
 
             string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
@@ -113,7 +114,6 @@ namespace IBS.Controllers.WebsitePages
 
             StreamReader reader = new StreamReader(response.GetResponseStream());
             string temp = null;
-            string status = "";
             while ((temp = reader.ReadLine()) != null)
             {
                 jsonresponse += temp;
@@ -124,8 +124,8 @@ namespace IBS.Controllers.WebsitePages
             var query = HttpUtility.ParseQueryString(uri.Query);
 
             string encData = query.Get("encData");
-            string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
-            string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
+            string salt1 = config.GetSection("PaymentConfig")["decrypt"];
             string Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
             PayverifyModel.Payverify objectres = new PayverifyModel.Payverify();
             objectres = JsonConvert.DeserializeObject<PayverifyModel.Payverify>(Decryptval);
@@ -134,9 +134,9 @@ namespace IBS.Controllers.WebsitePages
             string Tok_id = objectres.atomTokenId;
             var url = Request.Scheme + "://" + Request.Host.Value;
             model.LocalURL = url;
+            model.Tok_id = Tok_id;
 
             model = onlinePaymentGatewayRepository.PaymentIntergreationSave(model);
-            model.Tok_id = Tok_id;
             return Json(new { status = false, response = model });
         }
 
@@ -212,23 +212,22 @@ namespace IBS.Controllers.WebsitePages
             return hex.ToString();
         }
 
-        public IActionResult PaymentResponse(string mef_ref)
+        public IActionResult PaymentResponse(string id)
         {
             OnlinePaymentGateway model = new();
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
             int keysize = 256;
-            string hashAlgorithm = "SHA1";
+            string hashAlgorithm = config.GetSection("PaymentConfig")["hashAlgorithm"];
             string encdata = Request.Form["encdata"];
-            string passphrase1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
-            string salt1 = "75AEF0FA1B94B3C10D4F5B268F757F11";
+            string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
+            string salt1 = config.GetSection("PaymentConfig")["decrypt"];
             string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
             PayresponseModel.Rootobject root = new PayresponseModel.Rootobject();
             PayresponseModel.Parent objectres = new PayresponseModel.Parent();
 
             objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
 
-            model.MER_TXN_REF = mef_ref;
             model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
             model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
             model.Product = objectres.payInstrument.payDetails.product;
@@ -239,7 +238,7 @@ namespace IBS.Controllers.WebsitePages
             model.PaymentStatus = objectres.payInstrument.responseDetails.message;
             model.Email = objectres.payInstrument.custDetails.custEmail;
             model.Mobile = objectres.payInstrument.custDetails.custMobile;
-            model.MerID= objectres.payInstrument.merchDetails.merchId;
+            model.MerID = objectres.payInstrument.merchDetails.merchId;
             model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
             model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
             model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
@@ -248,7 +247,8 @@ namespace IBS.Controllers.WebsitePages
             model.Description = objectres.payInstrument.responseDetails.description;
             model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
 
-            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model);
+            model = onlinePaymentGatewayRepository.PaymentResponseUpdate(model, id);
+
             GlobalDeclaration.OnlinePaymentResponse = model;
             return View(model);
         }

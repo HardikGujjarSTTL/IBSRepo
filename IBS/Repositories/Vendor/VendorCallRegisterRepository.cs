@@ -6,10 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Dynamic;
 using System.Net;
 using System.Net.Mail;
-using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace IBS.Repositories.Vendor
@@ -17,10 +15,12 @@ namespace IBS.Repositories.Vendor
     public class VendorCallRegisterRepository : IVendorCallRegisterRepository
     {
         private readonly ModelContext context;
+        private readonly IConfiguration config;
 
-        public VendorCallRegisterRepository(ModelContext context)
+        public VendorCallRegisterRepository(ModelContext context, IConfiguration _config)
         {
             this.context = context;
+            this.config = _config;
         }
 
         public string CNO, DT, Action, CSNO, cstatus, wFOS;
@@ -1488,17 +1488,20 @@ namespace IBS.Repositories.Vendor
                 if (wVendMobile != "") { wIEMobile = wIEMobile + "," + wVendMobile; }
                 string message = "RITES LTD - QA Call Marked, IE-" + wIEName + ",Contact No.:" + wIEMobile_for_SMS + ",RLY-" + model.Rly + ",PO-" + model.PoNo + ",DT- " + model.PoDt + ", Firm Name-" + wVendor + ", Call Sno - " + model.CallSno + ",DT- " + model.CallRecvDt + "- RITES/" + sender;
 
-                using (HttpClient client = new HttpClient())
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendSMS"]) == true)
                 {
-                    string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
 
-                    HttpResponseMessage response = await client.GetAsync(baseurl);
-                    response.EnsureSuccessStatusCode(); // Ensure a successful response
+                        HttpResponseMessage response = await client.GetAsync(baseurl);
+                        response.EnsureSuccessStatusCode(); // Ensure a successful response
 
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseBody);
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(responseBody);
 
-                    sms = "success";
+                        sms = "success";
+                    }
                 }
             }
             catch (Exception ex)
@@ -1513,12 +1516,23 @@ namespace IBS.Repositories.Vendor
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
-            string sender = "";
 
-            if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; }
-            else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
-            else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
-            else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
+            if (Case_Region == "N")
+            {
+                wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665";
+            }
+            else if (Case_Region == "S")
+            {
+                wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359";
+            }
+            else if (Case_Region == "E")
+            {
+                wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704";
+            }
+            else if (Case_Region == "W")
+            {
+                wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>";
+            }
             else if (Case_Region == "C") { wRegion = "Central Region"; }
 
             var result = (from t13 in context.T13PoMasters
@@ -1672,23 +1686,18 @@ namespace IBS.Repositories.Vendor
             mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
             if (Case_Region == "N")
             {
-                sender = "nrinspn@rites.com";
             }
             else if (Case_Region == "W")
             {
-                sender = "wrinspn@rites.com";
             }
             else if (Case_Region == "E")
             {
-                sender = "erinspn@rites.com";
             }
             else if (Case_Region == "S")
             {
-                sender = "srinspn@rites.com";
             }
             else if (Case_Region == "C")
             {
-                sender = "crinspn@rites.com";
             }
 
             if (vend_cd == mfg_cd && manu_mail != "")
@@ -1899,7 +1908,7 @@ namespace IBS.Repositories.Vendor
                 model.CallSno = GetReport.CallSno;
                 model.CallLetterNo = GetReport.CallLetterNo;
                 model.CallLetterDt = GetReport.CallLetterDt;
-                model.CallInstallNo = GetReport.CallInstallNo;
+                model.CallInstallNo = (byte?)GetReport.CallInstallNo;
                 model.OnlineCall = GetReport.OnlineCall;
                 model.FinalOrStage = GetReport.FinalOrStage;
                 model.Remarks = GetReport.Remarks;
@@ -2067,7 +2076,7 @@ namespace IBS.Repositories.Vendor
             string dp = "";
             if (model.InspectingAgency == "R" || model.InspectingAgency == "U")
             {
-                var maxExtDelvDt = context.T15PoDetails.Where(T15 => T15.CaseNo == CaseNo).Max(T15 => (DateTime?)T15.ExtDelvDt);
+                var maxExtDelvDt = context.T15PoDetails.Where(T15 => T15.CaseNo == CaseNo).Max(T15 => T15.ExtDelvDt);
 
                 string resultDt = maxExtDelvDt != null ? maxExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001";
                 string ext_delv_dt = "";

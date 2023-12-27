@@ -1,10 +1,6 @@
 ﻿using IBS.Interfaces.IE;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.IE;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Drawing;
 
 namespace IBS.Controllers.IE
 {

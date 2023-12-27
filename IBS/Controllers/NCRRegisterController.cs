@@ -2,13 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using NuGet.Protocol.Core.Types;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
@@ -157,9 +152,9 @@ namespace IBS.Controllers
             }
             return Json(NCRCode);
         }
-        
+
         [HttpPost]
-        public IActionResult GetItem(string CaseNo,string BKNo,string SetNo)
+        public IActionResult GetItem(string CaseNo, string BKNo, string SetNo)
         {
             var json = "";
             try
@@ -172,9 +167,9 @@ namespace IBS.Controllers
             }
             return Json(json);
         }
-        
+
         [HttpPost]
-        public IActionResult GetQtyByItem(string CaseNo, string CALLRECVDT, string CALLSNO,string ItemSno)
+        public IActionResult GetQtyByItem(string CaseNo, string CALLRECVDT, string CALLSNO, string ItemSno)
         {
             var json = "";
             try

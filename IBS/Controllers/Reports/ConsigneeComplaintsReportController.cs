@@ -1,10 +1,6 @@
-﻿using IBS.Helper;
-using IBS.Interfaces;
-using IBS.Interfaces.Reports;
+﻿using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Models.Reports;
 using Microsoft.AspNetCore.Mvc;
-using static IBS.Helper.Enums;
 
 namespace IBS.Controllers.Reports
 {
@@ -39,19 +35,19 @@ namespace IBS.Controllers.Reports
         //    }
         //    return Json(dtResult);
         //}
-        
+
         public IActionResult Report(string FromDate, string ToDate)
-        {            
+        {
             ConsigneeReportsModel model = new() { ReportType = "", FromDate = Convert.ToDateTime(FromDate), ToDate = Convert.ToDateTime(ToDate) };
             model.ReportTitle = "Consignee Complaints Report";
             ViewBag.FromDate = FromDate;
-            ViewBag.ToDate = ToDate;            
+            ViewBag.ToDate = ToDate;
             return View(model);
         }
 
         public IActionResult ConsigneeComplaints(string FromDate, string ToDate)
-        {            
-            var data = consigneeComplaintsReportRepository.Get_Consignee_Complaints(FromDate, ToDate, GetUserInfo);            
+        {
+            var data = consigneeComplaintsReportRepository.Get_Consignee_Complaints(FromDate, ToDate, GetUserInfo);
             ViewBag.FromDate = FromDate;
             ViewBag.ToDate = ToDate;
             return PartialView(data);

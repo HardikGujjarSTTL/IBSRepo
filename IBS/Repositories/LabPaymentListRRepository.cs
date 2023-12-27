@@ -2,14 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -21,7 +16,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<LabPaymentListModel> GetLapPaymentList(DTParameters dtParameters,string Regin)
+        public DTResult<LabPaymentListModel> GetLapPaymentList(DTParameters dtParameters, string Regin)
         {
 
             DTResult<LabPaymentListModel> dTResult = new() { draw = 0 };
@@ -115,7 +110,7 @@ namespace IBS.Repositories
 
             //using (var dbContext = context.Database.GetDbConnection())
             //{
-                
+
             //}
 
             //return dTResult;
@@ -208,7 +203,7 @@ namespace IBS.Repositories
                 par[4] = new OracleParameter("p_DocRejRemark", OracleDbType.Varchar2, LabPaymentListModel.Remarks, ParameterDirection.Input);
                 par[5] = new OracleParameter("p_Username", OracleDbType.Varchar2, LabPaymentListModel.UName, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_SS1", OracleDbType.Date, ss, ParameterDirection.Input);
-                
+
                 var ds = DataAccessDB.ExecuteNonQuery("UpdateLabPayment", par, 1);
             }
             catch (Exception ex)

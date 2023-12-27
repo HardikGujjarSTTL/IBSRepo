@@ -1,8 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Data;
 
 namespace IBS.Repositories
@@ -92,7 +90,7 @@ namespace IBS.Repositories
             {
                 T95AccountCode accCode = new()
                 {
-                    AccCd =   model.AccCd ?? 0,
+                    AccCd = model.AccCd ?? 0,
                     AccDesc = model.AccDesc,
                     Createdby = model.Createdby,
                     Createddate = DateTime.Now,

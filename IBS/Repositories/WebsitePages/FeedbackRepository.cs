@@ -1,13 +1,8 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.WebsitePages;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -23,7 +18,7 @@ namespace IBS.Repositories.WebsitePages
         public bool CheckAlreadyExist(VendorFeedbackModel model)
         {
             var AlreadyExist = (from vf in context.VendorFeedbacks where vf.VendCd == model.VendCd && vf.RegionCode == model.RegionCode select vf).ToList();
-            if (AlreadyExist.Count > 0 )
+            if (AlreadyExist.Count > 0)
             {
                 return true;
             }
@@ -35,7 +30,7 @@ namespace IBS.Repositories.WebsitePages
             obj.VendCd = model.VendCd;
             obj.RegionCode = model.RegionCode;
             obj.Field1 = model.Field1;
-            obj.Field2 = model.Field2;  
+            obj.Field2 = model.Field2;
             obj.Field3 = model.Field3;
             obj.Field4 = model.Field4;
             obj.Field5 = model.Field5;

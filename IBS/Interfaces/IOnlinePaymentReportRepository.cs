@@ -1,13 +1,11 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
     public interface IOnlinePaymentReportRepository
     {
 
-        DTResult<OnlinePaymentReportModel> OnlinePaymentReport(DTParameters dtParameters,string Regin);
-       
+        DTResult<OnlinePaymentReportModel> OnlinePaymentReport(DTParameters dtParameters, string Regin);
+
     }
 }

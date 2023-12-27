@@ -14,9 +14,14 @@ namespace IBSAPI.Repositories
     {
 
         private readonly ModelContext context;
-        public CallRepository(ModelContext context)
+        private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
+
+        public CallRepository(ModelContext context, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
+            pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
 
         public List<CallListModel> GetCallList()
@@ -125,7 +130,9 @@ namespace IBSAPI.Repositories
 
         public List<CallStatusModel> Get_Call_Status_List()
         {
-            var allowedStatuses = new string[] { "M", "A", "R", "U", "S" };
+
+
+            var allowedStatuses = new string[] { "M", "A", "R", "U", "S", "G", "W", "T", "PR" };
             List<CallStatusModel> lstStatus = new();
 
             lstStatus = (from x in context.T21CallStatusCodes
@@ -229,6 +236,8 @@ namespace IBSAPI.Repositories
                                 existingEntity.QtyPassed = entity.QtyPassed;
                                 existingEntity.QtyRejected = entity.QtyRejected;
                                 existingEntity.QtyDue = entity.QtyDue;
+                                existingEntity.Updatedby = Convert.ToString(model.UserId);
+                                existingEntity.Updateddate = DateTime.Now;
                                 context.SaveChanges();
                             }
                         }
@@ -267,7 +276,8 @@ namespace IBSAPI.Repositories
                     existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
                     existingRecord.FifoVoilateReason = model.ReasonFIFO;
                     existingRecord.LocalOrOuts = wRejType;
-
+                    existingRecord.Updatedby = Convert.ToString(model.UserId);
+                    existingRecord.Updateddate = DateTime.Now;
                     context.SaveChanges();
                 }
 
@@ -295,6 +305,10 @@ namespace IBSAPI.Repositories
 
         public void Vendor_Rej_Email(VenderCallStatusModel model)
         {
+            string MailID = Convert.ToString(config.GetSection("AppSettings")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("AppSettings")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("AppSettings")["MailSmtpClient"]);
+
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
@@ -400,143 +414,240 @@ namespace IBSAPI.Repositories
 
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    // Create a MailMessage object
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(manu_mail);
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                                                                                                                   // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
+                    // Create a SmtpClient
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                                                                                                                       // Send the email
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle the exception (log, display error message, etc.)
+                    }
+                    finally
+                    {
+                        // Dispose of resources
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+
+
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(vend_email);
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    // Create a MailMessage object
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(vend_email);
+                    mail.To.Add(manu_mail);
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
 
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+
+
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    MailMessage mail = new MailMessage();
+                    if (string.IsNullOrEmpty(vend_email))
+                    {
+                        mail.To.Add(manu_mail);
+                    }
+                    else if (string.IsNullOrEmpty(manu_mail))
+                    {
+                        mail.To.Add(vend_email);
+                    }
+                    else
+                    {
+                        mail.To.Add(vend_email);
+                        mail.To.Add(manu_mail);
+                    }
 
-                if (string.IsNullOrEmpty(vend_email))
-                {
-                    mail.To.Add(manu_mail);
-                }
-                else if (string.IsNullOrEmpty(manu_mail))
-                {
-                    mail.To.Add(vend_email);
-                }
-                else
-                {
-                    mail.To.Add(vend_email);
-                    mail.To.Add(manu_mail);
+                    mail.Bcc.Add("nrinspn@gmail.com");
+                    mail.From = new MailAddress("nrinspn@gmail.com");
+                    mail.Subject = "Your Call for Inspection By RITES";
+                    mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    mail.Body = mail_body;
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    try
+                    {
+                        smtpClient.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
 
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
 
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                }
-                finally
-                {
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
             }
 
             if (vend_email == "" && manu_mail == "")
             {
-                MailMessage mail = new MailMessage();
                 mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
 
-                mail.To.Add(ie_co_email);
-                if (Case_Region == "N")
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
                 {
-                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
+                    MailMessage mail = new MailMessage();
+                    mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+
+                    mail.To.Add(ie_co_email);
+                    if (Case_Region == "N")
+                    {
+                        mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
+                    }
+                    else
+                    {
+                        mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
+                    }
+                    mail.From = new MailAddress(sender);
+                    mail.Subject = "Your Call for Inspection By RITES has Rejected.";
+                    mail.Body = mail_body;
+                    SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    try
+                    {
+                        smtpClient.Send(mail);
+                        email = "success";
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        mail.Dispose();
+                        smtpClient.Dispose();
+                    }
                 }
-                else
-                {
-                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
-                }
-                mail.From = new MailAddress(sender);
-                mail.Subject = "Your Call for Inspection By RITES has Rejected.";
-                mail.Body = mail_body;
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                try
-                {
-                    smtpClient.Send(mail);
-                    email = "success";
-                }
-                catch (Exception ex)
-                {
-                }
-                finally
-                {
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+
+                
             }
 
             // return email;
+        }
+
+        public string Save(VenderCallStatusModel model, string document)
+        {
+            if (model.CallStatus == "G" || model.CallStatus == "T")
+            {
+                string bsCheck = "";
+                if (!string.IsNullOrEmpty(model.CallStatus) && !string.IsNullOrEmpty(model.SetNo))
+                {
+                    bsCheck = context.T10IcBooksets
+                                  .Where(bookset => bookset.BkNo.Trim().ToUpper() == model.BkNo
+                                  && Convert.ToInt32(model.SetNo) >= Convert.ToInt32(bookset.SetNoFr)
+                                  && Convert.ToInt32(model.SetNo) <= Convert.ToInt32(bookset.SetNoTo) && bookset.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                  .Select(bookset => Convert.ToString(bookset.IssueToIecd)).FirstOrDefault();
+
+                    var ICTYPE = context.T10IcBooksets
+                                .Where(item => item.BkNo == model.BkNo && item.IssueToIecd == Convert.ToInt32(model.IeCd))
+                                .Select(item => item.Ictype)
+                                .FirstOrDefault();
+
+                    if (ICTYPE == "F")
+                    {
+                        model.AlertMsg = "This Book number and Set number are Finalized.";
+                        return model.AlertMsg;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && !string.IsNullOrEmpty(bsCheck) && document != "")
+                {
+                    var t17Detail = from a in context.T17CallRegisters
+                                    where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                                    select a;
+                    if (t17Detail.Count() > 0)
+                    {
+                        foreach (var row in t17Detail)
+                        {
+                            row.CallStatus = model.CallStatus;
+                            row.CallStatusDt = model.CallStatusDt;
+                            row.CallCancelStatus = null;
+                            row.BkNo = model.BkNo;
+                            row.SetNo = model.SetNo;
+                            row.UserId = model.UserName;
+                            row.Datetime = DateTime.Now;
+                            row.FifoVoilateReason = model.ReasonFIFO;
+                            row.Updatedby = Convert.ToString(model.UserId);
+                            row.Updateddate = DateTime.Now;
+                            context.SaveChanges();
+                        }
+                        model.AlertMsg = "Success";
+                    }
+                }
+                else if (!string.IsNullOrEmpty(model.BkNo) && !string.IsNullOrEmpty(model.SetNo) && string.IsNullOrEmpty(bsCheck))
+                {
+                    model.AlertMsg = "Book No. and Set No. specified is not issued to You!!!";
+                }
+                else if (string.IsNullOrEmpty(model.BkNo) || string.IsNullOrEmpty(model.SetNo) || !string.IsNullOrEmpty(document))
+                {
+                    model.AlertMsg = "Book No. , Set No. OR Stage IC Photo cannot be left blank!!!";
+                }
+            }
+            else
+            {
+                var detail = from a in context.T17CallRegisters
+                             where a.CaseNo == model.CaseNo && a.CallRecvDt == DateTime.ParseExact(Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy"), "dd/MM/yyyy", null) && a.CallSno == model.CallSno
+                             select a;
+                if (detail.Count() > 0)
+                {
+                    foreach (var item in detail)
+                    {
+                        item.CallStatus = model.CallStatus;
+                        item.CallStatusDt = model.CallStatusDt;
+                        //item.CallCancelStatus = w_call_cancel_status;
+                        item.UserId = model.UserName;
+                        item.Datetime = DateTime.Now;
+                        item.FifoVoilateReason = model.ReasonFIFO;
+                        item.Updatedby = Convert.ToString(model.UserId);
+                        item.Updateddate = DateTime.Now;
+                        context.SaveChanges();
+                    }
+                }
+                model.AlertMsg = "Success";
+            }
+            return model.AlertMsg;
         }
     }
 }

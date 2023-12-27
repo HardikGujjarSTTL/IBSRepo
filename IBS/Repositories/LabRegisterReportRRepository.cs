@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -21,7 +15,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-       
+
         public DTResult<LabRegisterReport> labRegisterReport(DTParameters dtParameters, string Regin)
         {
 
@@ -90,14 +84,14 @@ namespace IBS.Repositories
                         ieName = Convert.ToString(row["IE_NAME"]),
                         Lab = Convert.ToString(row["LAB"]),
                         TestRptDt = Convert.ToString(row["TEST_REPORT_REC_DATE"]),
-                        TestStatus  = Convert.ToString(row["TEST_STATUS"]),
+                        TestStatus = Convert.ToString(row["TEST_STATUS"]),
                         TestingFee = Convert.ToString(row["TESTING_FEE"]),
                         ServiceTax = Convert.ToString(row["SERVICE_TAX"]),
                         HandlingCharge = Convert.ToString(row["HANDLING_CHARGES"]),
                         amountReceived = Convert.ToString(row["AMOUNT_RECIEVED"]),
                         tdsAmt = Convert.ToString(row["TDS_AMT"]),
                         tdsDate = Convert.ToString(row["TDS_DATE"]),
-                        amtDue = Convert.ToString(row["AMT_DUE"]),   
+                        amtDue = Convert.ToString(row["AMT_DUE"]),
                         Test = Convert.ToString(row["TEST"]),
                         ItemDesc = Convert.ToString(row["ITEM_DESC"]),
                         Remarks = Convert.ToString(row["REMARKS"]),
@@ -135,7 +129,7 @@ namespace IBS.Repositories
 
             //return dTResult;
         }
-        
+
 
     }
 }

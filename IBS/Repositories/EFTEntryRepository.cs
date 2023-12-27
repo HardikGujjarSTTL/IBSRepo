@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Contracts;
-using Microsoft.DotNet.Scaffolding.Shared.Project;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using IBS.Helper;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
 
 namespace IBS.Repositories
@@ -43,7 +36,7 @@ namespace IBS.Repositories
             }
             else
             {
-               
+
                 orderCriteria = "VCHR_NO";
                 orderAscendingDirection = true;
             }

@@ -4,7 +4,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -49,12 +48,12 @@ namespace IBS.Repositories
 
             DataTable dt = new DataTable();
             DataSet ds;
-          
+
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("p_clientname", OracleDbType.Varchar2, clientname, ParameterDirection.Input);
             par[1] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("GetClientInfo", par, 1);
-           
+
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];

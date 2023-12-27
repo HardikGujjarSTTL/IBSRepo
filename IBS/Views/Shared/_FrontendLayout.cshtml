@@ -21,8 +21,8 @@
     <script type="text/javascript" src="~/frontend/js/modernizr.js"></script>
     <script type="text/javascript" src="~/frontend/js/jquery-min.js"></script>
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 </head>
 
 <body class="noJS">
@@ -274,15 +274,7 @@
     </div>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    <script type="text/javascript">
-        $(".datepicker").datepicker({
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: 'dd/mm/yy'
-            });
-    </script>
-
+    <script src="~/js/functions.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script type="text/javascript" src="~/frontend/js/bootstrap.min.js"></script>
     <noscript class="displayNone">
@@ -294,7 +286,13 @@
     <noscript class="displayNone">
     </noscript>
 
-
+    <script type="text/javascript">
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+    </script>
 
 </body>
 
