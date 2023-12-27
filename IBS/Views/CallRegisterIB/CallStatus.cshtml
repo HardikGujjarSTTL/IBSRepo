@@ -377,8 +377,10 @@
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
                             </div>
-                            <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
-                            <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
+                            <div id="ForARS">
+                                <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
+                                <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
+                            </div>
                         </div>
                         <div class="row my-0">
                             <div class="col-md-12 mb-5" style="align-content:center;">
@@ -512,14 +514,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
-            //var bknoaccpted = $('#bknoaccpted').val();
-            //var setnoaccpted = $('#setnoaccpted').val();
-            //if (bknoaccpted != "" || setnoaccpted!= ""){
-
-            //}else{
-
-            //}
+            $("#ForARS").hide();
             $('#ViewPrintIC').prop('disabled', true);
             $("#ViewPrintIC").css("cursor", "auto");
             $('#accepteddrp').hide();
@@ -584,6 +579,7 @@
                     $('#localdrp').hide();
                     $('#AcceptReject').text('Accepted');
                     $('#rejvalue').hide();
+                    $("#ForARS").show();
                     $('#Remarksval').hide();
                     $('#AcceptReject').show();
                     $('#Holograms').hide();
@@ -591,6 +587,7 @@
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').show();
                     $('#consigneeFirmDropdown').trigger('change');
                 } else if (selectedValue == "R") {
@@ -602,10 +599,12 @@
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
                     $('#AcceptReject').show();
+                    $("#ForARS").show();
                     $('#AcceptReject').text('Rejected');
                     $('#frmcancelled').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#LocalOutstationdrp').show();
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
@@ -613,25 +612,10 @@
                     $('#uploadcancel').show();
                     $('#consigneeFirmDropdown').trigger('change');
                 } else if (selectedValue == "G") {
-                    // $('#accepteuploadddrp').show();
-                    // $('#localdrp').hide();
-                    // $('#rejvalue').hide();
-                    // $('#accepteddrp').hide();
-                    // $('#savedetails').show();
-                    // $('#ReasonFIFOdv').show();
-                    // $('#bkset').show();
-                    // $('#Remarksval').hide();
-                    // $('#Holograms').hide();
-                    // $('#CallCancelStatusdrp').hide();
-                    // $('#frmcancelled').hide();
-                    // $('#AcceptReject').hide();
-                    // $('#uploadfile').hide();
-                    // $('#RefreshAll').hide();
-                    // $('#ViewPrintIC').hide();
-                    // $('#uploadcancel').hide();
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
+                    $("#ForARS").show();
                     $('#CallCancelStatusdrp').hide();
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
@@ -641,6 +625,7 @@
                     $('#Holograms').hide();
                     $('#frmcancelled').hide();
                     $('#ReasonFIFOdv').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
@@ -656,6 +641,7 @@
                     $('#savedetails').show();
                     $('#bkset').show();
                     $('#Remarksval').hide();
+                    $("#ForARS").hide();
                     $('#Holograms').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
@@ -664,6 +650,7 @@
                     $('#RefreshAll').hide();
                     $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
+                     $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').hide();
                 } else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
@@ -671,9 +658,11 @@
                     $('#rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
+                    $("#ForARS").hide();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#Remarksval').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#Holograms').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
@@ -692,8 +681,10 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#Remarksval').show();
                     $('#Holograms').show();
+                    $("#ForARS").hide();
                     $('#uploadfile').hide();
                     $('#AcceptReject').hide();
                     $('#RefreshAll').hide();
@@ -711,7 +702,9 @@
                     $('#ReasonFIFOdv').show();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#ViewPrintIC').hide();
+                    $("#ForARS").hide();
                     $('#AcceptReject').hide();
                     $('#uploadcancel').hide();
                     $('#CallCancelStatusdrp').hide();
@@ -728,7 +721,9 @@
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#ReasonFIFOdv').show();
+                     $('#CallCancelChargesdrp').hide();
                     $('#AcceptReject').hide();
+                    $("#ForARS").hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#Remarksval').show();
                     $('#Holograms').show();
@@ -745,8 +740,10 @@
                     $('#Holograms').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
+                    $("#ForARS").hide();
                     $('#AcceptReject').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
@@ -761,6 +758,7 @@
                     $('#Remarksval').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $("#ForARS").hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#Holograms').hide();
@@ -820,6 +818,7 @@
                 $('#Holograms').hide();
                 $('#rejvalue').hide();
                 $('#uploadfile').show();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
@@ -838,6 +837,7 @@
                 $('#Holograms').hide();
                 $('#accepteuploadddrp').show();
                 $('#savedetails').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ReasonFIFOdv').show();
                 $('#AcceptReject').text('Rejected');
                 $('#frmcancelled').hide();
@@ -868,28 +868,13 @@
                 $('#Holograms').hide();
                 $('#rejvalue').hide();
                 $('#uploadfile').show();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
                 $('#ReasonFIFOdv').show();
-                // $('#accepteuploadddrp').show();
-                // $('#localdrp').hide();
-                // $('#rejvalue').hide();
-                // $('#accepteddrp').hide();
-                // $('#savedetails').show();
-                // $('#ReasonFIFOdv').show();
-                // $('#bkset').show();
-                // $('#Remarksval').hide();
-                // $('#Holograms').hide();
-                // $('#CallCancelStatusdrp').hide();
-                // $('#frmcancelled').hide();
-                // $('#AcceptReject').hide();
-                // $('#uploadfile').hide();
-                // $('#RefreshAll').hide();
-                // $('#ViewPrintIC').hide();
-                // $('#uploadcancel').hide();
             } else if (CallStatusdrp == "T") {
                 $('#accepteuploadddrp').show();
                 $('#localdrp').hide();
@@ -904,6 +889,7 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
+                 $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -921,6 +907,7 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
+                 $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -938,6 +925,7 @@
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#uploadcancel').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
@@ -954,6 +942,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
@@ -974,6 +963,7 @@
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
                 $('#accepteuploadddrp').hide();
@@ -992,6 +982,7 @@
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
+                $('#CallCancelChargesdrp').hide();
             } else if (CallStatusdrp == "C") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
@@ -1197,21 +1188,20 @@
 
             //if (bknoaccpted != "" && setnoaccpted != "") {
             var ajaxData = AjaxModel();
-
+            debugger;
             if (CallStatus == "G" || CallStatus == "T") {
-                var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
-
-                if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
-                    var file = fileInput.defaultValue;
-                    formData.append("UploadeFile", file);
-                }
-
+                //var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
+
                 var uploadedDocuments = hiddenInput.val();
-                if (uploadedDocuments == "" || uploadedDocuments == null) {
-                    alert('Please select all files!');
+
+                var uploadedDocumentsArray = (uploadedDocuments == "" || uploadedDocuments == null) ? [] : JSON.parse(uploadedDocuments);
+
+                if (uploadedDocumentsArray.length < 4){
+                    alert("Please select all files!");
                     return;
                 }
+               
             }
             if (ajaxData) {
                 for (var key in ajaxData) {
@@ -1255,18 +1245,7 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
-            //} else {
-            //    alert("BKNO & SetNo Is Required.");
-            //    return;
-            //}
-            //if ($("#ActionType").val() == "C") {
-            //    $("#frmCallStatus").submit();
-            //}
-            //else {
-            //    if ($("#frmCallStatus").valid()) {
-            //        $("#frmCallStatus").submit();
-            //    }
-            //}
+            
         }
 
         function SaveImages() {

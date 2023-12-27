@@ -596,6 +596,7 @@
                     <input type="hidden" id="hdnToDateUE" name="hdnToDateUE" />
                     <input type="hidden" id="hdnAllIEsUE" name="hdnAllIEsUE" />
                     <input type="hidden" id="hdnParticularCMsUE" name="hdnParticularCMsUE" />
+                    <input type="hidden" id="hdnParticularIEsUE" name="hdnParticularIEsUE" />
                     <input type="hidden" id="hdnIEWiseUE" name="hdnIEWiseUE" />
                     <input type="hidden" id="hdnCMWiseUE" name="hdnCMWiseUE" />
                     <input type="hidden" id="hdnSortedIEUE" name="hdnSortedIEUE" />
@@ -664,7 +665,7 @@
 
                             <div class="row my-0">
                                 <div class="col-md-6" id="particularCMUE">
-                                    @Html.DropDownList("ddlsupercmUE", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercmUE" })
+                                    @Html.DropDownList("ddlsupercmUE", new SelectList(IBS.Models.Common.GetOfficerIsCoStatusIsNull(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercmUE" })
                                 </div>
                             </div>
                         </div>
@@ -1659,7 +1660,8 @@
             $('#frmUE').find("#hdnFromDateUE").val(FromDate);
             $('#frmUE').find("#hdnToDateUE").val(ToDate);
             $('#frmUE').find("#hdnAllIEsUE").val(AllIEs);
-            $('#frmUE').find("#hdnParticularCMsUE").val(ParticularIEs);
+            $('#frmUE').find("#hdnParticularCMsUE").val(ParticularCMs);
+            $('#frmUE').find("#hdnParticularIEsUE").val(ParticularIEs);
             $('#frmUE').find("#hdnIEWiseUE").val(IEWise);
             $('#frmUE').find("#hdnCMWiseUE").val(CMWise);
             $('#frmUE').find("#hdnSortedIEUE").val(SortedIE);

@@ -119,56 +119,67 @@ namespace IBSAPI.Repositories
                            where item.IssueToIecd == IeCd
                            select item).FirstOrDefault();
 
-            var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == Case_No.Trim() && ic.CallRecvDt == Convert.ToDateTime(CallRecvDt)
+            var ICInter = context.T17CallRegisters.Where(ic => ic.CaseNo == Case_No.Trim() && ic.CallRecvDt == Convert.ToDateTime(CallRecvDt)
                          && ic.CallSno == CallSNo).OrderByDescending(ic => ic.Datetime).FirstOrDefault();
 
-            if (ICInter != null)
-            {
-                //if (selectedConsigneeCd == ICInter.ConsigneeCd)
-                //{
-                caseDetailIEModel.BK_NO = ICInter.BkNo;
-                caseDetailIEModel.SET_NO = ICInter.SetNo;
-                caseDetailIEModel.Consignee = Convert.ToString(ICInter.ConsigneeCd);
-                caseDetailIEModel.QtyPassed = ICInter.QtyPassed;
-                caseDetailIEModel.QtyRejected = ICInter.QtyRejected;
-                //}
-            }
-            else
-            {
-                var dlt_IC = (from x in context.IcIntermediates
-                              orderby x.SetNo descending
-                              where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IeCd
-                              select x).FirstOrDefault();
-
-                if (dlt_IC != null)
+            //if (ICInter != null)
+            //{
+            //    ////if (selectedConsigneeCd == ICInter.ConsigneeCd)
+            //    ////{
+            //    caseDetailIEModel.BK_NO = ICInter.BkNo;
+            //    caseDetailIEModel.SET_NO = ICInter.SetNo;
+            //    //caseDetailIEModel.Consignee = Convert.ToString(ICInter.ConsigneeCd);
+            //    //caseDetailIEModel.QtyPassed = ICInter.QtyPassed;
+            //    //caseDetailIEModel.QtyRejected = ICInter.QtyRejected;
+            //    ////}
+            //}
+            //else
+            //{
+                if(string.IsNullOrEmpty(caseDetailIEModel.BK_NO) && string.IsNullOrEmpty(caseDetailIEModel.SET_NO))
                 {
-                    int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+                    var dlt_IC = (from x in context.T17CallRegisters
+                                  orderby Convert.ToInt32(x.SetNo) descending
+                                  where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IeCd
+                                  select x).FirstOrDefault();
 
-                    string incrementedSetNo = setNo.ToString("D3");
-                    var ic_bookset = (from item in context.T10IcBooksets
-                                      orderby item.IssueDt descending
-                                      where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
-                                            Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
-                                            item.IssueToIecd == dlt_IC.IeCd
-                                      select item).FirstOrDefault();
-
-                    if (ic_bookset != null)
+                    if (dlt_IC != null)
                     {
-                        caseDetailIEModel.BK_NO = ic_bookset.BkNo;
-                        caseDetailIEModel.SET_NO = Convert.ToString(incrementedSetNo);
+                        int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                        string incrementedSetNo = setNo.ToString("D3");
+                        var ic_bookset = (from item in context.T10IcBooksets
+                                          orderby item.IssueDt descending
+                                          where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                                Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                                item.IssueToIecd == dlt_IC.IeCd
+                                          select item).FirstOrDefault();
+
+                        if (ic_bookset != null)
+                        {
+                            caseDetailIEModel.BK_NO = ic_bookset.BkNo;
+                            caseDetailIEModel.SET_NO = Convert.ToString(incrementedSetNo);
+                        }
+                        else
+                        {
+                            caseDetailIEModel.BK_NO = "";
+                            caseDetailIEModel.SET_NO = "";
+                        }
                     }
                     else
                     {
-                        caseDetailIEModel.BK_NO = "";
-                        caseDetailIEModel.SET_NO = "";
+                        if(ic_book != null)
+                        {
+                            caseDetailIEModel.BK_NO = ic_book.BkNo;
+                            caseDetailIEModel.SET_NO = Convert.ToString(ic_book.SetNoFr);
+                        }
+                        else
+                        {
+                            caseDetailIEModel.BK_NO = "";
+                            caseDetailIEModel.SET_NO = "";
+                        }
                     }
                 }
-                else
-                {
-                    caseDetailIEModel.BK_NO = ic_book.BkNo;
-                    caseDetailIEModel.SET_NO = Convert.ToString(ic_book.SetNoFr);
-                }
-            }
+            //}
 
             return caseDetailIEModel;
         }
