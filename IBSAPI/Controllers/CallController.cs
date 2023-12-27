@@ -205,7 +205,7 @@ namespace IBSAPI.Controllers
         [Consumes("multipart/form-data")]
         public IActionResult ICPhotoUpload(string CaseNo, string DocBkNo, string DocSetNo, decimal? Latitude, decimal? Longitude,
             string Consignee, decimal? QtyPassed, decimal? QtyRejected, DateTime call_Recv_DT, int CallSno, string PoNo,
-            int? IeCd, string userId, int User_Id, string Call_Status, string ReasonFIFO, List<IFormFile> photos, IFormFile ICPhotoDigitalSign, IFormFile UploadTestPlan, IFormFile UploadICAnnexue1, IFormFile UploadICAnnexue2)
+            int? IeCd, string userId, int User_Id, string Call_Status, string ReasonFIFO, List<IFormFile>? photos, IFormFile? ICPhotoDigitalSign, IFormFile? UploadTestPlan, IFormFile? UploadICAnnexue1, IFormFile? UploadICAnnexue2)
         {
             try
             {
@@ -235,12 +235,13 @@ namespace IBSAPI.Controllers
                     obj.CallRecvDt = call_Recv_DT;
                     obj.CallSno = CallSno;
                     obj.PoNo = PoNo;
-                    //obj.IeCd = IeCd;
+                    obj.IeCd =Convert.ToString(IeCd);
                     obj.UserId = User_Id;
                     obj.UserName = userId;
                     obj.CallStatus = Call_Status;
                     obj.ReasonFIFO = ReasonFIFO;
-
+                    obj.BkNo = DocBkNo;
+                    obj.SetNo = DocSetNo;
                     int id = 0;
                     if (Call_Status == "A" || Call_Status == "R" || Call_Status == "G")
                     {
@@ -282,7 +283,8 @@ namespace IBSAPI.Controllers
                     // Call Status Update not in Accept and Reject
                     if (Call_Status != "A" && Call_Status != "R" && Call_Status != "G")
                     {
-                        var msg = callRepository.Save(obj, ICPhotoDigitalSign.Name);
+                        var DocName = ICPhotoDigitalSign != null ? ICPhotoDigitalSign.Name : null;
+                        var msg = callRepository.Save(obj, DocName);
                         if (obj.AlertMsg == "Success")
                         {
                             if (Call_Status == "T")//(Call_Status == "G" || Call_Status == "T")
@@ -451,7 +453,7 @@ namespace IBSAPI.Controllers
             int Upload_IC_Annexue2DID = (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2;
             var FileName = "";
 
-            if (ICPhotoDigitalSign.Length > 0)
+            if (ICPhotoDigitalSign != null)  //(ICPhotoDigitalSign.Length > 0)
             {
                 if (ICPhotoDigitalSign.Name == "ICPhotoDigitalSign")
                 {
@@ -465,7 +467,7 @@ namespace IBSAPI.Controllers
                     DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, ICPhoto_Dig_SignDID, IsStaging);
                 }
             }
-            if (UploadTestPlan.Length > 0)
+            if (UploadTestPlan != null)
             {
                 if (UploadTestPlan.Name == "UploadTestPlan")
                 {
@@ -479,7 +481,7 @@ namespace IBSAPI.Controllers
                     DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, null, FileName, string.Empty, Upload_Test_PlanDID, IsStaging);
                 }
             }
-            if (UploadICAnnexue1.Length > 0)
+            if (UploadICAnnexue1 != null)
             {
                 if (UploadICAnnexue1.Name == "UploadICAnnexue1")
                 {
@@ -493,7 +495,7 @@ namespace IBSAPI.Controllers
                     DocumentHelper.SavePDFForCallFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, null, FileName, string.Empty, Upload_IC_Annexue1DID, IsStaging);
                 }
             }
-            if (UploadICAnnexue2.Length > 0)
+            if (UploadICAnnexue2 != null)
             {
                 if (UploadICAnnexue2.Name == "UploadICAnnexue2")
                 {

@@ -36,6 +36,50 @@ namespace IBSAPI.Controllers
             this.config = _config;
         }
 
+        #region Normal (without Encrypted/Decrypted)
+        //[HttpPost("SignIn", Name = "SignIn")]
+        //public IActionResult SignIn([FromBody] LoginModel loginModel)
+        //{
+        //    try
+        //    {
+        //        UserModel userModel = userRepository.FindByLoginDetail(loginModel);
+        //        if (userModel != null)
+        //        {
+        //            var token = tokenServices.GenerateToken(userModel.userId);
+        //            tokenServices.InActiveOldActiveTokens(userModel.userId, token.AuthToken);
+        //            userModel.token = token.AuthToken;
+        //            var response = new
+        //            {
+        //                resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
+        //                message = "Data get successfully",
+        //                data = userModel
+        //            };
+        //            return Ok(response);
+        //        }
+        //        else
+        //        {
+        //            var response = new
+        //            {
+        //                resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+        //                message = "Invalid Username or Password."
+        //            };
+        //            return Ok(response);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "SignIn", 1, string.Empty);
+        //        var response = new
+        //        {
+        //            resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
+        //            message = ex.Message.ToString(),
+        //        };
+        //        return Ok(response);
+        //    }
+        //}
+
+        #endregion
+
         [HttpPost("SignIn", Name = "SignIn")]
         public IActionResult SignIn([FromBody] LoginModel loginModel)
         {
@@ -43,59 +87,12 @@ namespace IBSAPI.Controllers
             {
                 //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
                 //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
-
-                //string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
-                //string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
-                //loginModel.UserName = DecryptUserName;
-                //loginModel.Password = DecryptPassword;
-                UserModel userModel = userRepository.FindByLoginDetail(loginModel);
-                if (userModel != null)
-                {
-                    var token = tokenServices.GenerateToken(userModel.userId);
-                    tokenServices.InActiveOldActiveTokens(userModel.userId, token.AuthToken);
-                    userModel.token = token.AuthToken;
-                    var response = new
-                    {
-                        resultFlag = (int)Helper.Enums.ResultFlag.SucessMessage,
-                        message = "Data get successfully",
-                        data = userModel
-                    };
-                    return Ok(response);
-                }
-                else
-                {
-                    var response = new
-                    {
-                        resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                        message = "Invalid Username or Password."
-                    };
-                    return Ok(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "User_API", "SignIn", 1, string.Empty);
-                var response = new
-                {
-                    resultFlag = (int)Helper.Enums.ResultFlag.ErrorMessage,
-                    message = ex.Message.ToString(),
-                };
-                return Ok(response);
-            }
-        }
-
-        [HttpPost("SignInNew", Name = "SignInNew")]
-        public IActionResult SignInNew([FromBody] LoginModel loginModel)
-        {
-            try
-            {
-                //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
-                //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
-
                 string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
                 string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
+                string DecryptUserType = Common.getDecryptedText(loginModel.UserType, loginModel.UniqueId);
                 loginModel.UserName = DecryptUserName;
                 loginModel.Password = DecryptPassword;
+                loginModel.UserType = DecryptUserType;
                 UserModel userModel = userRepository.FindByLoginDetail(loginModel);
                 if (userModel != null)
                 {
@@ -264,6 +261,7 @@ namespace IBSAPI.Controllers
 
             return Ok(response);
         }
+
         private string GetErrorList(ModelStateDictionary modelState)
         {
             var errors = modelState.Values
