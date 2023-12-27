@@ -420,38 +420,40 @@ namespace IBS.Models
             return textValueDropDownDTO.ToList();
         }
 
-        public static List<SelectListItem> ChargesType()
+        public static List<TextValueDropDownDTO> ChargesType()
         {
-            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
-            SelectListItem single = new SelectListItem();
-            single.Text = "Customer's Advance";
-            single.Value = "A";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Call Cancellation Charge";
-            single.Value = "C";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Rejection Charges";
-            single.Value = "R";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Lab Charges";
-            single.Value = "L";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Revalidation Of IC";
-            single.Value = "V";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "Duplicate IC";
-            single.Value = "D";
-            textValueDropDownDTO.Add(single);
-            single = new SelectListItem();
-            single.Text = "NSIC Call Charges";
-            single.Value = "N";
-            textValueDropDownDTO.Add(single);
-            return textValueDropDownDTO.ToList();
+            //List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            //SelectListItem single = new SelectListItem();
+            //single.Text = "Customer's Advance";
+            //single.Value = "A";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Call Cancellation Charge";
+            //single.Value = "C";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Rejection Charges";
+            //single.Value = "R";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Lab Charges";
+            //single.Value = "L";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Revalidation Of IC";
+            //single.Value = "V";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "Duplicate IC";
+            //single.Value = "D";
+            //textValueDropDownDTO.Add(single);
+            //single = new SelectListItem();
+            //single.Text = "NSIC Call Charges";
+            //single.Value = "N";
+            //textValueDropDownDTO.Add(single);
+            //return textValueDropDownDTO.ToList();
+
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ChargesType)).ToList();
         }
 
         public static List<SelectListItem> BPORegion()
