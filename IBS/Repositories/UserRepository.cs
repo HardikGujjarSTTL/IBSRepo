@@ -57,6 +57,118 @@ namespace IBS.Repositories
             }
         }
 
+        public UserModel FindByUserID(string UserId, string UserType)
+        {
+            UserModel model = new();
+            if (UserType == "USERS")
+            {
+                model = (from u in context.T02Users
+                         where u.UserId.Trim() == UserId.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.UserId,
+                             Password = u.Password
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "VENDOR")
+            {
+                model = (from u in context.T05Vendors
+                         where u.VendCd == Convert.ToInt32(UserId.Trim())
+                         select new UserModel
+                         {
+                             FPUserID = Convert.ToString(u.VendCd),
+                             Password = u.VendPwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "IE")
+            {
+                model = (from u in context.T09Ies
+                         where u.IeEmpNo.Trim() == UserId.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.IeEmpNo,
+                             Password = u.IePwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                model = (from u in context.T32ClientLogins
+                         where u.Mobile.Trim() == UserId.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).FirstOrDefault();
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                model = (from u in context.T105LoLogins
+                         where u.Mobile.Trim() == UserId.Trim()
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).FirstOrDefault();
+            }
+            return model;
+        }
+
+        public List<UserModel> FindByUserType(string UserType)
+        {
+            List<UserModel> model = new();
+            if (UserType == "USERS")
+            {
+                model = (from u in context.T02Users
+                         where u.Password != null
+                         select new UserModel
+                         {
+                             FPUserID = u.UserId,
+                             Password = u.Password
+                         }).ToList();
+            }
+            else if (UserType == "VENDOR")
+            {
+                model = (from u in context.T05Vendors
+                         where u.VendPwd != null
+                         select new UserModel
+                         {
+                             FPUserID = Convert.ToString(u.VendCd),
+                             Password = u.VendPwd
+                         }).ToList();
+            }
+            else if (UserType == "IE")
+            {
+                model = (from u in context.T09Ies
+                         where u.IePwd != null
+                         select new UserModel
+                         {
+                             FPUserID = u.IeEmpNo,
+                             Password = u.IePwd
+                         }).ToList();
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                model = (from u in context.T32ClientLogins
+                         where u.Pwd != null
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).ToList();
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                model = (from u in context.T105LoLogins
+                         where u.Pwd != null
+                         select new UserModel
+                         {
+                             FPUserID = u.Mobile,
+                             Password = u.Pwd
+                         }).ToList();
+            }
+            return model;
+        }
+
         public void Update(UserModel model)
         {
             var user = context.T02Users.Find(model.UserId);
@@ -130,7 +242,7 @@ namespace IBS.Repositories
             if (UserType == "USERS")
             {
                 model = (from u in context.T02Users
-                         where u.UserId.Trim() == UserType.Trim()
+                         where u.UserId.Trim() == UserId.Trim()
                          select new UserModel
                          {
                              FPUserID = u.UserId,
@@ -140,7 +252,7 @@ namespace IBS.Repositories
             else if (UserType == "VENDOR")
             {
                 model = (from u in context.T05Vendors
-                         where u.VendCd == Convert.ToInt32(UserType.Trim())
+                         where u.VendCd == Convert.ToInt32(UserId.Trim())
                          select new UserModel
                          {
                              FPUserID = Convert.ToString(u.VendCd),
@@ -150,7 +262,7 @@ namespace IBS.Repositories
             else if (UserType == "IE")
             {
                 model = (from u in context.T09Ies
-                         where u.IeEmpNo.Trim() == UserType.Trim()
+                         where u.IeEmpNo.Trim() == UserId.Trim()
                          select new UserModel
                          {
                              FPUserID = u.IeEmpNo,
@@ -160,7 +272,7 @@ namespace IBS.Repositories
             else if (UserType == "CLIENT_LOGIN")
             {
                 model = (from u in context.T32ClientLogins
-                         where u.Mobile.Trim() == UserType.Trim()
+                         where u.Mobile.Trim() == UserId.Trim()
                          select new UserModel
                          {
                              FPUserID = u.Mobile,
@@ -170,7 +282,7 @@ namespace IBS.Repositories
             else if (UserType == "LO_LOGIN")
             {
                 model = (from u in context.T105LoLogins
-                         where u.Mobile.Trim() == UserType.Trim()
+                         where u.Mobile.Trim() == UserId.Trim()
                          select new UserModel
                          {
                              FPUserID = u.Mobile,
@@ -244,6 +356,7 @@ namespace IBS.Repositories
                 userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+                userSessionModel.LoginType = model.UserType.Trim();
             }
             else
             {
@@ -334,15 +447,52 @@ namespace IBS.Repositories
             return ieModel;
         }
 
-        public void ChangePassword(int UserId, String NewPassword)
+        public void ChangePassword(string UserId, String NewPassword ,string UserType)
         {
-            var user = context.T02Users.Find(UserId);
-            if (user == null)
-                throw new Exception("User Record Not found");
-            else
+            if (UserType == "USERS")
             {
-                user.Password = NewPassword;
-                context.SaveChanges();
+                var user = context.T02Users.Where(x => x.UserId == UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Password = NewPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (UserType == "VENDOR")
+            {
+                var user = context.T05Vendors.Where(x => x.VendCd == Convert.ToInt32(UserId)).FirstOrDefault();
+                if (user != null)
+                {
+                    user.VendPwd = NewPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (UserType == "IE")
+            {
+                var user = context.T09Ies.Where(x => x.IeEmpNo == UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.IePwd = NewPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                var user = context.T32ClientLogins.Where(x => x.Mobile == UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Pwd = NewPassword;
+                    context.SaveChanges();
+                }
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                var user = context.T105LoLogins.Where(x => x.Mobile == UserId).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Pwd = NewPassword;
+                    context.SaveChanges();
+                }
             }
         }
 
