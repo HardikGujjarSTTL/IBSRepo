@@ -15,10 +15,12 @@ namespace IBS.Repositories.Vendor
     public class VendorCallRegisterRepository : IVendorCallRegisterRepository
     {
         private readonly ModelContext context;
+        private readonly IConfiguration config;
 
-        public VendorCallRegisterRepository(ModelContext context)
+        public VendorCallRegisterRepository(ModelContext context, IConfiguration _config)
         {
             this.context = context;
+            this.config = _config;
         }
 
         public string CNO, DT, Action, CSNO, cstatus, wFOS;
@@ -1486,17 +1488,20 @@ namespace IBS.Repositories.Vendor
                 if (wVendMobile != "") { wIEMobile = wIEMobile + "," + wVendMobile; }
                 string message = "RITES LTD - QA Call Marked, IE-" + wIEName + ",Contact No.:" + wIEMobile_for_SMS + ",RLY-" + model.Rly + ",PO-" + model.PoNo + ",DT- " + model.PoDt + ", Firm Name-" + wVendor + ", Call Sno - " + model.CallSno + ",DT- " + model.CallRecvDt + "- RITES/" + sender;
 
-                using (HttpClient client = new HttpClient())
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendSMS"]) == true)
                 {
-                    string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
 
-                    HttpResponseMessage response = await client.GetAsync(baseurl);
-                    response.EnsureSuccessStatusCode(); // Ensure a successful response
+                        HttpResponseMessage response = await client.GetAsync(baseurl);
+                        response.EnsureSuccessStatusCode(); // Ensure a successful response
 
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseBody);
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(responseBody);
 
-                    sms = "success";
+                        sms = "success";
+                    }
                 }
             }
             catch (Exception ex)
