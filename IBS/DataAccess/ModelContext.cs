@@ -9619,7 +9619,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("MOBILE");
             entity.Property(e => e.Password)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("PASSWORD");
@@ -9736,7 +9736,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("MOBILE");
             entity.Property(e => e.Password)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("PASSWORD");
             entity.Property(e => e.Region)
@@ -10283,7 +10283,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("VEND_PANNO");
             entity.Property(e => e.VendPwd)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("VEND_PWD");
             entity.Property(e => e.VendRemarks)
@@ -10817,7 +10817,7 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("IE_PHONE_NO");
             entity.Property(e => e.IePwd)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("IE_PWD");
@@ -10997,7 +10997,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("IE_PHONE_NO");
             entity.Property(e => e.IePwd)
-                .HasMaxLength(8)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("IE_PWD");
             entity.Property(e => e.IeRegion)
@@ -11513,7 +11513,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("LO_PER_TO");
             entity.Property(e => e.Pwd)
-                .HasMaxLength(10)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("PWD");
             entity.Property(e => e.Status)
@@ -16660,7 +16660,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("ORGN_TYPE");
             entity.Property(e => e.Pwd)
-                .HasMaxLength(10)
+                .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("PWD");
             entity.Property(e => e.Status)
@@ -25703,7 +25703,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");
             entity.Property(e => e.IeCd)
-                .HasPrecision(4)
+                .HasPrecision(6)
                 .HasColumnName("IE_CD");
             entity.Property(e => e.IeCoName)
                 .HasMaxLength(30)

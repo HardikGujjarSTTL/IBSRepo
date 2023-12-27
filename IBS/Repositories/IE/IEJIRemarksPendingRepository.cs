@@ -42,11 +42,7 @@ namespace IBS.Repositories.IE
 
 
             query = from l in context.ViewGetPendingJiComplaints
-                    where
-                    l.ComplaintDt == DateTime.ParseExact("01-04-2013", "dd/MM/yyyy", null)
-                    && l.JiRequired == "Y" && l.JiFixDt >= DateTime.Now
-                    && l.IeCd == GetIeCd
-                    && (l.IeJiRemarks ?? "X") == "X"
+                    where l.IeCd == GetIeCd
                     select new IEJIRemarksPendingModel
                     {
                         ComplaintId = l.ComplaintId,

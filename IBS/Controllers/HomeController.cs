@@ -30,9 +30,10 @@ namespace IBS.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            //string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
+            string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
             //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
 
+            loginModel.Password = encryptedPassword;
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
             if (userMaster != null)
             {
@@ -211,11 +212,12 @@ namespace IBS.Controllers
             if (ModelState.IsValid)
             {
                 var SaltedToken = Common.CreateRandomText(16);
-                resetPassword.NewPassword = resetPassword.NewPassword;
-                resetPassword.ConfirmPassword = resetPassword.ConfirmPassword;
+                resetPassword.NewPassword = Common.getEncryptedText(resetPassword.NewPassword, "301ae92bb2bc7599");
+                resetPassword.ConfirmPassword = Common.getEncryptedText(resetPassword.ConfirmPassword, "301ae92bb2bc7599");
                 resetPassword.UserType = Common.DecryptQueryString(resetPassword.UserType);
                 UserModel user = userRepository.FindByIDForResetPass(Convert.ToString(resetPassword.UserId), resetPassword.UserType);
                 string UserId = formCollection["UserId"];
+
                 if (user.FPUserID.Trim() != resetPassword.UserName.Trim())
                 {
                     AlertDanger("User Name does not match.");
@@ -261,9 +263,11 @@ namespace IBS.Controllers
 
                 user.Password = strNewPassword;
 
-                UserModel userMaster = userRepository.FindByID(user.UserId);
+                string LoginType = IBS.Helper.SessionHelper.UserModelDTO.LoginType;
+                UserModel userMaster = userRepository.FindByUserID(user.UserId, LoginType);
 
-                if (userMaster.Password != strOldPassword)
+                string encryptedOldPassword = Common.getEncryptedText(strOldPassword, "301ae92bb2bc7599");
+                if (userMaster.Password != encryptedOldPassword)
                 {
                     AlertDanger("Old Password does not match.");
                     return View(user);
@@ -273,7 +277,8 @@ namespace IBS.Controllers
                     AlertDanger("New password must be different from your old password.");
                     return View(user);
                 }
-                userRepository.ChangePassword(Convert.ToInt32(user.UserId), user.Password);
+                string encryptedPassword = Common.getEncryptedText(user.Password, "301ae92bb2bc7599");
+                userRepository.ChangePassword(user.UserId, encryptedPassword, LoginType);
                 AlertUpdateSuccess("Password has been changed successfully.");
             }
             return RedirectToAction("Index", "Home");
@@ -291,6 +296,48 @@ namespace IBS.Controllers
         public ActionResult UserAccessDenied()
         {
             return View();
+        }
+
+
+        [HttpGet("CreateQueryForEncryptPasswords")]
+        public ActionResult<string> CreateQueryForEncryptPasswords(string UserType)
+        {
+            string result = "";
+            List<UserModel> obj = userRepository.FindByUserType(UserType);
+
+            if (obj != null)
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+
+                foreach (var item in obj)
+                {
+                    string encryptedPassword = Common.getEncryptedText(item.Password, "301ae92bb2bc7599");
+
+                    switch (UserType)
+                    {
+                        case "USERS":
+                            queryBuilder.AppendLine($"UPDATE t02_users SET PASSWORD = '{encryptedPassword}' WHERE PASSWORD = '{item.Password}';");
+                            break;
+                        case "VENDOR":
+                            queryBuilder.AppendLine($"UPDATE t05_vendor SET VEND_PWD = '{encryptedPassword}' WHERE VEND_PWD = '{item.Password}';");
+                            break;
+                        case "IE":
+                            queryBuilder.AppendLine($"UPDATE t09_ie SET IE_PWD = '{encryptedPassword}' WHERE IE_PWD = '{item.Password}';");
+                            break;
+                        case "CLIENT_LOGIN":
+                            queryBuilder.AppendLine($"UPDATE t32_client_login SET PWD = '{encryptedPassword}' WHERE PWD = '{item.Password}';");
+                            break;
+                        case "LO_LOGIN":
+                            queryBuilder.AppendLine($"UPDATE t105_lo_login SET PWD = '{encryptedPassword}' WHERE PWD = '{item.Password}';");
+                            break;
+                            // Add additional cases as needed
+                    }
+                }
+
+                result = queryBuilder.ToString();
+            }
+
+            return Ok(result);
         }
     }
 }
