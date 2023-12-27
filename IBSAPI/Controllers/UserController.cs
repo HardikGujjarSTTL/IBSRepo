@@ -88,11 +88,12 @@ namespace IBSAPI.Controllers
             {
                 //string encryptedUserName = Common.getEncryptedText("adminnr", "301ae92bb2bc7599");
                 //string encryptedPassword = Common.getEncryptedText("Rites123", "301ae92bb2bc7599");
-
                 string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
                 string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
+                string DecryptUserType = Common.getDecryptedText(loginModel.UserType, loginModel.UniqueId);
                 loginModel.UserName = DecryptUserName;
                 loginModel.Password = DecryptPassword;
+                loginModel.UserType = DecryptUserType;
                 UserModel userModel = userRepository.FindByLoginDetail(loginModel);
                 if (userModel != null)
                 {
@@ -257,6 +258,7 @@ namespace IBSAPI.Controllers
 
             return Ok(response);
         }
+
         private string GetErrorList(ModelStateDictionary modelState)
         {
             var errors = modelState.Values
