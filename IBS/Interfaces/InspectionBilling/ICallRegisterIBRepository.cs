@@ -22,7 +22,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         Task<string> send_IE_smsAsync(VenderCallRegisterModel model);
 
-        string send_Vendor_Email(VenderCallStatusModel model);
+        string send_Vendor_Email(VenderCallRegisterModel model);
 
         string RegiserCallDelete(VenderCallRegisterModel model);
 

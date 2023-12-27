@@ -6,6 +6,7 @@ using IBS.Models;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -13,11 +14,13 @@ namespace IBS.Repositories.WebsitePages
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public OnlineComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public OnlineComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
         public string GetItems(string ItemSno, string bkno, string setno, string InspRegionDropdown)
@@ -168,7 +171,11 @@ namespace IBS.Repositories.WebsitePages
             SendMailModel.Message = mail_body;
             try
             {
-                bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                bool isSend = false;
+                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                {
+                    isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                }
             }
             catch (Exception ex)
             {
