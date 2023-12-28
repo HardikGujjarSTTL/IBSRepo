@@ -5101,3 +5101,10 @@ ALTER TABLE t105_lo_login
 MODIFY (PWD VARCHAR2(25));
 
 
+-- Rites123
+--Update t05_vendor set VEND_PWD = 'WPg3mg2hKkFI3zwp72u8SA=='  where VEND_PWD is not null;
+--Update t02_users set PASSWORD = 'WPg3mg2hKkFI3zwp72u8SA==' where PASSWORD is not null;
+--Update t09_ie set IE_PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where IE_PWD is not null;
+--Update t32_client_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
+--Update t105_lo_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
+
