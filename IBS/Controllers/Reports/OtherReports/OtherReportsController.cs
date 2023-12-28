@@ -393,9 +393,9 @@ namespace IBS.Controllers.Reports.OtherReports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            IEICPhotoEnclosedModelReport model = new();//= otherReportsRepository.GetDataListReport(CaseNo, CallRecDT, CallSno, BKNO, SETNO, Region);
-            model.Regions = wRegion;
-            GlobalDeclaration.IEICPhotoEnclosedModel = model;
+            DSCExpModel model = otherReportsRepository.GetDSCExpReport(DSCMonth, DSCYear, DSCToMonth, DSCToYear, Region);
+            //model.Regions = wRegion;
+            //GlobalDeclaration.IEICPhotoEnclosedModel = model;
             return PartialView(model);
         }
 

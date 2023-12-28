@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.OtherReports;
 using IBS.Models;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Dynamic;
 using System.Globalization;
 
 namespace IBS.Repositories.Reports.OtherReports
@@ -1091,6 +1093,25 @@ namespace IBS.Repositories.Reports.OtherReports
                 }).ToList();
                 model.lstlistSubmittedPhotobyIE = listcong;
             }
+
+            return model;
+        }
+
+        public DSCExpModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string Region)
+        {
+            DSCExpModel model = new();
+            DataSet ds = null;
+            DataTable dt = new DataTable();
+
+            string wYrMth_FR = DSCToYear + DSCToMonth;
+            string wYrMth_TO = DSCYear + DSCMonth;
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_yearMFr", OracleDbType.Varchar2, wYrMth_FR, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_yearMTo", OracleDbType.Varchar2, wYrMth_TO, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GetDSCEXP", par, 1);
 
             return model;
         }

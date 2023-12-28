@@ -21,5 +21,6 @@ namespace IBS.Interfaces.Reports.OtherReports
         public VendorFeedbackReportModel GetVendorFeedbackReport(string Region);
         DTResult<IEICPhotoEnclosedModelReport> GetDataList(DTParameters dtParameters, string Region);
         IEICPhotoEnclosedModelReport GetDataListReport(string CaseNo, string CallRecDT, string CallSno, string BKNO, string SETNO, string Region);
+        DSCExpModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string Region);
     }
 }
