@@ -352,6 +352,8 @@ namespace IBS.Controllers.Reports.OtherReports
             model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
             model.ReportType = ReportType;
             model.Regions = wRegion;
+            model.IEWise = IEWise;
+            model.CMWise = CMWise;
             return PartialView(model);
         }
 

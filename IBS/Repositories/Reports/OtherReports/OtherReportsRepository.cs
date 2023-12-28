@@ -853,6 +853,7 @@ namespace IBS.Repositories.Reports.OtherReports
                         {
                             IE_NAME = Convert.ToString(row["IE_NAME"]),
                             CO_NAME = Convert.ToString(row["CO_NAME"]),
+                            Date = date,
                         }).ToList();
 
                         if (model.lstDailyIECMWorkPlanReporttbl3 == null)

@@ -1,105 +1,110 @@
 ﻿@model IBS.Models.Reports.DailyIECMWorkPlanReportModel
+@{
+    var IECMWise = "(IE Wise)";
+    if (Model.CMWise.ToLower() == "true")
+    {
+        IECMWise = "(CM Wise)";
+    }
+}
 
-
-    <div>
-
+<div>
     <h3 class="center">@Model.Regions</h3>
 
-    <h3 class="heading3">IE Inspection Daily Work Plan Report @Model.FromDate To @Model.ToDate (IE Wise)</h3>
-        <div class="tableOuter">
-            <table class="borderTable" cellpadding="0" cellspacing="0">
-                <tbody>
-                    <tr>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Scheduled Visit Date</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Date & Time of Entry</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Desire Date</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call SNo.</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Master Checksheet Linked(Yes/No)</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Manufacturer</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Place Of Inspection</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Manufacturer City</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Value</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call Status</font></b></th>
-                    </tr>
-                    @if (Model != null && Model.lstDailyIECMWorkPlanReporttbl1 != null && Model.lstDailyIECMWorkPlanReporttbl1.Count > 0)
+    <h3 class="heading3">IE Inspection Daily Work Plan Report @Model.FromDate To @Model.ToDate @IECMWise</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Scheduled Visit Date</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Date & Time of Entry</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Desire Date</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call SNo.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Master Checksheet Linked(Yes/No)</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Manufacturer</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Place Of Inspection</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Manufacturer City</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Value</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Call Status</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstDailyIECMWorkPlanReporttbl1 != null && Model.lstDailyIECMWorkPlanReporttbl1.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstDailyIECMWorkPlanReporttbl1)
                     {
-                        var SrNo = 0;
-                        @foreach (var item in Model.lstDailyIECMWorkPlanReporttbl1)
-                        {
-                            SrNo = SrNo + 1;
-                            <tr>
-                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.VISIT_DATE</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.LOGIN_TIME</font></td>
-                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DATE</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.DESIRE_DT</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CHK_COUNT</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_NAME</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_PLACE</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_CITY</font></td>
-                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.VALUE</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
-                            </tr>
-                        }
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.VISIT_DATE</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.LOGIN_TIME</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DATE</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.DESIRE_DT</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CHK_COUNT</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_NAME</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_PLACE</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MFG_CITY</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.VALUE</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
+                        </tr>
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
-
-    <div>
-
-    <h3 class="center">@Model.Regions</h3>
-
-    <h3 class="heading3">IE Non Inspection Daily Work Plan Report @Model.FromDate To @Model.ToDate (IE Wise)</h3>
-        <div class="tableOuter">
-            <table class="borderTable" cellpadding="0" cellspacing="0">
-                <tbody>
-                    <tr>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Work Plan</font></b></th>
-                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Work Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Time</font></b></th>
-                    </tr>
-                    @if (Model != null && Model.lstDailyIECMWorkPlanReporttbl2 != null && Model.lstDailyIECMWorkPlanReporttbl2.Count > 0)
-                    {
-                        var SrNo = 0;
-                        @foreach (var item in Model.lstDailyIECMWorkPlanReporttbl2)
-                        {
-                            SrNo = SrNo + 1;
-                            <tr>
-                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.NI_WORK_PLAN_CD</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.WORK_DATE</font></td>
-                                <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.LOGIN_TIME</font></td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+</div>
 
 <div>
 
     <h3 class="center">@Model.Regions</h3>
 
-    <h3 class="heading3">IE Who Had Not Entered Daily Work Plan  @Model.FromDate To @Model.ToDate (IE Wise)</h3>
+    <h3 class="heading3">IE Non Inspection Daily Work Plan Report @Model.FromDate To @Model.ToDate @IECMWise</h3>
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IE Name</font></b></th>
+                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Work Plan</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Work Date</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Time</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstDailyIECMWorkPlanReporttbl2 != null && Model.lstDailyIECMWorkPlanReporttbl2.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstDailyIECMWorkPlanReporttbl2)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.NI_WORK_PLAN_CD</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.WORK_DATE</font></td>
+                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.LOGIN_TIME</font></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div>
+
+    <h3 class="center">@Model.Regions</h3>
+
+    <h3 class="heading3">IE Who Had Not Entered Daily Work Plan  @Model.FromDate To @Model.ToDate @IECMWise</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
@@ -116,18 +121,18 @@
                     foreach (var item in Model.lstDailyIECMWorkPlanReporttbl3)
                     {
                         SrNo = SrNo + 1;
-                        var dates = Enumerable.Range(0, (int)(Convert.ToDateTime(@Model.ToDate) - Convert.ToDateTime(@Model.FromDate)).TotalDays + 1)
-                        .Select(offset => Convert.ToDateTime(@Model.FromDate).AddDays(offset).ToString("dd/MM/yyyy"));
-                        foreach (var date in dates)
-                        {
-                           <tr>
-                                <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                                <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@date</font></td>
-                                <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Reason</font></td>
-                            </tr>
-                        }
+                        @* var dates = Enumerable.Range(0, (int)(Convert.ToDateTime(@Model.ToDate) - Convert.ToDateTime(@Model.FromDate)).TotalDays + 1)
+                .Select(offset => Convert.ToDateTime(@Model.FromDate).AddDays(offset).ToString("dd/MM/yyyy"));*@
+                        @*foreach (var date in dates)
+                {*@
+                        <tr>
+                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.IE_NAME</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
+                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.Date</font></td>
+                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.Reason</font></td>
+                        </tr>
+                        @*}*@
                     }
                 }
 
