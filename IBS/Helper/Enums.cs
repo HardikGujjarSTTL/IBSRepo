@@ -929,5 +929,6 @@ namespace IBS.Helper
         public static IEWorkPlanModel IEWorkPlan { get; set; }
         public static RecieptVoucherModel BankStatement { get; set; }
         public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
+        public static InspectionBillingDelayReportModel InspBillDelayList { get; set; }
     }
 }
