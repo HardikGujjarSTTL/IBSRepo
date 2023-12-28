@@ -771,6 +771,7 @@
                     <input type="hidden" id="hdnDSCToYear" name="hdnDSCToYear" />
                     <input type="hidden" id="hdnDSCMonthText" name="hdnDSCMonthText" />
                     <input type="hidden" id="hdnDSCToMonthText" name="hdnDSCToMonthText" />
+                    <input type="hidden" id="hdnDSC_M" name="hdnDSC_M" />
                     <div class="row my-0">
                         <div class="col-md-12 mb-3">
                             <div class="custom-readio">
@@ -1890,7 +1891,7 @@
             var DSCToYear = $("#DSCToYear").val();
             var DSCMonthText = $("#DSCMonth option:selected").text();
             var DSCToMonthText = $("#DSCToMonth option:selected").text();
-
+            var DSC_Month = $("#DSC_M").is(":checked") == true ? "true" : "false";
             var ReportType = '@ReportType';
 
             $('#frmDSC').find("#hdnReportType").val(ReportType);
@@ -1900,6 +1901,7 @@
             $('#frmDSC').find("#hdnDSCToYear").val(DSCToYear);
             $('#frmDSC').find("#hdnDSCMonthText").val(DSCMonthText);
             $('#frmDSC').find("#hdnDSCToMonthText").val(DSCToMonthText);
+            $('#frmDSC').find("#hdnDSC_M").val(DSC_Month);
 
             $("#frmDSC").submit();
         }

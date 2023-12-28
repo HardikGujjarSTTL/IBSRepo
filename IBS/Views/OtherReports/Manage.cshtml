@@ -244,7 +244,7 @@
     }   
     
     function loadDSCExp() {
-        $("#dvReportViewer").load("@Url.Action("DSCExpReport")", { DSCMonth: '@Model.DSCMonth', DSCYear: '@Model.DSCYear', DSCToMonth: '@Model.DSCToMonth', DSCToYear: '@Model.DSCToYear', DSCMonthText: '@Model.DSCMonthText', DSCToMonthText: '@Model.DSCToMonthText' }, function (response) {
+        $("#dvReportViewer").load("@Url.Action("DSCExpReport")", { DSCMonth: '@Model.DSCMonth', DSCYear: '@Model.DSCYear', DSCToMonth: '@Model.DSCToMonth', DSCToYear: '@Model.DSCToYear', DSCMonthText: '@Model.DSCMonthText', DSCToMonthText: '@Model.DSCToMonthText', DSC_Monthrdo: '@Model.DSC_Monthrdo' }, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });        

@@ -71,6 +71,8 @@
         public int DSCToYear { get; set; }
         public string DSCMonthText { get; set; }
         public string DSCToMonthText { get; set; }
+        public string DSC_Monthrdo { get; set; }
+        public List<DSCExpModel> lstDSCExpModel { get; set; }
     }
 
     public class ControllingOfficerIEModel

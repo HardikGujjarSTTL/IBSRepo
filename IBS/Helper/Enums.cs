@@ -931,5 +931,6 @@ namespace IBS.Helper
         public static RecieptVoucherModel BankStatement { get; set; }
         public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
         public static InspectionBillingDelayReportModel InspBillDelayList { get; set; }
+        public static OtherReportsModel OtherReportsModelList { get; set; }
     }
 }

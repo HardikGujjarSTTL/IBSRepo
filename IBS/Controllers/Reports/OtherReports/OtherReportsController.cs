@@ -162,6 +162,7 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnDSCToYear") && !string.IsNullOrEmpty(formCollection["hdnDSCToYear"])) model.DSCToYear = Convert.ToInt32(formCollection["hdnDSCToYear"]);
                 if (formCollection.Keys.Contains("hdnDSCMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCMonthText"])) model.DSCMonthText = Convert.ToString(formCollection["hdnDSCMonthText"]);
                 if (formCollection.Keys.Contains("hdnDSCToMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCToMonthText"])) model.DSCToMonthText = Convert.ToString(formCollection["hdnDSCToMonthText"]);
+                if (formCollection.Keys.Contains("hdnDSC_M") && !string.IsNullOrEmpty(formCollection["hdnDSC_M"])) model.DSC_Monthrdo = Convert.ToString(formCollection["hdnDSC_M"]);
             }
 
 
@@ -385,7 +386,7 @@ namespace IBS.Controllers.Reports.OtherReports
             return PartialView(model);
         }
         
-        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText,string DSCToMonthText)
+        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText,string DSCToMonthText,string DSC_Monthrdo)
         {
             string wRegion = "";
             if (Region == "N") { wRegion = "Northern Region"; }
@@ -393,9 +394,14 @@ namespace IBS.Controllers.Reports.OtherReports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-            DSCExpModel model = otherReportsRepository.GetDSCExpReport(DSCMonth, DSCYear, DSCToMonth, DSCToYear, Region);
-            //model.Regions = wRegion;
-            //GlobalDeclaration.IEICPhotoEnclosedModel = model;
+            OtherReportsModel model = otherReportsRepository.GetDSCExpReport(DSCMonth, DSCYear, DSCToMonth, DSCToYear, DSC_Monthrdo, Region);
+            model.Region = wRegion;
+            model.DSCMonthText = DSCMonthText;
+            model.DSCToMonthText = DSCToMonthText;
+            model.DSCYear = Convert.ToInt32(DSCYear);
+            model.DSCToYear = Convert.ToInt32(DSCToYear);
+            model.DSC_Monthrdo = DSC_Monthrdo;
+            GlobalDeclaration.OtherReportsModelList = model;
             return PartialView(model);
         }
 
@@ -530,6 +536,11 @@ namespace IBS.Controllers.Reports.OtherReports
             {
                 IEICPhotoEnclosedModelReport model = GlobalDeclaration.IEICPhotoEnclosedModel;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/PhotoSubmiteedByIE.cshtml", model);
+            }
+            else if (ReportType == "DSC")
+            {
+                OtherReportsModel model = GlobalDeclaration.OtherReportsModelList;
+                htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/DSCExpReport.cshtml", model);
             }
 
             await new BrowserFetcher().DownloadAsync();

@@ -1097,22 +1097,47 @@ namespace IBS.Repositories.Reports.OtherReports
             return model;
         }
 
-        public DSCExpModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string Region)
+        public OtherReportsModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSC_Monthrdo, string Region)
         {
-            DSCExpModel model = new();
+            OtherReportsModel model = new();
+            List<DSCExpModel> lstDSCExpModel = new();
             DataSet ds = null;
             DataTable dt = new DataTable();
+            string wYrMth_FR = "";
+            string wYrMth_To = "";
 
-            string wYrMth_FR = DSCToYear + DSCToMonth;
-            string wYrMth_TO = DSCYear + DSCMonth;
+            if (DSC_Monthrdo == "true")
+            {
+                 wYrMth_FR = DSCYear + DSCMonth;
+                 wYrMth_To = DSCYear + DSCMonth;
+            }
+            else
+            {
+                 wYrMth_FR = DSCYear + DSCMonth;
+                 wYrMth_To = DSCToYear + DSCToMonth;
+            }
 
             OracleParameter[] par = new OracleParameter[4];
             par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_yearMFr", OracleDbType.Varchar2, wYrMth_FR, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_yearMTo", OracleDbType.Varchar2, wYrMth_TO, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_yearMTo", OracleDbType.Varchar2, wYrMth_To, ParameterDirection.Input);
             par[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
             ds = DataAccessDB.GetDataSet("GetDSCEXP", par, 1);
-
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                List<DSCExpModel> listcong = dt.AsEnumerable().Select(row => new DSCExpModel
+                {
+                    IE_Name = Convert.ToString(row["IE_Name"]),
+                    IE_Department = Convert.ToString(row["IE_DEPARTMENT"]),
+                    IE_Emp_No = Convert.ToInt32(row["IE_EMP_NO"]),
+                    R_Desgination = Convert.ToString(row["R_DESIGNATION"]),
+                    IE_Phone_No = Convert.ToString(row["IE_PHONE_NO"]),
+                    IE_Email = Convert.ToString(row["IE_EMAIL"]),
+                    ExpiryDate = Convert.ToString(row["EXPIRY_DT"]),
+                }).ToList();
+                model.lstDSCExpModel = listcong;
+            }
             return model;
         }
     }
