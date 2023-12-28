@@ -65,6 +65,14 @@
         public string CallSno { get; set; }
         public string BKNO { get; set; }
         public string SETNO { get; set; }
+        public string DSCMonth { get; set; }
+        public int DSCYear { get; set; }
+        public string DSCToMonth { get; set; }
+        public int DSCToYear { get; set; }
+        public string DSCMonthText { get; set; }
+        public string DSCToMonthText { get; set; }
+        public string DSC_Monthrdo { get; set; }
+        public List<DSCExpModel> lstDSCExpModel { get; set; }
     }
 
     public class ControllingOfficerIEModel
@@ -193,5 +201,16 @@
         public string VEND_CONTACT_PER_1 { get; set; }
         public string VEND_CONTACT_TEL_1 { get; set; }
         public string SOURCE { get; set; }
+    }
+
+    public class DSCExpModel
+    {
+        public string IE_Name { get; set; }
+        public string IE_Department { get; set; }
+        public int IE_Emp_No { get; set; }
+        public string R_Desgination { get; set; }
+        public string IE_Phone_No { get; set; }
+        public string IE_Email { get; set; }
+        public string ExpiryDate { get; set; }
     }
 }
