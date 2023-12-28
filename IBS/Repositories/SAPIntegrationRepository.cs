@@ -94,22 +94,22 @@ namespace IBS.Repositories
         public int UpdateBPO(DataSet ds)
         {
             int id = 0;
-            if (ds.Tables[0].Columns.Contains("SORT2_BPO_CD") && ds.Tables[0].Columns.Contains("SapCustCdBpo"))
+            if (ds.Tables[0].Columns.Contains("IBS_BPO_CD") && ds.Tables[0].Columns.Contains("SAP_BPO_CD"))
             {
                 foreach (DataTable dataTable in ds.Tables)
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        if (row.Table.Columns.Contains("SORT2_BPO_CD") && row["SORT2_BPO_CD"] != null && row["SORT2_BPO_CD"].ToString() != "")
+                        if (row.Table.Columns.Contains("IBS_BPO_CD") && row["IBS_BPO_CD"] != null && row["IBS_BPO_CD"].ToString() != "")
                         {
                             var t12Bpo = (from m in context.T12BillPayingOfficers
-                                          where m.BpoCd == row["SORT2_BPO_CD"].ToString()
+                                          where m.BpoCd == row["IBS_BPO_CD"].ToString()
                                           select m).FirstOrDefault();
                             if (t12Bpo != null)
                             {
-                                if (row.Table.Columns.Contains("SapCustCdBpo") && row["SapCustCdBpo"] != null && row["SapCustCdBpo"].ToString() != "")
+                                if (row.Table.Columns.Contains("SAP_BPO_CD") && row["SAP_BPO_CD"] != null && row["SAP_BPO_CD"].ToString() != "")
                                 {
-                                    t12Bpo.SapCustCdBpo = row["SapCustCdBpo"].ToString();
+                                    t12Bpo.SapCustCdBpo = row["SAP_BPO_CD"].ToString();
                                     context.SaveChanges();
                                     id = 1;
                                 }
@@ -127,22 +127,22 @@ namespace IBS.Repositories
         public int UpdateConsigne(DataSet ds)
         {
             int id = 0;
-            if (ds.Tables[0].Columns.Contains("SORT2_BPO_CD") && ds.Tables[0].Columns.Contains("SapCustCdBpo"))
+            if (ds.Tables[0].Columns.Contains("SAP_CONSIGNEE_CD") && ds.Tables[0].Columns.Contains("IBS_CONSIGNEE_CD"))
             {
                 foreach (DataTable dataTable in ds.Tables)
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        if (row.Table.Columns.Contains("SORT2_CONSIGNEE_CD") && row["SORT2_CONSIGNEE_CD"] != null && row["SORT2_CONSIGNEE_CD"].ToString() != "")
+                        if (row.Table.Columns.Contains("SAP_CONSIGNEE_CD") && row["SAP_CONSIGNEE_CD"] != null && row["SAP_CONSIGNEE_CD"].ToString() != "")
                         {
                             var t12Bpo = (from m in context.T06Consignees
-                                          where m.ConsigneeCd == Convert.ToInt32(row["SORT2_CONSIGNEE_CD"].ToString())
+                                          where m.ConsigneeCd == Convert.ToInt32(row["SAP_CONSIGNEE_CD"].ToString())
                                           select m).FirstOrDefault();
                             if (t12Bpo != null)
                             {
-                                if (row.Table.Columns.Contains("SapCustCdCon") && row["SapCustCdCon"] != null && row["SapCustCdCon"].ToString() != "")
+                                if (row.Table.Columns.Contains("IBS_CONSIGNEE_CD") && row["SapCIBS_CONSIGNEE_CDustCdCon"] != null && row["IBS_CONSIGNEE_CD"].ToString() != "")
                                 {
-                                    t12Bpo.SapCustCdCon = row["SapCustCdCon"].ToString();
+                                    t12Bpo.SapCustCdCon = row["IBS_CONSIGNEE_CD"].ToString();
                                     context.SaveChanges();
                                     id = 1;
                                 }
