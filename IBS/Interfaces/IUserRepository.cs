@@ -21,6 +21,7 @@ namespace IBS.Interfaces
         public void ChangePassword(string UserId, String NewPassword, string UserType);
 
         public UserSessionModel FindByUsernameOrEmail(string UserName, string UserType);
+        public UserModel CheckPasswordIsBlank(string UserName, string UserType);
 
         public void ChangePassword(ResetPasswordModel resetPassword);
 

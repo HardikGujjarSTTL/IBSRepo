@@ -4,6 +4,7 @@ using IBS.Interfaces;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Linq;
 
 namespace IBS.Repositories
 {
@@ -555,6 +556,61 @@ namespace IBS.Repositories
                                         UserName = u.LoName,
                                         FPUserID = Convert.ToString(u.Mobile),
                                         Email = ""
+                                    }).FirstOrDefault();
+            }
+
+            return userSessionModel;
+        }
+
+        public UserModel CheckPasswordIsBlank(string UserName, string UserType)
+        {
+            //return context.UserMasters.FirstOrDefault(p => p.UserName.Trim() == UserName.Trim() || p.Email.Trim() == UserName.Trim());
+            //return context.T02Users.FirstOrDefault(p => p.UserId.Trim() == UserName.Trim());
+
+            UserModel userSessionModel = new UserModel();
+            if (UserType == "USERS")
+            {
+                userSessionModel = (from u in context.T02Users
+                                    where u.UserId.Trim() == UserName.Trim()
+                                    select new UserModel
+                                    {
+                                        Password = u.Password
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "VENDOR")
+            {
+                userSessionModel = (from u in context.T05Vendors
+                                    where Convert.ToString(u.VendCd) == UserName.Trim()
+                                    select new UserModel
+                                    {
+                                        Password = u.VendPwd
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "IE")
+            {
+                userSessionModel = (from u in context.T09Ies
+                                    where u.IeEmpNo.Trim() == UserName.Trim()
+                                    select new UserModel
+                                    {
+                                        Password = u.IePwd
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "CLIENT_LOGIN")
+            {
+                userSessionModel = (from u in context.T32ClientLogins
+                                    where u.Mobile.Trim() == UserName.Trim()
+                                    select new UserModel
+                                    {
+                                        Password = u.Pwd
+                                    }).FirstOrDefault();
+            }
+            else if (UserType == "LO_LOGIN")
+            {
+                userSessionModel = (from u in context.T105LoLogins
+                                    where u.Mobile.Trim() == UserName.Trim()
+                                    select new UserModel
+                                    {
+                                        Password = u.Pwd
                                     }).FirstOrDefault();
             }
 

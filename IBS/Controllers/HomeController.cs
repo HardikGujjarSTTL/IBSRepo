@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
+using static IBS.Helper.Enums;
 
 namespace IBS.Controllers
 {
@@ -30,39 +32,69 @@ namespace IBS.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
-            //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
-
-            loginModel.Password = encryptedPassword;
-            UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
-            if (userMaster != null)
+            UserModel model = userRepository.CheckPasswordIsBlank(loginModel.UserName, loginModel.UserType);
+            if (model != null)
             {
-                //// temporary Commited - for local
-                //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
-                if (1 == 1)
+                if (model.Password == null || model.Password == "")
                 {
-                    string sender = "RITES/QA";
-                    Random random = new Random();
-                    string otp = Convert.ToString(random.Next(1000, 9999));
-                    string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
-                    //// temporary Commited - for local 
-                    //string responce = Models.Common.SendOTP(userMaster.MOBILE, message);
-                    //loginModel.OTP = otp;
-                    loginModel.OTP = "123";
-                    loginModel.MOBILE = userMaster.MOBILE;
-                    userRepository.SaveOTPDetails(loginModel);
-                    string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-                    string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
-                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
+                    string id = Common.EncryptQueryString(Convert.ToString(loginModel.UserName.Trim()));
+                    string UserType = Common.EncryptQueryString(Convert.ToString(loginModel.UserType));
+                    return RedirectToAction("ResetPassword", "Home", new { id = id, UserType = UserType });
                 }
                 else
                 {
-                    AlertDanger("Mobile no. does not exist");
+                    if (model.Password != null && loginModel.Password == null)
+                    {
+                        AlertDanger("Password is required.");
+                        return RedirectToAction("Index");
+                    }
                 }
             }
-            else
+            if (loginModel.Password != null)
             {
-                AlertDanger("Invalid Username or Password.");
+                //AlertDanger("Password is required.");
+                //return RedirectToAction("Index");
+
+                string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
+                //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
+
+                loginModel.Password = encryptedPassword;
+
+                UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
+                if (userMaster != null)
+                {
+                    //// temporary Commited - for local
+                    //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
+                    if (1 == 1)
+                    {
+                        string sender = "RITES/QA";
+                        Random random = new Random();
+                        string otp = Convert.ToString(random.Next(1000, 9999));
+                        string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
+                        //// temporary Commited - for local 
+                        //string responce = Models.Common.SendOTP(userMaster.MOBILE, message);
+                        //loginModel.OTP = otp;
+                        loginModel.OTP = "123";
+                        loginModel.MOBILE = userMaster.MOBILE;
+                        userRepository.SaveOTPDetails(loginModel);
+                        string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
+                        string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
+                        return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
+                    }
+                    else
+                    {
+                        AlertDanger("Mobile no. does not exist");
+                    }
+                }
+                else
+                {
+                    AlertDanger("Invalid Username or Password.");
+                }
+            }
+            else if (string.IsNullOrEmpty(loginModel.Password))
+            {
+                AlertDanger("Password is required.");
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
@@ -202,7 +234,7 @@ namespace IBS.Controllers
                 id = Common.DecryptQueryString(id.ToString());
                 UserType = Common.DecryptQueryString(UserType.ToString());
             }
-            ResetPasswordModel resetPassword = new() { UserId = id, UserType = UserType };
+            ResetPasswordModel resetPassword = new() { UserId = id, UserType = UserType, UserName = id };
             return View(resetPassword);
         }
 
