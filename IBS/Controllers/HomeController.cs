@@ -371,5 +371,19 @@ namespace IBS.Controllers
 
             return Ok(result);
         }
+
+        //[HttpGet("Encrypted")]
+        //public ActionResult<string> Encrypted(string Text)
+        //{
+        //    string encryptedPassword = Common.getEncryptedText(Text, "301ae92bb2bc7599");
+        //    return Ok(encryptedPassword);
+        //}
+
+        //[HttpGet("Decrypted")]
+        //public ActionResult<string> Decrypted(string Text)
+        //{
+        //    string DecryptedPassword = Common.getDecryptedText(Text, "301ae92bb2bc7599");
+        //    return Ok(DecryptedPassword);
+        //}
     }
 }
