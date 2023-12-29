@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace IBSAPI.Helper
+namespace IBS.Helper
 {
     public class CryptLib
     {
