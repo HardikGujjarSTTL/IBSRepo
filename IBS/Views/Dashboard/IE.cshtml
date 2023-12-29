@@ -74,7 +74,7 @@
                     </div>
                 </a>
             </div>
-      
+
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="UnderLabCall" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "U" })">
                     <div class="dashboard-box das5Client">
@@ -127,7 +127,7 @@
                 <div class="dashboard-box das8Client">
                     <div class="dash-total">
                         <div class="dash-count">
-                            <div class="total-amount">@Model.DSCExpiryDateCount</div>
+                            <div class="total-amount"><span style="font-size: 22px;">@Model.DSCExpiryDateCount</span></div>
                         </div>
                         <div class="total-inner">
                             DSC Expiry<br />
@@ -137,7 +137,7 @@
                     <div class="total-icons"><img src="~/images/DSC-expiry-date-icon.svg" alt="Request Cancel"> </div>
                 </div>
             </div>
-      
+
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a class="NCIssued" href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "NCI" })">
                     @* <a href='@Url.Action("IE_Dashboard_Detail", "Dashboard")?Type=NCIssuedAgainstIE'>*@
@@ -155,21 +155,21 @@
                     </div>
                 </a>
             </div>
-            
+
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a href="@Url.Action("IE_Dashboard_Detail", "Dashboard", new { Type = "ICIE" })">
-                <div class="dashboard-box das11Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NotRecievedCount</div>
+                    <div class="dashboard-box das11Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NotRecievedCount</div>
+                            </div>
+                            <div class="total-inner">
+                                IC issued by IE but<br />
+                                not recieved in office
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            IC issued by IE but<br />
-                            not recieved in office
-                        </div>
+                        <div class="total-icons"><img src="~/images/IC-issued-by-IE-but-icon.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/IC-issued-by-IE-but-icon.svg" alt="Inspection Assigned"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
@@ -525,7 +525,7 @@
                     <input type="text" />
                     <div class="chatSubmit">
                         <a href="javascript:void(0);"><span class="fa fa-paperclip"></span></a>
-                    <button><span class="fa fa-paper-plane"></span></button>
+                        <button><span class="fa fa-paper-plane"></span></button>
                     </div>
                 </div>
             </div>
@@ -534,7 +534,7 @@
     <!--  Chat 3rd step -->
     <div class="chatBox userChatBox">
         <div class="chatBoxHeader">
-           <div class="chatBoxHeadBody">
+            <div class="chatBoxHeadBody">
                 <ul>
                     <li>
                         <div class="chatBoxIcon chatBoxIconBg1">DR</div>
@@ -543,8 +543,8 @@
                             <p>Inspection Engineer | Rajasthan</p>
                         </div>
                     </li>
-                    </ul>
-           </div>
+                </ul>
+            </div>
         </div>
         <div class="chatBoxBody">
             <ul class="chatBodyText">
@@ -554,31 +554,31 @@
                 <li class="sendTextHolder">
                     <div class="sendText">Hi</div>
                 </li>
-                 <li class="reciveTextHolder">
+                <li class="reciveTextHolder">
                     <div class="recieveText">Hello</div>
                 </li>
                 <li class="sendTextHolder">
                     <div class="sendText">Hi</div>
                 </li>
-                 <li class="reciveTextHolder">
+                <li class="reciveTextHolder">
                     <div class="recieveText">Hello</div>
                 </li>
                 <li class="sendTextHolder">
                     <div class="sendText">Hi</div>
                 </li>
-                 <li class="reciveTextHolder">
+                <li class="reciveTextHolder">
                     <div class="recieveText">Hello</div>
                 </li>
                 <li class="sendTextHolder">
                     <div class="sendText">Hi</div>
                 </li>
-                 <li class="reciveTextHolder">
+                <li class="reciveTextHolder">
                     <div class="recieveText">Hello</div>
                 </li>
                 <li class="sendTextHolder">
                     <div class="sendText">Hi</div>
                 </li>
-                 <li class="reciveTextHolder">
+                <li class="reciveTextHolder">
                     <div class="recieveText">Hello</div>
                 </li>
                 <li class="sendTextHolder">
@@ -600,7 +600,7 @@
 </div>
 @section scripts{
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $(".overlay, .broadcastBox, .userChatBox").hide();
             if ($(".chatIcon").length) {
                 $(".chatIcon").click(function () {
@@ -685,7 +685,15 @@
                         enabled: true,
                         distance: -50,
                         //color: '#fff',
-                        format: '<b>{point.y}</b>'
+                        //format: '<b>{point.y}</b>'
+                        formatter: function () {
+                            if (this.y > 0) {
+                                return this.y
+                            }
+                            else {
+                                return ''
+                            }
+                        }
                     }
                 },
             },
