@@ -1,5 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,18 +19,20 @@ namespace IBS.Repositories.InspectionBilling
     {
         private readonly ModelContext context;
         private readonly IConfiguration config;
-        
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public CallRegisterIBRepository(ModelContext context, IConfiguration _config)
+
+        public CallRegisterIBRepository(ModelContext context, IConfiguration _config, ISendMailRepository _pSendMailRepository)
         {
             this.context = context;
             config = _config;
+            pSendMailRepository = _pSendMailRepository;
         }
 
         public string CNO, DT, Action, CSNO, cstatus, wFOS;
         int callval = 0;
         int e_status = 0;
-        
+
 
         public DTResult<VenderCallRegisterModel> GetDataList(DTParameters dtParameters, string RegionCode)
         {
@@ -1521,11 +1524,200 @@ namespace IBS.Repositories.InspectionBilling
             return sms;
         }
 
+        //public void Cancellation_Email(VenderCallStatusModel model)
+        //{
+        //    string MailID = Convert.ToString(config.GetSection("MailConfig")["MailID"]);
+        //    string MailPass = Convert.ToString(config.GetSection("MailConfig")["MailPass"]);
+        //    string MailSmtpClient = Convert.ToString(config.GetSection("MailConfig")["MailSmtpClient"]);
+
+        //    string Case_Region = model.CaseNo.ToString().Substring(0, 1);
+        //    string wRegion = "";
+        //    string sender = "";
+        //    string wPCity = "";
+        //    string manu_mail = "", mfg_cd = "", manu_name = "", manu_city = "";
+        //    string ie_phone = "", ie_name = "", ie_email = "", ie_co_email = "";
+        //    string vend_cd = "", vend_name = "", vend_email = "", rly_cd = "", vend_city = "";
+
+        //    var querys = from t13 in context.T13PoMasters
+        //                 join t05 in context.T05Vendors on t13.VendCd equals t05.VendCd
+        //                 join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+        //                 where t13.CaseNo == model.CaseNo.Trim()
+        //                 select new
+        //                 {
+        //                     t13.VendCd,
+        //                     t05.VendName,
+        //                     VEND_ADDRESS = t05.VendAdd2 != null ? t05.VendAdd1 + "/" + t05.VendAdd2 : t05.VendAdd1,
+        //                     t03.City,
+        //                     t05.VendEmail,
+        //                     t13.RegionCode,
+        //                     t13.RlyCd
+        //                 };
+
+        //    var results = querys.ToList();
+
+        //    foreach (var item in results)
+        //    {
+        //        vend_cd = item.VendCd.ToString();
+        //        vend_name = item.VendName;
+        //        vend_city = item.City;
+        //        vend_email = item.VendEmail;
+        //        rly_cd = item.RlyCd;
+
+        //        if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; wPCity = "New Delhi"; }
+        //        else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; wPCity = "Chennai"; }
+        //        else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; wPCity = "Kolkata"; wPCity = "Kolkata"; }
+        //        else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; wPCity = "Mumbai"; }
+        //        else if (Case_Region == "C") { wRegion = "Central Region"; sender = "crinspn@rites.com"; }
+        //    }
+
+        //    var query = from t05 in context.T05Vendors
+        //                join t17 in context.T17CallRegisters on t05.VendCd equals t17.MfgCd
+        //                join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
+        //                where t17.CaseNo == model.CaseNo.Trim() &&
+        //                      t17.CallRecvDt == model.CallRecvDt &&
+        //                      t17.CallSno == model.CallSno
+        //                select new
+        //                {
+        //                    MFG_NAME = t05.VendName,
+        //                    MFG_CITY = t03.City,
+        //                    t05.VendEmail,
+        //                    t17.MfgCd
+        //                };
+        //    var result = query.FirstOrDefault();
+
+        //    manu_mail = result.VendEmail;
+        //    mfg_cd = result.MfgCd.ToString();
+        //    manu_name = result.MFG_NAME;
+        //    manu_city = result.MFG_CITY;
+
+        //    var query2 = from t09 in context.T09Ies
+        //                 join t08 in context.T08IeControllOfficers
+        //                 on t09.IeCoCd equals t08.CoCd
+        //                 where t09.IeCd == model.IeCd
+        //                 select new
+        //                 {
+        //                     IE_PHONE_NO = t09.IePhoneNo,
+        //                     CO_NAME = t08.CoName,
+        //                     CO_PHONE_NO = t08.CoPhoneNo,
+        //                     IE_NAME = t09.IeName,
+        //                     IE_EMAIL = t09.IeEmail,
+        //                     CO_Email = t08.CoEmail,
+        //                 };
+
+        //    var result2 = query2.FirstOrDefault();
+
+        //    if (result2 != null)
+        //    {
+        //        ie_phone = result2.IE_PHONE_NO;
+        //        ie_name = result2.IE_NAME;
+        //        ie_email = result2.IE_EMAIL;
+        //        ie_co_email = result2.CO_Email;
+        //    }
+
+
+        //    string call_letter_dt = "";
+        //    if (Convert.ToString(model.CallLetterDt) == "")
+        //    {
+        //        call_letter_dt = "NIL";
+        //    }
+        //    else
+        //    {
+        //        call_letter_dt = Convert.ToString(model.CallLetterDt);
+        //    }
+        //    string mail_body = "";
+
+        //    mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallStatusDt + ", at SNo. " + model.CallSno + ". is Cancelled " + model.CallCancelStatusdrp + " on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + ", Due to the following reasons.<br>";
+
+        //    mail_body = mail_body + "=> Packing list showing quantities offered item wise and consignee wise not read (Whichever applicable) <br/> => 12 - Others (Specify)(Call cancelled on chargeable basis) <br><br>";
+
+        //    mail_body = mail_body + "You are requested to submit cancellation charges for the amount of Rs. " + model.CanCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + wPCity + " along with next call.<br><b><u>Please note that call letter without Call Cancellation charges will not be accepted.</u></b><br>";
+
+        //    mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+
+        //    bool isSend = false;
+        //    if (vend_cd == mfg_cd && manu_mail != "")
+        //    {
+        //        if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+        //        {
+        //            SendMailModel sendMailModel = new SendMailModel();
+        //            sendMailModel.From = sender;
+        //            sendMailModel.To = manu_mail;
+        //            sendMailModel.Bcc = "nrinspn@gmail.com";
+        //            sendMailModel.Subject = "Your Call for Inspection By RITES";
+        //            sendMailModel.Message = mail_body;
+        //            isSend = pSendMailRepository.SendMail(sendMailModel, null);
+        //        }
+        //    }
+        //    else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
+        //    {
+        //        if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+        //        {
+        //            SendMailModel sendMailModel = new SendMailModel();
+        //            // sender for local mail testing
+        //            sendMailModel.From = sender;
+        //            sendMailModel.To = vend_email + ";" + manu_mail;
+        //            sendMailModel.Bcc = "nrinspn@gmail.com";
+        //            sendMailModel.Subject = "Your Call for Inspection By RITES";
+        //            sendMailModel.Message = mail_body;
+        //            isSend = pSendMailRepository.SendMail(sendMailModel, null);
+        //        }
+        //    }
+        //    else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
+        //    {
+        //        if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+        //        {
+        //            SendMailModel sendMailModel = new SendMailModel();
+        //            sendMailModel.From = sender;
+        //            if (string.IsNullOrEmpty(vend_email))
+        //            {
+        //                sendMailModel.To = manu_mail;
+        //            }
+        //            else if (string.IsNullOrEmpty(manu_mail))
+        //            {
+        //                sendMailModel.To = vend_email;
+        //            }
+        //            else
+        //            {
+        //                sendMailModel.To = vend_email;
+        //                sendMailModel.To = manu_mail;
+        //            }
+        //            sendMailModel.Bcc = "nrinspn@gmail.com";
+        //            sendMailModel.Subject = "Your Call for Inspection By RITES";
+        //            sendMailModel.Message = mail_body;
+        //            isSend = pSendMailRepository.SendMail(sendMailModel, null);
+        //        }
+        //    }
+
+        //    if (vend_email == "" && manu_mail == "")
+        //    {
+        //        if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+        //        {
+        //            mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+
+        //            SendMailModel sendMailModel = new SendMailModel();
+        //            sendMailModel.From = sender;
+        //            sendMailModel.To = vend_email + ";" + manu_mail;
+        //            sendMailModel.Bcc = "nrinspn@gmail.com";
+        //            if (Case_Region == "N")
+        //            {
+        //                sendMailModel.Bcc = ie_email + ";" + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com";
+        //            }
+        //            else
+        //            {
+        //                sendMailModel.Bcc = ie_email + ";" + ";nrinspn@gmail.com";
+        //            }
+        //            sendMailModel.Subject = "Your Call for Inspection By RITES has Cancelled..";
+        //            sendMailModel.Message = mail_body;
+        //            isSend = pSendMailRepository.SendMail(sendMailModel, null);
+        //        }
+        //    }
+        //}
+
         public void Vendor_Rej_Email(VenderCallStatusModel model)
         {
-            string MailID = Convert.ToString(config.GetSection("AppSettings")["MailID"]);
-            string MailPass = Convert.ToString(config.GetSection("AppSettings")["MailPass"]);
-            string MailSmtpClient = Convert.ToString(config.GetSection("AppSettings")["MailSmtpClient"]);
+            string MailID = Convert.ToString(config.GetSection("MailConfig")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("MailConfig")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("MailConfig")["MailSmtpClient"]);
 
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
@@ -1622,148 +1814,98 @@ namespace IBS.Repositories.InspectionBilling
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
             string mail_body = "";
+            string MailSubject = "";
+            if (model.CallStatus == "R")
+            {
+                MailSubject = "Your Call for Inspection By RITES has Rejected.";
+            }
+            else
+            {
+                MailSubject = "Your Call for Inspection By RITES";
+            }
+            mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + Convert.ToDateTime(call_letter_dt).ToString("dd/MM/yyyy") + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + Convert.ToDateTime(model.PoDt).ToString("dd/MM/yyyy") + ", Case NO. -" + model.CaseNo + ", registered on date: " + Convert.ToDateTime(model.CallStatusDt).ToString("dd/MM/yyyy") + ", at SNo. " + model.CallSno + ". is Rejected on Date.-" + Convert.ToDateTime(model.CallStatusDt).ToString("dd/MM/yyyy") + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
 
-            mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallStatusDt + ", at SNo. " + model.CallSno + ". is Rejected on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
-
-            mail_body = mail_body + "You are requested to submit Rejection charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + wPCity + " along with next call.<br><b><u>Please note that call letter without Call Rejection charges will not be accepted.</u></b><br>";
+            mail_body = mail_body + "You are requested to submit Rejection charges for the amount of Rs. " + model.RejectionCharge + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + wPCity + " along with next call.<br><b><u>Please note that call letter without Call Rejection charges will not be accepted.</u></b><br>";
 
             mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
 
+            bool isSend = false;
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; 
-                mail.Body = mail_body;
-
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); 
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); 
-                try
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = MailSubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(vend_email);
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                // Send the email
-                try
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = vend_email + ";" + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = MailSubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-
-                if (string.IsNullOrEmpty(vend_email))
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    mail.To.Add(manu_mail);
-                }
-                else if (string.IsNullOrEmpty(manu_mail))
-                {
-                    mail.To.Add(vend_email);
-                }
-                else
-                {
-                    mail.To.Add(vend_email);
-                    mail.To.Add(manu_mail);
-                }
-
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                }
-                finally
-                {
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    if (string.IsNullOrEmpty(vend_email))
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (string.IsNullOrEmpty(manu_mail))
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    else
+                    {
+                        sendMailModel.To = vend_email;
+                        sendMailModel.To = manu_mail;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = MailSubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
 
             if (vend_email == "" && manu_mail == "")
             {
-                MailMessage mail = new MailMessage();
-                mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
 
-                mail.To.Add(ie_co_email);
-                if (Case_Region == "N")
-                {
-                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com");
-                }
-                else
-                {
-                    mail.Bcc.Add(ie_email + ";nrinspn@gmail.com");
-                }
-                mail.From = new MailAddress(sender);
-                mail.Subject = "Your Call for Inspection By RITES has Rejected.";
-                mail.Body = mail_body;
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                }
-                finally
-                {
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    sendMailModel.To = vend_email + ";" + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    if (Case_Region == "N")
+                    {
+                        sendMailModel.Bcc = ie_email + ";" + ";nrinspn@gmail.com" + ";nrinspn.fin@rites.com";
+                    }
+                    else
+                    {
+                        sendMailModel.Bcc = ie_email + ";" + ";nrinspn@gmail.com";
+                    }
+                    sendMailModel.Subject = "Your Call for Inspection By RITES has Rejected.";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
-
-            // return email;
         }
 
         public string send_Vendor_Mail(VenderCallStatusModel model)
@@ -1959,208 +2101,97 @@ namespace IBS.Repositories.InspectionBilling
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
             string mail_body = "";
-            if (model.CallCancelStatus == "C")
+            string Callsubject = "";
+            if (model.CallStatus == "C")
             {
-                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+                mail_body = vend_name + ", " + vend_add + " / " + manufacturerInfo.manu_name + ", " + manufacturerInfo.manu_add + ",<br><br> Your Call Letter Dated:  " + Convert.ToDateTime(call_letter_dt).ToString("dd/MM/yyyy") + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + Convert.ToDateTime(model.PoDt).ToString("dd/MM/yyyy") + ", Case NO. -" + model.CaseNo + ", registered on date: " + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy") + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatusDesc + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
 
-                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
+                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manufacturerInfo.manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
 
                 mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+                Callsubject = "Your Call for Inspection By RITES has Cancelled.";
             }
             else
             {
-                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+                mail_body = vend_name + ", " + vend_add + " / " + manufacturerInfo.manu_name + ", " + manufacturerInfo.manu_add + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + Convert.ToDateTime(model.PoDt).ToString("dd/MM/yyyy") + ", Case NO. -" + model.CaseNo + ", registered on date: " + Convert.ToDateTime(model.CallRecvDt).ToString("dd/MM/yyyy") + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + Convert.ToDateTime(model.CallStatusDt).ToString("dd/MM/yyyy") + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
                 mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+                Callsubject = "Your Call for Inspection By RITES";
             }
-
-            #region comment code
-            //string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
-            //if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
-            //{
-            //    mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
-            //}
-            //if (days_to_ic == 0)
-            //{
-            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
-            //}
-            //else if (days_to_ic > 0)
-            //{
-            //    System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
-            //    System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
-            //    string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
-            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
-            //}
-            //mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
-
-            //if (Case_Region == "N")
-            //{
-            //    sender = "nrinspn@rites.com";
-            //}
-            //else if (Case_Region == "W")
-            //{
-            //    sender = "wrinspn@rites.com";
-            //}
-            //else if (Case_Region == "E")
-            //{
-            //    sender = "erinspn@rites.com";
-            //}
-            //else if (Case_Region == "S")
-            //{
-            //    sender = "srinspn@rites.com";
-            //}
-            //else if (Case_Region == "C")
-            //{
-            //    sender = "crinspn@rites.com";
-            //}
-            #endregion
+            bool isSend = false;
+            string sender = "nrinspn@gmail.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-                                                                                                                   // Send the email
-                try
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = Callsubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(vend_email);
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                // Send the email
-                try
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = vend_email + ";" + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = Callsubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
 
-                if (string.IsNullOrEmpty(vend_email))
-                {
-                    mail.To.Add(manu_mail);
-                }
-                else if (string.IsNullOrEmpty(manu_mail))
-                {
-                    mail.To.Add(vend_email);
-                }
-                else
-                {
-                    mail.To.Add(vend_email);
-                    mail.To.Add(manu_mail);
-                }
-
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    if (string.IsNullOrEmpty(vend_email))
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (string.IsNullOrEmpty(manu_mail))
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    else
+                    {
+                        sendMailModel.To = vend_email + ";" + manu_mail;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = Callsubject;
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
-
             var controllingEmail = (from t08 in context.T08IeControllOfficers
                                     join t09 in context.T09Ies on t08.CoCd equals t09.IeCoCd
                                     where t09.IeCd == Convert.ToInt32(model.IeCd)
                                     select t08.CoEmail
                                     ).FirstOrDefault();
-
-
-            if (controllingEmail != "")
+            if (controllingEmail != null)
             {
-                MailMessage mail2 = new MailMessage();
-
-                mail2.To.Add(controllingEmail);
-                mail2.Bcc.Add("nrinspn@gmail.com");
-                if (!string.IsNullOrEmpty(ie_email))
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    mail2.CC.Add(ie_email);
-                }
-                mail2.From = new MailAddress("nrinspn@gmail.com");
-                mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
-                mail2.IsBodyHtml = true;
-                mail2.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient2 = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient2.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                try
-                {
-                    smtpClient2.Send(mail2);
-                    email = "success";
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail2.Dispose();
-                    smtpClient2.Dispose();
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    sendMailModel.To = controllingEmail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    if (!string.IsNullOrEmpty(ie_email))
+                    {
+                        sendMailModel.CC = ie_email;
+                    }
+                    sendMailModel.Subject = "Your Call (" + manufacturerInfo.manu_name + " - " + manufacturerInfo.manu_add + ") for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
             }
             return email;
@@ -2358,167 +2389,196 @@ namespace IBS.Repositories.InspectionBilling
             {
                 call_letter_dt = Convert.ToString(model.CallLetterDt);
             }
-            string mail_body = "";
-            if (model.CallCancelStatus == "C")
+            //string mail_body = "";
+            //if (model.CallCancelStatus == "C")
+            //{
+            //    mail_body = vend_name + ", " + vend_add + " / " + manufacturerInfo.manu_name + ", " + manufacturerInfo.manu_add + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+
+            //    mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manufacturerInfo.manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
+
+            //    mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+            //}
+            //else
+            //{
+            //    mail_body = vend_name + ", " + vend_add + " / " + manufacturerInfo.manu_name + ", " + manufacturerInfo.manu_add + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
+            //    mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            //}
+            string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
+            if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
             {
-                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
-
-                mail_body = mail_body + "You are requested to submit call cancellation charges for the amount of Rs. " + model.CallCancelCharges + "/- + GST, through NEFT/RTGS/Credit card/Debit card/Net banking. </b> in f/o RITES LTD, Payble at " + manu_add + " along with next call.<br><b><u>Please note that call letter without call cancellation charges will not be accepted.</u></b><br>";
-
-                mail_body = mail_body + "This is for your information and necessary corrective measures please. <br><br> Thanks for using RITES Inspection Services.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br>" + wRegion + ".";
+                mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
             }
-            else
+            if (days_to_ic == 0)
             {
-                mail_body = vend_name + ", " + vend_city + " / " + manu_name + ", " + manu_city + ",<br><br> Your Call Letter Dated:  " + call_letter_dt + " for inspection of material against Agency.-" + rly_cd + ", PO No. - " + model.PoNo + " & Date - " + model.PoDt + ", Case NO. -" + model.CaseNo + ", registered on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ". is Cancelled (" + model.CallCancelStatus + ") on Date.-" + model.CallStatusDt + " by the concerned Inspection Engineer. - " + ie_name + " Contact No. " + ie_phone + "<br>";
-                mail_body = mail_body + "This is for your information and necessary corrective measures please.<br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). <br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
+            }
+            else if (days_to_ic > 0)
+            {
+                System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
+                System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
+                string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
+                mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
+            }
+            mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+            string sender = "";
+            if (Case_Region == "N")
+            {
+                sender = "nrinspn@rites.com";
+            }
+            else if (Case_Region == "W")
+            {
+                sender = "wrinspn@rites.com";
+            }
+            else if (Case_Region == "E")
+            {
+                sender = "erinspn@rites.com";
+            }
+            else if (Case_Region == "S")
+            {
+                sender = "srinspn@rites.com";
+            }
+            else if (Case_Region == "C")
+            {
+                sender = "crinspn@rites.com";
             }
 
-            #region comment code
-            //string mail_body = "Dear Sir/Madam,<br><br> In Reference to your Call Letter dated:  " + call_letter_dt + " for inspection of material against PO No. - " + model.PoNo + " & date - " + model.PoDt + ", Call has been registered vide Case No -  " + model.CaseNo + ", on date: " + model.CallRecvDt + ", at SNo. " + model.CallSno + ".<br> ";
-            //if (model.CallRecvDt != Convert.ToDateTime(desire_dt.Trim()))
-            //{
-            //    mail_body = mail_body + "The Desired Inspection Date of this call shall be on or after: " + Convert.ToDateTime(desire_dt.Trim()) + ".<br>";
-            //}
-            //if (days_to_ic == 0)
-            //{
-            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday). Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only.<br><br> Thanks for using RITES Inspection Services. <br><br>" + wRegion + ".";
-            //}
-            //else if (days_to_ic > 0)
-            //{
-            //    System.DateTime w_dt1 = new System.DateTime(Convert.ToInt32(dateto_attend.Substring(6, 4)), Convert.ToInt32(dateto_attend.Substring(3, 2)), Convert.ToInt32(dateto_attend.Substring(0, 2)));
-            //    System.DateTime w_dt2 = w_dt1.AddDays(days_to_ic);
-            //    string date_to_ic = w_dt2.ToString("dd/MM/yyyy");
-            //    mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
-            //}
-            //mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+            bool isSend = false;
+            
 
-            //if (Case_Region == "N")
-            //{
-            //    sender = "nrinspn@rites.com";
-            //}
-            //else if (Case_Region == "W")
-            //{
-            //    sender = "wrinspn@rites.com";
-            //}
-            //else if (Case_Region == "E")
-            //{
-            //    sender = "erinspn@rites.com";
-            //}
-            //else if (Case_Region == "S")
-            //{
-            //    sender = "srinspn@rites.com";
-            //}
-            //else if (Case_Region == "C")
-            //{
-            //    sender = "crinspn@rites.com";
-            //}
-            #endregion
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                }
+                //MailMessage mail = new MailMessage();
+                //mail.To.Add(manu_mail);
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Subject = "Your Call for Inspection By RITES";
+                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                //mail.Body = mail_body;
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-                                                                                                                   // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+                //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                //smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                //                                                                  // Send the email
+                //try
+                //{
+                //    smtpClient.Send(mail);
+                //}
+                //catch (Exception ex)
+                //{
+                //}
+                //finally
+                //{
+                //    mail.Dispose();
+                //    smtpClient.Dispose();
+                //}
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(vend_email);
-                mail.To.Add(manu_mail);
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = vend_email + ";" + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                }
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                //MailMessage mail = new MailMessage();
+                //mail.To.Add(vend_email);
+                //mail.To.Add(manu_mail);
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Subject = "Your Call for Inspection By RITES";
+                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                //mail.Body = mail_body;
 
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+                //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                //smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                //try
+                //{
+                //    smtpClient.Send(mail);
+                //}
+                //catch (Exception ex)
+                //{
+                //}
+                //finally
+                //{
+                //    mail.Dispose();
+                //    smtpClient.Dispose();
+                //}
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
 
-                if (string.IsNullOrEmpty(vend_email))
-                {
-                    mail.To.Add(manu_mail);
+                    if (string.IsNullOrEmpty(vend_email))
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (string.IsNullOrEmpty(manu_mail))
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    else
+                    {
+                        sendMailModel.To = vend_email + ";" + manu_mail;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
-                else if (string.IsNullOrEmpty(manu_mail))
-                {
-                    mail.To.Add(vend_email);
-                }
-                else
-                {
-                    mail.To.Add(vend_email);
-                    mail.To.Add(manu_mail);
-                }
+                //MailMessage mail = new MailMessage();
+                //if (string.IsNullOrEmpty(vend_email))
+                //{
+                //    mail.To.Add(manu_mail);
+                //}
+                //else if (string.IsNullOrEmpty(manu_mail))
+                //{
+                //    mail.To.Add(vend_email);
+                //}
+                //else
+                //{
+                //    mail.To.Add(vend_email);
+                //    mail.To.Add(manu_mail);
+                //}
 
-                mail.Bcc.Add("nrinspn@gmail.com");
-                mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
-
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
-                }
+                //mail.Bcc.Add("nrinspn@gmail.com");
+                //mail.From = new MailAddress("nrinspn@gmail.com");
+                //mail.Subject = "Your Call for Inspection By RITES";
+                //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                //mail.Body = mail_body;
+                //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                //smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                //try
+                //{
+                //    smtpClient.Send(mail);
+                //}
+                //catch (Exception ex)
+                //{
+                //}
+                //finally
+                //{
+                //    mail.Dispose();
+                //    smtpClient.Dispose();
+                //}
             }
 
             var controllingEmail = (from t08 in context.T08IeControllOfficers
@@ -2530,38 +2590,49 @@ namespace IBS.Repositories.InspectionBilling
 
             if (controllingEmail != "")
             {
-                MailMessage mail2 = new MailMessage();
 
-                mail2.To.Add(controllingEmail);
-                mail2.Bcc.Add("nrinspn@gmail.com");
-                if (!string.IsNullOrEmpty(ie_email))
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    mail2.CC.Add(ie_email);
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = controllingEmail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    if (!string.IsNullOrEmpty(ie_email))
+                    {
+                        sendMailModel.CC = ie_email;
+                    }
+                    sendMailModel.Subject = "Your Call (" + manufacturerInfo.manu_name + " - " + manufacturerInfo.manu_add + ") for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
-                mail2.From = new MailAddress("nrinspn@gmail.com");
-                mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
-                mail2.IsBodyHtml = true;
-                mail2.Body = mail_body;
+                //MailMessage mail2 = new MailMessage();
+                //mail2.To.Add(controllingEmail);
+                //mail2.Bcc.Add("nrinspn@gmail.com");
+                //if (!string.IsNullOrEmpty(ie_email))
+                //{
+                //    mail2.CC.Add(ie_email);
+                //}
+                //mail2.From = new MailAddress("nrinspn@gmail.com");
+                //mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
+                //mail2.IsBodyHtml = true;
+                //mail2.Body = mail_body;
 
-                // Create a SmtpClient
-                SmtpClient smtpClient2 = new SmtpClient(MailSmtpClient); // Set your SMTP server address
-                smtpClient2.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
-
-                try
-                {
-                    smtpClient2.Send(mail2);
-                    email = "success";
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail2.Dispose();
-                    smtpClient2.Dispose();
-                }
+                //SmtpClient smtpClient2 = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                //smtpClient2.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                //try
+                //{
+                //    smtpClient2.Send(mail2);
+                //    email = "success";
+                //}
+                //catch (Exception ex)
+                //{
+                //}
+                //finally
+                //{
+                //    mail2.Dispose();
+                //    smtpClient2.Dispose();
+                //}
             }
             return email;
         }
@@ -3310,6 +3381,10 @@ namespace IBS.Repositories.InspectionBilling
 
                 context.SaveChanges();
             }
+            //if (CallReg.CallStatus == "C")
+            //{
+            //    Cancellation_Email(model);
+            //}
 
             return ID;
         }
@@ -3410,19 +3485,20 @@ namespace IBS.Repositories.InspectionBilling
                 model.SetNo = Status.SetNo;
                 model.DesireDt = Status.DesireDt;
                 model.CallStatusDt = CallStatusDt;
+                model.CallLetterDt = Convert.ToDateTime(Status.CallLetterDt);
             }
 
-            if(string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
+            if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
             {
                 var bookdetail = (from item in context.T10IcBooksets
-                               orderby item.IssueDt descending
-                               where item.IssueToIecd == IE_CD
-                               select item).FirstOrDefault();
+                                  orderby item.IssueDt descending
+                                  where item.IssueToIecd == IE_CD
+                                  select item).FirstOrDefault();
 
                 var calldetail = (from x in context.T17CallRegisters
-                              orderby x.SetNo descending
-                              where x.BkNo.Trim() == bookdetail.BkNo.Trim() && x.IeCd == IE_CD
-                              select x).FirstOrDefault();
+                                  orderby x.SetNo descending
+                                  where x.BkNo.Trim() == bookdetail.BkNo.Trim() && x.IeCd == IE_CD
+                                  select x).FirstOrDefault();
 
                 if (calldetail != null)
                 {
@@ -3463,7 +3539,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
             }
-           
+
             var secondQuery = (from cdt in context.T18CallDetails
                                join csn in context.V06Consignees
                                on cdt.ConsigneeCd equals csn.ConsigneeCd
@@ -4185,9 +4261,9 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.AlertMsg = "The IC is Present For give CASE_NO, CALL_RECV_DT and CALL_SNO, So it can not be cancelled!!!";
                     }
-                    send_Vendor_Mail(model);
+                    //send_Vendor_Mail(model);
                 }
-            }            
+            }
             return model.AlertMsg;//str;
         }
 
@@ -5118,6 +5194,12 @@ namespace IBS.Repositories.InspectionBilling
                 }
                 // send_Vendor_Email(model);
             }
+
+            if (model.CallStatus == "C")
+            {
+                //Cancellation_Email(model);
+                send_Vendor_Mail(model);
+            }
             return model;
         }
 
@@ -5575,7 +5657,6 @@ namespace IBS.Repositories.InspectionBilling
             context.SaveChanges();
             return true;
         }
-
 
         public bool SaveRPTPRMInspectionCertificate(string CASE_NO, string CALL_RECV_DT, string CALL_SNO, string CONSIGNEE_CD)
         {

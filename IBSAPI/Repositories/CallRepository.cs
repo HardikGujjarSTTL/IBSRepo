@@ -305,9 +305,9 @@ namespace IBSAPI.Repositories
 
         public void Vendor_Rej_Email(VenderCallStatusModel model)
         {
-            string MailID = Convert.ToString(config.GetSection("AppSettings")["MailID"]);
-            string MailPass = Convert.ToString(config.GetSection("AppSettings")["MailPass"]);
-            string MailSmtpClient = Convert.ToString(config.GetSection("AppSettings")["MailSmtpClient"]);
+            string MailID = Convert.ToString(config.GetSection("MailConfig")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("MailConfig")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("MailConfig")["MailSmtpClient"]);
 
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
@@ -414,7 +414,7 @@ namespace IBSAPI.Repositories
 
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     // Create a MailMessage object
                     MailMessage mail = new MailMessage();
@@ -449,7 +449,7 @@ namespace IBSAPI.Repositories
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     // Create a MailMessage object
                     MailMessage mail = new MailMessage();
@@ -482,7 +482,7 @@ namespace IBSAPI.Repositories
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     MailMessage mail = new MailMessage();
                     if (string.IsNullOrEmpty(vend_email))
@@ -527,7 +527,7 @@ namespace IBSAPI.Repositories
             {
                 mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";
 
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     MailMessage mail = new MailMessage();
                     mail_body = mail_body + "\n As their is no email-id available for Vendor/Manufacturer, So the email cannot be send to Vendor/Manufacturer.";

@@ -228,7 +228,7 @@ namespace IBS.Models
 
         //public string IsFinalizedStatus { get; set; }
         public bool IsFinalizedStatus { get; set; }
-        
+
         public int Isstageinspection { get; set; }
 
         public string? Createdby { get; set; }
@@ -275,14 +275,14 @@ namespace IBS.Models
 
         public string CHKRejCan { get; set; }
 
-        public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
+        public List<UnInspectedQtylstModel> lstUnInspectedQty { get; set; }
 
         public string FrIeName { get; set; }
-        
+
         public string ToIeName { get; set; }
-        
+
         public string UserName { get; set; }
-        
+
         public DateTime? RemInitDatetime { get; set; }
 
     }
@@ -514,6 +514,18 @@ namespace IBS.Models
 
         public bool[] chkItems { get; set; }
 
+        public int IeCd { get; set; }
+
+        public DateTime CallLetterDt { get; set; }
+
+        public string? CanCharges { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallStatusDt { get; set; }
+
+        public string CallCancelStatusdrp { get; set; }
+
     }
 
     public class VenderCallStatusModel
@@ -571,6 +583,8 @@ namespace IBS.Models
         public string? CallStatus { get; set; }
 
         public string? CallCancelStatus { get; set; }
+
+        public string? CallCancelStatusDesc { get; set; }
 
         public string? CallCancelCharges { get; set; }
 

@@ -622,7 +622,7 @@ namespace IBS.Repositories
             mail1.Body = NC_REASONS + "\n" + wRegion;
             rsender = "hardiksilvertouch007@outlook.com";
             bool isSend = false;
-            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
             {
                 SendMailModel sendMailModel = new SendMailModel();
                 //rsender = rsender;

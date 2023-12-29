@@ -142,11 +142,11 @@ namespace IBS.Controllers.InspectionBilling
             try
             {
                 result = callMarkedOnlineRepository.Call_Marked_Online_Save(Model, GetUserInfo);
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     callMarkedOnlineRepository.Send_Vendor_Email(Model, GetUserInfo.Region);
                 }
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendSMS"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendSMS"]) == "1")
                 {
                     if (Model.IE_NAME.Trim() != "" && Model.IE_NAME.Trim() != null)
                     {

@@ -41,5 +41,7 @@ namespace IBS.Interfaces
         public bool VerifyOTP(LoginModel model);
 
         public UserModel FindByIDForResetPass(string UserId, string UserType);
+
+        public string send_Vendor_Email(LoginModel model);
     }
 }

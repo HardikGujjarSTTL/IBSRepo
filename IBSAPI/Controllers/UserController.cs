@@ -152,7 +152,7 @@ namespace IBSAPI.Controllers
                         body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", rootPath);
 
                         bool isSend = false;
-                        if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                        if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                         {
                             SendMailModel sendMailModel = new SendMailModel();
                             sendMailModel.To = userMaster.Email;

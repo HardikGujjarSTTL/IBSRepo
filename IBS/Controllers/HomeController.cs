@@ -14,12 +14,16 @@ namespace IBS.Controllers
         private readonly IUserRepository userRepository;
         private readonly IWebHostEnvironment _env;
         public IConfiguration Configuration { get; }
+        private readonly IConfiguration config;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration)
+        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             userRepository = _userRepository;
             _env = env;
             Configuration = configuration;
+            pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
 
         public IActionResult Index()
@@ -51,6 +55,7 @@ namespace IBS.Controllers
                     loginModel.OTP = "123";
                     loginModel.MOBILE = userMaster.MOBILE;
                     userRepository.SaveOTPDetails(loginModel);
+                    string isSend = userRepository.send_Vendor_Email(loginModel);
                     string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
                     string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
                     return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
@@ -174,19 +179,34 @@ namespace IBS.Controllers
                     string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
                     body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.FPUserID)), UserType = Common.EncryptQueryString(Convert.ToString(loginModel.UserType)) }));
                     EmailUtility emailUtility = new(Configuration);
-                    string error = emailUtility.SendEmail(new EmailDetails
+                    //string error = emailUtility.SendEmail(new EmailDetails
+                    //{
+                    //    Body = body,
+                    //    Subject = "Reset Password on IBS",
+                    //    //ToEmailID = userMaster.Email,
+                    //});
+
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
-                        Body = body,
-                        Subject = "Reset Password on IBS",
-                        //ToEmailID = userMaster.Email,
-                    });
-                    if (string.IsNullOrEmpty(error))
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.To = userMaster.Email;
+                        sendMailModel.Subject = "Reset Password on IBS";
+                        sendMailModel.Message = body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    }
+
+                    if (isSend)
                     {
                         AlertAddSuccess("Reset Password link has been sent to registered email id");
                         return RedirectToAction("Index", "Home");
+
                     }
                     else
-                        AlertDanger(error);
+                    {
+                        AlertAddSuccess("Error");
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                     AlertDanger("Invalid Username or Email-Id");
