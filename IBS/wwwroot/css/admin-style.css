@@ -1527,4 +1527,4 @@ table.dataTable thead>tr>th.padR10{padding-right:10px;}
 .normalText{ font-weight:normal; color:#323232; font-size:14px;}
 .highlightBox{ background:#eaf8ff;}
 .highlightBox .borderTable tr:nth-child(even) td{ background:#f7f7f7;}
-select.form-control, select{appearance:auto!important;-webkit-appearance:auto!important;-moz-appearance:auto!important; font-family:Arial, Helvetica, sans-serif;}
+select.form-control, select{appearance:auto!important;-webkit-appearance:auto!important;-moz-appearance:auto!important; /*font-family:Arial, Helvetica, sans-serif;*/}
