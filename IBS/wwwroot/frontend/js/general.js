@@ -62,7 +62,14 @@ $(document).ready( function(){
 		loop:true,
 		simulateTouch: true,
 		keyboard:true,
-		autoplay:false,					  
+		speed: 1500,
+		effect: 'fade',
+		fadeEffect: {
+			crossFade: true
+		},
+		autoplay: {
+			delay: 2000,
+		},
         navigation: {
         nextEl: " .homeImgSlider-next",
         prevEl: " .homeImgSlider-prev",
