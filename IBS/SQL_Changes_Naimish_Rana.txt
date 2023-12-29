@@ -1218,6 +1218,185 @@ BEGIN
 END GET_VENDOR_DASHBOARD_RECENT_PO;
 ----------------------------------------------------- END VENDOR DASHBOARD SP -----------------------------------------------------
 
+----------------------------------------------------- START IE DASHBOARD SP -----------------------------------------------------
+create or replace PROCEDURE GET_IE_DASHBOARD
+(
+  P_IECD IN NUMBER ,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR,
+  P_RESULT_CURSOR1 OUT SYS_REFCURSOR
+) AS
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE();
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  IE_CD,
+            SUM(TOTAL_CALL) TOTAL_CALL,
+            SUM(PENDING_CALL) PENDING_CALL,
+            SUM(ACCEPTED_CALL) ACCEPTED_CALL,
+            SUM(CANCELLED_CALL) CANCELLED_CALL, 
+            SUM(UNDER_LAB_TESTING) UNDER_LAB_TESTING, 
+            SUM(STILL_UNDER_INSPECTION) STILL_UNDER_INSPECTION, 
+            SUM(STAGE_REJECTION) STAGE_REJECTION,   
+            SUM(TOTAL_NO_OF_NC_ISSUE) TOTAL_NO_OF_NC_ISSUE,
+            SUM(IC_ISSUE_BUT_NOT_RECEIVE_OFFICE) IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+            SUM(TOTAL_CONSIGNEE_COMPLAINT) TOTAL_CONSIGNEE_COMPLAINT,
+            TO_CHAR(IE.DSC_EXPIRY_DT,'DD/MM/YYYY') DSC_EXPIRY_DT
+    FROM (
+        SELECT  P_IECD IE_CD,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION,
+                0 TOTAL_NO_OF_NC_ISSUE,
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+        FROM T17_CALL_REGISTER t17
+        LEFT JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+        WHERE t17.IE_CD = P_IECD --670  
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY t17.IE_CD,t09.DSC_EXPIRY_DT
+        UNION ALL
+        SELECT  P_IECD IE_CD,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                COUNT(t17.CASE_NO) ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,
+                0 TOTAL_NO_OF_NC_ISSUE,
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+--        FROM T47_IE_WORK_PLAN t47
+        FROM T17_CALL_REGISTER t17 --ON t47.CASE_NO = t17.CASE_NO AND t47.CALL_RECV_DT = t17.CALL_RECV_DT AND t47.CALL_SNO = t17.CALL_SNO
+        LEFT JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+        WHERE TRIM(t17.CALL_STATUS) = 'A'
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND t17.IE_CD = P_IECD --670
+        GROUP BY t17.IE_CD,t09.DSC_EXPIRY_DT
+        UNION ALL
+        SELECT  P_IECD IE_CD,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,
+                COUNT(t41.CASE_NO) TOTAL_NO_OF_NC_ISSUE,
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+        FROM T41_NC_MASTER t41
+        LEFT JOIN T09_IE t09 ON t41.IE_CD = t09.IE_CD
+        WHERE t41.IE_CD = P_IECD
+        AND t41.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY t41.IE_CD,t09.DSC_EXPIRY_DT
+        UNION ALL
+        SELECT  IC.IECD IE_CD,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,
+                0 TOTAL_NO_OF_NC_ISSUE,
+                COUNT(*) IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+        FROM (
+            SELECT DISTINCT P_IECD IECD, t20.* FROM T20_IC t20
+            JOIN T30_IC_RECEIVED t30 ON t20.BK_NO <> t30.BK_NO AND t20.SET_NO <> t30.SET_NO
+            WHERE t20.IE_CD = P_IECD
+            AND t20.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        ) IC
+        LEFT JOIN T09_IE t09 ON IC.IE_CD = t09.IE_CD
+        GROUP BY IC.IECD,t09.DSC_EXPIRY_DT
+        UNION ALL
+        SELECT  P_IECD IE_CD,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,
+                0 TOTAL_NO_OF_NC_ISSUE,
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                COUNT(*) TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+        FROM T40_CONSIGNEE_COMPLAINTS t40
+        LEFT JOIN T09_IE t09 ON t40.IE_CD = t09.IE_CD
+        WHERE t40.IE_CD = P_IECD
+        AND t40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        GROUP BY t40.IE_CD,t09.DSC_EXPIRY_DT
+    ) IE
+    GROUP BY IE.IE_CD, IE.DSC_EXPIRY_DT;
+    
+    -- get Pending Call Data
+    OPEN P_RESULT_CURSOR1 FOR
+    SELECT  t17.Case_No,
+            TO_CHAR(t17.Call_Recv_Dt,'DD/MM/YYYY') Call_Recv_Dt,
+            t17.Call_Sno,
+            TO_CHAR(t17.DT_INSP_DESIRE,'DD/MM/YYYY') Insp_Desire_Dt,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+    WHERE t17.IE_CD = P_IECD
+    AND t17.CALL_STATUS = 'M'
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY t17.CALL_RECV_DT DESC;
+END GET_IE_DASHBOARD;
+
+create or replace PROCEDURE GET_IE_DASHBOARD_PENDING_CALL 
+(
+  P_IECD IN NUMBER ,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE();
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  t17.Case_No,
+            TO_CHAR(t17.Call_Recv_Dt,'DD/MM/YYYY') Call_Recv_Dt,
+            t17.Call_Sno,
+            TO_CHAR(t17.DT_INSP_DESIRE,'DD/MM/YYYY') Insp_Desire_Dt,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No
+    FROM T17_CALL_REGISTER t17
+    JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+    JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+    WHERE t17.IE_CD = P_IECD
+    AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE;
+END GET_IE_DASHBOARD_PENDING_CALL;
+----------------------------------------------------- END IE DASHBOARD SP -----------------------------------------------------
+
 
 ----------------------------------------------------- START Receipt of book set in Inspection Office PAGE -----------------------------------------------------
 create or replace PROCEDURE SP_GET_IC_RECEIPT 
