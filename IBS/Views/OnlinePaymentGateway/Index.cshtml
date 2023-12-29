@@ -182,7 +182,6 @@
                 $("#spnErrorCharges").html("Charges is Required.");
                 IsValid = false;
             }
-            debugger;
             if (!IsValid) return;
             var formData = $("#frmPaymentGateway").serialize();
             var casenoValue = $("#CaseNo").val();
@@ -196,7 +195,6 @@
 
             $(".spinner").show();
             $.get("@Url.Action("PaymentIntegration", "OnlinePaymentGateway")" + "?" + formData, function (response) {
-                debugger
                 var TOKID = response.response.Tok_id;
                 var mef_ref = response.response.MER_TXN_REF;
                 var CaseNo = $("#CaseNo").val();
