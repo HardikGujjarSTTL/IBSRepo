@@ -760,6 +760,68 @@
                 </form>
             </div>
         </div>
+
+        <div class="task-inner row DSC" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmDSC">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnDSCMonth" name="hdnDSCMonth" />
+                    <input type="hidden" id="hdnDSCYear" name="hdnDSCYear" />
+                    <input type="hidden" id="hdnDSCToMonth" name="hdnDSCToMonth" />
+                    <input type="hidden" id="hdnDSCToYear" name="hdnDSCToYear" />
+                    <input type="hidden" id="hdnDSCMonthText" name="hdnDSCMonthText" />
+                    <input type="hidden" id="hdnDSCToMonthText" name="hdnDSCToMonthText" />
+                    <input type="hidden" id="hdnDSC_M" name="hdnDSC_M" />
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <div class="custom-readio">
+                                <div class="company-checkbox">
+                                    <div class="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="DSC_M"  name="DSCExp" value="M" checked>
+                                            <label for="DSC_M">Report For the Month</label>
+                                        </div>
+                                    </div>
+                                    <div c lass="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="DSC_P" name="DSCExp" value="P">
+                                            <label for="DSC_P">Report For the Given Period</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="FromMn" id="lblMonth">Month</label> <br />
+                            @Html.DropDownList("DSCMonth", new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--",new { id = "DSCMonth" })
+                            <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="FromYr" id="lblYear">Year</label> <br />
+                            @Html.DropDownList("DSCYear", new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--",new { id = "DSCYear" })
+                            <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
+                        </div>
+                    </div>
+                     <div class="row my-0" id="ToPeriod">
+                        <div class="col-md-4 mb-3">
+                            <label for="ToMn">To Month</label> <br />
+                            @Html.DropDownList("DSCToMonth", new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--",new { id = "DSCToMonth" })
+                            <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ToYr">To Year</label> <br />
+                            @Html.DropDownList("DSCToYear", new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--",new { id = "DSCToYear" })
+                            <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
+                        </div>
+                     </div>
+                    <div class="col-md-5">
+                        <div class="savenext-btn btnAlign">
+                            <button type="button" class="save-btn active" onclick="ViewReportDSC();">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
@@ -844,6 +906,7 @@
             $("#TrainingArea").hide();
             $("#Region").hide();
             $("#department").hide();
+            $("#ToPeriod").hide();
 
             $("#divdateVENDPER").hide();
 
@@ -907,6 +970,8 @@
                 $(".U").css("display", "");
             } else if ('@ReportType' == 'IEICPHOTO') {
                 $(".IEICPHOTO").css("display", "");
+            }else if ('@ReportType' == 'DSC') {
+                $(".DSC").css("display", "");
             }
 
             $('#formonthVENDPER').change(function () {
@@ -915,6 +980,14 @@
                 $("#vendorVENDPER").val('');
                 $("#divdateVENDPER").hide();
                 $("#divmonthVENDPER").show();
+            });
+
+            $('#DSC_P').change(function () {
+                $("#ToPeriod").show();
+            });
+
+            $('#DSC_M').change(function () {
+                $("#ToPeriod").hide();
             });
 
             $('#forperiodVENDPER').change(function () {
@@ -1006,7 +1079,6 @@
                 $("#IENAME").hide();
             });
         });
-
 
         $('#forperiod').change(function () {
             $("#divdate").show();
@@ -1807,6 +1879,31 @@
             $("#BKNO").val('');
             $("#SETNO").val('');
             $("#dtphoto tbody").empty();
+        }
+
+        function ViewReportDSC(){
+
+            var DSCMonth = $("#DSCMonth").val();
+            var MonthVal = DSCMonth.padStart(2, '0');
+            var DSCYear = $("#DSCYear").val();
+            var DSCToMonth = $("#DSCToMonth").val();
+            var ToMonthVal = DSCToMonth.padStart(2, '0');
+            var DSCToYear = $("#DSCToYear").val();
+            var DSCMonthText = $("#DSCMonth option:selected").text();
+            var DSCToMonthText = $("#DSCToMonth option:selected").text();
+            var DSC_Month = $("#DSC_M").is(":checked") == true ? "true" : "false";
+            var ReportType = '@ReportType';
+
+            $('#frmDSC').find("#hdnReportType").val(ReportType);
+            $('#frmDSC').find("#hdnDSCMonth").val(MonthVal);
+            $('#frmDSC').find("#hdnDSCYear").val(DSCYear);
+            $('#frmDSC').find("#hdnDSCToMonth").val(ToMonthVal);
+            $('#frmDSC').find("#hdnDSCToYear").val(DSCToYear);
+            $('#frmDSC').find("#hdnDSCMonthText").val(DSCMonthText);
+            $('#frmDSC').find("#hdnDSCToMonthText").val(DSCToMonthText);
+            $('#frmDSC').find("#hdnDSC_M").val(DSC_Month);
+
+            $("#frmDSC").submit();
         }
     </script>
 }

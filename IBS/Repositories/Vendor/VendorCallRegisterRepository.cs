@@ -1908,7 +1908,7 @@ namespace IBS.Repositories.Vendor
                 model.CallSno = GetReport.CallSno;
                 model.CallLetterNo = GetReport.CallLetterNo;
                 model.CallLetterDt = GetReport.CallLetterDt;
-                model.CallInstallNo = (byte?)GetReport.CallInstallNo;
+                model.CallInstallNo = GetReport.CallInstallNo;
                 model.OnlineCall = GetReport.OnlineCall;
                 model.FinalOrStage = GetReport.FinalOrStage;
                 model.Remarks = GetReport.Remarks;
