@@ -95,7 +95,11 @@ namespace IBS.Controllers.WebsitePages
                 string hashAlgorithm = config.GetSection("PaymentConfig")["hashAlgorithm"];
                 string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
 
-                string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
+                //string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
+                //string testurleq = "http://paynetzuat.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
+
+                string testurleq = config.GetSection("PaymentConfig")["PaymentUrl"]+ "?merchId=" + config.GetSection("PaymentConfig")["merchId"]+ "&encData=" + Encryptval;
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
