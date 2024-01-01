@@ -5108,3 +5108,72 @@ MODIFY (PWD VARCHAR2(25));
 --Update t32_client_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
 --Update t105_lo_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
 
+create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
+    p_cs_no VARCHAR2,
+    p_po_no VARCHAR2,
+    p_po_date VARCHAR2,
+    p_vend_name VARCHAR2,
+    p_region_code VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+    total_records NUMBER;
+BEGIN
+    -- Count total records before applying pagination
+    SELECT COUNT(*) INTO total_records
+    FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t
+    WHERE m.VEND_CD = v.VEND_CD
+      AND v.VEND_CITY_CD = t.CITY_CD
+      AND m.PURCHASER_CD = c.CONSIGNEE_CD(+)
+      AND m.REGION_CODE = p_region_code
+      AND (p_cs_no IS NULL OR TRIM(CASE_NO) = p_cs_no)
+      AND (p_po_no IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_po_no || '%'))
+      AND (p_po_date IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_po_date)
+      AND (p_vend_name IS NULL OR UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(p_vend_name || '%'));
+
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+
+    -- Build the main query
+    str1 := 'SELECT * FROM (SELECT ROWNUM AS rnum, t.* FROM (' ||
+            'SELECT m.CASE_NO, m.PO_NO, TO_CHAR(m.PO_DT, ''dd/mm/yyyy'') AS PO_DT, ' ||
+            '(DECODE(m.RLY_NONRLY, ''R'', ''Railway'', ''P'', ''Private'', ''S'', ''State Government'', ''F'', ''Foreign Railways'', ''U'', ''PSU'') || ''('' || m.RLY_CD || '')'') AS RLY_CD, ' ||
+            '(v.VEND_NAME || ''('' || NVL2(t.LOCATION, t.LOCATION || '' : '' || t.CITY, t.CITY) || '')'') AS VEND_NAME, ' ||
+            '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
+            'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
+            'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            'm.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
+            'WHERE m.VEND_CD = v.VEND_CD ' ||
+            'AND v.VEND_CITY_CD = t.CITY_CD ' ||
+            'AND m.PURCHASER_CD = c.CONSIGNEE_CD(+) ' ||
+            'AND m.REGION_CODE = ''' || p_region_code || '''';
+
+    -- Apply filters
+    IF p_cs_no IS NOT NULL THEN
+        str1 := str1 || ' AND TRIM(CASE_NO) = ''' || p_cs_no || ''' ';
+    END IF;
+
+    IF p_po_no IS NOT NULL THEN
+        str1 := str1 || ' AND UPPER(TRIM(PO_NO)) LIKE UPPER(''%' || p_po_no || '%'') ';
+    END IF;
+
+    IF p_po_date IS NOT NULL THEN
+        str1 := str1 || ' AND TO_CHAR(PO_DT, ''dd/mm/yyyy'') = ''' || p_po_date || ''' ';
+    END IF;
+
+    IF p_vend_name IS NOT NULL THEN
+        str1 := str1 || ' AND UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(''' || p_vend_name || '%'') ';
+    END IF;
+
+    -- Order the result
+    str1 := str1 || ' ORDER BY CASE_NO ASC) t WHERE ROWNUM <= ' || p_page_end || ') WHERE rnum >= ' || p_page_start;
+
+    -- Open the ref cursor for the result
+    OPEN p_result_cursor FOR str1;
+END;
+/
+
