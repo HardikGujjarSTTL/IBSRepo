@@ -603,15 +603,15 @@ namespace IBS.Repositories
                 }
                 if (string.IsNullOrEmpty(NC_REASONS))
                 {
-                    NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n";
-                    NC_REASONS += $"Case No. {row["CASE_NO"]}\n";
-                    NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n";
+                    NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n<br/>";
+                    NC_REASONS += $"Case No. {row["CASE_NO"]}\n<br/>";
+                    NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n<br/>";
                     NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
-                    NC_REASONS += $"IE: {row["IE_NAME"]}\n";
-                    NC_REASONS += $"CM: {row["CO_NAME"]}\n";
+                    NC_REASONS += $"IE: {row["IE_NAME"]}\n<br/>";
+                    NC_REASONS += $"CM: {row["CO_NAME"]}\n<br/>";
                 }
 
-                NC_REASONS += $"NCR Code: {row["NC_CD"]}-{row["NC_DESC"]}\n";
+                NC_REASONS += $"NCR Code: {row["NC_CD"]}-{row["NC_DESC"]}\n<br/>";
                 if (!string.IsNullOrEmpty(row["IE_ACTION1"].ToString()))
                 {
                     NC_REASONS += $"IE Corrective and Preventive Action: {row["IE_ACTION1"]}\n";
@@ -627,21 +627,20 @@ namespace IBS.Repositories
             var emailQuery = (from t09 in context.T09Ies
                               join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
                               where t09.IeCd == ieCdFromDataRow
-                              select t09.IeEmail + ";" + t08.CoEmail).FirstOrDefault();
+                              select t09.IeEmail + "," + t08.CoEmail).FirstOrDefault();
 
             string emailAddresses = emailQuery ?? string.Empty;
 
             MailMessage mail1 = new MailMessage();
 
+            //if (j == 1 && nCRRegister.SetRegionCode == "N")
+            //{
+            //    mail1.CC.Add("sbu.ninsp@rites.com");
+            //}
 
-            if (j == 1 && nCRRegister.SetRegionCode == "N")
-            {
-                mail1.CC.Add("sbu.ninsp@rites.com");
-            }
-
-            mail1.From = new MailAddress("nrinspn@gmail.com");
-            mail1.Subject = "Non Conformities Register";
-            mail1.Body = NC_REASONS + "\n" + wRegion;
+            //mail1.From = new MailAddress("nrinspn@gmail.com");
+            //mail1.Subject = "Non Conformities Register";
+            //mail1.Body = NC_REASONS + "\n" + wRegion;
             rsender = "hardiksilvertouch007@outlook.com";
             bool isSend = false;
             if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
@@ -665,19 +664,19 @@ namespace IBS.Repositories
 
             if (region == "N")
             {
-                wRegion = "NORTHERN REGION \n 12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 \n Phone : +918800018691-95 \n Fax : 011-22024665";
+                wRegion = "<br/>NORTHERN REGION \n<br/> 12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 \n<br/> Phone : +918800018691-95 \n<br/> Fax : 011-22024665";
             }
             else if (region == "S")
             {
-                wRegion = "SOUTHERN REGION \n CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 \n Phone : 044-28292807/044- 28292817 \n Fax : 044-28290359";
+                wRegion = "<br/>SOUTHERN REGION \n<br/> CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 \n<br/> Phone : 044-28292807/044- 28292817 \n<br/> Fax : 044-28290359";
             }
             else if (region == "E")
             {
-                wRegion = "EASTERN REGION \n CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  \n Fax : 033-22348704";
+                wRegion = "<br/>EASTERN REGION \n<br/> CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  \n<br/> Fax : 033-22348704";
             }
             else if (region == "W")
             {
-                wRegion = "WESTERN REGION \n 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 \n Phone : 022-68943400/68943445";
+                wRegion = "<br/>WESTERN REGION \n<br/> 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 \n<br/> Phone : 022-68943400/68943445";
             }
             else if (region == "C")
             {
