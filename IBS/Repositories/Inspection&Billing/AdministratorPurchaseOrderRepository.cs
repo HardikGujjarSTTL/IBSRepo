@@ -102,41 +102,33 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 vend_name = Convert.ToString(dtParameters.AdditionalValues["vend_name"]);
             }
-
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("p_cs_no", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
             par[1] = new OracleParameter("p_po_no", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
             par[2] = new OracleParameter("p_po_date", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
             par[3] = new OracleParameter("p_vend_name", OracleDbType.Varchar2, vend_name.ToString() == "" ? DBNull.Value : vend_name.ToString(), ParameterDirection.Input);
             par[4] = new OracleParameter("p_region_code", OracleDbType.Varchar2, region_code.ToString() == "" ? DBNull.Value : region_code.ToString(), ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[7] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("SP_GET_Administrator_PO_DETAILS", par, 1);
-            DataTable dt = ds.Tables[0];
-
-
+            var ds = DataAccessDB.GetDataSet("SP_GET_Administrator_PO_DETAILS", par, 2);
             List<AdministratorPurchaseOrderListModel> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
-
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
             query = list.AsQueryable();
-
-
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.VEND_NAME).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;

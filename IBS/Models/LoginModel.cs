@@ -7,9 +7,9 @@ namespace IBS.Models
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        //[Required(ErrorMessage = "Password is required.")]
+        //[DataType(DataType.Password)]
+        public string? Password { get; set; }
 
         [Required(ErrorMessage = "OTP is required.")]
         public string OTP { get; set; }

@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.OtherReports;
 using IBS.Models;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Dynamic;
 using System.Globalization;
 
 namespace IBS.Repositories.Reports.OtherReports
@@ -851,6 +853,7 @@ namespace IBS.Repositories.Reports.OtherReports
                         {
                             IE_NAME = Convert.ToString(row["IE_NAME"]),
                             CO_NAME = Convert.ToString(row["CO_NAME"]),
+                            Date = date,
                         }).ToList();
 
                         if (model.lstDailyIECMWorkPlanReporttbl3 == null)
@@ -1092,6 +1095,50 @@ namespace IBS.Repositories.Reports.OtherReports
                 model.lstlistSubmittedPhotobyIE = listcong;
             }
 
+            return model;
+        }
+
+        public OtherReportsModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSC_Monthrdo, string Region)
+        {
+            OtherReportsModel model = new();
+            List<DSCExpModel> lstDSCExpModel = new();
+            DataSet ds = null;
+            DataTable dt = new DataTable();
+            string wYrMth_FR = "";
+            string wYrMth_To = "";
+
+            if (DSC_Monthrdo == "true")
+            {
+                 wYrMth_FR = DSCYear + DSCMonth;
+                 wYrMth_To = DSCYear + DSCMonth;
+            }
+            else
+            {
+                 wYrMth_FR = DSCYear + DSCMonth;
+                 wYrMth_To = DSCToYear + DSCToMonth;
+            }
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_yearMFr", OracleDbType.Varchar2, wYrMth_FR, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_yearMTo", OracleDbType.Varchar2, wYrMth_To, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GetDSCEXP", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                List<DSCExpModel> listcong = dt.AsEnumerable().Select(row => new DSCExpModel
+                {
+                    IE_Name = Convert.ToString(row["IE_Name"]),
+                    IE_Department = Convert.ToString(row["IE_DEPARTMENT"]),
+                    IE_Emp_No = Convert.ToInt32(row["IE_EMP_NO"]),
+                    R_Desgination = Convert.ToString(row["R_DESIGNATION"]),
+                    IE_Phone_No = Convert.ToString(row["IE_PHONE_NO"]),
+                    IE_Email = Convert.ToString(row["IE_EMAIL"]),
+                    ExpiryDate = Convert.ToString(row["EXPIRY_DT"]),
+                }).ToList();
+                model.lstDSCExpModel = listcong;
+            }
             return model;
         }
     }

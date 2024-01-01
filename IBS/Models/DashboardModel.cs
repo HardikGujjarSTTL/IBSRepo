@@ -31,7 +31,7 @@
 
         public int StageRejectionCount { get; set; }
 
-        public int DSCExpiryDateCount { get; set; }
+        public string DSCExpiryDateCount { get; set; }
 
         public int NCIsuedAgainstIECount { get; set; }
 

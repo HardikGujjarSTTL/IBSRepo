@@ -17,7 +17,6 @@ using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
-using IBSAPI.Helper;
 
 namespace IBS.Models
 {
@@ -2558,17 +2557,20 @@ namespace IBS.Models
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
 
             List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = (from v in ModelContext.T05Vendors
-                        join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
-                        where v.VendCityCd == c.CityCd && v.VendName != null
-                        && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                        orderby v.VendName
-                        select
-                   new SelectListItem
-                   {
-                       Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
-                       Value = Convert.ToString(v.VendCd),
-                   }).ToList();
+            if (VENDOR != null)
+            {
+                dropList = (from v in ModelContext.T05Vendors
+                            join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                            where v.VendCityCd == c.CityCd && v.VendName != null
+                            && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                            orderby v.VendName
+                            select
+                       new SelectListItem
+                       {
+                           Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                           Value = Convert.ToString(v.VendCd),
+                       }).ToList();
+            }
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);

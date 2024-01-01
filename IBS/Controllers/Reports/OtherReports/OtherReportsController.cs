@@ -154,6 +154,15 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnCallSno") && !string.IsNullOrEmpty(formCollection["hdnCallSno"])) model.CallSno = Convert.ToString(formCollection["hdnCallSno"]);
                 if (formCollection.Keys.Contains("hdnBKNO") && !string.IsNullOrEmpty(formCollection["hdnBKNO"])) model.BKNO = Convert.ToString(formCollection["hdnBKNO"]);
                 if (formCollection.Keys.Contains("hdnSETNO") && !string.IsNullOrEmpty(formCollection["hdnSETNO"])) model.SETNO = Convert.ToString(formCollection["hdnSETNO"]);
+            }else if (model.ReportType == "DSC")
+            {
+                if (formCollection.Keys.Contains("hdnDSCMonth") && !string.IsNullOrEmpty(formCollection["hdnDSCMonth"])) model.DSCMonth = Convert.ToString(formCollection["hdnDSCMonth"]);
+                if (formCollection.Keys.Contains("hdnDSCYear") && !string.IsNullOrEmpty(formCollection["hdnDSCYear"])) model.DSCYear = Convert.ToInt32(formCollection["hdnDSCYear"]);
+                if (formCollection.Keys.Contains("hdnDSCToMonth") && !string.IsNullOrEmpty(formCollection["hdnDSCToMonth"])) model.DSCToMonth = Convert.ToString(formCollection["hdnDSCToMonth"]);
+                if (formCollection.Keys.Contains("hdnDSCToYear") && !string.IsNullOrEmpty(formCollection["hdnDSCToYear"])) model.DSCToYear = Convert.ToInt32(formCollection["hdnDSCToYear"]);
+                if (formCollection.Keys.Contains("hdnDSCMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCMonthText"])) model.DSCMonthText = Convert.ToString(formCollection["hdnDSCMonthText"]);
+                if (formCollection.Keys.Contains("hdnDSCToMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCToMonthText"])) model.DSCToMonthText = Convert.ToString(formCollection["hdnDSCToMonthText"]);
+                if (formCollection.Keys.Contains("hdnDSC_M") && !string.IsNullOrEmpty(formCollection["hdnDSC_M"])) model.DSC_Monthrdo = Convert.ToString(formCollection["hdnDSC_M"]);
             }
 
 
@@ -343,6 +352,8 @@ namespace IBS.Controllers.Reports.OtherReports
             model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
             model.ReportType = ReportType;
             model.Regions = wRegion;
+            model.IEWise = IEWise;
+            model.CMWise = CMWise;
             return PartialView(model);
         }
 
@@ -374,6 +385,25 @@ namespace IBS.Controllers.Reports.OtherReports
             IEICPhotoEnclosedModelReport model = otherReportsRepository.GetDataListReport(CaseNo, CallRecDT, CallSno, BKNO, SETNO, Region);
             model.Regions = wRegion;
             GlobalDeclaration.IEICPhotoEnclosedModel = model;
+            return PartialView(model);
+        }
+        
+        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText,string DSCToMonthText,string DSC_Monthrdo)
+        {
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            OtherReportsModel model = otherReportsRepository.GetDSCExpReport(DSCMonth, DSCYear, DSCToMonth, DSCToYear, DSC_Monthrdo, Region);
+            model.Region = wRegion;
+            model.DSCMonthText = DSCMonthText;
+            model.DSCToMonthText = DSCToMonthText;
+            model.DSCYear = Convert.ToInt32(DSCYear);
+            model.DSCToYear = Convert.ToInt32(DSCToYear);
+            model.DSC_Monthrdo = DSC_Monthrdo;
+            GlobalDeclaration.OtherReportsModelList = model;
             return PartialView(model);
         }
 
@@ -508,6 +538,11 @@ namespace IBS.Controllers.Reports.OtherReports
             {
                 IEICPhotoEnclosedModelReport model = GlobalDeclaration.IEICPhotoEnclosedModel;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/PhotoSubmiteedByIE.cshtml", model);
+            }
+            else if (ReportType == "DSC")
+            {
+                OtherReportsModel model = GlobalDeclaration.OtherReportsModelList;
+                htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/DSCExpReport.cshtml", model);
             }
 
             await new BrowserFetcher().DownloadAsync();

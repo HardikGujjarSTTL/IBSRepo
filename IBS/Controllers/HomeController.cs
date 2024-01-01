@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
+using static IBS.Helper.Enums;
 
 namespace IBS.Controllers
 {
@@ -34,8 +36,31 @@ namespace IBS.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
-            string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
-            //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
+            UserModel model = userRepository.CheckPasswordIsBlank(loginModel.UserName, loginModel.UserType);
+            if (model != null)
+            {
+                if (model.Password == null || model.Password == "")
+                {
+                    string id = Common.EncryptQueryString(Convert.ToString(loginModel.UserName.Trim()));
+                    string UserType = Common.EncryptQueryString(Convert.ToString(loginModel.UserType));
+                    return RedirectToAction("ResetPassword", "Home", new { id = id, UserType = UserType });
+                }
+                else
+                {
+                    if (model.Password != null && loginModel.Password == null)
+                    {
+                        AlertDanger("Password is required.");
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+            if (loginModel.Password != null)
+            {
+                //AlertDanger("Password is required.");
+                //return RedirectToAction("Index");
+
+                string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
+                //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
 
             loginModel.Password = encryptedPassword;
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
@@ -225,7 +250,7 @@ namespace IBS.Controllers
                 id = Common.DecryptQueryString(id.ToString());
                 UserType = Common.DecryptQueryString(UserType.ToString());
             }
-            ResetPasswordModel resetPassword = new() { UserId = id, UserType = UserType };
+            ResetPasswordModel resetPassword = new() { UserId = id, UserType = UserType, UserName = id };
             return View(resetPassword);
         }
 
@@ -362,5 +387,19 @@ namespace IBS.Controllers
 
             return Ok(result);
         }
+
+        //[HttpGet("Encrypted")]
+        //public ActionResult<string> Encrypted(string Text)
+        //{
+        //    string encryptedPassword = Common.getEncryptedText(Text, "301ae92bb2bc7599");
+        //    return Ok(encryptedPassword);
+        //}
+
+        //[HttpGet("Decrypted")]
+        //public ActionResult<string> Decrypted(string Text)
+        //{
+        //    string DecryptedPassword = Common.getDecryptedText(Text, "301ae92bb2bc7599");
+        //    return Ok(DecryptedPassword);
+        //}
     }
 }

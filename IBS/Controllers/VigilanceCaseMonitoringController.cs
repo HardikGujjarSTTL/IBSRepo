@@ -51,7 +51,7 @@ namespace IBS.Controllers
                 {
                     model.lstVigilanceCasesList = JsonConvert.DeserializeObject<List<VigilanceCasesListModel>>(formCollection["checkedCaseNos"]);
                 }
-                model.UserId = USER_ID.Substring(0, 8);
+                model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
 
                 if (model.Id == 0)
                 {

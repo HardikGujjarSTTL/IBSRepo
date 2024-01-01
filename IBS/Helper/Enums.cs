@@ -700,6 +700,7 @@ namespace IBS.Helper
             [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
             [Description("JI CONSIGNEE COMPLAINTS")] COCOMPJI,
             [Description("Controlling Officer Wise IE")] COWISEIE,
+            [Description("SUMMARY OF IE WISE DSC GETTING EXPIRED DURING THE MONTH/PERIOD")] DSC,
         }
 
         public enum SAPType
@@ -930,5 +931,6 @@ namespace IBS.Helper
         public static RecieptVoucherModel BankStatement { get; set; }
         public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
         public static InspectionBillingDelayReportModel InspBillDelayList { get; set; }
+        public static OtherReportsModel OtherReportsModelList { get; set; }
     }
 }

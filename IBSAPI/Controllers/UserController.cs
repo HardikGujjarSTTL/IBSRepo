@@ -92,8 +92,12 @@ namespace IBSAPI.Controllers
                 string DecryptUserName = Common.getDecryptedText(loginModel.UserName, loginModel.UniqueId);
                 string DecryptPassword = Common.getDecryptedText(loginModel.Password, loginModel.UniqueId);
                 string DecryptUserType = Common.getDecryptedText(loginModel.UserType, loginModel.UniqueId);
+
+                string encryptedPassword = Common.getEncryptedText1(DecryptPassword, "301ae92bb2bc7599");
+
                 loginModel.UserName = DecryptUserName;
-                loginModel.Password = DecryptPassword;
+                //loginModel.Password = DecryptPassword;
+                loginModel.Password = encryptedPassword;
                 loginModel.UserType = DecryptUserType;
                 UserModel userModel = userRepository.FindByLoginDetail(loginModel);
                 if (userModel != null)
