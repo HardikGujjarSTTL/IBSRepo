@@ -42,13 +42,13 @@ namespace IBS.Repositories
 
                     if (orderCriteria == "")
                     {
-                        orderCriteria = "NC_NO";
+                        orderCriteria = "CaseNo";
                     }
                     orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
                 }
                 else
                 {
-                    orderCriteria = "NC_NO";
+                    orderCriteria = "CaseNo";
                     orderAscendingDirection = true;
                 }
 
@@ -88,17 +88,28 @@ namespace IBS.Repositories
                 List<NCRRegister> modelList = new List<NCRRegister>();
 
                 DataSet ds;
-                DateTime parsedDate = DateTime.ParseExact(FromDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
-                DateTime parsedDat1e = DateTime.ParseExact(ToDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
+                string formattedDate = null;
+                string formattedtoDate = null;
 
-                string formattedDate = parsedDate.ToString("dd/mm/yyyy");
-                string formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
+                if (FromDate != null && ToDate != null)
+                {
+                    DateTime parsedDate = DateTime.ParseExact(FromDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
+                    DateTime parsedDat1e = DateTime.ParseExact(ToDate, "dd/mm/yyyy", CultureInfo.InvariantCulture);
 
-                OracleParameter[] par = new OracleParameter[4];
+                    formattedDate = parsedDate.ToString("dd/mm/yyyy");
+                    formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
+                }
+
+                OracleParameter[] par = new OracleParameter[9];
                 par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
                 par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
                 par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[3] = new OracleParameter("p_case_no", OracleDbType.Varchar2, CASENO, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_BK_NO", OracleDbType.Varchar2, BKNo, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_SET_NO", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
+                par[6] = new OracleParameter("p_NCR_NO", OracleDbType.Varchar2, NCNO, ParameterDirection.Input);
+                par[7] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+                par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
                 ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
 
                 if (ds != null && ds.Tables.Count > 0)
@@ -112,7 +123,7 @@ namespace IBS.Repositories
                         SetNo = row.Field<string>("SET_NO"),
                         NC_NO = row.Field<string>("NC_NO"),
                         CALL_SNO = row.Field<int>("CALL_SNO"),
-                        IE_SNAME = row.Field<string>("IE_SNAME"),
+                        IE_SNAME = row.Field<string>("ie_name"),
                         CALL_RECV_DT = DateTime.TryParseExact(row.Field<string>("CALL_RECV_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime callRecvDate)
                 ? callRecvDate
                 : null,
