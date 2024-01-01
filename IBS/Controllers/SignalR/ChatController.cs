@@ -34,8 +34,8 @@ namespace IBS.Controllers.SignalR
         public async Task SendMessage(string user, string message)
         {
             ChatMessage model = new ChatMessage();
-            model.msg_send_ID = UserName;
-            model.msg_recv_ID = user;
+            model.msg_send_ID = UserId;
+            model.msg_recv_ID = UserId;
             model.send_message = message;
             model.recv_message = message;
             var restl = _chathub.ChatMessageSave(model, UserName, UserId);
@@ -49,10 +49,10 @@ namespace IBS.Controllers.SignalR
             return PartialView(model);
         }
 
-        public IActionResult ChatMessageHistory(string id)
+        public IActionResult ChatMessageHistory(int id)
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(UserName, id);
+            model = _chathub.GetMessageList(UserId, id);
             model.GUserName = UserName;
             return PartialView(model);
         }
