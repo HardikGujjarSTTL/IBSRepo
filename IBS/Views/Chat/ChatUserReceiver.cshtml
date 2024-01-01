@@ -1,0 +1,24 @@
+﻿@model IBS.Models.ChatMessage
+
+<div>
+    <ul>
+        @{
+            if (Model.lstMsg.Count > 0)
+            {
+                foreach (var item in Model.lstMsg)
+                {
+                    <li>
+                        <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                        <div class="chatBoxInfo">
+                            <h4 onclick="GetChatMessageList(@item.msg_recv_ID.Trim())">@item.Name</h4>
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li></li>
+            }
+        }
+    </ul>
+</div>

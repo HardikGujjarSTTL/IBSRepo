@@ -8,6 +8,8 @@
         public string send_message { get; set; }
         public string recv_message { get; set; }
         public string Name { get; set; }
+        public string HostUrl { get; set; }
+        public string GUserName { get; set; }
         public List<ChatMessage> lstMsg { get; set; }
     }
 }

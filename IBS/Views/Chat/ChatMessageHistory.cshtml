@@ -1,7 +1,72 @@
 ﻿@model IBS.Models.ChatMessage
 
+
+<ul class="chatBodyText">
+    @{
+        if (Model.lstMsg.Count > 0)
+        {
+            foreach(var item in Model.lstMsg)
+            {
+                if(Model.GUserName == item.msg_recv_ID)
+                {
+                    <li class="sendTextHolder">
+                        <div class="sendText">@item.send_message</div>
+                    </li>
+                }
+                else
+                {
+                    <li class="reciveTextHolder">
+                        <div class="recieveText">@item.send_message</div>
+                    </li>
+                }                                
+            }
+        }
+    }
+    @*<li class="reciveTextHolder">
+        <div class="recieveText">Hello</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Hi</div>
+    </li>
+    <li class="reciveTextHolder">
+        <div class="recieveText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Hi</div>
+    </li>
+    <li class="reciveTextHolder">
+        <div class="recieveText">Hello</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Hi</div>
+    </li>
+    <li class="reciveTextHolder">
+        <div class="recieveText">But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Hi</div>
+    </li>
+    <li class="reciveTextHolder">
+        <div class="recieveText">Hello</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+    </li>
+    <li class="reciveTextHolder">
+        <div class="recieveText">Hello</div>
+    </li>
+    <li class="sendTextHolder">
+        <div class="sendText">Hi</div>
+    </li>*@
+</ul>
+
+
+@*<div class="chatInputArea">
+    <input type="text" />
+</div>
+
 <div>
-    <h3 class="center">Chat History</h3>    
+    <h3 class="center">Chat History</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
@@ -9,7 +74,7 @@
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">ID</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Message Send Name</font></b></th>
                     <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Message Received Name</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Message</font></b></th>                    
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Message</font></b></th>
                 </tr>
                 @if (Model != null && Model.lstMsg != null && Model.lstMsg.Count > 0)
                 {
@@ -19,9 +84,9 @@
                             <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ID</font></td>
                             <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.msg_send_ID</font></td>
                             <td width="7%" valign="top" align="right"><font size="1" face="Verdana">@item.msg_recv_ID</font></td>
-                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.send_message</font></td>                            
+                            <td width="8%" valign="top" align="right"><font size="1" face="Verdana">@item.send_message</font></td>
                         </tr>
-                    }                    
+                    }
                 }
                 else
                 {
@@ -31,5 +96,5 @@
                 }
             </tbody>
         </table>
-    </div>    
-</div>
+    </div>
+</div>*@

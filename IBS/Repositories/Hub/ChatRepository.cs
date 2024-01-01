@@ -49,13 +49,16 @@ namespace IBS.Repositories.Hub
             return result;
         }
 
-        public ChatMessage GetMessageList(string id)
+        public ChatMessage GetMessageList(string send_id, string recv_id)
         {
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
 
             model.lstMsg = (from a in context.T113ChatMasters
-                            where a.MsgRecvId == id
+                            orderby a.Id descending
+                            //where a.MsgRecvId == recv_id
+                            where ((a.MsgSendId == send_id && a.MsgRecvId == recv_id) 
+                            || (a.MsgSendId == recv_id && a.MsgRecvId == send_id))
                             select new ChatMessage
                             {
                                 msg_send_ID = a.MsgSendId,
@@ -73,10 +76,10 @@ namespace IBS.Repositories.Hub
 
             model.lstMsg = (from a in context.T113ChatMasters
                             join b in context.T09Ies on Convert.ToInt32(a.MsgRecvId) equals b.IeCd
-                            orderby a.Id descending
                             where a.MsgSendId == id
+                            orderby a.Id descending
                             select new ChatMessage
-                            {
+                            {                                
                                 msg_recv_ID = a.MsgRecvId,
                                 Name = b.IeName
                             }).Distinct().ToList();

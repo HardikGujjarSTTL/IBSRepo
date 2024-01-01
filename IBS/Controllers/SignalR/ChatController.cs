@@ -1,4 +1,5 @@
-﻿using IBS.Interfaces;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using IBS.Interfaces;
 using IBS.Interfaces.Hub;
 using IBS.Models;
 using IBS.Repositories.Hub;
@@ -24,6 +25,8 @@ namespace IBS.Controllers.SignalR
         {
             ChatMessage model = new ChatMessage();
             model = _chathub.GetMessageRecvList(UserName);
+            model.HostUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
+            model.msg_recv_ID = model.lstMsg.Select(x => x.msg_recv_ID).FirstOrDefault();
             return View(model);
         }
 
@@ -37,12 +40,20 @@ namespace IBS.Controllers.SignalR
             model.recv_message = message;
             var restl = _chathub.ChatMessageSave(model, UserName, UserId);
             await this.hubContext.Clients.All.SendAsync("messageReceivedFromApi", user, message);
-        }        
+        }
+
+        public IActionResult ChatUserReceiver()
+        {
+            ChatMessage model = new ChatMessage();
+            model = _chathub.GetMessageRecvList(UserName);
+            return PartialView(model);
+        }
 
         public IActionResult ChatMessageHistory(string id)
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(id);
+            model = _chathub.GetMessageList(UserName, id);
+            model.GUserName = UserName;
             return PartialView(model);
         }
     }
