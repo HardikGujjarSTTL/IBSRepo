@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -24,7 +25,7 @@ namespace IBS.Repositories
             this.pSendMailRepository = pSendMailRepository;
             this.config = _config;
         }
-        public DTResult<NCRRegister> GetDataList(DTParameters dtParameters)
+        public DTResult<NCRRegister> GetDataList(DTParameters dtParameters,string Region)
         {
             DTResult<NCRRegister> dTResult = new() { draw = 0 };
             IQueryable<NCRRegister>? query = null;
@@ -51,7 +52,7 @@ namespace IBS.Repositories
                     orderAscendingDirection = true;
                 }
 
-                string ToDate = null, FromDate = null, IENAME = null;
+                string ToDate = null, FromDate = null, IENAME = null, CASENO = null, BKNo = null, SetNo = null, NCNO = null;
 
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["selectedValue"]))
                 {
@@ -65,6 +66,22 @@ namespace IBS.Repositories
                 {
                     ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
                 }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CASENO"]))
+                {
+                    CASENO = Convert.ToString(dtParameters.AdditionalValues["CASENO"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BKNo"]))
+                {
+                    BKNo = Convert.ToString(dtParameters.AdditionalValues["BKNo"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["SetNo"]))
+                {
+                    SetNo = Convert.ToString(dtParameters.AdditionalValues["SetNo"]);
+                }
+                if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["NCNO"]))
+                {
+                    NCNO = Convert.ToString(dtParameters.AdditionalValues["NCNO"]);
+                }
 
                 NCRRegister model = new NCRRegister();
                 DataTable dt = new DataTable();
@@ -77,19 +94,12 @@ namespace IBS.Repositories
                 string formattedDate = parsedDate.ToString("dd/mm/yyyy");
                 string formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
 
-                try
-                {
-                    OracleParameter[] par = new OracleParameter[4];
-                    par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
-                    par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
-                    par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
-                    par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                    ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                OracleParameter[] par = new OracleParameter[4];
+                par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
+                par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
+                par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -115,6 +125,7 @@ namespace IBS.Repositories
 
                     if (!string.IsNullOrEmpty(searchBy))
                         query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                        || Convert.ToString(w.NC_NO).ToLower().Contains(searchBy.ToLower())
                         );
 
                     dTResult.recordsFiltered = query.Count();
