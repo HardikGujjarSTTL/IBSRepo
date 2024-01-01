@@ -11,14 +11,14 @@
         @*<div class="list-btn">
         <a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Add New User</a>
         </div>*@
-        
+
     </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Document Type </label>
-                    @Html.DropDownListFor(model => model.DocType, new SelectList(IBS.Models.Common.GetDocType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="GetDocSubType('')"})
+                    @Html.DropDownListFor(model => model.DocType, new SelectList(IBS.Models.Common.GetDocType(), "Value", "Text"), "--Select--", new { @class = "", onChange = "GetDocSubType('')" })
                     <span class="text-danger" id="spnErrorAuthLevl"></span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                     <label id="IEName" for="Name">INSTRUCTIONS TO IE </label>
                     @*@if (Model.DocType == "R")
                     {*@
-                    @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType(Model.DocType) , "Value", "Text"),"--Select--", new { @class = "" })
+                    @Html.DropDownListFor(model => model.DocSubType, new SelectList(IBS.Models.Common.GetDocSubType(Model.DocType), "Value", "Text"), "--Select--", new { @class = "" })
 
 
                     <span class="text-danger" id="spnErrorLlRef"></span>
@@ -36,7 +36,7 @@
             <div class="col-md-4 mb-3" id="divRegion" style="display:none;">
                 <div class="reference">
                     <label for="Name">Region </label>
-                    @Html.DropDownListFor(model => model.Region, new SelectList(IBS.Models.Common.GetRegionType() , "Value", "Text"), new { @class = ""})
+                    @Html.DropDownListFor(model => model.Region, new SelectList(IBS.Models.Common.GetRegionType(), "Value", "Text"), new { @class = "" })
                     <span class="text-danger" id="spnErrorAuthLevl"></span>
                 </div>
             </div>
@@ -48,19 +48,23 @@
         </div>
         <div class="row my-0">
             <div class="col-md-12 mb-3">
-                <label for="Reference" style="color:#ff0099;">Select Document Type & Its Sub-Type (if applicable) / Part or Full Document Name and Click on [Search] button to search for  desired document----></label>
+                <div class="alert alert-warning center">
+                    <label for="Reference" style="color:#ff0099;">
+                        Select Document Type & Its Sub-Type (if applicable) / Part or Full Document Name and Click on [Search] button to search for  desired document---->
+                    </label>
+                </div>
             </div>
             <div class="col-md-12 mb-3">
                 <div class="list-btn">
-                @*<a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>*@
-                <button type="button" class="formBtn Permission_Add" onclick="Save();">Search</button>
-            </div>
+                    @*<a asp-area="" asp-controller="DownloadDocuments" asp-action="Index" class="formBtn"> Search </a>*@
+                    <button type="button" class="formBtn Permission_Add" onclick="Save();">Search</button>
+                </div>
             </div>
         </div>
     </div>
     <div class="row my-0">
         <div class="col-md-12 mb-3">
-                <label for="Reference" id="lblDocName" style="color:mediumvioletred; display:none;"></label>
+            <h3 class="heading3"><label for="Reference" id="lblDocName" style="display:none;"></label></h3>
         </div>
     </div>
     <section class="table-section">
@@ -86,7 +90,7 @@
     </section>
 </div>
 
-@section scripts{
+@section scripts {
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -98,7 +102,7 @@
             const actiontype = urlParams.get('actiontype');
             if (actiontype == "CI") {
                 $("#DocType").val('R');
-                
+
             }
             else {
                 $("#DocType").val("");
@@ -155,30 +159,28 @@
                         $("#DocType").attr('disabled', 'disabled');
                         $("#DocSubType").attr('disabled', 'disabled');
 
-                        
+
                     }
                     else {
                         $("#DocType").removeAttr('disabled');
                         $("#DocSubType").removeAttr('disabled');
                     }
-                var DocType = $("#DocType option:selected").text();
-                var DocName = $("#DocSubType option:selected").text();
-                var Doc_Type_Name = DocType + " - " + DocName;
-                debugger
-                if($("#DocType").val() != "" && $("#DocSubType").val() != ""){
-                    $("#lblDocName").show();
-                    $("#lblDocName").text(Doc_Type_Name);
-                }
-                
-                else if($("#DocType").val() != "")
-                {
-                    $("#lblDocName").show();
-                    $("#lblDocName").text(DocType);
-                }
-                else
-                {
-                    $("#lblDocName").hide();
-                }
+                    var DocType = $("#DocType option:selected").text();
+                    var DocName = $("#DocSubType option:selected").text();
+                    var Doc_Type_Name = DocType + " - " + DocName;
+                    debugger
+                    if ($("#DocType").val() != "" && $("#DocSubType").val() != "") {
+                        $("#lblDocName").show();
+                        $("#lblDocName").text(Doc_Type_Name);
+                    }
+
+                    else if ($("#DocType").val() != "") {
+                        $("#lblDocName").show();
+                        $("#lblDocName").text(DocType);
+                    }
+                    else {
+                        $("#lblDocName").hide();
+                    }
                 }
             });
         }
@@ -192,23 +194,21 @@
             var DocSearch = $("#DocumentName").val();
 
             var DocTypeT = $("#DocType option:selected").text();
-                var DocNameT = $("#DocSubType option:selected").text();
-                var Doc_Type_Name = DocTypeT + " - " + DocNameT;
-                debugger
-                if(DocType != "" && DocSubType != ""){
-                    $("#lblDocName").show();
-                    $("#lblDocName").text(Doc_Type_Name);
-                }
-                else if(DocType != "")
-                {
-                    $("#lblDocName").show();
-                    $("#lblDocName").text(DocTypeT);
-                }
-                else
-                {
-                    $("#lblDocName").hide();
-                }
-            
+            var DocNameT = $("#DocSubType option:selected").text();
+            var Doc_Type_Name = DocTypeT + " - " + DocNameT;
+            debugger
+            if (DocType != "" && DocSubType != "") {
+                $("#lblDocName").show();
+                $("#lblDocName").text(Doc_Type_Name);
+            }
+            else if (DocType != "") {
+                $("#lblDocName").show();
+                $("#lblDocName").text(DocTypeT);
+            }
+            else {
+                $("#lblDocName").hide();
+            }
+
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -263,16 +263,15 @@
                             if (FileExists(fpath)) {
                                 html += "<a href='" + fpath + "' Font-Names='Verdana' Font-Size='8pt' target='_blank'>Testplan/Lab Test Reports</a><br/>";
                             }
-                            else
-                            {
+                            else {
                                 html += "<span Font-Names='Verdana' Font-Size='8pt' style='color:red;'>No Document Available!!!</span><br/>";
                             }
-                            
+
                             html += "</td>";
                             return html;
                         }
                     },
-                            
+
 
                     //{
                     //    data: null, orderable: false,
@@ -314,4 +313,4 @@
         }
 
     </script>
-    }
+}

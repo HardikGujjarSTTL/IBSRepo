@@ -87,6 +87,7 @@ namespace IBS.Repositories
                 SmtpClient smtpClient = new SmtpClient(SMTPServer, SMTPPort);
                 NetworkCredential nc = new NetworkCredential(SMTPUser, SMTPPass);
                 smtpClient.Credentials = nc;
+                smtpClient.UseDefaultCredentials = false;
                 smtpClient.EnableSsl = EnableSsl;
                 try
                 {

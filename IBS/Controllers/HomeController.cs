@@ -16,12 +16,16 @@ namespace IBS.Controllers
         private readonly IUserRepository userRepository;
         private readonly IWebHostEnvironment _env;
         public IConfiguration Configuration { get; }
+        private readonly IConfiguration config;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration)
+        public HomeController(IUserRepository _userRepository, IWebHostEnvironment env, IConfiguration configuration, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             userRepository = _userRepository;
             _env = env;
             Configuration = configuration;
+            pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
 
         public IActionResult Index()
@@ -58,43 +62,40 @@ namespace IBS.Controllers
                 string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
                 //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
 
-                loginModel.Password = encryptedPassword;
-
-                UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
-                if (userMaster != null)
+            loginModel.Password = encryptedPassword;
+            UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
+            if (userMaster != null)
+            {
+                //// temporary Commited - for local
+                //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
+                if (1 == 1)
                 {
-                    //// temporary Commited - for local
-                    //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
-                    if (1 == 1)
+                    string sender = "RITES/QA";
+                    Random random = new Random();
+                    string otp = Convert.ToString(random.Next(1000, 9999));
+                    string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
+                    //// temporary Commited - for local 
+                    //string responce = Models.Common.SendOTP(userMaster.MOBILE, message);
+                    //loginModel.OTP = otp;
+                    loginModel.OTP = "123";
+                    loginModel.MOBILE = userMaster.MOBILE;
+                    userRepository.SaveOTPDetails(loginModel);
+                    if (!string.IsNullOrEmpty(userMaster.Email))
                     {
-                        string sender = "RITES/QA";
-                        Random random = new Random();
-                        string otp = Convert.ToString(random.Next(1000, 9999));
-                        string message = otp + " is the One Time Password for verification of your login with RITES LTD- QA Division. Valid for 10 minutes. Please do not share with anyone." + "-" + sender;
-                        //// temporary Commited - for local 
-                        //string responce = Models.Common.SendOTP(userMaster.MOBILE, message);
-                        //loginModel.OTP = otp;
-                        loginModel.OTP = "123";
-                        loginModel.MOBILE = userMaster.MOBILE;
-                        userRepository.SaveOTPDetails(loginModel);
-                        string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
-                        string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
-                        return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
+                        userRepository.send_Vendor_Email(loginModel, userMaster.Email);
                     }
-                    else
-                    {
-                        AlertDanger("Mobile no. does not exist");
-                    }
+                    string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
+                    string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
+                    return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });
                 }
                 else
                 {
-                    AlertDanger("Invalid Username or Password.");
+                    AlertDanger("Mobile no. does not exist");
                 }
             }
-            else if (string.IsNullOrEmpty(loginModel.Password))
+            else
             {
-                AlertDanger("Password is required.");
-                return RedirectToAction("Index");
+                AlertDanger("Invalid Username or Password.");
             }
             return RedirectToAction("Index");
         }
@@ -206,19 +207,34 @@ namespace IBS.Controllers
                     string body = System.IO.File.ReadAllText(System.IO.Path.Combine(_env.WebRootPath, "EmailTemplates", "ForgotPassword.html"), Encoding.UTF8);
                     body = body.Replace("{{USERNAME}}", userMaster.UserName).Replace("{{RESETPASSURL}}", Configuration.GetSection("BaseURL").Value + Url.Action("ResetPassword", "Home", new { id = Common.EncryptQueryString(Convert.ToString(userMaster.FPUserID)), UserType = Common.EncryptQueryString(Convert.ToString(loginModel.UserType)) }));
                     EmailUtility emailUtility = new(Configuration);
-                    string error = emailUtility.SendEmail(new EmailDetails
+                    //string error = emailUtility.SendEmail(new EmailDetails
+                    //{
+                    //    Body = body,
+                    //    Subject = "Reset Password on IBS",
+                    //    //ToEmailID = userMaster.Email,
+                    //});
+
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
-                        Body = body,
-                        Subject = "Reset Password on IBS",
-                        //ToEmailID = userMaster.Email,
-                    });
-                    if (string.IsNullOrEmpty(error))
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.To = userMaster.Email;
+                        sendMailModel.Subject = "Reset Password on IBS";
+                        sendMailModel.Message = body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    }
+
+                    if (isSend)
                     {
                         AlertAddSuccess("Reset Password link has been sent to registered email id");
                         return RedirectToAction("Index", "Home");
+
                     }
                     else
-                        AlertDanger(error);
+                    {
+                        AlertAddSuccess("Error");
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                     AlertDanger("Invalid Username or Email-Id");

@@ -18,6 +18,8 @@
     <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatus" id="frmCallStatus">
         <input type="hidden" asp-for="ActionType" />
         <input type="hidden" asp-for="IeCd" />
+        <input type="hidden" asp-for="CallLetterDt" />
+
         <div class="accordion-body" style="overflow-x: auto;">
             <table>
                 @*<col style="width: 20%;" />
@@ -650,7 +652,7 @@
                     $('#RefreshAll').hide();
                     $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
-                     $('#CallCancelChargesdrp').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').hide();
                 } else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
@@ -721,7 +723,7 @@
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#ReasonFIFOdv').show();
-                     $('#CallCancelChargesdrp').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#AcceptReject').hide();
                     $("#ForARS").hide();
                     $('#CallCancelStatusdrp').hide();
@@ -889,7 +891,7 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
-                 $('#CallCancelChargesdrp').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -907,7 +909,7 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
-                 $('#CallCancelChargesdrp').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
@@ -1140,6 +1142,7 @@
         }
         function Accepted() {
             var formData = AjaxModel();
+
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
             var bknoaccpted = $('#DocBkNo').val();
             var setnoaccpted = $('#DocSetNo').val();
@@ -1197,11 +1200,11 @@
 
                 var uploadedDocumentsArray = (uploadedDocuments == "" || uploadedDocuments == null) ? [] : JSON.parse(uploadedDocuments);
 
-                if (uploadedDocumentsArray.length < 4){
+                if (uploadedDocumentsArray.length < 4) {
                     alert("Please select all files!");
                     return;
                 }
-               
+
             }
             if (ajaxData) {
                 for (var key in ajaxData) {
@@ -1245,7 +1248,7 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
-            
+
         }
 
         function SaveImages() {
@@ -1329,6 +1332,10 @@
             SaveSingleDocuments("tab-3");
 
             var ajaxData = AjaxModel();
+            formData.append("CallCancelCharges", $("#CanCharges").val());
+            formData.append("CallCancelStatus", $("#CallCancelStatusdrp").val());
+            formData.append("CallCancelStatusDesc", $("#CallCancelStatusdrp option:selected").text());
+            formData.append("CallLetterDt", $("#CallLetterDt").val());
 
             if (ajaxData) {
                 for (var key in ajaxData) {
@@ -1343,7 +1350,7 @@
                 var file = fileInput.defaultValue;
                 formData.append("UploadeFile", file);
             } else {
-                alert("Upload File");
+                alert("Please Upload Cancellation Document.");
                 return;
             }
 
@@ -1408,6 +1415,7 @@
             var PoDt = $('#PoDt').val();
             var RejectionCharge = $('#RejectionCharge').val();
             var IeCd = $('#IeCd').val();
+            var CallLetterDt = $("#CallLetterDt").val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1428,7 +1436,9 @@
                 DocBkNo: DocBkNo,
                 DocSetNo: DocSetNo,
                 RejectionCharge: RejectionCharge,
-                IeCd: IeCd
+                IeCd: IeCd,
+                CallCancelCharges: CallCancelCharges,
+                CallLetterDt: CallLetterDt
             };
 
             return formData;

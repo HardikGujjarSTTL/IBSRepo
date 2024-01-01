@@ -255,7 +255,9 @@
                 $('#RlyCd').val('@Model.RlyCd');
                 $('#PoiCd').val('@Model.PoiCd');
             }, 2000);
-            FillPurchaserCdForEdit('@Model.PurchaserCd');
+            if ('@Model.PurchaserCd' != null && '@Model.PurchaserCd' != "0") {
+                FillPurchaserCdForEdit('@Model.PurchaserCd');
+            }
             fill_manufacturer('@Model.PoiCd');
             if ('@Model.PoiCd' != "" && '@Model.PoiCd' != "0") {
                 GetManufVEND('@Model.PoiCd');

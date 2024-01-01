@@ -13,10 +13,16 @@ namespace IBS.Models
 
         [Required(ErrorMessage = "OTP is required.")]
         public string OTP { get; set; }
+
         public string MOBILE { get; set; }
+
+        public string EmailID { get; set; }
+
         public string DecryptUserName { get; set; }
+
         [Required(ErrorMessage = "User Type is required.")]
         public string UserType { get; set; }
+
         public string DecryptUserType { get; set; }
 
     }

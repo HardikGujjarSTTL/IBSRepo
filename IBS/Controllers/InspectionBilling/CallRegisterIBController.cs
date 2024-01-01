@@ -22,7 +22,7 @@ namespace IBS.Controllers.InspectionBilling
         private readonly ICallRegisterIBRepository callregisterRepository;
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration config;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace IBS.Controllers.InspectionBilling
             callregisterRepository = _callregisterRepository;
             iDocument = _iDocumentRepository;
             env = _environment;
-            _config = configuration;
+            config = configuration;
         }
 
         public IActionResult Index(string CaseNo, DateTime? _CallRecvDt, string CallSno)
@@ -145,15 +145,7 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.e_status == 1 && model.RejCanCall == null)
                 {
                     //Bhavesh Code SMS & Mail Code comment.
-                    if (Convert.ToBoolean(_config.GetSection("AppSettings")["SendMail"]) == true)
-                    {
-                        if (model.IeCd > 0)
-                        {
-                            Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
-                            AlertDanger("SMS Send Success...");
-                        }
-                    }
-                    if (Convert.ToBoolean(_config.GetSection("AppSettings")["SendSMS"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendSMS"]) == "1")
                     {
                         string emailResult = callregisterRepository.send_Vendor_Email(model);
                         if (emailResult == "success")
@@ -161,6 +153,15 @@ namespace IBS.Controllers.InspectionBilling
                             AlertDanger("Mail Send Success...");
                         }
                     }
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        if (model.IeCd > 0)
+                        {
+                            Task<string> smsResult = callregisterRepository.send_IE_smsAsync(model);
+                            AlertDanger("SMS Send Success...");
+                        }
+                    }
+                    
                 }
                 if (i != null)
                 {

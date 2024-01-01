@@ -171,7 +171,7 @@ namespace IBS.Repositories.Inspection_Billing
                 FINAL_OR_STAGE = Convert.ToString(row["FINAL_OR_STAGE"])
             }).FirstOrDefault();
 
-            if (ds.Tables[1].Rows.Count > 0)
+            if (ds.Tables[0].Rows.Count > 0 && ds.Tables[1].Rows.Count > 0)
             {
                 model.PREV_CALL_1 = (Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) : null;
                 model.PREV_CALL_2 = (Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) : null;
@@ -336,7 +336,7 @@ namespace IBS.Repositories.Inspection_Billing
                         _data.IeCd = IE;
                         _data.ClusterCode = Convert.ToInt32(model.IE_NAME);
                         _data.CoCd = Convert.ToInt32(Co.Value);
-                        _data.UserId = uModel.UserName.Substring(0, 8);
+                        _data.UserId = uModel.UserName.Length > 8 ? uModel.UserName.Substring(0, 8) : uModel.UserName;
                         _data.DepartmentCode = model.DEPT_DROPDOWN;
                         _data.Datetime = DateTime.Now;
                         _data.Updatedby = Convert.ToString(uModel.UserID);
@@ -830,7 +830,7 @@ namespace IBS.Repositories.Inspection_Billing
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -847,7 +847,7 @@ namespace IBS.Repositories.Inspection_Billing
                 if (vend_email == "")
                 {
                     bool isSend = false;
-                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.From = sender;
@@ -862,7 +862,7 @@ namespace IBS.Repositories.Inspection_Billing
                 else if (manu_mail == "")
                 {
                     bool isSend = false;
-                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.From = sender;
@@ -877,7 +877,7 @@ namespace IBS.Repositories.Inspection_Billing
                 else
                 {
                     bool isSend = false;
-                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.From = sender;
@@ -962,7 +962,7 @@ namespace IBS.Repositories.Inspection_Billing
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -979,7 +979,7 @@ namespace IBS.Repositories.Inspection_Billing
                 if (vend_email != "")
                 {
                     bool isSend = false;
-                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.From = sender;
@@ -994,7 +994,7 @@ namespace IBS.Repositories.Inspection_Billing
                 else if (manu_mail != "")
                 {
                     bool isSend = false;
-                    if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                     {
                         SendMailModel sendMailModel = new SendMailModel();
                         sendMailModel.From = sender;
@@ -1237,7 +1237,7 @@ namespace IBS.Repositories.Inspection_Billing
             if (vend_cd == mfg_cd && manu_mail != "")
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -1252,7 +1252,7 @@ namespace IBS.Repositories.Inspection_Billing
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = "nrinspn@gmail.com";
@@ -1267,7 +1267,7 @@ namespace IBS.Repositories.Inspection_Billing
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = "nrinspn@gmail.com";
@@ -1316,7 +1316,7 @@ namespace IBS.Repositories.Inspection_Billing
             if (!string.IsNullOrEmpty(controlling_email))
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = "nrinspn@gmail.com";
