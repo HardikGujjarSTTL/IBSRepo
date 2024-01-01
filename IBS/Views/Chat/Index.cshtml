@@ -14,7 +14,7 @@
 </div>
 <div class="task-listinput">
     <form role="form" asp-controller="" asp-action="" id="frmChatMessage">
-        <div class="accordion-body">
+        <div class="accordion-body chatArea">
 
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
@@ -27,7 +27,7 @@
                     <input type="text" class="input" asp-for="send_message">
                 </div>
             </div>
-            <div class="savenext-btn">
+            <div class="savenext-btn mb-5">
                 <button type="button" class="save-btn active" id="btnSave">Save</button>
                 <button type="button" class="save-btn active" id="btnSearch">Search</button>
             </div>
@@ -382,10 +382,7 @@
 
 <style type="text/css">
 
-    body {
-        font-family: 'Poppins';
-    }
-
+    .chatArea .chatBox{right:inherit!important; bottom:inherit!important;}
     .chatBox {
         width: 100%;
         height: calc(100vh - 20px);
@@ -397,7 +394,7 @@
 
     .chatBoxHeader {
         background-color: #008b29;
-        padding: 20px 20px;
+        padding: 10px 20px;
         color: #fff;
         display: flex;
         justify-content: space-between;
@@ -405,7 +402,7 @@
     }
 
         .chatBoxHeader h2 {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
             margin: 0px;
             padding: 0px;
@@ -416,7 +413,7 @@
             display: inline-flex;
             align-items: center;
             color: #008b29;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             padding: 5px 10px;
             height: 35px;
@@ -428,7 +425,7 @@
 
     .chatBoxBody {
         padding: 20px;
-        height: calc(100vh - 140px);
+        height: calc(100vh - 104px);
         overflow: auto;
     }
 
@@ -437,7 +434,7 @@
     }
 
     .chatBoxBody h4, .chatBoxHeadBody li h4 {
-        font-size: 15px;
+        font-size: 12px;
         font-weight: 500;
     }
 
@@ -529,6 +526,7 @@
             padding: 10px 15px;
             box-sizing: border-box;
             border: 1px solid #999;
+            background:#fff;
         }
 
     .chatBoxHeadBody ul, .chatBoxBody .chatBodyText {
@@ -583,10 +581,12 @@
     }
 
     .userSelect {
-        padding: 8px;
+        padding:2px 8px!important;
         max-width: 150px;
         border-radius: 6px;
         width: 100%;
+        background:#fff;
+        height:35px;
     }
 
     .messageBody {
@@ -600,7 +600,7 @@
 
         .userChatBox .chatBoxBody {
             padding: 20px;
-            height: calc(100vh - 200px);
+            height: calc(100vh - 168px);
         }
 
     .recieveText:after {
