@@ -58,9 +58,9 @@ namespace IBS.Controllers
             {
                 //AlertDanger("Password is required.");
                 //return RedirectToAction("Index");
-
-                string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
-                //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
+            }
+            string encryptedPassword = Common.getEncryptedText(loginModel.Password, "301ae92bb2bc7599");
+            //string DecryptPassword = Common.getDecryptedText(loginModel.Password, "301ae92bb2bc7599");
 
             loginModel.Password = encryptedPassword;
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
