@@ -289,6 +289,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T112HolidayDetail> T112HolidayDetails { get; set; }
 
+    public virtual DbSet<T113ChatMaster> T113ChatMasters { get; set; }
+
     public virtual DbSet<T11CallCancelCode> T11CallCancelCodes { get; set; }
 
     public virtual DbSet<T12BillPayingOfficer> T12BillPayingOfficers { get; set; }
@@ -12069,6 +12071,53 @@ public partial class ModelContext : DbContext
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasDefaultValueSql("null")
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
+        modelBuilder.Entity<T113ChatMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0011474");
+
+            entity.ToTable("T113_CHAT_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.ConnectionId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CONNECTION_ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Message)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("MESSAGE");
+            entity.Property(e => e.MsgRecvId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MSG_RECV_ID");
+            entity.Property(e => e.MsgSendId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MSG_SEND_ID");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)

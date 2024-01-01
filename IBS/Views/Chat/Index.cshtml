@@ -1,0 +1,217 @@
+﻿@model IBS.Models.ChatMessage
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>SignalR Chat Demo</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="" asp-action="" id="frmChatMessage">
+        @*<input type="hidden" asp-for="ConnectionId" />*@
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Client Name <i class="text-danger">*</i></label>
+                    @*<input type="text" class="input" asp-for="Name" maxlength="30" />*@
+                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetIENameIsStatusNull("N") , "Value", "Text"),"--Select--")
+                    <span asp-validation-for="msg_recv_ID" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Message</label>
+                    <input type="text" class="input" asp-for="send_message">
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" id="btnSave">Save</button>
+                <button type="button" class="save-btn active" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="msgdiv">
+        Hello
+    </div>
+
+    <div id="dvReportViewer"></div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+
+
+<!-- Include the SignalR library -->
+<script>
+
+    $(document).ready(function () {
+        debugger
+        var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:7047/chatHub").build();
+        var hubProxy = connection;
+
+        connection.start().then(function (event) {
+            // Connection to the hub is established
+            debugger
+            console.log("Connection started.");
+            connection.invoke("OnConnectedAsync").then(function (err) {
+                debugger
+                console.log("New User Connected with 1");
+            }).catch(function (err) {
+                return console.log(err.toString());
+            });
+        }).catch(function (err) {
+            return console.log(err.toString());
+        });
+
+        connection.on("NewUserConnected", function (conn) {
+            debugger
+            console.log(conn);
+        });
+
+        connection.on("messageReceivedFromApi", function (user, message) {
+            debugger
+            console.log("message received from API 1")
+            // Handle received messages
+            console.log(user + " says: " + message);
+        });
+
+        connection.on("MessageReceivedFromHub", function (user, message) {
+            debugger
+            console.log("message received from Hub 1")
+            // Handle received messages
+            var data = user + " says: " + message;
+            $("#msgdiv").html(data);
+            console.log(user + " says: " + message);
+        });
+
+
+
+        $("#btnSave").click(function (e) {
+            debugger
+            var user = $("#msg_recv_ID").val();
+            var message = $("#send_message").val();
+            //var model = $("#frmChatMessage").serialize();
+
+
+            var url = "@Url.Action("SendMessage", "Chat")?user=" + user + "&message=" + message;
+            $.post(url, function (response) {
+                console.log("Message send From MVC Controller");
+            });
+
+            //var url = "@Url.Action("SendMessage", "Chat")";
+            //$.post(url, model, function (response) {
+            //    console.log("Message send From MVC Controller");
+            //});
+            //$("#frmChatMessage").submit();
+
+
+            connection.invoke("BroadcastAsync", user, message).then(function (err) {
+                debugger
+                console.log("BroadcastAsync Call");
+            }).catch(function (err) {
+                return console.log(err.toString());
+            });
+
+            //connection.invoke("BroadcastAsync", model).then(function (err) {
+            //    debugger
+            //    console.log("BroadcastAsync Call");
+            //}).catch(function (err) {
+            //    return console.log(err.toString());
+            //});
+
+            connection.on("messageReceivedFromApi", function (user, message) {
+                debugger
+                console.log("message received from API 1")
+                // Handle received messages
+                console.log(user + " says: " + message);
+            });
+
+            //connection.on("messageReceivedFromApi", function (model) {
+            //    debugger
+            //    console.log("message received from API 1 with model");
+            //    // Handle received messages
+            //});
+
+            connection.on("MessageReceivedFromHub", function (user, message) {
+                debugger
+                console.log("message received from Hub 1")
+                // Handle received messages
+                var data = user + " says: " + message;
+                $("#msgdiv").html(data);
+                console.log(user + " says: " + message);
+            });
+
+            //connection.on("MessageReceivedFromHub", function (model) {
+            //    debugger
+            //    console.log("message received from Hub 1 with model");
+            //});
+            //e.preventDefault();
+        });
+
+        $("#btnSearch").click(function (e) {
+            debugger
+            var id = $("#msg_recv_ID").val();
+            //var url = "@Url.Action("ChatMessageHistory", "Chat")?id=" + id;
+            //$.get(url, function (response) {
+            //    console.log("Message send From MVC Controller");
+            //});
+
+            $("#dvReportViewer").load("@Url.Action("ChatMessageHistory", "Chat")", { id: id }, function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
+            });
+        });
+    })
+    //var connection = new signalR.HubConnectionBuilder().withUrl("/signalr").build();
+    
+
+
+    //function getConnection() {
+    //    // Set your SignalR hub URL
+    //    var connectionUrl = "/chatHub";
+
+    //    // Create a connection
+    //    var connection = new signalR.HubConnectionBuilder()
+    //        .withUrl(connectionUrl)
+    //        .withHubProtocol(new signalR.MessagePackHubProtocol())
+    //        .build();
+
+    //    return connection;
+    //}
+
+    //// Usage example:
+    //var connection = getConnection();
+
+
+    
+
+    
+
+
+
+    function addListeners() {
+
+        
+
+
+        //this.hubConnection.on("messageReceivedFromApi", (data: chatMesage) => {
+        //    console.log("message received from API Controller")
+        //    this.messages.push(data);
+        //})
+        //this.hubConnection.on("messageReceivedFromHub", (data: chatMesage) => {
+        //    console.log("message received from Hub")
+        //    this.messages.push(data);
+        //})
+        //this.hubConnection.on("newUserConnected", _ => {
+        //    console.log("new user connected")
+        //})
+    }
+
+
+
+
+</script>
+
