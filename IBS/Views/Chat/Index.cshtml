@@ -32,12 +32,6 @@
             <div class="chatBox">
                 <div class="chatBoxHeader">
                     <h2>Message</h2>
-                    <select class="userSelect">
-                        <option>Test 1</option>
-                        <option>Test 2</option>
-                        <option>Test 3</option>
-                        <option>Test 4</option>
-                    </select>
                 </div>
                 <div class="messageBody">
                     <div class="chatBoxBody chatLeftBoxBody">
@@ -244,7 +238,7 @@
     }
 
     .chatBoxHeader {
-        background-color: #008b29;
+        background-color: #017f6a;
         padding: 10px 20px;
         color: #fff;
         display: flex;
@@ -276,12 +270,13 @@
 
     .chatBoxBody {
         padding: 20px;
-        height: calc(100vh - 104px);
+        height: calc(100vh - 68px);
         overflow: auto;
     }
 
     .chatLeftBoxBody {
-        width: 25%;
+        width: 30%;
+        border-right:1px solid #d1d1d1;
     }
 
     .chatBoxBody h4, .chatBoxHeadBody li h4 {
@@ -311,6 +306,17 @@
         align-items: center;
         position: relative;
         padding-right: 35px;
+        postion:relative;
+    }
+    .chatBoxBody li.active:before{
+        content:"";
+        background: rgba(255,255,255,0.5);
+        height: 55px;
+        width: 100%;
+        position: absolute;
+        z-index: 0;
+        border-radius: 5px;
+        left: -10px;
     }
 
     .chatBoxIcon {
@@ -412,15 +418,17 @@
         margin: 5px 0;
         padding: 10px;
         position: relative;
+        width:95%;
     }
 
     .chatBoxBody .chatBodyText .sendText {
-        background: #c4dfcf;
+        background: #e6feda;
         border-radius: 6px;
         margin: 5px 0;
         padding: 10px;
-        text-align: right;
+        text-align: left;
         position: relative;
+        width: 95%;
     }
 
     .chatBoxBody .chatBodyText .reciveTextHolder {
@@ -445,13 +453,14 @@
     }
 
     .userChatBox {
-        width: 75%;
+        width: 65%;
+        margin-left:4.5%;
         position: relative;
     }
 
         .userChatBox .chatBoxBody {
             padding: 20px;
-            height: calc(100vh - 168px);
+            height: calc(100vh - 137px);
         }
 
     .recieveText:after {
@@ -479,9 +488,22 @@
         position: absolute;
         pointer-events: none;
         border-color: rgba(196, 223, 207, 0);
-        border-left-color: #c4dfcf;
+        border-left-color: #e6feda;
         border-width: 10px;
         margin-top: -10px;
+    }
+
+    .submitChatBtn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: #F66A2F;
+        border-radius: 35px;
+        padding: 5px;
+        width:60px;
+        height:42px;
+        color:#fff;
+        border: 4px solid #F66A2F;
     }
 </style>
 
