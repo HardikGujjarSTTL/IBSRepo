@@ -1,107 +1,122 @@
-﻿
-@model IBS.Models.NCRRegister
+﻿@model IBS.Models.NCRRegister
 
 @{
     ViewData["Title"] = "Create NCR";
 }
 
 <style>
-   .btncls{
-       margin-top: 30px;
-   }
+    .btncls {
+        margin-top: 30px;
+    }
 
 </style>
 <div class="row my-0">
     <div class="list-inner">
         <div class="tast-list">
-            <h2>New Register</h2>
+            <h2>NCR Register</h2>
         </div>
     </div>
 </div>
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="NCRRegister" asp-action="LoadTable" data-ajax-method="post" id="frmNCRDetails">
-    
+
     <div class="accordion-body" id="BYIE">
         <div class="row my-0">
-    <div class="col-md-3 mb-3">
-        <label for="PropertyId">IE</label>
+            <div class="col-md-3 mb-3">
+                <label for="PropertyId">IE</label>
                 @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
-        <span id="spnIeCd" class="text-danger"></span>
-    </div>
-    <div class="col-md-3 mb-3">
-        <label for="Reference">Date From.</label>
+                <span id="spnIeCd" class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Date From.</label>
                 <input type="text" class="input datepicker" asp-for="FromDate" id="FromDate" placeholder="DD/MM/YYYY" required>
-                <span  class="text-danger field-validation-error" id="spnFromDate" ></span>
-    </div>
-    <div class="col-md-3 mb-3">
-        <label for="Reference">To</label>
+                <span class="text-danger field-validation-error" id="spnFromDate"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">To</label>
                 <input type="text" class="input datepicker" asp-for="ToDate" id="ToDate" placeholder="DD/MM/YYYY" required>
-                <span class="text-danger field-validation-error" id="spnToDate" ></span>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="savenext-btn">
-            <button type="button" class="save-btn active btncls" id="btnsearch" onclick="Submit();">Search</button>
-        </div>
-    </div>
-    </div>
-</div>
-
-
-    
-        <section class="table-section">
-            <div class="task-listinput">
-                <div class="dash-table">
-                    <table id="dtNCR" class="table-responsive">
-                        <thead>
-                            <tr>
-                                <th>NC Status</th>
-                                <th>Case No.</th>
-                                <th>Call Date</th>
-                                <th>Call SNO.</th>
-                                <th>IE</th>
-                                <th>Book NO.</th>
-                                <th>Set NO.</th>
-                                <th>Consignee</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <span class="text-danger field-validation-error" id="spnToDate"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Case No. </label>
+                <input type="text" class="input" ASP-FOR="CaseNo" maxlength="50" />
+                <span class="text-danger field-validation-error" ></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Book No. </label>
+                <input type="text" class="input" ASP-FOR="BKNo" maxlength="50" />
+                <span class="text-danger field-validation-error" ></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Set No. </label>
+                <input type="text" class="input" ASP-FOR="SetNo" maxlength="50" />
+                <span class="text-danger field-validation-error"></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="Reference">NCR No. </label>
+                <input type="text" class="input" ASP-FOR="NCRCode" maxlength="50" />
+                <span class="text-danger field-validation-error" ></span>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active btncls" id="btnsearch" onclick="Submit();">Search</button>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
-   
+
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtNCR" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>NC Status</th>
+                            <th>Case No.</th>
+                            <th>Call Date</th>
+                            <th>Call SNO.</th>
+                            <th>IE</th>
+                            <th>Book NO.</th>
+                            <th>Set NO.</th>
+                            <th>Consignee</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </form>
 
 @section scripts{
-     <partial name="_DataTablesScriptsPartial" />
+    <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
-     <script type="text/javascript">
-         function Submit() {
+    <script type="text/javascript">
+        function Submit() {
             var IsValid = true;
             $("#spnFromDate").html("");
             $("#spnToDate").html("");
             $("#spnIeCd").html("");
 
-            if ($("#FromDate").val() == "") {
-                $("#spnFromDate").html("Enter From Date.");
-                IsValid = false;
+            if ($("#FromDate").val() != "") {
+                if ($("#ToDate").val() == "") {
+                    $("#spnToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
             }
-            if ($("#ToDate").val() == "") {
-                $("#spnToDate").html("Enter To Date.");
-                IsValid = false;
-            }
-            if ($("#IENAME").val() == "") {
-                $("#spnIeCd").html("Select IE.");
-                IsValid = false;
+            if ($("#ToDate").val() != "") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
             }
 
             if (!IsValid) return;
             var IsValid = true;
-            
+
             if ($("#frmNCRDetails").valid()) {
                 $("#frmNCRDetails").submit();
             }
@@ -109,10 +124,10 @@
         }
 
 
-         function InitializeDatatable() {
+        function InitializeDatatable() {
             var selectedValue = $("#IENAME").val();
-            var NCNO = $("#NCNO").val();
-            var CASENO = $("#CASENO").val();
+            var NCNO = $("#NCRCode").val();
+            var CASENO = $("#CaseNo").val();
             var BKNo = $("#BKNo").val();
             var SetNo = $("#SetNo").val();
             var FromDate = $("#FromDate").val();
@@ -120,7 +135,7 @@
 
             var ajaxUrl = "@Url.Action("LoadTable")";
 
-             $("#dtNCR").DataTable({
+            $("#dtNCR").DataTable({
                 stateSave: false,
                 autoWidth: true,
                 scrollX: true,
@@ -139,6 +154,9 @@
                         var AdditionalValues = {
                             "NCNO": NCNO,
                             "CASENO": CASENO,
+                            "BKNo": BKNo,
+                            "SetNo": SetNo,
+                            "NCNO": NCNO,
                             "FromDate": FromDate,
                             "ToDate": ToDate,
                             "selectedValue": selectedValue
@@ -164,23 +182,6 @@
                     { data: "BKNo", width: "10%" },
                     { data: "SetNo", width: "10%" },
                     { data: "CONSIGNEE", width: "10%" },
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var NC_NO = data.NC_NO;
-                    //        var CaseNo = data.CaseNo;
-                    //        var BKNo = data.BKNo;
-                    //        var SetNo = data.SetNo;
-                    //        var editUrl = '@Url.Action("Manage", "NCRRegister")?NC_NO=' + NC_NO + '&Actions=' + "M";;
-                    //        var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";;
-                          
-                    //        var html = '<div>';
-                    //        html += '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + AddUrl + '\" class=\"edit\"><i class=\"fa fa-plus Permission_Add\" title="Add"></i></a>';
-                    //        html += '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                    //        html += '</div></div></div>';
-                    //        return html;
-                    //    }
-                    //},
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -192,7 +193,7 @@
                             var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";
                             if (NC_NO != null) {
                                 var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_Add\" title="Edit"></i></a>';
-                            }else{
+                            } else {
                                 var html = '<a href=\"' + AddUrl + '\" class=\"edit\"><i class=\"fa fa-plus Permission_Add\" title="Add" style="margin:10px;"></i>';
                             }
                             html += '</div>';
@@ -204,9 +205,9 @@
             });
         }
 
-     
+
         $("#NCNO").on("input", function () {
-            $("[data-valmsg-for='NC_NO']").hide(); 
+            $("[data-valmsg-for='NC_NO']").hide();
         });
         $("#CASENO").on("input", function () {
             $("[data-valmsg-for='CaseNo']").hide();
@@ -264,9 +265,9 @@
             }
         });
 
-     </script>
+    </script>
 }
 
 
 
-     
+
