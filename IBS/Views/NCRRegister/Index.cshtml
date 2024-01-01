@@ -101,21 +101,21 @@
             $("#spnToDate").html("");
             $("#spnIeCd").html("");
 
-            //if ($("#FromDate").val() == "") {
-            //    $("#spnFromDate").html("Enter From Date.");
-            //    IsValid = false;
-            //}
-            //if ($("#ToDate").val() == "") {
-            //    $("#spnToDate").html("Enter To Date.");
-            //    IsValid = false;
-            //}
-            //if ($("#IENAME").val() == "") {
-            //    $("#spnIeCd").html("Select IE.");
-            //    IsValid = false;
-            //}
+            if ($("#FromDate").val() != "") {
+                if ($("#ToDate").val() == "") {
+                    $("#spnToDate").html("Enter To Date.");
+                    IsValid = false;
+                }
+            }
+            if ($("#ToDate").val() != "") {
+                if ($("#FromDate").val() == "") {
+                    $("#spnFromDate").html("Enter From Date.");
+                    IsValid = false;
+                }
+            }
 
-            //if (!IsValid) return;
-            //var IsValid = true;
+            if (!IsValid) return;
+            var IsValid = true;
 
             if ($("#frmNCRDetails").valid()) {
                 $("#frmNCRDetails").submit();
