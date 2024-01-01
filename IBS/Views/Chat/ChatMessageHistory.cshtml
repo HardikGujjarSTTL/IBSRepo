@@ -7,7 +7,7 @@
         {
             foreach(var item in Model.lstMsg)
             {
-                if(Model.GUserName == item.msg_recv_ID)
+                if(Model.GUserName == item.msg_send_ID)
                 {
                     <li class="sendTextHolder">
                         <div class="sendText">@item.send_message</div>
