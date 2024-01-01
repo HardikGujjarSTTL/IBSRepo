@@ -11,10 +11,14 @@ namespace IBS.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly ModelContext context;
+        private readonly IConfiguration config;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public UserRepository(ModelContext context)
+        public UserRepository(ModelContext context, IConfiguration _config, ISendMailRepository _pSendMailRepository)
         {
             this.context = context;
+            config = _config;
+            pSendMailRepository = _pSendMailRepository;
         }
 
         public void Add(UserModel model)
@@ -310,6 +314,7 @@ namespace IBS.Repositories
                 userSessionModel.UserID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
                 userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
                 userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
+                userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAILID"]).Trim();
             }
             else
             {
@@ -448,7 +453,7 @@ namespace IBS.Repositories
             return ieModel;
         }
 
-        public void ChangePassword(string UserId, String NewPassword ,string UserType)
+        public void ChangePassword(string UserId, String NewPassword, string UserType)
         {
             if (UserType == "USERS")
             {
@@ -918,6 +923,36 @@ namespace IBS.Repositories
                 }
             }
             return false;
+        }
+
+
+        public string send_Vendor_Email(LoginModel model, string EmailID)
+        {
+            string MailID = Convert.ToString(config.GetSection("AppSettings")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("AppSettings")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("AppSettings")["MailSmtpClient"]);
+
+            string email = "";
+            string mail_body = "Dear Sir/Madam,<br><br>";
+
+            mail_body = mail_body + "OTP for Client Login is: " + model.OTP + ". This OTP is valid for 10 Mins only. <br><br>";
+            mail_body = mail_body + "Thanks for using RITES Inspection Services. <br><br>";
+            mail_body = mail_body + "<b>RITES LTD.</b>";
+            string sender = "";
+            sender = "nrinspn@rites.com";
+            bool isSend = false;
+
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                sendMailModel.From = sender;
+                sendMailModel.To = EmailID;
+                sendMailModel.Subject = "Your OTP For Client Login By RITES";
+                sendMailModel.Message = mail_body;
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
+
+            return email;
         }
     }
 }

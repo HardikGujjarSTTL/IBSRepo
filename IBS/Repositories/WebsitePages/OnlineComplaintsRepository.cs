@@ -172,7 +172,7 @@ namespace IBS.Repositories.WebsitePages
             try
             {
                 bool isSend = false;
-                if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     isSend = pSendMailRepository.SendMail(SendMailModel, null);
                 }

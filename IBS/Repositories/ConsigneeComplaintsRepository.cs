@@ -787,7 +787,7 @@ namespace IBS.Repositories
                 //SendMailModel.Message = mail_body;
             }
             bool isSend = false;
-            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
             {
                 isSend = pSendMailRepository.SendMail(SendMailModel, null);
             }
@@ -933,7 +933,7 @@ namespace IBS.Repositories
                 //SendMailModel.Message = mail_body;
             }
             bool isSend = false;
-            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
             {
                 isSend = pSendMailRepository.SendMail(SendMailModel, null);
             }

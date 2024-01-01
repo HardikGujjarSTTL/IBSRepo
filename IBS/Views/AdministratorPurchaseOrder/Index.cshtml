@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <ul class="radioListForm">
                     <li>
-                        <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
+                        <input type="radio" class="billInvoiceClass" id="rdbRailway" checked name="Railway" value="Bill_No" onchange="FillRailwayCode()">
                         <label for="Reference" class="billInvoiceClass">Railway</label><br>
                     </li>
                     <li>
@@ -44,7 +44,7 @@
             </div>
             <div class="row my-0">
             <div class="col-md-3 mb-3">
-                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetBillPayingOfficer() , "Value", "Text"),"--Select--")
+                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode("R"), "Value", "Text"), "--Select--")
             </div>
             <div class="col-md-2 mb-3">
                 <div class="list-btn">

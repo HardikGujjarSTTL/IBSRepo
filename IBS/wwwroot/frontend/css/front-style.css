@@ -511,7 +511,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .servicesList li, .kipList li{ width:33%; background:#e9fbff; box-shadow:2px 2px 4px 2px #d1d1d1; margin-bottom:10px; padding:20px; border-radius:2px; text-align:center; min-height:85px; align-items:center; font-weight:600; display:flex; justify-content:space-between;}
 .servicesList li{ text-align:left; display:flex; justify-content:space-between;}
 .servicesList li .subText{ font-size:13px;}
-.servicesList li .icons{ position:relative; transition:all 0.2s ease;}
+.servicesList li .icons{ position:relative; transition:all 0.2s ease; text-align:center;}
 .servicesList li .icons img{ width:85%; position:relative; z-index:1;}
 .servicesList li .icons:before{content: ""; width: 70px; height: 70px; border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; background:rgba(165,201,209,0.2);}
 .servicesList li:hover .icons{ transform:scale(1.1);}

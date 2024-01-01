@@ -25,7 +25,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
+            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters,Region);
             return Json(dTResult);
         }
 

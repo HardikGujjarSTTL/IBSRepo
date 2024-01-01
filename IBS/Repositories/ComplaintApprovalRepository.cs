@@ -407,7 +407,7 @@ namespace IBS.Repositories
             string mailBody = "Dear Sir/Madam,\n\n Online Consignee Complaint vide Rej Memo Letter dated:  " + complaint.RejMemoNo + " for JI of material against PO No. - " + model.Contract + " dated - " + model.Date + ", on date: " + complaint.TempComplaintDt + ". The Complaint is rejected due to following Reason:- " + model.Reasonforreject + ", so Complaint not registered. \n\n Thanks for using RITES Inspection Services. \n NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). \n\n" + wRegion + ".";
 
             bool isSend = false;
-            if (Convert.ToBoolean(config.GetSection("AppSettings")["SendMail"]) == true)
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
             {
                 SendMailModel SendMailModel = new SendMailModel();
                 SendMailModel.To = complaint.ConsigneeEmail; ;
