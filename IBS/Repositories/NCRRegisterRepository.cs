@@ -627,7 +627,7 @@ namespace IBS.Repositories
             var emailQuery = (from t09 in context.T09Ies
                               join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
                               where t09.IeCd == ieCdFromDataRow
-                              select t09.IeEmail + ";" + t08.CoEmail).FirstOrDefault();
+                              select t09.IeEmail + "," + t08.CoEmail).FirstOrDefault();
 
             string emailAddresses = emailQuery ?? string.Empty;
 
