@@ -55,7 +55,7 @@ namespace IBS.Repositories.Hub
             model.lstMsg = new List<ChatMessage>();
 
             model.lstMsg = (from a in context.T113ChatMasters
-                            orderby a.Id descending
+                            orderby a.Id 
                             //where a.MsgRecvId == recv_id
                             where ((a.MsgSendId == send_id && a.MsgRecvId == recv_id) 
                             || (a.MsgSendId == recv_id && a.MsgRecvId == send_id))
