@@ -4,6 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
+
+
+
 <div class="list-inner">
     <div class="tast-list">
         <h2>SignalR Chat Demo</h2>
@@ -11,13 +14,12 @@
 </div>
 <div class="task-listinput">
     <form role="form" asp-controller="" asp-action="" id="frmChatMessage">
-        @*<input type="hidden" asp-for="ConnectionId" />*@
         <div class="accordion-body">
+
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Client Name <i class="text-danger">*</i></label>
-                    @*<input type="text" class="input" asp-for="Name" maxlength="30" />*@
-                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetIENameIsStatusNull("N") , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetIENameIsStatusNull("N"), "Value", "Text"), "--Select--")
                     <span asp-validation-for="msg_recv_ID" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -29,8 +31,172 @@
                 <button type="button" class="save-btn active" id="btnSave">Save</button>
                 <button type="button" class="save-btn active" id="btnSearch">Search</button>
             </div>
+
+            <div class="chatBox">
+                <div class="chatBoxHeader">
+                    <h2>Message</h2>
+                    <select class="userSelect">
+                        <option>Test 1</option>
+                        <option>Test 2</option>
+                        <option>Test 3</option>
+                        <option>Test 4</option>
+                    </select>
+                </div>
+                <div class="messageBody">
+                    <div class="chatBoxBody chatLeftBoxBody">
+                        <ul>
+                            @{
+                                if(Model.lstMsg.Count > 0)
+                                {
+                                    foreach (var item in Model.lstMsg)
+                                    {
+                                        <li>
+                                            <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                                            <div class="chatBoxInfo">
+                                                <h4>@item.Name</h4>
+                                            </div>
+                                        </li>
+                                    }                                    
+                                }
+                            }
+                            @* <li>
+                                <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Deep Ravrani</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg2">AS</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Ajay Sharma</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg3">BR</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Bhavin Rathod</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg4">RB</div>
+                                <div class="chatBoxInfo">
+                                    <h4> Rahul Banna </h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg5">YP</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Yadav Paras</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg6">CV</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Chauhan Vijay</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg7">JS</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Jaydeep Sanchaniya</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Deep Ravrani</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg2">AS</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Ajay Sharma</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg3">BR</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Bhavin Rathod</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg4">RB</div>
+                                <div class="chatBoxInfo">
+                                    <h4> Rahul Banna </h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg5">YP</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Yadav Paras</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg6">CV</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Chauhan Vijay</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="chatBoxIcon chatBoxIconBg7">JS</div>
+                                <div class="chatBoxInfo">
+                                    <h4>Jaydeep Sanchaniya</h4>
+                                </div>
+                            </li> *@
+                        </ul>
+                    </div>
+                    <div class="userChatBox">
+                        <div class="chatBoxBody">
+                            <ul class="chatBodyText">
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">Hello</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Hi</div>
+                                </li>
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Hi</div>
+                                </li>
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">Hello</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Hi</div>
+                                </li>
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Hi</div>
+                                </li>
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">Hello</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                </li>
+                                <li class="reciveTextHolder">
+                                    <div class="recieveText">Hello</div>
+                                </li>
+                                <li class="sendTextHolder">
+                                    <div class="sendText">Hi</div>
+                                </li>
+                            </ul>
+                            <div class="chatInputArea">
+                                <input type="text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </form>
+
 
     <div id="msgdiv">
         Hello
@@ -44,12 +210,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
 
 
-<!-- Include the SignalR library -->
 <script>
 
     $(document).ready(function () {
         debugger
-        var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:7047/chatHub").build();
+        var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44301/chatHub").build();
         var hubProxy = connection;
 
         connection.start().then(function (event) {
@@ -166,7 +331,7 @@
         });
     })
     //var connection = new signalR.HubConnectionBuilder().withUrl("/signalr").build();
-    
+
 
 
     //function getConnection() {
@@ -186,15 +351,15 @@
     //var connection = getConnection();
 
 
-    
 
-    
+
+
 
 
 
     function addListeners() {
 
-        
+
 
 
         //this.hubConnection.on("messageReceivedFromApi", (data: chatMesage) => {
@@ -214,4 +379,258 @@
 
 
 </script>
+
+<style type="text/css">
+
+    body {
+        font-family: 'Poppins';
+    }
+
+    .chatBox {
+        width: 100%;
+        height: calc(100vh - 20px);
+        background-color: #e6edec;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .chatBoxHeader {
+        background-color: #008b29;
+        padding: 20px 20px;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .chatBoxHeader h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .chatBoxHeader .btn {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            color: #008b29;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            height: 35px;
+        }
+
+            .chatBoxHeader .btn:hover {
+                background-color: #fff;
+            }
+
+    .chatBoxBody {
+        padding: 20px;
+        height: calc(100vh - 140px);
+        overflow: auto;
+    }
+
+    .chatLeftBoxBody {
+        width: 25%;
+    }
+
+    .chatBoxBody h4, .chatBoxHeadBody li h4 {
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .chatBoxBody h4, .chatBoxBody p, .chatBoxHeadBody li p {
+        margin: 0;
+        padding: 0px;
+    }
+
+    .chatBoxBody ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .chatBoxBody li:not(:last-child) {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .chatBoxBody li {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-right: 35px;
+    }
+
+    .chatBoxIcon {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        margin: 0 10px 0 0;
+    }
+
+    .chatBoxIconBg1 {
+        background-color: #edcea5;
+        color: #a25600;
+    }
+
+    .chatBoxIconBg2 {
+        background-color: #a2d2ff;
+        color: #0f62b0;
+    }
+
+    .chatBoxIconBg3 {
+        background-color: #83c5be;
+        color: #1e7f75;
+    }
+
+    .chatBoxIconBg4 {
+        background-color: #ffddd2;
+        color: #ba4a25;
+    }
+
+    .chatBoxIconBg5 {
+        background-color: #ffb3c6;
+        color: #bf2b51;
+    }
+
+    .chatBoxIconBg6 {
+        background-color: #cbdfbd;
+        color: #4a8b1b;
+    }
+
+    .chatBoxIconBg7 {
+        background-color: #ced9c0;
+        color: #5b7a10;
+    }
+
+    .chatInputArea {
+        background: #d1d1d1;
+        padding: 10px;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
+
+        .chatInputArea input[type="text"] {
+            border-radius: 30px;
+            width: 100%;
+            padding: 10px 15px;
+            box-sizing: border-box;
+            border: 1px solid #999;
+        }
+
+    .chatBoxHeadBody ul, .chatBoxBody .chatBodyText {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .chatBoxHeadBody li {
+        display: flex;
+        align-items: center;
+    }
+
+    .chatBoxBody .chatBodyText {
+        padding-bottom: 50px;
+    }
+
+        .chatBoxBody .chatBodyText li {
+            display: flex;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+    .chatBoxHeadBody li h4 {
+        margin: 0;
+    }
+
+    .chatBoxBody .chatBodyText .recieveText {
+        background: #fff;
+        border-radius: 6px;
+        margin: 5px 0;
+        padding: 10px;
+        position: relative;
+    }
+
+    .chatBoxBody .chatBodyText .sendText {
+        background: #c4dfcf;
+        border-radius: 6px;
+        margin: 5px 0;
+        padding: 10px;
+        text-align: right;
+        position: relative;
+    }
+
+    .chatBoxBody .chatBodyText .reciveTextHolder {
+        justify-content: start;
+    }
+
+    .chatBoxBody .chatBodyText .sendTextHolder {
+        justify-content: end;
+    }
+
+    .userSelect {
+        padding: 8px;
+        max-width: 150px;
+        border-radius: 6px;
+        width: 100%;
+    }
+
+    .messageBody {
+        display: flex;
+    }
+
+    .userChatBox {
+        width: 75%;
+        position: relative;
+    }
+
+        .userChatBox .chatBoxBody {
+            padding: 20px;
+            height: calc(100vh - 200px);
+        }
+
+    .recieveText:after {
+        right: 100%;
+        top: 20px;
+        border: solid transparent;
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(255, 255, 255, 0);
+        border-right-color: #ffffff;
+        border-width: 10px;
+        margin-top: -10px;
+    }
+
+    .sendText:after {
+        left: 100%;
+        top: 20px;
+        border: solid transparent;
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(196, 223, 207, 0);
+        border-left-color: #c4dfcf;
+        border-width: 10px;
+        margin-top: -10px;
+    }
+</style>
 

@@ -6,5 +6,6 @@ namespace IBS.Interfaces.Hub
     {
         int ChatMessageSave(ChatMessage model, string userName,int userID);
         ChatMessage GetMessageList(string id);
+        ChatMessage GetMessageRecvList(string id);
     }
 }

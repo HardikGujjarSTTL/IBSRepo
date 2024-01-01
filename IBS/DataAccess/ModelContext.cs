@@ -9653,6 +9653,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserEmail)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("USER_EMAIL");
             entity.Property(e => e.UserName)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -12097,7 +12101,7 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .HasColumnType("DATE")
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
@@ -12114,6 +12118,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("MSG_SEND_ID");
+            entity.Property(e => e.RecvMessage)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("RECV_MESSAGE");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
