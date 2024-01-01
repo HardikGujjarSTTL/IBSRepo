@@ -55,7 +55,10 @@ namespace IBS.Controllers
                     loginModel.OTP = "123";
                     loginModel.MOBILE = userMaster.MOBILE;
                     userRepository.SaveOTPDetails(loginModel);
-                    string isSend = userRepository.send_Vendor_Email(loginModel);
+                    if (!string.IsNullOrEmpty(userMaster.Email))
+                    {
+                        userRepository.send_Vendor_Email(loginModel, userMaster.Email);
+                    }
                     string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
                     string EncryptUserType = Common.EncryptQueryString(loginModel.UserType);
                     return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName, UserType = EncryptUserType });

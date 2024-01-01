@@ -42,6 +42,6 @@ namespace IBS.Interfaces
 
         public UserModel FindByIDForResetPass(string UserId, string UserType);
 
-        public string send_Vendor_Email(LoginModel model);
+        public string send_Vendor_Email(LoginModel model, string EmailID);
     }
 }
