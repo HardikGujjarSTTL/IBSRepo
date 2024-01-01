@@ -5177,3 +5177,132 @@ BEGIN
 END;
 /
 
+create or replace PROCEDURE SP_GET_POMASTERLIST_For_Vendor (
+    p_VendCd IN NUMBER,
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on the given criteria
+    SELECT COUNT(*) INTO total_records
+    FROM T80_PO_MASTER m
+         JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+         LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+         LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE m.VEND_CD = p_VendCd
+        AND (m.Isdeleted is null OR m.Isdeleted =0) 
+      AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+      AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_PO_NO || '%'))
+      AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Return total records count
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+
+    -- Retrieve paginated data
+    OPEN p_result_cursor FOR
+        SELECT * FROM (
+            SELECT m.CASE_NO as CaseNo,
+                   m.PO_NO as PoNo,
+                   m.PO_DT AS PoDt,
+                   (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government',
+                           'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+                   m.REAL_CASE_NO as RealCaseNo,
+                   (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+                   (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                    NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') ||
+                    TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+                   m.REMARKS as Remarks,
+                   m.RLY_NONRLY as RlyNonrly,
+                   m.RLY_CD AS MainrlyCd,
+                   m.RLY_CD AS RlyCds,
+                   ROWNUM rnum
+            FROM T80_PO_MASTER m
+                 JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+                 LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+                 LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+            WHERE m.VEND_CD = p_VendCd
+              AND (m.Isdeleted is null OR m.Isdeleted =0)   
+              AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+              AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+              AND (p_PO_DT IS NULL OR TO_CHAR(m.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            ORDER BY m.CASE_NO ASC
+        ) t
+        WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+        
+END SP_GET_POMASTERLIST_For_Vendor;
+/
+
+CREATE OR REPLACE PROCEDURE SP_GET_POMASTERLIST_For_Client (
+    p_rly_cd IN VARCHAR2,
+    p_RlyNonrly IN VARCHAR2,
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on the given criteria
+    SELECT COUNT(*) INTO total_records
+    FROM T80_PO_MASTER m
+         JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+         LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+         LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE m.RLY_CD = p_rly_cd
+      AND m.RLY_NONRLY = p_RlyNonrly
+      AND (m.Isdeleted IS NULL OR m.Isdeleted = 0) 
+      AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+      AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_PO_NO || '%'))
+      AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Return total records count
+    OPEN p_result_records FOR SELECT total_records AS total_records FROM DUAL;
+
+    -- Retrieve paginated data
+    OPEN p_result_cursor FOR
+        SELECT * FROM (
+            SELECT m.CASE_NO AS CaseNo,
+                   m.PO_NO AS PoNo,
+                   m.PO_DT AS PoDt,
+                   (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government',
+                           'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+                   m.REAL_CASE_NO AS RealCaseNo,
+                   (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+                   (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                    NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') ||
+                    TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+                   m.REMARKS AS Remarks,
+                   m.RLY_NONRLY AS RlyNonrly,
+                   m.RLY_CD AS MainrlyCd,
+                   m.RLY_CD AS RlyCds,
+                   ROWNUM rnum
+            FROM T80_PO_MASTER m
+                 JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+                 LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+                 LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+            WHERE m.RLY_CD = p_rly_cd
+              AND m.RLY_NONRLY = p_RlyNonrly
+              AND (m.Isdeleted IS NULL OR m.Isdeleted = 0)   
+              AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+              AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+              AND (p_PO_DT IS NULL OR TO_CHAR(m.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            ORDER BY m.CASE_NO ASC
+        )
+        WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+
+END SP_GET_POMASTERLIST_For_Client;
+
+
+/
+

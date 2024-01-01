@@ -11,7 +11,28 @@
             <a asp-area="" asp-controller="ClientPurchaseOrder" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New PO Master</a>
         </div>
     </div>
-    <section class="table-section">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="reference">Ref No.</label>
+                <input type="text" class="input" id="txtCaseNumber" autocomplete="on">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">PO/Offer Letter No.</label>
+                <input type="text" class="input" id="txtPONumber">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">PO Date</label>
+                <input type="text" class="input datepicker" id="txtPODate">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="Search();">search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section" id="dvdtPOMaster" style="display:none;">
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtPOMaster" class="table-responsive nowrap">
@@ -43,11 +64,17 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
-        $(function () {
+        // $(function () {
+        //     InitializePOMasterDatatable();
+        // });
+        function Search() {
+            $("#dvdtPOMaster").css("display", "block");
             InitializePOMasterDatatable();
-        });
-
+        }
         function InitializePOMasterDatatable() {
+            var CaseNo = $("#txtCaseNumber").val();
+            var PoNo = $("#txtPONumber").val();
+            var PoDt = $("#txtPODate").val();
             $("#dtPOMaster").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -65,6 +92,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            CaseNo: CaseNo, PoNo: PoNo, PoDt: PoDt
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -106,7 +134,15 @@
                     },
                     { data: "CaseNo" },
                     { data: "PoNo" },
-                    { data: "PoDtDate" },
+                    {
+                        data: "PoDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "RlyCd" },
                     { data: "VendorName" },
                     { data: "ConsigneeSName" },
