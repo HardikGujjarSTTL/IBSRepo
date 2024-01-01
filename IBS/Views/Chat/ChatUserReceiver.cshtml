@@ -7,7 +7,7 @@
             {
                 foreach (var item in Model.lstMsg)
                 {
-                    <li>
+                    <li class="active">
                         <div class="chatBoxIcon chatBoxIconBg1">DR</div>
                         <div class="chatBoxInfo">
                             <h4 onclick="GetChatMessageList(@item.msg_recv_ID.Trim())">@item.Name</h4>
