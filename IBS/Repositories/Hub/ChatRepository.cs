@@ -65,5 +65,24 @@ namespace IBS.Repositories.Hub
                             }).ToList();
             return model;
         }
+
+        public ChatMessage GetMessageRecvList(string id)
+        {
+            ChatMessage model = new ChatMessage();
+            model.lstMsg = new List<ChatMessage>();
+
+            model.lstMsg = (from a in context.T113ChatMasters
+                            join b in context.T09Ies on Convert.ToInt32(a.MsgRecvId) equals b.IeCd
+                            orderby a.Id descending
+                            where a.MsgSendId == id
+                            select new ChatMessage
+                            {
+                                msg_recv_ID = a.MsgRecvId,
+                                Name = b.IeName
+                            }).Distinct().ToList();
+
+            return model;
+
+        }
     }
 }

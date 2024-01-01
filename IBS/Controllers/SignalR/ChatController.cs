@@ -20,10 +20,10 @@ namespace IBS.Controllers.SignalR
         }
 
 
-        public IActionResult Index(string id)
+        public IActionResult Index()
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(id);
+            model = _chathub.GetMessageRecvList(UserName);
             return View(model);
         }
 

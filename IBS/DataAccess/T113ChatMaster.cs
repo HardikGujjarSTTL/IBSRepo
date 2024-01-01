@@ -19,11 +19,13 @@ public partial class T113ChatMaster
 
     public int? Createdby { get; set; }
 
-    public DateTime? Createddate { get; set; }
+    public DateTimeOffset? Createddate { get; set; }
 
     public int? Updatedby { get; set; }
 
     public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? RecvMessage { get; set; }
 }
