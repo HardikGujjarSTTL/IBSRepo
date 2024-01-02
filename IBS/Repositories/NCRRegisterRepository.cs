@@ -608,7 +608,7 @@ namespace IBS.Repositories
                         NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n<br/>";
                         NC_REASONS += $"Case No. {row["CASE_NO"]}\n<br/>";
                         NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n<br/>";
-                        NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
+                        NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n<br/>";
                         NC_REASONS += $"IE: {row["IE_NAME"]}\n<br/>";
                         NC_REASONS += $"CM: {row["CO_NAME"]}\n<br/>";
                     }

@@ -113,7 +113,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="reference">
                                 <label for="Reference">NCR No.</label>
-                                <input type="text" asp-for="NC_NO" maxlength="100"  readonly="true" style="text-transform: uppercase;" required>
+                                <input type="text" asp-for="NC_NO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                             </div>
                         </div>
                     }
@@ -214,13 +214,17 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
+        debugger;
         $("#nccodeother").hide();
         $("#ncrcodes").hide();
         $("#ncrclass").hide();
         $('#btnsendIE').prop('disabled', true);
+        var NC_NO = $("#NC_NO").val();
+        if (NC_NO != "" && NC_NO != null && NC_NO != undefined) {
+            $('#btnsendIE').prop('disabled', false);
+        }
         var NCR = $("#NCRClass").val();
         if (NCR != "") {
-            $('#btnsendIE').prop('disabled', false);
             $('#NCRClass').trigger('change');
         }
         InitializeDatatable();
@@ -399,7 +403,7 @@
                         ShowHideMsgNew(true, data.alertMessage);
                         window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
-                } 
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
             }
