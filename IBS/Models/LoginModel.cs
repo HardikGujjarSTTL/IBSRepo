@@ -47,6 +47,7 @@ namespace IBS.Models
         public string MOBILE { get; set; }
         public int CoCd { get; set; }
         public string FPUserID { get; set; }
+        public int MasterID { get; set; }
     }
 
     public class ForgotPasswordModel

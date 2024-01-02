@@ -10,23 +10,23 @@
     </div>
 </div>
 <div class="task-listinput">
-    <form role="form" asp-controller="" asp-action="" id="frmChatMessage">
+    <form role="form" id="frmChatMessage">
         <div class="accordion-body chatArea">
 
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
-                    <label for="Reference">Client Name <i class="text-danger">*</i></label>
-                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetIENameIsStatusNull("N"), "Value", "Text"), "--Select--")
+                    <label for="Reference">User Name</label>
+                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
                     <span asp-validation-for="msg_recv_ID" class="text-danger"></span>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Message</label>
-                    <input type="text" class="input" asp-for="send_message">
-                </div>
+                @*<div class="col-md-4 mb-3">
+                <label for="Reference">Message</label>
+                <input type="text" class="input" asp-for="send_message">
+                </div>*@
             </div>
             <div class="savenext-btn mb-5">
-                <button type="button" class="save-btn active" id="btnSave">Save</button>
-                <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                <button type="button" class="save-btn active" id="btnSave" onclick="SaveMessage();">Save</button>
+                @*<button type="button" class="save-btn active" id="btnSearch">Search</button>*@
             </div>
 
             <div class="chatBox">
@@ -50,19 +50,49 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
 
 <script>
+    var HostUrl = "@Model.HostUrl" + "/chatHub";
+    var connection = new signalR.HubConnectionBuilder().withUrl(HostUrl).build();
     function GetUserReceiverList() {
-        $(".chatLeftBoxBody").load("@Url.Action("ChatUserReceiver", "Chat")", function (response) {
+        //$(".chatLeftBoxBody").load("@Url.Action("ChatUserReceiver", "Chat")", function (response) {
+        //    $(".chatLeftBoxBody").empty();
+        //    $(".chatLeftBoxBody").html(response);
+        //});
+
+        $.ajax({
+            url: '@Url.Action("ChatUserReceiver", "Chat")',
+            type: 'POST',
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
             debugger
-            $(".chatLeftBoxBody").empty();
-            $(".chatLeftBoxBody").html(response);
+            if (response != null) {
+                $(".chatLeftBoxBody").html("");
+                $(".chatLeftBoxBody").html(response);
+                //$("#chatLeftBoxBody").modal('show');
+            }
         });
     }
 
     function GetChatMessageList(id) {
         //var id = "@Model.msg_recv_ID";
-        $(".chatRightBoxBody").load("@Url.Action("ChatMessageHistory", "Chat")", { id: id }, function (response) {
-            $(".chatRightBoxBody").empty();
-            $(".chatRightBoxBody").html(response);
+        //$(".chatRightBoxBody").load("@Url.Action("ChatMessageHistory", "Chat")", { id: id }, function (response) {
+        //    $(".chatRightBoxBody").empty();
+        //    $(".chatRightBoxBody").html(response);
+        //});
+
+        $.ajax({
+            url: '@Url.Action("ChatMessageHistory", "Chat")/'+id,
+            type: 'POST',
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+            if (response != null) {
+                $(".chatRightBoxBody").html("");
+                $(".chatRightBoxBody").html(response);
+                //$("#chatLeftBoxBody").modal('show');
+            }
         });
     }
 
@@ -70,15 +100,13 @@
         var id = "@Model.msg_recv_ID";
         GetUserReceiverList();
         GetChatMessageList(id);
-        debugger
-        var HostUrl = "@Model.HostUrl" + "/chatHub";
-        console.log(HostUrl);
-        var connection = new signalR.HubConnectionBuilder().withUrl(HostUrl).build();
-        var hubProxy = connection;
 
+        var hubProxy = null;
+        debugger
         connection.start().then(function (event) {
             // Connection to the hub is established
             debugger
+            hubProxy = connection;
             console.log("Connection started.");
             connection.invoke("OnConnectedAsync").then(function (err) {
                 debugger
@@ -99,6 +127,7 @@
             debugger
             console.log("message received from API 1")
             // Handle received messages
+            GetChatMessageList(user);
             console.log(user + " says: " + message);
         });
 
@@ -107,127 +136,86 @@
             console.log("message received from Hub 1")
             // Handle received messages
             var data = user + " says: " + message;
-            $("#msgdiv").html(data);
+            //$(".recieveText").html(data);
+            GetChatMessageList(user);
+            console.log(user + " says: " + message);
+
+        });
+    })
+
+    function SaveMessage() {
+        //$("#btnSave").click(function (e) {
+        debugger
+        var user = $("#msg_recv_ID").val();
+        var message = $("#txtMsg").val();
+        //var model = $("#frmChatMessage").serialize();
+
+        var Recv_ID = "@Model.msg_recv_ID";
+
+        if (user == "" && Recv_ID == "") {
+            return;
+        }
+        if (user == "") {
+            user = Recv_ID;
+        }
+
+        var url = "@Url.Action("SendMessage", "Chat")?user=" + user + "&message=" + message;
+        $.post(url, function (response) {
+            console.log("Message send From MVC Controller");
+        });
+
+        connection.invoke("BroadcastAsync", user, message).then(function (err) {
+            debugger
+            console.log("BroadcastAsync Call");
+        }).catch(function (err) {
+            return console.log(err.toString());
+        });
+
+        //connection.invoke("BroadcastAsync", model).then(function (err) {
+        //    debugger
+        //    console.log("BroadcastAsync Call");
+        //}).catch(function (err) {
+        //    return console.log(err.toString());
+        //});
+
+        connection.on("messageReceivedFromApi", function (user, message) {
+            debugger
+            console.log("message received from API 1")
+            // Handle received messages
             console.log(user + " says: " + message);
         });
 
+        //connection.on("messageReceivedFromApi", function (model) {
+        //    debugger
+        //    console.log("message received from API 1 with model");
+        //    // Handle received messages
+        //});
 
-
-        $("#btnSave").click(function (e) {
+        connection.on("MessageReceivedFromHub", function (user, message) {
             debugger
-            var user = $("#msg_recv_ID").val();
-            var message = $("#send_message").val();
-            //var model = $("#frmChatMessage").serialize();
-
-
-            var url = "@Url.Action("SendMessage", "Chat")?user=" + user + "&message=" + message;
-            $.post(url, function (response) {
-                console.log("Message send From MVC Controller");
-            });
-
-            //var url = "@Url.Action("SendMessage", "Chat")";
-            //$.post(url, model, function (response) {
-            //    console.log("Message send From MVC Controller");
-            //});
-            //$("#frmChatMessage").submit();
-
-
-            connection.invoke("BroadcastAsync", user, message).then(function (err) {
-                debugger
-                console.log("BroadcastAsync Call");
-            }).catch(function (err) {
-                return console.log(err.toString());
-            });
-
-            //connection.invoke("BroadcastAsync", model).then(function (err) {
-            //    debugger
-            //    console.log("BroadcastAsync Call");
-            //}).catch(function (err) {
-            //    return console.log(err.toString());
-            //});
-
-            connection.on("messageReceivedFromApi", function (user, message) {
-                debugger
-                console.log("message received from API 1")
-                // Handle received messages
-                console.log(user + " says: " + message);
-            });
-
-            //connection.on("messageReceivedFromApi", function (model) {
-            //    debugger
-            //    console.log("message received from API 1 with model");
-            //    // Handle received messages
-            //});
-
-            connection.on("MessageReceivedFromHub", function (user, message) {
-                debugger
-                console.log("message received from Hub 1")
-                // Handle received messages
-                var data = user + " says: " + message;
-                $("#msgdiv").html(data);
-                console.log(user + " says: " + message);
-            });
-
-            //connection.on("MessageReceivedFromHub", function (model) {
-            //    debugger
-            //    console.log("message received from Hub 1 with model");
-            //});
-            //e.preventDefault();
+            console.log("message received from Hub 1")
+            // Handle received messages
+            var data = user + " says: " + message;
+            //$(".recieveText").html(data);
+            console.log(user + " says: " + message);
         });
-    })
-    //var connection = new signalR.HubConnectionBuilder().withUrl("/signalr").build();
 
-
-
-    //function getConnection() {
-    //    // Set your SignalR hub URL
-    //    var connectionUrl = "/chatHub";
-
-    //    // Create a connection
-    //    var connection = new signalR.HubConnectionBuilder()
-    //        .withUrl(connectionUrl)
-    //        .withHubProtocol(new signalR.MessagePackHubProtocol())
-    //        .build();
-
-    //    return connection;
-    //}
-
-    //// Usage example:
-    //var connection = getConnection();
-
-
-
-
-
-
-
-
-    function addListeners() {
-
-
-
-
-        //this.hubConnection.on("messageReceivedFromApi", (data: chatMesage) => {
-        //    console.log("message received from API Controller")
-        //    this.messages.push(data);
-        //})
-        //this.hubConnection.on("messageReceivedFromHub", (data: chatMesage) => {
-        //    console.log("message received from Hub")
-        //    this.messages.push(data);
-        //})
-        //this.hubConnection.on("newUserConnected", _ => {
-        //    console.log("new user connected")
-        //})
+        //connection.on("MessageReceivedFromHub", function (model) {
+        //    debugger
+        //    console.log("message received from Hub 1 with model");
+        //});
+        //e.preventDefault();
+        //});
     }
-
-
-
-
 </script>
 
 <style type="text/css">
 
-    .chatArea .chatBox{right:inherit!important; bottom:inherit!important;}
+    .chatArea .chatBox {
+        right: inherit !important;
+        bottom: inherit !important;
+    }
+
     .chatBox {
         width: 100%;
         height: calc(100vh - 20px);
@@ -276,7 +264,7 @@
 
     .chatLeftBoxBody {
         width: 30%;
-        border-right:1px solid #d1d1d1;
+        border-right: 1px solid #d1d1d1;
     }
 
     .chatBoxBody h4, .chatBoxHeadBody li h4 {
@@ -306,18 +294,19 @@
         align-items: center;
         position: relative;
         padding-right: 35px;
-        postion:relative;
+        postion: relative;
     }
-    .chatBoxBody li.active:before{
-        content:"";
-        background: rgba(255,255,255,0.5);
-        height: 55px;
-        width: 100%;
-        position: absolute;
-        z-index: 0;
-        border-radius: 5px;
-        left: -10px;
-    }
+
+        .chatBoxBody li.active:before {
+            content: "";
+            background: rgba(255,255,255,0.5);
+            height: 55px;
+            width: 100%;
+            position: absolute;
+            z-index: 0;
+            border-radius: 5px;
+            left: -10px;
+        }
 
     .chatBoxIcon {
         width: 40px;
@@ -383,7 +372,7 @@
             padding: 10px 15px;
             box-sizing: border-box;
             border: 1px solid #999;
-            background:#fff;
+            background: #fff;
         }
 
     .chatBoxHeadBody ul, .chatBoxBody .chatBodyText {
@@ -418,7 +407,7 @@
         margin: 5px 0;
         padding: 10px;
         position: relative;
-        width:95%;
+        width: 95%;
     }
 
     .chatBoxBody .chatBodyText .sendText {
@@ -440,12 +429,12 @@
     }
 
     .userSelect {
-        padding:2px 8px!important;
+        padding: 2px 8px !important;
         max-width: 150px;
         border-radius: 6px;
         width: 100%;
-        background:#fff;
-        height:35px;
+        background: #fff;
+        height: 35px;
     }
 
     .messageBody {
@@ -454,7 +443,7 @@
 
     .userChatBox {
         width: 65%;
-        margin-left:4.5%;
+        margin-left: 4.5%;
         position: relative;
     }
 
@@ -500,9 +489,9 @@
         background: #F66A2F;
         border-radius: 35px;
         padding: 5px;
-        width:60px;
-        height:42px;
-        color:#fff;
+        width: 60px;
+        height: 42px;
+        color: #fff;
         border: 4px solid #F66A2F;
     }
 </style>

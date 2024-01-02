@@ -367,6 +367,7 @@ namespace IBS.Repositories
                 userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+                userSessionModel.MasterID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
                 userSessionModel.LoginType = model.UserType.Trim();
             }
             else
@@ -958,6 +959,6 @@ namespace IBS.Repositories
             }
 
             return email;
-        }
+        }        
     }
 }
