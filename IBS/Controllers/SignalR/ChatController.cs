@@ -24,7 +24,7 @@ namespace IBS.Controllers.SignalR
         public IActionResult Index()
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageRecvList(UserName);
+            model = _chathub.GetMessageRecvList(Master_ID);
             model.HostUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
             model.msg_recv_ID = model.lstMsg.Select(x => x.msg_recv_ID).FirstOrDefault();
             return View(model);
@@ -34,26 +34,28 @@ namespace IBS.Controllers.SignalR
         public async Task SendMessage(string user, string message)
         {
             ChatMessage model = new ChatMessage();
-            model.msg_send_ID = UserId;
-            model.msg_recv_ID = UserId;
-            model.send_message = message;
-            model.recv_message = message;
-            var restl = _chathub.ChatMessageSave(model, UserName, UserId);
-            await this.hubContext.Clients.All.SendAsync("messageReceivedFromApi", user, message);
+            model.msg_send_ID = Master_ID;
+            model.msg_recv_ID = Convert.ToInt32(user);
+            model.message = message;
+            var res = _chathub.ChatMessageSave(model);
+            if (res > 0)
+                await this.hubContext.Clients.All.SendAsync("messageReceivedFromApi", Master_ID, message);
+            else
+                await this.hubContext.Clients.All.SendAsync("messageReceivedFromApi", res, message);
         }
 
         public IActionResult ChatUserReceiver()
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageRecvList(UserName);
+            model = _chathub.GetMessageRecvList(Master_ID);
             return PartialView(model);
         }
 
         public IActionResult ChatMessageHistory(int id)
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(UserId, id);
-            model.GUserName = UserName;
+            model = _chathub.GetMessageList(Master_ID, id);
+            model.Master_ID = Master_ID;
             return PartialView(model);
         }
     }

@@ -7,8 +7,9 @@
             {
                 foreach (var item in Model.lstMsg)
                 {
+                    var shortName = !string.IsNullOrEmpty(item.Name) ? item.Name.Split(" ")[0].Substring(0, 1) : "";
                     <li class="active">
-                        <div class="chatBoxIcon chatBoxIconBg1">DR</div>
+                        <div class="chatBoxIcon chatBoxIconBg1">@shortName</div>
                         <div class="chatBoxInfo">
                             <h4 onclick="GetChatMessageList(@item.msg_recv_ID)">@item.Name</h4>
                         </div>

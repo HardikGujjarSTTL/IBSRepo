@@ -4,6 +4,7 @@ using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -61,37 +62,66 @@ namespace IBS.Repositories.InspectionBilling
             DateTime? _CallRecvDt = Callrecvdt == "" ? null : DateTime.ParseExact(Callrecvdt, "dd/MM/yyyy", null);
             Callsno = Callsno.ToString() == "" ? string.Empty : Callsno.ToString();
 
-            query = from l in context.ViewGetInspectionCertDetails
-                    where l.Regioncode == Region
-                          && (Caseno == null || Caseno == "" || l.Caseno == Caseno)
-                          && (Callrecvdt == null || Callrecvdt == "" || l.Callrecvdt == _CallRecvDt)
-                          && (Callsno == null || Callsno == "" || l.Callsno == Convert.ToInt32(Callsno))
-                    select new InspectionCertModel
-                    {
-                        Caseno = l.Caseno,
-                        Callrecvdt = l.Callrecvdt,
-                        Callsno = Convert.ToInt32(l.Callsno),
-                        Icno = l.Icno,
-                        Bkno = l.Bkno,
-                        Setno = l.Setno,
-                        Status = l.Status,
-                        Iesname = l.Iesname,
-                        Consignee = l.Consignee,
-                        Callstatusdesc = l.Callstatusdesc,
-                        Regioncode = l.Regioncode,
-                        Callstatus = l.Callstatus,
-                    };
+            OracleParameter[] par = new OracleParameter[8];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_caseno", OracleDbType.Varchar2, Caseno, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_callrecvdt", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, Callsno, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[6] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            dTResult.recordsTotal = query.Count();
+            var ds = DataAccessDB.GetDataSet("GET_INSPECTION_CERT_DETAILS", par, 2);
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Caseno).ToLower().Contains(searchBy.ToLower())
-                );
+            //query = from l in context.ViewGetInspectionCertDetails
+            //        where l.Regioncode == Region
+            //              && (Caseno == null || Caseno == "" || l.Caseno == Caseno)
+            //              && (Callrecvdt == null || Callrecvdt == "" || l.Callrecvdt == _CallRecvDt)
+            //              && (Callsno == null || Callsno == "" || l.Callsno == Convert.ToInt32(Callsno))
+            //        select new InspectionCertModel
+            //        {
+            //            Caseno = l.Caseno,
+            //            Callrecvdt = l.Callrecvdt,
+            //            Callsno = Convert.ToInt32(l.Callsno),
+            //            Icno = l.Icno,
+            //            Bkno = l.Bkno,
+            //            Setno = l.Setno,
+            //            Status = l.Status,
+            //            Iesname = l.Iesname,
+            //            Consignee = l.Consignee,
+            //            Callstatusdesc = l.Callstatusdesc,
+            //            Regioncode = l.Regioncode,
+            //            Callstatus = l.Callstatus,
+            //        };
 
-            dTResult.recordsFiltered = query.Count();
+            //dTResult.recordsTotal = query.Count();
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => Convert.ToString(w.Caseno).ToLower().Contains(searchBy.ToLower())
+            //    );
+            //dTResult.recordsFiltered = query.Count();
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+            //return dTResult;
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            List<InspectionCertModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<InspectionCertModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
 
+            query = list.AsQueryable();
+
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
