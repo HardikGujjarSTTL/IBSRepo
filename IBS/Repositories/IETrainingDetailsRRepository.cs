@@ -117,7 +117,7 @@ namespace IBS.Repositories
 
         public IETrainingDetailsModel IEFetchData(string Name)
         {
-
+              
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[2];
@@ -145,6 +145,41 @@ namespace IBS.Repositories
                         Name = Convert.ToString(row["NAME"]),
 
                     };
+                }
+                else
+                {
+                    int ie = Convert.ToInt32(Name);
+                    var IE = context.T09Ies.Find(ie);
+                    if (IE == null)
+                        return model;
+                    else
+                    {
+                        DateTime? ieDob = IE.IeDob;
+                        DateTime? ieDoj = IE.IeJoinDt;
+                        string dob = "";
+                        string doj = "";
+                        if(ieDob ==null && ieDoj == null)
+                        {
+                            dob = "";
+                            doj = "";
+                        }
+                        else if(ieDob != null)
+                        {
+                            dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
+                            //doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
+                        }
+                        else if (ieDoj != null)
+                        {
+                            //dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
+                            doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
+                        }
+
+                        model.EmpNo = IE.IeEmpNo;
+                        model.DOB = dob;
+                        model.DOJ = doj;
+                        model.Discipline = IE.IeDepartment;
+                        return model;
+                    }
                 }
 
                 return model;
@@ -228,6 +263,9 @@ namespace IBS.Repositories
             {
                 //model.ID = Convert.ToDecimal(user.Id);
                 model.EmpNo = IE.IeEmpNo;
+                model.DOB = IE.IeDob.ToString();
+                model.DOJ = IE.IeJoinDt.ToString();
+                model.Discipline = IE.IeDepartment;
                 return model;
             }
         }
