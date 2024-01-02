@@ -1,0 +1,28 @@
+﻿@model IBS.Models.ChatMessage
+<ul class="chatBodyText">
+    @{
+        if (Model.lstMsg.Count > 0)
+        {
+            foreach (var item in Model.lstMsg)
+            {
+                if (Model.ID == item.msg_send_ID)
+                {
+                    <li class="sendTextHolder">
+                        <div class="sendText">@item.send_message</div>
+                    </li>
+                }
+                else
+                {
+                    <li class="reciveTextHolder">
+                        <div class="recieveText">@item.send_message</div>
+                    </li>
+                }
+            }
+        }
+    }
+</ul>
+
+<div class="chatInputArea">
+    <input type="text" />
+    <button class="submitChatBtn"><span class="fa fa-paper-plane"></span></button>
+</div>

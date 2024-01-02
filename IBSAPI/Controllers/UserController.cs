@@ -143,10 +143,10 @@ namespace IBSAPI.Controllers
                 UserSessionModel userMaster = userRepository.FindByUsernameOrEmail(forgotPasswordModel.UserName, forgotPasswordModel.UserType);
                 if (userMaster != null)
                 {
-                    if (userMaster.FPUserID.Trim() == "84997")
-                    {
-                        userMaster.Email = "urvesh.modi@silvertouch.com";
-                    }
+                    //if (userMaster.FPUserID.Trim() == "84997")
+                    //{
+                    //    userMaster.Email = "urvesh.modi@silvertouch.com";
+                    //}
                     if (userMaster.Email != null && userMaster.Email != "")
                     {
                         string RootHostName = HttpContext.Request.Host.Value;

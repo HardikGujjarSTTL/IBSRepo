@@ -2,6 +2,7 @@ using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
+using IBS.Interfaces.Hub;
 using IBS.Interfaces.IE;
 
 using IBS.Interfaces.Inspection_Billing;
@@ -15,7 +16,7 @@ using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
-
+using IBS.Repositories.Hub;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
@@ -254,6 +255,13 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
 builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
+// SignalR Class and Configuration
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+//builder.Services.AddScoped<IChatHub>();
+
+// SignalR Configuration
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -289,4 +297,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// SignalR Configuration
+//app.MapHub<ChatHub>("/signalr");
+app.MapHub<ChatHub>("/chatHub");
+
 app.Run();
+

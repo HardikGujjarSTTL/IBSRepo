@@ -5302,7 +5302,82 @@ BEGIN
         WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
 
 END SP_GET_POMASTERLIST_For_Client;
-
-
 /
 
+create or replace PROCEDURE SP_GET_DEO_VENDOR_PURCHASE_ORDERS (
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_region_code VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    SELECT COUNT(*) INTO total_records
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code;
+
+    OPEN p_result_records FOR
+    SELECT total_records as total_records FROM DUAL;
+
+    OPEN p_result_cursor FOR
+    SELECT * FROM (
+    SELECT
+        ROWNUM rnum,
+         p.CASE_NO CaseNo,
+        p.PURCHASER_CD PurchaserCd,
+        p.STOCK_NONSTOCK StockNonstock,
+        CASE
+            WHEN p.RLY_NONRLY = 'R' THEN 'Railway'
+            WHEN p.RLY_NONRLY = 'P' THEN 'Private'
+            WHEN p.RLY_NONRLY = 'S' THEN 'State Government'
+            WHEN p.RLY_NONRLY = 'F' THEN 'Foreign Railways'
+            WHEN p.RLY_NONRLY = 'U' THEN 'PSU'
+            ELSE p.RLY_NONRLY
+        END AS RlyNonrly,
+        p.PO_OR_LETTER PoOrLetter,
+        p.PO_NO PoNo,
+        p.PO_DT PoDt,
+        p.RECV_DT RecvDt,
+        p.VEND_CD VendCd,
+        p.RLY_CD RlyCd,
+        p.REGION_CODE RegionCode,
+        p.USER_ID UserId,
+        p.DATETIME Datetime,
+        p.REMARKS Remarks,
+        p.POI_CD PoiCd,
+        p.ISDELETED Isdeleted,
+        p.CREATEDDATE Createddate,
+        p.updateddate Updateddate,
+        v.vend_name VendName,
+        p.real_case_no RealCaseNo
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code
+    ORDER BY p.CASE_NO ASC
+    )
+    WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+
+END SP_GET_DEO_VENDOR_PURCHASE_ORDERS;
+/
