@@ -157,7 +157,7 @@ namespace IBS.Repositories
             DataTable dt = new DataTable();
             DataSet ds;
 
-            OracleParameter[] par = new OracleParameter[16];
+            OracleParameter[] par = new OracleParameter[19];
             par[0] = new OracleParameter("p_case_no", OracleDbType.Varchar2, caseno, ParameterDirection.Input);
             par[1] = new OracleParameter("p_region", OracleDbType.Varchar2, region, ParameterDirection.Input);
             par[2] = new OracleParameter("p_po_no", OracleDbType.Varchar2, pono, ParameterDirection.Input);
@@ -173,8 +173,11 @@ namespace IBS.Repositories
             par[12] = new OracleParameter("p_bill_no", OracleDbType.Varchar2, billno, ParameterDirection.Input);
             par[13] = new OracleParameter("p_bill_dt", OracleDbType.Date, billdt1, ParameterDirection.Input);
             par[14] = new OracleParameter("p_bill_amt", OracleDbType.Int32, billamount, ParameterDirection.Input);
-            par[15] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
-            ds = DataAccessDB.GetDataSet("GetSearchAllData", par, 1);
+            par[15] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[16] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[17] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[18] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GetSearchAllData", par, 2);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -199,18 +202,25 @@ namespace IBS.Repositories
 
                 query = list.AsQueryable();
 
-                dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+                int recordsTotal = 0;
+                if (ds != null && ds.Tables[1].Rows.Count > 0)
+                {
+                    recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+                }
 
-                if (!string.IsNullOrEmpty(searchBy))
-                    query = query.Where(w => Convert.ToString(w.PONO).ToLower().Contains(searchBy.ToLower())
-                    || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                    );
-
-                dTResult.recordsFiltered = query.Count();
-
-                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+                dTResult.recordsTotal = recordsTotal;
+                dTResult.recordsFiltered = recordsTotal;
+                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
                 dTResult.draw = dtParameters.Draw;
+
+                //dTResult.recordsTotal = ds.Tables[0].Rows.Count;
+                //if (!string.IsNullOrEmpty(searchBy))
+                //    query = query.Where(w => Convert.ToString(w.PONO).ToLower().Contains(searchBy.ToLower())
+                //    || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                //    );
+                //dTResult.recordsFiltered = query.Count();
+                //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+                //dTResult.draw = dtParameters.Draw;
 
             }
             return dTResult;

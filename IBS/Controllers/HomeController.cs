@@ -173,6 +173,11 @@ namespace IBS.Controllers
             //loginModel.OTP = otp;
             loginModel.OTP = "123";
             userRepository.SaveOTPDetails(loginModel);
+
+            if (!string.IsNullOrEmpty(userMaster.Email))
+            {
+                userRepository.send_Vendor_Email(loginModel, userMaster.Email);
+            }
             string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
             return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
         }

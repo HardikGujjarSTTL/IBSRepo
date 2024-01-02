@@ -83,10 +83,13 @@ namespace IBS.Repositories.Vendor
             string VendorAddress = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorAddress"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorAddress"]) : "";
             string VendorCity = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorCity"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorCity"]) : "";
 
-            OracleParameter[] par = new OracleParameter[1];
-            par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 2);
 
             List<VendorlistModel> model = new List<VendorlistModel>();
             if (ds != null && ds.Tables.Count > 0)
@@ -97,20 +100,32 @@ namespace IBS.Repositories.Vendor
 
             query = model.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            //dTResult.recordsFiltered = recordsTotal;
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
+
+            //dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(VendorCode)) query = query.Where(w => w.VEND_CD.ToString() == VendorCode);
             if (!string.IsNullOrEmpty(VendorName)) query = query.Where(w => w.VEND_NAME != null && w.VEND_NAME.ToString().ToLower().Contains(VendorName.ToString().ToLower()));
             if (!string.IsNullOrEmpty(VendorAddress)) query = query.Where(w => w.VEND_ADD != null && w.VEND_ADD.ToString().ToLower().Contains(VendorAddress.ToString().ToLower()));
             if (!string.IsNullOrEmpty(VendorCity)) query = query.Where(w => w.VEND_CITY_CD != null && w.VEND_CITY_CD.ToString().ToLower().Contains(VendorCity.ToString().ToLower()));
 
-            dTResult.recordsFiltered = query.Count();
+            dTResult.recordsFiltered = recordsTotal;
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
