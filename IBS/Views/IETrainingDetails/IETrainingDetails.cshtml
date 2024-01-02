@@ -43,7 +43,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">Discipline</label>
-                        @Html.DropDownListFor(model => model.Discipline, Common.Departmentlist(), new { @id="ddldis" })
+                        <input type="text" class="input" asp-for="Discipline" readonly="true" id="ddldis">
+                        @* @Html.DropDownListFor(model => model.Discipline, Common.Departmentlist(), new { @id="ddldis" }) *@
                         @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
                     </div>
                    
@@ -174,7 +175,7 @@
         $(function () {
             
             $("#out").prop("checked", true);
-            $("#ddldis").prop("disabled", true);
+            // $("#ddldis").prop("disabled", true);
             $(".datepicker").datepicker({
                 dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"
             });
@@ -277,9 +278,17 @@
                 data: { Name: Name },
 
                 success: function (success) {
-                    
+                   
                     if (success.EmpNo == null){
                         $("#txtempno").val(" ");
+                        $("#ddldis").val(success.Discipline);
+                        $("#txtdob").val(success.DOB);
+                        $("#txtdoj").val(success.DOJ);
+                        $("#ddlcat").val(success.Category);
+                        $("#txtcato").val(success.CategoryOther);
+                        $("#ddlqual").val(success.Qualification);
+                        $("#txtqualo").val(success.QualificationOther);
+                        $("#textAreaInput").val(success.Institute);
                     }
                     else{
                         $("#txtempno").val(success.EmpNo);
