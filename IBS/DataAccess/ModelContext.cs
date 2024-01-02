@@ -12097,12 +12097,6 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("CONNECTION_ID");
-            entity.Property(e => e.Createdby)
-                .HasPrecision(6)
-                .HasColumnName("CREATEDBY");
-            entity.Property(e => e.Createddate)
-                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
-                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -12111,29 +12105,14 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("MESSAGE");
             entity.Property(e => e.MsgRecvId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
+                .HasPrecision(6)
                 .HasColumnName("MSG_RECV_ID");
             entity.Property(e => e.MsgSendId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("MSG_SEND_ID");
-            entity.Property(e => e.RecvMessage)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
-                .HasColumnName("RECV_MESSAGE");
-            entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
-                .HasColumnName("UPDATEDBY");
-            entity.Property(e => e.Updateddate)
-                .HasColumnType("DATE")
-                .HasColumnName("UPDATEDDATE");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("USER_ID");
+                .HasColumnName("MSG_SEND_ID");
+            entity.Property(e => e.SendMsgDate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("SEND_MSG_DATE");
         });
 
         modelBuilder.Entity<T11CallCancelCode>(entity =>

@@ -109,7 +109,7 @@ namespace IBS.Repositories.InspectionBilling
                 str1 = "l.CaseNo,l.CallRecvDt";
             }
 
-            OracleParameter[] par = new OracleParameter[9];
+            OracleParameter[] par = new OracleParameter[12];
             par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
             par[1] = new OracleParameter("p_caseno", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
             par[2] = new OracleParameter("p_callrecvdt", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
@@ -118,73 +118,56 @@ namespace IBS.Repositories.InspectionBilling
             par[5] = new OracleParameter("p_vendor", OracleDbType.Varchar2, Vendor, ParameterDirection.Input);
             par[6] = new OracleParameter("p_callletterno", OracleDbType.Varchar2, CallLetterNo, ParameterDirection.Input);
             par[7] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[10] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[11] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GET_CALL_REG_CANCELLATION", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_CALL_REG_CANCELLATION", par, 2);
 
-            List<VenderCallRegisterModel> modelList = new List<VenderCallRegisterModel>();
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //List<VenderCallRegisterModel> modelList = new List<VenderCallRegisterModel>();
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    foreach (DataRow row in ds.Tables[0].Rows)
+            //    {
+            //        VenderCallRegisterModel model = new VenderCallRegisterModel
+            //        {
+            //            CaseNo = Convert.ToString(row["CASE_NO"]),
+            //            CallRecvDt = Convert.ToString(row["CALL_RECV_DT"]) == "" ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
+            //            CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]) == null ? 0 : Convert.ToInt32(row["CALL_INSTALL_NO"]),
+            //            CallSno = Convert.ToInt32(row["CALL_SNO"]) == null ? 0 : Convert.ToInt32(row["CALL_SNO"]),
+            //            CallStatus = Convert.ToString(row["CALL_STATUS"]),
+            //            CallLetterNo = Convert.ToString(row["CALL_LETTER_NO"]),
+            //            Remarks = Convert.ToString(row["REMARKS"]),
+            //            PoNo = Convert.ToString(row["PO_NO"]),
+            //            PoDt = Convert.ToString(row["PO_DT"]) == "" ? null : Convert.ToDateTime(row["PO_DT"]),
+            //            IeSname = Convert.ToString(row["IE_SNAME"]),
+            //            Vendor = Convert.ToString(row["VENDOR"]),
+            //            RegionCode = Convert.ToString(row["REGION_CODE"]),
+
+            //        };
+            //        modelList.Add(model);
+            //    }
+            //}
+
+            List<VenderCallRegisterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    VenderCallRegisterModel model = new VenderCallRegisterModel
-                    {
-                        CaseNo = Convert.ToString(row["CASE_NO"]),
-                        CallRecvDt = Convert.ToString(row["CALL_RECV_DT"]) == "" ? null : Convert.ToDateTime(row["CALL_RECV_DT"]),
-                        CallInstallNo = Convert.ToInt32(row["CALL_INSTALL_NO"]) == null ? 0 : Convert.ToInt32(row["CALL_INSTALL_NO"]),
-                        CallSno = Convert.ToInt32(row["CALL_SNO"]) == null ? 0 : Convert.ToInt32(row["CALL_SNO"]),
-                        CallStatus = Convert.ToString(row["CALL_STATUS"]),
-                        CallLetterNo = Convert.ToString(row["CALL_LETTER_NO"]),
-                        Remarks = Convert.ToString(row["REMARKS"]),
-                        PoNo = Convert.ToString(row["PO_NO"]),
-                        PoDt = Convert.ToString(row["PO_DT"]) == "" ? null : Convert.ToDateTime(row["PO_DT"]),
-                        IeSname = Convert.ToString(row["IE_SNAME"]),
-                        Vendor = Convert.ToString(row["VENDOR"]),
-                        RegionCode = Convert.ToString(row["REGION_CODE"]),
-
-                    };
-                    modelList.Add(model);
-                }
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<VenderCallRegisterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
-            //query = from l in context.ViewGetCallRegCancellations
-            //        where l.RegionCode == RegionCode
-            //              && (CaseNo == null || CaseNo == "" || l.CaseNo == CaseNo)
-            //              && (CallRecvDt == null || CallRecvDt == "" || l.CallRecvDt == _CallRecvDt)
-            //              && (PoNo == null || PoNo == "" || l.PoNo == PoNo)
-            //              && (PoDt == null || PoDt == "" || l.PoDt == _PoDt)
-            //              && (Vendor == null || Vendor == "" || l.Vendor == Vendor)
-            //              && (CallLetterNo == null || CallLetterNo == "" || l.CallLetterNo == CallLetterNo)
-            //              && (CallSno == null || CallSno == "" || l.CallSno == Convert.ToInt32(CallSno))
-            //        orderby str1
-            //        select new VenderCallRegisterModel
-            //        {
-            //            CaseNo = l.CaseNo,
-            //            CallRecvDt = l.CallRecvDt,
-            //            CallInstallNo = l.CallInstallNo,
-            //            CallSno = Convert.ToInt16(l.CallSno),
-            //            CallStatus = l.CallStatus,
-            //            CallLetterNo = l.CallLetterNo,
-            //            Remarks = l.Remarks,
-            //            PoNo = l.PoNo,
-            //            PoDt = l.PoDt,
-            //            IeSname = l.IeSname,
-            //            Vendor = l.Vendor,
-            //            RegionCode = l.RegionCode,
-            //        };
+            query = list.AsQueryable();
 
-            query = modelList.AsQueryable();
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
@@ -2710,7 +2693,7 @@ namespace IBS.Repositories.InspectionBilling
                 throw new Exception("Record Not found");
             else
             {
-                model.InspectingAgency = POMaster.InspectingAgency;
+                model.InspectingAgency = POMaster.InspectingAgency == null ? "X" : POMaster.InspectingAgency;
                 model.Remarks = POMaster.Remarks;
                 model.VendInspStopped = POMaster.VendInspStopped;
                 model.VendRemarks = POMaster.VendRemarks;

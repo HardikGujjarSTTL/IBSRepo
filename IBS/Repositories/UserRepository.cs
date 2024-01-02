@@ -199,7 +199,8 @@ namespace IBS.Repositories
                                     where u.UserId.Trim() == model.UserName.Trim()
                                     select new UserSessionModel
                                     {
-                                        MOBILE = u.Mobile
+                                        MOBILE = u.Mobile,
+                                        Email = u.UserEmail
                                     }).FirstOrDefault();
             }
             else if (model.UserType == "VENDOR")
@@ -208,7 +209,8 @@ namespace IBS.Repositories
                                     where u.VendCd == Convert.ToInt32(model.UserName.Trim())
                                     select new UserSessionModel
                                     {
-                                        MOBILE = u.VendContactTel1
+                                        MOBILE = u.VendContactTel1,
+                                        Email = u.VendEmail
                                     }).FirstOrDefault();
             }
             else if (model.UserType == "IE")
@@ -217,7 +219,8 @@ namespace IBS.Repositories
                                     where u.IeEmpNo.Trim() == model.UserName.Trim()
                                     select new UserSessionModel
                                     {
-                                        MOBILE = u.IePhoneNo
+                                        MOBILE = u.IePhoneNo,
+                                        Email  = u.IeEmail
                                     }).FirstOrDefault();
             }
             else if (model.UserType == "CLIENT_LOGIN")
@@ -226,7 +229,8 @@ namespace IBS.Repositories
                                     where u.Mobile.Trim() == model.UserName.Trim()
                                     select new UserSessionModel
                                     {
-                                        MOBILE = u.Mobile
+                                        MOBILE = u.Mobile,
+                                        Email = u.Email
                                     }).FirstOrDefault();
             }
             else if (model.UserType == "LO_LOGIN")
@@ -235,7 +239,8 @@ namespace IBS.Repositories
                                     where u.Mobile.Trim() == model.UserName.Trim()
                                     select new UserSessionModel
                                     {
-                                        MOBILE = u.Mobile
+                                        MOBILE = u.Mobile,
+                                        Email = u.Email
                                     }).FirstOrDefault();
             }
             return userSessionModel;
@@ -362,6 +367,7 @@ namespace IBS.Repositories
                 userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+                userSessionModel.MasterID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
                 userSessionModel.LoginType = model.UserType.Trim();
             }
             else
@@ -953,6 +959,6 @@ namespace IBS.Repositories
             }
 
             return email;
-        }
+        }        
     }
 }

@@ -4,8 +4,10 @@ namespace IBS.Interfaces.Hub
 {
     public interface IChatRepository
     {
-        int ChatMessageSave(ChatMessage model, string userName,int userID);
-        ChatMessage GetMessageList(string id);
-        ChatMessage GetMessageRecvList(string id);
+        int ChatMessageSave(ChatMessage model);
+
+        ChatMessage GetMessageList(int send_id, int recv_id);
+
+        ChatMessage GetMessageRecvList(int id);
     }
 }

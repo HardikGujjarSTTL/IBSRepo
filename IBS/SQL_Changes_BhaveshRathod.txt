@@ -5786,3 +5786,15 @@ and V.VEND_CITY_CD=T.CITY_CD;
 
 
 ALTER TABLE T02_USERS ADD USER_EMAIL VARCHAR2(50 BYTE)
+
+
+=========================
+Performance related work.
+=========================
+
+GET_LOGINBYUSERPASS - Naimesh changes in last
+
+GET_CALL_REG_CANCELLATION
+GET_INSPECTION_CERT_DETAILS
+GetSearchAllData
+GET_VENDOR_DATA

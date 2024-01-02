@@ -120,7 +120,7 @@ namespace IBS.Controllers
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                 if (userMaster != null)
-                {
+                {                    
                     SetUserInfo = userMaster;
                     var userClaims = new List<Claim>()
                     {
@@ -136,6 +136,7 @@ namespace IBS.Controllers
                         new Claim("OrganisationL", (userMaster.OrganisationL != null && userMaster.OrganisationL != "") ? Convert.ToString(userMaster.OrganisationL) : ""),
                         new Claim("OrgnType", (userMaster.OrgnType != null && userMaster.OrgnType != "") ? Convert.ToString(userMaster.OrgnType) : ""),
                         new Claim("Organisation", (userMaster.Organisation != null && userMaster.Organisation != "") ? Convert.ToString(userMaster.Organisation) : ""),
+                        new Claim("UserMasterID",Convert.ToString(userMaster.MasterID)),
                     };
                     var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                     var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
@@ -173,6 +174,11 @@ namespace IBS.Controllers
             //loginModel.OTP = otp;
             loginModel.OTP = "123";
             userRepository.SaveOTPDetails(loginModel);
+
+            if (!string.IsNullOrEmpty(userMaster.Email))
+            {
+                userRepository.send_Vendor_Email(loginModel, userMaster.Email);
+            }
             string EncryptUserName = Common.EncryptQueryString(loginModel.UserName);
             return RedirectToAction("OTPVerification", "Home", new { UserName = EncryptUserName });
         }

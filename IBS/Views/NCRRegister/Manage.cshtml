@@ -113,7 +113,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="reference">
                                 <label for="Reference">NCR No.</label>
-                                <input type="text" asp-for="NC_NO" maxlength="100"  readonly="true" style="text-transform: uppercase;" required>
+                                <input type="text" asp-for="NC_NO" maxlength="100" readonly="true" style="text-transform: uppercase;" required>
                             </div>
                         </div>
                     }
@@ -214,9 +214,15 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
+        debugger;
         $("#nccodeother").hide();
         $("#ncrcodes").hide();
         $("#ncrclass").hide();
+        $('#btnsendIE').prop('disabled', true);
+        var NC_NO = $("#NC_NO").val();
+        if (NC_NO != "" && NC_NO != null && NC_NO != undefined) {
+            $('#btnsendIE').prop('disabled', false);
+        }
         var NCR = $("#NCRClass").val();
         if (NCR != "") {
             $('#NCRClass').trigger('change');
@@ -317,13 +323,13 @@
                         var BKNo = data.responseText.BKNo;
                         var SetNo = data.responseText.SetNo;
                         $("#btnsave").hide();
+                        $('#btnsendIE').prop('disabled', false);
                         $("#rdnonc").hide();
                         $("#rdnc").hide();
                         $("#btnSaveMoreNC").show();
                         var actionUrl = '@Url.Action("Manage", "NCRRegister")?NC_NO=' + NCNO + '&Actions=' + "M" + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&CaseNo=' + CaseNo;
                         window.location.href = actionUrl;
                     }
-                } else {
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -394,10 +400,9 @@
             success: function (data) {
                 if (data.status === true) {
                     if (data.redirectToIndex === true) {
-                        alert(data.alertMessage);
+                        ShowHideMsgNew(true, data.alertMessage);
                         window.location.href = '@Url.Action("Index", "NCRRegister")';
                     }
-                } else {
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
