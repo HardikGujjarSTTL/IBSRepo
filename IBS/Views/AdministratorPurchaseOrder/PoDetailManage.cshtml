@@ -43,8 +43,9 @@
                         <input type="text" class="input" asp-for="ItemSrno" readonly="readonly">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference" style="width: 100%;">Consignee</label>
+                        <label for="Reference" style="width: 100%;">Consignee <span class="astric">*</span></label>
                         @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.CaseNo) , "Value", "Text"),"--Select--")
+                        <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
                     </div>
                 </div>
 
