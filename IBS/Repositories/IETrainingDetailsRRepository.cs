@@ -163,12 +163,17 @@ namespace IBS.Repositories
                             dob = "";
                             doj = "";
                         }
-                        else
+                        else if(ieDob != null)
                         {
                             dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
+                            //doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
+                        }
+                        else if (ieDoj != null)
+                        {
+                            //dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
                             doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
                         }
-                         
+
                         model.EmpNo = IE.IeEmpNo;
                         model.DOB = dob;
                         model.DOJ = doj;
