@@ -584,7 +584,7 @@ namespace IBS.Repositories
             string region = nCRRegister.SetRegionCode;
             string wRegion = GetRegionDetails(region);
             string rsender = GetSenderEmail(region);
-
+            string emailAddresses = null;
             DataTable dt = new DataTable();
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("p_NC_NO", OracleDbType.Varchar2, nCRRegister.NC_NO, ParameterDirection.Input);
@@ -595,41 +595,42 @@ namespace IBS.Repositories
             int j = 0;
             string NC_REASONS = "";
 
-            foreach (DataRow row in dt.Rows)
+            if (dt.Rows.Count > 0)
             {
-                if (row["NC_CLASS"].ToString() == "C")
+                foreach (DataRow row in dt.Rows)
                 {
-                    j = 1;
-                }
-                if (string.IsNullOrEmpty(NC_REASONS))
-                {
-                    NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n<br/>";
-                    NC_REASONS += $"Case No. {row["CASE_NO"]}\n<br/>";
-                    NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n<br/>";
-                    NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
-                    NC_REASONS += $"IE: {row["IE_NAME"]}\n<br/>";
-                    NC_REASONS += $"CM: {row["CO_NAME"]}\n<br/>";
-                }
+                    if (row["NC_CLASS"].ToString() == "C")
+                    {
+                        j = 1;
+                    }
+                    if (string.IsNullOrEmpty(NC_REASONS))
+                    {
+                        NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n<br/>";
+                        NC_REASONS += $"Case No. {row["CASE_NO"]}\n<br/>";
+                        NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n<br/>";
+                        NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
+                        NC_REASONS += $"IE: {row["IE_NAME"]}\n<br/>";
+                        NC_REASONS += $"CM: {row["CO_NAME"]}\n<br/>";
+                    }
 
-                NC_REASONS += $"NCR Code: {row["NC_CD"]}-{row["NC_DESC"]}\n<br/>";
-                if (!string.IsNullOrEmpty(row["IE_ACTION1"].ToString()))
-                {
-                    NC_REASONS += $"IE Corrective and Preventive Action: {row["IE_ACTION1"]}\n";
+                    NC_REASONS += $"NCR Code: {row["NC_CD"]}-{row["NC_DESC"]}\n<br/>";
+                    if (!string.IsNullOrEmpty(row["IE_ACTION1"].ToString()))
+                    {
+                        NC_REASONS += $"IE Corrective and Preventive Action: {row["IE_ACTION1"]}\n";
+                    }
+                    if (!string.IsNullOrEmpty(row["CO_FINAL_REMARKS1"].ToString()))
+                    {
+                        NC_REASONS += $"Controlling Remarks: {row["CO_FINAL_REMARKS1"]}\n";
+                    }
                 }
-                if (!string.IsNullOrEmpty(row["CO_FINAL_REMARKS1"].ToString()))
-                {
-                    NC_REASONS += $"Controlling Remarks: {row["CO_FINAL_REMARKS1"]}\n";
-                }
+                int ieCdFromDataRow = Convert.ToInt32(ds.Tables[0].Rows[0]["IE_CD"]);
+                var emailQuery = (from t09 in context.T09Ies
+                                  join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
+                                  where t09.IeCd == ieCdFromDataRow
+                                  select t09.IeEmail + "," + t08.CoEmail).FirstOrDefault();
+
+                emailAddresses = emailQuery ?? string.Empty;
             }
-
-            int ieCdFromDataRow = Convert.ToInt32(ds.Tables[0].Rows[0]["IE_CD"]);
-
-            var emailQuery = (from t09 in context.T09Ies
-                              join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
-                              where t09.IeCd == ieCdFromDataRow
-                              select t09.IeEmail + "," + t08.CoEmail).FirstOrDefault();
-
-            string emailAddresses = emailQuery ?? string.Empty;
 
             MailMessage mail1 = new MailMessage();
 
