@@ -71,34 +71,73 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[2];
-            par[0] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region == "" ? DBNull.Value : Region.ToString(), ParameterDirection.Input);
-            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            string PoNo = "", PoDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+            }
 
-            var ds = DataAccessDB.GetDataSet("Get_SP_DEO_CRIS_PurchesOrderList", par, 1);
-            DataTable dt = ds.Tables[0];
+            OracleParameter[] par = new OracleParameter[7];
+            par[0] = new OracleParameter("p_PO_NO", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_PO_DT", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_region_code", OracleDbType.Varchar2, Region.ToString() == "" ? DBNull.Value : Region.ToString(), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[4] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[5] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-
+            var ds = DataAccessDB.GetDataSet("Get_SP_DEO_CRIS_PurchesOrderList", par, 2);
             List<DEO_CRIS_PurchesOrderListModel> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<DEO_CRIS_PurchesOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
             }
-
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
             query = list.AsQueryable();
-            dTResult.recordsTotal = query.Count();
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.IMMS_POKEY).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
+
+
+            //OracleParameter[] par = new OracleParameter[2];
+            //par[0] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region == "" ? DBNull.Value : Region.ToString(), ParameterDirection.Input);
+            //par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            //var ds = DataAccessDB.GetDataSet("Get_SP_DEO_CRIS_PurchesOrderList", par, 1);
+            //DataTable dt = ds.Tables[0];
+
+
+            //List<DEO_CRIS_PurchesOrderListModel> list = new();
+            //if (ds != null && ds.Tables.Count > 0)
+            //{
+            //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+            //    list = JsonConvert.DeserializeObject<List<DEO_CRIS_PurchesOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //}
+
+            //query = list.AsQueryable();
+            //dTResult.recordsTotal = query.Count();
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.IMMS_POKEY).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
+            //    );
+
+            //dTResult.recordsFiltered = query.Count();
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            //dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
