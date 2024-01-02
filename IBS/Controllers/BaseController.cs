@@ -142,6 +142,14 @@ namespace IBS.Controllers
             }
         }
 
+        public int Master_ID
+        {
+            get
+            {
+                return (GetUserInfo.MasterID);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))
