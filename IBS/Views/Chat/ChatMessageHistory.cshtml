@@ -1,5 +1,5 @@
 ﻿@model IBS.Models.ChatMessage
-<ul class="chatBodyText">
+<ul id="messageList" class="chatBodyText">
     @{
         if (Model.lstMsg.Count > 0)
         {
@@ -24,11 +24,5 @@
 
 <div class="chatInputArea">
     <input type="text" id="txtMsg" />
-    @*<button class="submitChatBtn" id="btnSave" onclick="SaveMessage();"><span class="fa fa-paper-plane"></span></button>*@
+    <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
-
-<script>
-    $(function () { 
-        //SaveMessage();
-    })
-</script>
