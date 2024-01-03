@@ -4,12 +4,12 @@
 }
 
 <form data-ajax="true" asp-antiforgery="true" asp-controller="CallRegister" asp-action="DetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
-        <div class="list-inner">
-            <div class="tast-list">
-                <h2>Call Registration/Cancellation</h2>
-                @*<h3 class="heading3">Call Registration/Cancellation </h3>*@
-            </div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Call Registration/Cancellation</h2>
+            @*<h3 class="heading3">Call Registration/Cancellation </h3>*@
         </div>
+    </div>
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-2 mb-3">
@@ -64,12 +64,12 @@
         <div class="row my-0">
             <div class="col-md-12 mb-4 text-center">
                 <div class="savenext-btn">
-                <button type="button" class="reset-btn" id="btnSearch">Search</button>
-                <button type="button" class="reset-btn active" id="btnNewCall">New Call</button>
-                <button type="button" class="reset-btn" id="btnModify">Modify</button>
-                <button type="button" class="reset-btn" id="btnDelete">Delete</button>
-                <button type="button" class="reset-btn" id="btnCCancellation">Call Cancellation</button>
-                <button type="button" class="reset-btn" id="btnEditStatus">Edit Call Status</button>
+                    <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                    <button type="button" class="reset-btn active" id="btnNewCall">New Call</button>
+                    <button type="button" class="reset-btn" id="btnModify">Modify</button>
+                    <button type="button" class="reset-btn" id="btnDelete">Delete</button>
+                    <button type="button" class="reset-btn" id="btnCCancellation">Call Cancellation</button>
+                    <button type="button" class="reset-btn" id="btnEditStatus">Edit Call Status</button>
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
     </section>
 </form>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
@@ -136,7 +136,7 @@
         }
 
         function InitializeDatatable() {
-            var CaseNo = $("#CaseNo").val();
+            var CaseNo = $("#CaseNo").val().toUpperCase();
             var PoNo = $("#PoNo").val();
             var PoDt = $("#PoDt").val();
             var CallSno = $("#CallSno").val();
@@ -322,11 +322,11 @@
                 $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
                     debugger
                     if (response.status) {
-                        if(response.Client == "Y"){
+                        if (response.Client == "Y") {
                             if (response.w_itemBlocked == "Y") {
                                 var msg = response.responseText;
                                 var d = confirm(msg);
-                                
+
                                 if (d === false) {
                                     window.location.href = '@Url.Action("Index", "CallRegisterIB")';
                                 } else {
@@ -337,8 +337,7 @@
                                 window.location.href = '@Url.Action("Manage", "CallRegisterIB")' + '?CaseNo=' + response.code + "&CallRecvDt=" + response.dt + "&ActionType=A";
                             }
                         }
-                        else
-                        {
+                        else {
                             if (response.responseText != null) {
                                 ShowHideMsgNew(response.status, response.responseText);
                             }
@@ -350,7 +349,7 @@
                     else {
                         ShowHideMsgNew(response.status, response.responseText);
                     }
-                    
+
                 });
             }
         });
@@ -442,4 +441,4 @@
             window.location.href = '@Url.Action("Index", "CallRegisterIB")';
         };
     </script>
-    }
+}
