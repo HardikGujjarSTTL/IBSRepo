@@ -1,11 +1,12 @@
-﻿using IBS.Interfaces.Hub;
+﻿using IBS.Filters;
+using IBS.Interfaces.Hub;
 using IBS.Models;
 using IBS.Repositories.Hub;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace IBS.Controllers.SignalR
-{
+{    
     [Authorization]
     public class ChatController : BaseController
     {
@@ -37,10 +38,10 @@ namespace IBS.Controllers.SignalR
             return PartialView(model);
         }
 
-        public IActionResult ChatMessageHistory(int send_ID, int recv_ID)
+        public IActionResult ChatMessageHistory(int id)
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(send_ID, recv_ID);
+            model = _chathub.GetMessageList(Master_ID, id);
             model.Master_ID = Master_ID;
             return PartialView(model);
         }
