@@ -150,6 +150,19 @@ namespace IBS.Repositories
                 {
                     int ie = Convert.ToInt32(Name);
                     var IE = context.T09Ies.Find(ie);
+                    if (IE.IeDepartment == "M")
+                          IE.IeDepartment = "Mechanical";
+                    else if (IE.IeDepartment == "E")
+                        IE.IeDepartment = "Electrical";
+                    else if (IE.IeDepartment == "C")
+                          IE.IeDepartment = "Civil";
+                    else if (IE.IeDepartment == "L")
+                         IE.IeDepartment = "Metallurgy";
+                    else if (IE.IeDepartment == "T")
+                         IE.IeDepartment = "Textiles";
+                    else if (IE.IeDepartment == "P")
+                         IE.IeDepartment = "Power Engineering";
+
                     if (IE == null)
                         return model;
                     else
@@ -310,10 +323,11 @@ namespace IBS.Repositories
 
 
                 string CourseId;
+                string CoId;
                 string sqlQuery = "Select lpad(nvl(max(to_number(nvl(substr(COURSE_ID,2,4),0))),0)+1,4,'0')  From TRAINING_COURSE_MASTER where substr(COURSE_ID,1,1)='" + IETrainingDetailsModel.Regin + "'";
 
-                CourseId = GetDateString(sqlQuery);
-
+                CoId = GetDateString(sqlQuery);
+                CourseId = (IETrainingDetailsModel.Regin + CoId);
                 try
                 {
 
@@ -321,7 +335,7 @@ namespace IBS.Repositories
                     par[0] = new OracleParameter("p_course_id", OracleDbType.Varchar2, CourseId, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_training_type", OracleDbType.Varchar2, IETrainingDetailsModel.TrainingType, ParameterDirection.Input);
                     par[2] = new OracleParameter("p_training_field", OracleDbType.Varchar2, IETrainingDetailsModel.TrainingArea, ParameterDirection.Input);
-                    par[3] = new OracleParameter("p_course_name", OracleDbType.Varchar2, IETrainingDetailsModel.course_name, ParameterDirection.Input);
+                    par[3] = new OracleParameter("p_course_name", OracleDbType.Varchar2, IETrainingDetailsModel.CourseNameOther, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_course_institute", OracleDbType.Varchar2, IETrainingDetailsModel.Institue, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_course_dur_fr", OracleDbType.Date, from, ParameterDirection.Input);
                     par[6] = new OracleParameter("p_course_dur_to", OracleDbType.Date, to, ParameterDirection.Input);
