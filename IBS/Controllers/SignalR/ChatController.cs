@@ -1,11 +1,13 @@
-﻿using IBS.Interfaces.Hub;
+﻿using IBS.Filters;
+using IBS.Interfaces.Hub;
 using IBS.Models;
 using IBS.Repositories.Hub;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace IBS.Controllers.SignalR
-{
+{    
+    [Authorization]
     public class ChatController : BaseController
     {
         private readonly IHubContext<ChatHub1> hubContext;

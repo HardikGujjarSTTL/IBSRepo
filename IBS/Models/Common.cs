@@ -4825,6 +4825,7 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> UM = (from a in ModelContext.UserMasters
                                        where a.UserType == "USERS" || a.UserType == "IE" 
+                                       orderby a.UserType ascending, a.Name ascending
                                        select new SelectListItem
                                        {
                                            Text = Convert.ToString(a.Name),

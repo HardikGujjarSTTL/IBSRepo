@@ -14,14 +14,18 @@
     <form role="form" id="frmChatMessage">
         <div class="accordion-body chatArea">
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-3">
                     <label for="Reference">User Name</label>
-                    @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
-                    <span asp-validation-for="msg_recv_ID" class="text-danger"></span>
+                    @Html.DropDownList("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
+                    @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
                 </div>
-            </div>
-            <div class="savenext-btn mb-5">
-                <button type="button" class="save-btn active" id="btnSave" onclick="SaveMessage();">Save</button>
+                <div class="col-md-8 mb-3">
+                    <label for="Reference">Message</label>
+                    <input type="text" id="txtMessage" />
+                </div>
+                <div class="col-md-2 mb-3 savenext-btn" style="margin-top:30px;">
+                    <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Save</button>
+                </div>
             </div>
             <div class="chatBox">
                 <div class="chatBoxHeader">
@@ -48,10 +52,9 @@
 
     var SenderId = '@SenderId';
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
+    var id = "@Model.msg_recv_ID";
+    var MsgType = 0;
     $(document).ready(function () {
-        var id = "@Model.msg_recv_ID";
-
         GetUserReceiverList();
         GetChatMessageList(id);
     });
@@ -71,7 +74,8 @@
         });
     }
 
-    function GetChatMessageList(id) {
+    function GetChatMessageList(recvid) {
+        id = recvid;
         $.ajax({
             url: '@Url.Action("ChatMessageHistory", "Chat")/' + id,
             type: 'POST',
@@ -86,20 +90,27 @@
         });
     }
 
-    function SaveMessage() {
-        var ReceiverId = $("#msg_recv_ID").val();
-        var message = $("#txtMsg").val();
+    function SendMessage(type) {
+        MsgType = type
+        var ReceiverId = "";
+        var message = "";
+        if (type == 1) {
+            ReceiverId = $("#dpUser").val();
+            message = $("#txtMessage").val();
+        }
+        else if (type == 2) {
+            ReceiverId = id;
+            message = $("#txtMsg").val();
+        }
 
-        var Recv_ID = "@Model.msg_recv_ID";
-
-        if (ReceiverId == "" && Recv_ID == "") {
+        if (ReceiverId == "" || message == "") {
+            alert("Receiver and Message is required.")
             return;
         }
-        if (ReceiverId == "") {
-            ReceiverId = Recv_ID;
-        }
         connection.invoke("SendMessage", SenderId, ReceiverId, message);
-        $("#txtMsg").val("");
+
+        if (type == 1) { $("#txtMessage").val(""); }
+        else if (type == 2) { $("#txtMsg").val(""); }
     }
 
     connection.start().then(function () {
@@ -107,13 +118,18 @@
     });
 
     connection.on("ReceiveMessage", function (ReceiverId, message) {
-        if (SenderId != ReceiverId) {
-            var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '</div></li>';
-            $(".chatBodyText").append(element);
+        if (MsgType == 1) {
+            window.location.href = "@Url.Action("Index","Chat")";
         }
-        if (SenderId == ReceiverId) {
-            var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '</div></li>';
-            $(".chatBodyText").append(element);
+        else {
+            if (SenderId != ReceiverId) {
+                var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '</div></li>';
+                $(".chatBodyText").append(element);
+            }
+            if (SenderId == ReceiverId) {
+                var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '</div></li>';
+                $(".chatBodyText").append(element);
+            }
         }
     });
 
