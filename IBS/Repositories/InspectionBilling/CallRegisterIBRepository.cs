@@ -401,7 +401,38 @@ namespace IBS.Repositories.InspectionBilling
                 model.L5noPo = GetView.L5noPo;
                 model.Rly = GetView.Rly;
                 model.RlyNonrly = GetView.RlyNonrly;
+                model.MfgCd = Convert.ToInt32(GetView.PoiCd);
             }
+
+            var MfgDetails = context.ViewGetmanufvends.Where(x => x.VendCd == Convert.ToInt32(GetView.PoiCd)).FirstOrDefault();
+
+            if (MfgDetails != null)
+            {
+                model.Vendor = MfgDetails.VendName;
+                model.VendAdd1 = MfgDetails.VendAdd1;
+                model.VendContactPer1 = MfgDetails.VendContactPer1;
+                model.VendContactTel1 = MfgDetails.VendContactTel1;
+                model.VendStatus = MfgDetails.VendStatus;
+                model.VendStatusDtFr = Convert.ToDateTime(MfgDetails.VendStatusFr);
+                model.VendStatusDtTo = Convert.ToDateTime(MfgDetails.VendStatusTo);
+                model.VendEmail = MfgDetails.VendEmail;
+            }
+            //var ManufactureDetails = (from m in context.ViewGetmanufvends
+            //                          where m.VendCd == Convert.ToInt32(GetView.PoiCd)
+            //                          select new
+            //                          {
+            //                              VendCd = Convert.ToString(m.VendCd),
+            //                              Vendor = m.VendName,
+            //                              VendAdd1 = m.VendAdd1,
+            //                              VendContactPer1 = m.VendContactPer1,
+            //                              VendContactTel1 = m.VendContactTel1,
+            //                              VendStatus = m.VendStatus,
+            //                              VendStatusDtFr = Convert.ToDateTime(m.VendStatusFr),
+            //                              VendStatusDtTo = Convert.ToDateTime(m.VendStatusTo),
+            //                              VendEmail = m.VendEmail,
+            //                          }).FirstOrDefault();
+
+
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(CaseNo.Substring(0, 1));
             model.RegionCode = Region;
 

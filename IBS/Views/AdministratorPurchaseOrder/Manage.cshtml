@@ -574,7 +574,7 @@
         function GetManufVEND(id) {
             var VendCd = $("#VendCd").val();
             $.ajax({
-                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + VendCd,
+                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
