@@ -13,7 +13,7 @@ namespace IBS.Helper
             _chathub = chathub;
         }
 
-        public async Task OnConnectedAsync(string SenderId)
+        public async Task OnConnectedAsync(int SenderId)
         {
             foreach (var item in Common.ConnectedUsers.Where(kvp => kvp.Value == SenderId).ToList())
             {
@@ -23,7 +23,7 @@ namespace IBS.Helper
             Common.ConnectedUsers.Add(Context.ConnectionId, SenderId);
         }
 
-        public async Task SendMessage(string SenderId, string ReceiverId, string message)
+        public async Task SendMessage(int SenderId, int ReceiverId, string message, int MsgType)
         {
             ChatMessage model = new ChatMessage();
             model.msg_send_ID = Convert.ToInt32(SenderId);
@@ -35,7 +35,7 @@ namespace IBS.Helper
 
             foreach (var item in myKey)
             {
-                await Clients.Clients(item.Key).SendAsync("ReceiveMessage", ReceiverId, message);
+                await Clients.Clients(item.Key).SendAsync("ReceiveMessage", ReceiverId, message, MsgType);
             }
         }
     }
