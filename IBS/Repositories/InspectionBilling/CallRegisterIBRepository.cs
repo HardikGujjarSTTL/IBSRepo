@@ -2426,7 +2426,7 @@ namespace IBS.Repositories.InspectionBilling
             }
 
             bool isSend = false;
-            
+
 
             if (vend_cd == mfg_cd && manu_mail != "")
             {
@@ -3403,46 +3403,48 @@ namespace IBS.Repositories.InspectionBilling
 
             var Status = context.ViewGetCallStatusDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == Convert.ToInt32(CallSno)).FirstOrDefault();
 
-            var ic_book = (from item in context.T10IcBooksets
-                           orderby item.IssueDt descending
-                           where item.IssueToIecd == IE_CD
-                           select item).FirstOrDefault();
-
-            var dlt_IC = (from x in context.IcIntermediates
-                          orderby x.SetNo descending
-                          where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
-                          select x).FirstOrDefault();
-
-            if (dlt_IC != null)
+            if (IE_CD > 0)
             {
-                int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+                var ic_book = (from item in context.T10IcBooksets
+                               orderby item.IssueDt descending
+                               where item.IssueToIecd == IE_CD
+                               select item).FirstOrDefault();
 
-                string incrementedSetNo = setNo.ToString("D3");
+                var dlt_IC = (from x in context.IcIntermediates
+                              orderby x.SetNo descending
+                              where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
+                              select x).FirstOrDefault();
 
-                var ic_bookset = (from item in context.T10IcBooksets
-                                  orderby item.IssueDt descending
-                                  where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
-                                        Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
-                                        item.IssueToIecd == dlt_IC.IeCd
-                                  select item).FirstOrDefault();
-
-                if (ic_bookset != null)
+                if (dlt_IC != null)
                 {
-                    model.DocBkNo = ic_bookset.BkNo;
-                    model.DocSetNo = Convert.ToString(incrementedSetNo);
+                    int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                    string incrementedSetNo = setNo.ToString("D3");
+
+                    var ic_bookset = (from item in context.T10IcBooksets
+                                      orderby item.IssueDt descending
+                                      where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                            Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                            item.IssueToIecd == dlt_IC.IeCd
+                                      select item).FirstOrDefault();
+
+                    if (ic_bookset != null)
+                    {
+                        model.DocBkNo = ic_bookset.BkNo;
+                        model.DocSetNo = Convert.ToString(incrementedSetNo);
+                    }
+                    else
+                    {
+                        model.DocBkNo = "";
+                        model.DocSetNo = "";
+                    }
                 }
                 else
                 {
-                    model.DocBkNo = "";
-                    model.DocSetNo = "";
+                    model.DocBkNo = ic_book.BkNo;
+                    model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
                 }
             }
-            else
-            {
-                model.DocBkNo = ic_book.BkNo;
-                model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
-            }
-
             DateTime CallStatusDt = DateTime.Now.Date;
             if (Status == null)
                 return model;

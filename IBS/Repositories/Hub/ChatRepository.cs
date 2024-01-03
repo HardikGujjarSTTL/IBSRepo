@@ -1,6 +1,10 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces.Hub;
 using IBS.Models;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace IBS.Repositories.Hub
 {
@@ -52,16 +56,29 @@ namespace IBS.Repositories.Hub
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
 
-            model.lstMsg = (from a in context.T113ChatMasters
-                            orderby a.Id
-                            where ((a.MsgSendId == send_id && a.MsgRecvId == recv_id)
-                            || (a.MsgSendId == recv_id && a.MsgRecvId == send_id))
-                            select new ChatMessage
-                            {
-                                msg_send_ID = a.MsgSendId,
-                                msg_recv_ID = a.MsgRecvId,
-                                message = a.Message,
-                            }).ToList();
+            //model.lstMsg = (from a in context.T113ChatMasters
+            //                orderby a.Id
+            //                where ((send_id == recv_id && a.MsgSendId == send_id || a.MsgRecvId == recv_id) ||
+            //                ((a.MsgSendId == send_id && a.MsgRecvId == recv_id) || (a.MsgSendId == recv_id && a.MsgRecvId == send_id)))
+            //                select new ChatMessage
+            //                {
+            //                    msg_send_ID = a.MsgSendId,
+            //                    msg_recv_ID = a.MsgRecvId,
+            //                    message = a.Message,
+            //                }).ToList();
+
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("P_SENDER_ID", OracleDbType.Int32, send_id, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_RECEIVER_ID", OracleDbType.Int32, recv_id, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_CHAT_MESSAGES", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
             return model;
         }
 
@@ -70,16 +87,18 @@ namespace IBS.Repositories.Hub
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
 
-            model.lstMsg = (from a in context.T113ChatMasters
-                            join b in context.UserMasters on a.MsgRecvId equals Convert.ToInt32(b.Id)
-                            where a.MsgSendId == id
-                            orderby a.Id descending
-                            select new ChatMessage
-                            {
-                                msg_recv_ID = a.MsgRecvId,
-                                Name = b.Name
-                            }).Distinct().ToList();
 
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_SEND_RECV_ID", OracleDbType.Int32, id, ParameterDirection.Input);            
+            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_GET_MESSAGE_RECEIVER_NAME", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
             return model;
 
         }
