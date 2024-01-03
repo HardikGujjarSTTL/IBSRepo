@@ -298,7 +298,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // SignalR Configuration
-app.MapHub<IBS.Helper.ChatHub>("/chatHub");
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
 
