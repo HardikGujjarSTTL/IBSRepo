@@ -34,11 +34,19 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string Date = "";
+            string Date = "", FromDate = "", ToDate = "";
             int RDB1 = 0, RDB2 = 0, RDB3 = 0;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Date"]))
             {
                 Date = Convert.ToString(dtParameters.AdditionalValues["Date"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Rdb1"]))
             {
@@ -79,14 +87,18 @@ namespace IBS.Repositories.Inspection_Billing
             Date = Date.ToString() == "" ? string.Empty : Date.ToString();
 
             DateTime p_date = Convert.ToDateTime(Date);
+            DateTime p_Fromdate = Convert.ToDateTime(FromDate);
+            DateTime p_Todate = Convert.ToDateTime(ToDate);
 
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[8];
             par[0] = new OracleParameter("P_DATE", OracleDbType.Date, p_date, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("p_Fromdate", OracleDbType.Date, p_Fromdate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Todate", OracleDbType.Date, p_Todate, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_NEW", par, 1);
             DataTable dt = ds.Tables[0];
             List<CallMarkedOnlineModel> list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
