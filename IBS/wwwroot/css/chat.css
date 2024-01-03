@@ -10,6 +10,7 @@
     border-radius: 12px;
     overflow: hidden;
     position: relative;
+    border:1px solid #d1d1d1;
 }
 
 .chatBoxHeader {
@@ -44,14 +45,16 @@
         }
 
 .chatBoxBody {
-    padding: 20px;
     height: calc(100vh - 68px);
     overflow: auto;
+    padding:0;
 }
 
 .chatLeftBoxBody {
     width: 30%;
     border-right: 1px solid #d1d1d1;
+    background:#fff;
+
 }
 
 .chatBoxBody h4, .chatBoxHeadBody li h4 {
@@ -70,29 +73,24 @@
     list-style: none;
 }
 
+
 .chatBoxBody li:not(:last-child) {
     border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+   
+    margin: 0;
 }
 
 .chatBoxBody li {
     display: flex;
     align-items: center;
     position: relative;
-    padding-right: 35px;
-    postion: relative;
+    padding: 5px;
+
 }
 
-    .chatBoxBody li.active:before {
-        content: "";
-        background: rgba(255,255,255,0.5);
-        height: 55px;
-        width: 100%;
-        position: absolute;
-        z-index: 0;
-        border-radius: 5px;
-        left: -10px;
+    .chatBoxBody li.active {
+        background: #e9eaeb;
+        
     }
 
 .chatBoxIcon {
@@ -192,9 +190,9 @@
     background: #fff;
     border-radius: 6px;
     margin: 5px 0;
-    padding: 10px;
+     padding: 10px 10px 20px 10px;
     position: relative;
-    width: 95%;
+    min-width: 50px;
     box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
@@ -202,10 +200,10 @@
     background: #e6feda;
     border-radius: 6px;
     margin: 5px 0;
-    padding: 10px;
+    padding: 10px 10px 20px 10px;
     text-align: left;
     position: relative;
-    width: 95%;
+    min-width: 50px;
     box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
@@ -231,8 +229,8 @@
 }
 
 .userChatBox {
-    width: 65%;
-    margin-left: 4.5%;
+    width: 75%;
+    margin-left: 0.5%;
     position: relative;
 }
 
@@ -270,3 +268,10 @@
     height: 39px;
     color: #fff;
 }
+.timeStamp{
+    font-size: 11px;
+    position: absolute;
+    right: 2px;
+    bottom: 0;
+}
+.chatBoxBody li.active h4{ font-weight:bold;}
