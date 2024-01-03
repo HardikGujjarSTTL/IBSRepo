@@ -55,7 +55,6 @@
     var id = "@Model.msg_recv_ID";
     var MsgType = 0;
     $(document).ready(function () {
-        debugger
         GetUserReceiverList();
         GetChatMessageList(id);
     });
@@ -76,7 +75,6 @@
     }
 
     function GetChatMessageList(recvid) {
-        debugger
         id = recvid;
         $.ajax({
             url: '@Url.Action("ChatMessageHistory", "Chat")/' + id,
