@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Index";
     int SenderId = ViewBag.SenderId;
+    int ReceiverId = Model.msg_recv_ID ?? 0;
 }
 
 <div class="list-inner">
@@ -24,7 +25,7 @@
                     <input type="text" id="txtMessage" />
                 </div>
                 <div class="col-md-2 mb-3 savenext-btn" style="margin-top:30px;">
-                    <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Save</button>
+                    <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Send</button>
                 </div>
             </div>
             <div class="chatBox">
@@ -50,13 +51,13 @@
 
 <script>
 
-    var SenderId = '@SenderId';
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-    var id = "@Model.msg_recv_ID";
-    var MsgType = 0;
+    var SenderId = @SenderId;
+    var ReceiverId = @ReceiverId;
+
     $(document).ready(function () {
         GetUserReceiverList();
-        GetChatMessageList(id);
+        GetChatMessageList(ReceiverId);
     });
 
     function GetUserReceiverList() {
@@ -70,14 +71,16 @@
             if (response != null) {
                 $(".chatLeftBoxBody").html("");
                 $(".chatLeftBoxBody").html(response);
+                $(".userList").removeClass("active");
+                $("#li" + ReceiverId).addClass("active");
             }
         });
     }
 
     function GetChatMessageList(recvid) {
-        id = recvid;
+        ReceiverId = recvid;
         $.ajax({
-            url: '@Url.Action("ChatMessageHistory", "Chat")/' + id,
+            url: '@Url.Action("ChatMessageHistory", "Chat")/' + ReceiverId,
             type: 'POST',
             cache: false,
             processData: false,
@@ -86,20 +89,19 @@
             if (response != null) {
                 $(".chatRightBoxBody").html("");
                 $(".chatRightBoxBody").html(response);
+                $(".userList").removeClass("active");
+                $("#li" + ReceiverId).addClass("active");
             }
         });
     }
 
     function SendMessage(type) {
-        MsgType = type
-        var ReceiverId = "";
         var message = "";
         if (type == 1) {
-            ReceiverId = $("#dpUser").val();
+            ReceiverId = parseInt($("#dpUser").val());
             message = $("#txtMessage").val();
         }
         else if (type == 2) {
-            ReceiverId = id;
             message = $("#txtMsg").val();
         }
 
@@ -107,7 +109,8 @@
             alert("Receiver and Message is required.")
             return;
         }
-        connection.invoke("SendMessage", SenderId, ReceiverId, message);
+
+        connection.invoke("SendMessage", SenderId, ReceiverId, message, type);
 
         if (type == 1) { $("#txtMessage").val(""); }
         else if (type == 2) { $("#txtMsg").val(""); }
@@ -117,9 +120,9 @@
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (ReceiverId, message) {
+    connection.on("ReceiveMessage", function (ReceiverId, message, MsgType) {
         if (MsgType == 1) {
-            window.location.href = "@Url.Action("Index","Chat")";
+            window.location.href = "@Url.Action("Index", "Chat")";
         }
         else {
             if (SenderId != ReceiverId) {
