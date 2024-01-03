@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var Master_ID = ViewBag.Master_ID;
 }
 
 <div class="list-inner">
@@ -65,7 +66,7 @@
             processData: false,
             contentType: false
         }).done(function (response) {
-            debugger
+
             if (response != null) {
                 $(".chatLeftBoxBody").html("");
                 $(".chatLeftBoxBody").html(response);
@@ -82,7 +83,7 @@
         //});
 
         $.ajax({
-            url: '@Url.Action("ChatMessageHistory", "Chat")/'+id,
+            url: '@Url.Action("ChatMessageHistory", "Chat")?send_ID=' + parseInt(id) + '&recv_ID=' + @Master_ID,
             type: 'POST',
             cache: false,
             processData: false,
@@ -101,16 +102,11 @@
         GetUserReceiverList();
         GetChatMessageList(id);
 
-        var hubProxy = null;
-        debugger
         connection.start().then(function (event) {
             // Connection to the hub is established
-            debugger
-            hubProxy = connection;
-            console.log("Connection started.");
-            connection.invoke("OnConnectedAsync").then(function (err) {
-                debugger
-                console.log("New User Connected with 1");
+            console.log("Hub Connecting...!!");
+            connection.invoke("OnConnectedAsync", '@Master_ID').then(function (err) {
+                console.log("OnConnectedAsync Connection Success..!!");
             }).catch(function (err) {
                 return console.log(err.toString());
             });
@@ -119,33 +115,37 @@
         });
 
         connection.on("NewUserConnected", function (conn) {
-            debugger
             console.log(conn);
         });
 
         connection.on("messageReceivedFromApi", function (user, message) {
-            debugger
-            console.log("message received from API 1")
+            console.log("message received from API ready")
             // Handle received messages
-            GetChatMessageList(user);
+            //GetChatMessageList(user);
             console.log(user + " says: " + message);
         });
 
         connection.on("MessageReceivedFromHub", function (user, message) {
-            debugger
-            console.log("message received from Hub 1")
+            console.log("message received from Hub ready")
             // Handle received messages
             var data = user + " says: " + message;
-            //$(".recieveText").html(data);
-            GetChatMessageList(user);
-            console.log(user + " says: " + message);
+            //GetChatMessageList(user);
 
+            if (@Master_ID != user) {
+                var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '</div></li>';
+                $("#messageList").append(element);
+            }
+
+            if (@Master_ID == user) {
+                var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '</div></li>';
+                $("#messageList").append(element);
+            }
         });
     })
 
     function SaveMessage() {
         //$("#btnSave").click(function (e) {
-        debugger
+
         var user = $("#msg_recv_ID").val();
         var message = $("#txtMsg").val();
         //var model = $("#frmChatMessage").serialize();
@@ -164,48 +164,12 @@
             console.log("Message send From MVC Controller");
         });
 
-        connection.invoke("BroadcastAsync", user, message).then(function (err) {
-            debugger
+        connection.invoke("BroadcastAsync", '@Master_ID', user, message).then(function (err) {
+
             console.log("BroadcastAsync Call");
         }).catch(function (err) {
             return console.log(err.toString());
         });
-
-        //connection.invoke("BroadcastAsync", model).then(function (err) {
-        //    debugger
-        //    console.log("BroadcastAsync Call");
-        //}).catch(function (err) {
-        //    return console.log(err.toString());
-        //});
-
-        connection.on("messageReceivedFromApi", function (user, message) {
-            debugger
-            console.log("message received from API 1")
-            // Handle received messages
-            console.log(user + " says: " + message);
-        });
-
-        //connection.on("messageReceivedFromApi", function (model) {
-        //    debugger
-        //    console.log("message received from API 1 with model");
-        //    // Handle received messages
-        //});
-
-        connection.on("MessageReceivedFromHub", function (user, message) {
-            debugger
-            console.log("message received from Hub 1")
-            // Handle received messages
-            var data = user + " says: " + message;
-            //$(".recieveText").html(data);
-            console.log(user + " says: " + message);
-        });
-
-        //connection.on("MessageReceivedFromHub", function (model) {
-        //    debugger
-        //    console.log("message received from Hub 1 with model");
-        //});
-        //e.preventDefault();
-        //});
     }
 </script>
 

@@ -31,7 +31,8 @@ namespace IBS.Models
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
         public static int RegenerateOtpButtonShowMinute = 10;
 
-        public static List<string> userid = new List<string>();
+        //public static List<string> userid = new List<string>();
+        public static Dictionary<string,string> connectedUser = new Dictionary<string, string>();
 
         public static string SendOTP(string mobile, string message)
         {
@@ -4825,6 +4826,7 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> UM = (from a in ModelContext.UserMasters
                                        where a.UserType == "USERS" || a.UserType == "IE" 
+                                       orderby a.UserType ascending, a.Name ascending
                                        select new SelectListItem
                                        {
                                            Text = Convert.ToString(a.Name),

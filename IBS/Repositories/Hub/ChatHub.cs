@@ -21,22 +21,23 @@ namespace IBS.Repositories.Hub
         //    await Clients.All.MessageReceivedFromHub(message);
         //}
 
-        public async Task OnConnectedAsync()
+        public async Task OnConnectedAsync(string Master_ID)
         {
-            Common.userid.Add(Context.ConnectionId);
-            await Clients.All.NewUserConnected("a new user connectd = " + Context.ConnectionId);
+            var groupName = "HubConnection";
+            //Common.userid.Add(Context.ConnectionId);
+            Common.connectedUser.Add(Master_ID, Context.ConnectionId);
+            var group = Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Groups(groupName).NewUserConnected("a new user connectd = " + Context.ConnectionId);
         }
 
-        public async Task BroadcastAsync(string user, string message)
+        public async Task BroadcastAsync(string Master_ID, string user, string message)
         {
-            //await Clients.All.MessageReceivedFromHub(user, message);
-            await Clients.All.MessageReceivedFromHub(user, message);
+            var users = Common.connectedUser.Where(x => x.Key == Master_ID || x.Key == user).ToList();
+            foreach(var item in users)
+            {
+                await Clients.Client(item.Value).MessageReceivedFromHub(user, message);
+            }
         }
-        //public async Task SendMessage(string user, string message)
-        //{
-        //    await Clients.All.SendAsync("ReceiveMessage", user, message);
-        //}
-
 
     }
 }

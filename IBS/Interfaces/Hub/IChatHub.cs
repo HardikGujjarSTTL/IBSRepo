@@ -2,7 +2,7 @@
 
 namespace IBS.Interfaces.Hub
 {
-    public interface IChatHub 
+    public interface IChatHub
     {
         //Task MessageReceivedFromHub(ChatMessage message);
 

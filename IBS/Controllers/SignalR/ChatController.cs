@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Interfaces.Hub;
 using IBS.Models;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace IBS.Controllers.SignalR
 {
+    [Authorization]
     public class ChatController : BaseController
     {
         private readonly IHubContext<ChatHub> hubContext;
@@ -27,6 +29,7 @@ namespace IBS.Controllers.SignalR
             model = _chathub.GetMessageRecvList(Master_ID);
             model.HostUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
             model.msg_recv_ID = model.lstMsg.Select(x => x.msg_recv_ID).FirstOrDefault();
+            ViewBag.Master_ID = Master_ID;
             return View(model);
         }
 
@@ -51,10 +54,10 @@ namespace IBS.Controllers.SignalR
             return PartialView(model);
         }
 
-        public IActionResult ChatMessageHistory(int id)
+        public IActionResult ChatMessageHistory(int send_ID, int recv_ID)
         {
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(Master_ID, id);
+            model = _chathub.GetMessageList(send_ID, recv_ID);
             model.Master_ID = Master_ID;
             return PartialView(model);
         }
