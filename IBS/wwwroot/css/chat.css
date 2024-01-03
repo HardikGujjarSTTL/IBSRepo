@@ -6,7 +6,7 @@
 .chatBox {
     width: 100%;
     height: calc(100vh - 20px);
-    background-color: #e6edec;
+    background-color: #efe6df;
     border-radius: 12px;
     overflow: hidden;
     position: relative;
@@ -195,6 +195,7 @@
     padding: 10px;
     position: relative;
     width: 95%;
+    box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
 .chatBoxBody .chatBodyText .sendText {
@@ -205,6 +206,7 @@
     text-align: left;
     position: relative;
     width: 95%;
+    box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
 .chatBoxBody .chatBodyText .reciveTextHolder {
