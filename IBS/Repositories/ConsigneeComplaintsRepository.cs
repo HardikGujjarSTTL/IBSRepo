@@ -194,12 +194,15 @@ namespace IBS.Repositories
             //DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
 
 
-            OracleParameter[] par1 = new OracleParameter[3];
+            OracleParameter[] par1 = new OracleParameter[6];
             par1[0] = new OracleParameter("p_PO_No", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
             par1[1] = new OracleParameter("p_PO_Date", OracleDbType.Varchar2, PoDt, ParameterDirection.Input);
-            par1[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par1[2] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par1[3] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par1[4] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par1[5] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 1);
+            var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 2);
             DataTable dt2 = ds2.Tables[0];
 
             List<ConsigneeComplaints> list = dt2.AsEnumerable().Select(row => new ConsigneeComplaints
@@ -219,18 +222,15 @@ namespace IBS.Repositories
 
             query = list.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            int recordsTotal = 0;
+            if (ds2 != null && ds2.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds2.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 
