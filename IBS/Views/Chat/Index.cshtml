@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
     int SenderId = ViewBag.SenderId;
     int ReceiverId = Model.msg_recv_ID ?? 0;
+    string SiteUrl = Model.HostUrl;
 }
 
 <div class="list-inner">
@@ -48,13 +49,11 @@
 </div>
 
 <link href="~/css/chat.css" rel="stylesheet" />
-@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script> *@
 <script src="~/js/signalr.min.js"></script>
 
 <script>
-
-    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    
+    var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
     var SenderId = @SenderId;
     var ReceiverId = @ReceiverId;
 
