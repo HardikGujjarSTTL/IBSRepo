@@ -14,19 +14,21 @@
 <div class="task-listinput">
     <form role="form" id="frmChatMessage">
         <div class="accordion-body chatArea">
+            <div style="background:#f1f1f1; padding:15px; border-radius:12px; margin-bottom:15px;">
             <div class="row my-0">
-                <div class="col-md-2 mb-3">
+                <div class="col-md-2">
                     <label for="Reference">User Name</label>
                     @Html.DropDownList("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
                     @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
                 </div>
-                <div class="col-md-8 mb-3">
+                <div class="col-md-8">
                     <label for="Reference">Message</label>
                     <input type="text" id="txtMessage" />
                 </div>
-                <div class="col-md-2 mb-3 savenext-btn" style="margin-top:30px;">
+                <div class="col-md-2 savenext-btn" style="margin-top:30px;">
                     <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Send</button>
                 </div>
+            </div>
             </div>
             <div class="chatBox">
                 <div class="chatBoxHeader">
