@@ -10,13 +10,11 @@ namespace IBS.Controllers.SignalR
     [Authorization]
     public class ChatController : BaseController
     {
-        private readonly IHubContext<ChatHub1> hubContext;
         private readonly IConfiguration _configuration;
         private readonly IChatRepository _chathub;
 
-        public ChatController(IHubContext<ChatHub1> hubContext, IConfiguration configuration, IChatRepository chathub)
+        public ChatController(IConfiguration configuration, IChatRepository chathub)
         {
-            this.hubContext = hubContext;
             _configuration = configuration;
             _chathub = chathub;
         }

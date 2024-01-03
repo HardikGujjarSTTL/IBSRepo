@@ -31,7 +31,7 @@ namespace IBS.Models
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
         public static int RegenerateOtpButtonShowMinute = 10;
 
-        public static Dictionary<string, string> ConnectedUsers = new Dictionary<string, string>();
+        public static Dictionary<string, int> ConnectedUsers = new Dictionary<string, int>();
 
         public static string SendOTP(string mobile, string message)
         {
