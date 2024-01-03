@@ -19,14 +19,9 @@
                     @Html.DropDownListFor(Model => Model.msg_recv_ID, new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
                     <span asp-validation-for="msg_recv_ID" class="text-danger"></span>
                 </div>
-                @*<div class="col-md-4 mb-3">
-                <label for="Reference">Message</label>
-                <input type="text" class="input" asp-for="send_message">
-                </div>*@
             </div>
             <div class="savenext-btn mb-5">
                 <button type="button" class="save-btn active" id="btnSave" onclick="SaveMessage();">Save</button>
-                @*<button type="button" class="save-btn active" id="btnSearch">Search</button>*@
             </div>
             <div class="chatBox">
                 <div class="chatBoxHeader">
@@ -104,6 +99,7 @@
             ReceiverId = Recv_ID;
         }
         connection.invoke("SendMessage", SenderId, ReceiverId, message);
+        $("#txtMsg").val("");
     }
 
     connection.start().then(function () {
