@@ -1,4 +1,5 @@
 ﻿@model IBS.Models.ChatMessage
+
 <ul id="messageList" class="chatBodyText">
     @{
         if (Model.lstMsg.Count > 0)
@@ -8,21 +9,30 @@
                 if (Model.Master_ID == item.msg_send_ID)
                 {
                     <li class="sendTextHolder">
-                        <div class="sendText">@item.message</div>
+                        <div class="sendText">@item.message <span class="timeStamp">17:10 PM</span></div>
                     </li>
                 }
                 else
                 {
                     <li class="reciveTextHolder">
-                        <div class="recieveText">@item.message</div>
+                        <div class="recieveText">@item.message <span class="timeStamp">17:10 PM</span></div>
                     </li>
                 }
             }
         }
     }
 </ul>
-
 <div class="chatInputArea">
     <input type="text" id="txtMsg" />
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
+
+<script type="text/javascript">
+
+    $('#txtMsg').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            SendMessage(2);
+        }
+    });
+
+</script>
