@@ -326,7 +326,7 @@ namespace IBS.Controllers.InspectionBilling
                     {
                         if (GetData.InspectingAgency == "C")
                         {
-                            if (GetData.Remarks == "")
+                            if (string.IsNullOrEmpty(GetData.Remarks))
                             {
                                 msg = "RITES is not the Inspection Agency for this CASE.";
                             }
@@ -337,7 +337,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                         else if (GetData.InspectingAgency == "X")
                         {
-                            if (GetData.Remarks == "")
+                            if (string.IsNullOrEmpty(GetData.Remarks))
                             {
                                 msg = "Railways has cancelled the PO for this CASE.";
                             }
@@ -348,7 +348,7 @@ namespace IBS.Controllers.InspectionBilling
                         }
                         else if (GetData.InspectingAgency == "S")
                         {
-                            if (GetData.Remarks == "")
+                            if (string.IsNullOrEmpty(GetData.Remarks))
                             {
                                 msg = "RITES has Suspended the Inspection against this PO.";
                             }

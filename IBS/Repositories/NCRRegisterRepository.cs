@@ -100,7 +100,7 @@ namespace IBS.Repositories
                     formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
                 }
 
-                OracleParameter[] par = new OracleParameter[9];
+                OracleParameter[] par = new OracleParameter[12];
                 par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
                 par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
                 par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
@@ -109,8 +109,11 @@ namespace IBS.Repositories
                 par[5] = new OracleParameter("p_SET_NO", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_NCR_NO", OracleDbType.Varchar2, NCNO, ParameterDirection.Input);
                 par[7] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-                par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 1);
+                par[8] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+                par[9] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+                par[10] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[11] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+                ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 2);
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -132,18 +135,30 @@ namespace IBS.Repositories
 
                     query = list.AsQueryable();
 
-                    dTResult.recordsTotal = query.Count();
 
-                    if (!string.IsNullOrEmpty(searchBy))
-                        query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                        || Convert.ToString(w.NC_NO).ToLower().Contains(searchBy.ToLower())
-                        );
+                    int recordsTotal = 0;
+                    if (ds != null && ds.Tables[1].Rows.Count > 0)
+                    {
+                        recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+                    }
 
-                    dTResult.recordsFiltered = query.Count();
-
-                    dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+                    dTResult.recordsTotal = recordsTotal;
+                    dTResult.recordsFiltered = recordsTotal;
+                    dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
                     dTResult.draw = dtParameters.Draw;
+
+                    //dTResult.recordsTotal = query.Count();
+
+                    //if (!string.IsNullOrEmpty(searchBy))
+                    //    query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+                    //    || Convert.ToString(w.NC_NO).ToLower().Contains(searchBy.ToLower())
+                    //    );
+
+                    //dTResult.recordsFiltered = query.Count();
+
+                    //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+                    //dTResult.draw = dtParameters.Draw;
 
                 }
                 else
@@ -608,7 +623,7 @@ namespace IBS.Repositories
                         NC_REASONS = $"IC No. {row["IC_NO"]}, Dated: {row["IC_DATE"]}\n<br/>";
                         NC_REASONS += $"Case No. {row["CASE_NO"]}\n<br/>";
                         NC_REASONS += $"Item: {row["ITEM_DESC_PO"]}\n<br/>";
-                        NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n";
+                        NC_REASONS += $"PO No. {row["PO_NO"]}, Dated: {row["PO_DATE"]}\n<br/>";
                         NC_REASONS += $"IE: {row["IE_NAME"]}\n<br/>";
                         NC_REASONS += $"CM: {row["CO_NAME"]}\n<br/>";
                     }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
+using System.Drawing;
 
 namespace IBS.Controllers.Reports.OtherReports
 {
@@ -188,6 +189,8 @@ namespace IBS.Controllers.Reports.OtherReports
         {
             return View();
         }
+
+        #region NCRCWiseReport
         public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string iecmname, string reporttype, string COName, string IENametext)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -208,7 +211,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.NCRReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region IEWiseTrainingReport
         public IActionResult IEWiseTrainingReport(string IENAME, string TrainingArea, string Mechanical, string Electrical, string Civil, string Regular, string Deputaion, string Particularie, string ParticularArea)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -223,7 +228,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.IEWiseTrainingReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region OngoingContractReport
         public IActionResult OngoingContractReport(string StatusOffer, string Region, string StatusOffertxt, string Regiontxt, string rdoregionwise)
         {
             OngoingContrcatsReportModel model = otherReportsRepository.Getongoingcontractdetails(StatusOffer, Region, StatusOffertxt, Regiontxt, rdoregionwise);
@@ -232,42 +239,38 @@ namespace IBS.Controllers.Reports.OtherReports
             model.StatusOffertxt = StatusOffertxt;
             return PartialView(model);
         }
+        #endregion
 
+        #region ContractReport
         public IActionResult ContractReport(string FromDate, string ToDate, string Region, string clientname)
         {
             ContractReportModel model = otherReportsRepository.GetContractDetails(FromDate, ToDate, Region, clientname);
             GlobalDeclaration.ContractReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorClusterIEReport
         public IActionResult VendorClusterIEReport(string department)
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            //string wRegion = "";
-            //if (Region == "N") { wRegion = "Northern Region"; }
-            //else if (Region == "S") { wRegion = "Southern Region"; }
-            //else if (Region == "E") { wRegion = "Eastern Region"; }
-            //else if (Region == "W") { wRegion = "Western Region"; }
-            //else if (Region == "C") { wRegion = "Central Region"; }
             VendorClusterReportModel model = otherReportsRepository.GetVendorClusterReport(department, Region);
             GlobalDeclaration.VendorClusterReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region IEAlterMappingReport
         public IActionResult IEAlterMappingReport()
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            //string wRegion = "";
-            //if (Region == "N") { wRegion = "Northern Region"; }
-            //else if (Region == "S") { wRegion = "Southern Region"; }
-            //else if (Region == "E") { wRegion = "Eastern Region"; }
-            //else if (Region == "W") { wRegion = "Western Region"; }
-            //else if (Region == "C") { wRegion = "Central Region"; }
             IEAlterMappingReportModel model = otherReportsRepository.GetIEAlterMappingReport(Region);
             GlobalDeclaration.IEAlterMappingReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorPerforeport
         public IActionResult VendorPerforeport(string FromDate, string ToDate, string formonth, string forperiod, string month, string year, string vendcd, string vendor, string monthtxt)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -288,7 +291,9 @@ namespace IBS.Controllers.Reports.OtherReports
             model.Region = DateTime.Now.ToString("dd-MM-yyyy");
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorFeedback
         public IActionResult VendorFeedback()
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -303,7 +308,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.VendorFeedbackReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region PeriodWiseChecksheet
         public IActionResult PeriodWiseChecksheet(string FromDate, string ToDate)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -320,7 +327,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.PeriodWiseChecksheetReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region PeriodWiseTechRef
         public IActionResult PeriodWiseTechRef(string FromDate, string ToDate)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -337,7 +346,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.PeriodWiseTechnicalRefReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region DailyWorkIECMReport
         public IActionResult DailyWorkIECMReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
         {
             string wRegion = "";
@@ -356,7 +367,9 @@ namespace IBS.Controllers.Reports.OtherReports
             model.CMWise = CMWise;
             return PartialView(model);
         }
+        #endregion
 
+        #region DailyWorkIEExcepReport
         public IActionResult DailyWorkIEExcepReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
         {
             string wRegion = "";
@@ -373,7 +386,9 @@ namespace IBS.Controllers.Reports.OtherReports
             model.Regions = wRegion;
             return PartialView(model);
         }
+        #endregion
 
+        #region PhotoSubmiteedByIE
         public IActionResult PhotoSubmiteedByIE(string CaseNo, string CallRecDT, string CallSno, string BKNO, string SETNO)
         {
             string wRegion = "";
@@ -387,8 +402,10 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.IEICPhotoEnclosedModel = model;
             return PartialView(model);
         }
-        
-        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText,string DSCToMonthText,string DSC_Monthrdo)
+        #endregion
+
+        #region DSCExpReport
+        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText, string DSCToMonthText, string DSC_Monthrdo)
         {
             string wRegion = "";
             if (Region == "N") { wRegion = "Northern Region"; }
@@ -406,6 +423,7 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.OtherReportsModelList = model;
             return PartialView(model);
         }
+        #endregion
 
         #region Other Event
         [HttpGet]

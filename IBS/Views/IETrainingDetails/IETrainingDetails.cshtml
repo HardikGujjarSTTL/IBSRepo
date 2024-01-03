@@ -7,7 +7,7 @@
     ViewData["Title"] = "IE TRAINING DETAILS";
     string clsView = "";
     //if (Model.LabId > 0)
-    //{        
+    //{
     //    clsView = "Permission_View";
     //}
 }
@@ -43,10 +43,11 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">Discipline</label>
-                        @Html.DropDownListFor(model => model.Discipline, Common.Departmentlist(), new { @id="ddldis" })
+                        <input type="text" class="input" asp-for="Discipline" readonly="true" id="ddldis">
+                        @* @Html.DropDownListFor(model => model.Discipline, Common.Departmentlist(), new { @id="ddldis" }) *@
                         @*<span asp-validation-for="Discipline" class="text-danger"></span>*@
                     </div>
-                   
+
                     <div class="col-md-4 mb-3">
                         <label for="Reference">DOB</label>
                         <input type="text" class="input datepicker" asp-for="DOB" id="txtdob">
@@ -61,7 +62,7 @@
                     <div class="col-md-4 mb-3" style="margin-top:3%">
                         <label for="Reference">Photo</label>
                         <input type="file" class="form-control-file" id="photofile" name="Photo" accept=".pdf">
-                        
+
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Category</label>
@@ -85,11 +86,11 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">Institute</label>
-                        <textarea id="textAreaInput"  asp-for="Institute"></textarea>
+                        <textarea id="textAreaInput" asp-for="Institute"></textarea>
                         @*<span asp-validation-for="Institute" class="text-danger"></span>*@
                     </div>
-@*                    <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save" style="margin-left:42%" id="btnsaveemp" onclick="SaveEmp();">Save</button>
+                    @*                    <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" style="margin-left:42%" id="btnsaveemp" onclick="SaveEmp();">Save</button>
                     </div>*@
                     <div class="row">
                         <div class="col-lg-12">
@@ -110,12 +111,12 @@
                         <label for="Reference">Training Category</label>
                         <br />
                         @Html.RadioButtonFor(m => m.training_category, "O",new { id = "out",name = "trainingCategory" })
-                            Outside
+                        Outside
 
 
                         @Html.RadioButtonFor(m => m.training_category, "I",new { id = "in",name = "trainingCategory" })
-                            In-House
-                        
+                        In-House
+
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Course Name</label>
@@ -128,7 +129,7 @@
                         @*<span asp-validation-for="Category" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Institue</label>
+                        <label for="Reference">Course Institue</label>
                         <input type="text" class="input" asp-for="Institue" id="txtinst">
                         <span class="text-danger field-validation-error" id="spnError6"></span>
                     </div>
@@ -172,11 +173,13 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(function () {
-            
+
             $("#out").prop("checked", true);
-            $("#ddldis").prop("disabled", true);
+            // $("#ddldis").prop("disabled", true);
             $(".datepicker").datepicker({
-                dateFormat: "dd-mm-yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd-mm-yy",
+                changeMonth: true,
+                changeYear: true
             });
         });
         function Save() {
@@ -223,21 +226,20 @@
             }
             if (!IsValid) return;
 
-            
-                $("#frmtrainingDetails").submit();
+
+            $("#frmtrainingDetails").submit();
             completed = function (response) {
                 var res = response.responseJSON;
                 ShowHideMsgNew(res.status, res.responseText);
-                if(res.status == false){
+                if (res.status == false) {
                     alert(res.responseText);
-                    
+
                 }
-                else
-                {
+                else {
                     window.location.href = '@Url.Action("Index", "IETrainingDetails")';
                 }
                 //window.location.href = "/LaboratoryMaster/LaboratoryMaster";
-                
+
             };
         }
 
@@ -253,7 +255,7 @@
             var url = '@Url.Action("BindCourseName", "IETrainingDetails")';
             $.ajax({
                 //url: '/IETrainingDetails/BindCourseName',
-                url:url,
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { TrainingType: TrainingType, TrainingArea: TrainingArea },
@@ -271,17 +273,25 @@
             var url = '@Url.Action("IEFetchData", "IETrainingDetails")';
             $.ajax({
                 //url: '/IETrainingDetails/IEFetchData',
-                url:url,
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { Name: Name },
 
                 success: function (success) {
-                    
-                    if (success.EmpNo == null){
+
+                    if (success.EmpNo == null) {
                         $("#txtempno").val(" ");
+                        $("#ddldis").val(success.Discipline);
+                        $("#txtdob").val(success.DOB);
+                        $("#txtdoj").val(success.DOJ);
+                        $("#ddlcat").val(success.Category);
+                        $("#txtcato").val(success.CategoryOther);
+                        $("#ddlqual").val(success.Qualification);
+                        $("#txtqualo").val(success.QualificationOther);
+                        $("#textAreaInput").val(success.Institute);
                     }
-                    else{
+                    else {
                         $("#txtempno").val(success.EmpNo);
                         $("#ddldis").val(success.Discipline);
                         $("#txtdob").val(success.DOB);
@@ -292,24 +302,24 @@
                         $("#txtqualo").val(success.QualificationOther);
                         $("#textAreaInput").val(success.Institute);
                     }
-                    
+
                 }
 
             });
         }
 
-        function TrainingDFetchData(){
+        function TrainingDFetchData() {
             var Course = $("#ddlcourse").val();
             var url = '@Url.Action("TrainingDFetchData", "IETrainingDetails")';
             $.ajax({
                 //url: '/IETrainingDetails/TrainingDFetchData',
-                url:url,
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { Course: Course },
 
                 success: function (success) {
-                    
+
                     $("#txtcourseother").val(success.CourseNameOther);
                     $("#txtinst").val(success.Institue);
                     $("#txtfrom").val(success.From);
@@ -317,17 +327,16 @@
                     $("#txtcert").val(success.certificate);
                     $("#txtfees").val(success.Fees);
                     $("#txtvalidity").val(success.Validity);
-                   if(success.training_category == "I"){
-                        
+                    if (success.training_category == "I") {
+
                         $("#in").prop("checked", true);
-                   }
-                   else
-                   {
+                    }
+                    else {
                         $("#out").prop("checked", true);
-                        
-                   }
-                   
-                    
+
+                    }
+
+
                 }
 
             });
