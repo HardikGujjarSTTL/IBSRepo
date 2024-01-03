@@ -230,7 +230,7 @@
         }
 
         $("#btnModify").click(function () {
-            var CaseNo = $("#CaseNo").val();
+            var CaseNo = $("#CaseNo").val().toUpperCase();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
@@ -310,7 +310,7 @@
 
         $("#btnNewCall").click(function () {
             debugger
-            var CaseNo = $("#CaseNo").val();
+            var CaseNo = $("#CaseNo").val().toUpperCase();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
@@ -355,7 +355,7 @@
         });
 
         $("#btnDelete").click(function () {
-            var CaseNo = $("#CaseNo").val();
+            var CaseNo = $("#CaseNo").val().toUpperCase();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
@@ -384,7 +384,7 @@
         });
 
         $("#btnCCancellation").click(function () {
-            var CaseNo = $("#CaseNo").val();
+            var CaseNo = $("#CaseNo").val().toUpperCase();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
@@ -412,14 +412,16 @@
         });
 
         $("#btnEditStatus").click(function () {
-            var CaseNo = $("#CaseNo").val();
-            var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CaseNo = $("#CaseNo").val().toUpperCase();
+            // var CallRecvDt = moment($('#CallRecvDt').datepicker('getDate')).format("YYYY-MM-DD");
+            var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
 
             if (CaseNo == null || CaseNo == "") {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
+            debugger
             if (CallRecvDt == null || CallRecvDt == "") {
                 ShowHideMsgNew(false, "Please select Call Date");
                 return;
