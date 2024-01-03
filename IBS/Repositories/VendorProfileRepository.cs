@@ -73,10 +73,13 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[1];
-            par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 2);
 
             List<VendorlistModel> model = new List<VendorlistModel>();
             if (ds != null && ds.Tables.Count > 0)
@@ -86,7 +89,13 @@ namespace IBS.Repositories
             }
             query = model.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            //dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.VEND_NAME).ToLower().Contains(searchBy.ToLower())
@@ -95,11 +104,14 @@ namespace IBS.Repositories
                 || Convert.ToString(w.VEND_ADD).ToLower().Contains(searchBy.ToLower())
                 );
 
-            dTResult.recordsFiltered = query.Count();
+            //dTResult.recordsFiltered = query.Count();
+            dTResult.recordsFiltered = recordsTotal;
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }

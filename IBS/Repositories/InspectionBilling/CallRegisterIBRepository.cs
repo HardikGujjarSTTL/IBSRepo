@@ -2693,7 +2693,7 @@ namespace IBS.Repositories.InspectionBilling
                 throw new Exception("Record Not found");
             else
             {
-                model.InspectingAgency = POMaster.InspectingAgency;
+                model.InspectingAgency = POMaster.InspectingAgency == null ? "X" : POMaster.InspectingAgency;
                 model.Remarks = POMaster.Remarks;
                 model.VendInspStopped = POMaster.VendInspStopped;
                 model.VendRemarks = POMaster.VendRemarks;

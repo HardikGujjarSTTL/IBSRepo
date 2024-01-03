@@ -36,11 +36,12 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             }
             catch (Exception ex)
             {
-                // Common.AddException(ex.ToString(), ex.Message.ToString(), "ComplaintsJIRequiredReport", "GetClientType", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ConsigneeCompReport", "GetClientType", 1, GetIPAddress());
             }
             return Json(json);
         }
 
+        #region Manage
         public IActionResult Manage(string ReportType)
         {
             ConsigneeCompReports model = new();
@@ -67,17 +68,6 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnInspRegions") && !string.IsNullOrEmpty(formCollection["hdnInspRegions"])) model.InspRegion = Convert.ToString(formCollection["hdnInspRegions"]);
                 if (formCollection.Keys.Contains("hdnJIInspRegion") && !string.IsNullOrEmpty(formCollection["hdnJIInspRegion"])) model.JIInspRegion = Convert.ToString(formCollection["hdnJIInspRegion"]);
                 if (formCollection.Keys.Contains("hdnJIREQRegion") && !string.IsNullOrEmpty(formCollection["hdnJIREQRegion"])) model.JIInspReqRegion = Convert.ToString(formCollection["hdnJIREQRegion"]);
-                //if (formCollection.Keys.Contains("hdneastern") && !string.IsNullOrEmpty(formCollection["hdneastern"])) model.regioneast = Convert.ToString(formCollection["hdneastern"]);
-                //if (formCollection.Keys.Contains("hdnwestern") && !string.IsNullOrEmpty(formCollection["hdnwestern"])) model.regionwest = Convert.ToString(formCollection["hdnwestern"]);
-                //if (formCollection.Keys.Contains("hdnalljiRegions") && !string.IsNullOrEmpty(formCollection["hdnalljiRegions"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegions"]);
-                //if (formCollection.Keys.Contains("hdnnorthernji") && !string.IsNullOrEmpty(formCollection["hdnnorthernji"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernji"]);
-                //if (formCollection.Keys.Contains("hdnsouthernji") && !string.IsNullOrEmpty(formCollection["hdnsouthernji"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernji"]);
-                //if (formCollection.Keys.Contains("hdneasternji") && !string.IsNullOrEmpty(formCollection["hdneasternji"])) model.jieast = Convert.ToString(formCollection["hdneasternji"]);
-                //if (formCollection.Keys.Contains("hdnwesternji") && !string.IsNullOrEmpty(formCollection["hdnwesternji"])) model.jiwest = Convert.ToString(formCollection["hdnwesternji"]);
-                //if (formCollection.Keys.Contains("hdncompallRegions") && !string.IsNullOrEmpty(formCollection["hdncompallRegions"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegions"]);
-                //if (formCollection.Keys.Contains("hdnYes") && !string.IsNullOrEmpty(formCollection["hdnYes"])) model.compyes = Convert.ToString(formCollection["hdnYes"]);
-                //if (formCollection.Keys.Contains("hdnNo") && !string.IsNullOrEmpty(formCollection["hdnNo"])) model.compno = Convert.ToString(formCollection["hdnNo"]);
-                //if (formCollection.Keys.Contains("hdnCancelled") && !string.IsNullOrEmpty(formCollection["hdnCancelled"])) model.cancelled = Convert.ToString(formCollection["hdnCancelled"]);
                 if (formCollection.Keys.Contains("hdnUnderConsideration") && !string.IsNullOrEmpty(formCollection["hdnUnderConsideration"])) model.underconsider = Convert.ToString(formCollection["hdnUnderConsideration"]);
                 if (formCollection.Keys.Contains("hdnallaction") && !string.IsNullOrEmpty(formCollection["hdnallaction"])) model.allaction = Convert.ToString(formCollection["hdnallaction"]);
                 if (formCollection.Keys.Contains("hdnParticularAction") && !string.IsNullOrEmpty(formCollection["hdnParticularAction"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularAction"]);
@@ -127,17 +117,6 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
                 if (formCollection.Keys.Contains("hdnInspRegions") && !string.IsNullOrEmpty(formCollection["hdnInspRegions"])) model.InspRegion = Convert.ToString(formCollection["hdnInspRegions"]);
                 if (formCollection.Keys.Contains("hdnJIInspRegion") && !string.IsNullOrEmpty(formCollection["hdnJIInspRegion"])) model.JIInspRegion = Convert.ToString(formCollection["hdnJIInspRegion"]);
                 if (formCollection.Keys.Contains("hdnJIREQRegion") && !string.IsNullOrEmpty(formCollection["hdnJIREQRegion"])) model.JIInspReqRegion = Convert.ToString(formCollection["hdnJIREQRegion"]);
-                //if (formCollection.Keys.Contains("hdneastern") && !string.IsNullOrEmpty(formCollection["hdneastern"])) model.regioneast = Convert.ToString(formCollection["hdneastern"]);
-                //if (formCollection.Keys.Contains("hdnwestern") && !string.IsNullOrEmpty(formCollection["hdnwestern"])) model.regionwest = Convert.ToString(formCollection["hdnwestern"]);
-                //if (formCollection.Keys.Contains("hdnalljiRegions") && !string.IsNullOrEmpty(formCollection["hdnalljiRegions"])) model.jiallregion = Convert.ToString(formCollection["hdnalljiRegions"]);
-                //if (formCollection.Keys.Contains("hdnnorthernji") && !string.IsNullOrEmpty(formCollection["hdnnorthernji"])) model.jinorth = Convert.ToString(formCollection["hdnnorthernji"]);
-                //if (formCollection.Keys.Contains("hdnsouthernji") && !string.IsNullOrEmpty(formCollection["hdnsouthernji"])) model.jisourth = Convert.ToString(formCollection["hdnsouthernji"]);
-                //if (formCollection.Keys.Contains("hdneasternji") && !string.IsNullOrEmpty(formCollection["hdneasternji"])) model.jieast = Convert.ToString(formCollection["hdneasternji"]);
-                //if (formCollection.Keys.Contains("hdnwesternji") && !string.IsNullOrEmpty(formCollection["hdnwesternji"])) model.jiwest = Convert.ToString(formCollection["hdnwesternji"]);
-                //if (formCollection.Keys.Contains("hdncompallRegions") && !string.IsNullOrEmpty(formCollection["hdncompallRegions"])) model.compallregion = Convert.ToString(formCollection["hdncompallRegions"]);
-                //if (formCollection.Keys.Contains("hdnYes") && !string.IsNullOrEmpty(formCollection["hdnYes"])) model.compyes = Convert.ToString(formCollection["hdnYes"]);
-                //if (formCollection.Keys.Contains("hdnNo") && !string.IsNullOrEmpty(formCollection["hdnNo"])) model.compno = Convert.ToString(formCollection["hdnNo"]);
-                //if (formCollection.Keys.Contains("hdnCancelled") && !string.IsNullOrEmpty(formCollection["hdnCancelled"])) model.cancelled = Convert.ToString(formCollection["hdnCancelled"]);
                 if (formCollection.Keys.Contains("hdnUnderConsideration") && !string.IsNullOrEmpty(formCollection["hdnUnderConsideration"])) model.underconsider = Convert.ToString(formCollection["hdnUnderConsideration"]);
                 if (formCollection.Keys.Contains("hdnallaction") && !string.IsNullOrEmpty(formCollection["hdnallaction"])) model.allaction = Convert.ToString(formCollection["hdnallaction"]);
                 if (formCollection.Keys.Contains("hdnParticularAction") && !string.IsNullOrEmpty(formCollection["hdnParticularAction"])) model.particilaraction = Convert.ToString(formCollection["hdnParticularAction"]);
@@ -181,7 +160,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             if (ReportType == "COCOMPJI") model.ReportTitle = "Summarized Position Consignee Rejection (Region Wise)";
             return View("Manage", model);
         }
+        #endregion
 
+        #region ComplaintsByPeriod
         public IActionResult ComplaintsByPeriod(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
@@ -207,10 +188,12 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region ComplaintRecieved
         public IActionResult ComplaintRecieved(string FromDate, string ToDate, string AllCM, string AllIEs, string AllVendors, string AllClient, string AllConsignee, string Compact, string AwaitingJI, string JIConclusion, string JIConclusionfollowup,
-           string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
-           string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee, string FinancialYearsvalue)
+          string JIconclusionreport, string JIDecidedDT, string All, string ParticularIEs, string IEWise, string CMWise, string VendorWise, string ClientWise, string ConsigneeWise, string FinancialYear, string ParticularCMs, string ParticularClients, string ParticularConsignee,
+          string ParticularVendor, string Detailed, string FinancialYears, string ddlsupercm, string ddliename, string Clientwiseddl, string vendor, string Item, string consignee, string FinancialYearsvalue)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
@@ -230,7 +213,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             GlobalDeclaration.JIRequiredReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region JIComplaintsReport
         public IActionResult JIComplaintsReport(string JISNO)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -245,7 +230,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             ViewBag.Regions = wRegion;
             return PartialView(model);
         }
+        #endregion
 
+        #region ComplaintsByCONJI
         public IActionResult ComplaintsByCONJI(string FromDate, string ToDate, string InspRegion, string JIInspRegion, string JIInspReqRegion, string underconsider, string actiondrp, string actioncodedrp, string actionjidrp)
         {
             string region = "", jirequired = "";
@@ -270,7 +257,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             model.jirequired = jirequired;
             return PartialView("~/Views/ConsigneeCompPeriod/ComplaintsByPeriod.cshtml", model);
         }
+        #endregion
 
+        #region DefectCodeReport
         public IActionResult DefectCodeReport(DateTime FromDate, DateTime ToDate)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -285,7 +274,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             GlobalDeclaration.DefectCodeReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region JICompReport
         public IActionResult JICompReport(string FinancialYearsText, string FinancialYearsValue)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -301,7 +292,9 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             GlobalDeclaration.JIRequiredReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region TopNHighValueInsp
         public IActionResult TopNHighValueInsp(string month, string year, string valinsp, string FromDate, string ToDate, string ICDate, string BillDate, string formonth, string forperiod, string monthChar)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -323,8 +316,11 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             GlobalDeclaration.HighValueInspReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region GeneratePDF
         [HttpPost]
+
         public async Task<IActionResult> GeneratePDF(string ReportType)
         {
             string htmlContent = string.Empty;
@@ -386,5 +382,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
 
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
+        #endregion
+        
     }
 }
