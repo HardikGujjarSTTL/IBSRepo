@@ -1613,7 +1613,7 @@ namespace IBS.Models
                                   {
                                       Text = Convert.ToString(a.CourseName + "(" + Convert.ToDateTime(a.CourseDurFr).ToString("dd/MM/yyyy") + Convert.ToDateTime(a.CourseDurTo).ToString("dd/MM/yyyy") + ")"),
                                       Value = Convert.ToString(a.CourseId)
-                                  }).ToList();
+                                  }).Distinct().ToList();
             return IE;
 
         }
