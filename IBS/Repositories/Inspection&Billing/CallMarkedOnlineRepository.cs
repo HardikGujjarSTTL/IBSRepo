@@ -34,11 +34,19 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string Date = "";
+            string Date = "", FromDate = "", ToDate = "";
             int RDB1 = 0, RDB2 = 0, RDB3 = 0;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Date"]))
             {
                 Date = Convert.ToString(dtParameters.AdditionalValues["Date"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Rdb1"]))
             {
@@ -79,32 +87,45 @@ namespace IBS.Repositories.Inspection_Billing
             Date = Date.ToString() == "" ? string.Empty : Date.ToString();
 
             DateTime p_date = Convert.ToDateTime(Date);
-
-            OracleParameter[] par = new OracleParameter[6];
+            //DateTime p_Fromdate, p_Todate;
+            //if (!string.IsNullOrEmpty(FromDate))
+            //{
+            //    p_Fromdate = Convert.ToDateTime(FromDate);
+            //}
+            //if (!string.IsNullOrEmpty(ToDate))
+            //{
+            //    p_Todate = Convert.ToDateTime(ToDate);
+            //}
+            OracleParameter[] par = new OracleParameter[8];
             par[0] = new OracleParameter("P_DATE", OracleDbType.Date, p_date, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("p_Fromdate", OracleDbType.Date, string.IsNullOrEmpty(FromDate) ? null : Convert.ToDateTime(FromDate), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Todate", OracleDbType.Date, string.IsNullOrEmpty(ToDate) ? null : Convert.ToDateTime(ToDate), ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_NEW", par, 1);
             DataTable dt = ds.Tables[0];
-            List<CallMarkedOnlineModel> list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
+            List<CallMarkedOnlineModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                CASE_NO = Convert.ToString(row["CASE_NO"]),
-                CALL_RECV_DT = Convert.ToString(row["CALL_RECV_DT"]),
-                CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
-                CALL_SNO = Convert.ToString(row["CALL_SNO"]),
-                DATE_TIME = Convert.ToString(row["DATE_TIME"]),
-                CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
-                CALL_LETTER_NO = Convert.ToString(row["CALL_LETTER_NO"]),
-                REMARKS = Convert.ToString(row["REMARKS"]),
-                PO_NO = Convert.ToString(row["PO_NO"]),
-                PO_DT = Convert.ToString(row["PO_DT"]),
-                VENDOR = Convert.ToString(row["VENDOR"]),
-                IE_NAME = Convert.ToString(row["IE_NAME"])
-            }).ToList();
-
+                list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
+                {
+                    CASE_NO = Convert.ToString(row["CASE_NO"]),
+                    CALL_RECV_DT = Convert.ToString(row["CALL_RECV_DT"]),
+                    CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
+                    CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                    DATE_TIME = Convert.ToString(row["DATE_TIME"]),
+                    CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
+                    CALL_LETTER_NO = Convert.ToString(row["CALL_LETTER_NO"]),
+                    REMARKS = Convert.ToString(row["REMARKS"]),
+                    PO_NO = Convert.ToString(row["PO_NO"]),
+                    PO_DT = Convert.ToString(row["PO_DT"]),
+                    VENDOR = Convert.ToString(row["VENDOR"]),
+                    IE_NAME = Convert.ToString(row["IE_NAME"])
+                }).ToList();
+            }
             query = list.AsQueryable();
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;

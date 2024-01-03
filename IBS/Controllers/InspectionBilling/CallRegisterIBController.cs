@@ -230,11 +230,11 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.CaseNo != null && model.CallRecvDt != null && model.CallSno != null)
                 {
                     #region File Upload Profile Picture
-                    if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
                         msg = "Document Upload Successfully.";
                         int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.CallRegistrationDoc };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                         DocumentHelper.SaveFiles(DocID, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.CallRegistrationDoc), env, iDocument, "CallRegistrationDoc", string.Empty, DocumentIds);
                     }
                     #endregion
