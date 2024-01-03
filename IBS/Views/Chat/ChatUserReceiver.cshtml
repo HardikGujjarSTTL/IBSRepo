@@ -1,25 +1,20 @@
 ﻿@model IBS.Models.ChatMessage
 
-<div>
-    <ul>
-        @{
-            if (Model.lstMsg.Count > 0)
+<ul>
+    @{
+        if (Model.lstMsg.Count > 0)
+        {
+            foreach (var item in Model.lstMsg)
             {
-                foreach (var item in Model.lstMsg)
-                {
-                    var shortName = !string.IsNullOrEmpty(item.Name) ? item.Name.Split(" ")[0].Substring(0, 1) : "";
-                    <li class="active">
-                        <div class="chatBoxIcon chatBoxIconBg1">@shortName</div>
-                        <div class="chatBoxInfo">
-                            <h4 onclick="GetChatMessageList(@item.msg_recv_ID)">@item.Name</h4>
-                        </div>
-                    </li>
-                }
-            }
-            else
-            {
-                <li></li>
+                var shortName = !string.IsNullOrEmpty(item.Name) ? item.Name.Split(" ")[0].Substring(0, 1) : "";
+                var id = "li" + item.msg_recv_ID;
+                <li class="userList" onclick="GetChatMessageList(@item.msg_recv_ID)" id="@id">
+                    <div class="chatBoxIcon chatBoxIconBg1">@shortName</div>
+                    <div class="chatBoxInfo">
+                        <h4>@item.Name</h4>
+                    </div>
+                </li>
             }
         }
-    </ul>
-</div>
+    }
+</ul>
