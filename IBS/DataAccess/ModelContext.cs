@@ -24744,6 +24744,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(75)
                 .IsUnicode(false)
                 .HasColumnName("PO_NO");
+            entity.Property(e => e.PoiCd)
+                .HasPrecision(6)
+                .HasColumnName("POI_CD");
             entity.Property(e => e.PurchaserCd)
                 .HasMaxLength(173)
                 .IsUnicode(false)

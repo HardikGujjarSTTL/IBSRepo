@@ -120,7 +120,8 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Course Name</label>
-                        @Html.DropDownListFor(model => model.course_name, Common.CourseName(Model.Regin.ToString(),Model.TrainingType,Model.TrainingArea),"", new { @id="ddlcourse",onChange="TrainingDFetchData()"})
+                        @* @Html.DropDownListFor(model => model.course_name, Common.CourseName(Model.Regin.ToString(),Model.TrainingType,Model.TrainingArea),"", new { @id="ddlcourse",onChange="TrainingDFetchData()"}) *@
+                        <select id="ddlcourse" asp-for="course_name" onChange="TrainingDFetchData()"></select>
                         <span class="text-danger field-validation-error" id="spnError5"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -261,7 +262,10 @@
                 data: { TrainingType: TrainingType, TrainingArea: TrainingArea },
 
                 success: function (success) {
+                    $("#ddlcourse").empty();
+                    $("#ddlcourse").append("<option value=''>---Select---</option>");
                     $.each(success.list, function (index, value) {
+                       
                         $("#ddlcourse").append("<option value=" + value.Value + " >" + value.Text + "</option>");
                     });
                 }
@@ -279,7 +283,7 @@
                 data: { Name: Name },
 
                 success: function (success) {
-
+                    debugger;
                     if (success.EmpNo == null) {
                         $("#txtempno").val(" ");
                         $("#ddldis").val(success.Discipline);

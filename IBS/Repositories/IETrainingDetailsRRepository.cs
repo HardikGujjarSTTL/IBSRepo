@@ -150,6 +150,19 @@ namespace IBS.Repositories
                 {
                     int ie = Convert.ToInt32(Name);
                     var IE = context.T09Ies.Find(ie);
+                    if (IE.IeDepartment == "M")
+                          IE.IeDepartment = "Mechanical";
+                    else if (IE.IeDepartment == "E")
+                        IE.IeDepartment = "Electrical";
+                    else if (IE.IeDepartment == "C")
+                          IE.IeDepartment = "Civil";
+                    else if (IE.IeDepartment == "L")
+                         IE.IeDepartment = "Metallurgy";
+                    else if (IE.IeDepartment == "T")
+                         IE.IeDepartment = "Textiles";
+                    else if (IE.IeDepartment == "P")
+                         IE.IeDepartment = "Power Engineering";
+
                     if (IE == null)
                         return model;
                     else
@@ -286,6 +299,18 @@ namespace IBS.Repositories
             iec = GetDateString(Query);
             if (iec == null)
             {
+                if (IETrainingDetailsModel.Discipline == "Mechanical")
+                    IETrainingDetailsModel.Discipline = "M";
+                else if (IETrainingDetailsModel.Discipline == "Electrical")
+                    IETrainingDetailsModel.Discipline = "E";
+                else if(IETrainingDetailsModel.Discipline == "Civil")
+                    IETrainingDetailsModel.Discipline = "C";
+                else if(IETrainingDetailsModel.Discipline == "Metallurgy")
+                    IETrainingDetailsModel.Discipline = "L";
+                else if(IETrainingDetailsModel.Discipline == "Textiles")
+                    IETrainingDetailsModel.Discipline = "T";
+                else if(IETrainingDetailsModel.Discipline == "Power Engineerin")
+                    IETrainingDetailsModel.Discipline = "P";
                 var trainingDetail = new TraineeEmployeeMaster
                 {
                     IeCd = Convert.ToInt32(IETrainingDetailsModel.Name),

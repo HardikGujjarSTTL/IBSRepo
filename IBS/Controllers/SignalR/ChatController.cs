@@ -1,12 +1,10 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces.Hub;
 using IBS.Models;
-using IBS.Repositories.Hub;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace IBS.Controllers.SignalR
-{    
+{
     [Authorization]
     public class ChatController : BaseController
     {
@@ -23,7 +21,7 @@ namespace IBS.Controllers.SignalR
         {
             ChatMessage model = new ChatMessage();
             model = _chathub.GetMessageRecvList(Master_ID);
-            model.HostUrl = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host;
+            model.HostUrl = _configuration.GetSection("AppSettings")["SiteUrl"];
             model.msg_recv_ID = model.lstMsg.Select(x => x.msg_recv_ID).FirstOrDefault();
             ViewBag.SenderId = Master_ID;
             return View(model);

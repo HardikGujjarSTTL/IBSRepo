@@ -69,6 +69,8 @@ namespace IBS.Models
 
         public int MfgCd { get; set; }
 
+        public int MfgCd1 { get; set; }
+
         public string? MfgPlace { get; set; }
 
         public string? UserId { get; set; }
