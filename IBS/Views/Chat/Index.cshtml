@@ -5,6 +5,7 @@
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
     string SiteUrl = Model.HostUrl;
+    int CurrentDateCount = Model.CurrDateCount;
 }
 
 <div class="list-inner">
@@ -18,7 +19,7 @@
             <div class="chatTopFilter">
                 <div class="row my-0">
                     <div class="col-md-3">
-                        <label for="Reference">Users</label>                        
+                        <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
 
                     </div>
@@ -59,6 +60,8 @@
     var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
+    //var currDate = @DateTime.Now.ToString("dd MMMM yyyy");
+    var Cnt = @CurrentDateCount;
 
     $(document).ready(function () {
         GetUserReceiverList();
@@ -136,6 +139,11 @@
             window.location.href = "@Url.Action("Index", "Chat")";
         }
         else {
+            if (Cnt == 0) {
+                var element = '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
+                $(".chatBodyText").append(element);
+                Cnt = Cnt + 1;
+            }
             if (SenderId != ReceiverId) {
                 var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '<span class="timeStamp">' + "@DateTime.Now.ToString("hh:mm tt")" + '</span></div></li>';
                 $(".chatBodyText").append(element);

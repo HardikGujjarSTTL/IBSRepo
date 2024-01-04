@@ -80,6 +80,7 @@ namespace IBS.Repositories.Hub
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                model.CurrDateCount = model.lstMsg.Where(x=> x.Msg_Date.Date == DateTime.Now.Date).Count();
             }
             return model;
         }
