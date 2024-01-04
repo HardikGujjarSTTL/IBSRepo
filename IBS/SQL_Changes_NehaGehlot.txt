@@ -1704,3 +1704,55 @@ ALTER TABLE online_payment ADD STATUS_CD VARCHAR2(20);
 ALTER TABLE online_payment MODIFY TRANSACTION_NO VARCHAR2(20);
 --ALTER TABLE online_payment ADD Tok_ID VARCHAR2(20);
 
+=================================================================================================
+CREATE OR REPLACE PROCEDURE GetBillFinalisationForm(
+    p_FromDate IN VARCHAR2,
+    p_ToDate IN VARCHAR2,
+    p_Sector IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_RESULT OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO total_records 
+    FROM
+     v22_bill v22
+        WHERE v22.Bill_Dt >= TO_DATE('01-11-20', 'dd-mm-yy') 
+        AND v22.SENT_TO_SAP IS null 
+        AND v22.BILL_FINALISED IS null 
+        AND v22.REGION_CODE = p_Region
+        AND (V22.BILL_DT BETWEEN TO_DATE(p_FromDate, 'dd/MM/yyyy') AND TO_DATE(p_ToDate, 'dd/MM/yyyy'))
+        AND ((p_Sector != 'A' and v22.bpo_type = p_Sector) OR (p_Sector = 'A' AND 1 = 1))
+        ORDER BY v22.BILL_NO;
+
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+    
+    OPEN p_RESULT FOR
+    SELECT * FROM (SELECT ROWNUM AS rnum, t.* FROM (
+    SELECT
+        v22.bill_no AS BillNo,
+        v22.bill_dt AS BillDt,
+        v22.insp_fee AS InspFee,
+        v22.Cgst AS Cgst,
+        v22.Sgst AS Sgst,
+        v22.Igst AS Igst,
+        v22.bill_amount AS BillAmount,
+        v22.invoice_no AS InvoiceNo,
+        v22.bpo_name || '/' || v22.bpo_rly || '/' || v22.bpo_city AS BPO,
+        v22.Consignee || '/' || v22.consignee_city AS Consignee,
+        v22.recipient_gstin_no AS RecipientGstinNo
+    FROM
+         v22_bill v22
+        WHERE v22.Bill_Dt >= TO_DATE('01-11-20', 'dd-mm-yy') 
+        AND v22.SENT_TO_SAP IS null 
+        AND v22.BILL_FINALISED IS null 
+        AND v22.REGION_CODE = p_Region
+        AND (V22.BILL_DT BETWEEN TO_DATE(p_FromDate, 'dd/MM/yyyy') AND TO_DATE(p_ToDate, 'dd/MM/yyyy'))
+        AND ((p_Sector != 'A' and v22.bpo_type = p_Sector) OR (p_Sector = 'A' AND 1 = 1))
+        ORDER BY v22.BILL_NO
+            )t where ROWNUM <= p_page_end) WHERE rnum >= p_page_start;
+END;
+

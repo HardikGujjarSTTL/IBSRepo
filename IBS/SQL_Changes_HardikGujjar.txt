@@ -5446,3 +5446,72 @@ BEGIN
 
 END;
 /
+create or replace PROCEDURE Get_SP_AdministratorList(
+    p_UserName           IN VARCHAR2,
+    p_UserId           IN VARCHAR2,
+    p_page_start      NUMBER,
+    p_page_end        NUMBER,
+    p_result_cursor   OUT SYS_REFCURSOR,
+    p_result_records  OUT SYS_REFCURSOR
+)
+AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on filter criteria
+    SELECT COUNT(*) INTO total_records
+    FROM t02_users u
+    WHERE (u.isdeleted = 0 or u.isdeleted is null)
+          AND (p_UserName IS NULL OR UPPER(TRIM(u.user_name)) LIKE UPPER(TRIM('%' || p_UserName || '%')))
+          AND (p_UserId IS NULL OR UPPER(TRIM(u.user_id)) LIKE UPPER(TRIM('%' || p_UserId || '%')));
+
+    -- Open cursor for total records
+    OPEN p_result_records FOR
+        SELECT total_records AS total_records FROM DUAL;
+
+    -- Open cursor for paginated results
+    OPEN p_result_cursor FOR
+        SELECT *
+        FROM (
+            SELECT
+                ROWNUM rnum,
+                u.id ID,
+                u.user_id UserId,
+                u.user_name UserName,
+                u.emp_no EmpNo,
+                u.region Region,
+                u.status Status,
+                u.ALLOW_PO AllowPo,
+                u.ALLOW_DN_CHKSHT AllowDnChksht,
+                u.CALL_MARKING CallMarking,
+                u.CALL_REMARKING CallRemarking,
+                u.USER_TYPE UserType,
+                u.ISDELETED Isdeleted,
+                u.CREATEDDATE Createddate,
+                u.CREATEDBY Createdby,
+                u.UPDATEDDATE Updateddate,
+                u.UPDATEDBY Updatedby,
+--                (
+--                    SELECT r.rolename
+--                    FROM user_master um
+--                    INNER JOIN userroles uu on um.id = uu.user_master_id
+--                    INNER JOIN roles r ON uu.role_id = r.role_id 
+--                    WHERE um.user_type ='USERS' and trim(um.user_id) = trim(u.user_id)
+--                    ORDER BY r.rolename
+--                ) AS RoleName
+                r.rolename
+            FROM t02_users u
+            LEFT JOIN user_master um on um.user_type ='USERS' and trim(um.user_id) = trim(u.user_id)
+            LEFT JOIN userroles uu ON um.id = uu.user_master_id
+            LEFT JOIN roles r ON uu.role_id = r.role_id 
+            WHERE (u.isdeleted = 0 or u.isdeleted is null)
+              AND (p_UserName IS NULL OR UPPER(TRIM(u.user_name)) LIKE UPPER(TRIM('%' || p_UserName || '%')))
+              AND (p_UserId IS NULL OR UPPER(TRIM(u.user_id)) LIKE UPPER(TRIM('%' || p_UserId || '%')))
+                ORDER BY
+                    user_name
+        )
+        WHERE rnum BETWEEN p_page_start AND p_page_end
+        ORDER BY rnum ASC;
+
+END;
+/
