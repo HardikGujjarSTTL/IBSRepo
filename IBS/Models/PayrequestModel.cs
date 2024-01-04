@@ -64,4 +64,92 @@
             public Payrequest payInstrument { get; set; }
         }
     }
+
+    public class TransactionTrackingRequestModel
+    {
+        public class MerchDetails
+        {
+            public int merchId { get; set; }
+            public string merchTxnId { get; set; }
+            public string merchTxnDate { get; set; }
+        }
+
+        public class PayDetails
+        {
+            public decimal amount { get; set; }
+            public string txnCurrency { get; set; }
+            public string signature { get; set; }
+        }
+
+        public class PayInstrument
+        {
+            public MerchDetails merchDetails { get; set; }
+            public PayDetails payDetails { get; set; }
+        }
+
+        public class Rootobject
+        {
+            public PayInstrument payInstrument { get; set; }
+        }
+    }
+
+    public class TransactionTrackingResponseModel
+    {
+        public class SettlementDetails
+        {
+            public string reconStatus { get; set; }
+
+        }
+        public class MerchDetails
+        {
+            public int merchId { get; set; }
+            public string merchTxnId { get; set; }
+            public DateTime merchTxnDate { get; set; }
+            public string clientCode { get; set; }
+
+        }
+        public class PayDetails
+        {
+            public int atomTxnId { get; set; }
+            public string product { get; set; }
+            public int amount { get; set; }
+            public double surchargeAmount { get; set; }
+            public double totalAmount { get; set; }
+
+        }
+        public class BankDetails
+        {
+            public string bankTxnId { get; set; }
+            public string otsBankName { get; set; }
+            public string bankAuthId { get; set; }
+
+        }
+        public class PayModeSpecificData
+        {
+            public string subChannel { get; set; }
+            public BankDetails bankDetails { get; set; }
+
+        }
+        public class ResponseDetails
+        {
+            public string statusCode { get; set; }
+            public string message { get; set; }
+            public string description { get; set; }
+
+        }
+        public class PayInstrument
+        {
+            public SettlementDetails settlementDetails { get; set; }
+            public MerchDetails merchDetails { get; set; }
+            public PayDetails payDetails { get; set; }
+            public PayModeSpecificData payModeSpecificData { get; set; }
+            public ResponseDetails responseDetails { get; set; }
+
+        }
+        public class Application
+        {
+            public PayInstrument payInstrument { get; set; }
+
+        }
+    }
 }

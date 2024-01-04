@@ -13,6 +13,7 @@ using IBS.Helper;
 using System.Collections.Specialized;
 using System.Globalization;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using IBS.Repositories;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -41,6 +42,7 @@ namespace IBS.Controllers.WebsitePages
             return Json(model);
         }
 
+        #region PaymentIntegration
         public IActionResult PaymentIntegration(OnlinePaymentGateway model)
         {
             try
@@ -58,11 +60,15 @@ namespace IBS.Controllers.WebsitePages
                 hd.api = "AUTH";
                 hd.platform = "FLASH";
 
+                string Mer_Ref = onlinePaymentGatewayRepository.GetMerTrnRef(model.CaseNo,model.ChargesType);
+
+                model.MER_TXN_REF = Mer_Ref;
+
                 md.merchId = config.GetSection("PaymentConfig")["merchId"];
                 md.userId = config.GetSection("PaymentConfig")["merchId"];
                 md.password = config.GetSection("PaymentConfig")["password"];
                 md.merchTxnDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                md.merchTxnId = config.GetSection("PaymentConfig")["merchTxnId"];
+                md.merchTxnId = Mer_Ref;
                 model.MerID = md.merchId;
                 pd.amount = Convert.ToString(model.Charges);
                 pd.product = config.GetSection("PaymentConfig")["product"];
@@ -98,7 +104,7 @@ namespace IBS.Controllers.WebsitePages
                 //string testurleq = "https://caller.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
                 //string testurleq = "http://paynetzuat.atomtech.in/ots/aipay/auth?merchId=317159&encData=" + Encryptval;
 
-                string testurleq = config.GetSection("PaymentConfig")["PaymentUrl"]+ "?merchId=" + config.GetSection("PaymentConfig")["merchId"]+ "&encData=" + Encryptval;
+                string testurleq = config.GetSection("PaymentConfig")["PaymentUrl"] + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
                 ServicePointManager.Expect100Continue = true;
@@ -151,7 +157,9 @@ namespace IBS.Controllers.WebsitePages
 
             return Json(new { status = false, response = model });
         }
+        #endregion
 
+        #region OtherEvents
         public string Encrypt(string plainText, string passphrase, string salt, Byte[] iv, int iterations)
         {
             var plainBytes = Encoding.UTF8.GetBytes(plainText);
@@ -223,7 +231,9 @@ namespace IBS.Controllers.WebsitePages
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
+        #endregion
 
+        #region PaymentResponse
         public IActionResult PaymentResponse(string id)
         {
             OnlinePaymentGateway model = new();
@@ -272,7 +282,130 @@ namespace IBS.Controllers.WebsitePages
             }
             return View(model);
         }
+        #endregion
 
+        public IActionResult BindPaymentList()
+        {
+            OnlinePaymentGateway model = onlinePaymentGatewayRepository.BindPaymentList();
+            return View(model);
+        }
+
+        #region TransactionTracking
+        [HttpGet]
+        public IActionResult TransactionTracking(PaymentList model)
+        {
+            TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
+
+            TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
+            TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
+            TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
+
+            md.merchId = Convert.ToInt32(config.GetSection("PaymentConfig")["merchId"]);
+            md.merchTxnId = model.MERTXNID;
+            md.merchTxnDate = DateTime.Parse(model.merchTxnDate).ToString("yyyy-MM-dd");
+            pd.amount = model.Charges.Value;
+
+            pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
+
+            string[] signature = new string[4];
+            signature[0] = Convert.ToString(md.merchId);
+            signature[1] = md.merchTxnId;
+            signature[2] = Convert.ToString(pd.amount);
+            signature[3] = pd.txnCurrency;
+
+            pd.signature = generateSignature(config.GetSection("GenerateSignature")["SignatureHashKey"], signature);
+
+            pi.merchDetails = md;
+            pi.payDetails = pd;
+
+            rt.payInstrument = pi;
+
+            var json = JsonConvert.SerializeObject(rt);
+
+            string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
+            string salt = config.GetSection("PaymentConfig")["Encrypt"];
+            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            int iterations = 65536;
+
+            string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
+
+            //string testurleq = "https://paynetzuat.atomtech.in/ots/payment/status" + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
+            string testurleq = config.GetSection("PaymentConfig")["TransactionTrackingUrl"] + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            Encoding encoding = new UTF8Encoding();
+            byte[] data = encoding.GetBytes(json);
+            request.ProtocolVersion = HttpVersion.Version11;
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+            Stream stream = request.GetRequestStream();
+            stream.Write(data, 0, data.Length);
+            stream.Close();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            string jsonresponse = response.ToString();
+
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            string temp = null;
+            while ((temp = reader.ReadLine()) != null)
+            {
+                jsonresponse += temp;
+            }
+            var result = jsonresponse.Replace("System.Net.HttpWebResponse", "");
+
+            var uri = new Uri("http://atom.in?" + result);
+            var query = HttpUtility.ParseQueryString(uri.Query);
+
+            string encData = query.Get("encData");
+            string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
+            string salt1 = config.GetSection("PaymentConfig")["decrypt"];
+            string Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
+            //TransactionTrackingResponseModel.SettlementDetails root = new TransactionTrackingResponseModel.SettlementDetails();
+            //TransactionTrackingResponseModel.Application objectres = new TransactionTrackingResponseModel.Application();
+
+            //objectres = JsonConvert.DeserializeObject<TransactionTrackingResponseModel.Application>(Decryptval);
+
+            return Json(new { status = false, response = Decryptval });
+        }
+        #endregion
+
+        public string generateSignature(string hashKey, string[] param)
+        {
+            string resp = null;
+            StringBuilder sb = new StringBuilder();
+            foreach (string s in param)
+            {
+                sb.Append(s);
+            }
+            try
+            {
+                resp = ByteArrayToHexString(EncodeWithHMACSHA2(sb.ToString(), hashKey));
+            }
+            catch (Exception e)
+            {
+
+            }
+            return resp;
+        }
+
+        private byte[] EncodeWithHMACSHA2(string text, string keyString)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(keyString);
+            using (HMACSHA512 hmac = new HMACSHA512(keyBytes))
+            {
+                byte[] textBytes = Encoding.UTF8.GetBytes(text);
+                byte[] hmacBytes = hmac.ComputeHash(textBytes);
+                return hmacBytes;
+            }
+        }
+
+
+        #region GeneratePDF
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(OnlinePaymentGateway model)
         {
@@ -306,5 +439,6 @@ namespace IBS.Controllers.WebsitePages
 
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
+        #endregion
     }
 }

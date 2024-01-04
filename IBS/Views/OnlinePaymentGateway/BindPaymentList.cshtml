@@ -1,0 +1,71 @@
+﻿@model IBS.Models.OnlinePaymentGateway
+
+@{
+    Layout = "~/Views/Shared/_FrontendLayout.cshtml";
+}
+
+
+<div class="iePieGraphGrid">
+    <table class="borderGrid">
+        <tr>
+            <th>Sr. No.</th>
+            <th>Merchant Tran Ref</th>
+            <th>Merchant Tran Date</th>
+            <th>Merchant Tran ID</th>
+            <th>Atom Tran ID</th>
+            <th>Amount</th>
+            <th>Action</th>
+        </tr>
+        @if (Model != null && Model.lstPaymentList != null && Model.lstPaymentList.Count > 0)
+        {
+            var SrNo = 0;
+            @foreach (var item in Model.lstPaymentList)
+            {
+                SrNo = SrNo + 1;
+                <tr>
+                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
+                    <td width="1%" valign="top" align="Left"><font size="1" face="Verdana">@item.MER_TXN_REF</font></td>
+                    <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.merchTxnDate</font></td>
+                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.MERTXNID</font></td>
+                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.AtomTXNID</font></td>
+                    <td width="1%" valign="top" align="left"><font size="1" face="Verdana">@item.Charges</font></td>
+                    <td width="1%" valign="top" align="left">
+                        <a href="javascript:void(0);" onclick="editRow('@item.MERTXNID','@item.MER_TXN_REF','@item.merchTxnDate','@item.Charges')">
+                            Transaction Tracking
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        }
+    </table>
+</div>
+<script>
+
+    function editRow(MERTXNID, MER_TXN_REF, merchTxnDate, Charges) {
+        var PaymentList = {
+            merchTxnDate: merchTxnDate,
+            MER_TXN_REF: MER_TXN_REF,
+            MERTXNID: MERTXNID,
+            Charges: Charges
+        };
+
+        $.ajax({
+            url: '/OnlinePaymentGateway/TransactionTracking',
+            type: 'GET',
+            dataType: 'json',
+            data: PaymentList,
+            success: function (response) {
+                alert(response.response);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>
