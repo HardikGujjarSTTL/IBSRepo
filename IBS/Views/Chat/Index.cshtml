@@ -9,7 +9,7 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>SignalR Chat Demo</h2>
+        <h2>Users Chat</h2>
     </div>
 </div>
 <div class="task-listinput">
@@ -18,7 +18,7 @@
             <div class="chatTopFilter">
                 <div class="row my-0">
                     <div class="col-md-3">
-                        <label for="Reference">User Name</label>
+                        <label for="Reference">Users</label>
                         @*@Html.DropDownList("dpUser", new MultiSelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")                        *@
                         @*@Html.ListBox("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--",new { @class = "selectCountry show-tick form-control input-md" })*@
                         @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
@@ -140,14 +140,16 @@
         }
         else {
             if (SenderId != ReceiverId) {
-                var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '<span class="timeStamp">17:10 PM</span></div></li>';
+                var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '<span class="timeStamp">' + "@DateTime.Now.ToString("hh:mm tt")" + '</span></div></li>';
                 $(".chatBodyText").append(element);
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                $("#txtMsg").focus();
             }
             if (SenderId == ReceiverId) {
-                var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '<span class="timeStamp">17:10 PM</span></div></li>';
+                var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '<span class="timeStamp">' + "@DateTime.Now.ToString("hh:mm tt")" + '</span></div></li>';
                 $(".chatBodyText").append(element);
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                $("#txtMsg").focus();
             }
         }
     });
