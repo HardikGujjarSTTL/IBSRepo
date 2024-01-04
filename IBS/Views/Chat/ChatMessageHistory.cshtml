@@ -12,7 +12,7 @@
                 {
                     Cnt = Cnt + 1;
                     msgDate = item.Msg_Date.Date.ToString("dd MMMM yyyy");
-                    <li><div>@msgDate</div></li>
+                    <li><div class="messageDate"><span>@msgDate</span></div></li>
                 }
                 else if (DateTime.Now.ToString("dd MMMM yyyy") == item.Msg_Date.Date.ToString("dd MMMM yyyy") && Cnt == 0)
                 {

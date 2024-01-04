@@ -192,7 +192,7 @@
     margin: 5px 0;
      padding: 10px 10px 20px 10px;
     position: relative;
-    min-width: 130px;
+    min-width: 60px;
     box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
@@ -203,7 +203,7 @@
     padding: 10px 10px 20px 10px;
     text-align: left;
     position: relative;
-    min-width: 130px;
+    min-width: 60px;
     box-shadow: 1px 1px 2px 0px #d1d1d1;
 }
 
@@ -274,4 +274,12 @@
     right: 2px;
     bottom: 0;
 }
+.messageDate{ text-align:center; width:100%; position:relative;}
+.messageDate span{ background:#f1f1f1; padding:2px; border-radius:5px; z-index:1; position:relative; display:inline-block;}
+.messageDate:before{width:100%; content:""; height:1px; background:#d1d1d1; position:absolute; left:0; top:14px;}
 .chatBoxBody li.active h4{ font-weight:bold;}
+.chatTopFilter{background:#f1f1f1; padding:15px; border-radius:12px; margin-bottom:15px;}
+.chatTopFilter .form-select{ height:45px;}
+.chatTopFilter #txtMessage{ background:#fff;}
+.chatTopFilter .userMultiSelect .multiselect-native-select, .chatTopFilter .userMultiSelect .multiselect-native-select .btn-group{ width:100%; display:block;}
+.multiselect-container .multiselect-option .form-check-label, .multiselect-container .multiselect-all .form-check-label{ padding-bottom:0;}
