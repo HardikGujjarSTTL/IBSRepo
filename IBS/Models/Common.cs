@@ -2464,7 +2464,8 @@ namespace IBS.Models
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper())
+                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                        a.ConsigneeCd.ToString() == consignee.ToString()
                         orderby a.Consignee
                         select
                    new SelectListItem

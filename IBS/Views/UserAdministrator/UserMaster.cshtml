@@ -11,6 +11,23 @@
             <a asp-area="" asp-controller="UserAdministrator" asp-action="UserManage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New User</a>
         </div>
     </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="reference">User Name</label>
+                <input type="text" class="input" id="txtUserName" autocomplete="on">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">User Id</label>
+                <input type="text" class="input" id="txtUserId">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="Search();">search</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
@@ -46,9 +63,12 @@
         $(function () {
             InitializeDatatable();
         });
-
+        function Search() {
+            InitializeDatatable();
+        }
         function InitializeDatatable() {
-            
+            var UserName = $("#txtUserName").val();
+            var UserId = $("#txtUserId").val();
             $("#dtUser").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -58,7 +78,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -66,6 +86,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            UserName: UserName, UserId: UserId
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
