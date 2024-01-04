@@ -53,11 +53,12 @@ namespace IBS.Controllers.Vendor
                 if (id > 0)
                 {
                     #region File Upload Profile Picture
+                    string fileName= VendCd + "_" + model.DocType;
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Inernal_Records };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        id = DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", string.Empty, DocumentIds);
+                        id = DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", fileName, DocumentIds);
                     }
                 }
                 #endregion
