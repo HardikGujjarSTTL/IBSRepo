@@ -1,4 +1,5 @@
 ﻿@model IBS.Models.ChatMessage
+
 <ul id="messageList" class="chatBodyText">
     @{
         if (Model.lstMsg.Count > 0)
@@ -21,8 +22,17 @@
         }
     }
 </ul>
-
 <div class="chatInputArea">
     <input type="text" id="txtMsg" />
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
+
+<script type="text/javascript">
+
+    $('#txtMsg').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            SendMessage(2);
+        }
+    });
+
+</script>

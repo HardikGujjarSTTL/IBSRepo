@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
     int SenderId = ViewBag.SenderId;
     int ReceiverId = Model.msg_recv_ID ?? 0;
+    string SiteUrl = Model.HostUrl;
 }
 
 <div class="list-inner">
@@ -15,20 +16,20 @@
     <form role="form" id="frmChatMessage">
         <div class="accordion-body chatArea">
             <div style="background:#f1f1f1; padding:15px; border-radius:12px; margin-bottom:15px;">
-            <div class="row my-0">
-                <div class="col-md-2">
-                    <label for="Reference">User Name</label>
-                    @Html.DropDownList("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
-                    @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
+                <div class="row my-0">
+                    <div class="col-md-2">
+                        <label for="Reference">User Name</label>
+                        @Html.DropDownList("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")
+                        @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-8">
+                        <label for="Reference">Message</label>
+                        <input type="text" id="txtMessage" />
+                    </div>
+                    <div class="col-md-2 savenext-btn" style="margin-top:30px;">
+                        <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Send</button>
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <label for="Reference">Message</label>
-                    <input type="text" id="txtMessage" />
-                </div>
-                <div class="col-md-2 savenext-btn" style="margin-top:30px;">
-                    <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);">Send</button>
-                </div>
-            </div>
             </div>
             <div class="chatBox">
                 <div class="chatBoxHeader">
@@ -48,13 +49,11 @@
 </div>
 
 <link href="~/css/chat.css" rel="stylesheet" />
-@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script> *@
 <script src="~/js/signalr.min.js"></script>
 
-<script>
+<script type="text/javascript">
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
     var SenderId = @SenderId;
     var ReceiverId = @ReceiverId;
 
@@ -94,6 +93,7 @@
                 $(".chatRightBoxBody").html(response);
                 $(".userList").removeClass("active");
                 $("#li" + ReceiverId).addClass("active");
+                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
             }
         });
     }
@@ -109,7 +109,7 @@
         }
 
         if (ReceiverId == "" || message == "") {
-            alert("Receiver and Message is required.")
+            //alert("Receiver and Message is required.")
             return;
         }
 
@@ -131,11 +131,19 @@
             if (SenderId != ReceiverId) {
                 var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '</div></li>';
                 $(".chatBodyText").append(element);
+                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
             }
             if (SenderId == ReceiverId) {
                 var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '</div></li>';
                 $(".chatBodyText").append(element);
+                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
             }
+        }
+    });
+
+    $('#txtMessage').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            SendMessage(1);
         }
     });
 
