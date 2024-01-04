@@ -18,10 +18,7 @@
             <div class="chatTopFilter">
                 <div class="row my-0">
                     <div class="col-md-3">
-                        <label for="Reference">Users</label>
-                        @*@Html.DropDownList("dpUser", new MultiSelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--")                        *@
-                        @*@Html.ListBox("dpUser", new SelectList(IBS.Models.Common.GetUserMaster(), "Value", "Text"), "--Select--",new { @class = "selectCountry show-tick form-control input-md" })*@
-                        @*<span asp-validation-for="msg_recv_ID" class="text-danger"></span>*@
+                        <label for="Reference">Users</label>                        
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
 
                     </div>
