@@ -34,10 +34,11 @@ namespace IBS.Controllers.SignalR
             return PartialView(model);
         }
 
-        public IActionResult ChatMessageHistory(int id)
+        public IActionResult ChatMessageHistory(string id)
         {
+            var recv_id = !string.IsNullOrEmpty(id) ? Convert.ToInt32(id) : 0;
             ChatMessage model = new ChatMessage();
-            model = _chathub.GetMessageList(Master_ID, id);
+            model = _chathub.GetMessageList(Master_ID, recv_id);
             model.Master_ID = Master_ID;
             return PartialView(model);
         }

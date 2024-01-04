@@ -4,21 +4,35 @@
     @{
         if (Model.lstMsg.Count > 0)
         {
+            var msgDate = DateTime.Now.ToString("dd MMMM yyyy");
+            var Cnt = 0;
             foreach (var item in Model.lstMsg)
             {
-                if (Model.Master_ID == item.msg_send_ID)
+                if (msgDate != item.Msg_Date.Date.ToString("dd MMMM yyyy"))
+                {
+                    Cnt = Cnt + 1;
+                    msgDate = item.Msg_Date.Date.ToString("dd MMMM yyyy");
+                    <li><div>@msgDate</div></li>
+                }
+                else if (DateTime.Now.ToString("dd MMMM yyyy") == item.Msg_Date.Date.ToString("dd MMMM yyyy") && Cnt == 0)
+                {
+                    Cnt = Cnt + 1;
+                    <li style="text-align:center"><div>@msgDate</div></li>
+                }
+
+                if (Convert.ToString(Model.Master_ID) == item.msg_send_ID)
                 {
                     <li class="sendTextHolder">
-                        <div class="sendText">@item.message <span class="timeStamp">17:10 PM</span></div>
+                        <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                     </li>
                 }
                 else
                 {
                     <li class="reciveTextHolder">
-                        <div class="recieveText">@item.message <span class="timeStamp">17:10 PM</span></div>
+                        <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                     </li>
                 }
-            }
+            }            
         }
     }
 </ul>
