@@ -172,7 +172,7 @@ namespace IBS.Repositories
             //dTResult.recordsTotal = query.Count();
             //dTResult.data = results;
             //dTResult.recordsFiltered = query.Count();
-            //return dTResult;
+            return dTResult;
         }
     }
 }
