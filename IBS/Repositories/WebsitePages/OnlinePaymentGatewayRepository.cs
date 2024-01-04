@@ -62,16 +62,6 @@ namespace IBS.Repositories.WebsitePages
 
         public OnlinePaymentGateway PaymentIntergreationSave(OnlinePaymentGateway model)
         {
-            //OracleParameter[] par = new OracleParameter[2];
-            //par[0] = new OracleParameter("p_DATE", OracleDbType.Varchar2, DateTime.Now.ToString("ddMMyy"), ParameterDirection.Input);
-            //par[1] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            //var ds = DataAccessDB.GetDataSet("GenerateMERID", par, 1);
-
-            //string merNo = ds.Tables[0].Rows[0]["MERNO"].ToString();
-
-            //string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5, '0');
-            //model.MER_TXN_REF = mer_ref;
             var OnlinePayment = new OnlinePayment
             {
                 MerTxnRef = model.MER_TXN_REF,
