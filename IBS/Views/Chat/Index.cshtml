@@ -4,8 +4,7 @@
     ViewData["Title"] = "Index";
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
-    string SiteUrl = Model.HostUrl;
-    int CurrentDateCount = Model.CurrDateCount;
+    string SiteUrl = Model.HostUrl;    
 }
 
 <div class="list-inner">
@@ -61,7 +60,7 @@
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
     //var currDate = @DateTime.Now.ToString("dd MMMM yyyy");
-    var Cnt = @CurrentDateCount;
+    var Cnt = 0 ;
 
     $(document).ready(function () {
         GetUserReceiverList();
@@ -104,11 +103,13 @@
                 $(".userList").removeClass("active");
                 $("#li" + ReceiverId).addClass("active");
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                
+                Cnt = parseInt($("#hdnCurrDtCount").val());
             }
         });
     }
 
-    function SendMessage(type) {
+    function SendMessage(type) {        
         var message = "";
         if (type == 1) {
             ReceiverId = $("#dpUser").val().join(",");
@@ -122,7 +123,6 @@
             //alert("Receiver and Message is required.")
             return;
         }
-        debugger
         connection.invoke("SendMessage", SenderId, ReceiverId, message, type);
 
         if (type == 1) { $("#txtMessage").val(""); }
@@ -130,7 +130,6 @@
     }
 
     connection.start().then(function () {
-        debugger
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
@@ -138,7 +137,7 @@
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
-        else {
+        else {            
             if (Cnt == 0) {
                 var element = '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
                 $(".chatBodyText").append(element);
