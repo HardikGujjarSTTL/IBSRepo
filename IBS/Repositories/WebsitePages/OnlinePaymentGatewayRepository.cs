@@ -73,6 +73,11 @@ namespace IBS.Repositories.WebsitePages
                 Amount = model.Charges,
                 ChargesType = model.ChargesType,
                 Datetime = DateTime.Now,
+                CustEmail = model.Email,
+                CustMobile = model.Mobile,
+                MerId = model.MerID,
+                MerTxnId = model.MER_TXN_REF,
+                MerTxnDate = DateTime.Now,
                 TokId = model.Tok_id
             };
             model.AlertMsg = "Success";
@@ -112,10 +117,29 @@ namespace IBS.Repositories.WebsitePages
                 onlinePayment.TransactionNo = model.BankTXNID;
                 onlinePayment.RrnNo = null;
                 onlinePayment.Status = model.PaymentStatus;
-                onlinePayment.CustEmail = model.Email;
-                onlinePayment.CustMobile = model.Mobile;
-                onlinePayment.MerId = model.MerID;
-                onlinePayment.MerTxnDate = Convert.ToDateTime(model.merchTxnDate);
+                onlinePayment.MerTxnId = model.MERTXNID;
+                onlinePayment.AtomTxnId = model.AtomTXNID;
+                onlinePayment.CustAccNo = model.custAccNo;
+                onlinePayment.TxnCompleteDate = Convert.ToDateTime(model.TranDate);
+                onlinePayment.BankTxnId = model.BankTXNID;
+                onlinePayment.BankName = model.BankName;
+                onlinePayment.SubChannel = model.SubChannel;
+                onlinePayment.Description = model.Description;
+                onlinePayment.StatusCd = model.StatusCode;
+                context.SaveChanges();
+                model.AlertMsg = "Success";
+            }
+            return model;
+        }
+
+        public OnlinePaymentGateway PaymentTrackingResponse(OnlinePaymentGateway model)
+        {
+            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == model.MER_TXN_REF);
+
+            if (onlinePayment != null)
+            {
+                onlinePayment.TransactionNo = model.BankTXNID;
+                onlinePayment.Status = model.PaymentStatus;
                 onlinePayment.MerTxnId = model.MERTXNID;
                 onlinePayment.AtomTxnId = model.AtomTXNID;
                 onlinePayment.CustAccNo = model.custAccNo;
@@ -144,6 +168,7 @@ namespace IBS.Repositories.WebsitePages
                             merchTxnDate = l.MerTxnDate.HasValue ? l.MerTxnDate.Value.ToString("dd/MM/yyyy") : null,
                             MERTXNID = l.MerTxnId,
                             Charges = l.Amount,
+                            Status = l.Status,
                             AtomTXNID = l.AtomTxnId
                         };
 

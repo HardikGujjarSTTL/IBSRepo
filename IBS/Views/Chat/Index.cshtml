@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
-    string SiteUrl = Model.HostUrl;    
+    string SiteUrl = Model.HostUrl;
 }
 
 <div class="list-inner">
@@ -20,7 +20,7 @@
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
-
+                        @*<input type="file" id="fileupload">*@
                     </div>
                     <div class="col-md-8">
                         <label for="Reference">Message</label>
@@ -60,7 +60,7 @@
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
     //var currDate = @DateTime.Now.ToString("dd MMMM yyyy");
-    var Cnt = 0 ;
+    var Cnt = 0;
 
     $(document).ready(function () {
         GetUserReceiverList();
@@ -68,6 +68,37 @@
 
         $('#dpUser').multiselect({
             includeSelectAllOption: true,
+        });
+
+        $('#fileupload').change(function () {
+            var fileInput = this;
+            var file = fileInput.files[0];
+            
+            //var formData = new FormData();
+            //formData.append("SenderId", "1");
+            //formData.append("ReceiverId", "12");
+            //formData.append("message", "Test");
+            //formData.append("MsgType", "1");
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            connection.invoke("SendFile", formData);
+
+            $.ajax({
+                url: '@Url.Action("UploadFile", "Chat")',
+                type: 'POST',
+                data: { SingleFile: fileInput.files[0] },
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response != null) {
+                    $(".chatLeftBoxBody").html("");
+                    $(".chatLeftBoxBody").html(response);
+                    $(".userList").removeClass("active");
+                    $("#li" + ReceiverId).addClass("active");
+                }
+            });
         });
     });
 
@@ -103,14 +134,23 @@
                 $(".userList").removeClass("active");
                 $("#li" + ReceiverId).addClass("active");
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
-                
+
                 Cnt = parseInt($("#hdnCurrDtCount").val());
             }
         });
     }
 
-    function SendMessage(type) {        
+    function SendMessage(type) {
+        
+        const file = document.getElementById("fileupload").files[0];
+        var reader = new FileReader();
+        var arrBuffer = reader.readAsArrayBuffer(file);
+        connection.invoke("SendFile", file);
+
         var message = "";
+        var fileupload = uploadFiles();
+
+        return;
         if (type == 1) {
             ReceiverId = $("#dpUser").val().join(",");
             message = $("#txtMessage").val();
@@ -123,7 +163,7 @@
             //alert("Receiver and Message is required.")
             return;
         }
-        connection.invoke("SendMessage", SenderId, ReceiverId, message, type);
+        connection.invoke("SendMessage", SenderId, ReceiverId, message, type, fileupload);
 
         if (type == 1) { $("#txtMessage").val(""); }
         else if (type == 2) { $("#txtMsg").val(""); }
@@ -137,7 +177,7 @@
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
-        else {            
+        else {
             if (Cnt == 0) {
                 var element = '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
                 $(".chatBodyText").append(element);
@@ -163,5 +203,20 @@
             SendMessage(1);
         }
     });
+
+    function uploadFiles() {
+        const file = document.getElementById("fileupload").files[0];
+
+        // Read the file as an ArrayBuffer
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const arrayBuffer = e.target.result;
+
+            // Convert the ArrayBuffer to a byte array
+            const byteArray = new Uint8Array(arrayBuffer);
+            return byteArray;
+        }
+        reader.readAsArrayBuffer(file);
+    }
 
 </script>
