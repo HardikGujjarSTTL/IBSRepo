@@ -9,5 +9,9 @@ namespace IBS.Interfaces.WebsitePages
         public OnlinePaymentGateway PaymentIntergreationSave(OnlinePaymentGateway model);
 
         public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model,string id);
+
+        OnlinePaymentGateway BindPaymentList();
+
+        string GetMerTrnRef(string CaseNo,string ChargesType);
     }
 }
