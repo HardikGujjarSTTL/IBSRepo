@@ -17,7 +17,7 @@
                 else if (DateTime.Now.ToString("dd MMMM yyyy") == item.Msg_Date.Date.ToString("dd MMMM yyyy") && Cnt == 0)
                 {
                     Cnt = Cnt + 1;
-                    <li style="text-align:center"><div>@msgDate</div></li>
+                    <li><div class="messageDate"><span>@msgDate</span></div></li>
                 }
 
                 if (Convert.ToString(Model.Master_ID) == item.msg_send_ID)
