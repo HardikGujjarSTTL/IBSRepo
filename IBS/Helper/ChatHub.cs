@@ -30,21 +30,7 @@ namespace IBS.Helper
             model.msg_recv_ID = ReceiverId;
             model.message = message;
             var res = _chathub.ChatMessageSave(model);
-
-            //var myKey = Common.ConnectedUsers.Where(x => x.Value == ReceiverId || x.Value == SenderId).ToList();
-
-            //var myKey = new List<KeyValuePair<string, string>>();
-            //var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
-            //if (arrRecvId.Count() > 0)
-            //{
-            //    foreach (var item in arrRecvId)
-            //    {
-            //        KeyValuePair<string, string> obj = new KeyValuePair<string, string>();
-            //        obj = Common.ConnectedUsers.Where(x => x.Value == item || x.Value == SenderId).FirstOrDefault();
-            //        myKey.Add(obj);
-            //    }
-            //}
-
+            
             var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
             if (arrRecvId.Count() > 0)
             {
@@ -55,15 +41,16 @@ namespace IBS.Helper
                     foreach (var k in myKey)
                     {
                         await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, message, MsgType);
-                        //await Clients.Clients(item.Key).SendAsync("ReceiveMessage", item.Value, message, MsgType);
                     }
                 }
             }
-
+            #region Old Response
+            //var myKey = Common.ConnectedUsers.Where(x => x.Value == ReceiverId || x.Value == SenderId).ToList();
             //foreach (var item in myKey)
             //{
             //    await Clients.Clients(item.Key).SendAsync("ReceiveMessage", ReceiverId, message, MsgType);                
             //}
+            #endregion
         }
     }
 }
