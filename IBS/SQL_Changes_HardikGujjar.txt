@@ -5515,3 +5515,7 @@ BEGIN
 
 END;
 /
+
+
+ALTER TABLE t79_central_qoinsp
+add Grade VARCHAR2(30 BYTE);

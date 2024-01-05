@@ -32,6 +32,7 @@ namespace IBS.Repositories
                 model.QoiDate = t79CentralQoinsp.QoiDate;
                 model.Region = t79CentralQoinsp.Region;
                 model.UserId = t79CentralQoinsp.UserId;
+                model.Grade = t79CentralQoinsp.Grade;
                 model.Createdby = t79CentralQoinsp.Createdby;
                 model.Createddate = t79CentralQoinsp.Createddate;
                 model.Updatedby = t79CentralQoinsp.Updatedby;
@@ -138,6 +139,7 @@ namespace IBS.Repositories
                 obj.QoiDate = model.QoiDate;
                 obj.Region = model.Region;
                 obj.UserId = model.UserId;
+                obj.Grade = model.Grade;
                 obj.Datetime = DateTime.Now;
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = Convert.ToInt32(model.UserId);
@@ -153,6 +155,7 @@ namespace IBS.Repositories
                 objAdd.Rejected = model.Rejected;
                 objAdd.Region = model.Region;
                 objAdd.UserId = model.UserId;
+                objAdd.Grade = model.Grade;
                 objAdd.Datetime = DateTime.Now;
                 objAdd.Updatedby = Convert.ToInt32(model.UserId);
                 objAdd.Updateddate = DateTime.Now;
