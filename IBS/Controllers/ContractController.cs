@@ -91,9 +91,10 @@ namespace IBS.Controllers
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
+                        string fileName = id.ToString();
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Contract_Documents_If_Any };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ContractDocument), env, iDocument, "Contract", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.Contracts), env, iDocument, "Contract", fileName, DocumentIds);
                     }
                     return Json(new { status = true, responseText = msg });
                 }

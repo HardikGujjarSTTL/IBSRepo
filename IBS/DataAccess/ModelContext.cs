@@ -20422,6 +20422,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.Grade)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("GRADE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
