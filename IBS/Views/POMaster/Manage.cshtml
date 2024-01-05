@@ -61,7 +61,7 @@
 
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="dvRlyCdDesc" style="display:none;">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
                                 <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
                             </div>
@@ -247,6 +247,7 @@
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
                 FillEditedData();
             }
+            
         });
 
         function FillEditedData() {
@@ -254,6 +255,9 @@
             setTimeout(function () {
                 $('#RlyCd').val('@Model.RlyCd');
                 $('#PoiCd').val('@Model.PoiCd');
+                if ('@Model.RlyCd' == "0" || '@Model.RlyCd' == "") {
+                    $("#dvRlyCdDesc").css("display", "block");
+                }
             }, 2000);
             if ('@Model.PurchaserCd' != null && '@Model.PurchaserCd' != "0") {
                 FillPurchaserCdForEdit('@Model.PurchaserCd');
@@ -265,6 +269,7 @@
         }
 
         function FillAgencyClient(types) {
+            
             var RlyNonrly = $("#RlyNonrly").val();
             $.ajax({
                 url: '@Url.Action("GetAgencyClient", "POMaster")?RlyNonrly=' + RlyNonrly,
@@ -289,6 +294,15 @@
                     fill_consignee_purcher();
                 }, 2000);
             }
+            setTimeout(function () {
+                var RlyCd = $("#RlyCd").val();
+                if (RlyCd == null || RlyCd == "0" || RlyCd == "") {
+                    $("#dvRlyCdDesc").css("display", "block");
+                }
+                else {
+                    $("#dvRlyCdDesc").css("display", "none");
+                }
+            }, 100);
         }
 
         function RlyCd_Changed() {
@@ -330,6 +344,12 @@
                     });
                 }
             });
+            if (RlyCd == "0" || RlyCd == "") {
+                $("#dvRlyCdDesc").css("display", "block");
+            }
+            else {
+                $("#dvRlyCdDesc").css("display", "none");
+            }
         }
 
         function RegionCode_Changed() {

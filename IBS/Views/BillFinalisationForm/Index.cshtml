@@ -101,17 +101,15 @@
             var Sector = $("#ddlSector").val();
 
             $("#dtBillFinalisationList").DataTable({
-                stateSave: false,// Design Assets
+                stateSave: false,
                 autoWidth: true,
                 scrollX: true,
-                scrollY: "500px",
                 scrollCollapse: true,
-                processing: true, // ServerSide Setups
+                processing: true,
                 serverSide: true,
                 destroy: true,
-                paging: false,// Paging Setups
-                searching: false,// Searching Setups
-                ordering: false,
+                paging: true,
+                searching: false,
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",

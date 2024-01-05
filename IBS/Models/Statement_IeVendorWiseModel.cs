@@ -61,6 +61,7 @@
         public int COUNT  { get; set; }
         public string CALL_STATUS { get; set; }
         public int VEND_CD { get; set; }
+        public int IE { get; set; }
         
         public List<railway_dropdown1> Railways { get; set; }
 

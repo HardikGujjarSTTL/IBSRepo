@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Linq;
@@ -679,7 +680,6 @@ namespace IBS.Repositories
 
         public DTResult<UserModel> GetUserList(DTParameters dtParameters)
         {
-
             DTResult<UserModel> dTResult = new() { draw = 0 };
             IQueryable<UserModel>? query = null;
 
@@ -689,7 +689,6 @@ namespace IBS.Repositories
 
             if (dtParameters.Order != null)
             {
-                // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
 
                 if (orderCriteria == "")
@@ -700,45 +699,45 @@ namespace IBS.Repositories
             }
             else
             {
-                // if we have an empty search then just order the results by Id ascending
                 orderCriteria = "UserName";
                 orderAscendingDirection = true;
             }
-            query = from l in context.T02Users
-                    where (l.Isdeleted == 0 || l.Isdeleted == null)
-                    select new UserModel
-                    {
-                        ID = Convert.ToDecimal(l.Id),
-                        UserId = l.UserId,
-                        UserName = l.UserName,
-                        EmpNo = l.EmpNo,
-                        Region = l.Region,
-                        Status = l.Status,
-                        AllowPo = l.AllowPo,
-                        AllowDnChksht = l.AllowDnChksht,
-                        CallMarking = l.CallMarking,
-                        CallRemarking = l.CallRemarking,
-                        UserType = l.UserType,
-                        Isdeleted = l.Isdeleted,
-                        Createddate = l.Createddate,
-                        Createdby = l.Createdby,
-                        Updateddate = l.Updateddate,
-                        Updatedby = l.Updatedby,
-                        RoleName = (from u in context.Userroles join r in context.Roles on u.RoleId equals r.RoleId where u.UserId == l.UserId select r.Rolename).FirstOrDefault(),
-                    };
 
-            dTResult.recordsTotal = query.Count();
+            string UserName = "", UserId = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["UserName"]))
+            {
+                UserName = Convert.ToString(dtParameters.AdditionalValues["UserName"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["UserId"]))
+            {
+                UserId = Convert.ToString(dtParameters.AdditionalValues["UserId"]);
+            }
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.UserName).ToLower().Contains(searchBy.ToLower())
-                );
+            OracleParameter[] par = new OracleParameter[6];
+            par[0] = new OracleParameter("p_UserName", OracleDbType.Varchar2, UserName.ToString() == "" ? DBNull.Value : UserName.ToString(), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_UserId", OracleDbType.Varchar2, UserId.ToString() == "" ? DBNull.Value : UserId.ToString(), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            var ds = DataAccessDB.GetDataSet("Get_SP_AdministratorList", par, 2);
+            List<UserModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<UserModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            query = list.AsQueryable();
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 

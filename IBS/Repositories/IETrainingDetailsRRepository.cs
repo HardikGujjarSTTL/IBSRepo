@@ -299,6 +299,18 @@ namespace IBS.Repositories
             iec = GetDateString(Query);
             if (iec == null)
             {
+                if (IETrainingDetailsModel.Discipline == "Mechanical")
+                    IETrainingDetailsModel.Discipline = "M";
+                else if (IETrainingDetailsModel.Discipline == "Electrical")
+                    IETrainingDetailsModel.Discipline = "E";
+                else if(IETrainingDetailsModel.Discipline == "Civil")
+                    IETrainingDetailsModel.Discipline = "C";
+                else if(IETrainingDetailsModel.Discipline == "Metallurgy")
+                    IETrainingDetailsModel.Discipline = "L";
+                else if(IETrainingDetailsModel.Discipline == "Textiles")
+                    IETrainingDetailsModel.Discipline = "T";
+                else if(IETrainingDetailsModel.Discipline == "Power Engineerin")
+                    IETrainingDetailsModel.Discipline = "P";
                 var trainingDetail = new TraineeEmployeeMaster
                 {
                     IeCd = Convert.ToInt32(IETrainingDetailsModel.Name),

@@ -20,146 +20,153 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-       <div class="accordion-body">
-                    <div class="row my-0">
+        <div class="accordion-body">
+            <div class="row my-0">
 
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Bank</label>
-                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
-                            <span asp-validation-for="BANK_NAME" class="text-danger"></span>
-                        </div>
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Bank</label>
+                    @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { @id = "BankNameDropdown" })
+                    <span asp-validation-for="BANK_NAME" class="text-danger"></span>
+                </div>
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Cheque No.</label>
-                            <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Cheque No.</label>
+                    <input type="text" id="CHQ_NO" class="input" asp-for="CHQ_NO" maxlength="300" />
 
-                        </div>
+                </div>
 
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Cheque Date</label>
-                            <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT" maxlength="300" />
+                <div class="col-md-4 mb-4">
+                    <label for="Reference">Cheque Date</label>
+                    <input type="text" id="CHQ_DT" class="input datepicker" asp-for="CHQ_DT" maxlength="300" />
 
-                        </div>
+                </div>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Voucher No.</label>
-                            <input type="text" id="vchr_no" class="input" readonly />
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Voucher No. :</label>
 
-                        </div>
+                    <label class="text-danger" id="vchr_no"></label>
+
+                </div>
 
 
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Dated</label>
-                            <input type="text" id="vchr_dt" class="input" maxlength="300" readonly />
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Dated :</label>
 
-                        </div>
+                    <label class="text-danger" id="vchr_dt"></label>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Cheque Amount </label>
-                            <input type="text" id="chqAmt" class="input" maxlength="300" readonly />
+                </div>
 
-                        </div>
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Cheque Amount :</label>
 
-                   
+                    <label class="text-danger" id="chqAmt"></label>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Paying Authority </label>
-                            <input type="text" id="payAuth" class="input" maxlength="300" readonly />
+                </div>
 
-                        </div>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Posted Amount </label>
-                            <input type="text" id="pstAmt" class="input" maxlength="300" readonly />
 
-                        </div>
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Paying Authority :</label>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference">Amount Transferred to other Region </label>
-                            <input type="text" id="Amttrnsfered" class="input" maxlength="300" readonly />
+                    <label class="text-danger" id="payAuth"></label>
 
-                        </div>
+                </div>
 
-                        <div class="hide1 col-md-4 mb-4">
-                            <label for="Reference" id="lblsuspense">Suspense Amount</label>
-                            <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />
-                        <input type="text" id="bpoRly" class="input" maxlength="300" hidden readonly />
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Posted Amount :</label>
 
-                        </div>
+                    <label class="text-danger" id="pstAmt"></label>
 
-                     
+                </div>
 
-                        <div class="savenext-btn mb-4">
-                        <button type="button" class="save-btn active Permission_Save" onclick="search();">Search</button>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference">Amount Transferred to other Region :</label>
+
+                    <label class="text-danger" id="Amttrnsfered"></label>
+
+                </div>
+
+                <div class="hide1 col-md-4 mb-4">
+                    <label for="Reference" id="lblsuspense">Suspense Amount :</label>
+
+                    <label class="text-danger" id="AmtSuspense"></label>
+                    <input type="text" id="bpoRly" class="input" maxlength="300" hidden readonly />
+
+                </div>
+
+
+
+                <div class="savenext-btn mb-4">
+                    <button type="button" class="save-btn active Permission_Save" onclick="search();">Search</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
                         <h3 class="heading3">Online Bills Cleared for the Period</h3>
-                            </div>
-                        </div>
-                        
+                    </div>
+                </div>
 
-                       <div class="hide1 col-md-12 mb-4">
 
-                      
-                          @*  <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />*@
-                        <div class="row align-items-end my-0">
+                <div class="hide1 col-md-12 mb-4">
+
+
+                    @*  <input type="text" id="AmtSuspense" class="input" maxlength="300" readonly />*@
+                    <div class="row align-items-end my-0">
                         <div class="col-md-3">
                             <label for="Reference">From</label>
                             <input type="text" id="From" class="input" maxlength="300" />
-                            </div>
+                        </div>
                         <div class="col-md-3">
                             <label for="Reference">To</label>
                             <input type="text" id="To" class="input" maxlength="300" />
                         </div>
-                        <div class ="col-md-3">
+                        <div class="col-md-3">
                             <button type="button" class="commonBtn active Permission_Save" onclick="showbill();">Show Bills Cleared </button>
                         </div>
-                        </div>                     
-                        </div>
-                        @*<div class="hide1 col-md-4 mb-4"></div>*@
-                        <table id="dtrlychkpost" class="table-responsive">
-                            <thead>
-                                <tr>
-
-                                    @*<th>S NO</th>*@
-
-                                    <th>#</th>
-                                    <th>Bill No.</th>
-                                    <th>Invoice No</th>
-                                    <th>Bill Amount</th>
-                                    <th>CO7 No.</th>
-                                    <th>CO7 Date</th>
-                                    <th>Payment Date</th>
-                                    <th>Passed Amount</th>
-                                    <th>Bill Amount Cleared</th>
-                                    <th>BPO_CD</th>
-                                    <th>Action</th>
-
-
-
-
-
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                            </tbody>
-                        </table>
-
-
-
-                    <div class="savenext-btn">
-                        <button type="submit" class="save-btn active Permission_Save" onclick="submit();">Submit</button>
                     </div>
-
-                    </div>
-
-
-
-
                 </div>
+                @*<div class="hide1 col-md-4 mb-4"></div>*@
+                <table id="dtrlychkpost" class="table-responsive">
+                    <thead>
+                        <tr>
+
+                            @*<th>S NO</th>*@
+
+                            <th>#</th>
+                            <th>Bill No.</th>
+                            <th>Invoice No</th>
+                            <th>Bill Amount</th>
+                            <th>CO7 No.</th>
+                            <th>CO7 Date</th>
+                            <th>Payment Date</th>
+                            <th>Passed Amount</th>
+                            <th>Bill Amount Cleared</th>
+                            <th>BPO_CD</th>
+                            <th>Action</th>
+
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+
+
+
+                <div class="savenext-btn">
+                    <button type="submit" class="hide1 save-btn active Permission_Save" onclick="submit();">Submit</button>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
     </div>
 </section>
 
@@ -170,17 +177,19 @@
         $(document).ready(function () {
             debugger;
             $("#dtrlychkpost").css("display", "none");
+            $(".hide1").css("display", "none");
 
         });
 
-     
 
-        function showbill(){
+
+        function showbill() {
             debugger;
             fromDate = $("#From").val();
             toDate = $("#To").val();
             bpoRly = $("#bpoRly").val();
             $("#dtrlychkpost").css("display", "block");
+            $(".hide1").css("display", "block");
 
             InitializeDatatable(fromDate, toDate, bpoRly);
         }
@@ -204,7 +213,7 @@
         }
 
         function GetValue(BankNameDropdown, CHQ_NO, CHQ_DT) {
-          
+
 
             $.ajax({
                 url: '/Rly_Online_Check_Posting_Form/GetValue',
@@ -215,21 +224,19 @@
                 success: function (success) {
                     debugger;
 
-                    $("#vchr_no").val(success.VCHR_NO)
-                    $("#vchr_dt").val(success.VCHR_DT)
-                    $("#chqAmt").val(success.CHQ_AMOUNT)
-                    $("#payAuth").val(success.BPO_CD)
-                    $("#pstAmt").val(success.AMOUNT_ADJUSTED)
-                    $("#Amttrnsfered").val(success.AMOUNT_TRANSFERRED)
-                    $("#AmtSuspense").val(success.SUSPENSE_AMOUNT)
-                    $("#bpoRly").val(success.BPO_RLY)
+                    $("#vchr_no").text(success.VCHR_NO)
+                    $("#vchr_dt").text(success.VCHR_DT)
+                    $("#chqAmt").text(success.CHQ_AMOUNT)
+                    $("#payAuth").text(success.BPO_CD)
+                    $("#pstAmt").text(success.AMOUNT_ADJUSTED)
+                    $("#Amttrnsfered").text(success.AMOUNT_TRANSFERRED)
+                    $("#AmtSuspense").text(success.SUSPENSE_AMOUNT)
+                    $("#bpoRly").text(success.BPO_RLY)
                     //sessionStorage.setItem("IEcode", success.IE);
-                    if (success.ACC_CD == "2709")
-                    {
+                    if (success.ACC_CD == "2709") {
                         $("#lblsuspense").text("Un-Adjusted Advance");
                     }
-                    else
-                    {
+                    else {
                         $("#lblsuspense").text("Suspense Amount");
                     }
 
@@ -292,7 +299,7 @@
                         defaultContent: '<input type="checkbox" class="row-checkbox" />',
                         orderable: false
                     },
-                 
+
                 ],
                 "order": [[0, "asc"]]
             });
@@ -304,7 +311,7 @@
 
 
 
-        function submit(){
+        function submit() {
             debugger;
             sendSelectedDataToController();
 
@@ -350,14 +357,13 @@
                 contentType: 'application/json',
                 success: function (response) {
                     debugger;
-                   if(response == "True")
-                   {
+                    if (response == "True") {
                         alert("Your Postings are Updated!!!")
-                   }
-                   else{
+                    }
+                    else {
                         alert("Sorry, Posting Cannot be Save as Posted Amount is greater then the Suspense Amount !!!")
 
-                   }
+                    }
                 },
                 error: function (error) {
                     // Handle any errors that occur during the AJAX request
@@ -370,7 +376,7 @@
 
         }
 
-     
+
 
     </script>
 }

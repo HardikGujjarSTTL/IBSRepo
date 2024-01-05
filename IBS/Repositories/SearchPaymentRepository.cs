@@ -83,15 +83,19 @@ namespace IBS.Repositories
             //             ACC_CD = Convert.ToString(t25.AccCd)
             //         });
 
-            OracleParameter[] par = new OracleParameter[7];
+            OracleParameter[] par = new OracleParameter[10];
             par[0] = new OracleParameter("p_Case_No", OracleDbType.Varchar2, CASE_NO, ParameterDirection.Input);
             par[1] = new OracleParameter("p_Amount", OracleDbType.Varchar2, AMOUNT, ParameterDirection.Input);
             par[2] = new OracleParameter("p_Chq_No", OracleDbType.Varchar2, CHQ_NO, ParameterDirection.Input);
             par[3] = new OracleParameter("p_Chq_Dt", OracleDbType.Varchar2, CHQ_DT, ParameterDirection.Input);
             par[4] = new OracleParameter("p_Bank_Name", OracleDbType.Varchar2, BANK_NAME, ParameterDirection.Input);
             par[5] = new OracleParameter("p_Narration", OracleDbType.Varchar2, NARRATION, ParameterDirection.Input);
-            par[6] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-            var ds = DataAccessDB.GetDataSet("GET_SEARCH_PAYMENT_DETAILS", par, 1);
+            par[6] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[9] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_SEARCH_PAYMENT_DETAILS", par, 2);
 
             SearchPaymentsModel model = new();
             List<SearchPaymentsModel> LstNew = new();
@@ -133,21 +137,15 @@ namespace IBS.Repositories
 
             query = LstNew.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => (w.BANK_NAME != null && w.BANK_NAME.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.CHQ_NO != null && w.CHQ_NO.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.CHQ_DT != null && w.CHQ_DT.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.CASE_NO != null && w.CASE_NO.ToLower().Contains(searchBy.ToLower()))
-                                                || (w.NARRATION != null && w.NARRATION.ToLower().Contains(searchBy.ToLower()))
-                                           );
-
-            dTResult.recordsFiltered = query.Count();
-            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-            return dTResult;
 
             //if (!string.IsNullOrEmpty(BANK_NAME))
             //{
@@ -174,7 +172,7 @@ namespace IBS.Repositories
             //dTResult.recordsTotal = query.Count();
             //dTResult.data = results;
             //dTResult.recordsFiltered = query.Count();
-            //return dTResult;
+            return dTResult;
         }
     }
 }
