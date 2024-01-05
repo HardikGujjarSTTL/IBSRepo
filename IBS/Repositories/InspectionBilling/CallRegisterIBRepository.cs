@@ -4452,7 +4452,10 @@ namespace IBS.Repositories.InspectionBilling
                                    d.QtyToInsp
                                }
                   ).FirstOrDefault();
-            reader = Convert.ToDecimal(CallDetails.QtyToInsp);
+            if (CallDetails != null)
+            {
+                reader = Convert.ToDecimal(CallDetails.QtyToInsp);
+            }
             if (reader > 0)
             {
                 qty = (reader + Convert.ToDecimal(model.QtyToInsp)) - Convert.ToDecimal(model.QtyToInsp);
