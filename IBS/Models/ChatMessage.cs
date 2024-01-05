@@ -13,5 +13,21 @@
         public int CurrDateCount { get; set; }
         public List<ChatMessage> lstMsg { get; set; }
     }
+
+    public class FileModel
+    {
+        //public int lastModified { get; set; }
+        //public string name { get; set; }
+        //public int size { get; set; }
+        //public string type { get; set; }
+        //public string webkitRelativePath { get; set; }
+
+        public string SenderId { get; set; }
+        public string ReceiverId { get; set; }
+        public string message { get; set; }
+        public string MsgType { get; set; }
+        public IFormFile Photos { get; set; }
+
+    }
 }
 

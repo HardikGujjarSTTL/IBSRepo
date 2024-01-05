@@ -52,5 +52,32 @@ namespace IBS.Helper
             //}
             #endregion
         }
+
+        //public async Task SendFile(string SenderId, string ReceiverId)
+        //{            
+        //    await Clients.Caller.SendAsync("FileReceived", ReceiverId);
+        //}
+
+        public async Task SendFile(IFormFile file)
+        {
+            try
+            {
+                // Process the file on the server
+                // ...
+
+                // Send a success response back to the client
+                await Clients.Caller.SendAsync("FileSentResponse", "File received successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                Console.Error.WriteLine($"Error processing file: {ex.Message}");
+
+                // Send an error response back to the client
+                await Clients.Caller.SendAsync("FileSentError", "Failed to process file. Please try again.");
+            }
+            await Clients.Caller.SendAsync("FileReceived", file);
+        }
+        
     }
 }

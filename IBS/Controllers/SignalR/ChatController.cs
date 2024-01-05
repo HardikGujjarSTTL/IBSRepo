@@ -42,5 +42,11 @@ namespace IBS.Controllers.SignalR
             model.Master_ID = Master_ID;
             return PartialView(model);
         }
+
+        [HttpPost]
+        public IActionResult UploadFile(IFormFile SingleFile)
+        {
+            return Json(null);
+        }
     }
 }
