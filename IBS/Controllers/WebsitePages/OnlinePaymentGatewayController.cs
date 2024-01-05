@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using IBS.Repositories;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace IBS.Controllers.WebsitePages
 {
@@ -294,15 +295,17 @@ namespace IBS.Controllers.WebsitePages
         [HttpGet]
         public IActionResult TransactionTracking(PaymentList model)
         {
+            OnlinePaymentGateway modelupdate = new();
             TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
 
             TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
             TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
             TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
-
+            modelupdate.MER_TXN_REF = model.MER_TXN_REF;
             md.merchId = Convert.ToInt32(config.GetSection("PaymentConfig")["merchId"]);
             md.merchTxnId = model.MERTXNID;
             md.merchTxnDate = DateTime.Parse(model.merchTxnDate).ToString("yyyy-MM-dd");
+            //pd.amount = model.Charges.Value;
             pd.amount = model.Charges.Value;
 
             pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
@@ -310,10 +313,10 @@ namespace IBS.Controllers.WebsitePages
             string[] signature = new string[4];
             signature[0] = Convert.ToString(md.merchId);
             signature[1] = md.merchTxnId;
-            signature[2] = Convert.ToString(pd.amount);
+            signature[2] = pd.amount.ToString("0.00");
             signature[3] = pd.txnCurrency;
 
-            pd.signature = generateSignature(config.GetSection("GenerateSignature")["SignatureHashKey"], signature);
+            pd.signature = generateSignature(config.GetSection("PaymentConfig")["SignatureHashKey"], signature);
 
             pi.merchDetails = md;
             pi.payDetails = pd;
@@ -365,10 +368,25 @@ namespace IBS.Controllers.WebsitePages
             string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
             string salt1 = config.GetSection("PaymentConfig")["decrypt"];
             string Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
-            //TransactionTrackingResponseModel.SettlementDetails root = new TransactionTrackingResponseModel.SettlementDetails();
-            //TransactionTrackingResponseModel.Application objectres = new TransactionTrackingResponseModel.Application();
 
-            //objectres = JsonConvert.DeserializeObject<TransactionTrackingResponseModel.Application>(Decryptval);
+            TransactionTrackingResponseModel.Rootobject root = new TransactionTrackingResponseModel.Rootobject();
+
+            root = JsonConvert.DeserializeObject<TransactionTrackingResponseModel.Rootobject>(Decryptval);
+
+            modelupdate.MERTXNID = root.payInstrument.merchDetails.merchTxnId;
+            DateTime txnCompleteDate = Convert.ToDateTime(root.payInstrument.merchDetails.merchTxnDate);
+            modelupdate.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+            modelupdate.BankTXNID = root.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+            modelupdate.BankName = root.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+            modelupdate.PaymentStatus = root.payInstrument.responseDetails.message;
+            modelupdate.MerID = root.payInstrument.merchDetails.merchId;
+            modelupdate.AtomTXNID = root.payInstrument.payDetails.atomTxnId;
+            //modelupdate.custAccNo = root.payInstrument.payDetails.custAccNo;
+            modelupdate.SubChannel = root.payInstrument.payModeSpecificData.subChannel;
+            modelupdate.Description = root.payInstrument.responseDetails.description;
+            modelupdate.StatusCode = root.payInstrument.responseDetails.statusCode;
+
+            modelupdate = onlinePaymentGatewayRepository.PaymentTrackingResponse(modelupdate);
 
             return Json(new { status = false, response = Decryptval });
         }

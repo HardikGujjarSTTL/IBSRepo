@@ -10,6 +10,8 @@ namespace IBS.Interfaces.WebsitePages
 
         public OnlinePaymentGateway PaymentResponseUpdate(OnlinePaymentGateway model,string id);
 
+        public OnlinePaymentGateway PaymentTrackingResponse(OnlinePaymentGateway model);
+
         OnlinePaymentGateway BindPaymentList();
 
         string GetMerTrnRef(string CaseNo,string ChargesType);
