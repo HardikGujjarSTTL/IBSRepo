@@ -265,7 +265,9 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-            $("#UomCd").val(3);
+            if ($("#UomCd").val() == "") {
+                $("#UomCd").val(6);
+            }
             $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
                 var idName = $(this).attr('id');
                 if (idName == "OtChargePer") {

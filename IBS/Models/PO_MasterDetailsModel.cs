@@ -56,7 +56,7 @@ namespace IBS.Models
 
         public decimal? Value { get; set; }
 
-        [Required(ErrorMessage = "Last Date of Supply Date is required")]
+        //[Required(ErrorMessage = "Last Date of Supply Date is required")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? DelvDt { get; set; }
