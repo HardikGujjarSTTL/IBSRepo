@@ -284,3 +284,9 @@
 .chatTopFilter .userMultiSelect .multiselect-native-select, .chatTopFilter .userMultiSelect .multiselect-native-select .btn-group{ width:100%; display:block;}
 .multiselect-container .multiselect-option .form-check-label, .multiselect-container .multiselect-all .form-check-label{ padding-bottom:0;}
 .multiselect-container .multiselect-option .form-check, .multiselect-container .multiselect-all .form-check{ display:flex; align-items:center;}
+
+.upload-btn-wrapper { position: absolute; overflow: hidden;  display: inline-block;  width:60px;  height:39px;  right: 75px;  top: 12px;  line-height:32px;  cursor:pointer;}
+.upload-btn-wrapper:hover, .upload-btn-wrapper:hover button{ background:#008B29; border-color:#008B29; cursor:pointer;}
+.upload-btn-wrapper input[type=file] { position: absolute;  left: 0;  top: 0;  opacity: 0;  width:60px;  height:39px;  cursor:pointer;}
+.upload-btn-wrapper button{ width:100%; height:100%; padding:0; cursor:pointer;}
+.upload-btn-wrapper button .fa-paperclip{ font-size:20px; cursor:pointer;}
