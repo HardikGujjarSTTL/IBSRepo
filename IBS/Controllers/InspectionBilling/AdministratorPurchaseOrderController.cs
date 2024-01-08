@@ -66,6 +66,7 @@ namespace IBS.Controllers.InspectionBilling
                 ViewBag.RLY_CD = types[1];
                 model.RlyNonrly = PO_TYPE;
                 model.RlyCd = RLY_CD;
+                model.RecvDt =DateTime.Now;
             }
 
             List<IBS_DocumentDTO> lstDocumentUpload_a_scanned_copy = iDocument.GetRecordsList((int)Enums.DocumentCategory.VendorPO, Convert.ToString(CaseNo));

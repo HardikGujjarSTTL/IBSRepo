@@ -287,7 +287,15 @@ namespace IBS.Controllers.WebsitePages
 
         public IActionResult BindPaymentList()
         {
-            OnlinePaymentGateway model = onlinePaymentGatewayRepository.BindPaymentList();
+            OnlinePaymentGateway model = new();
+            try
+            {
+                model = onlinePaymentGatewayRepository.BindPaymentList();
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlinePaymentGateway", "BindPaymentList", 1, GetIPAddress());
+            }
             return View(model);
         }
 
@@ -296,101 +304,110 @@ namespace IBS.Controllers.WebsitePages
         public IActionResult TransactionTracking(PaymentList model)
         {
             OnlinePaymentGateway modelupdate = new();
-            TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
-
-            TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
-            TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
-            TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
-            modelupdate.MER_TXN_REF = model.MER_TXN_REF;
-            md.merchId = Convert.ToInt32(config.GetSection("PaymentConfig")["merchId"]);
-            md.merchTxnId = model.MERTXNID;
-            md.merchTxnDate = DateTime.Parse(model.merchTxnDate).ToString("yyyy-MM-dd");
-            //pd.amount = model.Charges.Value;
-            pd.amount = model.Charges.Value;
-
-            pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
-
-            string[] signature = new string[4];
-            signature[0] = Convert.ToString(md.merchId);
-            signature[1] = md.merchTxnId;
-            signature[2] = pd.amount.ToString("0.00");
-            signature[3] = pd.txnCurrency;
-
-            pd.signature = generateSignature(config.GetSection("PaymentConfig")["SignatureHashKey"], signature);
-
-            pi.merchDetails = md;
-            pi.payDetails = pd;
-
-            rt.payInstrument = pi;
-
-            var json = JsonConvert.SerializeObject(rt);
-
-            string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
-            string salt = config.GetSection("PaymentConfig")["Encrypt"];
-            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-            int iterations = 65536;
-
-            string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
-
-            //string testurleq = "https://paynetzuat.atomtech.in/ots/payment/status" + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
-            string testurleq = config.GetSection("PaymentConfig")["TransactionTrackingUrl"] + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            Encoding encoding = new UTF8Encoding();
-            byte[] data = encoding.GetBytes(json);
-            request.ProtocolVersion = HttpVersion.Version11;
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.ContentLength = data.Length;
-            Stream stream = request.GetRequestStream();
-            stream.Write(data, 0, data.Length);
-            stream.Close();
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            string jsonresponse = response.ToString();
-
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string temp = null;
-            while ((temp = reader.ReadLine()) != null)
+            string Decryptval = "";
+            try
             {
-                jsonresponse += temp;
+                TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
+
+                TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
+                TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
+                TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
+                modelupdate.MER_TXN_REF = model.MER_TXN_REF;
+                md.merchId = Convert.ToInt32(config.GetSection("PaymentConfig")["merchId"]);
+                md.merchTxnId = model.MERTXNID;
+                md.merchTxnDate = DateTime.Parse(model.merchTxnDate).ToString("yyyy-MM-dd");
+                //pd.amount = model.Charges.Value;
+                pd.amount = model.Charges.Value;
+
+                pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
+
+                string[] signature = new string[4];
+                signature[0] = Convert.ToString(md.merchId);
+                signature[1] = md.merchTxnId;
+                signature[2] = pd.amount.ToString("0.00");
+                signature[3] = pd.txnCurrency;
+
+                pd.signature = generateSignature(config.GetSection("PaymentConfig")["SignatureHashKey"], signature);
+
+                pi.merchDetails = md;
+                pi.payDetails = pd;
+
+                rt.payInstrument = pi;
+
+                var json = JsonConvert.SerializeObject(rt);
+
+                string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
+                string salt = config.GetSection("PaymentConfig")["Encrypt"];
+                byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                int iterations = 65536;
+
+                string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
+
+                //string testurleq = "https://paynetzuat.atomtech.in/ots/payment/status" + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
+                string testurleq = config.GetSection("PaymentConfig")["TransactionTrackingUrl"] + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&encData=" + Encryptval;
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                Encoding encoding = new UTF8Encoding();
+                byte[] data = encoding.GetBytes(json);
+                request.ProtocolVersion = HttpVersion.Version11;
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.ContentLength = data.Length;
+                Stream stream = request.GetRequestStream();
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                string jsonresponse = response.ToString();
+
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string temp = null;
+                while ((temp = reader.ReadLine()) != null)
+                {
+                    jsonresponse += temp;
+                }
+                var result = jsonresponse.Replace("System.Net.HttpWebResponse", "");
+
+                var uri = new Uri("http://atom.in?" + result);
+                var query = HttpUtility.ParseQueryString(uri.Query);
+
+                string encData = query.Get("encData");
+                string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
+                string salt1 = config.GetSection("PaymentConfig")["decrypt"];
+                Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
+
+                TransactionTrackingResponseModel.Rootobject root = new TransactionTrackingResponseModel.Rootobject();
+
+                root = JsonConvert.DeserializeObject<TransactionTrackingResponseModel.Rootobject>(Decryptval);
+
+                modelupdate.MERTXNID = root.payInstrument.merchDetails.merchTxnId;
+                DateTime txnCompleteDate = Convert.ToDateTime(root.payInstrument.merchDetails.merchTxnDate);
+                modelupdate.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+                modelupdate.BankTXNID = root.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+                modelupdate.BankName = root.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+                modelupdate.PaymentStatus = root.payInstrument.responseDetails.message;
+                modelupdate.MerID = root.payInstrument.merchDetails.merchId;
+                modelupdate.AtomTXNID = root.payInstrument.payDetails.atomTxnId;
+                //modelupdate.custAccNo = root.payInstrument.payDetails.custAccNo;
+                modelupdate.SubChannel = root.payInstrument.payModeSpecificData.subChannel;
+                modelupdate.Description = root.payInstrument.responseDetails.description;
+                modelupdate.StatusCode = root.payInstrument.responseDetails.statusCode;
+
+                if(modelupdate.PaymentStatus != "SUCCESS")
+                {
+                    modelupdate = onlinePaymentGatewayRepository.PaymentTrackingResponse(modelupdate);
+                }
             }
-            var result = jsonresponse.Replace("System.Net.HttpWebResponse", "");
-
-            var uri = new Uri("http://atom.in?" + result);
-            var query = HttpUtility.ParseQueryString(uri.Query);
-
-            string encData = query.Get("encData");
-            string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
-            string salt1 = config.GetSection("PaymentConfig")["decrypt"];
-            string Decryptval = decrypt(encData, passphrase1, salt1, iv, iterations);
-
-            TransactionTrackingResponseModel.Rootobject root = new TransactionTrackingResponseModel.Rootobject();
-
-            root = JsonConvert.DeserializeObject<TransactionTrackingResponseModel.Rootobject>(Decryptval);
-
-            modelupdate.MERTXNID = root.payInstrument.merchDetails.merchTxnId;
-            DateTime txnCompleteDate = Convert.ToDateTime(root.payInstrument.merchDetails.merchTxnDate);
-            modelupdate.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
-            modelupdate.BankTXNID = root.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
-            modelupdate.BankName = root.payInstrument.payModeSpecificData.bankDetails.otsBankName;
-            modelupdate.PaymentStatus = root.payInstrument.responseDetails.message;
-            modelupdate.MerID = root.payInstrument.merchDetails.merchId;
-            modelupdate.AtomTXNID = root.payInstrument.payDetails.atomTxnId;
-            //modelupdate.custAccNo = root.payInstrument.payDetails.custAccNo;
-            modelupdate.SubChannel = root.payInstrument.payModeSpecificData.subChannel;
-            modelupdate.Description = root.payInstrument.responseDetails.description;
-            modelupdate.StatusCode = root.payInstrument.responseDetails.statusCode;
-
-            modelupdate = onlinePaymentGatewayRepository.PaymentTrackingResponse(modelupdate);
-
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlinePaymentGateway", "TransactionTracking", 1, GetIPAddress());
+            }
             return Json(new { status = false, response = Decryptval });
         }
-        #endregion
 
         public string generateSignature(string hashKey, string[] param)
         {
@@ -421,7 +438,7 @@ namespace IBS.Controllers.WebsitePages
                 return hmacBytes;
             }
         }
-
+        #endregion
 
         #region GeneratePDF
         [HttpPost]
