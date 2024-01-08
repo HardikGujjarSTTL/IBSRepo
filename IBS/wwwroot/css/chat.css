@@ -283,3 +283,4 @@
 .chatTopFilter #txtMessage{ background:#fff;}
 .chatTopFilter .userMultiSelect .multiselect-native-select, .chatTopFilter .userMultiSelect .multiselect-native-select .btn-group{ width:100%; display:block;}
 .multiselect-container .multiselect-option .form-check-label, .multiselect-container .multiselect-all .form-check-label{ padding-bottom:0;}
+.multiselect-container .multiselect-option .form-check, .multiselect-container .multiselect-all .form-check{ display:flex; align-items:center;}
