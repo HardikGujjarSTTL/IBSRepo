@@ -4466,7 +4466,6 @@ namespace IBS.Repositories.InspectionBilling
             {
                 reader = Convert.ToDecimal(CallDetails.QtyToInsp);
             }
-
             if (reader > 0)
             {
                 qty = (reader + Convert.ToDecimal(model.QtyToInsp)) - Convert.ToDecimal(model.QtyToInsp);

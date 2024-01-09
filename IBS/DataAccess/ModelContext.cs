@@ -12493,10 +12493,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Id)
                 .HasPrecision(6)
                 .HasColumnName("ID");
-            entity.Property(e => e.ConnectionId)
-                .HasMaxLength(20)
+            entity.Property(e => e.Filename)
+                .HasMaxLength(100)
                 .IsUnicode(false)
-                .HasColumnName("CONNECTION_ID");
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("FILENAME");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -25685,7 +25686,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("NUMBER(13,2)")
                 .HasColumnName("CALL_CANCEL_AMOUNT");
             entity.Property(e => e.CallCancelCharges)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_CANCEL_CHARGES");
             entity.Property(e => e.CallCancelChargesStatus)
                 .HasMaxLength(5)

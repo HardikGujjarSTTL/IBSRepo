@@ -39,7 +39,11 @@ public partial class ViewGetCallStatusDetail
 
     public string? CallCancelStatus { get; set; }
 
-    public short? CallCancelCharges { get; set; }
+    public int? CallCancelCharges { get; set; }
+
+    public string? CallCancelChargesStatus { get; set; }
+
+    public decimal? CallCancelAmount { get; set; }
 
     public string? CallCancelChargesStatus { get; set; }
 

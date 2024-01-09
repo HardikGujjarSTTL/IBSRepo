@@ -31,7 +31,7 @@ namespace IBS.Models
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
         public static int RegenerateOtpButtonShowMinute = 10;
 
-        public static Dictionary<string, int> ConnectedUsers = new Dictionary<string, int>();
+        public static Dictionary<string, string> ConnectedUsers = new Dictionary<string, string>();
 
         public static string SendOTP(string mobile, string message)
         {
@@ -1613,7 +1613,7 @@ namespace IBS.Models
                                   {
                                       Text = Convert.ToString(a.CourseName + "(" + Convert.ToDateTime(a.CourseDurFr).ToString("dd/MM/yyyy") + Convert.ToDateTime(a.CourseDurTo).ToString("dd/MM/yyyy") + ")"),
                                       Value = Convert.ToString(a.CourseId)
-                                  }).ToList();
+                                  }).Distinct().ToList();
             return IE;
 
         }
@@ -2464,7 +2464,8 @@ namespace IBS.Models
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper())
+                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                        a.ConsigneeCd.ToString() == consignee.ToString()
                         orderby a.Consignee
                         select
                    new SelectListItem
@@ -3714,9 +3715,21 @@ namespace IBS.Models
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
             SelectListItem single = new SelectListItem();
             single = new SelectListItem();
+            single.Text = "12.65M";
+            single.Value = "9";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "15.8M";
+            single.Value = "10";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "18M";
+            single.Value = "11";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
             single.Text = "13M";
             single.Value = "1";
-            single.Selected = true;
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "26M";
@@ -3739,12 +3752,40 @@ namespace IBS.Models
             single.Value = "6";
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
+            single.Text = "104M";
+            single.Value = "12";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
             single.Text = "117M";
             single.Value = "7";
             textValueDropDownDTO.Add(single);
             single = new SelectListItem();
             single.Text = "130M";
             single.Value = "8";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
+
+        public static List<SelectListItem> GetGrade()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "R-260";
+            single.Value = "R-260";
+            single.Selected = true;
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "880";
+            single.Value = "880";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "1080HH";
+            single.Value = "1080HH";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "R-350HT";
+            single.Value = "R-350HT";
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }

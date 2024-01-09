@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.CentralQOIIModel
 
 @{
-    ViewData["Title"] = "Central QOII";
+    ViewData["Title"] = "Manage Rail Inspection Details";
     string clsView = "";
     if (Model.IsEdited == false)
     {
@@ -10,7 +10,7 @@
 }
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Central QOII</h2>
+        <h2>Manage Rail Inspection Details</h2>
     </div>
     <div>
         <a asp-action="Index" asp-controller="CentralQOII" class="formBtn viewall-btn">View List</a>
@@ -33,12 +33,12 @@
                         <span asp-validation-for="Year" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Weight<i class="text-danger">*</i> </label>
+                        <label for="Reference">Section<i class="text-danger">*</i> </label>
                         @Html.DropDownListFor(model => model.Weights, new SelectList(IBS.Models.Common.GetLength() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="Weights" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="Reference">Height<i class="text-danger">*</i> </label>
+                        <label for="Reference">Length<i class="text-danger">*</i> </label>
                         @Html.DropDownListFor(model => model.QoiLengths, new SelectList(IBS.Models.Common.GetWeight() , "Value", "Text"),"--Select--")
                         <span asp-validation-for="QoiLengths" class="text-danger"></span>
                     </div>
@@ -55,7 +55,12 @@
                         <input type="text" class="input" asp-for="Accepted">
                         <span asp-validation-for="Accepted" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Grade</label>
+                        @Html.DropDownListFor(model => model.Grade, new SelectList(IBS.Models.Common.GetGrade(), "Value", "Text"), "--Select--")
+                        @* <span asp-validation-for="Grade" class="text-danger"></span> *@
+                    </div>
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Rejected Quantity(mt) </label>
                         <input type="text" class="input" asp-for="Rejected">
                         <span asp-validation-for="Rejected" class="text-danger"></span>

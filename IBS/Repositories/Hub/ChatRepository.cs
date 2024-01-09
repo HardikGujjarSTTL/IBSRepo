@@ -20,34 +20,37 @@ namespace IBS.Repositories.Hub
         public int ChatMessageSave(ChatMessage model)
         {
             var result = 0;
-            if (model.ID <= 0)
+            var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
+            if (arrRecvId.Count() > 0)
             {
-                T113ChatMaster obj = new T113ChatMaster();
-                obj.ConnectionId = null;
-                obj.MsgSendId = model.msg_send_ID;
-                obj.MsgRecvId = model.msg_recv_ID;
-                obj.Message = model.message;
-                obj.SendMsgDate = DateTime.Now;
-                context.T113ChatMasters.Add(obj);
-                context.SaveChanges();
-                result = obj.Id;
-            }
-            else
-            {
-                var dtlChat = (from a in context.T113ChatMasters
-                               where a.Id == model.ID
-                               select a).FirstOrDefault();
-                if (dtlChat != null)
+                foreach (var item in arrRecvId)
                 {
-                    dtlChat.ConnectionId = null;
-                    dtlChat.MsgSendId = model.msg_send_ID;
-                    dtlChat.MsgRecvId = model.msg_recv_ID;
-                    dtlChat.Message = model.message;
-                    dtlChat.SendMsgDate = DateTime.Now;
+                    T113ChatMaster obj = new T113ChatMaster();
+                    obj.MsgSendId = Convert.ToInt32(model.msg_send_ID);
+                    obj.MsgRecvId = Convert.ToInt32(item);
+                    obj.Message = model.message;
+                    obj.SendMsgDate = DateTime.Now;
+                    obj.Filename = model.FileName;
+                    context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
-                    result = model.ID;
+                    result = obj.Id;
                 }
             }
+            //else
+            //{
+            //    var dtlChat = (from a in context.T113ChatMasters
+            //                   where a.Id == model.ID
+            //                   select a).FirstOrDefault();
+            //    if (dtlChat != null)
+            //    {
+            //        dtlChat.MsgSendId = Convert.ToInt32(model.msg_send_ID);
+            //        dtlChat.MsgRecvId = Convert.ToInt32(model.msg_recv_ID);
+            //        dtlChat.Message = model.message;
+            //        dtlChat.SendMsgDate = DateTime.Now;
+            //        context.SaveChanges();
+            //        result = model.ID;
+            //    }
+            //}
             return result;
         }
 
@@ -78,6 +81,7 @@ namespace IBS.Repositories.Hub
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                model.CurrDateCount = model.lstMsg.Where(x => x.Msg_Date.Date == DateTime.Now.Date).Count();
             }
             return model;
         }
@@ -89,7 +93,7 @@ namespace IBS.Repositories.Hub
 
 
             OracleParameter[] par = new OracleParameter[2];
-            par[0] = new OracleParameter("P_SEND_RECV_ID", OracleDbType.Int32, id, ParameterDirection.Input);            
+            par[0] = new OracleParameter("P_SEND_RECV_ID", OracleDbType.Int32, id, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("SP_GET_MESSAGE_RECEIVER_NAME", par);
@@ -98,7 +102,7 @@ namespace IBS.Repositories.Hub
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            }
+            }            
             return model;
 
         }

@@ -30,12 +30,12 @@ namespace IBS.Helper
             AdminUserUploadDoc = 3,
             [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,
-            [Description("/ReadWriteData/Files/VendorDocument")]
+            [Description("/ReadWriteData/Files/Vendor/DOC")]
             VendorDocument = 5,
             [Description("/ReadWriteData/MA")]
             VendorMADocument = 6,
-            [Description("/ReadWriteData/Files/ContractDocument")]
-            ContractDocument = 7,
+            [Description("/ReadWriteData/Files/CONTRACTS")]
+            Contracts = 7,
             [Description("/ReadWriteData/Files/TechnicalReferences")]
             TechnicalReferencesDoc = 8,
             [Description("/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")]
@@ -84,6 +84,10 @@ namespace IBS.Helper
             VendorPO = 29,
             [Description("/ReadWriteData/IC_PHOTOS")]
             ICPHOTOS = 30,
+            [Description("/ReadWriteData/Files/VENDOR_CREATION_BASIS")]
+            VendorCreationBasis = 31,
+            [Description("/ReadWriteData/Files/TECH")]
+            Tech = 32,
         }
 
         public enum DocumentCategory : int

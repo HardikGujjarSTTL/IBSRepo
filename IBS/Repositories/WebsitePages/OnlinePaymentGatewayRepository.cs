@@ -1,10 +1,13 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.InkML;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.WebsitePages;
 using IBS.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -42,7 +45,7 @@ namespace IBS.Repositories.WebsitePages
             return model;
         }
 
-        public OnlinePaymentGateway PaymentIntergreationSave(OnlinePaymentGateway model)
+        public string GetMerTrnRef(string CaseNo, string ChargesType)
         {
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("p_DATE", OracleDbType.Varchar2, DateTime.Now.ToString("ddMMyy"), ParameterDirection.Input);
@@ -52,11 +55,16 @@ namespace IBS.Repositories.WebsitePages
 
             string merNo = ds.Tables[0].Rows[0]["MERNO"].ToString();
 
-            string mer_ref = DateTime.Now.ToString("ddMMyy") + model.CaseNo.Substring(0, 1) + model.ChargesType + merNo.PadLeft(5, '0');
-            model.MER_TXN_REF = mer_ref;
+            string mer_ref = DateTime.Now.ToString("ddMMyy") + CaseNo.Substring(0, 1) + ChargesType + merNo.PadLeft(5, '0');
+
+            return mer_ref;
+        }
+
+        public OnlinePaymentGateway PaymentIntergreationSave(OnlinePaymentGateway model)
+        {
             var OnlinePayment = new OnlinePayment
             {
-                MerTxnRef = mer_ref,
+                MerTxnRef = model.MER_TXN_REF,
                 OrderInfo = model.VEND_CD.HasValue ? (short?)model.VEND_CD.Value : null,
                 CaseNo = model.CaseNo.Trim(),
                 CallRecvDt = Convert.ToDateTime(model.CallDate),
@@ -65,6 +73,11 @@ namespace IBS.Repositories.WebsitePages
                 Amount = model.Charges,
                 ChargesType = model.ChargesType,
                 Datetime = DateTime.Now,
+                CustEmail = model.Email,
+                CustMobile = model.Mobile,
+                MerId = model.MerID,
+                MerTxnId = model.MER_TXN_REF,
+                MerTxnDate = DateTime.Now,
                 TokId = model.Tok_id
             };
             model.AlertMsg = "Success";
@@ -94,7 +107,7 @@ namespace IBS.Repositories.WebsitePages
             }
             model.CallSno = GetPayment.CallSno;
             model.MER_TXN_REF = GetPayment.MER_TXN_REF;
-            
+
             model.ChargesType = EnumUtility<Enums.ChargesType>.GetDescriptionByKey(GetPayment.ChargesType);
 
             var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == GetPayment.MER_TXN_REF);
@@ -104,10 +117,6 @@ namespace IBS.Repositories.WebsitePages
                 onlinePayment.TransactionNo = model.BankTXNID;
                 onlinePayment.RrnNo = null;
                 onlinePayment.Status = model.PaymentStatus;
-                onlinePayment.CustEmail = model.Email;
-                onlinePayment.CustMobile = model.Mobile;
-                onlinePayment.MerId = model.MerID;
-                onlinePayment.MerTxnDate = Convert.ToDateTime(model.merchTxnDate);
                 onlinePayment.MerTxnId = model.MERTXNID;
                 onlinePayment.AtomTxnId = model.AtomTXNID;
                 onlinePayment.CustAccNo = model.custAccNo;
@@ -120,6 +129,51 @@ namespace IBS.Repositories.WebsitePages
                 context.SaveChanges();
                 model.AlertMsg = "Success";
             }
+            return model;
+        }
+
+        public OnlinePaymentGateway PaymentTrackingResponse(OnlinePaymentGateway model)
+        {
+            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == model.MER_TXN_REF);
+
+            if (onlinePayment != null)
+            {
+                onlinePayment.TransactionNo = model.BankTXNID;
+                onlinePayment.Status = model.PaymentStatus;
+                onlinePayment.MerTxnId = model.MERTXNID;
+                onlinePayment.AtomTxnId = model.AtomTXNID;
+                onlinePayment.CustAccNo = model.custAccNo;
+                onlinePayment.TxnCompleteDate = Convert.ToDateTime(model.TranDate);
+                onlinePayment.BankTxnId = model.BankTXNID;
+                onlinePayment.BankName = model.BankName;
+                onlinePayment.SubChannel = model.SubChannel;
+                onlinePayment.Description = model.Description;
+                onlinePayment.StatusCd = model.StatusCode;
+                context.SaveChanges();
+                model.AlertMsg = "Success";
+            }
+            return model;
+        }
+
+        public OnlinePaymentGateway BindPaymentList()
+        {
+           OnlinePaymentGateway model = new();
+
+            var query = from l in context.OnlinePayments
+                        where l.MerId != null
+                        select new PaymentList
+                        {
+                            MerID = l.MerId,
+                            MER_TXN_REF = l.MerTxnRef,
+                            merchTxnDate = l.MerTxnDate.HasValue ? l.MerTxnDate.Value.ToString("dd/MM/yyyy") : null,
+                            MERTXNID = l.MerTxnId,
+                            Charges = l.Amount,
+                            Status = l.Status,
+                            AtomTXNID = l.AtomTxnId
+                        };
+
+            model.lstPaymentList = query.ToList();
+
             return model;
         }
     }

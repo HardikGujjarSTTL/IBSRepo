@@ -53,5 +53,17 @@ namespace IBS.Models
         public string SubChannel { get; set; }
         public string Description { get; set; }
         public string StatusCode { get; set; }
+        public List<PaymentList> lstPaymentList { get; set; }
+    }
+
+    public class PaymentList
+    {
+        public string MerID { get; set; }
+        public string MER_TXN_REF { get; set; }
+        public string merchTxnDate { get; set; }
+        public string MERTXNID { get; set; }
+        public decimal? Charges { get; set; }
+        public string AtomTXNID { get; set; }
+        public string Status { get; set; }
     }
 }
