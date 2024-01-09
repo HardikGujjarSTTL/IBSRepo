@@ -20,6 +20,8 @@
         <input type="hidden" asp-for="IeCd" />
         <input type="hidden" asp-for="CallLetterDt" />
 
+        <input type="hidden" asp-for="CallCancelStatus" />
+
         <div class="accordion-body" style="overflow-x: auto;">
             <table>
                 @*<col style="width: 20%;" />
@@ -170,7 +172,7 @@
                 </tr>
                 <tr id="ReasonFIFOdv">
                     <td>
-                        <label for="Reference">Reason For Voilating FIFO : </label>
+                        <label for="Reference">Reason For Violating FIFO : </label>
                     </td>
                     <td colspan="4">
                         <textarea rows="4" asp-for="ReasonFIFO" style="color:red;text-transform: uppercase;" id="ReasonFIFO"></textarea>
@@ -178,7 +180,7 @@
                 </tr>
                 <tr id="MatCanvalue">
                     <td>
-                        <label for="Reference">Material Vlaue: </label>
+                        <label for="Reference">Material Value: </label>
                     </td>
                     <td>
                         <input type="text" class="input" id="MatValue" asp-for="MaterialValue" style="color:red;text-transform: uppercase;" readonly="readonly">
@@ -425,16 +427,15 @@
                         </div>
                         <div class="col-md-10 mb-10">
                             <div class="reference">
-                                <label>Reasons For Cancellation:-</label>
+                                <h3 class="heading3">Reasons For Cancellation:-</h3>
+                                @* <label>Reasons For Cancellation:-</label> *@
                                 <div class="custom-control custom-checkbox">
                                     <label class="custom-checkbox">
                                         <input type="checkbox" asp-for="chkItems[0]" class="custom" />
-
                                         <label for="chk_1">01 - Material Not Found</label>
                                     </label>
                                     <label class="custom-checkbox">
                                         <input type="checkbox" asp-for="chkItems[1]" class="custom" />
-
                                         <label for="chk_2">02 - Call letter recieved after expiry of delivery period</label>
                                     </label>
                                     <label class="custom-checkbox">
@@ -520,7 +521,7 @@
             $('#ViewPrintIC').prop('disabled', true);
             $("#ViewPrintIC").css("cursor", "auto");
             $('#accepteddrp').hide();
-            $('#CallCancelChargesdrp').hide();
+            // $('#CallCancelChargesdrp').hide();
             $('#MatCanvalue').hide();
             $('#ReasonFIFOdv').hide();
             $('#accepteuploadddrp').hide();
@@ -592,7 +593,8 @@
                     $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').show();
                     $('#consigneeFirmDropdown').trigger('change');
-                } else if (selectedValue == "R") {
+                }
+                else if (selectedValue == "R") {
                     $('#MatValue').show();
                     $('#accepteddrp').show();
                     $('#localdrp').show();
@@ -606,6 +608,7 @@
                     $('#frmcancelled').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
+                    $('#CallCancelStatusdrp').hide();
                     $('#CallCancelChargesdrp').hide();
                     $('#LocalOutstationdrp').show();
                     $('#uploadfile').show();
@@ -613,7 +616,8 @@
                     $('#ViewPrintIC').show();
                     $('#uploadcancel').show();
                     $('#consigneeFirmDropdown').trigger('change');
-                } else if (selectedValue == "G") {
+                }
+                else if (selectedValue == "G") {
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -635,7 +639,8 @@
 
                     $('#consigneeFirmDropdown').trigger('change');
 
-                } else if (selectedValue == "T") {
+                }
+                else if (selectedValue == "T") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -654,7 +659,8 @@
                     $('#ViewPrintIC').hide();
                     $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "S") {
+                }
+                else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -673,7 +679,8 @@
                     $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "U") {
+                }
+                else if (selectedValue == "U") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -692,7 +699,8 @@
                     $('#RefreshAll').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "W") {
+                }
+                else if (selectedValue == "W") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -711,7 +719,8 @@
                     $('#uploadcancel').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "M" || selectedValue == "B") {
+                }
+                else if (selectedValue == "M" || selectedValue == "B") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -730,7 +739,8 @@
                     $('#Remarksval').show();
                     $('#Holograms').show();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
+                }
+                else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -749,7 +759,8 @@
                     $('#AcceptReject').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "C") {
+                }
+                else if (selectedValue == "C") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
@@ -786,6 +797,7 @@
                     }
                 });
             });
+            debugger
             var CallStatusdrp = $('#CallStatusdrp').val();
 
             if (CallStatusdrp == "C") {
@@ -800,6 +812,25 @@
                 $('#ViewPrintIC').hide();
                 $('#AcceptReject').hide();
                 $('#uploadcancel').hide();
+
+                $('#accepteuploadddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#frmcancelled').show();
+                $('#CallCancelStatusdrp').show();
+                $('#MatValue').show();
+
+                $('#CallCancelStatusdrp').prop('disabled', true);
+                $('#CallCancelChargesdrp').prop('disabled', true);
+
+                var selectedValue1 = $('#CallCancelStatusdrp').val();
+                if (selectedValue1 == "C") {
+
+                    $('#CallCancelChargesdrp').show();
+                    CallCancelStatus();
+                    CallCancellationChanges();
+                }
+
             } else if (CallStatusdrp == "A") {
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
@@ -895,6 +926,10 @@
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
+
+                
+
+
             } else if (CallStatusdrp == "S") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
@@ -985,25 +1020,29 @@
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#CallCancelChargesdrp').hide();
-            } else if (CallStatusdrp == "C") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').hide();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#frmcancelled').show();
-                $('#Remarksval').hide();
-                $('#Holograms').hide();
-                $('#CallCancelStatusdrp').show();
-                $('#MatValue').show();
-                $('#uploadfile').hide();
-                $('#RefreshAll').hide();
-                $('#AcceptReject').hide();
-                $('#ViewPrintIC').hide();
-                $('#uploadcancel').hide();
             }
+            else if (CallStatusdrp == "C") {
+                // $('#accepteuploadddrp').hide();
+                // $('#localdrp').hide();
+                // $('#rejvalue').hide();
+                // $('#accepteddrp').hide();
+                // $('#savedetails').hide();
+                // $('#bkset').hide();
+                // $('#ReasonFIFOdv').show();
+                // $('#frmcancelled').show();
+                // $('#Remarksval').hide();
+                // $('#Holograms').hide();
+                // $('#CallCancelStatusdrp').show();
+                // $('#MatValue').show();
+                // $('#uploadfile').hide();
+                // $('#RefreshAll').hide();
+                // $('#AcceptReject').hide();
+                // $('#ViewPrintIC').hide();
+                // $('#uploadcancel').hide();
+
+                // $('#CallCancelChargesdrp').show();
+            }
+
             $('#LocalOutstationdrp').change(function () {
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
@@ -1024,6 +1063,14 @@
             });
 
             $('#CallCancelStatusdrp').change(function () {
+                debugger
+                CallCancelStatus();
+                CallCancellationChanges();
+            });
+
+            function CallCancelStatus()
+            {
+                debugger
                 $('#MatCanvalue').hide();
                 var selectedValue1 = $('#CallCancelStatusdrp').val();
                 var selectedValue = $('#CallStatusdrp').val();
@@ -1033,36 +1080,47 @@
 
                 if (selectedValue1 == "C") {
                     $('#CallCancelChargesdrp').show();
-                } else if (selectedValue1 == "N") {
-                    $('#CallCancelChargesdrp').hide();
-                }
+                    $("#MatCanvalue").show();
 
-                $.ajax({
-                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
-                    type: 'GET',
-                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
-                    success: function (data) {
-                        if (data.ChkFIFO == "true") {
-                            $('#ReasonFIFOdv').show();
-                        } else if (data.ChkFIFO == "false") {
-                            $('#ReasonFIFOdv').hide();
+                    $.ajax({
+                        url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
+                        type: 'GET',
+                        data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                        success: function (data) {
+                            if (data.ChkFIFO == "true") {
+                                $('#ReasonFIFOdv').show();
+                            } else if (data.ChkFIFO == "false") {
+                                $('#ReasonFIFOdv').hide();
+                            }
+                            var callRlyFirmList = data.CallRlyFirmList;
+                            $('#CallCancelChargesdrp').empty();
+                            for (var i = 0; i < callRlyFirmList.length; i++) {
+                                $('#CallCancelChargesdrp').append($('<option>', {
+                                    value: callRlyFirmList[i].Value,
+                                    text: callRlyFirmList[i].Text
+                                }));
+                            }
+                        },
+                        error: function () {
+                            alert('Error occurred while retrieving BkNo and SetNo.');
                         }
-                        var callRlyFirmList = data.CallRlyFirmList;
-                        for (var i = 0; i < callRlyFirmList.length; i++) {
-                            $('#CallCancelChargesdrp').append($('<option>', {
-                                value: callRlyFirmList[i].Value,
-                                text: callRlyFirmList[i].Text
-                            }));
-                        }
-                    },
-                    error: function () {
-                        alert('Error occurred while retrieving BkNo and SetNo.');
-                    }
-                });
-            });
+                    });
+                }
+                // else if (selectedValue1 == "N") {
+                else {
+                    $('#CallCancelChargesdrp').hide();
+                    $("#MatCanvalue").hide();
+                }
+            }
 
             $('#CallCancelChargesdrp').change(function () {
+                CallCancellationChanges();
+            });
+
+            function CallCancellationChanges()
+            {
                 var selectedValue = $('#CallCancelChargesdrp').val();
+                
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
@@ -1071,7 +1129,7 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#MatCanvalue').show();
+                        
                         $('#MatValue').val(data.MaterialValue);
                         $('#CanCharges').val(data.CallCancelCharges);
                     },
@@ -1079,8 +1137,7 @@
                         alert('Error occurred while retrieving BkNo and SetNo.');
                     }
                 });
-
-            });
+            }
         });
 
         function UploadFiles() {
@@ -1337,6 +1394,9 @@
             formData.append("CallCancelStatusDesc", $("#CallCancelStatusdrp option:selected").text());
             formData.append("CallLetterDt", $("#CallLetterDt").val());
 
+            formData.append("CallCancelChargesStatus", $("#CallCancelChargesdrp").val());
+            formData.append("CallCancelAmount", $("#MatValue").val());
+
             if (ajaxData) {
                 for (var key in ajaxData) {
                     if (ajaxData.hasOwnProperty(key)) {
@@ -1416,6 +1476,9 @@
             var RejectionCharge = $('#RejectionCharge').val();
             var IeCd = $('#IeCd').val();
             var CallLetterDt = $("#CallLetterDt").val();
+
+            var CallCancelChargesStatus = $("#CallCancelChargesdrp").val();
+            var CallCancelAmount = $("#MatValue").val();
 
             var formData = {
                 CallStatus: CallStatus,
