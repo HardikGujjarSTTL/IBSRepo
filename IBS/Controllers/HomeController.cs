@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using static IBS.Helper.Enums;
 
@@ -120,10 +121,36 @@ namespace IBS.Controllers
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                 if (userMaster != null)
-                {                
-                    if(userMaster.LoginType == "IE")
+                {
+                    if (userMaster.LoginType == "IE")
                     {
-                        DateTime? DSC_Exp_DT = userRepository.GetDSC_Exp_DT(userMaster.IeCd);
+                        X509Certificate2 cert = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+
+                        //X509Certificate2 cert = DigitalSigner.getCertificate("bikey3383@gmail.com");
+                        //X509Certificate2 cert = DigitalSigner.getCertificate("dhiren.parmar@silvertouch.com");
+
+                        if (cert == null)
+                        {
+                            return Json(new { status = false, responseText = "Kindly Attached Certificate!!" });
+                        }
+                        else
+                        {
+                            DateTime? DSC_Exp_DT = cert.NotAfter;
+
+                            if(DSC_Exp_DT.Value.Date < DateTime.Now.Date)
+                            {
+                                return Json(new { status = false, responseText = "DSC Expiry date cannot be earlier then current date." });
+                            }
+                            else
+                            {
+                                DateTime? DSC_Exp_DT1 = userRepository.GetDSC_Exp_DT(userMaster.IeCd);
+
+                                if(DSC_Exp_DT1 == null || (DSC_Exp_DT.Value.Date != DSC_Exp_DT1.Value.Date))
+                                {
+                                   string DSCUpdate = userRepository.UpdateDSCDate(userMaster.IeCd, DSC_Exp_DT.Value);
+                                }
+                            }
+                        }
                     }
                     SetUserInfo = userMaster;
                     var userClaims = new List<Claim>()

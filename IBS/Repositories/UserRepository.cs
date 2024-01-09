@@ -970,5 +970,18 @@ namespace IBS.Repositories
 
             return DSCDT;
         }
+
+        public string UpdateDSCDate(int IeCd,DateTime DSC_Exp_DT)
+        {
+            string msg = "";
+            var recordToUpdate = context.T09Ies.SingleOrDefault(t => t.IeCd == IeCd);
+
+            if (recordToUpdate != null)
+            {
+                recordToUpdate.DscExpiryDt = DSC_Exp_DT;
+                context.SaveChanges();
+            }
+            return msg;
+        }
     }
 }
