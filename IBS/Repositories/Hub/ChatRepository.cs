@@ -30,6 +30,7 @@ namespace IBS.Repositories.Hub
                     obj.MsgRecvId = Convert.ToInt32(item);
                     obj.Message = model.message;
                     obj.SendMsgDate = DateTime.Now;
+                    obj.Filename = model.FileName;
                     context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
                     result = obj.Id;

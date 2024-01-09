@@ -219,6 +219,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<SapQaConsignee> SapQaConsignees { get; set; }
 
+    public virtual DbSet<SysImportFull01> SysImportFull01s { get; set; }
+
     public virtual DbSet<T01Region> T01Regions { get; set; }
 
     public virtual DbSet<T02User> T02Users { get; set; }
@@ -9488,6 +9490,404 @@ public partial class ModelContext : DbContext
                 .HasColumnName("ZTERM");
         });
 
+        modelBuilder.Entity<SysImportFull01>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("SYS_IMPORT_FULL_01");
+
+            entity.HasIndex(e => new { e.ProcessOrder, e.Duplicate }, "SYS_MTABLE_00001ABC4_IND_1").IsUnique();
+
+            entity.HasIndex(e => new { e.ObjectSchema, e.OriginalObjectName, e.ObjectType }, "SYS_MTABLE_00001ABC4_IND_2");
+
+            entity.HasIndex(e => new { e.ObjectSchema, e.ObjectName, e.ObjectType, e.PartitionName, e.SubpartitionName }, "SYS_MTABLE_00001ABC4_IND_3");
+
+            entity.HasIndex(e => e.BaseProcessOrder, "SYS_MTABLE_00001ABC4_IND_4");
+
+            entity.HasIndex(e => new { e.OriginalObjectSchema, e.OriginalObjectName, e.PartitionName }, "SYS_MTABLE_00001ABC4_IND_5");
+
+            entity.HasIndex(e => e.ObjectPathSeqno, "SYS_MTABLE_00001ABC4_IND_6");
+
+            entity.Property(e => e.AbortStep)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ABORT_STEP");
+            entity.Property(e => e.AccessMethod)
+                .HasMaxLength(16)
+                .IsUnicode(false)
+                .HasColumnName("ACCESS_METHOD");
+            entity.Property(e => e.AncestorObjectName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ANCESTOR_OBJECT_NAME");
+            entity.Property(e => e.AncestorObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ANCESTOR_OBJECT_SCHEMA");
+            entity.Property(e => e.AncestorObjectType)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ANCESTOR_OBJECT_TYPE");
+            entity.Property(e => e.AncestorProcessOrder)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ANCESTOR_PROCESS_ORDER");
+            entity.Property(e => e.BaseObjectName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("BASE_OBJECT_NAME");
+            entity.Property(e => e.BaseObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("BASE_OBJECT_SCHEMA");
+            entity.Property(e => e.BaseObjectType)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("BASE_OBJECT_TYPE");
+            entity.Property(e => e.BaseProcessOrder)
+                .HasColumnType("NUMBER")
+                .HasColumnName("BASE_PROCESS_ORDER");
+            entity.Property(e => e.BlockSize)
+                .HasColumnType("NUMBER")
+                .HasColumnName("BLOCK_SIZE");
+            entity.Property(e => e.ClusterOk)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CLUSTER_OK");
+            entity.Property(e => e.CompletedBytes)
+                .HasColumnType("NUMBER")
+                .HasColumnName("COMPLETED_BYTES");
+            entity.Property(e => e.CompletedRows)
+                .HasColumnType("NUMBER")
+                .HasColumnName("COMPLETED_ROWS");
+            entity.Property(e => e.CompletionTime)
+                .HasColumnType("DATE")
+                .HasColumnName("COMPLETION_TIME");
+            entity.Property(e => e.ControlQueue)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("CONTROL_QUEUE");
+            entity.Property(e => e.CreationLevel)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CREATION_LEVEL");
+            entity.Property(e => e.CreationTime)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATION_TIME");
+            entity.Property(e => e.CumulativeTime)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CUMULATIVE_TIME");
+            entity.Property(e => e.DataBufferSize)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DATA_BUFFER_SIZE");
+            entity.Property(e => e.DataIo)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DATA_IO");
+            entity.Property(e => e.DataobjNum)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DATAOBJ_NUM");
+            entity.Property(e => e.DbVersion)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("DB_VERSION");
+            entity.Property(e => e.Degree)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DEGREE");
+            entity.Property(e => e.DomainProcessOrder)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DOMAIN_PROCESS_ORDER");
+            entity.Property(e => e.DumpAllocation)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUMP_ALLOCATION");
+            entity.Property(e => e.DumpFileid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUMP_FILEID");
+            entity.Property(e => e.DumpLength)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUMP_LENGTH");
+            entity.Property(e => e.DumpOrigLength)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUMP_ORIG_LENGTH");
+            entity.Property(e => e.DumpPosition)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUMP_POSITION");
+            entity.Property(e => e.Duplicate)
+                .HasColumnType("NUMBER")
+                .HasColumnName("DUPLICATE");
+            entity.Property(e => e.ElapsedTime)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ELAPSED_TIME");
+            entity.Property(e => e.ErrorCount)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ERROR_COUNT");
+            entity.Property(e => e.ExtendSize)
+                .HasColumnType("NUMBER")
+                .HasColumnName("EXTEND_SIZE");
+            entity.Property(e => e.FileMaxSize)
+                .HasColumnType("NUMBER")
+                .HasColumnName("FILE_MAX_SIZE");
+            entity.Property(e => e.FileName)
+                .IsUnicode(false)
+                .HasColumnName("FILE_NAME");
+            entity.Property(e => e.FileType)
+                .HasColumnType("NUMBER")
+                .HasColumnName("FILE_TYPE");
+            entity.Property(e => e.Flags)
+                .HasColumnType("NUMBER")
+                .HasColumnName("FLAGS");
+            entity.Property(e => e.Grantor)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("GRANTOR");
+            entity.Property(e => e.Granules)
+                .HasColumnType("NUMBER")
+                .HasColumnName("GRANULES");
+            entity.Property(e => e.Guid).HasColumnName("GUID");
+            entity.Property(e => e.InProgress)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("IN_PROGRESS");
+            entity.Property(e => e.Instance)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("INSTANCE");
+            entity.Property(e => e.InstanceId)
+                .HasColumnType("NUMBER")
+                .HasColumnName("INSTANCE_ID");
+            entity.Property(e => e.IsDefault)
+                .HasColumnType("NUMBER")
+                .HasColumnName("IS_DEFAULT");
+            entity.Property(e => e.JobMode)
+                .HasMaxLength(21)
+                .IsUnicode(false)
+                .HasColumnName("JOB_MODE");
+            entity.Property(e => e.JobVersion)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("JOB_VERSION");
+            entity.Property(e => e.LastFile)
+                .HasColumnType("NUMBER")
+                .HasColumnName("LAST_FILE");
+            entity.Property(e => e.LastUpdate)
+                .HasColumnType("DATE")
+                .HasColumnName("LAST_UPDATE");
+            entity.Property(e => e.LoadMethod)
+                .HasColumnType("NUMBER")
+                .HasColumnName("LOAD_METHOD");
+            entity.Property(e => e.MetadataBufferSize)
+                .HasColumnType("NUMBER")
+                .HasColumnName("METADATA_BUFFER_SIZE");
+            entity.Property(e => e.MetadataIo)
+                .HasColumnType("NUMBER")
+                .HasColumnName("METADATA_IO");
+            entity.Property(e => e.Name)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.ObjectIntOid)
+                .HasMaxLength(130)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_INT_OID");
+            entity.Property(e => e.ObjectLongName)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_LONG_NAME");
+            entity.Property(e => e.ObjectName)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_NAME");
+            entity.Property(e => e.ObjectNumber)
+                .HasColumnType("NUMBER")
+                .HasColumnName("OBJECT_NUMBER");
+            entity.Property(e => e.ObjectPathSeqno)
+                .HasColumnType("NUMBER")
+                .HasColumnName("OBJECT_PATH_SEQNO");
+            entity.Property(e => e.ObjectRow)
+                .HasColumnType("NUMBER")
+                .HasColumnName("OBJECT_ROW");
+            entity.Property(e => e.ObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_SCHEMA");
+            entity.Property(e => e.ObjectTablespace)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_TABLESPACE");
+            entity.Property(e => e.ObjectType)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_TYPE");
+            entity.Property(e => e.ObjectTypePath)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("OBJECT_TYPE_PATH");
+            entity.Property(e => e.OldValue)
+                .IsUnicode(false)
+                .HasColumnName("OLD_VALUE");
+            entity.Property(e => e.Operation)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("OPERATION");
+            entity.Property(e => e.OptionTag)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("OPTION_TAG");
+            entity.Property(e => e.OrigBaseObjectName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ORIG_BASE_OBJECT_NAME");
+            entity.Property(e => e.OrigBaseObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ORIG_BASE_OBJECT_SCHEMA");
+            entity.Property(e => e.OriginalObjectName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ORIGINAL_OBJECT_NAME");
+            entity.Property(e => e.OriginalObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("ORIGINAL_OBJECT_SCHEMA");
+            entity.Property(e => e.PacketNumber)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PACKET_NUMBER");
+            entity.Property(e => e.Parallelization)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PARALLELIZATION");
+            entity.Property(e => e.ParentObjectName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PARENT_OBJECT_NAME");
+            entity.Property(e => e.ParentObjectSchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PARENT_OBJECT_SCHEMA");
+            entity.Property(e => e.ParentProcessOrder)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PARENT_PROCESS_ORDER");
+            entity.Property(e => e.PartitionName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PARTITION_NAME");
+            entity.Property(e => e.Phase)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PHASE");
+            entity.Property(e => e.Platform)
+                .HasMaxLength(101)
+                .IsUnicode(false)
+                .HasColumnName("PLATFORM");
+            entity.Property(e => e.ProcessName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PROCESS_NAME");
+            entity.Property(e => e.ProcessOrder)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PROCESS_ORDER");
+            entity.Property(e => e.ProcessingState)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PROCESSING_STATE");
+            entity.Property(e => e.ProcessingStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("PROCESSING_STATUS");
+            entity.Property(e => e.Property)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PROPERTY");
+            entity.Property(e => e.ProxySchema)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PROXY_SCHEMA");
+            entity.Property(e => e.ProxyView)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("PROXY_VIEW");
+            entity.Property(e => e.QueueTabnum)
+                .HasColumnType("NUMBER")
+                .HasColumnName("QUEUE_TABNUM");
+            entity.Property(e => e.RemoteLink)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("REMOTE_LINK");
+            entity.Property(e => e.Scn)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SCN");
+            entity.Property(e => e.Seed)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SEED");
+            entity.Property(e => e.ServiceName)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasColumnName("SERVICE_NAME");
+            entity.Property(e => e.SizeEstimate)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SIZE_ESTIMATE");
+            entity.Property(e => e.SrcCompat)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("SRC_COMPAT");
+            entity.Property(e => e.StartTime)
+                .HasColumnType("DATE")
+                .HasColumnName("START_TIME");
+            entity.Property(e => e.State)
+                .HasMaxLength(12)
+                .IsUnicode(false)
+                .HasColumnName("STATE");
+            entity.Property(e => e.StatusQueue)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("STATUS_QUEUE");
+            entity.Property(e => e.SubpartitionName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("SUBPARTITION_NAME");
+            entity.Property(e => e.TargetXmlClob)
+                .HasColumnType("CLOB")
+                .HasColumnName("TARGET_XML_CLOB");
+            entity.Property(e => e.TdeRewrappedKey).HasColumnName("TDE_REWRAPPED_KEY");
+            entity.Property(e => e.TemplateTable)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("TEMPLATE_TABLE");
+            entity.Property(e => e.Timezone)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasColumnName("TIMEZONE");
+            entity.Property(e => e.TotalBytes)
+                .HasColumnType("NUMBER")
+                .HasColumnName("TOTAL_BYTES");
+            entity.Property(e => e.Trigflag)
+                .HasColumnType("NUMBER")
+                .HasColumnName("TRIGFLAG");
+            entity.Property(e => e.UnloadMethod)
+                .HasColumnType("NUMBER")
+                .HasColumnName("UNLOAD_METHOD");
+            entity.Property(e => e.UserDirectory)
+                .IsUnicode(false)
+                .HasColumnName("USER_DIRECTORY");
+            entity.Property(e => e.UserFileName)
+                .IsUnicode(false)
+                .HasColumnName("USER_FILE_NAME");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(128)
+                .IsUnicode(false)
+                .HasColumnName("USER_NAME");
+            entity.Property(e => e.ValueN)
+                .HasColumnType("NUMBER")
+                .HasColumnName("VALUE_N");
+            entity.Property(e => e.ValueT)
+                .IsUnicode(false)
+                .HasColumnName("VALUE_T");
+            entity.Property(e => e.Version)
+                .HasColumnType("NUMBER")
+                .HasColumnName("VERSION");
+            entity.Property(e => e.WorkItem)
+                .HasMaxLength(21)
+                .IsUnicode(false)
+                .HasColumnName("WORK_ITEM");
+            entity.Property(e => e.XmlClob)
+                .HasColumnType("CLOB")
+                .HasColumnName("XML_CLOB");
+        });
+
         modelBuilder.Entity<T01Region>(entity =>
         {
             entity.HasKey(e => e.RegionCode).HasName("PK_REGION_CODE");
@@ -12093,10 +12493,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Id)
                 .HasPrecision(6)
                 .HasColumnName("ID");
-            entity.Property(e => e.ConnectionId)
-                .HasMaxLength(20)
+            entity.Property(e => e.Filename)
+                .HasMaxLength(100)
                 .IsUnicode(false)
-                .HasColumnName("CONNECTION_ID");
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("FILENAME");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -13396,11 +13797,18 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("BPO");
+            entity.Property(e => e.CallCancelAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("CALL_CANCEL_AMOUNT");
             entity.Property(e => e.CallCancelCharges)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CALL_CANCEL_CHARGES");
+            entity.Property(e => e.CallCancelChargesStatus)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("CALL_CANCEL_CHARGES_STATUS");
             entity.Property(e => e.CallCancelStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -25274,9 +25682,16 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("BK_NO");
+            entity.Property(e => e.CallCancelAmount)
+                .HasColumnType("NUMBER(13,2)")
+                .HasColumnName("CALL_CANCEL_AMOUNT");
             entity.Property(e => e.CallCancelCharges)
-                .HasPrecision(5)
+                .HasPrecision(6)
                 .HasColumnName("CALL_CANCEL_CHARGES");
+            entity.Property(e => e.CallCancelChargesStatus)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("CALL_CANCEL_CHARGES_STATUS");
             entity.Property(e => e.CallCancelStatus)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -25646,6 +26061,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("BKNO");
+            entity.Property(e => e.Callcancelstatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("CALLCANCELSTATUS");
             entity.Property(e => e.Callrecvdt)
                 .HasColumnType("DATE")
                 .HasColumnName("CALLRECVDT");

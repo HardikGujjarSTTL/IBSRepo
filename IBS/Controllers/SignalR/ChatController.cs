@@ -1,7 +1,9 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces.Hub;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace IBS.Controllers.SignalR
 {
@@ -10,11 +12,15 @@ namespace IBS.Controllers.SignalR
     {
         private readonly IConfiguration _configuration;
         private readonly IChatRepository _chathub;
+        private readonly IWebHostEnvironment env;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public ChatController(IConfiguration configuration, IChatRepository chathub)
+        public ChatController(IConfiguration configuration, IChatRepository chathub, IWebHostEnvironment _env, IHubContext<ChatHub> hubContext)
         {
             _configuration = configuration;
             _chathub = chathub;
+            env = _env;
+            _hubContext = hubContext;
         }
 
         public IActionResult Index()
@@ -44,9 +50,41 @@ namespace IBS.Controllers.SignalR
         }
 
         [HttpPost]
-        public IActionResult UploadFile(IFormFile SingleFile)
+        public async Task UploadFile(string SenderId, string ReceiverId, string message, int MsgType, IFormFile file)
         {
-            return Json(null);
+            //if (file == null || file.Length == 0)
+            //return Content("file not selected");
+
+            //var path = Path.Combine("/ReadWriteData/CHAT_FILES", file.FileName);
+            var path = env.WebRootPath + "/ReadWriteData/CHAT_FILES";
+            path = Path.Combine(path, file.FileName);
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                file.CopyToAsync(stream);
+            }
+
+            var FileName = file.FileName;
+            ChatMessage model = new ChatMessage();
+            model.msg_send_ID = SenderId;
+            model.msg_recv_ID = ReceiverId;
+            model.message = message;
+            model.FileName = FileName;
+            var res = _chathub.ChatMessageSave(model);
+
+            var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
+            if (arrRecvId.Count() > 0)
+            {
+                foreach (var recvID in arrRecvId)
+                {
+                    var myKey = Common.ConnectedUsers.Where(x => x.Value == recvID || x.Value == SenderId).ToList();
+
+                    foreach (var k in myKey)
+                    {
+                        var extention = Path.GetExtension(FileName);
+                        await _hubContext.Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, message, MsgType, FileName, extention);
+                    }
+                }
+            }
         }
     }
 }
