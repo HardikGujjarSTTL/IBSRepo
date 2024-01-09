@@ -44,6 +44,8 @@ namespace IBS.Models
 
         public decimal? CallCancelAmount { get; set; }
 
+        public string CancellationStatus { get; set; }
+
         public string Createdby { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -145,7 +147,6 @@ namespace IBS.Models
         public string InvoiceNo { get; set; }
 
         public string AdvBill { get; set; }
-
 
         public string CertNo { get; set; }
 
@@ -341,7 +342,6 @@ namespace IBS.Models
         public string? LoRemarks { get; set; }
 
         public string? SapStatus { get; set; }
-
 
         public string chkABill { get; set; }
 

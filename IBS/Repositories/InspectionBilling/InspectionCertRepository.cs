@@ -163,6 +163,12 @@ namespace IBS.Repositories.InspectionBilling
                     model.Callstatus = CallData.Callstatus;
                     model.CallCancelStatus = CallData.Callcancelstatus;
                 }
+
+                var ICDetails = context.T20Ics.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
+                if (ICDetails != null)
+                {
+                    model.CancellationStatus = "1";
+                }
             }
 
             return model;
@@ -2317,9 +2323,9 @@ namespace IBS.Repositories.InspectionBilling
             DataSet ds = new DataSet();
             if (Convert.ToInt32(certdt) >= 20170701)
             {
-                if(model.Callstatus == "C")
+                if (model.Callstatus == "C")
                 {
-                    if(model.CallCancelStatus == "C")
+                    if (model.CallCancelStatus == "C")
                     {
                         OracleParameter[] parameter = new OracleParameter[17];
                         parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, 1, model.Regioncode, ParameterDirection.Input);
@@ -2365,7 +2371,7 @@ namespace IBS.Repositories.InspectionBilling
 
                     ds = DataAccessDB.GetDataSet("SP_GENERATE_BILL_GST_NEW", parameter);
                 }
-                
+
             }
             else
             {
@@ -2472,21 +2478,21 @@ namespace IBS.Repositories.InspectionBilling
                          }).FirstOrDefault();
 
             var query_c = (from c in context.T18CallDetails
-                         join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
-                         join u in context.T04Uoms on p.UomCd equals u.UomCd
-                         where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
-                         select new
-                         {
-                             c,
-                             p,
-                             u
-                         }).FirstOrDefault();
+                           join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
+                           join u in context.T04Uoms on p.UomCd equals u.UomCd
+                           where c.CaseNo == CaseNo && c.CallRecvDt == CallRecvDt && c.CallSno == CallSno && c.ItemSrnoPo == ItemSrnoPo
+                           select new
+                           {
+                               c,
+                               p,
+                               u
+                           }).FirstOrDefault();
 
             var CDetails = query;
             var CDetails_C = query_c;
-            if(CallDetails != null)
+            if (CallDetails != null)
             {
-                if(CallDetails.CallStatus != "C")
+                if (CallDetails.CallStatus != "C")
                 {
                     if (CDetails != null)
                     {
@@ -2545,7 +2551,7 @@ namespace IBS.Repositories.InspectionBilling
                     }
                 }
             }
-            
+
 
             return model;
         }

@@ -16,6 +16,8 @@
             <h3 class="heading3">New Inspection Certificate </h3>
             <input type="hidden" asp-for="Callstatus" />
             <input type="hidden" asp-for="CallCancelStatus" />
+            <input type="hidden" asp-for="CancellationStatus" />
+            
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
@@ -121,8 +123,14 @@
                 $("#btnAddNew").hide();
             }
 
-            if ($("#Callstatus").val() == "C") {
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
                 $(".BookSet").hide();
+                if ($("#CancellationStatus").val() == "1") {
+                    $("#btnAddNew").hide();
+                }
+            }
+            else {
+                $(".BookSet").show();
             }
 
             // $("#Callrecvdt").datepicker({
