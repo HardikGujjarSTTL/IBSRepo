@@ -20,10 +20,13 @@
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
-                        <input type="file" id="fileupload" multiple>
+                    </div>
+                    <div class="col-md-3">
+                       <label>Upload File</label>
+                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
                         <div id="divFile"></div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-5">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
