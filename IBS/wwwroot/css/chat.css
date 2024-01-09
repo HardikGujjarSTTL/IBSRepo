@@ -4,7 +4,7 @@
 .chatBoxHeader h2 { font-size: 16px; font-weight: 600; margin: 0px; padding: 0px; }
 .chatBoxHeader .btn { flex-shrink: 0; display: inline-flex; align-items: center; color: #008b29; font-size: 12px; font-weight: bold; padding: 5px 10px; height: 35px; }
 .chatBoxHeader .btn:hover { background-color: #fff; }
-.chatBoxBody { height: calc(100vh - 68px); overflow: auto; padding:0; }
+.chatBoxBody { height: calc(100vh - 61px); overflow: auto; padding:0; }
 .chatLeftBoxBody { width: 30%; border-right: 1px solid #d1d1d1; background:#fff; }
 .chatBoxBody h4, .chatBoxHeadBody li h4 { font-size: 12px; font-weight: 500; }
 .chatBoxBody h4, .chatBoxBody p, .chatBoxHeadBody li p { margin: 0; padding: 0px; }
@@ -57,6 +57,6 @@
 .upload-btn-wrapper button{ width:100%; height:100%; padding:0; cursor:pointer;}
 .upload-btn-wrapper button .fa-paperclip{ font-size:20px; cursor:pointer;}
 
-.topUploadCustom{ position:relative;}
-.topUploadCustom .upload-btn-wrapper{ top:0; right:0; width:auto; height:43px; padding:8px 30px; line-height:32px; margin-top:32px;}
+.topUploadCustom{ position:relative; width:auto; display:flex; align-items:center; margin-top:28px;}
+.topUploadCustom .upload-btn-wrapper{ position:static; width:auto; height:43px; padding:8px 30px; line-height:32px;}
 .topUploadCustom .submitChatBtn{ border-radius:8px;}
