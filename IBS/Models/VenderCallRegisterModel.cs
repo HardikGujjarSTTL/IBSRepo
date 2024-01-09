@@ -590,6 +590,10 @@ namespace IBS.Models
 
         public string? CallCancelCharges { get; set; }
 
+        public string? CallCancelChargesStatus { get; set; }
+
+        public decimal? CallCancelAmount { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? CallStatusDt { get; set; }

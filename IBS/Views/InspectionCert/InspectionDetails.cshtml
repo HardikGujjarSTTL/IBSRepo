@@ -27,6 +27,9 @@
         <input type="hidden" asp-for="BpoType" />
         <input type="hidden" asp-for="BillNo" />
         <input type="hidden" asp-for="chkABill" />
+        <input type="hidden" asp-for="Callstatus" />
+        <input type="hidden" asp-for="CallCancelCharges" />
+        
 
 
 
@@ -249,18 +252,22 @@
             </div>
 
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <div class="reference">
-                        <label for="Bkno">Book No. <span class="text-danger">*</span></label>
-                        <input type="text" class="input" asp-for="Bkno" maxlength="4" style="text-transform: uppercase;">
+                @if (@Model.Callstatus != "C")
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Bkno">Book No. <span class="text-danger">*</span></label>
+                            <input type="text" class="input" asp-for="Bkno" maxlength="4" style="text-transform: uppercase;">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="reference">
-                        <label for="Setno">Set No. <span class="text-danger">*</span></label>
-                        <input type="text" class="input" asp-for="Setno" maxlength="3" style="text-transform: uppercase;">
+                    <div class="col-md-4 mb-3">
+                        <div class="reference">
+                            <label for="Setno">Set No. <span class="text-danger">*</span></label>
+                            <input type="text" class="input" asp-for="Setno" maxlength="3" style="text-transform: uppercase;">
+                        </div>
                     </div>
-                </div>
+                }
+
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Cert No.</label>
@@ -377,10 +384,10 @@
                 <a asp-controller="InspectionCert" asp-action="Index" class="reset-btn">Cancel</a>
             </div>
         </div>
-        <div class="alert alert-warning center">
+        <div class="alert alert-warning center dtList">
             BILL ITEM DETAILS
         </div>
-        <div id="divgrid">
+        <div id="divgrid" class="dtList">
             <section class="table-section">
                 <div class="task-listinput">
                     <div class="dash-table">
@@ -415,6 +422,34 @@
                 </div>
             </section>
         </div>
+
+        <div class="alert alert-warning center dtListC" style="display:none;">
+            CANCELLATION BILL DETAILS
+        </div>
+
+        <div class="accordion-body dtListC">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Call Cancellation Type</label>
+                        @Html.DropDownListFor(model => model.CallCancelStatus, new SelectList(IBS.Models.Common.CallCancelStatus(), "Value", "Text"), "--Select--")
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Cancellation Amount (Material Vlaue) </label>
+                        <input type="text" class="input" asp-for="CallCancelAmount" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Cancellation Changes </label>
+                        <input type="text" class="input" asp-for="CallCancelCharges" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="alert alert-warning center">
             BILL GENERATION  <span style="color:#d52127;">(Don't use this option for Mulitiple IC - One Bill generation)</span>
         </div>
@@ -701,6 +736,7 @@
             ConsigneeGSTChanged();
             $('input[type=radio][name=ConsigneeGST]').change();
 
+
             if ($("#BillDt").val() != "") {
                 $("#btnBillDtUpdate").show();
             }
@@ -766,6 +802,19 @@
                 $("#btnDelete").show();
                 $("#btnSave").hide();
             }
+
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
+                $(".dtList").hide();
+                $(".dtListC").show();
+
+                $("#CallCancelStatus").prop('disabled', true);
+                $("#BpoFee").val($("#CallCancelCharges").val());
+            }
+            else {
+                $(".dtList").show();
+                $(".dtListC").hide();
+            }
+
         });
 
         $("#StampPatternCd").change(function () {
@@ -882,11 +931,37 @@
         }
 
         function ConsigneeGSTChanged() {
-            debugger
             $('input[type=radio][name=ConsigneeGST]').change(function () {
                 var ConsigneeCd = $("#Consignee").val();
+
+                var checkedValue = $("input[name='ConsigneeGST']:checked").val();
                 if ($("#IrfcFunded").val() == "N") {
-                    if (this.value === 'rdbBPO') {
+                    if (checkedValue == 'rdbConsignee') {
+                        $.ajax({
+                            url: '@Url.Action("GetConsignee", "InspectionCert")',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { "ConsigneeCd": ConsigneeCd },
+                            success: function (contacts) {
+                                if (contacts.data && contacts.data.length > 0) {
+                                    $("#lblCity").text("City : " + contacts.data[0].City);
+                                    $("#lblState").text(",State : " + contacts.data[0].State);
+                                    $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
+
+                                    $("#GstinNo").val(contacts.data[0].GstinNo);
+                                    $("#LegalName").val(contacts.data[0].LegalName);
+
+                                    $('#GstinNo').prop('readonly', true);
+
+                                    $("#City").val(contacts.data[0].City);
+                                    $("#State").val(contacts.data[0].State);
+                                    $("#Pincode").val(contacts.data[0].Pincode);
+                                    StateWiseGST(contacts.data[0].StateID);
+                                }
+                            }
+                        });
+                    }
+                    else {
                         var BPOCd = $("#BpoCd").val();
                         $.ajax({
                             url: '@Url.Action("GetBPO", "InspectionCert")',
@@ -914,31 +989,7 @@
                                 }
                             }
                         });
-                    }
-                    else {
-                        $.ajax({
-                            url: '@Url.Action("GetConsignee", "InspectionCert")',
-                            type: "GET",
-                            dataType: "JSON",
-                            data: { "ConsigneeCd": ConsigneeCd },
-                            success: function (contacts) {
-                                if (contacts.data && contacts.data.length > 0) {
-                                    $("#lblCity").text("City : " + contacts.data[0].City);
-                                    $("#lblState").text(",State : " + contacts.data[0].State);
-                                    $("#lblPincode").text(",PIN : " + contacts.data[0].Pincode);
 
-                                    $("#GstinNo").val(contacts.data[0].GstinNo);
-                                    $("#LegalName").val(contacts.data[0].LegalName);
-
-                                    $('#GstinNo').prop('readonly', true);
-
-                                    $("#City").val(contacts.data[0].City);
-                                    $("#State").val(contacts.data[0].State);
-                                    $("#Pincode").val(contacts.data[0].Pincode);
-                                    StateWiseGST(contacts.data[0].StateID);
-                                }
-                            }
-                        });
                     }
                 }
             });
@@ -1044,13 +1095,16 @@
                 ShowHideMsgNew(false, "Gstin No are required.");
                 return;
             }
-            if ($("#Bkno").val() == "") {
-                ShowHideMsgNew(false, "Bk No are required.");
-                return;
-            }
-            if ($("#Setno").val() == "") {
-                ShowHideMsgNew(false, "Set No are required.");
-                return;
+            if ($("#Callstatus").val() != "C") {
+
+                if ($("#Bkno").val() == "" || $("#Bkno").val() == null) {
+                    ShowHideMsgNew(false, "Bk No are required.");
+                    return;
+                }
+                if ($("#Setno").val() == "" || $("#Setno").val() == null) {
+                    ShowHideMsgNew(false, "Set No are required.");
+                    return;
+                }
             }
             if ($("#FirstInspDt").val() == "") {
                 ShowHideMsgNew(false, "First Insp Date required.");
@@ -1071,7 +1125,6 @@
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
             $.get("@Url.Action("Validation", "InspectionCert")", formData, function (response) {
-                debugger
                 if (response.status) {
                     if (response.responseText != "") {
                         ShowHideMsgNew(false, response.responseText);
@@ -1079,16 +1132,24 @@
                     else {
                         $.post("@Url.Action("InspectionCertSave", "InspectionCert")", formData, function (response) {
                             ShowHideMsgNew(response.status, response.responseText);
-                            debugger
-                            if (response.status) {
-                                if (response.BkNo != null && response.SetNo != null) {
-                                    var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&Bkno=' + response.BkNo + '&Setno=' + response.SetNo + '&ActionType=M';
-                                    setTimeout(function () {
-                                        window.location.href = redirectUrl;
-                                    }, 1000);
-                                }
+                            if ($("#Callstatus").val() != "C") {
+                                if (response.status) {
+                                    if (response.BkNo != null && response.SetNo != null) {
+                                        var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&Bkno=' + response.BkNo + '&Setno=' + response.SetNo + '&ActionType=M';
+                                        setTimeout(function () {
+                                            window.location.href = redirectUrl;
+                                        }, 1000);
+                                    }
 
+                                }
                             }
+                            else {
+                                var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&ActionType=M';
+                                setTimeout(function () {
+                                    window.location.href = redirectUrl;
+                                }, 1000);
+                            }
+
                         });
                     }
                 }
@@ -1309,7 +1370,8 @@
             //else {
             //    $("#chkABill").val('X');
             //}
-
+            // $("#CallCancelStatus").prop('disabled', false);
+            $('select').prop('disabled', false);
             var chkABill = $('input[name="chkABill"]:checked').val();
             if (chkABill == "on") {
                 $("#chkABill").val('A');

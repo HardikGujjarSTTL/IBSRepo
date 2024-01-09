@@ -1274,6 +1274,8 @@ namespace IBS.Repositories.InspectionBilling
                     totalvalue = Convert.ToDecimal(totalvalue3 + otheramount);
                     totalvalueFinal += totalvalue;
                     model.TMValueNew = totalvalueFinal;
+
+                    
                 }
             }
 
@@ -1362,6 +1364,13 @@ namespace IBS.Repositories.InspectionBilling
             w_total_fee = Convert.ToDecimal(w_insp_fee + w_cgst + w_sgst + w_igst);
 
             model.NetFeeNew = w_total_fee;
+
+            if (basevalue == 0)
+            {
+                model.TMValueNew = 0;
+                model.TIFeeNew = 0;
+                model.NetFeeNew = 0;
+            }
 
             return model;
         }

@@ -129,7 +129,7 @@ namespace IBS.Controllers.InspectionBilling
                 //int idt = dt1.CompareTo(DateTime.Now.Date);
 
                 string dt1 = Convert.ToDateTime(model.BillDt).ToString("dd/MM/yyyy");
-                int idt = dt1.CompareTo(DateTime.Now.Date.ToString("dd/MM/yyyy"));
+                //int idt = dt1.CompareTo(DateTime.Now.Date.ToString("dd/MM/yyyy"));
 
                 model.Regioncode = Region;
                 int fyr = billRepository.financial_year_check(model);
@@ -137,10 +137,10 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     msg = "Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)";
                 }
-                else if (idt > 0)
-                {
-                    msg = "Bill Date Cannot be greater then Current Date!!!";
-                }
+                //else if (idt > 0)
+                //{
+                //    msg = "Bill Date Cannot be greater then Current Date!!!";
+                //}
                 else if (model.BpoType == "R" && model.Au == "" && !(model.BpoRly == "RCF" || model.BpoRly == "ICF" || model.BpoRly == "RWF"))
                 {
                     msg = "AU Cannot be Blank For Railways Bills, Kindly Update the AU for the BPO and then Generate the Bill!!!";
