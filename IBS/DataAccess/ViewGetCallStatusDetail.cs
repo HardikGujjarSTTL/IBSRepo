@@ -45,10 +45,6 @@ public partial class ViewGetCallStatusDetail
 
     public decimal? CallCancelAmount { get; set; }
 
-    public string? CallCancelChargesStatus { get; set; }
-
-    public decimal? CallCancelAmount { get; set; }
-
     public string? BkNo { get; set; }
 
     public string? SetNo { get; set; }
