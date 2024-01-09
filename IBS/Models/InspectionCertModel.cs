@@ -36,6 +36,14 @@ namespace IBS.Models
 
         public string? Callstatus { get; set; }
 
+        public string? CallCancelStatus { get; set; }
+
+        public int? CallCancelCharges { get; set; }
+
+        public string? CallCancelChargesStatus { get; set; }
+
+        public decimal? CallCancelAmount { get; set; }
+
         public string Createdby { get; set; }
 
         public DateTime? CreatedDate { get; set; }

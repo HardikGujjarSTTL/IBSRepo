@@ -14,6 +14,8 @@
     <form role="form" asp-controller="InspectionCert" asp-action="Index" id="frmDetails">
         <div class="accordion-body" style="overflow-x: auto;">
             <h3 class="heading3">New Inspection Certificate </h3>
+            <input type="hidden" asp-for="Callstatus" />
+            <input type="hidden" asp-for="CallCancelStatus" />
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
@@ -35,8 +37,8 @@
                 </div>
             </div>
 
-            <h3 class="heading3">Update Inspection Certificate </h3>
-            <div class="row my-0">
+            <h3 class="heading3 BookSet">Update Inspection Certificate </h3>
+            <div class="row my-0 BookSet">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
                         <label for="Reference">Book No.</label>
@@ -100,7 +102,7 @@
     </form>
 </div>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <style>
@@ -118,6 +120,16 @@
             else {
                 $("#btnAddNew").hide();
             }
+
+            if ($("#Callstatus").val() == "C") {
+                $(".BookSet").hide();
+            }
+
+            // $("#Callrecvdt").datepicker({
+            //     changeMonth: true,
+            //     changeYear: true,
+            //     dateFormat: 'dd/mm/yyyy',
+            // });
             //InitializeDatatable();
         });
 
@@ -168,13 +180,14 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.Caseno;
-                            var CallRecvDt = moment(data.Callrecvdt).format("DD-MM-YYYY");
+                            var CallRecvDt = moment(data.Callrecvdt).format("YYYY-MM-DD");
+                            //var CallRecvDt = data.Callrecvdt;
                             var CallSno = data.Callsno;
 
                             var Bkno = data.Bkno == null ? "" : data.Bkno;
                             var Setno = data.Setno == null ? "" : data.Setno;
 
-                            var editUrl = '@Url.Action("Index", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&Bkno=" + Bkno + "&Setno=" + Setno;
+                            var editUrl = '@Url.Action("Index", "InspectionCert")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno + "&Bkno=" + Bkno + "&Setno=" + Setno;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"btnEditG edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
                             html += '</div>';
                             return html;
@@ -299,17 +312,26 @@
                 ShowHideMsgNew(false, "Please select Call S No.");
                 return false;
             }
-            if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please select Book no.");
-                return false;
+            if ($("#Callstatus").val() != "C") {
+                if (Bkno == "" || Bkno == null) {
+                    ShowHideMsgNew(false, "Please select Book no.");
+                    return false;
+                }
+                if (Setno == "" || Setno == null) {
+                    ShowHideMsgNew(false, "Please select Set no");
+                    return false;
+                }
+
+                if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+                }
             }
-            if (Setno == "" || Setno == null) {
-                ShowHideMsgNew(false, "Please select Set no");
-                return false;
+            else {
+                if (Caseno != "" && Callrecvdt != null && Callsno != "") {
+                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+                }
             }
-            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
-                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
-            }
+
         });
 
         $("#btnDelete").click(function () {
@@ -332,16 +354,24 @@
                 ShowHideMsgNew(false, "Please add Call S No.");
                 return false;
             }
-            if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please add Book no.");
-                return false;
+
+            if ($("#Callstatus").val() != "C") {
+                if (Bkno == "" || Bkno == null) {
+                    ShowHideMsgNew(false, "Please select Book no.");
+                    return false;
+                }
+                if (Setno == "" || Setno == null) {
+                    ShowHideMsgNew(false, "Please select Set no");
+                    return false;
+                }
+                if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
+                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=D";
+                }
             }
-            if (Setno == "" || Setno == null) {
-                ShowHideMsgNew(false, "Please add Set no");
-                return false;
-            }
-            if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
-                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=D";
+            else {
+                if (Caseno != "" && Callrecvdt != null && Callsno != "") {
+                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=D";
+                }
             }
         });
 
@@ -354,17 +384,23 @@
                 ShowHideMsgNew(false, "Please add Case No.");
                 return false;
             }
-            if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please add Book no.");
-                return false;
+            if ($("#Callstatus").val() != "C") {
+                if (Bkno == "" || Bkno == null) {
+                    ShowHideMsgNew(false, "Please select Book no.");
+                    return false;
+                }
+                if (Setno == "" || Setno == null) {
+                    ShowHideMsgNew(false, "Please select Set no");
+                    return false;
+                }
+                if (Bkno != "" && Setno != "") {
+                    window.location.href = '@Url.Action("ChangeConsignee", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+                }
             }
-            if (Setno == "" || Setno == null) {
-                ShowHideMsgNew(false, "Please add Set no");
-                return false;
-            }
-            if (Bkno != "" && Setno != "") {
+            else {
                 window.location.href = '@Url.Action("ChangeConsignee", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
             }
+
         });
 
         $("#btnBPOReturned").click(function () {
@@ -376,17 +412,23 @@
                 ShowHideMsgNew(false, "Please add Case No.");
                 return false;
             }
-            if (Bkno == "" || Bkno == null) {
-                ShowHideMsgNew(false, "Please add Book no.");
-                return false;
+            if ($("#Callstatus").val() != "C") {
+                if (Bkno == "" || Bkno == null) {
+                    ShowHideMsgNew(false, "Please select Book no.");
+                    return false;
+                }
+                if (Setno == "" || Setno == null) {
+                    ShowHideMsgNew(false, "Please select Set no");
+                    return false;
+                }
+                if (Bkno != "" && Setno != "") {
+                    window.location.href = '@Url.Action("Returned_Bills_BPO_Change_Form", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+                }
             }
-            if (Setno == "" || Setno == null) {
-                ShowHideMsgNew(false, "Please add Set no");
-                return false;
-            }
-            if (Bkno != "" && Setno != "") {
+            else {
                 window.location.href = '@Url.Action("Returned_Bills_BPO_Change_Form", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
             }
+            
         });
     </script>
 }
