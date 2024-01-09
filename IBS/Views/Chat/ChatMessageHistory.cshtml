@@ -8,6 +8,8 @@
             var Cnt = 0;
             foreach (var item in Model.lstMsg)
             {
+                var FileUrl = "";
+                FileUrl = item.RelativePath + "/" + item.Field_ID;
                 if (msgDate != item.Msg_Date.Date.ToString("dd MMMM yyyy"))
                 {
                     Cnt = Cnt + 1;
@@ -22,25 +24,79 @@
 
                 if (Convert.ToString(Model.Master_ID) == item.msg_send_ID)
                 {
-                    <li class="sendTextHolder">
-                        <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
-                    </li>
+                    if (!string.IsNullOrEmpty(item.Field_ID))
+                    {
+                        <li class="sendTextHolder">
+                            <div class="sendText">
+                                <div class="box-body">
+                                    <div class="attachment-block clearfix">
+                                        @{
+                                            if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
+                                            {
+                                                <a><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                            }
+                                        }
+                                        <div class="attachment-pushed">
+                                            <h4 class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></h4>
+                                        </div>
+                                    </div>
+                                    <a id="btnDownload" href="@FileUrl" class="btn btn-default btn-xs" download="@item.FileDisplayName"><i class="fa fa fa-download"></i></a>
+                                    @*<button type="button" id="ShowModelImg" value="@FileUrl" class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>*@
+                                </div>
+                                <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
+                            </div>
+                        </li>
+                    }
+
+                    if (!string.IsNullOrEmpty(item.message))
+                    {
+                        <li class="sendTextHolder">
+                            <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
+                        </li>
+                    }
                 }
                 else
                 {
-                    <li class="reciveTextHolder">
-                        <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
-                    </li>
+                    if (!string.IsNullOrEmpty(item.Field_ID))
+                    {
+                        <li class="reciveTextHolder">
+                            <div class="recieveText">
+                                <div class="box-body">
+                                    <div class="attachment-block clearfix">
+                                        @{
+                                            if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
+                                            {
+                                                <a><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                            }
+                                        }
+                                        <div class="attachment-pushed">
+                                            <h4 class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></h4>
+                                        </div>
+                                    </div>
+                                    <a id="btnDownload" href="@FileUrl" class="btn btn-default btn-xs" download="@item.FileDisplayName"><i class="fa fa fa-download"></i></a>
+                                    @*<button type="button" id="ShowModelImg" value="@FileUrl" class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>*@
+                                </div>
+                                <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
+                            </div>
+                        </li>
+                    }
+
+                    if (!string.IsNullOrEmpty(item.message))
+                    {
+                        <li class="reciveTextHolder">
+                            <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
+                        </li>
+                    }
                 }
             }
         }
     }
 </ul>
 <div class="chatInputArea">
-    <input type="text" id="txtMsg" autocomplete="off"/>
+    <input type="text" id="txtMsg" autocomplete="off" />
     <div class="upload-btn-wrapper submitChatBtn">
         <button><span class="fa fa-paperclip"></span></button>
-        <input type="file" name="myfile" />
+        <input type="file" name="myfile" id="fileupload2" />
     </div>
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
@@ -50,7 +106,17 @@
     $('#txtMsg').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
             SendMessage(2);
-        }        
+        }
+    });
+
+    $('#fileupload2').change(function (e) {
+        var fileInput = this;
+        var file = fileInput.files[0];
+        var type = 1;
+
+        if (file != null) {
+            UploadFile(2, file)
+        }
     });
 
 </script>

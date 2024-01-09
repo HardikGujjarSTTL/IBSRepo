@@ -257,7 +257,7 @@ builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
 // SignalR Class and Configuration
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
-//builder.Services.AddScoped<IChatHub>();
+builder.Services.AddScoped<ChatHub>();
 
 // SignalR Configuration
 builder.Services.AddSignalR();

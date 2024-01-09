@@ -12493,11 +12493,21 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Id)
                 .HasPrecision(6)
                 .HasColumnName("ID");
-            entity.Property(e => e.Filename)
+            entity.Property(e => e.Extension)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("EXTENSION");
+            entity.Property(e => e.FieldId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
-                .HasColumnName("FILENAME");
+                .HasColumnName("FIELD_ID");
+            entity.Property(e => e.Filedisplayname)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("FILEDISPLAYNAME");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
@@ -12511,6 +12521,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.MsgSendId)
                 .HasPrecision(6)
                 .HasColumnName("MSG_SEND_ID");
+            entity.Property(e => e.Relativepath)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.SendMsgDate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("SEND_MSG_DATE");

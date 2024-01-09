@@ -22,9 +22,8 @@
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
                     <div class="col-md-3">
-                       <label>Upload File</label>
+                        <label>Upload File</label>
                         <input type="file" id="fileupload" class="fileUploadNormal" multiple>
-                        <div id="divFile"></div>
                     </div>
                     <div class="col-md-5">
                         <label for="Reference">Message</label>
@@ -58,17 +57,15 @@
 <link href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
 <script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-
 <script type="text/javascript">
 
     var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
-    //var currDate = @DateTime.Now.ToString("dd MMMM yyyy");
     var Cnt = 0;
     var GFileName = "";
     var byteArray = [];
+    var base64String = "";
 
 
     $(document).ready(function () {
@@ -79,48 +76,18 @@
             includeSelectAllOption: true,
         });
 
+        $(document).ajaxSend(function () {
+            $(".overlayLoader").hide();
+        });
+
         $('#fileupload').change(function (e) {
             var fileInput = this;
             var file = fileInput.files[0];
-            debugger
-            //var path = "@System.IO.Path.GetFullPath("'+file.name+'")";
-            //console.log(path);
+            var type = 1;            
 
-            uploadFile3();
-
-
-
-            //var formData = new FormData();
-            //formData.append("SenderId", "1");
-            //formData.append("ReceiverId", "12");
-            //formData.append("message", "Test");
-            //formData.append("MsgType", "1");
-
-            const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-            //connection.invoke("SendFile", formData);
-
-            //$.ajax({
-            //    url: '@Url.Action("UploadFile", "Chat")',
-            //    type: 'POST',
-            //    data: formData,//{ SingleFile: fileInput.files[0] },
-            //    cache: false,
-            //    processData: false,
-            //    contentType: false
-            //}).done(function (response) {
-            //    if (response != null) {
-            //        console.log(response.filename);
-            //        GFileName = response.filename;
-            //        //$(".chatLeftBoxBody").html("");
-            //        //$(".chatLeftBoxBody").html(response);
-            //        //$(".userList").removeClass("active");
-            //        //$("#li" + ReceiverId).addClass("active");
-            //    }
-            //});
-        });
-
-        $(document).ajaxSend(function () {
-            $(".overlayLoader").hide();
+            if (file != null) {
+                UploadFile(1, file)
+            }
         });
     });
 
@@ -163,30 +130,7 @@
     }
 
     function SendMessage(type) {
-        //uploadFile3();
-        //uploadFiles()
-        var uint8Array = new Uint8Array(byteArray[0]);
-        byteArray = Array.from(uint8Array);
-
-        //// Creating textDecoder instance
-        //let decoder = new TextDecoder("utf-8");
-
-        //// Using decode method to get string output
-        //let str = decoder.decode(byteArray);
-
-        //// Display the output
-        //console.log(str);
-
-        debugger
-        //byteArray = new Uint8Array([65, 66, 67]);
-        var byteString = String.fromCharCode.apply(String, byteArray)
-        connection.invoke("UploadFiles", byteString); //UploadFiles
-
-        return;
-        const fileInput = document.getElementById("fileupload").files;
-
         var message = "";
-        //var fileupload = uploadFiles();
 
         if (type == 1) {
             ReceiverId = $("#dpUser").val().join(",");
@@ -197,41 +141,10 @@
         }
 
         if (ReceiverId == "" && (message == "" || GFileName == "")) {
-            //alert("Receiver and Message is required.")
             return;
         }
-        //const formData = new FormData();
-        //formData.append("SenderId", SenderId);
-        //formData.append("ReceiverId", ReceiverId);
-        //formData.append("Message", message);
-        //formData.append("MsgType", type);
-        //formData.append("file", fileInput[0]);
-        connection.invoke("SendMessage", formData);
-        if (fileInput != null) {
-            $(".overlayLoader").hide();
-            $.ajax({
-                url: '@Url.Action("UploadFile", "Chat")',
-                type: 'POST',
-                data: formData,//{ SingleFile: fileInput.files[0] },
-                cache: false,
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response != null) {
-                    console.log(response.filename);
-                    GFileName = response.filename;
-                    //$(".chatLeftBoxBody").html("");
-                    //$(".chatLeftBoxBody").html(response);
-                    //$(".userList").removeClass("active");
-                    //$("#li" + ReceiverId).addClass("active");
-                }
-            });
-        }
-        else {
-            var FileName = GFileName;
-            //connection.invoke("SendMessage", SenderId, ReceiverId, message, type, FileName);
-            connection.invoke("SendMessage", formData);
-        }
+
+        connection.invoke("SendMessage", SenderId, ReceiverId, message, type);
 
         if (type == 1) { $("#txtMessage").val(""); }
         else if (type == 2) { $("#txtMsg").val(""); }
@@ -241,37 +154,35 @@
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (ReceiverId, message, MsgType, FileName, extention) {
-
-        if (MsgType == 1) {
+    connection.on("ReceiveMessage", function (recvID, message, MsgType, File_Field_ID, FileDisplayName, Extension, CurrDateCnt) {
+        debugger
+        if (MsgType == 0) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
         else {
             var FilePath = "../ReadWriteData/CHAT_FILES/";
-            if (FileName != "" && FileName != null) { FilePath = FilePath + FileName }
+            if (File_Field_ID != "" && File_Field_ID != null) { FilePath = FilePath + File_Field_ID }
             var element = "";
 
-
-            if (Cnt == 0) {
+            if (CurrDateCnt == 0) {
                 element += '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
                 $(".chatBodyText").append(element);
-                Cnt = Cnt + 1;
             }
 
             //Sender Side
-            if (SenderId != ReceiverId) {
-                if (FileName != "" && FileName != null) {
-                    if (extention == ".jpg" || extention == ".jpeg" || extention == ".png") {
+            if (SenderId != recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
                         //element += '<a><li class="sendTextHolder" > <div class="sendText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
                         element += '<li class="sendTextHolder" > <div class="sendText" >' +
                             '<div class="box-body">' +
                             '<div class="attachment-block clearfix">' +
                             '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
                             '<div class="attachment-pushed"> ' +
-                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileName + ' </i></h4>' +
+                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileDisplayName + ' </i></h4>' +
                             '</div>' +
                             '</div>' +
-                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileName + '"><i class="fa fa fa-download"></i></a>' +
+                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + File_Field_ID + '"><i class="fa fa fa-download"></i></a>' +
                             //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
                             '</div>' +
                             '</div></li>';
@@ -286,19 +197,19 @@
             }
 
             //Receiver Side
-            if (SenderId == ReceiverId) {
-                if (FileName != "" && FileName != null) {
-                    if (extention == ".jpg" || extention == ".jpeg" || extention == ".png") {
+            if (SenderId == recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
                         //element += '<a><li class="reciveTextHolder" > <div class="recieveText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
                         element += '<li class="reciveTextHolder" > <div class="recieveText" >' +
                             '<div class="box-body">' +
                             '<div class="attachment-block clearfix">' +
                             '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
                             '<div class="attachment-pushed"> ' +
-                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileName + ' </i></h4>' +
+                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileDisplayName + ' </i></h4>' +
                             '</div>' +
                             '</div>' +
-                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileName + '"><i class="fa fa fa-download"></i></a>' +
+                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + File_Field_ID + '"><i class="fa fa fa-download"></i></a>' +
                             //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
                             '</div>' +
                             '</div></li>';
@@ -320,50 +231,41 @@
         }
     });
 
-    function uploadFiles() {
-        const file = document.getElementById("fileupload").files[0];
+    function UploadFile(type, file) {
+        var Message = "";
 
-        //// Read the file as an ArrayBuffer
-        //const reader = new FileReader();
-        //reader.onload = function (e) {
-        //    const arrayBuffer = e.target.result;
+        if (type == 1) {
+            ReceiverId = $("#dpUser").val().join(",");
+            Message = $("#txtMessage").val();
+        }
+        else if (type == 2) {
+            Message = $("#txtMsg").val();
+        }
 
-        //    // Convert the ArrayBuffer to a byte array
-        //    byteArray = new Uint8Array(arrayBuffer);
-        //    //return byteArray;
-        //}
-        //reader.readAsArrayBuffer(file);
+        if (ReceiverId == "") {
+            ShowHideMsgNew(false, "Please select Receiver user..!!");
+            return;
+        }
 
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onloadend = function (evt) {
-            if (evt.target.readyState == FileReader.DONE) {
-                var arrayBuffer = evt.target.result,
-                    array = new Uint8Array(arrayBuffer);
-                for (var i = 0; i < array.length; i++) {
-                    byteArray.push(array[i]);
-                }
+        var formData = new FormData();
+        formData.append("SenderId", SenderId);
+        formData.append("ReceiverId", ReceiverId);
+        formData.append("Message", Message);
+        formData.append("MsgType", type);
+        formData.append("MyFiles", file);
+
+        $.ajax({
+            url: '@Url.Action("UploadFile", "Chat")',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+            if (response != null) {
+                console.log(response.filename);
+                GFileName = response.filename;
             }
-        }
+        });
     }
-
-    function uploadFile3() {
-        var files = document.getElementById("fileupload").files[0];
-        var reader = new FileReader();
-        reader.onload = processFile(files);
-        reader.readAsArrayBuffer(files);
-    }
-
-    function processFile(theFile) {
-        return function (e) {
-            var theBytes = e.target.result; //.split('base64,')[1]; // use with uploadFile2
-            byteArray.push(theBytes);
-            //document.getElementById('divFile').innerText = '';
-            //for (var i = 0; i < byteArray.length; i++) {
-            //    byteArray += byteArray[i];
-            //}
-            console.log(byteArray);
-        }
-    }
-
 </script>
