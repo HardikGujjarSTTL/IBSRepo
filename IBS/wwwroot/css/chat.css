@@ -291,4 +291,6 @@
 .upload-btn-wrapper button{ width:100%; height:100%; padding:0; cursor:pointer;}
 .upload-btn-wrapper button .fa-paperclip{ font-size:20px; cursor:pointer;}
 
-.fileUploadNormal{ border:1px solid #d1d1d1; background:#fff; padding:6px; height:44px; border-radius:6px; box-sizing:border-box; width:100%;}
+.topUploadCustom{ position:relative;}
+.topUploadCustom .upload-btn-wrapper{ top:0; right:0; width:auto; height:43px; padding:8px 30px; line-height:32px; margin-top:32px;}
+.topUploadCustom .submitChatBtn{ border-radius:8px;}
