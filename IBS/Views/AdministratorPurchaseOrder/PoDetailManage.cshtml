@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference" style="width: 100%;">Consignee <span class="astric">*</span></label>
-                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.CaseNo) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsignee(Model.CaseNo), "Value", "Text"), "--Select--")
                         <span asp-validation-for="ConsigneeCd" class="text-danger"></span>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Unit Of Measurment</label>
-                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment() , "Value", "Text"),"--Select--",new { @onchange="GetUOMChanged()" })
+                        @Html.DropDownListFor(model => model.UomCd, new SelectList(IBS.Models.Common.GetUnitOfMeasurment(), "Value", "Text"), "--Select--", new { @onchange = "GetUOMChanged()" })
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="reference">Value</label>
@@ -101,7 +101,7 @@
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Discount Type</label>
-                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'DiscountPer');"})
+                        @Html.DropDownListFor(model => model.DiscountType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'DiscountPer');" })
                         <span asp-validation-for="Rate" class="text-danger"></span>
                     </div>
                     <div class="col-md-2 mb-3">
@@ -120,7 +120,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Excise Type</label>
-                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'ExcisePer');"})
+                            @Html.DropDownListFor(model => model.ExciseType, new SelectList(IBS.Models.Common.ExciseType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'ExcisePer');" })
                             <span asp-validation-for="ExciseType" class="text-danger"></span>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="reference">
                             <label for="Name">Other Charges Type</label>
-                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType() , "Value", "Text"),"--Select--", new{ @onChange="AddRemoveValidation(this.value,'OtChargePer');"})
+                            @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'OtChargePer');" })
                             <span asp-validation-for="OtChargeType" class="text-danger"></span>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                         <div class="reference">
                             <label for="Name">Delivery Date</label>
                             <input type="text" class="datetime" asp-for="DelvDt" style="text-transform: uppercase;" readonly="readonly" onblur="cpy();">
-                            <span asp-validation-for="DelvDt" class="text-danger"></span>
+                            @* <span asp-validation-for="DelvDt" class="text-danger"></span> *@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -215,7 +215,7 @@
         </form>
     </div>
 </section>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -230,7 +230,9 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-            $("#UomCd").val(3);
+            if ($("#UomCd").val() == "") {
+                $("#UomCd").val(6);
+            }
             $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
                 var idName = $(this).attr('id');
                 if (idName == "OtChargePer") {
