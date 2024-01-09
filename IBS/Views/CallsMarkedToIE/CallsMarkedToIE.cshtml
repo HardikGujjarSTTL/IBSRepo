@@ -103,7 +103,7 @@
                                 else
                                 {
                                     CallStausF += "\nSample Not Recieved in Lab.";
-                                        D1 += "\nSample Not Recieved in Lab.";
+                                    D1 += "\nSample Not Recieved in Lab.";
                                 }
                                 if (item.PAYMENT_RECIEPT != 0)
                                 {
@@ -119,14 +119,14 @@
                                 }
                             }
 
-                            if (item.NEWVENDOR == "Y")
+                            @* if (item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
                             }
                             else
                             {
                                 NewVendor = "";
-                            }
+                            } *@
                             if (item.COUNT > 0)
                             {
                                 ItemDescPo = item.ITEM_DESC_PO + "<span color='#FF00CC'> and more items as per call</span>";
@@ -135,14 +135,14 @@
                             {
                                 ItemDescPo = item.ITEM_DESC_PO;
                             }
-                            if (item.VEND_CD == item.MFG_CD)
+                            @* if (item.VEND_CD == item.MFG_CD)
                             {
                                 wVendor = item.VENDOR;
                             }
                             else
                             {
                                 wVendor = $"{item.VENDOR} At {item.MANUFACTURER}";
-                            }
+                            } *@
                             <tr>
                                 @if (item.CM_APPROVAL == "A" || item.CALL_STATUS != "M")
                                 {
@@ -160,12 +160,28 @@
 
                                     <td align="center"><font size="1" face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
                                 }
-                                <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">item.CONSIGNEE</font></td>
+                                @if (item.VEND_CD == item.MFG_CD)
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font> <font size="1" face="Verdana" color='#FF00CC'> At </font> <font size="1" face="Verdana" font color='#3333FF'>@item.MANUFACTURER</font></td>
+                                }
+
+                                @if (item.NEWVENDOR == "Y")
+                                {
+                                    <td align="center"><font size="1" face="Verdana" color=crimson>Yes</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                
+                                <td align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
                                 <td align="center">
 
-                                    @if (item.COUNT > 0)
+                                    @if (item.COUNT > 1)
                                     {
                                         <font size="1" face="Verdana">
                                             @item.ITEM_DESC_PO
@@ -239,7 +255,7 @@
                                     {
                                         <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
                                     }
-                                    
+
                                 }
                                 else
                                 {

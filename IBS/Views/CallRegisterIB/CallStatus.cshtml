@@ -312,6 +312,7 @@
                             <div class="col-md-4 mb-3">
                                 <div class="savenext-btn" style="margin-top:30px;">
                                     <button type="button" class="save-btn active" id="savefiles" onclick="SaveImages();">Save Files</button>
+                                    <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                                 </div>
                             </div>
                         </div>
@@ -391,7 +392,7 @@
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
                                     <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
-                                    <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
+                                    
                                     <a asp-controller="CallRegisterIB" asp-action="Index" id="uploadcancel" class="reset-btn">Cancel</a>
                                 </div>
                             </div>
@@ -1331,7 +1332,7 @@
 
                 if (uploadedDocumentsArray.length >= 5) {
 
-                    if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
+                    //if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
                         var ajaxData = AjaxModel();
 
                         if (ajaxData) {
@@ -1369,10 +1370,10 @@
                                 console.error('Error: ' + textStatus, errorThrown);
                             }
                         });
-                    }
-                    else {
-                        alert('Please select the first five (5) Images!');
-                    }
+                    // }
+                    // else {
+                    //     alert('Please select the first five (5) Images!');
+                    // }
                 } else {
                     alert('Please select the first five (5) Images!');
                 }

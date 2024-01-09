@@ -131,6 +131,9 @@
             }
             else {
                 $(".BookSet").show();
+                if ($("#CancellationStatus").val() != "1") {
+                    $("#btnAddNew").show();
+                }
             }
 
             // $("#Callrecvdt").datepicker({
@@ -308,6 +311,8 @@
             var Bkno = $("#Bkno").val();
             var Setno = $("#Setno").val();
 
+
+            debugger
             if (Caseno == "" || Caseno == null) {
                 ShowHideMsgNew(false, "Please select Case No.");
                 return false;
@@ -320,7 +325,7 @@
                 ShowHideMsgNew(false, "Please select Call S No.");
                 return false;
             }
-            if ($("#Callstatus").val() != "C") {
+            if ($("#Callstatus").val() != "C" && $("#Callstatus").val() != "CB") {
                 if (Bkno == "" || Bkno == null) {
                     ShowHideMsgNew(false, "Please select Book no.");
                     return false;
@@ -363,7 +368,7 @@
                 return false;
             }
 
-            if ($("#Callstatus").val() != "C") {
+            if ($("#Callstatus").val() != "C" && $("#Callstatus").val() != "CB") {
                 if (Bkno == "" || Bkno == null) {
                     ShowHideMsgNew(false, "Please select Book no.");
                     return false;
@@ -392,7 +397,7 @@
                 ShowHideMsgNew(false, "Please add Case No.");
                 return false;
             }
-            if ($("#Callstatus").val() != "C") {
+            if ($("#Callstatus").val() != "C" && $("#Callstatus").val() != "CB") {
                 if (Bkno == "" || Bkno == null) {
                     ShowHideMsgNew(false, "Please select Book no.");
                     return false;
@@ -420,7 +425,7 @@
                 ShowHideMsgNew(false, "Please add Case No.");
                 return false;
             }
-            if ($("#Callstatus").val() != "C") {
+            if ($("#Callstatus").val() != "C" && $("#Callstatus").val() != "CB") {
                 if (Bkno == "" || Bkno == null) {
                     ShowHideMsgNew(false, "Please select Book no.");
                     return false;
