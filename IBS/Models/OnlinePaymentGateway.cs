@@ -64,5 +64,6 @@ namespace IBS.Models
         public string MERTXNID { get; set; }
         public decimal? Charges { get; set; }
         public string AtomTXNID { get; set; }
+        public string Status { get; set; }
     }
 }

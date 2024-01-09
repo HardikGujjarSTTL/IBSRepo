@@ -1,5 +1,5 @@
 ﻿@model IBS.Models.ChatMessage
-<input type="hidden" id="hdnCurrDtCount" value="@Model.CurrDateCount"/>
+<input type="hidden" id="hdnCurrDtCount" value="@Model.CurrDateCount" />
 <ul id="messageList" class="chatBodyText">
     @{
         if (Model.lstMsg.Count > 0)
@@ -32,12 +32,16 @@
                         <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                     </li>
                 }
-            }            
+            }
         }
     }
 </ul>
 <div class="chatInputArea">
     <input type="text" id="txtMsg" autocomplete="off"/>
+    <div class="upload-btn-wrapper submitChatBtn">
+        <button><span class="fa fa-paperclip"></span></button>
+        <input type="file" name="myfile" />
+    </div>
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
 
@@ -46,7 +50,7 @@
     $('#txtMsg').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
             SendMessage(2);
-        }
+        }        
     });
 
 </script>

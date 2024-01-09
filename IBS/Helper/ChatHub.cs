@@ -1,6 +1,9 @@
 ﻿using IBS.Interfaces.Hub;
 using IBS.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.JSInterop;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace IBS.Helper
 {
@@ -23,14 +26,15 @@ namespace IBS.Helper
             Common.ConnectedUsers.Add(Context.ConnectionId, SenderId);
         }
 
-        public async Task SendMessage(string SenderId, string ReceiverId, string message, int MsgType)
+        public async Task SendMessage(string SenderId, string ReceiverId, string message, int MsgType, string FileName)
         {
             ChatMessage model = new ChatMessage();
             model.msg_send_ID = SenderId;
             model.msg_recv_ID = ReceiverId;
             model.message = message;
+            model.FileName = FileName;
             var res = _chathub.ChatMessageSave(model);
-            
+
             var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
             if (arrRecvId.Count() > 0)
             {
@@ -40,7 +44,8 @@ namespace IBS.Helper
 
                     foreach (var k in myKey)
                     {
-                        await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, message, MsgType);
+                        var extention = Path.GetExtension(FileName);
+                        await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, message, MsgType, FileName, extention);
                     }
                 }
             }
@@ -53,31 +58,13 @@ namespace IBS.Helper
             #endregion
         }
 
-        //public async Task SendFile(string SenderId, string ReceiverId)
-        //{            
-        //    await Clients.Caller.SendAsync("FileReceived", ReceiverId);
-        //}
-
-        public async Task SendFile(IFormFile file)
+        //[JSInvokable]
+        public async Task UploadFiles(string byteArray)
         {
-            try
-            {
-                // Process the file on the server
-                // ...
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(byteArray);
+            string decodedString = Encoding.UTF8.GetString(utf8Bytes);
 
-                // Send a success response back to the client
-                await Clients.Caller.SendAsync("FileSentResponse", "File received successfully");
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                Console.Error.WriteLine($"Error processing file: {ex.Message}");
-
-                // Send an error response back to the client
-                await Clients.Caller.SendAsync("FileSentError", "Failed to process file. Please try again.");
-            }
-            await Clients.Caller.SendAsync("FileReceived", file);
+            await Clients.All.SendAsync("ReceiveMessage", utf8Bytes);
         }
-        
     }
 }
