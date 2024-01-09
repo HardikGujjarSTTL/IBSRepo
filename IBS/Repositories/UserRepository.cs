@@ -959,5 +959,16 @@ namespace IBS.Repositories
 
             return email;
         }        
+
+        public DateTime? GetDSC_Exp_DT(int IeCd)
+        {
+            var result = from a in context.T09Ies
+                        where a.IeCd == IeCd
+                          select a.DscExpiryDt;
+
+            var DSCDT = result.FirstOrDefault();
+
+            return DSCDT;
+        }
     }
 }

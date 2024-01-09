@@ -120,7 +120,11 @@ namespace IBS.Controllers
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                 if (userMaster != null)
-                {                    
+                {                
+                    if(userMaster.LoginType == "IE")
+                    {
+                        DateTime? DSC_Exp_DT = userRepository.GetDSC_Exp_DT(userMaster.IeCd);
+                    }
                     SetUserInfo = userMaster;
                     var userClaims = new List<Claim>()
                     {
