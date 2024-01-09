@@ -124,18 +124,19 @@ namespace IBS.Controllers
                 {
                     if (userMaster.LoginType == "IE")
                     {
-                        X509Certificate2 cert = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+                        X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
 
-                        //X509Certificate2 cert = DigitalSigner.getCertificate("bikey3383@gmail.com");
-                        //X509Certificate2 cert = DigitalSigner.getCertificate("dhiren.parmar@silvertouch.com");
+                        CertificateDetails CertificateDetailsModel = ExtractCertificateDetails(Certificate.Subject);
 
-                        if (cert == null)
+                        //X509Certificate2 cert = DigitalSigner.getCertificate(CertificateDetailsModel.Email);
+
+                        if (Certificate == null)
                         {
                             return Json(new { status = false, responseText = "Kindly Attached Certificate!!" });
                         }
                         else
                         {
-                            DateTime? DSC_Exp_DT = cert.NotAfter;
+                            DateTime? DSC_Exp_DT = Certificate.NotAfter;
 
                             if(DSC_Exp_DT.Value.Date < DateTime.Now.Date)
                             {
@@ -438,5 +439,41 @@ namespace IBS.Controllers
         //    string DecryptedPassword = Common.getDecryptedText(Text, "301ae92bb2bc7599");
         //    return Ok(DecryptedPassword);
         //}
+
+        private static CertificateDetails ExtractCertificateDetails(string subject)
+        {
+            return new CertificateDetails
+            {
+                CommonName = GetCertificateValue(subject, "CN"),
+                Email = GetCertificateValue(subject, "E"),
+                SerialNumber = GetCertificateValue(subject, "SERIALNUMBER"),
+                Phone = GetCertificateValue(subject, "Phone"),
+                Title = GetCertificateValue(subject, "T"),
+                Street = GetCertificateValue(subject, "STREET"),
+                State = GetCertificateValue(subject, "S"),
+                Locality = GetCertificateValue(subject, "L"),
+                PostalCode = GetCertificateValue(subject, "PostalCode"),
+                OrganizationUnit = GetCertificateValue(subject, "OU"),
+                Organization = GetCertificateValue(subject, "O"),
+                Country = GetCertificateValue(subject, "C")
+            };
+        }
+
+        private static string GetCertificateValue(string subject, string field)
+        {
+            string prefix = field + "=";
+            int start = subject.IndexOf(prefix);
+            if (start >= 0)
+            {
+                start += prefix.Length;
+                int end = subject.IndexOf(',', start);
+                if (end < 0)
+                    end = subject.Length;
+
+                return subject.Substring(start, end - start).Trim();
+            }
+
+            return null;
+        }
     }
 }
