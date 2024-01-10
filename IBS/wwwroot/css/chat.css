@@ -60,8 +60,12 @@
 .topUploadCustom{ position:relative; width:auto; display:flex; align-items:center; margin-top:28px;}
 .topUploadCustom .upload-btn-wrapper{ position:static; width:auto; height:43px; padding:8px 30px; line-height:32px;}
 .topUploadCustom .submitChatBtn{ border-radius:8px;}
-.attachment-block{ display:flex; background:#d6f8c6; padding:5px; border-radius:5px;}
-#btnDownload, #ShowModelImg{ background:#f1f1f1; border-radius:6px; padding:3px; font-size:11px; text-decoration:none;}
+.attachment-block{ display:flex; background:#cadfc0; padding:5px; border-radius:5px; margin-bottom:10px; width:400px;}
+.chatImagePopup{ margin-right:20px;}
+.attachment-pushed .attachment-heading{ font-style:italic; font-size:11px;}
+#btnDownload, #ShowModelImg{ background:#017f6a; border-radius:6px; padding:3px 10px; font-size:11px; color:#fff; text-decoration:none;}
+.chatFileSize{ font-size:12px; font-style:italic; padding-right:10px;}
+.fileDownload{ display:flex; justify-content:space-between;}
 
 
 /* Magnific Popup CSS */
