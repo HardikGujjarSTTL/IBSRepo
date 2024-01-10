@@ -30,27 +30,15 @@ namespace IBS.Repositories.Hub
                     obj.MsgRecvId = Convert.ToInt32(item);
                     obj.Message = model.message;
                     obj.SendMsgDate = DateTime.Now;
-                    obj.Filename = model.FileName;
+                    obj.Relativepath = model.RelativePath;
+                    obj.FieldId = model.Field_ID;
+                    obj.Extension = model.Extension;
+                    obj.Filedisplayname = model.FileDisplayName;
                     context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
                     result = obj.Id;
                 }
-            }
-            //else
-            //{
-            //    var dtlChat = (from a in context.T113ChatMasters
-            //                   where a.Id == model.ID
-            //                   select a).FirstOrDefault();
-            //    if (dtlChat != null)
-            //    {
-            //        dtlChat.MsgSendId = Convert.ToInt32(model.msg_send_ID);
-            //        dtlChat.MsgRecvId = Convert.ToInt32(model.msg_recv_ID);
-            //        dtlChat.Message = model.message;
-            //        dtlChat.SendMsgDate = DateTime.Now;
-            //        context.SaveChanges();
-            //        result = model.ID;
-            //    }
-            //}
+            }            
             return result;
         }
 
@@ -58,18 +46,7 @@ namespace IBS.Repositories.Hub
         {
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
-
-            //model.lstMsg = (from a in context.T113ChatMasters
-            //                orderby a.Id
-            //                where ((send_id == recv_id && a.MsgSendId == send_id || a.MsgRecvId == recv_id) ||
-            //                ((a.MsgSendId == send_id && a.MsgRecvId == recv_id) || (a.MsgSendId == recv_id && a.MsgRecvId == send_id)))
-            //                select new ChatMessage
-            //                {
-            //                    msg_send_ID = a.MsgSendId,
-            //                    msg_recv_ID = a.MsgRecvId,
-            //                    message = a.Message,
-            //                }).ToList();
-
+            
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_SENDER_ID", OracleDbType.Int32, send_id, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RECEIVER_ID", OracleDbType.Int32, recv_id, ParameterDirection.Input);
@@ -90,7 +67,6 @@ namespace IBS.Repositories.Hub
         {
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
-
 
             OracleParameter[] par = new OracleParameter[2];
             par[0] = new OracleParameter("P_SEND_RECV_ID", OracleDbType.Int32, id, ParameterDirection.Input);
