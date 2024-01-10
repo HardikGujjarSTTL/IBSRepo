@@ -959,5 +959,37 @@ namespace IBS.Repositories
 
             return email;
         }        
+
+        public CertificateDetails GetDSC_Exp_DT(int IeCd)
+        {
+            CertificateDetails model = new();
+            var result = (from item in context.T09Ies
+                         where item.IeCd == IeCd
+                         select new
+                         {
+                             item.DscExpiryDt,
+                             item.IeEmail,
+                             item.IePhoneNo
+                         }).FirstOrDefault();
+
+            model.DSC_Exp_DT = (result.DscExpiryDt.HasValue && result.DscExpiryDt.Value != DateTime.MinValue) ? result.DscExpiryDt.Value : (DateTime?)null;
+            model.IE_Email = result.IeEmail;
+            model.IE_Phone_No = result.IePhoneNo;
+
+            return model;
+        }
+
+        public string UpdateDSCDate(int IeCd,DateTime DSC_Exp_DT)
+        {
+            string msg = "";
+            var recordToUpdate = context.T09Ies.SingleOrDefault(t => t.IeCd == IeCd);
+
+            if (recordToUpdate != null)
+            {
+                recordToUpdate.DscExpiryDt = DSC_Exp_DT;
+                context.SaveChanges();
+            }
+            return msg;
+        }
     }
 }

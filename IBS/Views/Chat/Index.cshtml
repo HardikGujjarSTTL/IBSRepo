@@ -7,6 +7,8 @@
     string SiteUrl = Model.HostUrl;
 }
 
+<input type="hidden" id="hdnBase64String" value="" />
+<input type="hidden" id="hdnFileName" value="" />
 <div class="list-inner">
     <div class="tast-list">
         <h2>Users Chat</h2>
@@ -20,17 +22,27 @@
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
-                        @*<input type="file" id="fileupload">*@
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
-                    <div class="col-md-1 savenext-btn" style="margin-top:30px;">
+                    <div class="col-md-2 d-flex justify-content-between">                        
+                        <div class="topUploadCustom">
+                    <div class="upload-btn-wrapper submitChatBtn">
+                        <button><span class="fa fa-paperclip"></span></button>
+                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
+                    </div>
+                        </div>
+
+                        <div class="savenext-btn" style="margin-top:28px;">
                         <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
                     </div>
+                    </div>
+                    
                 </div>
             </div>
+            <div id="divFile"></div>
             <div class="chatBox">
                 <div class="chatBoxHeader">
                     <h2>Message</h2>
@@ -59,8 +71,11 @@
     var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
-    //var currDate = @DateTime.Now.ToString("dd MMMM yyyy");
     var Cnt = 0;
+    var GFileName = "";
+    var byteArray = [];
+    var base64String = "";
+
 
     $(document).ready(function () {
         GetUserReceiverList();
@@ -70,36 +85,23 @@
             includeSelectAllOption: true,
         });
 
-        $('#fileupload').change(function () {
-            var fileInput = this;
-            var file = fileInput.files[0];
-            
-            //var formData = new FormData();
-            //formData.append("SenderId", "1");
-            //formData.append("ReceiverId", "12");
-            //formData.append("message", "Test");
-            //formData.append("MsgType", "1");
-
-            const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-            connection.invoke("SendFile", formData);
-
-            $.ajax({
-                url: '@Url.Action("UploadFile", "Chat")',
-                type: 'POST',
-                data: { SingleFile: fileInput.files[0] },
-                cache: false,
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response != null) {
-                    $(".chatLeftBoxBody").html("");
-                    $(".chatLeftBoxBody").html(response);
-                    $(".userList").removeClass("active");
-                    $("#li" + ReceiverId).addClass("active");
-                }
-            });
+        $(document).ajaxSend(function () {
+            $(".overlayLoader").hide();
         });
+
+        //$('#fileupload').change(function (e) {
+        //    var fileInput = this;
+        //    var file = fileInput.files[0];
+        //    var type = 1;
+
+        //    if (file != null) {
+        //        UploadFile(1, file)
+        //    }
+        //});
+    });
+
+    $('#fileupload').change(function (e) {
+        handleFile('fileupload');
     });
 
     function GetUserReceiverList() {
@@ -141,56 +143,106 @@
     }
 
     function SendMessage(type) {
-        
-        const file = document.getElementById("fileupload").files[0];
-        var reader = new FileReader();
-        var arrBuffer = reader.readAsArrayBuffer(file);
-        connection.invoke("SendFile", file);
+        var Message = "";
 
-        var message = "";
-        var fileupload = uploadFiles();
-
-        return;
         if (type == 1) {
             ReceiverId = $("#dpUser").val().join(",");
-            message = $("#txtMessage").val();
+            Message = $("#txtMessage").val();
         }
         else if (type == 2) {
-            message = $("#txtMsg").val();
+            Message = $("#txtMsg").val();
         }
 
-        if (ReceiverId == "" || message == "") {
-            //alert("Receiver and Message is required.")
-            return;
+        //if (ReceiverId == "" && (Message == "" || GFileName == "")) {
+        //    return;
+        //}
+        var imagesJson = null;
+
+        if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
+            imagesJson = [
+                { image: $("#hdnBase64String").val(), filename: $("#hdnFileName").val() },
+            ];
         }
-        connection.invoke("SendMessage", SenderId, ReceiverId, message, type, fileupload);
+        connection.invoke("SendMessage", SenderId, ReceiverId, Message, type, imagesJson);
+        //connection.invoke("GetByteArray", SenderId, ReceiverId, message, type, imagesJson);
 
         if (type == 1) { $("#txtMessage").val(""); }
         else if (type == 2) { $("#txtMsg").val(""); }
+
+        $("#hdnBase64String").val("");
+        $("#hdnFileName").val("");
     }
 
     connection.start().then(function () {
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (ReceiverId, message, MsgType) {
+    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, Extension, CurrDateCnt) {
+        debugger
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
         else {
-            if (Cnt == 0) {
-                var element = '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
+            var FilePath = "../ReadWriteData/CHAT_FILES/";
+            if (File_Field_ID != "" && File_Field_ID != null) { FilePath = FilePath + File_Field_ID }
+            var element = "";
+
+            if (CurrDateCnt == 1) {
+                element += '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
                 $(".chatBodyText").append(element);
-                Cnt = Cnt + 1;
             }
-            if (SenderId != ReceiverId) {
-                var element = '<li class="sendTextHolder" > <div class="sendText" >' + message + '<span class="timeStamp">' + "@DateTime.Now.ToString("hh:mm tt")" + '</span></div></li>';
+            element = "";
+            //Sender Side
+            if (SenderId != recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
+                        //element += '<a><li class="sendTextHolder" > <div class="sendText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
+                        element += '<li class="sendTextHolder" > <div class="sendText" >' +
+                            '<div class="box-body">' +
+                            '<div class="attachment-block clearfix">' +
+                            '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
+                            '<div class="attachment-pushed">' +
+                            '<h4 class="attachment-heading"><i class="fa fa-image">' + FileDisplayName + '</i></h4>' +
+                            '</div>' +
+                            '</div>' +
+                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i></a>' +
+                            //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
+                            '</div>' +
+                            '<span class="timeStamp">' + Msg_Date + '</span>' +
+                            '</div></li>';
+                    }
+                }
+                if (Message != "" && Message != null) {
+                    element += '<li class="sendTextHolder" > <div class="sendText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                }
                 $(".chatBodyText").append(element);
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
                 $("#txtMsg").focus();
             }
-            if (SenderId == ReceiverId) {
-                var element = '<li class="reciveTextHolder" > <div class="recieveText" >' + message + '<span class="timeStamp">' + "@DateTime.Now.ToString("hh:mm tt")" + '</span></div></li>';
+
+            //Receiver Side
+            if (SenderId == recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
+                        //element += '<a><li class="reciveTextHolder" > <div class="recieveText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
+                        element += '<li class="reciveTextHolder" > <div class="recieveText" >' +
+                            '<div class="box-body">' +
+                            '<div class="attachment-block clearfix">' +
+                            '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
+                            '<div class="attachment-pushed"> ' +
+                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileDisplayName + ' </i></h4>' +
+                            '</div>' +
+                            '</div>' +
+                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i></a>' +
+                            //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
+                            '</div>' +
+                            '<span class="timeStamp">' + Msg_Date + '</span>' +
+                            '</div></li>';
+                    }
+                }
+                if (Message != "" && Message != null) {
+                    element += '<li class="reciveTextHolder" > <div class="recieveText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                }
                 $(".chatBodyText").append(element);
                 $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
                 $("#txtMsg").focus();
@@ -204,19 +256,72 @@
         }
     });
 
-    function uploadFiles() {
-        const file = document.getElementById("fileupload").files[0];
+    function UploadFile(type, file) {
+        var Message = "";
 
-        // Read the file as an ArrayBuffer
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const arrayBuffer = e.target.result;
-
-            // Convert the ArrayBuffer to a byte array
-            const byteArray = new Uint8Array(arrayBuffer);
-            return byteArray;
+        if (type == 1) {
+            ReceiverId = $("#dpUser").val().join(",");
+            Message = $("#txtMessage").val();
         }
-        reader.readAsArrayBuffer(file);
+        else if (type == 2) {
+            Message = $("#txtMsg").val();
+        }
+
+        if (ReceiverId == "") {
+            ShowHideMsgNew(false, "Please select Receiver user..!!");
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("SenderId", SenderId);
+        formData.append("ReceiverId", ReceiverId);
+        formData.append("Message", Message);
+        formData.append("MsgType", type);
+        formData.append("MyFiles", file);
+
+        $.ajax({
+            url: '@Url.Action("UploadFile", "Chat")',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+            if (response != null) {
+                console.log(response.filename);
+                GFileName = response.filename;
+            }
+        });
     }
 
+    async function handleFile(fileId) {
+        const fileInput = document.getElementById(fileId);
+        const file = fileInput.files[0];
+        if (file) {
+            const base64String = await readAsDataURL(file);
+            $("#hdnBase64String").val(base64String);
+            $("#hdnFileName").val(file.name);
+        }
+        else {
+            $("#hdnBase64String").val("");
+            $("#hdnFileName").val("");
+        }
+    }
+
+    function readAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                //resolve(event.target.result.split(',')[1]);
+                resolve(event.target.result);
+            };
+
+            reader.onerror = function (error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 </script>

@@ -257,10 +257,13 @@ builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
 // SignalR Class and Configuration
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
-//builder.Services.AddScoped<IChatHub>();
+builder.Services.AddScoped<ChatHub>();
 
 // SignalR Configuration
-builder.Services.AddSignalR();
+//builder.Services.AddSignalR();
+builder.Services.AddSignalR(e => {
+    e.MaximumReceiveMessageSize = 102400000;
+});
 
 var app = builder.Build();
 

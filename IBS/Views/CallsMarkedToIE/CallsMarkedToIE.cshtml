@@ -103,7 +103,7 @@
                                 else
                                 {
                                     CallStausF += "\nSample Not Recieved in Lab.";
-                                        D1 += "\nSample Not Recieved in Lab.";
+                                    D1 += "\nSample Not Recieved in Lab.";
                                 }
                                 if (item.PAYMENT_RECIEPT != 0)
                                 {
@@ -119,14 +119,14 @@
                                 }
                             }
 
-                            if (item.NEWVENDOR == "Y")
+                            @* if (item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
                             }
                             else
                             {
                                 NewVendor = "";
-                            }
+                            } *@
                             if (item.COUNT > 0)
                             {
                                 ItemDescPo = item.ITEM_DESC_PO + "<span color='#FF00CC'> and more items as per call</span>";
@@ -135,20 +135,20 @@
                             {
                                 ItemDescPo = item.ITEM_DESC_PO;
                             }
-                            if (item.VEND_CD == item.MFG_CD)
+                            @* if (item.VEND_CD == item.MFG_CD)
                             {
                                 wVendor = item.VENDOR;
                             }
                             else
                             {
                                 wVendor = $"{item.VENDOR} At {item.MANUFACTURER}";
-                            }
+                            } *@
                             <tr>
                                 @if (item.CM_APPROVAL == "A" || item.CALL_STATUS != "M")
                                 {
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
+                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wSelect>Select</a></font></td>
+                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wPrint>Print</a></font></td>
+                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wHistory>History</a></font></td>
 
                                     <td align="center"><font size="1" face="Verdana" color='#FF00CC'>Approved by CM</font></td>
                                 }
@@ -160,12 +160,28 @@
 
                                     <td align="center"><font size="1" face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
                                 }
-                                <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">item.CONSIGNEE</font></td>
+                                @if (item.VEND_CD == item.MFG_CD)
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font> <font size="1" face="Verdana" color='#FF00CC'> At </font> <font size="1" face="Verdana" font color='#3333FF'>@item.MANUFACTURER</font></td>
+                                }
+
+                                @if (item.NEWVENDOR == "Y")
+                                {
+                                    <td align="center"><font size="1" face="Verdana" color=crimson>Yes</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                }
+                                
+                                <td align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
                                 <td align="center">
 
-                                    @if (item.COUNT > 0)
+                                    @if (item.COUNT > 1)
                                     {
                                         <font size="1" face="Verdana">
                                             @item.ITEM_DESC_PO
@@ -239,7 +255,7 @@
                                     {
                                         <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
                                     }
-                                    
+
                                 }
                                 else
                                 {
@@ -273,11 +289,9 @@
 <script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
-
 <script type="text/javascript">
 
     $(function () {
-        //InitializeDatatable();
         setDefaultDate();
     });
 
@@ -286,101 +300,6 @@
         var todate = new Date();
         $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
         $('#ToDate').text(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
-    }
-
-    function InitializeDatatable() {
-        var PType = $("#PType").val();
-        $("#dtUser").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: true,// Searching Setups
-            ajax: {// Ajax Filter
-                url: "@Url.Action("LoadTable")",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        PType: PType
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-
-            columns: [// Columns Setups
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "Vendor" },
-                { data: "NewVendor" },
-                { data: "Consignee" },
-                { data: "ItemDescPo" },
-                {
-                    data: "ExtDelvDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                {
-                    data: "InspDesireDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                {
-                    data: "CallMarkDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                { data: "CallSno" },
-                { data: "callDocAny" },
-                { data: "PoSource" },
-                { data: "PoSource" },
-                { data: "CallStatus" },
-                { data: "Remarks" },
-                { data: "PoNo" },
-                { data: "PoDate" },
-                { data: "MfgPers" },
-                { data: "MfgPhone" },
-                { data: "UserId" },
-                { data: "Datetime" },
-                //{
-                //    data: null, orderable: false,
-                //    render: function (data, type, row) {
-                //        var CaseNo = data.CaseNo;
-                //        var MaNo = data.MaNo;
-                //        var MaDtc = data.MaDtc;
-                //        var MaSno = data.MaSno;
-                //        var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
-                //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                //        html += '</div>';
-                //        return html;
-                //    }
-                //},
-                //{ data: "MaStatus" },
-            ],
-            "order": [[0, "asc"]]
-        });
     }
 
     var fileName = '';
@@ -396,7 +315,12 @@
     });
 
     $("#btnPrint").click(function () {
-        generatePdf(true);
+        //generatePdf(true);
+
+        var content = document.getElementById('dvReportViewer');
+        content.style.display = 'block'; 
+        window.print();
+        content.style.display = 'none';
     });
 
     $("#btnExportToPdf").click(function () {
@@ -406,7 +330,6 @@
         var url = '@Url.Action("Index", "Dashboard")';
         window.location.href = url;
     });
-
 
     $("#btnExportToExcel").click(function () {
         var html = $('#dvReportViewer').html();
@@ -421,35 +344,78 @@
         e.preventDefault();
     });
 
+    // function generatePdf(isPrint) {
+    //     var element = document.getElementById('dvReportViewer');
+
+    //     element.style.width = "1100px";
+
+    //     const options = {
+    //         margin: 0,
+    //         filename: getExportFileName(fileName) + '.pdf',
+    //         image: { type: 'jpeg', quality: 1 },
+    //         html2canvas: {
+    //             scale: 4,
+    //             useCORS: true
+    //         },
+    //         jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+    //     };
+
+    //     if (isPrint) {
+    //         html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+    //             pdfObj.autoPrint();
+    //             window.open(pdfObj.output('bloburl'), '_blank');
+    //         });
+    //     }
+    //     else {
+    //         html2pdf().set(options).from(element).save();
+    //     }
+
+    //     setTimeout(function () {
+    //         element.style.width = "100%";
+    //     }, 1000);
+    // }
+
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        const urlParams = new URLSearchParams(window.location.search);
+        const ReportType = urlParams.get('type');
+        
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "CallsMarkedToIE")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: ReportType },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
     }
-
+    
 </script>
