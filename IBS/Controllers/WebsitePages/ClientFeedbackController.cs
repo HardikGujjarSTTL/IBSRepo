@@ -71,7 +71,6 @@ namespace IBS.Controllers.WebsitePages
                     sendMailModel.Message = "Thank You Sir/Mam for your feedback, we will work as the suggestions given by you to improve our services. \n\n RITES LTD \n QA Division";
                     isSend = pSendMailRepository.SendMail(sendMailModel, null);
                 }
-
                 AlertAddSuccess("Your FeedBack is sent to QA Division, RITES LTD");
                 return RedirectToAction("Index");
             }
