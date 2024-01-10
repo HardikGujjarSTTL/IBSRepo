@@ -76,6 +76,10 @@ namespace IBS.Helper
                             if (images != null)
                             {
                                 var path = _env.WebRootPath + "/ReadWriteData/CHAT_FILES";
+                                if (!Directory.Exists(path))
+                                {
+                                    Directory.CreateDirectory(path);
+                                }
                                 path = Path.Combine(path, model.Field_ID);
                                 SaveByteArrayToFileWithBinaryWriter(buffer, path);
                             }
