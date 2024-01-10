@@ -124,32 +124,13 @@ namespace IBS.Controllers
                 {
                     if (userMaster.LoginType == "IE")
                     {
-                        X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
-
-                        CertificateDetails CertificateDetailsModel = ExtractCertificateDetails(Certificate.Subject);
-
-                        //X509Certificate2 cert = DigitalSigner.getCertificate(CertificateDetailsModel.Email);
-
-                        if (Certificate == null)
+                        bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
+                        if (IsDigitalSignatureConfig)
                         {
-                            return Json(new { status = false, responseText = "Kindly Attached Certificate!!" });
-                        }
-                        else
-                        {
-                            DateTime? DSC_Exp_DT = Certificate.NotAfter;
-
-                            if(DSC_Exp_DT.Value.Date < DateTime.Now.Date)
+                            string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.IeCd);
+                            if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
                             {
-                                return Json(new { status = false, responseText = "DSC Expiry date cannot be earlier then current date." });
-                            }
-                            else
-                            {
-                                DateTime? DSC_Exp_DT1 = userRepository.GetDSC_Exp_DT(userMaster.IeCd);
-
-                                if(DSC_Exp_DT1 == null || (DSC_Exp_DT.Value.Date != DSC_Exp_DT1.Value.Date))
-                                {
-                                   string DSCUpdate = userRepository.UpdateDSCDate(userMaster.IeCd, DSC_Exp_DT.Value);
-                                }
+                                return Json(new { status = false, responseText = _DigitalSignatureStatus });
                             }
                         }
                     }
@@ -440,7 +421,44 @@ namespace IBS.Controllers
         //    return Ok(DecryptedPassword);
         //}
 
-        private static CertificateDetails ExtractCertificateDetails(string subject)
+        public string DigitalSignatureStatus(int IeCd)
+        {
+            string responseText = string.Empty;
+
+            CertificateDetails DSCDT_Email = userRepository.GetDSC_Exp_DT(IeCd);
+
+            //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+            //X509Certificate2 cert = DigitalSigner.getCertificate(CertificateDetailsModel.Email);
+            X509Certificate2 Certificate = DigitalSigner.getCertificate(DSCDT_Email.IE_Email);
+
+            if (Certificate == null)
+            {
+                responseText = "Kindly Attached Certificate!!";
+            }
+            else
+            {
+                CertificateDetails CertificateDetailsModel = ExtractCertificateDetails(Certificate.Subject);
+
+                DateTime? DSC_Exp_DT = Certificate.NotAfter;
+
+                if (DSC_Exp_DT.Value.Date < DateTime.Now.Date)
+                {
+                    responseText = "DSC Expiry date cannot be earlier then current date!!";
+                }
+                else
+                {
+                    if (DSCDT_Email.DSC_Exp_DT == null || (DSC_Exp_DT.Value.Date != DSCDT_Email.DSC_Exp_DT.Value.Date))
+                    {
+                        string DSCUpdate = userRepository.UpdateDSCDate(IeCd, DSC_Exp_DT.Value);
+                    }
+                }
+            }
+
+            return responseText;
+
+        }
+
+        private CertificateDetails ExtractCertificateDetails(string subject)
         {
             return new CertificateDetails
             {
@@ -459,7 +477,7 @@ namespace IBS.Controllers
             };
         }
 
-        private static string GetCertificateValue(string subject, string field)
+        private string GetCertificateValue(string subject, string field)
         {
             string prefix = field + "=";
             int start = subject.IndexOf(prefix);

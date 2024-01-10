@@ -14,5 +14,8 @@
         public string OrganizationUnit { get; set; }
         public string Organization { get; set; }
         public string Country { get; set; }
+        public DateTime? DSC_Exp_DT { get; set; }
+        public string IE_Email { get; set; }
+        public string IE_Phone_No { get; set; }
     }
 }

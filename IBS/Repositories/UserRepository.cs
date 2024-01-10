@@ -960,15 +960,23 @@ namespace IBS.Repositories
             return email;
         }        
 
-        public DateTime? GetDSC_Exp_DT(int IeCd)
+        public CertificateDetails GetDSC_Exp_DT(int IeCd)
         {
-            var result = from a in context.T09Ies
-                        where a.IeCd == IeCd
-                          select a.DscExpiryDt;
+            CertificateDetails model = new();
+            var result = (from item in context.T09Ies
+                         where item.IeCd == IeCd
+                         select new
+                         {
+                             item.DscExpiryDt,
+                             item.IeEmail,
+                             item.IePhoneNo
+                         }).FirstOrDefault();
 
-            var DSCDT = result.FirstOrDefault();
+            model.DSC_Exp_DT = (result.DscExpiryDt.HasValue && result.DscExpiryDt.Value != DateTime.MinValue) ? result.DscExpiryDt.Value : (DateTime?)null;
+            model.IE_Email = result.IeEmail;
+            model.IE_Phone_No = result.IePhoneNo;
 
-            return DSCDT;
+            return model;
         }
 
         public string UpdateDSCDate(int IeCd,DateTime DSC_Exp_DT)
