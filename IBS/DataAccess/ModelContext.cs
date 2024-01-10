@@ -12508,6 +12508,11 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("FILEDISPLAYNAME");
+            entity.Property(e => e.Filesize)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL")
+                .HasColumnName("FILESIZE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");

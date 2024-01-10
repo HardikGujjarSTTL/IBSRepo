@@ -13,7 +13,7 @@ namespace IBS.Controllers
             ieclaimrepository = _ieclaimrepository;
         }
 
-        [Authorization("IEClaimForm", "Manage", "view")]
+        [Authorization("IEClaimForm", "Index", "view")]
 
         public IActionResult Manage(string CLAIM_NO, string ACTION, decimal ID)
         {
@@ -27,7 +27,7 @@ namespace IBS.Controllers
         }
 
 
-        [Authorization("IEClaimForm", "Insert_IE", "edit")]
+        [Authorization("IEClaimForm", "Index", "edit")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]

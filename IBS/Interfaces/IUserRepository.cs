@@ -44,5 +44,9 @@ namespace IBS.Interfaces
         public UserModel FindByIDForResetPass(string UserId, string UserType);
 
         public string send_Vendor_Email(LoginModel model, string EmailID);
+
+        public CertificateDetails GetDSC_Exp_DT(int IeCd);
+
+        public string UpdateDSCDate(int IeCd,DateTime DSC_Exp_DT);
     }
 }

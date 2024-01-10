@@ -50,7 +50,7 @@ namespace IBS.Repositories.WebsitePages
 
         public bool CheckClientAlreadyExist(ClientFeedbackModel model)
         {
-            var AlreadyExist = (from vf in context.ClientFeedbacks where vf.Mobile == model.Mobile && vf.RegionCode == model.RegionCode select vf).ToList();
+            var AlreadyExist = (from vf in context.ClientFeedbacks where vf.Mobile ==Convert.ToDecimal(model.Mobile) && vf.RegionCode == model.RegionCode select vf).ToList();
             if (AlreadyExist.Count > 0)
             {
                 return true;
@@ -75,7 +75,7 @@ namespace IBS.Repositories.WebsitePages
             obj.Field12 = model.Field12;
             obj.Client = model.Client;
             obj.OffName = model.OffName;
-            obj.Mobile = model.Mobile;
+            obj.Mobile =Convert.ToDecimal(model.Mobile);
             obj.Email = model.Email;
             obj.RegionCode = model.RegionCode;
             context.ClientFeedbacks.Add(obj);
