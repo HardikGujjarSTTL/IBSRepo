@@ -17,5 +17,11 @@ public partial class T113ChatMaster
 
     public byte? Isdeleted { get; set; }
 
-    public string? Filename { get; set; }
+    public string? Relativepath { get; set; }
+
+    public string? FieldId { get; set; }
+
+    public string? Extension { get; set; }
+
+    public string? Filedisplayname { get; set; }
 }
