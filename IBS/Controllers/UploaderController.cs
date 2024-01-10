@@ -3,6 +3,7 @@ using IBS.Controllers;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
@@ -455,5 +456,87 @@ namespace GSDMWeb.Controllers.Master
             }
         }
         #endregion
+
+        public IActionResult Manage()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult SaveFile(string FolderName, string DocumentcategoryID,string Documentid)
+        {
+            string result = "";
+            string folderPath = env.WebRootPath + FolderName;
+            try
+            {
+                if (Directory.Exists(folderPath))
+                {
+                    StringBuilder queryBuilder = new StringBuilder();
+                    string[] fileNames = Directory.GetFiles(folderPath).Select(Path.GetFileName).ToArray();
+
+                    for (int i = 0; i < fileNames.Length; i++)
+                    {
+                        string fileName = fileNames[i];
+                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                        string extension = Path.GetExtension(fileName);
+                        int indexOfHyphen = fileName.IndexOf('-');
+
+                        string applicationid = "";
+                        string otherdocumentname = "";
+                        if (FolderName == "/ReadWriteData/TESTPLAN")
+                        {
+                            if (indexOfHyphen != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen);
+                            }
+                            otherdocumentname = "Upload TestPlan";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Vendor/PO")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "To get the RITES \'Case No.\' Kindly E-mail a copy of Purchase Order in \'PDF\' format on the Email-Id mentioned above or Upload a scanned copy of Purchase Order in 'PDF\' format from here. Scanned copy should be in Black & White and Low DPI.";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/CONTRACTS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Contract Documents (If Any)";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/CASE_NO")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                        }
+                        else if (FolderName == "/ReadWriteData/CALLS_DOCUMENTS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "CallRegistrationDoc";
+                        }
+                        else if (FolderName == "/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")
+                        {
+                            if (indexOfHyphen != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen);
+                            }
+                            otherdocumentname = " Cancellation Document";
+                        }
+
+                        queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
+                            $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");
+                    }
+
+                    result = queryBuilder.ToString();
+                }
+                else
+                {
+                    return Ok("Path not found");
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions if needed
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
     }
 }
