@@ -10,6 +10,8 @@
             {
                 var FileUrl = "";
                 FileUrl = item.RelativePath + "/" + item.Field_ID;
+
+
                 if (msgDate != item.Msg_Date.Date.ToString("dd MMMM yyyy"))
                 {
                     Cnt = Cnt + 1;
@@ -30,22 +32,24 @@
                             <div class="sendText">
                                 <div class="box-body">
                                     <div class="attachment-block">
-                                        @{
-                                            if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
-                                            {
-                                                <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
-                                            }
+                                        @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
+                                        {
+                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                        }
+                                        else /*if (item.Extension != ".jpg" && item.Extension != ".jpeg" && item.Extension != ".png" && !string.IsNullOrEmpty(item.Extension))*/
+                                        {
+                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
                                         }
                                         <div class="attachment-pushed">
                                             <span class="attachment-heading"><i class="fa fa-image"></i> @item.FileDisplayName</span>
                                         </div>
                                     </div>
                                     <div class="fileDownload">
-                                    <div>
-                                    <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
-                                    <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup"><i class="fa fa-camera"></i> View</a>
+                                        <div>
+                                            <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
+                                            <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>
                                         </div>
-                                    <span class="chatFileSize">File Size : 10 KB</span>
+                                        <span class="chatFileSize">File Size : @item.FileSize</span>
                                     </div>
                                 </div>
                                 <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
@@ -67,23 +71,25 @@
                         <li class="reciveTextHolder">
                             <div class="recieveText">
                                 <div class="box-body">
-                                    <div class="attachment-block clearfix">
-                                        @{
-                                            if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
-                                            {
-                                                <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
-                                            }
+                                    <div class="attachment-block">
+                                        @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
+                                        {
+                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                        }
+                                        else /*if (item.Extension != ".jpg" && item.Extension != ".jpeg" && item.Extension != ".png" && !string.IsNullOrEmpty(item.Extension))*/
+                                        {
+                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
                                         }
                                         <div class="attachment-pushed">
-                                            <span class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></span>
+                                            <span class="attachment-heading"><i class="fa fa-image"></i> @item.FileDisplayName</span>
                                         </div>
                                     </div>
                                     <div class="fileDownload">
                                         <div>
-                                    <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
-                                    <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup"><i class="fa fa-camera"></i> View</a>
+                                            <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
+                                            <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>
                                         </div>
-                                    <span class="chatFileSize">File Size : 10 KB</span>
+                                        <span class="chatFileSize">File Size : @item.FileSize</span>
                                     </div>
                                 </div>
                                 <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
@@ -117,15 +123,6 @@
             SendMessage(2);
         }
     });
-
-    //$('#fileupload2').change(function (e) {
-    //    var fileInput = this;
-    //    var file = fileInput.files[0];
-    //    var type = 1;
-    //    if (file != null) {
-    //        UploadFile(2, file)
-    //    }
-    //});
 
     $('#fileupload2').change(function (e) {
         handleFile('fileupload2');

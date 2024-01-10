@@ -5,7 +5,7 @@
 .chatBoxHeader .btn { flex-shrink: 0; display: inline-flex; align-items: center; color: #008b29; font-size: 12px; font-weight: bold; padding: 5px 10px; height: 35px; }
 .chatBoxHeader .btn:hover { background-color: #fff; }
 .chatBoxBody { height: calc(100vh - 61px); overflow: auto; padding:0; }
-.chatLeftBoxBody { width: 30%; border-right: 1px solid #d1d1d1; background:#fff; }
+.chatLeftBoxBody { width: 20%; border-right: 1px solid #d1d1d1; background:#fff; }
 .chatBoxBody h4, .chatBoxHeadBody li h4 { font-size: 12px; font-weight: 500; }
 .chatBoxBody h4, .chatBoxBody p, .chatBoxHeadBody li p { margin: 0; padding: 0px; }
 .chatBoxBody ul { padding: 0; margin: 0; list-style: none; }
@@ -27,13 +27,13 @@
 .chatBoxBody .chatBodyText { padding-bottom: 50px; }
 .chatBoxBody .chatBodyText li { display: flex; border: none; margin: 0; padding: 0; }
 .chatBoxHeadBody li h4 { margin: 0; }
-.chatBoxBody .chatBodyText .recieveText { background: #fff; border-radius: 6px; margin: 5px 0; padding: 10px 10px 20px 10px; position: relative; min-width: 60px; box-shadow: 1px 1px 2px 0px #d1d1d1;}
-.chatBoxBody .chatBodyText .sendText { background: #e6feda; border-radius: 6px; margin: 5px 0; padding: 10px 10px 20px 10px; text-align: left; position: relative; min-width: 60px; box-shadow: 1px 1px 2px 0px #d1d1d1; }
+.chatBoxBody .chatBodyText .recieveText { background: #fff; border-radius: 6px; margin: 5px 0; padding: 10px 10px 20px 10px; position: relative; min-width: 60px; box-shadow: 1px 1px 2px 0px #d1d1d1; max-width: 80%;}
+.chatBoxBody .chatBodyText .sendText { background: #e6feda; border-radius: 6px; margin: 5px 0; padding: 10px 10px 20px 10px; text-align: left; position: relative; min-width: 60px; box-shadow: 1px 1px 2px 0px #d1d1d1; max-width: 80%; }
 .chatBoxBody .chatBodyText .reciveTextHolder { justify-content: start; }
 .chatBoxBody .chatBodyText .sendTextHolder { justify-content: end; }
 .userSelect { padding: 2px 8px !important; max-width: 150px; border-radius: 6px; width: 100%; background: #fff; height: 35px; }
 .messageBody { display: flex; }
-.userChatBox { width: 75%; margin-left: 0.5%; position: relative; }
+.userChatBox { width: 80%; margin-left: 0.5%; position: relative; }
 .userChatBox .chatBoxBody { padding: 20px; height: calc(100vh - 137px); }
 .recieveText:after { content: ''; position: absolute; top: 0; left: -10px; border: 10px solid transparent; border-top: 10px solid #fff; }
 .sendText:after { content: ''; position: absolute; top: 0; right: -10px; border: 10px solid transparent; border-top: 10px solid #e6feda; }
