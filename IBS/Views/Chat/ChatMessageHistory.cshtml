@@ -37,12 +37,16 @@
                                             }
                                         }
                                         <div class="attachment-pushed">
-                                            <span class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></span>
+                                            <span class="attachment-heading"><i class="fa fa-image"></i> @item.FileDisplayName</span>
                                         </div>
                                     </div>
+                                    <div class="fileDownload">
+                                    <div>
                                     <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
                                     <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup"><i class="fa fa-camera"></i> View</a>
-                                    @*<button type="button" id="ShowModelImg" value="@FileUrl" class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>*@
+                                        </div>
+                                    <span class="chatFileSize">File Size : 10 KB</span>
+                                    </div>
                                 </div>
                                 <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
                             </div>
