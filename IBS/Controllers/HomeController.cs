@@ -67,6 +67,19 @@ namespace IBS.Controllers
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
             if (userMaster != null)
             {
+                if (loginModel.UserType == "IE")
+                {
+                    bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
+                    if (IsDigitalSignatureConfig)
+                    {
+                        string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.UserID);
+                        if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
+                        {
+                            AlertDanger(_DigitalSignatureStatus);
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
                 //// temporary Commited - for local
                 //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
                 if (1 == 1)
@@ -122,18 +135,6 @@ namespace IBS.Controllers
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                 if (userMaster != null)
                 {
-                    if (userMaster.LoginType == "IE")
-                    {
-                        bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
-                        if (IsDigitalSignatureConfig)
-                        {
-                            string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.IeCd);
-                            if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
-                            {
-                                return Json(new { status = false, responseText = _DigitalSignatureStatus });
-                            }
-                        }
-                    }
                     SetUserInfo = userMaster;
                     var userClaims = new List<Claim>()
                     {
@@ -421,6 +422,7 @@ namespace IBS.Controllers
         //    return Ok(DecryptedPassword);
         //}
 
+        #region Digital Signature
         public string DigitalSignatureStatus(int IeCd)
         {
             string responseText = string.Empty;
@@ -428,7 +430,6 @@ namespace IBS.Controllers
             CertificateDetails DSCDT_Email = userRepository.GetDSC_Exp_DT(IeCd);
 
             //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
-            //X509Certificate2 cert = DigitalSigner.getCertificate(CertificateDetailsModel.Email);
             X509Certificate2 Certificate = DigitalSigner.getCertificate(DSCDT_Email.IE_Email);
 
             if (Certificate == null)
@@ -493,5 +494,6 @@ namespace IBS.Controllers
 
             return null;
         }
+        #endregion
     }
 }
