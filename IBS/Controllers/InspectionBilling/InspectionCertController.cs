@@ -25,12 +25,12 @@ namespace IBS.Controllers.InspectionBilling
             _config = configuration;
         }
 
-        public IActionResult Index(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno)
+        public IActionResult Index(string CaseNo, DateTime? _CallRecvDt, int CallSno, string Bkno, string Setno)
         {
             InspectionCertModel model = new();
-            if (CaseNo != "" && CallRecvDt != null && CallSno > 0)
+            if (CaseNo != "" && _CallRecvDt != null && CallSno > 0)
             {
-                model = inpsRepository.FindByID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, GetRegionCode);
+                model = inpsRepository.FindByID(CaseNo, _CallRecvDt, CallSno, Bkno, Setno, GetRegionCode);
             }
             return View(model);
         }
@@ -169,7 +169,8 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Createdby = UserName;
                     i = inpsRepository.InspectionCertSave(model, Region);
                 }
@@ -198,7 +199,8 @@ namespace IBS.Controllers.InspectionBilling
                 string str = "";
                 if (model.BillNo != null && model.BillDt != null)
                 {
-                    model.UserId = UserName;
+                    //model.UserId = UserName;
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Createdby = UserName;
                     str = inpsRepository.ReturnBillSubmit(model, Region);
                 }
@@ -270,7 +272,8 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 else
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
 
                     i = inpsRepository.BillUpdate(model, Region);
                     msg = "Update Successfully.";
@@ -374,7 +377,8 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 else
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     i = inpsRepository.BillDateUpdate(model, Region);
                 }
                 if (i == "1")
@@ -556,7 +560,8 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.ConsigneeCd > 0)
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    //model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Regioncode = Region;
                     inpsRepository.SaveChangeConsignee(model);
                     if (model.UpdateStatus == "1")
@@ -598,7 +603,8 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.BillNo != null)
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    //model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Regioncode = Region;
                     inpsRepository.SaveReturned_Bills_Changes(model);
                     if (model.UpdateStatus == "1")

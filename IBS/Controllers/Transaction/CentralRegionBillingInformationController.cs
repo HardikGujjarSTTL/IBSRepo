@@ -97,7 +97,7 @@ namespace IBS.Controllers.Transaction
             try
             {
                 string Region = SessionHelper.UserModelDTO.Region;
-                model.UserId = USER_ID.Substring(0, 8);
+                model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                 model.Region = Region;
                 if (model.BillNo != null && model.IsEdited == true)
                 {
