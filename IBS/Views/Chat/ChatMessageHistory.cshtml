@@ -109,14 +109,17 @@
         }
     });
 
-    $('#fileupload2').change(function (e) {
-        var fileInput = this;
-        var file = fileInput.files[0];
-        var type = 1;
+    //$('#fileupload2').change(function (e) {
+    //    var fileInput = this;
+    //    var file = fileInput.files[0];
+    //    var type = 1;
+    //    if (file != null) {
+    //        UploadFile(2, file)
+    //    }
+    //});
 
-        if (file != null) {
-            UploadFile(2, file)
-        }
+    $('#fileupload2').change(function (e) {
+        handleFile('fileupload2');
     });
 
 </script>

@@ -26,5 +26,12 @@
         public int MsgType { get; set; }
         public IFormFile MyFiles { get; set; }
     }
+
+    public class ImageData
+    {
+        public string Description { get; set; }
+        public string FileName { get; set; }
+        public string Image { get; set; }
+    }
 }
 
