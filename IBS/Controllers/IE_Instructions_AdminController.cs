@@ -57,15 +57,15 @@ namespace IBS.Controllers
             {
                 if (model.MessageId == 0)
                 {
-                    model.Createdby = USER_ID.Substring(0, 8);
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.Createdby = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     instructionsRepository.SaveDetails(model, Region);
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else
                 {
-                    model.Updatedby = USER_ID.Substring(0, 8);
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.Updatedby = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     instructionsRepository.SaveDetails(model, Region);
                     AlertAddSuccess("Record Updated Successfully.");
                 }

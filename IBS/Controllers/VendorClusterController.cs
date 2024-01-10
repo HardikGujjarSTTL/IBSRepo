@@ -99,7 +99,7 @@ namespace IBS.Controllers
                     if (!vendorClusterRepository.IsDuplicate(model))
                     {
                         model.Createdby = UserId;
-                        model.UserId = USER_ID.Substring(0, 8);
+                        model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                         vendorClusterRepository.SaveDetails(model);
                         AlertAddSuccess("Record Added Successfully.");
                         return RedirectToAction("Index");
@@ -112,7 +112,7 @@ namespace IBS.Controllers
                 else
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     vendorClusterRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
                     return RedirectToAction("Index");
