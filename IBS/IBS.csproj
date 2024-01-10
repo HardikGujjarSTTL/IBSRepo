@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625, CS8629, CA1416, CS1998</NoWarn>
+		<NoWarn>SYSLIB0021, SYSLIB0022, CS0168, CS8600, CS8601, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625, CS8629, CA1416, CS1998, SYSLIB0014</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Controllers\IE Reports\**" />
