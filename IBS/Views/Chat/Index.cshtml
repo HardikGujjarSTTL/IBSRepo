@@ -169,7 +169,7 @@
     });
 
     connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt) {
-        debugger
+        
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
