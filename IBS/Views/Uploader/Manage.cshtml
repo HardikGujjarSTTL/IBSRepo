@@ -1,0 +1,49 @@
+﻿
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>File</h2>
+    </div>
+
+</div>
+<section>
+    <div class="task-listinput">
+        <div class="accordion-body">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Folder Name like : (/ReadWriteData/TESTPLAN)</label>
+                    <input type="text" class="input" id="FolderName" name="FolderName">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Documentcategory ID</label>
+                    <input type="text" class="input" id="DocumentcategoryID" name="DocumentcategoryID">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="Reference">Documentid</label>
+                    <input type="text" class="input" id="Documentid" name="Documentid">
+                </div>
+            </div>
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" onclick="Save();">Save</button>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div id="dvText"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function Save() {
+            $.get("@Url.Action("SaveFile", "Uploader")", { FolderName: $('#FolderName').val(), DocumentcategoryID: $('#DocumentcategoryID').val(), Documentid: $('#Documentid').val() }, 
+            function (response) {
+                $("#dvText").text(response);
+            });
+        }
+
+    </script>
+}
