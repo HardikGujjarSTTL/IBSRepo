@@ -27,15 +27,19 @@
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
-                    <div class="col-md-1 topUploadCustom">
-                        <div class="upload-btn-wrapper submitChatBtn">
-                            <button><span class="fa fa-paperclip"></span></button>
-                            <input type="file" id="fileupload" class="fileUploadNormal" multiple>
-                        </div>
+                    <div class="col-md-2 d-flex justify-content-between">                        
+                        <div class="topUploadCustom">
+                    <div class="upload-btn-wrapper submitChatBtn">
+                        <button><span class="fa fa-paperclip"></span></button>
+                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
                     </div>
-                    <div class="col-md-1 savenext-btn" style="margin-top:30px;">
+                        </div>
+
+                        <div class="savenext-btn" style="margin-top:28px;">
                         <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
                     </div>
+                    </div>
+                    
                 </div>
             </div>
             <div id="divFile"></div>

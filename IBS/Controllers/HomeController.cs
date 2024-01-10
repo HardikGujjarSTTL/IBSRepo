@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using static IBS.Helper.Enums;
 
@@ -66,6 +67,19 @@ namespace IBS.Controllers
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
             if (userMaster != null)
             {
+                if (loginModel.UserType == "IE")
+                {
+                    bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
+                    if (IsDigitalSignatureConfig)
+                    {
+                        string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.UserID);
+                        if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
+                        {
+                            AlertDanger(_DigitalSignatureStatus);
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
                 //// temporary Commited - for local
                 //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
                 if (1 == 1)
@@ -120,7 +134,7 @@ namespace IBS.Controllers
             {
                 UserSessionModel userMaster = userRepository.FindByLoginDetail(loginModel);
                 if (userMaster != null)
-                {                    
+                {
                     SetUserInfo = userMaster;
                     var userClaims = new List<Claim>()
                     {
@@ -407,5 +421,79 @@ namespace IBS.Controllers
         //    string DecryptedPassword = Common.getDecryptedText(Text, "301ae92bb2bc7599");
         //    return Ok(DecryptedPassword);
         //}
+
+        #region Digital Signature
+        public string DigitalSignatureStatus(int IeCd)
+        {
+            string responseText = string.Empty;
+
+            CertificateDetails DSCDT_Email = userRepository.GetDSC_Exp_DT(IeCd);
+
+            //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+            X509Certificate2 Certificate = DigitalSigner.getCertificate(DSCDT_Email.IE_Email);
+
+            if (Certificate == null)
+            {
+                responseText = "Kindly Attached Certificate!!";
+            }
+            else
+            {
+                CertificateDetails CertificateDetailsModel = ExtractCertificateDetails(Certificate.Subject);
+
+                DateTime? DSC_Exp_DT = Certificate.NotAfter;
+
+                if (DSC_Exp_DT.Value.Date < DateTime.Now.Date)
+                {
+                    responseText = "DSC Expiry date cannot be earlier then current date!!";
+                }
+                else
+                {
+                    if (DSCDT_Email.DSC_Exp_DT == null || (DSC_Exp_DT.Value.Date != DSCDT_Email.DSC_Exp_DT.Value.Date))
+                    {
+                        string DSCUpdate = userRepository.UpdateDSCDate(IeCd, DSC_Exp_DT.Value);
+                    }
+                }
+            }
+
+            return responseText;
+
+        }
+
+        private CertificateDetails ExtractCertificateDetails(string subject)
+        {
+            return new CertificateDetails
+            {
+                CommonName = GetCertificateValue(subject, "CN"),
+                Email = GetCertificateValue(subject, "E"),
+                SerialNumber = GetCertificateValue(subject, "SERIALNUMBER"),
+                Phone = GetCertificateValue(subject, "Phone"),
+                Title = GetCertificateValue(subject, "T"),
+                Street = GetCertificateValue(subject, "STREET"),
+                State = GetCertificateValue(subject, "S"),
+                Locality = GetCertificateValue(subject, "L"),
+                PostalCode = GetCertificateValue(subject, "PostalCode"),
+                OrganizationUnit = GetCertificateValue(subject, "OU"),
+                Organization = GetCertificateValue(subject, "O"),
+                Country = GetCertificateValue(subject, "C")
+            };
+        }
+
+        private string GetCertificateValue(string subject, string field)
+        {
+            string prefix = field + "=";
+            int start = subject.IndexOf(prefix);
+            if (start >= 0)
+            {
+                start += prefix.Length;
+                int end = subject.IndexOf(',', start);
+                if (end < 0)
+                    end = subject.Length;
+
+                return subject.Substring(start, end - start).Trim();
+            }
+
+            return null;
+        }
+        #endregion
     }
 }

@@ -29,18 +29,19 @@
                         <li class="sendTextHolder">
                             <div class="sendText">
                                 <div class="box-body">
-                                    <div class="attachment-block clearfix">
+                                    <div class="attachment-block">
                                         @{
                                             if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
                                             {
-                                                <a><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                                <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
                                             }
                                         }
                                         <div class="attachment-pushed">
-                                            <h4 class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></h4>
+                                            <span class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></span>
                                         </div>
                                     </div>
-                                    <a id="btnDownload" href="@FileUrl" class="btn btn-default btn-xs" download="@item.FileDisplayName"><i class="fa fa fa-download"></i></a>
+                                    <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
+                                    <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup"><i class="fa fa-camera"></i> View</a>
                                     @*<button type="button" id="ShowModelImg" value="@FileUrl" class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>*@
                                 </div>
                                 <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
@@ -66,14 +67,15 @@
                                         @{
                                             if (item.Extension.ToLower() == ".jpg" || item.Extension.ToLower() == ".jpeg" || item.Extension.ToLower() == ".png")
                                             {
-                                                <a><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                                <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
                                             }
                                         }
                                         <div class="attachment-pushed">
-                                            <h4 class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></h4>
+                                            <span class="attachment-heading"><i class="fa fa-image">@item.FileDisplayName</i></span>
                                         </div>
                                     </div>
-                                    <a id="btnDownload" href="@FileUrl" class="btn btn-default btn-xs" download="@item.FileDisplayName"><i class="fa fa fa-download"></i></a>
+                                    <a id="btnDownload" href="@FileUrl" download="@item.FileDisplayName"><i class="fa fa fa-download"></i> Download</a>
+                                    <a id="ShowModelImg" href="@FileUrl" class="chatImagePopup"><i class="fa fa-camera"></i> View</a>
                                     @*<button type="button" id="ShowModelImg" value="@FileUrl" class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>*@
                                 </div>
                                 <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
@@ -100,7 +102,6 @@
     </div>
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
-
 <script type="text/javascript">
 
     $('#txtMsg').keypress(function (e) {
