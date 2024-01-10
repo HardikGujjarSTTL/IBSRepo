@@ -9,6 +9,7 @@
 
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
+<input type="hidden" id="hdnFileSize" value="" />
 <div class="list-inner">
     <div class="tast-list">
         <h2>Users Chat</h2>
@@ -27,19 +28,19 @@
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
-                    <div class="col-md-2 d-flex justify-content-between">                        
+                    <div class="col-md-2 d-flex justify-content-between">
                         <div class="topUploadCustom">
-                    <div class="upload-btn-wrapper submitChatBtn">
-                        <button><span class="fa fa-paperclip"></span></button>
-                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
-                    </div>
+                            <div class="upload-btn-wrapper submitChatBtn">
+                                <button><span class="fa fa-paperclip"></span></button>
+                                <input type="file" id="fileupload" class="fileUploadNormal" multiple>
+                            </div>
                         </div>
 
                         <div class="savenext-btn" style="margin-top:28px;">
-                        <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
+                            <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
+                        </div>
                     </div>
-                    </div>
-                    
+
                 </div>
             </div>
             <div id="divFile"></div>
@@ -88,16 +89,6 @@
         $(document).ajaxSend(function () {
             $(".overlayLoader").hide();
         });
-
-        //$('#fileupload').change(function (e) {
-        //    var fileInput = this;
-        //    var file = fileInput.files[0];
-        //    var type = 1;
-
-        //    if (file != null) {
-        //        UploadFile(1, file)
-        //    }
-        //});
     });
 
     $('#fileupload').change(function (e) {
@@ -160,24 +151,24 @@
 
         if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
             imagesJson = [
-                { image: $("#hdnBase64String").val(), filename: $("#hdnFileName").val() },
+                { image: $("#hdnBase64String").val(), filename: $("#hdnFileName").val(), filesize: $("#hdnFileSize").val() },
             ];
         }
         connection.invoke("SendMessage", SenderId, ReceiverId, Message, type, imagesJson);
-        //connection.invoke("GetByteArray", SenderId, ReceiverId, message, type, imagesJson);
 
         if (type == 1) { $("#txtMessage").val(""); }
         else if (type == 2) { $("#txtMsg").val(""); }
 
         $("#hdnBase64String").val("");
         $("#hdnFileName").val("");
+        $("#hdnFileSize").val("");
     }
 
     connection.start().then(function () {
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, Extension, CurrDateCnt) {
+    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt) {
         debugger
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
@@ -195,22 +186,28 @@
             //Sender Side
             if (SenderId != recvID) {
                 if (File_Field_ID != "" && File_Field_ID != null) {
+                    element += '<li class="sendTextHolder" > <div class="sendText" >' +
+                        '<div class="box-body">' +
+                        '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
-                        //element += '<a><li class="sendTextHolder" > <div class="sendText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
-                        element += '<li class="sendTextHolder" > <div class="sendText" >' +
-                            '<div class="box-body">' +
-                            '<div class="attachment-block clearfix">' +
-                            '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
-                            '<div class="attachment-pushed">' +
-                            '<h4 class="attachment-heading"><i class="fa fa-image">' + FileDisplayName + '</i></h4>' +
-                            '</div>' +
-                            '</div>' +
-                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i></a>' +
-                            //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
-                            '</div>' +
-                            '<span class="timeStamp">' + Msg_Date + '</span>' +
-                            '</div></li>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                    } else {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
                     }
+                    element += '<div class="attachment-pushed">' +
+                        '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="fileDownload">' +
+                        '<div>' +
+                        '<a id="btnDownload" href="' + FilePath + '" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i> Download</a>' +
+                        '<a id="ShowModelImg" href="' + FilePath + '" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>' +
+                        '</div>' +
+                        '<span class="chatFileSize">File Size : ' + FileSize + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<span class="timeStamp">' + Msg_Date + '</span>' +
+                        '</div></li>';
                 }
                 if (Message != "" && Message != null) {
                     element += '<li class="sendTextHolder" > <div class="sendText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
@@ -223,22 +220,28 @@
             //Receiver Side
             if (SenderId == recvID) {
                 if (File_Field_ID != "" && File_Field_ID != null) {
+                    element += '<li class="reciveTextHolder" > <div class="recieveText" >' +
+                        '<div class="box-body">' +
+                        '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
-                        //element += '<a><li class="reciveTextHolder" > <div class="recieveText" ><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></div></li></a>'
-                        element += '<li class="reciveTextHolder" > <div class="recieveText" >' +
-                            '<div class="box-body">' +
-                            '<div class="attachment-block clearfix">' +
-                            '<a><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>' +
-                            '<div class="attachment-pushed"> ' +
-                            '<h4 class="attachment-heading"><i class="fa fa-image">  ' + FileDisplayName + ' </i></h4>' +
-                            '</div>' +
-                            '</div>' +
-                            '<a id="btnDownload" href="' + FilePath + '" class="btn btn-default btn-xs" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i></a>' +
-                            //'<button type="button" id="ShowModelImg"  value="' + FilePath + '"  class="btn btn-default btn-xs"><i class="fa fa-camera"></i></button>' +
-                            '</div>' +
-                            '<span class="timeStamp">' + Msg_Date + '</span>' +
-                            '</div></li>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                    } else {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
                     }
+                    element += '<div class="attachment-pushed">' +
+                        '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="fileDownload">' +
+                        '<div>' +
+                        '<a id="btnDownload" href="' + FilePath + '" download="' + FileDisplayName + '"><i class="fa fa fa-download"></i> Download</a>' +
+                        '<a id="ShowModelImg" href="' + FilePath + '" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>' +
+                        '</div>' +
+                        '<span class="chatFileSize">File Size : ' + FileSize + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<span class="timeStamp">' + Msg_Date + '</span>' +
+                        '</div></li>';
                 }
                 if (Message != "" && Message != null) {
                     element += '<li class="reciveTextHolder" > <div class="recieveText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
@@ -297,15 +300,28 @@
     async function handleFile(fileId) {
         const fileInput = document.getElementById(fileId);
         const file = fileInput.files[0];
+
+        var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+        var sizeinbytes = file.size;
+        fSize = sizeinbytes; i = 0; while (fSize > 900) { fSize /= 1024; i++; }
+        var FileSize = (Math.round(fSize * 100) / 100) + ' ' + fSExt[i];
+        
         if (file) {
             const base64String = await readAsDataURL(file);
             $("#hdnBase64String").val(base64String);
             $("#hdnFileName").val(file.name);
+            $("#hdnFileSize").val(FileSize);
         }
         else {
             $("#hdnBase64String").val("");
             $("#hdnFileName").val("");
+            $("#hdnFileSize").val("");
         }
+
+        
+
+
+        //alert(sizeinbytes);
     }
 
     function readAsDataURL(file) {

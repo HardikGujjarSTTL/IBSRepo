@@ -30,7 +30,7 @@ namespace IBS.Helper
 
         public async Task SendMessage(string SenderId, string ReceiverId, string Message, int MsgType, IEnumerable<ImageData> images)
         {
-            string FileDisplayName = null, Field_ID = null, Extension = null;
+            string FileDisplayName = null, Field_ID = null, Extension = null, FileSize = null;
             byte[] buffer = new byte[] { };
 
             var arrRecvId = string.IsNullOrEmpty(ReceiverId) ? new List<string>() : ReceiverId.Split(",").ToList();
@@ -57,9 +57,11 @@ namespace IBS.Helper
                                 model.Field_ID = newGuid.ToString() + Path.GetExtension(item.FileName);
                                 model.Extension = Path.GetExtension(item.FileName);
                                 model.FileDisplayName = item.FileName;
+                                model.FileSize = item.FileSize;
                                 FileDisplayName = item.FileName;
                                 Field_ID = model.Field_ID;
                                 Extension = Path.GetExtension(item.FileName);
+                                FileSize = item.FileSize;
                             }
                         }
                     }
@@ -87,14 +89,14 @@ namespace IBS.Helper
                             {
                                 var lstChat = _chathub.GetMessageList(Convert.ToInt32(SenderId), Convert.ToInt32(recvID)).lstMsg;
                                 var CurrDateCount = lstChat.Where(x => x.Msg_Date.Date == DateTime.Now.Date).Count();
-                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, Message, MsgType, Msg_Date, Field_ID, FileDisplayName, Extension, CurrDateCount);
+                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, Message, MsgType, Msg_Date, Field_ID, FileDisplayName, FileSize, Extension, CurrDateCount);
                             }
                         }
                         else
                         {
                             foreach (var k in myKey)
                             {
-                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", 0);
+                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", "", 0);
                             }
                         }
                     }
@@ -104,7 +106,7 @@ namespace IBS.Helper
 
                         foreach (var k in myKey)
                         {
-                            await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", 0);
+                            await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", "", 0);
                         }
                     }
                 }

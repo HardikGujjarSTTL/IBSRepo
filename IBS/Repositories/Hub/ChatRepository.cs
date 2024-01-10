@@ -23,12 +23,7 @@ namespace IBS.Repositories.Hub
             using (var transaction = context.Database.BeginTransaction())
             {
                 try
-                {
-                    //var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
-                    //if (arrRecvId.Count() > 0)
-                    //{
-                    //    foreach (var item in arrRecvId)
-                    //    {
+                {                    
                     T113ChatMaster obj = new T113ChatMaster();
                     obj.MsgSendId = Convert.ToInt32(model.msg_send_ID);
                     obj.MsgRecvId = Convert.ToInt32(model.msg_recv_ID);//Convert.ToInt32(item);
@@ -38,11 +33,11 @@ namespace IBS.Repositories.Hub
                     obj.FieldId = model.Field_ID;
                     obj.Extension = model.Extension;
                     obj.Filedisplayname = model.FileDisplayName;
+                    obj.Filesize = model.FileSize;
                     context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
                     result = obj.Id;
-                    //    }
-                    //}
+                   
                     transaction.Commit();
                 }
                 catch (Exception)
