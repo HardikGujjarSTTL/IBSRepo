@@ -341,7 +341,6 @@ $(document).ready( function(){
 		return false;
 	});
 
-
 	$('a').not(".litebox, .galleryBox a").filter(function () {
 		return this.hostname && this.hostname !== location.hostname;
 	}).click(function (e) {
