@@ -126,7 +126,7 @@
                 $(".chatRightBoxBody").html(response);
                 $(".userList").removeClass("active");
                 $("#li" + ReceiverId).addClass("active");
-                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
 
                 Cnt = parseInt($("#hdnCurrDtCount").val());
             }
@@ -168,8 +168,8 @@
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt) {
-        
+    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID) {
+
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
@@ -186,7 +186,7 @@
             //Sender Side
             if (SenderId != recvID) {
                 if (File_Field_ID != "" && File_Field_ID != null) {
-                    element += '<li class="sendTextHolder" > <div class="sendText" >' +
+                    element += '<li class="sendTextHolder" id="' + ResultID + '" > <div class="sendText" >' +
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
@@ -210,17 +210,17 @@
                         '</div></li>';
                 }
                 if (Message != "" && Message != null) {
-                    element += '<li class="sendTextHolder" > <div class="sendText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                    element += '<li class="sendTextHolder" id="' + ResultID + '"> <div class="sendText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
                 }
                 $(".chatBodyText").append(element);
-                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
                 $("#txtMsg").focus();
             }
 
             //Receiver Side
             if (SenderId == recvID) {
                 if (File_Field_ID != "" && File_Field_ID != null) {
-                    element += '<li class="reciveTextHolder" > <div class="recieveText" >' +
+                    element += '<li class="reciveTextHolder" id="' + ResultID + '"> <div class="recieveText" >' +
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
@@ -244,10 +244,10 @@
                         '</div></li>';
                 }
                 if (Message != "" && Message != null) {
-                    element += '<li class="reciveTextHolder" > <div class="recieveText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                    element += '<li class="reciveTextHolder" id="' + ResultID + '"> <div class="recieveText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
                 }
                 $(".chatBodyText").append(element);
-                $('.chatBoxBody').scrollTop($('.chatBoxBody').height());
+                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
                 $("#txtMsg").focus();
             }
         }
@@ -305,7 +305,7 @@
         var sizeinbytes = file.size;
         fSize = sizeinbytes; i = 0; while (fSize > 900) { fSize /= 1024; i++; }
         var FileSize = (Math.round(fSize * 100) / 100) + ' ' + fSExt[i];
-        
+
         if (file) {
             const base64String = await readAsDataURL(file);
             $("#hdnBase64String").val(base64String);
@@ -318,7 +318,7 @@
             $("#hdnFileSize").val("");
         }
 
-        
+
 
 
         //alert(sizeinbytes);
@@ -340,4 +340,21 @@
             reader.readAsDataURL(file);
         });
     }
+
+    function DeleteMessage(Id) {
+        connection.invoke("DeleteMessage", SenderId, ReceiverId, Id);
+    }
+
+    connection.on("ReceiveDeleteMessage", function (ReceiverId, DeletedId, CurrDateCnt, Result) {
+
+        //Sender Side
+        if (SenderId != recvID) {
+            $("#" + DeletedId).remove();
+        }
+
+        //Receiver Side
+        if (SenderId == recvID) {
+            $("#" + DeletedId).remove();
+        }
+    });
 </script>

@@ -6,9 +6,11 @@
         {
             var msgDate = DateTime.Now.ToString("dd MMMM yyyy");
             var Cnt = 0;
+            
             foreach (var item in Model.lstMsg)
             {
                 var FileUrl = "";
+                var clsDel = "clsDel_" + item.ID;
                 FileUrl = item.RelativePath + "/" + item.Field_ID;
 
 
@@ -28,8 +30,8 @@
                 {
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
-                        <li class="sendTextHolder">
-                            <div class="sendText">
+                        <li class="sendTextHolder @clsDel" id="@item.ID">
+                            <div class="sendText">                                
                                 <div class="box-body">
                                     <div class="attachment-block">
                                         @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
@@ -59,7 +61,7 @@
 
                     if (!string.IsNullOrEmpty(item.message))
                     {
-                        <li class="sendTextHolder">
+                        <li class="sendTextHolder @clsDel" id="@item.ID">
                             <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                         </li>
                     }
@@ -68,7 +70,7 @@
                 {
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
-                        <li class="reciveTextHolder">
+                        <li class="reciveTextHolder @clsDel" id="@item.ID">
                             <div class="recieveText">
                                 <div class="box-body">
                                     <div class="attachment-block">
@@ -99,7 +101,7 @@
 
                     if (!string.IsNullOrEmpty(item.message))
                     {
-                        <li class="reciveTextHolder">
+                        <li class="reciveTextHolder @clsDel" id="@item.ID">
                             <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                         </li>
                     }
