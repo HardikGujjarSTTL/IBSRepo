@@ -734,6 +734,15 @@ namespace IBS.Helper
             [Description("NSIC Call Charges")]
             N,
         }
+
+        //public enum CreditDebitNote
+        //{
+        //    [Description("Credit Note")]
+        //    C = 9,
+        //    [Description("Debit Zone")]
+        //    D = 10,
+        //}
+
     }
 
     public class EnumUtility<T>

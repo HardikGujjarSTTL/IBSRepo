@@ -24,4 +24,6 @@ public partial class T113ChatMaster
     public string? Extension { get; set; }
 
     public string? Filedisplayname { get; set; }
+
+    public string? Filesize { get; set; }
 }

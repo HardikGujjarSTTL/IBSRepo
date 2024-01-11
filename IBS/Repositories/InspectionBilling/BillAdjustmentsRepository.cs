@@ -1,9 +1,12 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Dynamic;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -517,7 +520,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 if (chk_bill_dt(Convert.ToString(model.BillDt), Region) == 1)
                 {
-                    if (model.IcTypeId == 9)
+                    if (model.IcTypeId == 9 || model.IcTypeId == 10)
                     {
                         gen_credit_note(model);
                     }
@@ -536,7 +539,7 @@ namespace IBS.Repositories.InspectionBilling
             }
             else if (model.BillNo != null)
             {
-                if (model.IcTypeId == 9)
+                if (model.IcTypeId == 9 || model.IcTypeId == 10)
                 {
                     gen_credit_note(model);
                 }
@@ -632,7 +635,7 @@ namespace IBS.Repositories.InspectionBilling
                 //    c_note_bno = model.BillNo;
                 //}
 
-                if (model.IcTypeId == 9)
+                if (model.IcTypeId == 9 || model.IcTypeId == 10)
                 {
                     c_note_bno = model.BillNo;
                 }
@@ -1186,56 +1189,57 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         discountamount = Convert.ToDecimal((basevalue * DiscountPerP) / 100);
                     }
-                    else if (DiscountTypeP == "L")
-                    {
-                        discountamount = DiscountPerP;
-                    }
+                    //else if (DiscountTypeP == "L")
+                    //{
+                    //    discountamount = DiscountPerP;
+                    //}
                     else if (DiscountTypeP == "N")
                     {
                         discountamount = Convert.ToDecimal(DiscountPerP * qtyOffNow);
                     }
                     else
                     {
-                        discountamount = 0;
+                        //discountamount = 0;
+                        discountamount = Convert.ToDecimal(qtyOffNow / qty) * DiscountPerP;
                     }
                     //Exise Calculation
-                    if (BillAdType == "Credit")
-                    {
-                        if (qtyOffNow == qty)
-                        {
-                            if (ExciseTypeP == "P")
-                            {
-                                exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
-                            }
-                            else if (ExciseTypeP == "L")
-                            {
-                                exciseamount = Convert.ToDecimal(ExcisePerP);
-                            }
-                            else
-                            {
-                                exciseamount = 0;
-                            }
-                        }
-                        else
-                        {
-                            exciseamount = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (ExciseTypeP == "P")
-                        {
-                            exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
-                        }
-                        else if (ExciseTypeP == "L")
-                        {
-                            exciseamount = Convert.ToDecimal(ExcisePerP);
-                        }
-                        else
-                        {
-                            exciseamount = 0;
-                        }
-                    }
+                    //if (BillAdType == "Credit")
+                    //{
+                    //    if (qtyOffNow == qty)
+                    //    {
+                    //        if (ExciseTypeP == "P")
+                    //        {
+                    //            exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                    //        }
+                    //        else if (ExciseTypeP == "L")
+                    //        {
+                    //            exciseamount = Convert.ToDecimal(ExcisePerP);
+                    //        }
+                    //        else
+                    //        {
+                    //            exciseamount = 0;
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        exciseamount = 0;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (ExciseTypeP == "P")
+                    //    {
+                    //        exciseamount = Convert.ToDecimal(((basevalue - discountamount) * ExcisePerP) / 100);
+                    //    }
+                    //    else if (ExciseTypeP == "L")
+                    //    {
+                    //        exciseamount = Convert.ToDecimal(ExcisePerP);
+                    //    }
+                    //    else
+                    //    {
+                    //        exciseamount = 0;
+                    //    }
+                    //}
 
                     //Salse Tax
                     if (SalesTaxPerP > 0)
@@ -1254,17 +1258,18 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         otheramount = Convert.ToDecimal((basevalue * OtChargePerP) / 100);
                     }
-                    else if (OtChargeTypeP == "L")
-                    {
-                        otheramount = Convert.ToDecimal(OtChargePerP);
-                    }
+                    //else if (OtChargeTypeP == "L")
+                    //{
+                    //    otheramount = Convert.ToDecimal(OtChargePerP);
+                    //}
                     else if (OtChargeTypeP == "N")
                     {
                         otheramount = Convert.ToDecimal((qtyOffNow * OtChargePerP) / 100);
                     }
                     else
                     {
-                        otheramount = 0;
+                        //otheramount = 0;
+                        otheramount = Convert.ToDecimal(qtyOffNow / qty) * OtChargePerP;
                     }
 
                     //Total Calculation
@@ -1275,7 +1280,7 @@ namespace IBS.Repositories.InspectionBilling
                     totalvalueFinal += totalvalue;
                     model.TMValueNew = totalvalueFinal;
 
-                    
+
                 }
             }
 
@@ -1313,28 +1318,54 @@ namespace IBS.Repositories.InspectionBilling
 
             if ((model.MinFee > 0) && (model.MinFee > w_insp_fee))
             {
-                w_insp_fee += Convert.ToDecimal(model.MinFee);
+                w_insp_fee = Convert.ToDecimal(model.MinFee);
             }
             if ((model.MaxFee >= 0) && (model.MaxFee < w_insp_fee))
             {
-                w_insp_fee += Convert.ToDecimal(model.MaxFee);
+                w_insp_fee = Convert.ToDecimal(model.MaxFee);
             }
-            model.TIFeeNew = w_insp_fee;
+            
 
             var Ic_Dt = context.T20Ics.Where(x => x.CaseNo == Caseno && x.CallRecvDt == Convert.ToDateTime(Callrecvdt) && x.CallSno == Callsno && x.ConsigneeCd == ConsigneeCd).Select(x => x.IcDt).FirstOrDefault();
-            var igst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.IgstRate ?? 0).FirstOrDefault();
-            var sgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.SgstRate ?? 0).FirstOrDefault();
-            var cgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.CgstRate ?? 0).FirstOrDefault();
+            //var igst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.IgstRate ?? 0).FirstOrDefault();
+
+            var igst_rate = (from gst in context.T89Gsts
+                             join ic in context.T20Ics on 1 equals 1 // Dummy join condition
+                             where ic.CaseNo == Caseno && ic.CallRecvDt == Convert.ToDateTime(Callrecvdt) && ic.ConsigneeCd == ConsigneeCd && ic.CallSno == Callsno
+                                && ic.IcDt >= gst.DtFrom
+                                && ic.IcDt <= gst.DtTo
+                             select gst.IgstRate).FirstOrDefault();
+            igst_rate = igst_rate / 100;
+
+            //var sgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.SgstRate ?? 0).FirstOrDefault();
+            var sgst_rate = (from gst in context.T89Gsts
+                             join ic in context.T20Ics on 1 equals 1 // Dummy join condition
+                             where ic.CaseNo == Caseno && ic.CallRecvDt == Convert.ToDateTime(Callrecvdt) && ic.ConsigneeCd == ConsigneeCd && ic.CallSno == Callsno
+                                && ic.IcDt >= gst.DtFrom
+                                && ic.IcDt <= gst.DtTo
+                             select gst.SgstRate).FirstOrDefault();
+            sgst_rate = sgst_rate / 100;
+
+
+            //var cgst_rate = context.T89Gsts.Where(x => x.DtFrom >= Ic_Dt && x.DtTo <= Ic_Dt).Select(x => x.CgstRate ?? 0).FirstOrDefault();
+            var cgst_rate = (from gst in context.T89Gsts
+                             join ic in context.T20Ics on 1 equals 1 // Dummy join condition
+                             where ic.CaseNo == Caseno && ic.CallRecvDt == Convert.ToDateTime(Callrecvdt) && ic.ConsigneeCd == ConsigneeCd && ic.CallSno == Callsno
+                                && ic.IcDt >= gst.DtFrom
+                                && ic.IcDt <= gst.DtTo
+                             select gst.CgstRate).FirstOrDefault();
+            cgst_rate = cgst_rate / 100;
+
             if (model.TaxType == "I")
             {
-                w_igst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(igst_rate) / 100)) / 100);
+                w_igst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(igst_rate))));
                 w_cgst = 0;
                 w_sgst = 0;
             }
             else if (model.TaxType == "C")
             {
-                w_cgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(cgst_rate) / 100)) / 100);
-                w_sgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(sgst_rate) / 100)) / 100);
+                w_cgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(cgst_rate))));
+                w_sgst = Convert.ToDecimal((w_insp_fee * Convert.ToDecimal(Convert.ToInt32(sgst_rate))));
                 w_igst = 0;
             }
             else if (model.TaxType == "X")
@@ -1346,7 +1377,7 @@ namespace IBS.Repositories.InspectionBilling
             else if (model.TaxType == "Y")
             {
                 w_total_fee = w_insp_fee;
-                w_insp_fee = w_total_fee / (1 + (Convert.ToInt32(igst_rate) / 100));
+                w_insp_fee = w_total_fee / (1 + Convert.ToDecimal(igst_rate));
                 w_igst = Convert.ToDecimal(w_insp_fee * Convert.ToDecimal(igst_rate));
                 w_cgst = 0;
                 w_sgst = 0;
@@ -1355,15 +1386,16 @@ namespace IBS.Repositories.InspectionBilling
             else if (model.TaxType == "Z")
             {
                 w_total_fee = w_insp_fee;
-                w_insp_fee = w_total_fee / (1 + (Convert.ToInt32(cgst_rate) / 100) + (Convert.ToInt32(sgst_rate) / 100));
+                w_insp_fee = w_total_fee / (1 + (Convert.ToDecimal(cgst_rate) + Convert.ToDecimal(sgst_rate)));
                 w_igst = 0;
-                w_cgst = Convert.ToDecimal(w_insp_fee * (Convert.ToInt32(cgst_rate) / 100));
-                w_sgst = Convert.ToDecimal(w_insp_fee * (Convert.ToInt32(sgst_rate) / 100));
+                w_cgst = Convert.ToDecimal(w_insp_fee * Convert.ToDecimal(cgst_rate));
+                w_sgst = Convert.ToDecimal(w_insp_fee * Convert.ToDecimal(sgst_rate));
                 w_insp_fee = w_total_fee - (w_cgst + w_sgst);
             }
             w_total_fee = Convert.ToDecimal(w_insp_fee + w_cgst + w_sgst + w_igst);
 
-            model.NetFeeNew = w_total_fee;
+            model.TIFeeNew = Math.Round(w_insp_fee);
+            model.NetFeeNew = Math.Round(w_total_fee);
 
             if (basevalue == 0)
             {

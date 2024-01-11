@@ -20,25 +20,33 @@ namespace IBS.Repositories.Hub
         public int ChatMessageSave(ChatMessage model)
         {
             var result = 0;
-            var arrRecvId = string.IsNullOrEmpty(model.msg_recv_ID) ? new List<string>() : model.msg_recv_ID.Split(",").ToList();
-            if (arrRecvId.Count() > 0)
+            using (var transaction = context.Database.BeginTransaction())
             {
-                foreach (var item in arrRecvId)
-                {
+                try
+                {                    
                     T113ChatMaster obj = new T113ChatMaster();
                     obj.MsgSendId = Convert.ToInt32(model.msg_send_ID);
-                    obj.MsgRecvId = Convert.ToInt32(item);
+                    obj.MsgRecvId = Convert.ToInt32(model.msg_recv_ID);//Convert.ToInt32(item);
                     obj.Message = model.message;
-                    obj.SendMsgDate = DateTime.Now;
+                    obj.SendMsgDate = model.Msg_Date;
                     obj.Relativepath = model.RelativePath;
                     obj.FieldId = model.Field_ID;
                     obj.Extension = model.Extension;
                     obj.Filedisplayname = model.FileDisplayName;
+                    obj.Filesize = model.FileSize;
                     context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
                     result = obj.Id;
+                   
+                    transaction.Commit();
                 }
-            }            
+                catch (Exception)
+                {
+                    result = 0;
+                    transaction.Rollback();
+                }
+            }
+
             return result;
         }
 
@@ -46,7 +54,7 @@ namespace IBS.Repositories.Hub
         {
             ChatMessage model = new ChatMessage();
             model.lstMsg = new List<ChatMessage>();
-            
+
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_SENDER_ID", OracleDbType.Int32, send_id, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RECEIVER_ID", OracleDbType.Int32, recv_id, ParameterDirection.Input);
@@ -78,7 +86,7 @@ namespace IBS.Repositories.Hub
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model.lstMsg = JsonConvert.DeserializeObject<List<ChatMessage>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            }            
+            }
             return model;
 
         }

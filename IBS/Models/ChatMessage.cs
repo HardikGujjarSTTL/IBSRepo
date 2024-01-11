@@ -14,6 +14,7 @@
         public string Field_ID { get; set; }
         public string Extension { get; set; }
         public string FileDisplayName { get; set; }
+        public string FileSize { get; set; }
         public int CurrDateCount { get; set; }
         public List<ChatMessage> lstMsg { get; set; }
     }
@@ -25,6 +26,14 @@
         public string Message { get; set; }
         public int MsgType { get; set; }
         public IFormFile MyFiles { get; set; }
+    }
+
+    public class ImageData
+    {
+        public string Description { get; set; }
+        public string FileName { get; set; }
+        public string Image { get; set; }
+        public string FileSize { get; set; }
     }
 }
 

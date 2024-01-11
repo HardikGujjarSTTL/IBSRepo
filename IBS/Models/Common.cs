@@ -4356,6 +4356,25 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.TaxType_GST_O)).ToList();
         }
 
+        //public static IEnumerable<TextValueDropDownDTO> CreditDebitNote()
+        //{
+        //    return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CreditDebitNote)).ToList();
+        //}
+
+        public static List<SelectListItem> CreditDebitNote()
+        {
+            List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
+            SelectListItem single = new SelectListItem();
+            single = new SelectListItem();
+            single.Text = "Credit Note";
+            single.Value = "9";
+            textValueDropDownDTO.Add(single);
+            single = new SelectListItem();
+            single.Text = "Debit Note";
+            single.Value = "10";
+            textValueDropDownDTO.Add(single);
+            return textValueDropDownDTO.ToList();
+        }
 
         public static string[] GetVenderDetails(int VendCd)
         {
