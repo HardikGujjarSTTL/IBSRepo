@@ -475,5 +475,45 @@ namespace IBS.Controllers.WebsitePages
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
         #endregion
+        //[HttpPost]
+        //public IActionResult SettlementResponse()
+        //{
+        //    TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
+
+        //    TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
+        //    TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
+        //    TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
+        //    pi.merchDetails = md;
+        //    pi.payDetails = pd;
+        //    rt.payInstrument = pi;
+        //    var json = JsonConvert.SerializeObject(rt);
+        //    string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
+        //    string salt = config.GetSection("PaymentConfig")["Encrypt"];
+        //    byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        //    int iterations = 65536;
+
+        //    string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
+
+        //    string testurleq = "https://titanuat.atomtech.in/SettlementReport/generateReport" + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&settlementDate=" + "2024-01-05";
+        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
+        //    ServicePointManager.Expect100Continue = true;
+        //    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+        //    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+        //    request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+        //    Encoding encoding = new UTF8Encoding();
+        //    byte[] data = encoding.GetBytes(json);
+        //    request.ProtocolVersion = HttpVersion.Version11;
+        //    request.Method = "POST";
+        //    request.ContentType = "application/json";
+        //    request.ContentLength = data.Length;
+        //    Stream stream = request.GetRequestStream();
+        //    stream.Write(data, 0, data.Length);
+        //    stream.Close();
+        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //    string jsonresponse = response.ToString();
+
+        //    return Json(new { status = false, response = jsonresponse });
+        //}
     }
 }
