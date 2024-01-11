@@ -30,8 +30,16 @@
                 {
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
-                        <li class="sendTextHolder @clsDel" id="@item.ID">
-                            <div class="sendText">                                
+                        <li class="sendTextHolder">
+                            <div class="deleteSelect"><span class="fa fa-chevron-down"></span>
+                                <div class="fileUploadDelete">
+                                    <ul class="editDeleteFile">
+                                        <li><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
+                                        <li><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="sendText">
                                 <div class="box-body">
                                     <div class="attachment-block">
                                         @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
@@ -118,6 +126,12 @@
     </div>
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
+<div class="fileUploadedInfo">
+    <span class="fileUploadedInfoClose">X</span>
+    <h4>You have choosen file</h4>
+    <span class="fileUploadFileName"><i class="fa fa-image"></i> Profile.png</span>
+    <span class="chatFileSize">File Size (10KB)</span>
+</div>
 <script type="text/javascript">
 
     $('#txtMsg').keypress(function (e) {
@@ -129,5 +143,11 @@
     $('#fileupload2').change(function (e) {
         handleFile('fileupload2');
     });
+
+    
+    $(".deleteSelect").click(function(){
+        $(".fileUploadDelete").slideToggle();
+    });
+    
 
 </script>

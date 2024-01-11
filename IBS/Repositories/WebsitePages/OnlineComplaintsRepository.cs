@@ -73,7 +73,7 @@ namespace IBS.Repositories.WebsitePages
             {
                 TempComplaintId = Compid,
                 TempComplaintDt = DateTime.Now,
-                //RejMemoDt = onlineComplaints.RejMemodate,
+                RejMemoDt = onlineComplaints.RejMemodate,
                 ConsigneeName = onlineComplaints.Name,
                 ConsigneeDesig = onlineComplaints.Designation,
                 ConsigneeEmail = onlineComplaints.Email,
