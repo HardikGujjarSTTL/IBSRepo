@@ -21,6 +21,9 @@
     </div>
 </div>
 <div class="iePieGraphGrid">
+   @* <div class="savenext-btn" style="margin-left: 92%;">
+        <button type="button" class="save-btn active Permission_Save" onclick="BtnSettlement()">Settlement</button>
+    </div>*@
     <table class="borderGrid">
         <tr>
             <th>Sr. No.</th>
@@ -89,4 +92,18 @@
             }
         });
     }
+
+    //function BtnSettlement(){
+    //    var urlpath = "@Url.Action("SettlementResponse", "OnlinePaymentGateway")";
+    //    $.ajax({
+    //        url: urlpath,
+    //        type: 'POST',
+    //        dataType: 'json',
+    //        success: function (data) {
+                
+    //        },
+    //        error: function (xhr, textStatus, errorThrown) {
+    //        }
+    //    });
+    //}
 </script>
