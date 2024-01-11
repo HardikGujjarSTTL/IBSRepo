@@ -56,9 +56,9 @@ namespace IBS.Controllers.Vendor
                     string fileName= VendCd + "_" + model.DocType;
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Inernal_Records };
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Inernal_Records, (int)Enums.DocumentCategory_CANRegisrtation.Firm_Certificate_Like_RDSO_Approval_Type_test_etc, (int)Enums.DocumentCategory_CANRegisrtation.Raw_Material_Invoice, (int)Enums.DocumentCategory_CANRegisrtation.Calibration_Records };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        id = DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", fileName, DocumentIds);
+                        id = DocumentHelper.SaveFiles(Convert.ToString(VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", fileName, DocumentIds);
                     }
                 }
                 #endregion

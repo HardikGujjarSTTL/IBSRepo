@@ -56,6 +56,10 @@ namespace IBS.Helpers
                 {
                     string fileExtension = Path.GetExtension(item.UniqueFileName);
                     item.UniqueFileName = SpecificFileName + fileExtension;
+                    if(item.Documentid == 12)
+                    {
+                        item.UniqueFileName = SpecificFileName + "_R" + fileExtension;
+                    }
                     //TempPath = Path.Combine(TempFilePath, item.UniqueFileName);
                 }
 
