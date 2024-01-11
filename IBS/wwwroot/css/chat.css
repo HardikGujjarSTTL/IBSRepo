@@ -60,7 +60,7 @@
 .topUploadCustom{ position:relative; width:auto; display:flex; align-items:center; margin-top:28px;}
 .topUploadCustom .upload-btn-wrapper{ position:static; width:auto; height:43px; padding:8px 30px; line-height:32px;}
 .topUploadCustom .submitChatBtn{ border-radius:8px;}
-.attachment-block{ display:flex; background:#cadfc0; padding:5px; border-radius:5px; margin-bottom:10px; width:400px;}
+.attachment-block{ display:flex; background:#cadfc0; padding:5px; border-radius:5px; margin-bottom:10px; width:400px; align-items:center;}
 .chatImagePopup{ margin-right:20px;}
 .attachment-pushed .attachment-heading{ font-style:italic; font-size:11px;}
 #btnDownload, #ShowModelImg{ background:#017f6a; border-radius:6px; padding:3px 10px; font-size:11px; color:#fff; text-decoration:none;}
