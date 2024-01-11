@@ -46,24 +46,22 @@
                     <span class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-6">
-                
-                    <ul class="radioListForm mt-5">
-                        <li id="dvAllRly">
-                            <input type="radio" id="AllRly" name="ClientWise" value="AllRly">
-                            <label for="AllRly">All Railway</label>
-                        </li>
-                        <li id="dvPerClient">
-                            <input type="radio" id="PerClient" name="ClientWise" value="PerClient">
-                            <label for="PerClient">Particular Client</label>
-                        </li>
-                        <li>
-                            <input type="radio" id="PerBPO" name="ClientWise" value="PerBPO">
-                            <label for="PerBPO">Particular BPO</label>
-                        </li>
-                    </ul>
+            <div class="col-md-5">
+                <ul class="radioListForm mt-5">
+                    <li id="dvAllRly">
+                        <input type="radio" id="AllRly" name="ClientWise" value="AllRly">
+                        <label for="AllRly">All Railway</label>
+                    </li>
+                    <li id="dvPerClient">
+                        <input type="radio" id="PerClient" name="ClientWise" value="PerClient">
+                        <label for="PerClient">Particular Client</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="PerBPO" name="ClientWise" value="PerBPO">
+                        <label for="PerBPO">Particular BPO</label>
+                    </li>
+                </ul>
             </div>
-
             <div class="col-md-3" id="ClientName">
                 <label for="Reference">Choose Client</label>
                 @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "Text", "Value"), "--Select--", new {})
