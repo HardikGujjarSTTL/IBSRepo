@@ -180,24 +180,35 @@ namespace IBS.Helper
             #endregion
         }
 
-        public async Task DeleteMessage(string SenderId, string ReceiverId, string DeletedId)
+        public async Task DeleteMessage(string SenderId, string ReceiverId, int DeletedId)
         {
-            var result = _chathub.ChatMessageDelete(Convert.ToInt32(DeletedId));
+            string DeleteDate = "", DeleteFileName = "";
+            var result = _chathub.ChatMessageDelete(DeletedId, ref DeleteDate, ref DeleteFileName);
             var myKey = Common.ConnectedUsers.Where(x => x.Value == ReceiverId || x.Value == SenderId).ToList();
             if (result > 0)
             {
+                if (string.IsNullOrEmpty(DeleteFileName))
+                {
+                    var path = _env.WebRootPath + "/ReadWriteData/CHAT_FILES";
+                    path = Path.Combine(path, DeleteFileName);
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                }
+
                 foreach (var k in myKey)
                 {
                     var lstChat = _chathub.GetMessageList(Convert.ToInt32(SenderId), Convert.ToInt32(ReceiverId)).lstMsg;
                     var CurrDateCount = lstChat.Where(x => x.Msg_Date.Date == DateTime.Now.Date).Count();
-                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", ReceiverId, DeletedId, CurrDateCount, result);
+                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", ReceiverId, DeletedId, CurrDateCount, result, DeleteDate);
                 }
             }
             else
             {
                 foreach (var k in myKey)
                 {
-                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", "", 0, result);
+                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", "", 0, result, "");
                 }
             }
         }

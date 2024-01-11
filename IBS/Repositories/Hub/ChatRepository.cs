@@ -91,7 +91,7 @@ namespace IBS.Repositories.Hub
 
         }
 
-        public int ChatMessageDelete(int id)
+        public int ChatMessageDelete(int id, ref string DeleteDate, ref string DeleteFileName)
         {
             int result = 0;
             using (var transaction = context.Database.BeginTransaction())
@@ -106,6 +106,15 @@ namespace IBS.Repositories.Hub
                         context.Remove(data);
                         context.SaveChanges();
                         result = data.Id;
+                        DeleteDate = "clsDate_" + data.SendMsgDate.Value.Date.ToString("ddMMMMyyyy");
+
+                        if(result > 0)
+                        {
+                            if (string.IsNullOrEmpty(data.FieldId))
+                            {
+                                DeleteFileName = data.FieldId;
+                            }
+                        }
                     }
                     transaction.Commit();
                 }
