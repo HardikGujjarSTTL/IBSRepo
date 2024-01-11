@@ -1,5 +1,6 @@
 ﻿$('#txtMsg').keypress(function (e) {
     if (e.keyCode == 13) {  // detect the enter key
+        e.preventDefault();
         SendMessage(2);
     }
 });

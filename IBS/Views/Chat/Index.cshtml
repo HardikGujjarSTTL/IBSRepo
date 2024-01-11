@@ -22,7 +22,7 @@
                 <div class="row my-0">
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
+                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new {@class = "select2", multiple = "multiple" })</div>
                     </div>
                     <div class="col-md-8">
                         <label for="Reference">Message</label>
@@ -55,9 +55,9 @@
                         <div class="chatUserHeader">
                             <ul>
                                 <li class="userList">
-                                    <div class="chatBoxIcon chatBoxIconBg1 clsShortName">A</div>
+                                    <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
                                     <div class="chatBoxInfo">
-                                        <h4 class="clsName">ARVIND KUMAR</h4>
+                                        <h4 class="clsName"></h4>
                                     </div>
                                 </li>
                             </ul>
@@ -104,6 +104,13 @@
     $('#fileupload').change(function (e) {
         handleFile('fileupload');
     });
+
+    //$('#dpUser').select2({
+    //    // Optional: You can customize Select2 options here
+    //    placeholder: 'Select a client type',
+    //    allowClear: false, // Adds a clear button
+    //    minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
+    //});
 
     function GetUserReceiverList() {
         $.ajax({
@@ -156,9 +163,9 @@
             Message = $("#txtMsg").val();
         }
 
-        //if (ReceiverId == "" && (Message == "" || GFileName == "")) {
-        //    return;
-        //}
+        if (ReceiverId == "" && (Message == "" || GFileName == "")) {
+            return;
+        }
         var imagesJson = null;
 
         if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
@@ -284,13 +291,14 @@
 
             $(".fileUploadedInfo").hide();
             var my_awesome_script = document.createElement('script');
-            my_awesome_script.setAttribute('src', '/js/test.js');
+            my_awesome_script.setAttribute('src', '/js/ChatMessageHistory.js');
             document.head.appendChild(my_awesome_script);
         }
     });
 
-    $('#txtMessage').keypress(function (e) {
+    $('#txtMessage').keypress(function (e) {        
         if (e.keyCode == 13) {  // detect the enter key
+            e.preventDefault();
             SendMessage(1);
         }
     });
