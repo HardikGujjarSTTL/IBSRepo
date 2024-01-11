@@ -20,7 +20,7 @@
 .chatBoxIconBg5 { background-color: #ffb3c6; color: #bf2b51; }
 .chatBoxIconBg6 { background-color: #cbdfbd; color: #4a8b1b; }
 .chatBoxIconBg7 { background-color: #ced9c0; color: #5b7a10; }
-.chatInputArea { background: #d1d1d1; padding: 10px; display: block; position: absolute; bottom: 0; width: 100%; left: 0; box-sizing: border-box; border-radius: 12px; }
+.chatInputArea { background: #d1d1d1; padding: 10px; display: block; position: absolute; bottom: 0; width: 100%; left: 0; box-sizing: border-box; }
 .chatInputArea input[type="text"] { border-radius: 30px; width: 100%; padding: 10px 15px; box-sizing: border-box; border: 1px solid #999; background: #fff; }
 .chatBoxHeadBody ul, .chatBoxBody .chatBodyText { list-style: none; margin: 0; padding: 0; }
 .chatBoxHeadBody li { display: flex; align-items: center; }
@@ -34,7 +34,7 @@
 .userSelect { padding: 2px 8px !important; max-width: 150px; border-radius: 6px; width: 100%; background: #fff; height: 35px; }
 .messageBody { display: flex; }
 .userChatBox { width: 80%; position: relative; }
-.userChatBox .chatBoxBody { padding: 20px; height: calc(100vh - 137px); }
+.userChatBox .chatBoxBody { padding: 20px; height: calc(100vh - 186px); }
 .recieveText:after { content: ''; position: absolute; top: 0; left: -10px; border: 10px solid transparent; border-top: 10px solid #fff; }
 .sendText:after { content: ''; position: absolute; top: 0; right: -10px; border: 10px solid transparent; border-top: 10px solid #e6feda; }
 .submitChatBtn { position: absolute; right: 12px; top: 12px; background: #F66A2F; border-radius: 35px; padding: 5px; width: 60px; height: 39px; color: #fff; }
