@@ -22,7 +22,7 @@
                 <div class="row my-0">
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new {@class = "select2", multiple = "multiple" })</div>
+                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
                     <div class="col-md-8">
                         <label for="Reference">Message</label>
@@ -94,6 +94,9 @@
 
         $('#dpUser').multiselect({
             includeSelectAllOption: true,
+            enableFiltering: true,
+            includeFilterClearBtn: true,
+            enableCaseInsensitiveFiltering: true
         });
 
         $(document).ajaxSend(function () {
@@ -296,7 +299,7 @@
         }
     });
 
-    $('#txtMessage').keypress(function (e) {        
+    $('#txtMessage').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
             e.preventDefault();
             SendMessage(1);
