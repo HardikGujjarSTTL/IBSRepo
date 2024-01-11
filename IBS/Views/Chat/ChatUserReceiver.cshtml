@@ -8,10 +8,12 @@
             {
                 var shortName = !string.IsNullOrEmpty(item.Name) ? item.Name.Split(" ")[0].Substring(0, 1) : "";
                 var id = "li" + item.msg_recv_ID;
+                var clsShortName = "SN_" + item.msg_recv_ID;
+                var clsName = "N_" + item.msg_recv_ID;
                 <li class="userList" onclick="GetChatMessageList('@item.msg_recv_ID')" id="@id">
-                    <div class="chatBoxIcon chatBoxIconBg1">@shortName</div>
+                    <div class="chatBoxIcon chatBoxIconBg1 @clsShortName">@shortName</div>
                     <div class="chatBoxInfo">
-                        <h4>@item.Name</h4>
+                        <h4 class="@clsName">@item.Name</h4>
                     </div>
                 </li>
             }

@@ -102,7 +102,7 @@ namespace IBS.Controllers
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        string fileName = id.ToString() + "_R";
+                        string fileName = id.ToString();
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref, (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref_Reply };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                         DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.Tech), env, iDocument, "TechnicalRef", fileName, DocumentIds);

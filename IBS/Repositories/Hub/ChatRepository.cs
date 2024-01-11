@@ -23,7 +23,7 @@ namespace IBS.Repositories.Hub
             using (var transaction = context.Database.BeginTransaction())
             {
                 try
-                {                    
+                {
                     T113ChatMaster obj = new T113ChatMaster();
                     obj.MsgSendId = Convert.ToInt32(model.msg_send_ID);
                     obj.MsgRecvId = Convert.ToInt32(model.msg_recv_ID);//Convert.ToInt32(item);
@@ -37,7 +37,7 @@ namespace IBS.Repositories.Hub
                     context.T113ChatMasters.Add(obj);
                     context.SaveChanges();
                     result = obj.Id;
-                   
+
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -89,6 +89,42 @@ namespace IBS.Repositories.Hub
             }
             return model;
 
+        }
+
+        public int ChatMessageDelete(int id, ref string DeleteDate, ref string DeleteFileName)
+        {
+            int result = 0;
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var data = (from a in context.T113ChatMasters
+                                where a.Id == Convert.ToInt32(id)
+                                select a).FirstOrDefault();
+                    if (data != null)
+                    {
+                        context.Remove(data);
+                        context.SaveChanges();
+                        result = data.Id;
+                        DeleteDate = "clsDate_" + data.SendMsgDate.Value.Date.ToString("ddMMMMyyyy");
+
+                        if(result > 0)
+                        {
+                            if (string.IsNullOrEmpty(data.FieldId))
+                            {
+                                DeleteFileName = data.FieldId;
+                            }
+                        }
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    result = 0;
+                    transaction.Rollback();
+                }
+            }
+            return result;
         }
     }
 }
