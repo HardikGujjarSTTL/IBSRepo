@@ -33,16 +33,16 @@
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
                         <li class="sendTextHolder @clsDel" id="@item.ID">
-                            <div class="deleteSelect">
-                                <span class="fa fa-chevron-down"></span>
-                                <div class="fileUploadDelete">
-                                    <ul class="editDeleteFile">
-                                        <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
-                                        @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
-                                    </ul>
-                                </div>
-                            </div>
                             <div class="sendText">
+                                <div class="deleteSelect">
+                                    <span class="fa fa-chevron-down"></span>
+                                    <div class="fileUploadDelete">
+                                        <ul class="editDeleteFile">
+                                            <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
+                                            @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="box-body">
                                     <div class="attachment-block">
                                         @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
@@ -73,16 +73,20 @@
                     if (!string.IsNullOrEmpty(item.message))
                     {
                         <li class="sendTextHolder @clsDel" id="@item.ID">
+                            <div class="sendText">
+                                <div class="box-body">
                             <div class="deleteSelect">
-                                <span class="fa fa-chevron-down"></span>
-                                <div class="fileUploadDelete">
-                                    <ul class="editDeleteFile">
-                                        <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
-                                        @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
-                                    </ul>
+                                    <span class="fa fa-chevron-down"></span>
+                                    <div class="fileUploadDelete">
+                                        <ul class="editDeleteFile">
+                                            <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
+                                            @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
+                                        </ul>
+                                    </div>
                                 </div>
+                            @item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
                             </div>
-                            <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
+                            </div>
                         </li>
                     }
                 }
