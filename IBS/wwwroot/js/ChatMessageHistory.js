@@ -9,9 +9,13 @@ $('#fileupload2').change(function (e) {
     handleFile('fileupload2');
 });
 
-$(".deleteSelect").click(function () {
-    $(".fileUploadDelete").slideToggle();
+$(".deleteSelectTrigger").click(function () {
+        $(this).next().slideToggle();
 });
+$(".sendText").on("mouseleave", function () {
+    $(".fileUploadDelete").hide();
+});
+
 
 function CloseFileUploadPopup() {
     $(".fileUploadedInfo").hide();

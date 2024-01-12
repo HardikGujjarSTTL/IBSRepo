@@ -511,8 +511,6 @@ namespace GSDMWeb.Controllers.Master
                         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                         string extension = Path.GetExtension(fileName);
                         int indexOfHyphen = fileName.IndexOf('-');
-
-                       
                         if (FolderName == "/ReadWriteData/TESTPLAN")
                         {
                             if (indexOfHyphen != -1)
@@ -576,6 +574,20 @@ namespace GSDMWeb.Controllers.Master
                             int indexOfHyphen1 = fileName.IndexOf('_');
                             applicationid = fileName.Substring(0, indexOfHyphen1);
                             
+                        }
+                        else if (FolderName == "/ReadWriteData/VENDOR/MA")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (indexOfHyphen1 != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen1);
+                            }
+                            otherdocumentname = "Vendor MA Doc";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Online_Complaints")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Upload Rejection Memo";
                         }
                         queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
                             $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");
