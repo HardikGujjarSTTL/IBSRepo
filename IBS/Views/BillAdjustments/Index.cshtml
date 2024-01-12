@@ -70,13 +70,13 @@
                     $("#BpoFeeType").val($("#_BpoFeeType").val());
                     InitializeDatatable();
                     onBpoFeeType();
-                    AdjustCalculation();
+                    // AdjustCalculation();
                     $("#IcTypeId").val("10");
 
                     $('input[type=radio][name=BillAdType]').change(function () {
                         var BillAdType = $('input[type=radio][name=BillAdType]:checked').val();
                         $('#BillAdType').val(BillAdType);
-                        AdjustCalculation();
+                        //AdjustCalculation();
                         if (BillAdType == "Credit") {
                             $("#IcTypeId").val("9");
                         }

@@ -4600,7 +4600,8 @@ namespace IBS.Models
                 new SelectListItem() { Text = "Western Region", Value = "3006" },
                 new SelectListItem() { Text = "Central Region", Value = "3066" },
                 new SelectListItem() { Text = "Bill Adjustment of Old System", Value = "9999" },
-                new SelectListItem() { Text = "Miscelleanous Adjustments", Value = "9998" }
+                new SelectListItem() { Text = "Miscelleanous Adjustments", Value = "9998" },
+                new SelectListItem() { Text = "Refund", Value = "9979" }
             };
             return textValueDropDownDTO.ToList();
         }
