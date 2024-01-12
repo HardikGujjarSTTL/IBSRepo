@@ -77,6 +77,10 @@ namespace IBS.Controllers.Reports.Billing
             {
                 model.Title = "Returned Bills yet to be Submitted to CRIS (Under Testing)";
             }
+            else if (ActionType == "CNoteInvoice")
+            {
+                model.Title = "Credit Note Invoices";
+            }
 
             return View(model);
         }
@@ -153,5 +157,13 @@ namespace IBS.Controllers.Reports.Billing
         }
         #endregion
 
+
+        #region Client Report
+        public IActionResult CNoteInvoiceReport(DateTime? CnoteFromDt, DateTime? CnoteToDt, string ActionType)
+        {
+            BillRaisedModel model = billraisedRepository.GetCNoteInvoice(CnoteFromDt, CnoteToDt, ActionType, Region);
+            return View(model);
+        }
+        #endregion
     }
 }
