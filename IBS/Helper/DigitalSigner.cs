@@ -115,7 +115,6 @@ namespace IBS.Helper
                             yPos = y1; //792
                             xPos2 = x2;
                             yPos2 = y2;
-
                         }
                     }
 
