@@ -9,13 +9,19 @@ $('#fileupload2').change(function (e) {
     handleFile('fileupload2');
 });
 
-$(".deleteSelectTrigger").click(function () {
-        $(this).next().slideToggle();
+if ($(".deleteSelectTrigger").length) {
+    $(".deleteSelectTrigger").click(function () {
+        if ($(".fileUploadDelete").is(":visible")) {
+            $(this).next().slideUp();
+        } else {
+            $(this).next().slideDown();
+            return false;
+        }
+    });
+}
+$(".sendText").click(function () {
+    $(".fileUploadDelete").slideUp();
 });
-$(".sendText").on("mouseleave", function () {
-    $(".fileUploadDelete").hide();
-});
-
 
 function CloseFileUploadPopup() {
     $(".fileUploadedInfo").hide();

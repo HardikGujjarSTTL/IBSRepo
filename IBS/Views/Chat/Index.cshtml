@@ -298,9 +298,23 @@
             }
 
             $(".fileUploadedInfo").hide();
-            var runscript = document.createElement('script');
-            runscript.setAttribute('src', '/js/ChatMessageHistory.js');
-            document.head.appendChild(runscript);
+            window.location.reload();
+
+            if ($(".deleteSelectTrigger").length) {
+            $(".deleteSelectTrigger").click(function () {
+                if ($(".fileUploadDelete").is(":visible")) {
+                    $(this).next().slideUp();
+                        
+                } else {
+                    $(this).next().slideDown();
+                      //  window.location.reload();
+                    return false;
+                }
+            });
+            }
+            //var runscript = document.createElement('script');
+            //runscript.setAttribute('src', '/js/ChatMessageHistory.js');
+            //document.head.appendChild(runscript);
         }
     });
 
