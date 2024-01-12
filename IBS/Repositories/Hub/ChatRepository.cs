@@ -110,7 +110,7 @@ namespace IBS.Repositories.Hub
 
                         if(result > 0)
                         {
-                            if (string.IsNullOrEmpty(data.FieldId))
+                            if (!string.IsNullOrEmpty(data.FieldId))
                             {
                                 DeleteFileName = data.FieldId;
                             }

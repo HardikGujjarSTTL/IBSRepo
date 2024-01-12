@@ -255,6 +255,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T100Contract> T100Contracts { get; set; }
 
+    public virtual DbSet<T100ContractMaterial> T100ContractMaterials { get; set; }
+
     public virtual DbSet<T100VenderCluster> T100VenderClusters { get; set; }
 
     public virtual DbSet<T100VenderClusterHistory> T100VenderClusterHistories { get; set; }
@@ -11485,6 +11487,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
                 .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.InspectionfeeType)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("INSPECTIONFEE_TYPE");
             entity.Property(e => e.Inspfee)
                 .HasColumnType("NUMBER")
                 .HasColumnName("INSPFEE");
@@ -11500,6 +11506,24 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Lotofinsp)
                 .HasColumnType("NUMBER")
                 .HasColumnName("LOTOFINSP");
+            entity.Property(e => e.LumpsumCancellation)
+                .HasPrecision(6)
+                .HasColumnName("LUMPSUM_CANCELLATION");
+            entity.Property(e => e.LumpsumFlatfee)
+                .HasPrecision(6)
+                .HasColumnName("LUMPSUM_FLATFEE");
+            entity.Property(e => e.LumpsumRejection)
+                .HasPrecision(6)
+                .HasColumnName("LUMPSUM_REJECTION");
+            entity.Property(e => e.MandayCancellation)
+                .HasPrecision(6)
+                .HasColumnName("MANDAY_CANCELLATION");
+            entity.Property(e => e.MandayFlatfee)
+                .HasPrecision(6)
+                .HasColumnName("MANDAY_FLATFEE");
+            entity.Property(e => e.MandayRejection)
+                .HasPrecision(6)
+                .HasColumnName("MANDAY_REJECTION");
             entity.Property(e => e.Mandaybasis)
                 .HasColumnType("NUMBER")
                 .HasColumnName("MANDAYBASIS");
@@ -11515,6 +11539,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Minpoval)
                 .HasColumnType("NUMBER")
                 .HasColumnName("MINPOVAL");
+            entity.Property(e => e.PerBasisCancellation)
+                .HasPrecision(6)
+                .HasColumnName("PER_BASIS_CANCELLATION");
+            entity.Property(e => e.PerBasisFlatfee)
+                .HasPrecision(6)
+                .HasColumnName("PER_BASIS_FLATFEE");
+            entity.Property(e => e.PerBasisRejection)
+                .HasPrecision(6)
+                .HasColumnName("PER_BASIS_REJECTION");
             entity.Property(e => e.Tpfrom)
                 .HasColumnType("DATE")
                 .HasColumnName("TPFROM");
@@ -11527,6 +11560,57 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
+        });
+
+        modelBuilder.Entity<T100ContractMaterial>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0011654");
+
+            entity.ToTable("T100_CONTRACT_MATERIAL");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("\"IBSDEV\".\"T100_CONTRACT_MATERIAL_SEQ\".\"NEXTVAL\"")
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.ContractId)
+                .HasPrecision(6)
+                .HasColumnName("CONTRACT_ID");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Fromrs)
+                .HasPrecision(6)
+                .HasColumnName("FROMRS");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(6)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Lumpsum)
+                .HasPrecision(6)
+                .HasColumnName("LUMPSUM");
+            entity.Property(e => e.Manday)
+                .HasPrecision(6)
+                .HasColumnName("MANDAY");
+            entity.Property(e => e.PerBasis)
+                .HasPrecision(6)
+                .HasColumnName("PER_BASIS");
+            entity.Property(e => e.Tors)
+                .HasPrecision(6)
+                .HasColumnName("TORS");
+            entity.Property(e => e.Updatedate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDATE");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Userid)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("USERID");
         });
 
         modelBuilder.Entity<T100VenderCluster>(entity =>
@@ -27116,6 +27200,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T08_IE_CONTROLL_OFFICER_HISTORY_SEQ");
         modelBuilder.HasSequence("T09_IE_HISTORY_SEQ");
         modelBuilder.HasSequence("T10_IC_BOOKSET_SEQ");
+        modelBuilder.HasSequence("T100_CONTRACT_MATERIAL_SEQ");
         modelBuilder.HasSequence("T100_VENDER_CLUSTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T101_IE_CLUSTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T101_IE_CLUSTER_SEQ");

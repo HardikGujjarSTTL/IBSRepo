@@ -30,10 +30,10 @@
                     </div>
                     <div class="col-md-1 d-flex justify-content-between">
                         @*<div class="topUploadCustom">
-                            <div class="upload-btn-wrapper submitChatBtn">
-                                <button><span class="fa fa-paperclip"></span></button>
-                                <input type="file" id="fileupload" class="fileUploadNormal" multiple>
-                            </div>
+                        <div class="upload-btn-wrapper submitChatBtn">
+                        <button><span class="fa fa-paperclip"></span></button>
+                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
+                        </div>
                         </div>*@
 
                         <div class="savenext-btn" style="margin-top:28px;">
@@ -55,9 +55,9 @@
                         <div class="chatUserHeader">
                             <ul>
                                 <li class="userList">
-                                    <div class="chatBoxIcon chatBoxIconBg1 clsShortName">A</div>
+                                    <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
                                     <div class="chatBoxInfo">
-                                        <h4 class="clsName">ARVIND KUMAR</h4>
+                                        <h4 class="clsName"></h4>
                                     </div>
                                 </li>
                             </ul>
@@ -94,6 +94,9 @@
 
         $('#dpUser').multiselect({
             includeSelectAllOption: true,
+            enableFiltering: true,
+            includeFilterClearBtn: true,
+            enableCaseInsensitiveFiltering: true
         });
 
         $(document).ajaxSend(function () {
@@ -104,6 +107,13 @@
     $('#fileupload').change(function (e) {
         handleFile('fileupload');
     });
+
+    //$('#dpUser').select2({
+    //    // Optional: You can customize Select2 options here
+    //    placeholder: 'Select a client type',
+    //    allowClear: false, // Adds a clear button
+    //    minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
+    //});
 
     function GetUserReceiverList() {
         $.ajax({
@@ -156,9 +166,9 @@
             Message = $("#txtMsg").val();
         }
 
-        //if (ReceiverId == "" && (Message == "" || GFileName == "")) {
-        //    return;
-        //}
+        if (ReceiverId == "" && (Message == "" || GFileName == "")) {
+            return;
+        }
         var imagesJson = null;
 
         if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
@@ -180,8 +190,8 @@
         connection.invoke("OnConnectedAsync", SenderId);
     });
 
-    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID) {
-
+    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
+        debugger
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
@@ -191,7 +201,8 @@
             var element = "";
             var clsDel = "clsDel_" + ResultID;
             if (CurrDateCnt == 1) {
-                element += '<li><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
+                var clsDate = "clsDate_" + "@DateTime.Now.ToString("ddMMMMyyyy")"
+                element += '<li class="' + clsDate + '"><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
                 $(".chatBodyText").append(element);
             }
             element = "";
@@ -200,13 +211,13 @@
                 if (File_Field_ID != "" && File_Field_ID != null) {
                     element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '" >' +
                         '<div class="deleteSelect">' +
-                        '< span class="fa fa-chevron-down" > </span>' +
-                        '< div class="fileUploadDelete" >' +
+                        '<span class="fa fa-chevron-down" ></span>' +
+                        '<div class="fileUploadDelete" >' +
                         '<ul class="editDeleteFile" >' +
                         '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
                         '</ul>' +
-                        '< /div>' +
-                        '< /div>' +
+                        '</div>' +
+                        '</div>' +
                         '<div class="sendText" >' +
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
@@ -280,11 +291,17 @@
                 $(".chatBoxBody").scrollTop($(".chatBodyText").height());
                 $("#txtMsg").focus();
             }
+
+            $(".fileUploadedInfo").hide();
+            var my_awesome_script = document.createElement('script');
+            my_awesome_script.setAttribute('src', '/js/ChatMessageHistory.js');
+            document.head.appendChild(my_awesome_script);
         }
     });
 
     $('#txtMessage').keypress(function (e) {
         if (e.keyCode == 13) {  // detect the enter key
+            e.preventDefault();
             SendMessage(1);
         }
     });
@@ -377,6 +394,7 @@
     }
 
     function DeleteMessage(Id) {
+        debugger
         connection.invoke("DeleteMessage", SenderId, ReceiverId, Id);
     }
 

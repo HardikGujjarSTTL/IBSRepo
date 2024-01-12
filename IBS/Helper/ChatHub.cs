@@ -187,7 +187,7 @@ namespace IBS.Helper
             var myKey = Common.ConnectedUsers.Where(x => x.Value == ReceiverId || x.Value == SenderId).ToList();
             if (result > 0)
             {
-                if (string.IsNullOrEmpty(DeleteFileName))
+                if (!string.IsNullOrEmpty(DeleteFileName))
                 {
                     var path = _env.WebRootPath + "/ReadWriteData/CHAT_FILES";
                     path = Path.Combine(path, DeleteFileName);
@@ -208,7 +208,7 @@ namespace IBS.Helper
             {
                 foreach (var k in myKey)
                 {
-                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", "", 0, result, "");
+                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", "", DeletedId, 0, result, "");
                 }
             }
         }
