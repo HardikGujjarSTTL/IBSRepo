@@ -154,8 +154,8 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .fileUploadedInfoClose:hover{ background:#f1f1f1;}
 .fileUploadFileName{ font-style:italic; font-size:12px;}
 .fileUploadedInfo h4{ font-size:16px; margin-bottom:5px;}
-.sendTextHolder .deleteSelect{ display:none; position:absolute; right:10px; top:10px; z-index:10; background:#e6feda; width:30px; height:30px; text-align:center; line-height:30px;}
-.sendTextHolder .sendText:hover .deleteSelect{ display:block;}
+.deleteSelectTrigger{display:none; position:absolute; right:10px; top:10px; z-index:10; background:#e6feda; width:30px; height:30px; text-align:center; line-height:30px;}
+.sendTextHolder .sendText:hover .deleteSelectTrigger{ display:block;}
 .fileUploadDelete{width:100px; border-radius:4px; background:#fff; box-shadow:2px 2px 4px 2px #d1d1d1; padding:10px; height:auto; z-index:10; position:absolute; right:0px; top:30px; display:none;}
 .editDeleteFile{ margin:0; padding:0; list-style:none;}
 .editDeleteFile a{ text-decoration:none;}
