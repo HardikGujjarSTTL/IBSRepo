@@ -211,8 +211,8 @@
                 if (File_Field_ID != "" && File_Field_ID != null) {
                     element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '" >' +
                         '<div class="deleteSelect">' +
-                        '<span class="fa fa-chevron-down" ></span>' +
-                        '<div class="fileUploadDelete" >' +
+                        '<div class="deleteSelectTrigger"><span class="fa fa-chevron-down" ></span></div>' +
+                        '<div class="fileUploadDelete">' +
                         '<ul class="editDeleteFile" >' +
                         '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
                         '</ul>' +
@@ -244,7 +244,7 @@
                 if (Message != "" && Message != null) {
                     element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '">' +
                         '<div class="deleteSelect">' +
-                        '<span class="fa fa-chevron-down" > </span>' +
+                        '<div class="deleteSelectTrigger"><span class="fa fa-chevron-down" > </span></div>' +
                         '<div class="fileUploadDelete" >' +
                         '<ul class="editDeleteFile" >' +
                         '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
