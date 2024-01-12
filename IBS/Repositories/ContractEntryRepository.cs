@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -59,6 +60,21 @@ namespace IBS.Repositories
                 obj.Createdby = model.CreatedBy;
                 obj.Createddate = DateTime.Now;
                 obj.Clientcode = model.CLIENTCODE;
+
+                obj.InspectionfeeType = model.InspectionfeeType;
+
+                obj.PerBasisFlatfee = model.PerBasisFlatfee;
+                obj.MandayFlatfee = model.MandayFlatfee;
+                obj.LumpsumFlatfee = model.LumpsumFlatfee;
+
+                obj.PerBasisCancellation = model.PerBasisCancellation;
+                obj.MandayCancellation = model.MandayCancellation;
+                obj.LumpsumCancellation = model.LumpsumCancellation;
+
+                obj.PerBasisRejection = model.PerBasisRejection;
+                obj.MandayRejection = model.MandayRejection;
+                obj.LumpsumRejection = model.LumpsumRejection;
+
                 context.T100Contracts.Add(obj);
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(obj.Id);
@@ -83,9 +99,55 @@ namespace IBS.Repositories
                 Contract.Updatedby = model.UpdatedBy;
                 Contract.Updatedate = DateTime.Now;
                 Contract.Clientcode = model.CLIENTCODE;
+
+                Contract.InspectionfeeType = model.InspectionfeeType;
+
+                Contract.PerBasisFlatfee = model.PerBasisFlatfee;
+                Contract.MandayFlatfee = model.MandayFlatfee;
+                Contract.LumpsumFlatfee = model.LumpsumFlatfee;
+
+                Contract.PerBasisCancellation = model.PerBasisCancellation;
+                Contract.MandayCancellation = model.MandayCancellation;
+                Contract.LumpsumCancellation = model.LumpsumCancellation;
+
+                Contract.PerBasisRejection = model.PerBasisRejection;
+                Contract.MandayRejection = model.MandayRejection;
+                Contract.LumpsumRejection = model.LumpsumRejection;
+
+
                 context.SaveChanges();
                 ContractId = Convert.ToInt32(Contract.Id);
             }
+
+            var T100ContractMaterials = (from T100 in context.T100ContractMaterials where T100.ContractId == ContractId select T100).ToList();
+            if (T100ContractMaterials.Count > 0 && T100ContractMaterials != null)
+            {
+                context.T100ContractMaterials.RemoveRange(T100ContractMaterials);
+                context.SaveChanges();
+            }
+            if (model.lstContractEntryList != null)
+            {
+                foreach (var item in model.lstContractEntryList)
+                {
+                    T100ContractMaterial Clst = new T100ContractMaterial();
+                    {
+                        Clst.ContractId = ContractId;
+                        Clst.PerBasis = item.PerBasis;
+                        Clst.Manday = item.Manday;
+                        Clst.Lumpsum = item.Lumpsum;
+                        Clst.Fromrs = item.Fromrs;
+                        Clst.Tors = item.Tors;
+
+                        Clst.Userid = Convert.ToString(model.CreatedBy);
+                        Clst.Createdby = Convert.ToString(model.CreatedBy);
+                        Clst.Createddate = DateTime.Now.Date;
+                    }
+                    context.T100ContractMaterials.Add(Clst);
+                    context.SaveChanges();
+                }
+
+            }
+
             #endregion
             return ContractId;
         }
@@ -203,6 +265,33 @@ namespace IBS.Repositories
                 model.CALLCANCELATION = Convert.ToInt32(Contract.Callcancelation);
                 model.Materialdescription = Contract.Materialdescription;
                 model.CLIENTCODE = Contract.Clientcode;
+
+                model.InspectionfeeType = Contract.InspectionfeeType;
+                model.PerBasisFlatfee = Contract.PerBasisFlatfee;
+                model.MandayFlatfee = Contract.MandayFlatfee;
+                model.LumpsumFlatfee = Contract.LumpsumFlatfee;
+                model.PerBasisCancellation = Contract.PerBasisCancellation;
+                model.MandayCancellation = Contract.MandayCancellation;
+                model.LumpsumCancellation = Contract.LumpsumCancellation;
+                model.PerBasisRejection = Contract.PerBasisRejection;
+                model.MandayRejection = Contract.MandayRejection;
+                model.LumpsumRejection = Contract.LumpsumRejection;
+
+                List<ContractEntryList> clst = (from T100 in context.T100ContractMaterials
+                                                where T100.ContractId == ID
+                                                select new ContractEntryList
+                                                {
+                                                    Id = Convert.ToInt32(T100.Id),
+                                                    ContractId = Convert.ToInt32(T100.ContractId),
+                                                    PerBasis = T100.PerBasis,
+                                                    Manday = T100.Manday,
+                                                    Lumpsum = T100.Lumpsum,
+                                                    Fromrs = T100.Fromrs,
+                                                    Tors = T100.Tors,
+                                                }
+                                                ).ToList();
+                model.lstContractEntryList = clst;
+
                 return model;
             }
         }
@@ -216,6 +305,55 @@ namespace IBS.Repositories
             Contract.Updatedate = DateTime.Now;
             context.SaveChanges();
             return true;
+        }
+
+        public DTResult<ContractEntryList> GetValueList(DTParameters dtParameters, List<ContractEntryList> ContractList)
+        {
+            DTResult<ContractEntryList> dTResult = new() { draw = 0 };
+            IQueryable<ContractEntryList>? query = null;
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                // in this example we just default sort on the 1st column
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "PerBasis";
+                }
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "IeCd";
+                orderAscendingDirection = true;
+            }
+
+            query = (from u in ContractList
+                     select new ContractEntryList
+                     {
+                         Id = u.Id,
+                         PerBasis = u.PerBasis,
+                         Manday = u.Manday,
+                         Lumpsum = u.Lumpsum,
+                         Fromrs = u.Fromrs,
+                         Tors = u.Tors,
+                     }).AsQueryable();
+
+            dTResult.recordsTotal = query.Count();
+
+            dTResult.recordsFiltered = query.Count();
+
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+
         }
     }
 }

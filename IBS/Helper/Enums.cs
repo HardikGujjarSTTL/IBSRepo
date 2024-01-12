@@ -32,7 +32,7 @@ namespace IBS.Helper
             Vendor = 4,
             [Description("/ReadWriteData/Files/Vendor/DOC")]
             VendorDocument = 5,
-            [Description("/ReadWriteData/MA")]
+            [Description("/ReadWriteData/VENDOR/MA")]
             VendorMADocument = 6,
             [Description("/ReadWriteData/Files/CONTRACTS")]
             Contracts = 7,
@@ -44,7 +44,7 @@ namespace IBS.Helper
             CallRegistrationDoc = 10,
             [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/ReadWriteData/Files/Online_Comp_Document")]
+            [Description("/ReadWriteData/Files/Online_Complaints")]
             OnlineComplaints = 11,
             [Description("/ReadWriteData/Files/Complaint_Case")]
             ComplaintCase = 12,
@@ -734,6 +734,15 @@ namespace IBS.Helper
             [Description("NSIC Call Charges")]
             N,
         }
+
+        //public enum CreditDebitNote
+        //{
+        //    [Description("Credit Note")]
+        //    C = 9,
+        //    [Description("Debit Zone")]
+        //    D = 10,
+        //}
+
     }
 
     public class EnumUtility<T>

@@ -81,6 +81,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Action</th>
                             <th>Case No.</th>
                             <th>PO No.</th>
                             <th>PO Date</th>
@@ -92,7 +93,7 @@
                             <th>Status</th>
                             <th>Call Letter No/Dispatch Ref No.</th>
                             <th>Remarks</th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -181,6 +182,21 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            //var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
+                            //var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
+                            var CallRecvDt = data.CallRecvDt;
+                            var CallSno = data.CallSno;
+
+                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -208,21 +224,7 @@
                     { data: "CallStatus" },
                     { data: "CallLetterNo" },
                     { data: "Remarks" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            //var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
-                            //var CallRecvDt = moment(data.CallRecvDt).format("YYYY-MM-DD");
-                            var CallRecvDt = data.CallRecvDt;
-                            var CallSno = data.CallSno;
-
-                            var editUrl = '@Url.Action("Index", "CallRegisterIB")?CaseNo=' + CaseNo + "&_CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-eye\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
+                    
 
                 ],
                 "order": [[0, "asc"]]

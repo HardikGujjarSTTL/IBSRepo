@@ -3,6 +3,7 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -14,6 +15,8 @@ namespace IBS.Controllers
         private readonly IContractEntryRepository contractEntryRepository;
         private readonly IDocument iDocument;
         private readonly IWebHostEnvironment env;
+        SessionHelper objSessionHelper = new SessionHelper();
+
         public ContractEntryController(IDocument _iDocumentRepository, IWebHostEnvironment _environment, IContractEntryRepository _contractEntryRepository)
         {
             iDocument = _iDocumentRepository;
@@ -53,6 +56,11 @@ namespace IBS.Controllers
                 if (id > 0)
                 {
                     model = contractEntryRepository.FindByID(id);
+                    objSessionHelper.lstContractEntryList = model.lstContractEntryList;
+                }
+                else
+                {
+                    objSessionHelper.lstContractEntryList = null;
                 }
             }
             catch (Exception ex)
@@ -78,6 +86,10 @@ namespace IBS.Controllers
                     model.UpdatedBy = UserId;
                 }
                 model.CreatedBy = UserId;
+                if (objSessionHelper.lstContractEntryList != null)
+                {
+                    model.lstContractEntryList = objSessionHelper.lstContractEntryList;
+                }
                 int i = contractEntryRepository.ContractDetailsInsertUpdate(model);
                 if (i > 0)
                 {
@@ -96,6 +108,7 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
         public IActionResult Delete(int id)
         {
             try
@@ -129,5 +142,75 @@ namespace IBS.Controllers
             return Json(new { data = result });
         }
 
+        [HttpPost]
+        public IActionResult SaveMValue(ContractEntryList model)
+        {
+            try
+            {
+                List<ContractEntryList> lstContractEntryList = objSessionHelper.lstContractEntryList == null ? new List<ContractEntryList>() : objSessionHelper.lstContractEntryList;
+                lstContractEntryList.RemoveAll(x => x.Id == Convert.ToInt32(model.Id));
+                if (model.Id > 0)
+                {
+                    model.Id = model.Id;
+                }
+                else
+                {
+                    model.Id = lstContractEntryList.Count > 0 ? (lstContractEntryList.OrderByDescending(a => a.Id).FirstOrDefault().Id) + 1 : 1;
+                }
+                lstContractEntryList.Add(model);
+                objSessionHelper.lstContractEntryList = lstContractEntryList;
+                return Json(new { status = true, responseText = "Material Value Added Successfully." });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ContractEntry ", "SaveMValue", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult LoadDataTable([FromBody] DTParameters dtParameters)
+        {
+            List<ContractEntryList> lstContractEntryList = new List<ContractEntryList>();
+            if (objSessionHelper.lstContractEntryList != null)
+            {
+                lstContractEntryList = objSessionHelper.lstContractEntryList;
+            }
+
+            DTResult<ContractEntryList> dTResult = contractEntryRepository.GetValueList(dtParameters, lstContractEntryList);
+            return Json(dTResult);
+        }
+
+        [HttpGet]
+        public IActionResult EditMValue(string id)
+        {
+            try
+            {
+                ContractEntryList MValue = objSessionHelper.lstContractEntryList.Where(x => x.Id == Convert.ToInt32(id)).FirstOrDefault();
+                return Json(new { status = true, list = MValue });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ContractEntry", "EditMValue", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteMValue(string id)
+        {
+            try
+            {
+                List<ContractEntryList> lstContractEntryList = objSessionHelper.lstContractEntryList == null ? new List<ContractEntryList>() : objSessionHelper.lstContractEntryList;
+                lstContractEntryList.RemoveAll(x => x.Id == Convert.ToInt32(id));
+                objSessionHelper.lstContractEntryList = lstContractEntryList;
+                return Json(new { status = true, responseText = "Material Value Deleted Successfully" });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ContractEntry", "DeleteMValue", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
     }
 }

@@ -16,7 +16,7 @@
 
         <div class="row my-0">
             <div class="col-md-3 mb-3">
-                <label for="Caseno">Bill Types</label>
+                <label for="BillAdType">Bill Types</label>
                 <div class="custom-readio">
                     <div class="company-checkbox">
                         <div class="remember">
@@ -47,13 +47,13 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Call Date</label>
+                    <label for="Callrecvdt">Call Date</label>
                     <input type="text" class="input" asp-for="Callrecvdt" maxlength="100">
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Call SNo.</label>
+                    <label for="Callsno">Call SNo.</label>
                     <input type="text" class="input" asp-for="Callsno" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -68,13 +68,13 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Date</label>
+                    <label for="PoDt">Date</label>
                     <input type="text" class="input" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Po Source</label>
+                    <label for="PoSource">Po Source</label>
                     <input type="text" class="input" asp-for="PoSource" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -83,13 +83,13 @@
         <div class="row my-0">
             <div class="col-md-8 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Vendor Name</label>
+                    <label for="VendName">Vendor Name</label>
                     <input type="text" class="input" asp-for="VendName" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Inspecting Er.</label>
+                    <label for="IeName">Inspecting Er.</label>
                     <input type="text" class="input" asp-for="IeName" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -100,20 +100,20 @@
             {
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">IRFC BPO</label>
+                        <label for="IrfcBpo">IRFC BPO</label>
                         @Html.DropDownListFor(model => model.IrfcBpo, new SelectList(IBS.Models.Common.GetBPOList() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                     </div>
                 </div>
             }
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">IRFC Funded</label>
+                    <label for="IrfcFunded">IRFC Funded</label>
                     @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"), new { @disabled = "disabled" })
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Consignee</label>
+                    <label for="Consignee">Consignee</label>
                     @Html.DropDownListFor(model => model.Consignee, new SelectList(IBS.Models.Common.GetConsignee(Model.Caseno) , "Value", "Text"), new { @disabled = "disabled" })
                 </div>
             </div>
@@ -122,20 +122,20 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Bk No.</label>
+                    <label for="Bkno">Bk No.</label>
                     <input type="text" class="input" asp-for="Bkno" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Set No.</label>
+                    <label for="Setno">Set No.</label>
                     <input type="text" class="input" asp-for="Setno" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnBillDt" style="color:#d52127;"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Cert Date (DD/MM/YYYY)</label>
+                    <label for="CertDt">Cert Date (DD/MM/YYYY)</label>
                     <input type="text" class="input" asp-for="CertDt" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -144,19 +144,19 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">BPO.</label>
+                    <label for="Bpo">BPO.</label>
                     @Html.DropDownListFor(model => model.Bpo, new SelectList(IBS.Models.Common.GetBPOList(Model.BpoCd) , "Value", "Text"))
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Install No</label>
+                    <label for="CallInstallNo">Install No</label>
                     <input type="text" class="input" asp-for="CallInstallNo" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Install Part</label>
+                    <label for="FullPart">Install Part</label>
                     @Html.DropDownListFor(model => model.FullPart, new SelectList(IBS.Models.Common.GetFPart() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
                 </div>
             </div>
@@ -176,7 +176,7 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Other Insp Dates</label>
+                    <label for="OtherInspDt">Other Insp Dates</label>
                     <input type="text" class="datepicker" asp-for="OtherInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                 </div>
             </div>
@@ -185,20 +185,20 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">IC Submit Date</label>
+                    <label for="ICSubmitDt">IC Submit Date</label>
                     <input type="text" class="datepicker" asp-for="ICSubmitDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Sealing Pattern</label>
+                    <label for="StampPattern">Sealing Pattern</label>
                     @Html.DropDownListFor(model => model.StampPatternCd, new SelectList(IBS.Models.Common.GetSealing() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
                     <textarea class="input" asp-for="StampPattern" style="text-transform: uppercase;display:none;"></textarea>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Photo Attached</label>
+                    <label for="Photo">Photo Attached</label>
                     @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.OnlineCallStatus() , "Value", "Text"),"--Select--" , new { @disabled = "disabled" })
                 </div>
             </div>
@@ -207,20 +207,20 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Bill No.</label>
+                    <label for="BillNo">Bill No.</label>
                     <input type="text" class="input" asp-for="BillNo" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Bill Date</label>
+                    <label for="BillDt">Bill Date</label>
                     <input type="text" class="input" asp-for="BillDt" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnBillDt" style="color:#d52127;"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">No. of Visits</label>
+                    <label for="NoOfInsp">No. of Visits</label>
                     <input type="text" class="input" asp-for="NoOfInsp" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -228,33 +228,33 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">GSTIN No.</label>
+                    <label for="GstinNo">GSTIN No.</label>
                     <input type="text" class="input" asp-for="GstinNo" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Legal Name</label>
+                    <label for="LegalName">Legal Name</label>
                     <input type="text" class="input" asp-for="LegalName" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">IC Type</label>
-                    @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.GetICType() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
+                    <label for="IcTypeId">IC Type</label>
+                    @Html.DropDownListFor(model => model.IcTypeId, new SelectList(IBS.Models.Common.CreditDebitNote(), "Value", "Text"), "--Select--", new { @disabled = "disabled" })
                 </div>
             </div>
         </div>
         <div class="row my-0">
             <div class="col-md-1 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Au Code</label>
+                    <label for="Au">Au Code</label>
                     <input type="text" class="input" asp-for="Au" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-11 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Bill Paying Officer</label>
+                    <label for="BpoName">Bill Paying Officer</label>
                     <input type="text" class="input" asp-for="BpoName" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
@@ -303,19 +303,19 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Material Value</label>
+                        <label for="TMValue">Material Value</label>
                         <input type="text" class="input" asp-for="TMValue" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Insp Fee</label>
+                        <label for="TIFee">Insp Fee</label>
                         <input type="text" class="input" asp-for="TIFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Net Fee</label>
+                        <label for="NetFee">Net Fee</label>
                         <input type="text" class="input" asp-for="NetFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
@@ -324,19 +324,19 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Material Value</label>
+                        <label for="TMValueNew">Material Value</label>
                         <input type="text" class="input" asp-for="TMValueNew" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Insp Fee</label>
+                        <label for="TIFeeNew">Insp Fee</label>
                         <input type="text" class="input" asp-for="TIFeeNew" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Net Fee</label>
+                        <label for="NetFeeNew">Net Fee</label>
                         <input type="text" class="input" asp-for="NetFeeNew" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
@@ -345,19 +345,19 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Material Value</label>
+                        <label for="TMValueDiff">Material Value</label>
                         <input type="text" class="input" asp-for="TMValueDiff" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Insp Fee</label>
+                        <label for="TIFeeDiff">Insp Fee</label>
                         <input type="text" class="input" asp-for="TIFeeDiff" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Caseno">Net Fee</label>
+                        <label for="NetFeeDiff">Net Fee</label>
                         <input type="text" class="input" asp-for="NetFeeDiff" maxlength="100" style="text-transform: uppercase;" readonly>
                     </div>
                 </div>
@@ -367,20 +367,20 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Invoice No.</label>
+                    <label for="InvoiceNo">Invoice No.</label>
                     <input type="text" class="input" asp-for="InvoiceNo" maxlength="100" style="text-transform: uppercase;" readonly>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Min Fee Payble</label>
+                    <label for="MinFee">Min Fee Payble</label>
                     <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnMinFee" style="color:#d52127;"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Max Fee Allowed</label>
+                    <label for="MaxFee">Max Fee Allowed</label>
                     <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" readonly>
                     <span id="spnMaxFee" style="color:#d52127;"></span>
                 </div>
@@ -396,35 +396,35 @@
             </div>*@
             <div class="col-md-4 mb-3 RlyBpoFee" style="display:none;">
                 <div class="reference">
-                    <label for="Reference">Rly BPO Fee</label>
-                    @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee() , "Value", "Text"), new { @disabled = "disabled" })
+                    <label for="RlyBpoFee">Rly BPO Fee</label>
+                    @Html.DropDownListFor(model => model.RlyBpoFee, new SelectList(IBS.Models.Common.RlyBPOFee(), "Value", "Text"), new { @class = "", onChange = "onBpoFeeType()" })
                 </div>
             </div>
             <div class="col-md-4 mb-3 BpoFee" style="display:none;">
                 <div class="reference">
-                    <label for="Reference">FEE</label>
-                    <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;" readonly>
+                    <label for="BpoFee">FEE</label>
+                    <input type="text" class="input" asp-for="BpoFee" maxlength="100" style="text-transform: uppercase;" onchange="onBpoFeeType()" readonly>
                     <span asp-validation-for="BpoFee" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">Adjustment Fee</label>
-                    <input type="text" class="input" asp-for="AdjustmentFee" maxlength="100" style="text-transform: uppercase;" onChange="onAdjustmentFee()">
+                    <label for="AdjustmentFee">Adjustment Fee</label>
+                    <input type="text" class="input" asp-for="AdjustmentFee" maxlength="10" style="text-transform: uppercase;" onChange="onAdjustmentFee()">
                     <span asp-validation-for="AdjustmentFee" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Reference">FEE Type</label>
-                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType() , "Value", "Text"),"--Select--", new { @class = "" ,onChange="onBpoFeeType()", @disabled = "disabled"})
+                    <label for="BpoFeeType">FEE Type</label>
+                    @Html.DropDownListFor(model => model.BpoFeeType, new SelectList(IBS.Models.Common.GetFeeType(), "Value", "Text"), "--Select--", new { @class = "", onChange = "onBpoFeeType()", @disabled = "disabled" })
                 </div>
             </div>
             @if (@Convert.ToInt32(Convert.ToDateTime(@Model.CertDt).ToString("yyyyMMdd")) >= @Convert.ToInt32(20170701))
             {
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">TAX GST Type</label>
+                        <label for="TaxType">TAX GST Type</label>
                         @Html.DropDownListFor(model => model.TaxType, new SelectList(IBS.Models.Common.GetTaxType_GST() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                     </div>
                 </div>
@@ -433,7 +433,7 @@
             {
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">TAX Type</label>
+                        <label for="BpoTaxType">TAX Type</label>
                         @Html.DropDownListFor(model => model.BpoTaxType, new SelectList(IBS.Models.Common.GetTAXType() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                     </div>
                 </div>
@@ -443,13 +443,13 @@
         <div class="row my-0">
             <div class="col-md-4 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Advance Bill</label>
+                    <label for="AdvBill">Advance Bill</label>
                     @Html.DropDownListFor(model => model.AdvBill, new SelectList(IBS.Models.Common.GetAdvanceBill() , "Value", "Text"),"--Select--", new { @disabled = "disabled" })
                 </div>
             </div>
             <div class="col-md-8 mb-3">
                 <div class="reference">
-                    <label for="Caseno">Remarks <span class="darkRedBoldText">*</span></label>
+                    <label for="Remarks">Remarks <span class="darkRedBoldText">*</span></label>
                     @*<input type="text" class="input" asp-for="Remarks" maxlength="200" style="text-transform: uppercase;">*@
                     <textarea class="input" asp-for="Remarks" style="text-transform: uppercase;"></textarea>
                     <span id="spnRemarks" style="color:#d52127;"></span>

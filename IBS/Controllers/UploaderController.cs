@@ -463,26 +463,54 @@ namespace GSDMWeb.Controllers.Master
         }
 
         [HttpGet]
-        public IActionResult SaveFile(string FolderName, string DocumentcategoryID,string Documentid)
+        public IActionResult SaveFile(string FolderName, string DocumentcategoryID, string Documentid)
         {
             string result = "";
             string folderPath = env.WebRootPath + FolderName;
+            string applicationid = "";
+            string otherdocumentname = "";
             try
             {
                 if (Directory.Exists(folderPath))
                 {
                     StringBuilder queryBuilder = new StringBuilder();
                     string[] fileNames = Directory.GetFiles(folderPath).Select(Path.GetFileName).ToArray();
-
+                    if (FolderName == "/ReadWriteData/Files/TECH")
+                    {
+                        if (Convert.ToInt32(Documentid) == 11)
+                            fileNames = fileNames.Where(fileName => !fileName.Contains("_")).ToArray();
+                        else
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_")).ToArray();
+                    }
+                    else if (FolderName == "/ReadWriteData/Files/Vendor/DOC")
+                    {
+                        if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 45)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_I")).ToArray();
+                            otherdocumentname = "Inernal Records";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 47)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_F")).ToArray();
+                            otherdocumentname = "Firm Certificate(Like RDSO, Approval, Type test etc.)";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 48)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_R")).ToArray();
+                            otherdocumentname = "Raw Material/Invoice";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 49)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_C")).ToArray();
+                            otherdocumentname = "Calibration Records";
+                        }
+                    }
                     for (int i = 0; i < fileNames.Length; i++)
                     {
                         string fileName = fileNames[i];
                         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                         string extension = Path.GetExtension(fileName);
                         int indexOfHyphen = fileName.IndexOf('-');
-
-                        string applicationid = "";
-                        string otherdocumentname = "";
                         if (FolderName == "/ReadWriteData/TESTPLAN")
                         {
                             if (indexOfHyphen != -1)
@@ -516,9 +544,51 @@ namespace GSDMWeb.Controllers.Master
                             {
                                 applicationid = fileName.Substring(0, indexOfHyphen);
                             }
-                            otherdocumentname = " Cancellation Document";
+                            otherdocumentname = "Cancellation Document";
                         }
-
+                        else if (FolderName == "/ReadWriteData/Files/TECH")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (Convert.ToInt32(Documentid) == 12)
+                            {
+                                if (indexOfHyphen1 != -1)
+                                {
+                                    applicationid = fileName.Substring(0, indexOfHyphen1);
+                                    otherdocumentname = "Upload Tech Ref Reply";
+                                }
+                            }
+                            else
+                            {
+                                applicationid = fileNameWithoutExtension;
+                                otherdocumentname = "Upload Tech Ref";
+                            }
+                            
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/VENDOR_CREATION_BASIS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Document on the basis of which vendor/manufacturer is created( IN PDF ONLY)";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Vendor/DOC")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            applicationid = fileName.Substring(0, indexOfHyphen1);
+                            
+                        }
+                        else if (FolderName == "/ReadWriteData/VENDOR/MA")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (indexOfHyphen1 != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen1);
+                            }
+                            otherdocumentname = "Vendor MA Doc";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Online_Complaints")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Upload Rejection Memo";
+                        }
                         queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
                             $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");
                     }

@@ -93,6 +93,26 @@ namespace IBS.Helper
             }
         }
 
+        public List<ContractEntryList> lstContractEntryList
+        {
+            get
+            {
+                string ContractEntry = httpContextAccessor.HttpContext.Session.GetString("sessionContractEntryList");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(ContractEntry))
+                {
+                    List<ContractEntryList> ContractEntryModels = JsonSerializer.Deserialize<List<ContractEntryList>>(ContractEntry);
+
+                    if (ContractEntryModels != null)
+                        return ContractEntryModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionContractEntryList", JsonSerializer.Serialize(value));
+            }
+        }
+
         public List<InterUnitTransferRegionModel> lstInterUnitTransferRegionModel
         {
             get

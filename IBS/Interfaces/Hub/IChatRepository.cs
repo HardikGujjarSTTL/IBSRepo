@@ -9,5 +9,7 @@ namespace IBS.Interfaces.Hub
         ChatMessage GetMessageList(int send_id, int recv_id);
 
         ChatMessage GetMessageRecvList(int id);
+
+        int ChatMessageDelete(int id, ref string DeleteDate, ref string DeleteFileName);
     }
 }
