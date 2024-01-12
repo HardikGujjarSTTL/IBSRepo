@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
@@ -150,17 +151,17 @@ builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalReposi
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineRepository>();
 #endregion
-builder.Services.AddScoped<ICityRepository,CityRepository>();
-builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
-builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
-builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
-builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
-builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepository>();
-builder.Services.AddScoped<ISearchPaymentsRepository,SearchPaymentRepository>();
-builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
-builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
+builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
+builder.Services.AddScoped<ICheckPostingFormRepository, CheckPostingFormRepository>();
+builder.Services.AddScoped<ISearchPaymentsRepository, SearchPaymentRepository>();
+builder.Services.AddScoped<IEFTEntryRepository, EFTEntryRepository>();
+builder.Services.AddScoped<IInterUnit_TransferRepository, InterUnit_TransferRepository>();
 builder.Services.AddScoped<IUnregisteredCallsRepository, UnregisteredCallsRepository>();
 builder.Services.AddScoped<IInspectionFeeBillRepository, InspectionFeeBillRepository>();
 builder.Services.AddScoped<ITDSEntryRepository, TDSEntryRepository>();
@@ -261,7 +262,8 @@ builder.Services.AddScoped<ChatHub>();
 
 // SignalR Configuration
 //builder.Services.AddSignalR();
-builder.Services.AddSignalR(e => {
+builder.Services.AddSignalR(e =>
+{
     e.MaximumReceiveMessageSize = 102400000;
 });
 
@@ -296,6 +298,7 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

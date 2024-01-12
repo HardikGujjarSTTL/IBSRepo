@@ -1,8 +1,15 @@
-﻿using IBS.Filters;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using IBS.Filters;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.MSIdentity.Shared;
+using Newtonsoft.Json;
+using PuppeteerSharp;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Xml;
 
 namespace IBS.Controllers
@@ -15,6 +22,7 @@ namespace IBS.Controllers
         SessionHelper objSessionHelper = new SessionHelper();
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
+
         public IC_RPT_IntermediateController(IIC_RPT_IntermediateRepository _iC_RPT_IntermediateRepository, IWebHostEnvironment _env, IConfiguration _config)
         {
             iC_RPT_IntermediateRepository = _iC_RPT_IntermediateRepository;
@@ -125,7 +133,6 @@ namespace IBS.Controllers
             return Json(VisitDate);
         }
 
-
         public IActionResult FillItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
         {
             var model = iC_RPT_IntermediateRepository.FillItems(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
@@ -137,7 +144,6 @@ namespace IBS.Controllers
             var model = iC_RPT_IntermediateRepository.GetDetails(Case_No, Call_Recv_Dt, Call_SNo, ITEM_SRNO_PO, Consignee_Cd);
             return Json(model);
         }
-
 
         public IActionResult SetAccepted(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
         {
@@ -224,6 +230,7 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
+
         public IActionResult DeletePOAmendment(string CaseNo, string PO_NO, string Sno)
         {
             int res = 0;
@@ -265,6 +272,88 @@ namespace IBS.Controllers
                 //Response.Write(filename);                
             }
             return Json(filename);
+        }
+
+        public async Task<IActionResult> GetReportData(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo)
+        {
+            X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+
+            if (Certificate == null)
+            {
+                return Json(new { status = 0, responseText = "Kindly Attached Certificate!!" });
+            }
+
+            string signedFileName = string.Empty;
+
+            var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
+            webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
+
+            string methodName = "GetReportData";
+
+            var formData = new Dictionary<string, string>
+            {
+                { "CaseNO", CaseNO },
+                { "Call_Recv_Dt", Call_Recv_Dt },
+                { "CallSNo", CallSNo },
+                { "Consignee_CD", Consignee_CD },
+                { "Region", Region },
+                { "BkNo", BkNo },
+                { "SetNo", SetNo },
+            };
+
+            using (var httpClient = new HttpClient())
+            {
+                var encodedFormData = new FormUrlEncodedContent(formData);
+
+                var response = await httpClient.PostAsync($"{webServiceUrl}/{methodName}", encodedFormData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(responseContent);
+
+                    string base64String = xmlDoc.InnerText.Replace("\"", "");
+
+                    if (base64String != null)
+                    {
+                        byte[] bytes = Convert.FromBase64String(base64String);
+
+                        string filePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.DigiSignatureFiles);
+
+                        if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+                        string fileName = DateTime.Now.Ticks.ToString() + ".pdf";
+
+                        string fullPath = filePath + "/" + fileName;
+
+                        System.IO.File.WriteAllBytes(fullPath, bytes);
+
+                        DigitalSignatureModel model = new DigitalSignatureModel
+                        {
+                            IsLeft = false,
+                            IsMultipleSign = false,
+                            PageNo = 1,
+                            X1 = 450,
+                            Y1 = 50,
+                            X2 = 580, 
+                            Y2 = 110
+                        };
+
+                        DigitalSigner.SetSignField(bytes, fullPath, model.IsMultipleSign, model.IsLeft, model.SearchText, out int counter, model.PageNo, model.Level, model.X1, model.Y1, model.X2, model.Y2);
+                        DigitalSigner.SignPDF(DigitalSigner.getCertificate("minesh vinodchandra doshi"), fullPath, "", "", counter, model.PageNo);
+
+                        signedFileName = fileName.Replace(".pdf", "_Signed.pdf");
+                    }
+                }
+                else
+                {
+                    return Json(new { status = 0, responseText = "Something went wrong!!" });
+                }
+            }
+
+            return Json(new { status = 1, responseText = signedFileName });
         }
     }
 }
