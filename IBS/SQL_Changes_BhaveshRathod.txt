@@ -5861,3 +5861,6 @@ Credit Note Invoice Report
 
 GET_CNOTEINVOICE_SUMMARY
 =========================================================
+
+ALTER TABLE T29_JV_DETAILS MODIFY IU_ADV_NO DEFAULT NULL;
+ALTER TABLE T29_JV_DETAILS MODIFY IU_ADV_DT DEFAULT NULL;

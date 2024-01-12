@@ -43,8 +43,8 @@
                     </td>
                     <td>
                         <label class="text-danger" id="lblVNo">@Model.VCHR_NO</label> &
-                        <label class="text-danger" id="lblVDT">@Model.VCHR_DT</label>
-                        <label class="text-danger" id="lblSNO">@Model.SNO</label>
+                        <label class="text-danger" id="lblVDT">@Convert.ToDateTime(@Model.VCHR_DT).ToString("dd/MM/yyyy")</label>
+                        @* <label class="text-danger" id="lblSNO">@Model.SNO</label> *@
                     </td>
                 </tr>
                 <tr>
@@ -59,7 +59,7 @@
                     </td>
                     <td>
                         <input type="text" class="input datepicker" asp-for="TXTV_DT" />
-                        <label class="text-danger" id="lblJVDT">@Model.JV_DT</label>
+                        <label class="text-danger" id="lblJVDT">@Convert.ToDateTime(@Model.JV_DT).ToString("dd/MM/yyyy")</label>
                     </td>
                 </tr>
                 <tr>
@@ -117,11 +117,11 @@
                     <label for="Reference">Narration</label>
                     <input type="text" class="input" asp-for="Transfer.NARRATION" />
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-md-2 mb-3" style="display:none;">
                     <label for="Reference">Inter Unit Advice No.</label>
                     <input type="text" class="input" asp-for="Transfer.IU_ADV_NO" readonly />
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-md-2 mb-3" style="display:none;">
                     <label for="Reference">Inter Unit Advice Date.</label>
                     <input type="text" class="input" asp-for="Transfer.IU_ADV_DT" readonly />
                 </div>
@@ -221,7 +221,7 @@
                 lblIUAMT: $("#Transfer_lblIUAMT").val(),
                 ACTION: $("#Transfer_ACTION").val(),
             }
-
+            
             var VCHR_NO = "@Model.VCHR_NO";
             var VCHR_DT = "@Model.VCHR_DT";
             var SNO = "@Model.SNO";
@@ -235,7 +235,8 @@
             var SUSPENSE_AMT = "@Model.SUSPENSE_AMT";
             var JV_NO = "@Model.JV_NO";
             var JV_DT = "@Model.JV_DT";
-            var TXTV_DT = "@Model.TXTV_DT";
+            var TXTV_DT = $("#TXTV_DT").val();
+
             var Transfer = formData;
             $.ajax({
                 url: "@Url.Action("DetailsSave", "InterUnit_Transfer")",
