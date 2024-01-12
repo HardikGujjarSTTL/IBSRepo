@@ -6,47 +6,54 @@
         {
             var msgDate = DateTime.Now.ToString("dd MMMM yyyy");
             var Cnt = 0;
+
             foreach (var item in Model.lstMsg)
             {
                 var FileUrl = "";
+                var clsDel = "clsDel_" + item.ID;
                 FileUrl = item.RelativePath + "/" + item.Field_ID;
 
-
+                var clsDate = "";
                 if (msgDate != item.Msg_Date.Date.ToString("dd MMMM yyyy"))
                 {
                     Cnt = Cnt + 1;
                     msgDate = item.Msg_Date.Date.ToString("dd MMMM yyyy");
-                    <li><div class="messageDate"><span>@msgDate</span></div></li>
+                    clsDate = "clsDate_" + Convert.ToDateTime(msgDate).ToString("ddMMMMyyyy");
+                    <li class="@clsDate"><div class="messageDate"><span>@msgDate</span></div></li>
                 }
                 else if (DateTime.Now.ToString("dd MMMM yyyy") == item.Msg_Date.Date.ToString("dd MMMM yyyy") && Cnt == 0)
                 {
                     Cnt = Cnt + 1;
-                    <li><div class="messageDate"><span>@msgDate</span></div></li>
+                    clsDate = "clsDate_" + Convert.ToDateTime(msgDate).ToString("ddMMMMyyyy");
+                    <li class="@clsDate"><div class="messageDate"><span>@msgDate</span></div></li>
                 }
 
                 if (Convert.ToString(Model.Master_ID) == item.msg_send_ID)
                 {
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
-                        <li class="sendTextHolder">
-                            <div class="deleteSelect"><span class="fa fa-chevron-down"></span>
-                                <div class="fileUploadDelete">
-                                    <ul class="editDeleteFile">
-                                        <li><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
-                                        <li><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <li class="sendTextHolder @clsDel" id="@item.ID">
                             <div class="sendText">
+                                <div class="deleteSelect">
+                                    <div class="deleteSelectTrigger">
+                                        <span class="fa fa-chevron-down "></span>
+                                    </div>
+                                    <div class="fileUploadDelete">
+                                        <ul class="editDeleteFile">
+                                            <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
+                                            @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="box-body">
                                     <div class="attachment-block">
                                         @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
                                         {
-                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                            <a href="@FileUrl" class="chatImagePopup" target="_blank"><img id="imgC" style="width:50px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
                                         }
                                         else /*if (item.Extension != ".jpg" && item.Extension != ".jpeg" && item.Extension != ".png" && !string.IsNullOrEmpty(item.Extension))*/
                                         {
-                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
+                                            <a href="@FileUrl" class="chatImagePopup" target="_blank"><img id="imgC" style="width:50px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
                                         }
                                         <div class="attachment-pushed">
                                             <span class="attachment-heading"><i class="fa fa-image"></i> @item.FileDisplayName</span>
@@ -67,8 +74,23 @@
 
                     if (!string.IsNullOrEmpty(item.message))
                     {
-                        <li class="sendTextHolder">
-                            <div class="sendText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
+                        <li class="sendTextHolder @clsDel" id="@item.ID">
+                            <div class="sendText">
+                                <div class="box-body">
+                            <div class="deleteSelect">
+                                        <div class="deleteSelectTrigger">
+                                            <span class="fa fa-chevron-down "></span>
+                                        </div>
+                                    <div class="fileUploadDelete">
+                                        <ul class="editDeleteFile">
+                                            <li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-trash"></span> Delete</a></li>
+                                            @*<li onclick="DeleteMessage(@item.ID)"><a href="#"><span class="fa fa-pencil"></span> Edit</a></li>*@
+                                        </ul>
+                                    </div>
+                                </div>
+                            @item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span>
+                            </div>
+                            </div>
                         </li>
                     }
                 }
@@ -76,18 +98,17 @@
                 {
                     if (!string.IsNullOrEmpty(item.Field_ID))
                     {
-                        <li class="reciveTextHolder">
-                        
+                        <li class="reciveTextHolder @clsDel" id="@item.ID">
                             <div class="recieveText">
                                 <div class="box-body">
                                     <div class="attachment-block">
                                         @if (item.Extension == ".jpg" || item.Extension == ".jpeg" || item.Extension == ".png")
                                         {
-                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
+                                            <a href="@FileUrl" class="chatImagePopup" target="_blank"><img id="imgC" style="width:50px;" class="attachment-img" src="@FileUrl" alt="Attachment Image"></a>
                                         }
                                         else /*if (item.Extension != ".jpg" && item.Extension != ".jpeg" && item.Extension != ".png" && !string.IsNullOrEmpty(item.Extension))*/
                                         {
-                                            <a href="@FileUrl" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
+                                            <a href="@FileUrl" class="chatImagePopup" target="_blank"><img id="imgC" style="width:50px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>
                                         }
                                         <div class="attachment-pushed">
                                             <span class="attachment-heading"><i class="fa fa-image"></i> @item.FileDisplayName</span>
@@ -108,7 +129,7 @@
 
                     if (!string.IsNullOrEmpty(item.message))
                     {
-                        <li class="reciveTextHolder">
+                        <li class="reciveTextHolder @clsDel" id="@item.ID">
                             <div class="recieveText">@item.message <span class="timeStamp">@item.Msg_Date.ToString("hh:mm tt")</span></div>
                         </li>
                     }
@@ -125,28 +146,11 @@
     </div>
     <button type="button" class="submitChatBtn" onclick="SendMessage(2);"><span class="fa fa-paper-plane"></span></button>
 </div>
-<div class="fileUploadedInfo">
-    <span class="fileUploadedInfoClose">X</span>
+<div class="fileUploadedInfo" style="display:none;">
+    <span class="fileUploadedInfoClose" onclick="CloseFileUploadPopup()">X</span>
     <h4>You have choosen file</h4>
     <span class="fileUploadFileName"><i class="fa fa-image"></i> Profile.png</span>
-    <span class="chatFileSize">File Size (10KB)</span>
+    <span class="chatFileSize"><b>File Size : </b><span id="FileSize">10KB</span></span>
 </div>
-<script type="text/javascript">
 
-    $('#txtMsg').keypress(function (e) {
-        if (e.keyCode == 13) {  // detect the enter key
-            SendMessage(2);
-        }
-    });
-
-    $('#fileupload2').change(function (e) {
-        handleFile('fileupload2');
-    });
-
-    
-    $(".deleteSelect").click(function(){
-        $(".fileUploadDelete").slideToggle();
-    });
-    
-
-</script>
+<script src="~/js/ChatMessageHistory.js"></script>

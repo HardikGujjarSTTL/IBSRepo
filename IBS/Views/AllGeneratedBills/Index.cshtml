@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>All Generated Bills</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Choose Region</label>
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--")
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Client Type</label>
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),"--Select--",new{@id="ClientType"})
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">LOA</label>
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),"--Select--")
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                
+                    <ul class="radioListForm mt-5">
+                        <li id="dvAllRly">
+                            <input type="radio" id="AllRly" name="ClientWise" value="AllRly">
+                            <label for="AllRly">All Railway</label>
+                        </li>
+                        <li id="dvPerClient">
+                            <input type="radio" id="PerClient" name="ClientWise" value="PerClient">
+                            <label for="PerClient">Particular Client</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="PerBPO" name="ClientWise" value="PerBPO">
+                            <label for="PerBPO">Particular BPO</label>
+                        </li>
+                    </ul>
+            </div>
+
+            <div class="col-md-3" id="ClientName">
+                <label for="Reference">Choose Client</label>
+                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "Text", "Value"), "--Select--", new {})
+            </div>
+            <div class="col-md-3" id="BPOName">
+                <label for="Reference">Enter BPO Name</label>
+                <input type="text" name="BPOName">
+            </div>
+
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-4 text-center">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active">Create Bill</button>
+                    <button type="button" class="save-btn active">Get Bill</button>
+                    <button type="button" class="save-btn active">Return Bill</button>
+                    <button type="button" class="reset-btn">Clear Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtGB" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Invoice No.</th>
+                            <th>Invoice Region</th>
+                            <th>Invoice Date</th>
+                            <th>PDF</th>
+                            <th>File Size</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+        });
+
+        $('#AllRly').change(function () {
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+        });
+
+        $('#PerClient').change(function () {
+            $("#ClientName").show();
+            $("#BPOName").hide();
+        });
+
+        $('#PerBPO').change(function () {
+            $("#ClientName").hide();
+            $("#BPOName").show();
+        });
+
+        $('#ClientType').change(function () {
+            var CT = $("#ClientType").val();
+            if (CT != "R") {
+                $("#dvAllRly").hide();
+                $("#dvPerClient").hide();
+                $("#ClientName").hide();
+                $("#BPOName").hide();
+            } else {
+                $("#dvAllRly").show();
+                $("#dvPerClient").show();
+                $("#ClientName").hide();
+                $("#BPOName").hide();
+            }
+
+        });
+
+    </script>
+}
