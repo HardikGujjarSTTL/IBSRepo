@@ -589,6 +589,31 @@ namespace GSDMWeb.Controllers.Master
                             applicationid = fileNameWithoutExtension;
                             otherdocumentname = "Upload Rejection Memo";
                         }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/FULL")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Full Signature";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/INITIALS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Initials";
+                        }
+                        else if (FolderName == "/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Checksheet";
+                        }
                         queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
                             $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");
                     }
