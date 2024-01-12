@@ -298,8 +298,7 @@
             }
 
             $(".fileUploadedInfo").hide();
-            window.location.reload();
-
+            
             if ($(".deleteSelectTrigger").length) {
             $(".deleteSelectTrigger").click(function () {
                 if ($(".fileUploadDelete").is(":visible")) {
@@ -307,7 +306,6 @@
                         
                 } else {
                     $(this).next().slideDown();
-                      //  window.location.reload();
                     return false;
                 }
             });
