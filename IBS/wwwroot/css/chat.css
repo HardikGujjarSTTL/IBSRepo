@@ -24,7 +24,6 @@
 .chatInputArea input[type="text"] { border-radius: 30px; width: 100%; padding: 10px 15px; box-sizing: border-box; border: 1px solid #999; background: #fff; }
 .chatBoxHeadBody ul, .chatBoxBody .chatBodyText { list-style: none; margin: 0; padding: 0; }
 .chatBoxHeadBody li { display: flex; align-items: center; }
-.chatBoxBody .chatBodyText { padding-bottom: 50px; }
 .chatBoxBody .chatBodyText li { display: flex; border: none; margin: 0; padding: 0; }
 .chatBoxHeadBody li h4 { margin: 0; }
 .chatBoxBody .chatBodyText .recieveText { background: #fff; border-radius: 6px; margin: 5px 0; padding: 10px 10px 20px 10px; position: relative; min-width: 60px; box-shadow: 1px 1px 2px 0px #d1d1d1; max-width: 80%;}
