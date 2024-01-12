@@ -10,8 +10,12 @@ $('#fileupload2').change(function (e) {
 });
 
 $(".deleteSelectTrigger").click(function () {
-    $(this).next().slideToggle();
+        $(this).next().slideToggle();
 });
+$(".sendText").on("mouseleave", function () {
+    $(".fileUploadDelete").hide();
+});
+
 
 function CloseFileUploadPopup() {
     $(".fileUploadedInfo").hide();

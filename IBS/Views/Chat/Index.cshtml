@@ -168,6 +168,8 @@
             if (ReceiverId == "" && Message == "" && $(".fileUploadFileName").html() == "") {
                 return;
             }
+            else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() != "")) {
+            }
             else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() == "")) {
                 return;
             }
@@ -296,9 +298,9 @@
             }
 
             $(".fileUploadedInfo").hide();
-            var my_awesome_script = document.createElement('script');
-            my_awesome_script.setAttribute('src', '/js/ChatMessageHistory.js');
-            document.head.appendChild(my_awesome_script);
+            var runscript = document.createElement('script');
+            runscript.setAttribute('src', '/js/ChatMessageHistory.js');
+            document.head.appendChild(runscript);
         }
     });
 
