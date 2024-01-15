@@ -19,6 +19,9 @@ if ($(".deleteSelectTrigger").length) {
         }
     });
 }
+$(".chatBoxBody").on('click', function () {
+   $(".fileUploadDelete").slideUp();
+});
 $(".sendText").click(function () {
     $(".fileUploadDelete").slideUp();
 });
