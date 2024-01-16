@@ -32,8 +32,6 @@ namespace IBS.Models
 
         public string? InspectionfeeType { get; set; }
 
-        public int? MaterialvalueId { get; set; }
-
         public int? PerBasisFlatfee { get; set; }
 
         public int? MandayFlatfee { get; set; }

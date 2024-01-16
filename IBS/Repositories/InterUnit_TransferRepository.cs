@@ -37,7 +37,7 @@ namespace IBS.Repositories
                 model.BANK_NAME = BankName;
 
                 model.VCHR_NO = Convert.ToString(ds.Tables[0].Rows[0]["VCHR_NO"]);
-                model.VCHR_DT = Convert.ToString(ds.Tables[0].Rows[0]["VCHR_DT"]);
+                model.VCHR_DT = Convert.ToDateTime(ds.Tables[0].Rows[0]["VCHR_DT"]);
                 model.SNO = Convert.ToInt32(ds.Tables[0].Rows[0]["SNO"]);
                 model.CHQ_NO = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_NO"]);
                 model.CHQ_DT = Convert.ToString(ds.Tables[0].Rows[0]["CHQ_DT"]);
@@ -60,7 +60,7 @@ namespace IBS.Repositories
                          select new
                          {
                              VCHR_NO = jv.VchrNo,
-                             VCHR_DT = Convert.ToDateTime(jv.VchrDt).ToString("dd/MM/yyyy")
+                             VCHR_DT = jv.VchrDt
                          }).FirstOrDefault();
             if (query != null)
             {
@@ -85,7 +85,7 @@ namespace IBS.Repositories
                     AMOUNT = Convert.ToString(row["AMOUNT"]),
                     NARRATION = Convert.ToString(row["NARRATION"]),
                     IU_ADV_NO = Convert.ToString(row["IU_ADV_NO"]),
-                    IU_ADV_DT = Convert.ToString(row["IU_ADV_DT"]),
+                    IU_ADV_DT = Convert.ToString(row["IU_ADV_DT"]) != "" ? Convert.ToDateTime(row["IU_ADV_DT"]) : null,
                     lblIUAMT = Convert.ToString(row["AMOUNT"]),
                     ACTION = "M",
                 }).ToList();
@@ -150,8 +150,7 @@ namespace IBS.Repositories
                 try
                 {
                     var item = model.Transfer;
-                    //foreach (var item in model.lstUnitTransfer)
-                    //{
+                    
                     var query = (context.T25RvDetails
                                     .Where(t => t.ChqNo == model.CHQ_NO &&
                                                 t.ChqDt == DateTime.ParseExact(model.CHQ_DT, "dd/MM/yyyy", null) &&
@@ -162,16 +161,16 @@ namespace IBS.Repositories
                                         amtadj = t.AmtTransferred ?? 0, // Use null coalescing operator to handle null values
                                         susamt = t.SuspenseAmt
                                     })).FirstOrDefault();
-                    if (model.JV_NO == "")
+                    if (model.JV_NO == null)
                     {
-                        var ss = user.Region + model.TXTV_DT.Substring(8, 2) + model.TXTV_DT.Substring(3, 2);
+                        var ss = user.Region + Convert.ToString(Convert.ToDateTime(model.TXTV_DT)).Substring(8, 2) + Convert.ToString(Convert.ToDateTime(model.TXTV_DT)).Substring(3, 2);
                         var res = GenerateJVNO(ss);
                         model.JV_NO = ss + res;
-
+                        model.JV_DT = model.TXTV_DT;
                         T27Jv Clst = new T27Jv();
                         {
                             Clst.VchrNo = model.JV_NO;
-                            Clst.VchrDt = DateTime.ParseExact(model.JV_DT, "dd/MM/yyyy", null);
+                            Clst.VchrDt = model.JV_DT;
                             Clst.RvVchrNo = model.VCHR_NO;
                             Clst.RvSno = Convert.ToByte(model.SNO);
                             Clst.BankCd = Convert.ToByte(model.BANK_CD);
@@ -200,7 +199,7 @@ namespace IBS.Repositories
                         t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
                         t29Jv.Narration = item.NARRATION;
                         t29Jv.IuAdvNo = item.IU_ADV_NO;
-                        t29Jv.IuAdvDt = DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                        t29Jv.IuAdvDt = item.IU_ADV_DT;
                         t29Jv.Createdby = user.UserID;
                         t29Jv.Createddate = DateTime.Now;
                         context.T29JvDetails.Add(t29Jv);
@@ -227,7 +226,7 @@ namespace IBS.Repositories
                             t29Jv.Amount = Convert.ToDecimal(item.AMOUNT);
                             t29Jv.Narration = item.NARRATION;
                             t29Jv.IuAdvNo = item.IU_ADV_NO;
-                            t29Jv.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                            t29Jv.IuAdvDt = item.IU_ADV_DT;
                             t29Jv.Createdby = user.UserID;
                             t29Jv.Createddate = DateTime.Now;
                             context.T29JvDetails.Add(t29Jv);
@@ -255,7 +254,7 @@ namespace IBS.Repositories
                                 jvDetail.Amount = Convert.ToDecimal(item.AMOUNT);
                                 jvDetail.Narration = item.NARRATION;
                                 jvDetail.IuAdvNo = item.IU_ADV_NO;
-                                jvDetail.IuAdvDt = string.IsNullOrEmpty(item.IU_ADV_DT) ? null : DateTime.ParseExact(item.IU_ADV_DT, "dd/MM/yyyy", null);
+                                jvDetail.IuAdvDt = item.IU_ADV_DT;
                                 jvDetail.Updatedby = user.UserID;
                                 jvDetail.Updateddate = DateTime.Now;
                                 context.SaveChanges();

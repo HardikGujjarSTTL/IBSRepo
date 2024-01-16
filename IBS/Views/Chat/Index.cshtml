@@ -83,7 +83,6 @@
     var SenderId = "@SenderId";
     var ReceiverId = "@ReceiverId";
     var Cnt = 0;
-    var GFileName = "";
     var byteArray = [];
     var base64String = "";
 
@@ -107,13 +106,6 @@
     $('#fileupload').change(function (e) {
         handleFile('fileupload');
     });
-
-    //$('#dpUser').select2({
-    //    // Optional: You can customize Select2 options here
-    //    placeholder: 'Select a client type',
-    //    allowClear: false, // Adds a clear button
-    //    minimumResultsForSearch: 5 // Show search input only if there are 5 or more options
-    //});
 
     function GetUserReceiverList() {
         $.ajax({
@@ -161,14 +153,28 @@
         if (type == 1) {
             ReceiverId = $("#dpUser").val().join(",");
             Message = $("#txtMessage").val();
+
+            // validation
+            if (ReceiverId == "" && Message == "") {
+                return;
+            }
+            else if (ReceiverId != "" && Message == "") {
+                return;
+            }
         }
         else if (type == 2) {
             Message = $("#txtMsg").val();
+
+            if (ReceiverId == "" && Message == "" && $(".fileUploadFileName").html() == "") {
+                return;
+            }
+            else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() != "")) {
+            }
+            else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() == "")) {
+                return;
+            }
         }
 
-        if (ReceiverId == "" && (Message == "" || GFileName == "")) {
-            return;
-        }
         var imagesJson = null;
 
         if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
@@ -191,7 +197,6 @@
     });
 
     connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
-        debugger
         if (MsgType == 1) {
             window.location.href = "@Url.Action("Index", "Chat")";
         }
@@ -211,8 +216,8 @@
                 if (File_Field_ID != "" && File_Field_ID != null) {
                     element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '" >' +
                         '<div class="deleteSelect">' +
-                        '<span class="fa fa-chevron-down" ></span>' +
-                        '<div class="fileUploadDelete" >' +
+                        '<div class="deleteSelectTriggerNew"><span class="fa fa-chevron-down" ></span></div>' +
+                        '<div class="fileUploadDelete">' +
                         '<ul class="editDeleteFile" >' +
                         '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
                         '</ul>' +
@@ -244,7 +249,7 @@
                 if (Message != "" && Message != null) {
                     element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '">' +
                         '<div class="deleteSelect">' +
-                        '<span class="fa fa-chevron-down" > </span>' +
+                        '<div class="deleteSelectTriggerNew"><span class="fa fa-chevron-down" > </span></div>' +
                         '<div class="fileUploadDelete" >' +
                         '<ul class="editDeleteFile" >' +
                         '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
@@ -293,9 +298,21 @@
             }
 
             $(".fileUploadedInfo").hide();
-            var my_awesome_script = document.createElement('script');
-            my_awesome_script.setAttribute('src', '/js/ChatMessageHistory.js');
-            document.head.appendChild(my_awesome_script);
+            
+            if ($(".deleteSelectTriggerNew").length) {
+            $(".deleteSelectTriggerNew").click(function () {
+                if ($(".fileUploadDelete").is(":visible")) {
+                    $(this).next().slideUp();
+                        
+                } else {
+                    $(this).next().slideDown();
+                    return false;
+                }
+            });
+            }
+            //var runscript = document.createElement('script');
+            //runscript.setAttribute('src', '/js/ChatMessageHistory.js');
+            //document.head.appendChild(runscript);
         }
     });
 
@@ -305,44 +322,6 @@
             SendMessage(1);
         }
     });
-
-    function UploadFile(type, file) {
-        var Message = "";
-
-        if (type == 1) {
-            ReceiverId = $("#dpUser").val().join(",");
-            Message = $("#txtMessage").val();
-        }
-        else if (type == 2) {
-            Message = $("#txtMsg").val();
-        }
-
-        if (ReceiverId == "") {
-            ShowHideMsgNew(false, "Please select Receiver user..!!");
-            return;
-        }
-
-        var formData = new FormData();
-        formData.append("SenderId", SenderId);
-        formData.append("ReceiverId", ReceiverId);
-        formData.append("Message", Message);
-        formData.append("MsgType", type);
-        formData.append("MyFiles", file);
-
-        $.ajax({
-            url: '@Url.Action("UploadFile", "Chat")',
-            type: 'POST',
-            data: formData,
-            cache: false,
-            processData: false,
-            contentType: false
-        }).done(function (response) {
-            if (response != null) {
-                console.log(response.filename);
-                GFileName = response.filename;
-            }
-        });
-    }
 
     async function handleFile(fileId) {
         const fileInput = document.getElementById(fileId);
@@ -394,7 +373,6 @@
     }
 
     function DeleteMessage(Id) {
-        debugger
         connection.invoke("DeleteMessage", SenderId, ReceiverId, Id);
     }
 

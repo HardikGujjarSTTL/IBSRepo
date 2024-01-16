@@ -16842,12 +16842,14 @@ public partial class ModelContext : DbContext
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.IuAdvDt)
                 .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("IU_ADV_DT");
             entity.Property(e => e.IuAdvNo)
                 .HasMaxLength(12)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("IU_ADV_NO");
             entity.Property(e => e.Narration)
                 .HasMaxLength(50)

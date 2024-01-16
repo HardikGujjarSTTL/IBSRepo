@@ -102,7 +102,7 @@ namespace IBS.Controllers
                         string ItemCd = i;
                         int[] DocumentIds = { (int)Enums.DocumentCategory_MasterDoc.MasterItemDoc };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(ItemCd, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.MasterItemDoc), env, iDocument, "MasterIDoc", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(ItemCd, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.MasterItemDoc), env, iDocument, "MasterIDoc", ItemCd, DocumentIds);
                     }
                     //return Json(new { status = true, responseText = msg });
                 }

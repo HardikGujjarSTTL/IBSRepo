@@ -511,8 +511,6 @@ namespace GSDMWeb.Controllers.Master
                         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                         string extension = Path.GetExtension(fileName);
                         int indexOfHyphen = fileName.IndexOf('-');
-
-                       
                         if (FolderName == "/ReadWriteData/TESTPLAN")
                         {
                             if (indexOfHyphen != -1)
@@ -576,6 +574,45 @@ namespace GSDMWeb.Controllers.Master
                             int indexOfHyphen1 = fileName.IndexOf('_');
                             applicationid = fileName.Substring(0, indexOfHyphen1);
                             
+                        }
+                        else if (FolderName == "/ReadWriteData/VENDOR/MA")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (indexOfHyphen1 != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen1);
+                            }
+                            otherdocumentname = "Vendor MA Doc";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Online_Complaints")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Upload Rejection Memo";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/FULL")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Full Signature";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/INITIALS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Initials";
+                        }
+                        else if (FolderName == "/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Checksheet";
                         }
                         queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
                             $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");

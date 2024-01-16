@@ -5857,3 +5857,10 @@ ALTER TABLE T100_Contract_Material
     MODIFY ID INT DEFAULT T100_Contract_Material_seq.nextval;
 
 =========================================================
+Credit Note Invoice Report
+
+GET_CNOTEINVOICE_SUMMARY
+=========================================================
+
+ALTER TABLE T29_JV_DETAILS MODIFY IU_ADV_NO DEFAULT NULL;
+ALTER TABLE T29_JV_DETAILS MODIFY IU_ADV_DT DEFAULT NULL;

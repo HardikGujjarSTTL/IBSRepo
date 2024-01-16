@@ -14,5 +14,6 @@ namespace IBS.Interfaces.Reports.Billing
 
         public BillRaisedModel GetBillsNotCris(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string Region, string rdbPRly, string rdbPAU);
 
+        public BillRaisedModel GetCNoteInvoice(DateTime? CnoteFromDt, DateTime? CnoteToDt, string ActionType, string Region);
     }
 }

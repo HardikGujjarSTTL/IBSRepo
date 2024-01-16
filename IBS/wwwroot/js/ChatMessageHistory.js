@@ -9,8 +9,21 @@ $('#fileupload2').change(function (e) {
     handleFile('fileupload2');
 });
 
-$(".deleteSelect").click(function () {
-    $(".fileUploadDelete").slideToggle();
+if ($(".deleteSelectTrigger").length) {
+    $(".deleteSelectTrigger").click(function () {
+        if ($(".fileUploadDelete").is(":visible")) {
+            $(this).next().slideUp();
+        } else {
+            $(this).next().slideDown();
+            return false;
+        }
+    });
+}
+$(".chatBoxBody").on('click', function () {
+   $(".fileUploadDelete").slideUp();
+});
+$(".sendText").click(function () {
+    $(".fileUploadDelete").slideUp();
 });
 
 function CloseFileUploadPopup() {

@@ -112,7 +112,7 @@ namespace IBS.Controllers.Vendor
                             string UNo = model.CASE_NO + "_" + model.MA_NO;
                             int[] DocumentIds = { (int)Enums.DocumentCategory_VendorMADoc.VendorMADoc };
                             List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                            DocumentHelper.SaveFiles(UNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorMADocument), env, iDocument, "MADoc", string.Empty, DocumentIds);
+                            DocumentHelper.SaveFiles(model.CASE_NO, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorMADocument), env, iDocument, string.Empty, UNo, DocumentIds);
                         }
                     }
                     return Json(new { success = true, responseText = msg, Status = i });

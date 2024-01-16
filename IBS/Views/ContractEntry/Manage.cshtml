@@ -106,71 +106,46 @@
                 <div class="row my-0 FlatFee" style="display:none;">
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Percentage  Basis</label>
-                        <input type="text" class="input" ASP-FOR="PerBasisFlatfee" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="PerBasisFlatfee" maxlength="10" onkeypress="return isNumber(event)"/>
                         <span asp-validation-for="PerBasisFlatfee" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Man Days</label>
-                        <input type="text" class="input" ASP-FOR="MandayFlatfee" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="MandayFlatfee" maxlength="10" onkeypress="return isNumber(event)"/>
                         <span asp-validation-for="MandayFlatfee" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">Lumpsum</label>
-                        <input type="text" class="input" ASP-FOR="LumpsumFlatfee" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="LumpsumFlatfee" maxlength="10" onkeypress="return isNumber(event)"/>
                         <span asp-validation-for="LumpsumFlatfee" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row my-0 MaterialFee" style="display:none;">
-                    @* <div class="col-md-4 mb-4">
-                    <label for="Reference">Percentage  Basis</label>
-                    <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="10" />
-                    <span asp-validation-for="INSPFEE" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                    <label for="Reference">Man Days</label>
-                    <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="10" />
-                    <span asp-validation-for="INSPFEE" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                    <label for="Reference">Lumpsum</label>
-                    <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="10" />
-                    <span asp-validation-for="INSPFEE" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                    <label for="Reference">Material Value From (Rs)</label>
-                    <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="10" />
-                    <span asp-validation-for="INSPFEE" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                    <label for="Reference">Material Value To (Rs)</label>
-                    <input type="text" class="input" ASP-FOR="INSPFEE" maxlength="10" />
-                    <span asp-validation-for="INSPFEE" class="text-danger"></span>
-                    </div> *@
                     <div class="row my-0">
                         <div class="col-md-4 mb-3">
                             <label for="Reference">Percentage  Basis</label>
-                            <input type="text" class="input" ASP-FOR="PerBasis" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="PerBasis" maxlength="10" onkeypress="return isNumber(event)"/>
                             <span asp-validation-for="PerBasis" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Man Days</label>
-                            <input type="text" class="input" ASP-FOR="Manday" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="Manday" maxlength="10" onkeypress="return isNumber(event)"/>
                             <span asp-validation-for="Manday" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Lumpsum</label>
-                            <input type="text" class="input" ASP-FOR="Lumpsum" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="Lumpsum" maxlength="10" onkeypress="return isNumber(event)"/>
                             <span asp-validation-for="Lumpsum" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Material Value From (Rs)</label>
-                            <input type="text" class="input" ASP-FOR="Fromrs" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="Fromrs" maxlength="10" onkeypress="return isNumber(event)"/>
                             <span asp-validation-for="Fromrs" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-4">
                             <label for="Reference">Material Value To (Rs)</label>
-                            <input type="text" class="input" ASP-FOR="Tors" maxlength="10" />
+                                        <input type = "text" class="input" ASP-FOR="Tors" maxlength="10" onkeypress="return isNumber(event)"/>
                             <span asp-validation-for="Tors" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 mb-3 btnAlign">
