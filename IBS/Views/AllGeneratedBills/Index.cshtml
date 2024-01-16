@@ -14,35 +14,35 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">From Date</label>
-                    <input type="text" class="datepicker" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <input type="text" class="datepicker" id="FromDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">To Date</label>
-                    <input type="text" class="datepicker" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <input type="text" class="datepicker" maxlength="100" id="ToDt" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Choose Region</label>
-                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--")
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--",new {@id="InspRegion"})
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Client Type</label>
-                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),"--Select--",new{@id="ClientType"})
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),"--Select--",new {@id="ClientType"})
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">LOA</label>
-                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),"--Select--")
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),"--Select--",new {@id="LOA"})
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -64,21 +64,21 @@
             </div>
             <div class="col-md-3" id="ClientName">
                 <label for="Reference">Choose Client</label>
-                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "Text", "Value"), "--Select--", new {})
+                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "Text", "Value"), "--Select--", new {@id="RailwayCD"})
             </div>
             <div class="col-md-3" id="BPOName">
                 <label for="Reference">Enter BPO Name</label>
-                <input type="text" name="BPOName">
+                <input type="text" id="BPO_Name" name="BPOName">
             </div>
 
         </div>
         <div class="row my-0">
             <div class="col-md-12 mb-4 text-center">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active">Create Bill</button>
-                    <button type="button" class="save-btn active">Get Bill</button>
-                    <button type="button" class="save-btn active">Return Bill</button>
-                    <button type="button" class="reset-btn">Clear Filter</button>
+                    <button type="button" class="save-btn active" onclick="BtnCreateBill()">Create Bill</button>
+                    <button type="button" class="save-btn active" onclick="BtnGetBill()">Get Bill</button>
+                    <button type="button" class="save-btn active" onclick="BtnReturnBill()">Return Bill</button>
+                    <button type="button" class="reset-btn" onclick="BtnClear()">Clear Filter</button>
                 </div>
             </div>
         </div>
@@ -147,6 +147,88 @@
             }
 
         });
+
+        function BtnClear() {
+            $("#BPO_Name").val('');
+            $("#RailwayCD").val('');
+            $("#LOA").val('');
+            $("#ClientType").val('');
+            $("#InspRegion").val('');
+            $("#ToDt").val('');
+            $("#FromDt").val('');
+        }
+
+        function BtnGetBill() {
+            InitializeDatatable();
+        }
+
+        function InitializeDatatable() {
+
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
+            var LOA = $("#LOA").val();
+            var ClientName = $("#RailwayCD").val();
+            var BPOName = $("#BPO_Name").val();
+            var ClientType = $("#ClientType").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtGB").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "Region": Region,
+                            "LOA": LOA,
+                            "ClientName": ClientName,
+                            "BPOName": BPOName,
+                            "ClientType": ClientType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BILL_NO" },
+                    { data: "REGION_CODE" },
+                    { data: "BILL_DT" },
+                    { data: "" },
+                    { data: "" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.Id;
+                            var editUrl = '@Url.Action("Manage", "ClientMaster")/' + id;
+                            var html = '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
 
     </script>
 }
