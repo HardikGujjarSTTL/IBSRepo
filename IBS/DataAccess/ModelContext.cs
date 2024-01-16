@@ -12576,6 +12576,7 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.Id)
                 .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T113_CHAT_MASTER_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Extension)
                 .HasMaxLength(10)
@@ -27210,6 +27211,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T107_LO_LOGGIN_LOG_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
+        modelBuilder.HasSequence("T113_CHAT_MASTER_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");
