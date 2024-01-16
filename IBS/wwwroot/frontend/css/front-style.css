@@ -117,7 +117,7 @@ a.registerLink:hover { color:#646464; text-decoration:underline; }
 .otherLogo { float: right; display: flex; align-items: center; padding: 10px 0 0; }
 ul.rightLinks { list-style: none; padding: 15px 0 10px; margin: 0; }
 ul.rightLinks li { float: left; padding: 0 7px 0 8px; position: relative; font-size: 0.875em; transition:all 0.2s ease; height: 45px; margin-right:15px; }
-ul.rightLinks li:last-child { margin-right:0; }
+ul.rightLinks li:last-child { margin-right:0; padding-right:0; }
 ul.rightLinks li.langSelectBoxIn { }
 ul.rightLinks li.langSelectBoxIn { background: url(../images/language.png); background-repeat: no-repeat; padding-left: 45px; }
 .langSelectBoxIn label { display:block; padding-bottom:0; }
