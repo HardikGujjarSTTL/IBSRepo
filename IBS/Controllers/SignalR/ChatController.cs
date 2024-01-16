@@ -113,5 +113,10 @@ namespace IBS.Controllers.SignalR
                 return ms.ToArray();
             }
         }
+
+        public IActionResult GetUsersByUserType(string type)
+        {
+            return Json(Common.GetUserMaster(type).ToList());
+        }
     }
 }

@@ -107,17 +107,17 @@ input[type="submit"].cancelBtn, input[type="button"].cancelBtn, input[type="rese
 .brandName .subtitle { display: block; font-size: 18px; font-weight: 400; color: #646464; }
 a.registerLink { color:#E83535; text-decoration:none; }
 a.registerLink:hover { color:#646464; text-decoration:underline; }
-.headerRow { padding: 10px 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; }
+.headerRow { padding: 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; }
 .mainLogo, .topStrip { text-align: left;}
 .mainLogo img { width: 204px; margin-bottom:10px; }
-.mainLogo a { float: left; text-decoration:none; font-size:11px; line-height:14px; }
+.mainLogo a { float: left; text-decoration:none; font-size:11px; line-height:14px; margin-top:10px; }
 .brandDetail span { display: block; color: #323232; }
 .brandDetail span.firstTitle { font-weight: 600; font-size:1.8em; transition:all 0.2s ease; }
 .brandDetail span.secondTitle { font-weight:400; font-size:13px; }
 .otherLogo { float: right; display: flex; align-items: center; padding: 10px 0 0; }
 ul.rightLinks { list-style: none; padding: 15px 0 10px; margin: 0; }
 ul.rightLinks li { float: left; padding: 0 7px 0 8px; position: relative; font-size: 0.875em; transition:all 0.2s ease; height: 45px; margin-right:15px; }
-ul.rightLinks li:last-child { margin-right:0; }
+ul.rightLinks li:last-child { margin-right:0; padding-right:0; }
 ul.rightLinks li.langSelectBoxIn { }
 ul.rightLinks li.langSelectBoxIn { background: url(../images/language.png); background-repeat: no-repeat; padding-left: 45px; }
 .langSelectBoxIn label { display:block; padding-bottom:0; }
@@ -504,7 +504,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .headerSkipContent{ list-style:none; margin:0;}
 .headerSkipContent{ display:flex; justify-content:end;}
 .headerSkipContent li{ margin:0 10px;}
-.headerSkipContent a{ text-decoration:none; font-size:0.8em;}
+.headerSkipContent a{ text-decoration:none; font-size:0.85em;}
 #accessControl input[type="submit"]{ padding:2px; line-height:16px; background:#666; border:none; border-radius:2px; font-size:11px; width:20px;}
 .servicesContent{ padding:20px 0;}
 .servicesList, .kipList{ display:flex; justify-content:space-between; list-style:none; flex-wrap:wrap; margin:0; padding:0;}
@@ -642,6 +642,22 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .calIcon { background-position: -205px -107px; width: 30px; height: 30px; display: block; vertical-align: top; }
 .ui-datepicker.ui-widget-content{background: #f2f4ff;}
 
+.headerTopStrip{ background:#f1f1f1; padding:5px 0;}
+.headerTopStrip select{ padding:0; border:none; width:auto; height:auto;}
+.headerTopStrip label{ margin:0; padding:0;}
+.loginBtnHome a.loginDropBtn{ background:#F66A2F; color:#fff; display:inline-block; text-transform:uppercase; font-weight:500; text-decoration:none; padding:10px 15px; border-radius:8px; transition:all 0.5s ease;}
+.loginBtnHome a.loginDropBtn:hover{ background:#118133;}
+.loginBtnBlock{display: flex; align-items: center; justify-content: flex-end; height: 120px;}
+.loginBtnBlock .rightLinks{ display: flex;  align-items: center;}
+.loginDropLinks{ display:none; width:220px; background:#fff; position:absolute; right:0; z-index:1001; box-shadow:1px 1px 2px 1px #999; border-radius:6px;}
+.loginDropLinks ul{ list-style:none; margin:0; padding:0;}
+.loginDropLinks ul li{ border-bottom:1px solid #d1d1d1; float:inherit; width:100%; display:block; margin:0; padding:0; height:inherit;}
+.loginDropLinks ul li:last-child{border:none;}
+.loginDropLinks ul li a{ display:block; padding:5px 15px; text-decoration:none; font-size:1.1em; font-weight:500;}
+.loginDropLinks ul li a:hover{ color:#F66A2F;}
+.loginDropLinks ul li a:after{font-family:"FontAwesome"; content:"\f054"; position:absolute; right:5px; font-size:12px;}
+.loginDropBtn.active .fa-arrow-circle-down:before{font-family:"FontAwesome"; content:"\f0aa"!important;}
+
 /*New Responsive Style*/
 @media only screen and (min-width: 1170px) {
 #nav ul {display:block;}
@@ -650,7 +666,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 #nav li a{padding:10px 40px;}
 }
 @media only screen and (max-width:1368px) {
-ul.rightLinks li{ font-size:0.675em}
+ul.rightLinks li{ font-size:0.775em}
 .brandDetail span.firstTitle{ font-size:1.2em;}
 }
 @media only screen and (max-width:1169px) {

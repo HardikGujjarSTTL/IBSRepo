@@ -1206,7 +1206,7 @@ namespace IBS.Models
             textValueDropDownDTO.Add(single);
             return textValueDropDownDTO.ToList();
         }
-        
+
         public static List<SelectListItem> LOA()
         {
             List<SelectListItem> textValueDropDownDTO = new List<SelectListItem>();
@@ -4899,11 +4899,11 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SAPType)).ToList();
         }
 
-        public static List<SelectListItem> GetUserMaster()
+        public static List<SelectListItem> GetUserMaster(string UsertType)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> UM = (from a in ModelContext.UserMasters
-                                       where a.UserType == "USERS" || a.UserType == "IE"
+                                       where a.UserType == UsertType
                                        orderby a.UserType ascending, a.Name ascending
                                        select new SelectListItem
                                        {
@@ -4911,6 +4911,19 @@ namespace IBS.Models
                                            Value = Convert.ToString(a.Id)
                                        }).ToList();
             return UM;
+        }
+
+        public static List<SelectListItem> GetUserTypeForMaster()
+        {
+            List<SelectListItem> list = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Users", Value = "USERS" },
+                new SelectListItem { Text = "Vendor", Value = "VENDOR" },
+                new SelectListItem { Text = "Inspection Engineer (IE)", Value = "IE" },
+                new SelectListItem { Text = "Client", Value = "CLIENT_LOGIN" },
+                new SelectListItem { Text = "Liaisoning Officer (LO)", Value = "LO_LOGIN" },
+            };
+            return list;
         }
     }
 

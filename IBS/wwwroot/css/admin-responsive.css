@@ -49,8 +49,12 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .left-side-collapsed #sidebar, .ipadView #sidebar { display: none; }
 .mobi_logoSection { display: block; position: absolute; top: 8px; left: 15px; z-index: 2; }
 .topLinksAndSearch {padding: 9px 0; }
-.navbar-toggle { height: 33px; width: 33px;line-height: 37px;font-size: 34px; }
-.navBtn, .left-side-collapsed .navBtn{ right:0;left: 208px; top:21px;  }
+
+.left-side-collapsed .navBtn{right:inherit;left: 0px; line-height:40px;  }
+.navBtn{ z-index:23; left: 0px;}
+.left-side-opend .navBtn{left:275px;}
+
+
 #sidebar{ z-index: 22; }
 .logoSection { }
 #header { padding: 0px; display:inherit; }
@@ -58,7 +62,6 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 .topLinksAndSearch .userTopLinks{  padding: 4px 0; }
 .left-side-opend #sidebar { display: block; }
 .left-side-collapsed.nav-hover #sidebar, .left-side-collapsed.ipad #sidebar { display: block; left: -89px; }
-.navbar-toggle{ background: transparent; }
 .search input { background: transparent;border: 1px solid #c7c7c7; }
 .search .fa{ color: #c7c7c7; }
 .userTopLinks{ display:none;}
@@ -159,7 +162,7 @@ tast-date{ margin-top:15px; }
 }
 @media only screen and (max-width:479px) {
 .dropPopup { margin-right: 0; top: 56px; width: 95%; margin: 0 2.5%; }
-.topLinksAndSearch{ padding:10px; justify-content:space-between;}
+.topLinksAndSearch{ padding:10px; justify-content:center;}
 .topLinksAndSearch .userTopLinks li { position: static;  padding: 0;}
 .topLinksAndSearch li{ padding: 0; }
 .topLinksAndSearch .userTopLinks{ margin-left: 0;padding: 0; }
@@ -169,7 +172,8 @@ tast-date{ margin-top:15px; }
 .remember a.link1{ margin-top: 15px; display: block; }
 .mobi_logoSection{ width: 120px; }
 .userImg { width: 35px;height: 35px;margin-right: 7px; }
-.navBtn, .left-side-collapsed .navBtn { left: 133px;top: 10px; }
+.navBtn{right: 0px; top: 0px; left:inherit; }
+.left-side-opend .navBtn, .left-side-collapsed .navBtn { right: 0;top:0px; left:inherit; }
 .userInformation{ align-items: center; }
 #sidebar { top: 0px; }
 .mobi_logoSection{ left: 7px; }
@@ -189,6 +193,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination{ flex-wrap:wrap;}
 .savenext-btn button, .reset-btn{ margin-right:0;}
 .reset-btn{ text-align:center;}
 #sidebar{ height:100%;}
+.logoSection{ justify-content:space-evenly;}
 }
 @media only screen and (max-width:400px) {
 .adminForm .sixColFeild li .feildCol { width: 100%; margin-bottom: 10px; }
