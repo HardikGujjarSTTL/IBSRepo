@@ -87,7 +87,17 @@
                                             </select>
                                             <input type="submit" name="btnSearchLng" value="Go" id="btnSearchLng" class="goButton">
                                         </li>*@
-                                        <li class="loginBtnHome"><a asp-action="Index" asp-controller="Home">Login</a></li>
+                                        <li class="loginBtnHome"><a href="javascript:void(0);" class="loginDropBtn">User Login <span class="fa fa-arrow-circle-down"></span></a>
+                                            <div class="loginDropLinks">
+                                                <ul>
+                                                    <li><a asp-action="Index" asp-controller="Home">Users</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home">Vendor</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home">Inspection Engineer (IE)</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home">Client</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer (LO)</a></li>
+                                                </ul>
+                                            </div>    
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -319,10 +329,31 @@
     </noscript>
 
     <script type="text/javascript">
+        $(document).ready(function(){
+            if ($(".loginDropBtn").length > 0) {
+            $(".loginDropBtn").click(function(){
+                if ($('.loginDropLinks').css("display") == "block") {
+                    $(this).removeClass('active');
+                    $('.loginDropLinks').slideUp();
+                } else {
+                    $(this).addClass('active');
+                    $('.loginDropLinks').slideDown();
+                }
+                return false;
+            });
+            $(document).bind('mousedown touchstart', function (e) {
+                if ($(e.target).closest('.loginDrpPopup').length === 0) {
+                    $('.loginDropBtn').removeClass('active');
+                    $('.loginDropLinks').slideUp();
+                }
+            });
+            }
+        
         $(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'dd/mm/yy',
+        });
         });
     </script>
 
