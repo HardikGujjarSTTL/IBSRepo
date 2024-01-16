@@ -165,3 +165,9 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .chatUserHeader ul{ list-style:none; margin:0; padding:0;}
 .chatUserHeader ul li{ display:flex; align-items:center;}
 .chatUserHeader ul li h4{ margin-bottom:0; font-size:16px; font-weight:700;}
+@media only screen and (max-width:479px) {
+.messageBody{ flex-direction:column;}
+.chatLeftBoxBody, .userChatBox{ width:100%;}
+.chatBox{ height:auto;}
+.chatBoxBody, .userChatBox .chatBoxBody{height:auto; max-height:350px; overflow:auto;}
+}
