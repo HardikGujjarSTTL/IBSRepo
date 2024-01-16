@@ -29,6 +29,27 @@
     <div class="wrapper">
         <header id="header">
             <div class="headerRow">
+                <div class="headerTopStrip">
+                      <div class="container">
+                        <ul class="headerSkipContent">
+                            <li><a tabindex="1" href="#content">Skip to Main Content</a></li>
+                            <li class="fontResize">
+                                <div id="accessControl" class="textResizeWrapper">
+                                    <input type="submit" value="A-" id="font_normal" title="Decrease Font Size" class="fontScaler large">
+                                    <input type="submit" value="A" id="font_large" title="Normal Font Size" class="fontScaler normal">
+                                    <input type="submit" value="A+" id="font_larger" title="Increase Font Size" class="fontScaler largest">
+                                </div>
+                            </li>
+                            <li>
+                                <label><span class="fa fa-language"></span></label>
+                                <select name="Languages" id="languages" title="Select Language" class="">
+                                    <option selected="selected" value="">English</option>
+                                    <option value="">हिन्दी</option>
+                                </select>
+                            </li>
+                        </ul>
+                      </div>
+                </div>
                 <div class="container">
                     <div class="logoRow">
                         <div class="row m-0">
@@ -45,8 +66,8 @@
                                 <div class="brandDetail text-center"> <span class="firstTitle">Quality Assurance Division</span> <span class="secondTitle">ISO 9001, 17020, 17065</span> </div>
                             </div>
                             <div class="col-lg-4 col-md-12">
-                                <div class="">
-                                    <ul class="headerSkipContent">
+                                <div class="loginBtnBlock">
+                                   @* <ul class="headerSkipContent">
                                         <li><a tabindex="1" href="#content">Skip to Main Content</a></li>
                                         <li class="fontResize">
                                             <div id="accessControl" class="textResizeWrapper">
@@ -55,17 +76,18 @@
                                                 <input type="submit" value="A+" id="font_larger" title="Increase Font Size" class="fontScaler largest">
                                             </div>
                                         </li>
-                                    </ul>
+                                    </ul>*@
                                     <ul class="rightLinks">
                                         <li class="helpLineNumber">National Helpline Number <span>1800 425 7000 (TOLL FREE)</span> </li>
-                                        <li class="langSelectBoxIn">
+                                       @* <li class="langSelectBoxIn">
                                             <label for="languages" id="languageSelection">Language</label>
                                             <select name="Languages" id="languages" title="Select Language" class="">
                                                 <option selected="selected" value="">English</option>
                                                 <option value="">हिन्दी</option>
                                             </select>
                                             <input type="submit" name="btnSearchLng" value="Go" id="btnSearchLng" class="goButton">
-                                        </li>
+                                        </li>*@
+                                        <li class="loginBtnHome"><a asp-action="Index" asp-controller="Home">Login</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -146,11 +168,11 @@
                                 <li>
                                     <a href="#" title="Quick Links">Quick Links</a>
                                     <ul>
-                                        <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
+                                       @* <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">Vendor Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">IE Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">User Login</a></li>
-                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>*@
                                         <li><a asp-action="Index" asp-controller="OnlinePaymentGateway">Online Payment Through Gateway</a></li>
                                         <li><a asp-action="Index" asp-controller="FeedbackSuggestion">Feedback & Suggestions</a></li>
                                         <li><a href="https://rites.com/" target="_blank">Online Payment Through Gateway</a></li>
@@ -175,7 +197,7 @@
                                         <li><a asp-action="ForeignInspection" asp-controller="ContactUs">Foreign Inspection</a></li>
                                     </ul>
                                 </li>
-                                <li>
+                                @*<li>
                                     <a href="#" title="Logins">Logins</a>
                                     <ul>
                                         <li><a asp-action="Index" asp-controller="Home">Users</a></li>
@@ -184,7 +206,7 @@
                                         <li><a asp-action="Index" asp-controller="Home">Client</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer (LO)</a></li>
                                     </ul>
-                                </li>
+                                </li>*@
                             </ul>
                         </div>
                     </div>
