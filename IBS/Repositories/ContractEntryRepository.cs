@@ -225,6 +225,11 @@ namespace IBS.Repositories
                     MAXPOVAL = row["MAXPOVAL"] != DBNull.Value ? Convert.ToInt32(row["MAXPOVAL"]) : 0,
                     CALLCANCELATION = row["CALLCANCELATION"] != DBNull.Value ? Convert.ToInt32(row["CALLCANCELATION"]) : 0,
                     Materialdescription = row["MATERIALDESCRIPTION"] != DBNull.Value ? Convert.ToString(row["MATERIALDESCRIPTION"]) : string.Empty,
+
+                    InspectionfeeType = Convert.ToString(row["INSPECTIONFEE_TYPE"]) == "F" ? "Flat Fee" : "Material Value Wise",
+                    PerBasisFlatfee = Convert.ToString(row["INSPECTIONFEE_TYPE"]) == "F" ? Convert.ToInt32(row["PER_BASIS_FLATFEE"]) : 0,
+                    MandayFlatfee = Convert.ToString(row["INSPECTIONFEE_TYPE"]) == "F" ? Convert.ToInt32(row["MANDAY_FLATFEE"]) : 0,
+                    LumpsumFlatfee = Convert.ToString(row["INSPECTIONFEE_TYPE"]) == "F" ? Convert.ToInt32(row["LUMPSUM_FLATFEE"]) : 0,
                 }).ToList();
 
                 query = list.AsQueryable();
