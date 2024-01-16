@@ -12570,7 +12570,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T113ChatMaster>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C0011474");
+            entity.HasKey(e => e.Id).HasName("SYS_C0011707");
 
             entity.ToTable("T113_CHAT_MASTER");
 
@@ -12581,26 +12581,19 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Extension)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("EXTENSION");
             entity.Property(e => e.FieldId)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FIELD_ID");
             entity.Property(e => e.Filedisplayname)
                 .HasMaxLength(200)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FILEDISPLAYNAME");
             entity.Property(e => e.Filesize)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FILESIZE");
-            entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
-                .HasColumnName("ISDELETED");
             entity.Property(e => e.Message)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -12614,7 +12607,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Relativepath)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.SendMsgDate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")

@@ -20,11 +20,15 @@
         <div class="accordion-body chatArea">
             <div class="chatTopFilter">
                 <div class="row my-0">
+                    <div class="col-md-2">
+                        <label for="Reference">Users Type</label>
+                        <div class="userMultiSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetRole(), "Value", "Text"), "--Select--")</div>
+                    </div>
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(), "Value", "Text"), new { multiple = "multiple" })</div>
+                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(""), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
@@ -228,9 +232,9 @@
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
-                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
                     } else {
-                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
                     }
                     element += '<div class="attachment-pushed">' +
                         '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +
@@ -271,9 +275,9 @@
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
-                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
                     } else {
-                        element += '<a href="' + FilePath + '" class="chatImagePopup"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
                     }
                     element += '<div class="attachment-pushed">' +
                         '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +

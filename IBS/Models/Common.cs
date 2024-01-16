@@ -4899,11 +4899,11 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SAPType)).ToList();
         }
 
-        public static List<SelectListItem> GetUserMaster()
+        public static List<SelectListItem> GetUserMaster(string UsertType)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> UM = (from a in ModelContext.UserMasters
-                                       where a.UserType == "USERS" || a.UserType == "IE"
+                                       where a.UserType == UsertType || a.UserType == "IE"
                                        orderby a.UserType ascending, a.Name ascending
                                        select new SelectListItem
                                        {
