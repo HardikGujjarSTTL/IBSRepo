@@ -645,11 +645,18 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .headerTopStrip{ background:#f1f1f1; padding:5px 0;}
 .headerTopStrip select{ padding:0; border:none; width:auto; height:auto;}
 .headerTopStrip label{ margin:0; padding:0;}
-.loginBtnHome a{ background:#F66A2F; color:#fff; display:inline-block; text-transform:uppercase; font-size:600; text-decoration:none; padding:10px 15px; border-radius:8px; transition:all 0.5s ease;}
-.loginBtnHome a:hover{ background:#118133;}
+.loginBtnHome a.loginDropBtn{ background:#F66A2F; color:#fff; display:inline-block; text-transform:uppercase; font-weight:500; text-decoration:none; padding:10px 15px; border-radius:8px; transition:all 0.5s ease;}
+.loginBtnHome a.loginDropBtn:hover{ background:#118133;}
 .loginBtnBlock{display: flex; align-items: center; justify-content: flex-end; height: 120px;}
 .loginBtnBlock .rightLinks{ display: flex;  align-items: center;}
-
+.loginDropLinks{ display:none; width:220px; background:#fff; position:absolute; right:0; z-index:2; box-shadow:1px 1px 2px 1px #999; border-radius:6px;}
+.loginDropLinks ul{ list-style:none; margin:0; padding:0;}
+.loginDropLinks ul li{ border-bottom:1px solid #d1d1d1; float:inherit; width:100%; display:block; margin:0; padding:0; height:inherit;}
+.loginDropLinks ul li:last-child{border:none;}
+.loginDropLinks ul li a{ display:block; padding:5px 15px; text-decoration:none; font-size:1.1em; font-weight:500;}
+.loginDropLinks ul li a:hover{ color:#F66A2F;}
+.loginDropLinks ul li a:after{font-family:"FontAwesome"; content:"\f054"; position:absolute; right:5px; font-size:12px;}
+.loginDropBtn.active .fa-arrow-circle-down:before{font-family:"FontAwesome"; content:"\f0aa"!important;}
 
 /*New Responsive Style*/
 @media only screen and (min-width: 1170px) {
