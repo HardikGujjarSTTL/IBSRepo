@@ -22,11 +22,11 @@
                 <div class="row my-0">
                     <div class="col-md-2">
                         <label for="Reference">Users Type</label>
-                        <div class="userMultiSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetRole(), "Value", "Text"), "--Select--")</div>
+                        <div class="userMultiSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForMaster(), "Value", "Text"), "--Select--", new { @onChange="FillUsers()"})</div>
                     </div>
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.ListBox("dpUser", new MultiSelectList(Common.GetUserMaster(""), "Value", "Text"), new { multiple = "multiple" })</div>
+                        <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster(""), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
                     <div class="col-md-6">
                         <label for="Reference">Message</label>
@@ -124,6 +124,8 @@
                 $(".chatLeftBoxBody").html(response);
                 $(".userList").removeClass("active");
                 $("#li" + ReceiverId).addClass("active");
+                $(".clsShortName").html($(".SN_" + ReceiverId).html());
+                $(".clsName").html($(".N_" + ReceiverId).html());
             }
         });
     }
@@ -228,7 +230,7 @@
                         '</ul>' +
                         '</div>' +
                         '</div>' +
-                        
+
                         '<div class="box-body">' +
                         '<div class="attachment-block">';
                     if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
@@ -303,17 +305,17 @@
             }
 
             $(".fileUploadedInfo").hide();
-            
+
             if ($(".deleteSelectTriggerNew").length) {
-            $(".deleteSelectTriggerNew").click(function () {
-                if ($(".fileUploadDelete").is(":visible")) {
-                    $(this).next().slideUp();
-                        
-                } else {
-                    $(this).next().slideDown();
-                    return false;
-                }
-            });
+                $(".deleteSelectTriggerNew").click(function () {
+                    if ($(".fileUploadDelete").is(":visible")) {
+                        $(this).next().slideUp();
+
+                    } else {
+                        $(this).next().slideDown();
+                        return false;
+                    }
+                });
             }
             //var runscript = document.createElement('script');
             //runscript.setAttribute('src', '/js/ChatMessageHistory.js');
@@ -390,4 +392,17 @@
             $(".chatBoxBody").scrollTop($(".chatBodyText").height());
         }
     });
+
+    function FillUsers(id) {
+        var _drpUserType = $('select#dpUserType').val();
+        $.get("@Url.Action("GetUsersByUserType", "Chat")", { type: _drpUserType }, function (response) {
+            if (response != null) {
+                $("#dpUser").empty();
+                $.each(response, function (ind, val) {
+                    $("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                });
+                $("#dpUser").multiselect('rebuild');
+            }
+        });
+    }
 </script>
