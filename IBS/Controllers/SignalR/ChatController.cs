@@ -114,9 +114,9 @@ namespace IBS.Controllers.SignalR
             }
         }
 
-        public IActionResult GetUsersByUserType(string type)
+        public IActionResult GetUsersByUserType(string type, string id)
         {
-            return Json(Common.GetUserMaster(type).ToList());
+            return Json(Common.GetUserMaster(type, id).ToList());
         }
     }
 }

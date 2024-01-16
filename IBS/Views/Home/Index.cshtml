@@ -5,7 +5,7 @@
 }
 
 <div class="loginForm">
-    <h2 class="heading1 bold">Login</h2>
+    <h2 class="heading1 bold" id="login">Login</h2>
     <form role="form" asp-controller="Home" asp-action="Login" id="frmLogin">
 
         <div class="row">
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="divUserType">
             <div class="col-md-12">
                 <div class="reference">
                     <label for="UserType">User Type</label>
@@ -51,7 +51,7 @@
             </div>
         </div>
         @*<div class="row m-0">
-            <div class="col-md-12 text-center"><p class="m-0 dividerLine">Don't have an account? <a class="registerLink" href="#">Register Now</a></p></div>
+        <div class="col-md-12 text-center"><p class="m-0 dividerLine">Don't have an account? <a class="registerLink" href="#">Register Now</a></p></div>
         </div>*@
 
     </form>
@@ -74,6 +74,25 @@
                     $('#eyeShowHide i').addClass("fa-eye-slash");
                 }
             });
+
+            if ($("#UserType").val() != "") {
+                $("#divUserType").hide();
+                if ($("#UserType").val() == "USERS") {
+                    $("#login").html("User Login");
+                }
+                else if ($("#UserType").val() == "VENDOR"){
+                    $("#login").html("Vendor Login");
+                }
+                else if ($("#UserType").val() == "IE") {
+                    $("#login").html("IE Login")
+                }
+                else if ($("#UserType").val() == "CLIENT_LOGIN") {
+                    $("#login").html("Client Login")
+                }
+                else if ($("#UserType").val() == "LO_LOGIN") {
+                    $("#login").html("Liaisoning Officer Login")
+                }
+            }
         });
 
         $(document).keypress(function (e) {
