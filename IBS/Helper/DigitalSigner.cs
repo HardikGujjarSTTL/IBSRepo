@@ -5,6 +5,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using iTextSharp.text.pdf.security;
 using System.Security.Cryptography.X509Certificates;
+using System.Runtime.ConstrainedExecution;
 
 namespace IBS.Helper
 {
@@ -271,19 +272,46 @@ namespace IBS.Helper
 
         public static X509Certificate2 getCertificate(string subject)
         {
-            // Access Personal (MY) certificate store of current user
-            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-            my.Open(OpenFlags.ReadOnly);
-            // Find the certificate we’ll use to sign
+            //// Access Personal (MY) certificate store of current user
+            //X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            //my.Open(OpenFlags.ReadOnly);
+            //// Find the certificate we’ll use to sign
+            //X509Certificate2 cert2 = null;
+            //foreach (X509Certificate2 cert in my.Certificates)
+            //{
+            //    if (cert.Subject.Contains(subject))
+            //    {
+            //        // Get its associated CSP and private key
+            //        cert2 = cert;
+            //    }
+            //}
+            //return cert2;
+
             X509Certificate2 cert2 = null;
-            foreach (X509Certificate2 cert in my.Certificates)
+
+            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+
+            try
             {
-                if (cert.Subject.Contains(subject))
+                my.Open(OpenFlags.ReadOnly);
+
+                foreach (X509Certificate2 cert in my.Certificates)
                 {
-                    // Get its associated CSP and private key
-                    cert2 = cert;
+                    if (cert.Subject.Contains(subject))
+                    {
+                        // Get its associated CSP and private key
+                        cert2 = cert;
+                        break;  // Assuming you only need one matching certificate
+                    }
                 }
+
+                
             }
+            finally
+            {
+                my.Close();
+            }
+
             return cert2;
         }
 
