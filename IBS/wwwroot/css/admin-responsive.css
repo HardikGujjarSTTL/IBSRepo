@@ -52,7 +52,7 @@ h2.boxTitle.feildPadding { padding-right: 0; }
 
 .left-side-collapsed .navBtn{right:inherit;left: 0px; line-height:40px;  }
 .navBtn{ z-index:23; left: 0px;}
-.left-side-opend .navBtn{left:275px;}
+.left-side-opend .navBtn{left:314px; margin-top:2px;}
 
 
 #sidebar{ z-index: 22; }

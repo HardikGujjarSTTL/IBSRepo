@@ -21,7 +21,7 @@
 	/*================= Global Variable End =================*/
 
 	//css3 style calling 
-	document.write('<link rel="stylesheet" type="text/css" href="' + cssFolder + 'animate.css">');
+	//document.write('<link rel="stylesheet" type="text/css" href="' + cssFolder + 'animate.css">');
 
 	/*================= On Document Load Start =================*/
 	$(document).ready(function () {
