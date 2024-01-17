@@ -16,6 +16,8 @@ using IBS.Repositories;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using IBS.Interfaces;
 using IBS.Filters;
+using MessagePack;
+using static IBS.Helper.Enums;
 
 namespace IBS.Controllers
 {
@@ -50,7 +52,41 @@ namespace IBS.Controllers
         public IActionResult CreateBill([FromBody] AllGeneratedBills fromdata)
         {
             AllGeneratedBills model = allGeneratedBillsRepository.GenerateBill(fromdata);
-            return View("NorthBillGeneratePDF", model);
+
+            string regionCode = "";
+            if (model.REGION_CODE == "N")
+            { regionCode = "North_Bills"; }
+            else if (model.REGION_CODE == "S")
+            { regionCode = "South_Bills"; }
+            else if (model.REGION_CODE == "E")
+            { regionCode = "East_Bills"; }
+            else if (model.REGION_CODE == "W")
+            { regionCode = "West_Bills"; }
+            else if (model.REGION_CODE == "C")
+            { regionCode = "Central_Bills"; }
+            else if (model.REGION_CODE == "Q")
+            { regionCode = "Q_Bills"; }
+            
+            var path = env.WebRootPath + "/ReadWriteData/" + regionCode;
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            else
+            {
+                string pdfFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", regionCode, model.BILL_NO + ".PDF");
+
+                if (System.IO.File.Exists(pdfFilePath))
+                {
+                    // PDF file exists
+                }
+                else
+                {
+                    // PDF file does not exist
+                }
+            }
+
+            return View(model);
         }
         
         [HttpPost]
