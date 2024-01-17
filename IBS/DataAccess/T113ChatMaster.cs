@@ -15,8 +15,6 @@ public partial class T113ChatMaster
 
     public DateTimeOffset? SendMsgDate { get; set; }
 
-    public byte? Isdeleted { get; set; }
-
     public string? Relativepath { get; set; }
 
     public string? FieldId { get; set; }

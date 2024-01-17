@@ -106,6 +106,7 @@ builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.Inspec
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
+builder.Services.AddScoped<IFinanceReportsRepository, IBS.Repositories.Reports.FinanceReportsRepository>();
 
 builder.Services.AddScoped<IBillCheckPostingRepository, BillCheckPostingRepository>();
 

@@ -39,7 +39,7 @@
 .submitChatBtn { position: absolute; right: 12px; top: 12px; background: #F66A2F; border-radius: 35px; padding: 5px; width: 60px; height: 39px; color: #fff; }
 .timeStamp { font-size: 11px; position: absolute; right: 2px; bottom: 0; }
 
-.messageDate{ text-align:center; width:100%; position:relative;}
+.messageDate{ text-align:center; width:100%; position:relative; z-index:0;}
 .messageDate span{ background:#f1f1f1; padding:2px; border-radius:5px; z-index:1; position:relative; display:inline-block;}
 .messageDate:before{width:100%; content:""; height:1px; background:#d1d1d1; position:absolute; left:0; top:14px;}
 .chatBoxBody li.active h4{ font-weight:bold;}

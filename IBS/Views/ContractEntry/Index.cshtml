@@ -40,9 +40,14 @@
                             <th>ORGANIZATION TYPE</th>
                             <th>LETTER NO.</th>
                             <th>LETTER DATE</th>
-                            <th>Total LOT OF INSP</th>
+
+                            <th>FEE TYPES</th>
+                            <th>PERCENTAGE BASIS</th>
+                            <th>MAN DAYS</th>
+                            <th>LUMPSUM</th>
+                            @* <th>Total LOT OF INSP</th>
                             <th>MATERIAL VALUE</th>
-                            <th>MATERIAL DESCRIPTION</th>
+                            <th>MATERIAL DESCRIPTION</th> *@
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -129,9 +134,15 @@
                             return data;
                         }
                     },
-                    { data: "LOTOFINSP" },
-                    { data: "MATERIALVALUE" },
-                    { data: "Materialdescription" },
+                    // { data: "LOTOFINSP" },
+                    // { data: "MATERIALVALUE" },
+                    // { data: "Materialdescription" },
+
+                    { data: "InspectionfeeType" },
+                    { data: "PerBasisFlatfee" },
+                    { data: "MandayFlatfee" },
+                    { data: "LumpsumFlatfee" },
+
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
