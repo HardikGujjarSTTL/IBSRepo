@@ -397,6 +397,30 @@
             var BkNo = $('#BK_NO').val();
             var SetNo = $('#SET_NO').val();
 
+            $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
+                if (response.status) {
+                    var base64String = response.responseText;
+
+                    var model = {
+                        PDFDocument: base64String,
+                        PageNo: 1,
+                        IsMultipleSign: false,
+                        IsLeft: false,
+                        X1: 450,
+                        Y1: 50,
+                        X2: 580,
+                        Y2: 110
+                    };
+
+                    $.post('http://localhost:9090/api/Home', model, function (response) {
+                        downloadPDF(response.PDFDocument);
+                    });
+                }
+                else{
+                    ShowHideMsg("error", response.responseText);
+                }
+            });
+
             // var QueryString = "?RptFlag=8" +
             //     "&CaseNO=" + encodeURIComponent(CaseNO) +
             //     "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
@@ -406,22 +430,27 @@
             //     "&BkNo=" + encodeURIComponent(BkNo) +
             //     "&SetNo=" + encodeURIComponent(SetNo);
 
-            //window.open('@ReportUrl' + QueryString);
+            // window.open('@ReportUrl' + QueryString);
 
-            $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
-                if (response.status) {
-                    var a = document.createElement('A');
-                    var filePath = "/ReadWriteData/DigiSignatureFiles/" + response.responseText;
-                    a.href = filePath;
-                    a.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
-                else {
-                    ShowHideMsg("error", response.responseText);
-                }
-            });
+            // var QueryString = "?RptFlag=8" +
+            //     "&CaseNO=" + encodeURIComponent(CaseNO) +
+            //     "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
+            //     "&CallSNo=" + encodeURIComponent(CallSNo) +
+            //     "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
+            //     "&Region=" + encodeURIComponent(Region) +
+            //     "&BkNo=" + encodeURIComponent(BkNo) +
+            //     "&SetNo=" + encodeURIComponent(SetNo);
+
+            // window.open('@ReportUrl' + QueryString);
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "IC_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
         }
 
         function lstman() {

@@ -1,15 +1,8 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.MSIdentity.Shared;
-using Newtonsoft.Json;
-using PuppeteerSharp;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Xml;
 
 namespace IBS.Controllers
@@ -276,14 +269,14 @@ namespace IBS.Controllers
 
         public async Task<IActionResult> GetReportData(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo)
         {
-            X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
+            //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
 
-            if (Certificate == null)
-            {
-                return Json(new { status = 0, responseText = "Kindly Attached Certificate!!" });
-            }
+            //if (Certificate == null)
+            //{
+            //    return Json(new { status = 0, responseText = "Kindly Attached Certificate!!" });
+            //}
 
-            string signedFileName = string.Empty;
+            string base64String = string.Empty;
 
             var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
             webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
@@ -314,46 +307,19 @@ namespace IBS.Controllers
                     XmlDocument xmlDoc = new XmlDocument();
                     xmlDoc.LoadXml(responseContent);
 
-                    string base64String = xmlDoc.InnerText.Replace("\"", "");
-
-                    if (base64String != null)
-                    {
-                        byte[] bytes = Convert.FromBase64String(base64String);
-
-                        string filePath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.DigiSignatureFiles);
-
-                        if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-
-                        string fileName = DateTime.Now.Ticks.ToString() + ".pdf";
-
-                        string fullPath = filePath + "/" + fileName;
-
-                        System.IO.File.WriteAllBytes(fullPath, bytes);
-
-                        DigitalSignatureModel model = new DigitalSignatureModel
-                        {
-                            IsLeft = false,
-                            IsMultipleSign = false,
-                            PageNo = 1,
-                            X1 = 450,
-                            Y1 = 50,
-                            X2 = 580, 
-                            Y2 = 110
-                        };
-
-                        DigitalSigner.SetSignField(bytes, fullPath, model.IsMultipleSign, model.IsLeft, model.SearchText, out int counter, model.PageNo, model.Level, model.X1, model.Y1, model.X2, model.Y2);
-                        DigitalSigner.SignPDF(DigitalSigner.getCertificate("minesh vinodchandra doshi"), fullPath, "", "", counter, model.PageNo);
-
-                        signedFileName = fileName.Replace(".pdf", "_Signed.pdf");
-                    }
-                }
-                else
-                {
-                    return Json(new { status = 0, responseText = "Something went wrong!!" });
+                    base64String = xmlDoc.InnerText.Replace("\"", "");
                 }
             }
 
-            return Json(new { status = 1, responseText = signedFileName });
+            if (!string.IsNullOrEmpty(base64String))
+            {
+                return Json(new { status = 1, responseText = base64String });
+            }
+            else
+            {
+                return Json(new { status = 0, responseText = "Something went wrong!!" });
+            }
         }
+
     }
 }
