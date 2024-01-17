@@ -64,7 +64,7 @@
             </div>
             <div class="col-md-3" id="ClientName">
                 <label for="Reference">Choose Client</label>
-                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "Text", "Value"), "--Select--", new {@id="RailwayCD"})
+                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "","Value"), "--Select--", new {@id="RailwayCD"})
             </div>
             <div class="col-md-3" id="BPOName">
                 <label for="Reference">Enter BPO Name</label>
@@ -115,6 +115,7 @@
         $(document).ready(function () {
             $("#ClientName").hide();
             $("#BPOName").hide();
+            $('#AllRly').prop('checked', true);
         });
 
         $('#AllRly').change(function () {
@@ -156,6 +157,67 @@
             $("#InspRegion").val('');
             $("#ToDt").val('');
             $("#FromDt").val('');
+            $("#dtGB").val('');
+            $('#AllRly').prop('checked', true);
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+            $("#dvAllRly").show();
+        }
+
+        function BtnCreateBill() {
+            var fromdata = {
+                FromDate: $("#FromDt").val(),
+                ToDate: $("#ToDt").val(),
+                REGION_CODE: $("#InspRegion").val(),
+                LOA: $("#LOA").val(),
+                CLIENT_NAME: $("#RailwayCD").val(),
+                BPO_NAME: $("#BPO_Name").val(),
+                CLIENT_TYPE: $("#ClientType").val(),
+                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+            };
+
+            $.ajax({
+                url: "@Url.Action("CreateBill", "AllGeneratedBills")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(fromdata), 
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (result) {
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function BtnReturnBill() {
+            var fromdata = {
+                FromDate: $("#FromDt").val(),
+                ToDate: $("#ToDt").val(),
+                REGION_CODE: $("#InspRegion").val(),
+                LOA: $("#LOA").val(),
+                CLIENT_NAME: $("#RailwayCD").val(),
+                BPO_NAME: $("#BPO_Name").val(),
+                CLIENT_TYPE: $("#ClientType").val(),
+                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+            };
+
+            $.ajax({
+                url: "@Url.Action("ReturnBill", "AllGeneratedBills")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(fromdata),
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (result) {
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
         }
 
         function BtnGetBill() {
@@ -212,15 +274,39 @@
                     },
                     { data: "BILL_NO" },
                     { data: "REGION_CODE" },
-                    { data: "BILL_DT" },
-                    { data: "" },
-                    { data: "" },
+                    {
+                        data: "BILL_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            //var downloadLink = "@Url.Action("DownloadPhotos", "ICPhotoEnclosed")" +
+                            //    "?CaseNo=" + row.CaseNo +
+                            //    "&CallRecvDt=" + row.CallRecvDt +
+                            //    "&CallSno=" + row.CallSno +
+                            //    "&BkNo=" + row.BkNo +
+                            //    "&SetNo=" + row.SetNo;
+
+                            return '<td width="10%" valign="top" align="center">' +
+                                '<a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '</td>';
+                        }
+                    },
+                    { data: "FileSize" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var id = data.Id;
-                            var editUrl = '@Url.Action("Manage", "ClientMaster")/' + id;
-                            var html = '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            var Id = data.Id;
+                            var RailId = data.RailId;
+                            var editUrl = '@Url.Action("ManageDetails", "CentralItemMaster")/' + Id;
+                            //var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

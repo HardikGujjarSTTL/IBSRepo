@@ -38,6 +38,8 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            DataTable dt = null;
+
             string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : "";
             string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : "";
             string Region = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]) ? Convert.ToString(dtParameters.AdditionalValues["Region"]) : "";
@@ -58,21 +60,55 @@ namespace IBS.Repositories
 
             var ds = DataAccessDB.GetDataSet("GenerateBillDetails", par, 1);
 
-            dTResult.recordsTotal = query.Count();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.BILL_NO).ToLower().Contains(searchBy.ToLower())
-                );
+                List<AllGeneratedBills> list = dt.AsEnumerable().Select(row => new AllGeneratedBills
+                {
+                    BILL_NO = row.Field<string>("BILL_NO"),
+                    BILL_DT = row.Field<DateTime>("BILL_DT"),
+                    REGION_CODE = row.Field<string>("REGION_CODE"),
+                    CLIENT_TYPE = row.Field<string>("CLIENT_TYPE"),
+                    CLIENT_NAME = row.Field<string>("CLIENT_NAME"),
+                    BPO_NAME = row.Field<string>("BPO_NAME"),
+                    LOA = row.Field<string>("LOA"),
+                    FileSize = "0",
+                }).ToList();
 
-            dTResult.recordsFiltered = query.Count();
+                query = list.AsQueryable();
 
-            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+                dTResult.recordsTotal = ds.Tables[0].Rows.Count;
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+                if (!string.IsNullOrEmpty(searchBy))
+                    query = query.Where(w => Convert.ToString(w.BILL_NO).ToLower().Contains(searchBy.ToLower())
+                    );
 
-            dTResult.draw = dtParameters.Draw;
+                dTResult.recordsFiltered = query.Count();
+
+                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+                dTResult.draw = dtParameters.Draw;
+            }
 
             return dTResult;
+        }
+
+        public AllGeneratedBills GenerateBill(AllGeneratedBills model)
+        {
+            if(model.RailwayChk == "true")
+            {
+
+            }
+            else if(model.CLIENT_NAME != null)
+            {
+
+            }
+            else
+            {
+
+            }
+            return model;
         }
 
         //public bool Remove(int Id, int UserID)
