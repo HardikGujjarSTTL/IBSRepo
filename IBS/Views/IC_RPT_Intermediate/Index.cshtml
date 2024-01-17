@@ -386,71 +386,54 @@
         });
 
         function Download() {
-            $('#BK_NO').prop('disabled', true);
-            $('#SET_NO').prop('disabled', true);
 
-            var CaseNO = $("#lblCASE_NO").html();
-            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
-            var CallSNo = $("#lblCall_SNO").html();
-            var Consignee_CD = $("#CONSIGNEE_CD").val();
-            var Region = $("#Region").val();
-            var BkNo = $('#BK_NO').val();
-            var SetNo = $('#SET_NO').val();
+            // var QueryString = "?RptFlag=8" +
+            //     "&CaseNO=" + encodeURIComponent(CaseNO) +
+            //     "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
+            //     "&CallSNo=" + encodeURIComponent(CallSNo) +
+            //     "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
+            //     "&Region=" + encodeURIComponent(Region) +
+            //     "&BkNo=" + encodeURIComponent(BkNo) +
+            //     "&SetNo=" + encodeURIComponent(SetNo);
 
-            $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
-                if (response.status) {
-                    var base64String = response.responseText;
+            // window.open('@ReportUrl' + QueryString);
 
-                    var model = {
-                        PDFDocument: base64String,
-                        PageNo: 1,
-                        IsMultipleSign: false,
-                        IsLeft: false,
-                        X1: 450,
-                        Y1: 50,
-                        X2: 580,
-                        Y2: 110
-                    };
+            // var flag = DigitalSignatureStatus("bikey3383@gmail.com");
 
-                    $.post('http://localhost:9090/api/Home', model, function (response) {
-                        downloadPDF(response.PDFDocument);
+            // if (flag == 0) {
+            //     ShowHideMsg("error", "Kindly Attached Certificate!!");
+            //     return;
+            // }
+
+            var EmailId = "bikey3383@gmail.com";
+
+            $.get('http://localhost:9090/api/Home?EmailId=' + EmailId, function (response) {
+                if (response.Flag == 0) {
+                    ShowHideMsg("error", "Kindly Attached Certificate!!");
+                    return;
+                }
+                else {
+                    $('#BK_NO').prop('disabled', true);
+                    $('#SET_NO').prop('disabled', true);
+
+                    var CaseNO = $("#lblCASE_NO").html();
+                    var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+                    var CallSNo = $("#lblCall_SNO").html();
+                    var Consignee_CD = $("#CONSIGNEE_CD").val();
+                    var Region = $("#Region").val();
+                    var BkNo = $('#BK_NO').val();
+                    var SetNo = $('#SET_NO').val();
+
+                    $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
+                        if (response.status) {
+                            getDigitalSignedDoc(EmailId, response.responseText);
+                        }
+                        else {
+                            ShowHideMsg("error", response.responseText);
+                        }
                     });
                 }
-                else{
-                    ShowHideMsg("error", response.responseText);
-                }
             });
-
-            // var QueryString = "?RptFlag=8" +
-            //     "&CaseNO=" + encodeURIComponent(CaseNO) +
-            //     "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
-            //     "&CallSNo=" + encodeURIComponent(CallSNo) +
-            //     "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-            //     "&Region=" + encodeURIComponent(Region) +
-            //     "&BkNo=" + encodeURIComponent(BkNo) +
-            //     "&SetNo=" + encodeURIComponent(SetNo);
-
-            // window.open('@ReportUrl' + QueryString);
-
-            // var QueryString = "?RptFlag=8" +
-            //     "&CaseNO=" + encodeURIComponent(CaseNO) +
-            //     "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
-            //     "&CallSNo=" + encodeURIComponent(CallSNo) +
-            //     "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-            //     "&Region=" + encodeURIComponent(Region) +
-            //     "&BkNo=" + encodeURIComponent(BkNo) +
-            //     "&SetNo=" + encodeURIComponent(SetNo);
-
-            // window.open('@ReportUrl' + QueryString);
-        }
-
-        function downloadPDF(pdf) {
-            const linkSource = `data:application/pdf;base64,${pdf}`;
-            const downloadLink = document.createElement("a");
-            const fileName = "IC_Report.pdf";
-            downloadLink.href = linkSource;
-            downloadLink.download = fileName;
-            downloadLink.click();
         }
 
         function lstman() {
@@ -1043,6 +1026,38 @@
                 event.returnValue = false;
             }
             return false;
+        }
+
+        function DigitalSignatureStatus(EmailId) {
+
+            return 0;
+        }
+
+        function getDigitalSignedDoc(EmailId, base64String) {
+            var model = {
+                EmailId: EmailId,
+                PDFDocument: base64String,
+                PageNo: 1,
+                IsMultipleSign: false,
+                IsLeft: false,
+                X1: 450,
+                Y1: 50,
+                X2: 580,
+                Y2: 110
+            };
+
+            $.post('http://localhost:9090/api/Home', model, function (response) {
+                downloadPDF(response.PDFDocument);
+            });
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "IC_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
         }
 
     </script>

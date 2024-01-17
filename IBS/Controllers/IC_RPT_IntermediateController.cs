@@ -262,63 +262,63 @@ namespace IBS.Controllers
                     writetext.WriteLine(xmlResp);
 
                 }
-                //Response.Write(filename);                
             }
             return Json(filename);
         }
 
         public async Task<IActionResult> GetReportData(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo)
         {
-            //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
-
-            //if (Certificate == null)
-            //{
-            //    return Json(new { status = 0, responseText = "Kindly Attached Certificate!!" });
-            //}
-
-            string base64String = string.Empty;
-
-            var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
-            webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
-
-            string methodName = "GetReportData";
-
-            var formData = new Dictionary<string, string>
+            try
             {
-                { "CaseNO", CaseNO },
-                { "Call_Recv_Dt", Call_Recv_Dt },
-                { "CallSNo", CallSNo },
-                { "Consignee_CD", Consignee_CD },
-                { "Region", Region },
-                { "BkNo", BkNo },
-                { "SetNo", SetNo },
-            };
+                string base64String = string.Empty;
 
-            using (var httpClient = new HttpClient())
-            {
-                var encodedFormData = new FormUrlEncodedContent(formData);
+                var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
+                webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
 
-                var response = await httpClient.PostAsync($"{webServiceUrl}/{methodName}", encodedFormData);
+                string methodName = "GetReportData";
 
-                if (response.IsSuccessStatusCode)
+                var formData = new Dictionary<string, string>
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
+                    { "CaseNO", CaseNO },
+                    { "Call_Recv_Dt", Call_Recv_Dt },
+                    { "CallSNo", CallSNo },
+                    { "Consignee_CD", Consignee_CD },
+                    { "Region", Region },
+                    { "BkNo", BkNo },
+                    { "SetNo", SetNo },
+                };
 
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(responseContent);
+                using (var httpClient = new HttpClient())
+                {
+                    var encodedFormData = new FormUrlEncodedContent(formData);
 
-                    base64String = xmlDoc.InnerText.Replace("\"", "");
+                    var response = await httpClient.PostAsync($"{webServiceUrl}/{methodName}", encodedFormData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(responseContent);
+
+                        base64String = xmlDoc.InnerText.Replace("\"", "");
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(base64String))
+                {
+                    return Json(new { status = 1, responseText = base64String });
+                }
+                else
+                {
+                    return Json(new { status = 0, responseText = "Something went wrong!!" });
                 }
             }
+            catch (Exception ex)
+            {
+                return Json(new { status = 0, responseText = ex.Message.ToString() });
+            }
 
-            if (!string.IsNullOrEmpty(base64String))
-            {
-                return Json(new { status = 1, responseText = base64String });
-            }
-            else
-            {
-                return Json(new { status = 0, responseText = "Something went wrong!!" });
-            }
         }
 
     }
