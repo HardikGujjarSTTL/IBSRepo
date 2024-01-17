@@ -107,6 +107,7 @@ builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.Inspec
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
+builder.Services.AddScoped<IFinanceReportsRepository, IBS.Repositories.Reports.FinanceReportsRepository>();
 
 builder.Services.AddScoped<IBillCheckPostingRepository, BillCheckPostingRepository>();
 
@@ -179,8 +180,7 @@ builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsReposito
 builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 builder.Services.AddScoped<IClientRailwayRepository, IBS.Repositories.ClientRailwayRepository>();
-
-
+builder.Services.AddScoped<IAllGeneratedBillsRepository, IBS.Repositories.AllGeneratedBillsRepository>();
 
 
 

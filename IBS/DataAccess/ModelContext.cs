@@ -12570,36 +12570,30 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T113ChatMaster>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C0011474");
+            entity.HasKey(e => e.Id).HasName("SYS_C0011707");
 
             entity.ToTable("T113_CHAT_MASTER");
 
             entity.Property(e => e.Id)
                 .HasPrecision(6)
+                .HasDefaultValueSql("\"IBSDEV\".\"T113_CHAT_MASTER_SEQ\".\"NEXTVAL\"")
                 .HasColumnName("ID");
             entity.Property(e => e.Extension)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("EXTENSION");
             entity.Property(e => e.FieldId)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FIELD_ID");
             entity.Property(e => e.Filedisplayname)
                 .HasMaxLength(200)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FILEDISPLAYNAME");
             entity.Property(e => e.Filesize)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("FILESIZE");
-            entity.Property(e => e.Isdeleted)
-                .HasPrecision(2)
-                .HasColumnName("ISDELETED");
             entity.Property(e => e.Message)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -12613,7 +12607,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Relativepath)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValueSql("NULL")
                 .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.SendMsgDate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -16842,12 +16835,14 @@ public partial class ModelContext : DbContext
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.IuAdvDt)
                 .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
                 .HasColumnType("DATE")
                 .HasColumnName("IU_ADV_DT");
             entity.Property(e => e.IuAdvNo)
                 .HasMaxLength(12)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NULL")
                 .HasColumnName("IU_ADV_NO");
             entity.Property(e => e.Narration)
                 .HasMaxLength(50)
@@ -27208,6 +27203,7 @@ public partial class ModelContext : DbContext
         modelBuilder.HasSequence("T107_LO_LOGGIN_LOG_SEQ");
         modelBuilder.HasSequence("T108_REMARKED_CALLS_SEQ");
         modelBuilder.HasSequence("T109_LAB_SAMPLE_INFO_HISTORY_SEQ");
+        modelBuilder.HasSequence("T113_CHAT_MASTER_SEQ");
         modelBuilder.HasSequence("T12_BILL_PAYING_OFFICER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_HISTORY_SEQ");
         modelBuilder.HasSequence("T13_PO_MASTER_SEQ");

@@ -481,7 +481,7 @@ namespace IBS.Controllers.InspectionBilling
                     {
                         int[] DocumentIds = { (int)Enums.DocumentCategory.ICDocument };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection);
-                        DocumentHelper.SaveFiles(BillNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICDocument), env, iDocument, string.Empty, BillNo + ".pdf", DocumentIds);
+                        DocumentHelper.SaveFiles(BillNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICDocument), env, iDocument, string.Empty, BillNo, DocumentIds);
 
                         msg = "The file has been uploaded.";
                         string i = inpsRepository.DocUpdate(BillNo, Convert.ToString(UserId));
