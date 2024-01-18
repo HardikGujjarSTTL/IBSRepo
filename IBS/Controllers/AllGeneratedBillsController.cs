@@ -70,38 +70,38 @@ namespace IBS.Controllers
             {
                 foreach (var item in model.items)
                 {
-                    decimal totalBillAmount = (item.sgst ?? 0) + (item.cgst ?? 0) + (item.igst ?? 0) + (item.insp_fee ?? 0);
-                    item.BILL_AMOUNT = totalBillAmount;
+                    //decimal totalBillAmount = (item.sgst ?? 0) + (item.cgst ?? 0) + (item.igst ?? 0) + (item.insp_fee ?? 0);
+                    //item.BILL_AMOUNT = totalBillAmount;
 
-                    DateTime billDate = Convert.ToDateTime(item.BILL_DT);
-                    string formattedDate = billDate.ToString("yyyy-MM-dd");
+                    //DateTime billDate = Convert.ToDateTime(item.BILL_DT);
+                    //string formattedDate = billDate.ToString("yyyy-MM-dd");
 
-                    var expire = "2020-10-01";
+                    //var expire = "2020-10-01";
 
-                    if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null))
-                    {
-                        continue;
-                    }
+                    //if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null))
+                    //{
+                    //    continue;
+                    //}
 
-                    var path = env.WebRootPath + "/ReadWriteData/" + regionCode;
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-                    else
-                    {
-                        string pdfFilePath = Path.Combine(path, model.BILL_NO + ".PDF");
+                    //var path = env.WebRootPath + "/ReadWriteData/" + regionCode;
+                    //if (!Directory.Exists(path))
+                    //{
+                    //    Directory.CreateDirectory(path);
+                    //}
+                    //else
+                    //{
+                    //    string pdfFilePath = Path.Combine(path, model.BILL_NO + ".PDF");
 
-                        // check bill No Pdf exists.
-                        if (System.IO.File.Exists(pdfFilePath))
-                        {
-                            // PDF file exists
-                        }
-                        else
-                        {
-                            // PDF file does not exist
-                        }
-                    }
+                    //    // check bill No Pdf exists.
+                    //    if (System.IO.File.Exists(pdfFilePath))
+                    //    {
+                    //        // PDF file exists
+                    //    }
+                    //    else
+                    //    {
+                    //        // PDF file does not exist
+                    //    }
+                    //}
 
                 }
             }
