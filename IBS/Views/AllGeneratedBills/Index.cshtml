@@ -35,14 +35,14 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Client Type</label>
-                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),"--Select--",new {@id="ClientType"})
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),new {@id="ClientType"})
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">LOA</label>
-                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),"--Select--",new {@id="LOA"})
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),new {@id="LOA"})
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -111,11 +111,12 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
+        var Region = "@ViewBag.Region";
         $(document).ready(function () {
             $("#ClientName").hide();
             $("#BPOName").hide();
             $('#AllRly').prop('checked', true);
+            $("#InspRegion").val(Region);
         });
 
         $('#AllRly').change(function () {

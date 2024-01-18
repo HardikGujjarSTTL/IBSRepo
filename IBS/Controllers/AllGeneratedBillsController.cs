@@ -37,6 +37,7 @@ namespace IBS.Controllers
         [Authorization("AllGeneratedBills", "Index", "view")]
         public IActionResult Index()
         {
+            ViewBag.Region = Region;
             return View();
         }
 

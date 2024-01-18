@@ -46,7 +46,7 @@
         public string igst { get; set; }
         public string fee_rate { get; set; }
         public List<ItemsDetail> items { get; set; } = new List<ItemsDetail>();
-        //public List<BillDetailsForPDF> items { get; set; } //lstBillDetailsForPDF
+        public List<BillDetailsForPDF> lstBillDetail { get; set; } //lstBillDetailsForPDF
     }
 
     public class BillDetailsForPDF
