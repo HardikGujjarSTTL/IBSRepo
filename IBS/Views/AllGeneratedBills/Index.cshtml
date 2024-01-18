@@ -173,11 +173,11 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
-                url: "@Url.Action("CreateBill", "AllGeneratedBills")",
+                url: "@Url.Action("NorthBill", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata), 
@@ -185,6 +185,7 @@
                     responseType: 'blob'
                 },
                 success: function (result) {
+                    window.location.href = "@Url.Action("NorthBill", "AllGeneratedBills")";
                 },
                 error: function (error) {
                     console.error(error);
@@ -201,7 +202,7 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({

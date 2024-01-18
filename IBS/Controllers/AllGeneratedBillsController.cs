@@ -19,7 +19,7 @@ using IBS.Filters;
 
 namespace IBS.Controllers
 {
-    [Authorization]
+    //[Authorization]
     public class AllGeneratedBillsController : BaseController
     {
         private readonly IAllGeneratedBillsRepository allGeneratedBillsRepository;
@@ -47,16 +47,22 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateBill([FromBody] AllGeneratedBills fromdata)
+        public IActionResult NorthBillGeneratePDF(AllGeneratedBills fromdata) //CreateBill
         {
             AllGeneratedBills model = allGeneratedBillsRepository.GenerateBill(fromdata);
-            return View("NorthBillGeneratePDF", model);
+            return View(model);
         }
         
         [HttpPost]
         public IActionResult ReturnBill([FromBody] AllGeneratedBills fromdata)
         {
             return View();
+        }
+
+        public IActionResult NorthBill(AllGeneratedBills obj)
+        {
+            AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
+            return View(model);
         }
 
         #region GeneratePDF

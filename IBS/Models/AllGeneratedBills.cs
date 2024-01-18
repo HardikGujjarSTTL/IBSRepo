@@ -47,5 +47,31 @@
         public string set_no { get; set; }
         public string call_instalment_no { get; set; }
         public string RailwayChk { get; set; }
+        public string invoice_no { get; set; }
+        public string material_value { get; set; }
+        public string insp_fee { get; set; }
+        public string sgst { get; set; }
+        public string cgst { get; set; }
+        public string igst { get; set; }
+        public string fee_rate { get; set; }
+        public List<ItemsDetail> items { get; set; } = new List<ItemsDetail>();
+    }
+
+    public class ItemsDetail
+    {
+        public string item_desc { get; set; }
+        public string qty { get; set; }
+        public string rate { get; set; }
+        public string uom_s_desc { get; set; }
+        public string uom_factor { get; set; }
+        public string basic_value { get; set; }
+        public string sales_tax { get; set; }
+        public string sales_tax_per { get; set; }
+        public string discount_type { get; set; }
+        public string discount { get; set; }
+        public string discount_per { get; set; }
+        public string ot_charge_type { get; set; }
+        public string ot_charge_per { get; set; }
+        public string other_charges { get; set; }
     }
 }
