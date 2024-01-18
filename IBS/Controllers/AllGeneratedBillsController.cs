@@ -93,7 +93,8 @@ namespace IBS.Controllers
                         {
                             Directory.CreateDirectory(path);
                         }
-                        else
+                        
+                        if(Directory.Exists(path))
                         {
                             // check if the PDF file exists
                             string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");

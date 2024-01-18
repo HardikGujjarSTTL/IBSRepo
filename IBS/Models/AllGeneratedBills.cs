@@ -32,8 +32,8 @@
         public string Consignee { get; set; }
         public string ConsigneeAdd1 { get; set; }
         public string ConsigneeCity { get; set; }
-        public string ICNO { get; set; }
-        public string ICDT { get; set; }
+        public string IC_NO { get; set; }
+        public string IC_DT { get; set; }
         public string bk_no { get; set; }
         public string set_no { get; set; }
         public string call_instalment_no { get; set; }
