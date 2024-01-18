@@ -138,7 +138,7 @@ namespace IBS.Controllers
                                 {
                                     await pdfContent.CopyToAsync(pdfStream);
                                     byte[] pdfBytes = pdfStream.ToArray();
-
+                                    string base64String = Convert.ToBase64String(pdfBytes);
                                     await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                                 }
 

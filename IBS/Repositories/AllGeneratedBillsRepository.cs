@@ -153,7 +153,26 @@ namespace IBS.Repositories
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
+            model.items = new List<ItemsDetail>();
 
+            foreach (var item in list)
+            {
+                var result = from vbi in context.V23BillItems
+                             where vbi.BillNo == item.BILL_NO
+                             select new ItemsDetail
+                             {
+                                 Item_SrNo = vbi.ItemSrno,
+                                 item_desc = vbi.ItemDesc,
+                                 qty = vbi.Qty,
+                                 rate = vbi.Rate,
+                                 UnitCode = vbi.UomSDesc,
+                                 uom_factor = vbi.UomFactor,
+                                 basic_value = vbi.BasicValue,
+                                 Value = vbi.Value
+                             };
+
+                model.items.AddRange(result);
+            }
             model.lstBillDetailsForPDF = list;
 
             return model;
