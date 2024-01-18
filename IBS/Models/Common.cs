@@ -4992,6 +4992,60 @@ namespace IBS.Models
                                          }).ToList();
             return Role;
         }
+
+        public static string ConvertAmountToWords(decimal amount)
+        {
+            if (amount == 0)
+            {
+                return "Zero";
+            }
+
+            string[] units = { "", "Thousand", "Million", "Billion", "Trillion" };
+            int i = 0;
+            string words = "";
+
+            while (amount > 0)
+            {
+                if (amount % 1000 != 0)
+                {
+                    words = $"{ConvertThreeDigitAmountToWords((int)(amount % 1000))} {units[i]} {words}";
+                }
+
+                amount /= 1000;
+                if(amount.ToString().Substring(0, 3) == "0.0")
+                    break;
+                i++;
+            }
+
+            return words.Trim();
+        }
+
+        public static string ConvertThreeDigitAmountToWords(int num)
+        {
+            string[] ones = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+            string[] teens = { "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+            string[] tens = { "", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+
+            string words = "";
+
+            if (num % 100 < 10 || num % 100 >= 20)
+            {
+                words = $"{ones[num % 10]} {words}";
+                num /= 10;
+            }
+            else
+            {
+                words = $"{teens[num % 10 - 1]} {words}";
+                num /= 100;
+            }
+
+            if (num > 0)
+            {
+                words = $"{ones[num % 10]} Hundred {words}";
+            }
+
+            return words.Trim();
+        }
     }
 
     public static class DbContextHelper
