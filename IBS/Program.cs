@@ -29,6 +29,7 @@ using IBS.Repositories.Vendor;
 using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 using System.Globalization;
 using System.Text.Json.Serialization;
@@ -179,8 +180,7 @@ builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsReposito
 builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 builder.Services.AddScoped<IClientRailwayRepository, IBS.Repositories.ClientRailwayRepository>();
-
-
+builder.Services.AddScoped<IAllGeneratedBillsRepository, IBS.Repositories.AllGeneratedBillsRepository>();
 
 
 
@@ -268,6 +268,7 @@ builder.Services.AddSignalR(e =>
     e.MaximumReceiveMessageSize = 102400000;
 });
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -277,6 +278,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 var supportedCultures = new[]
 {

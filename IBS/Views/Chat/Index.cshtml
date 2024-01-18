@@ -22,24 +22,17 @@
                 <div class="row my-0">
                     <div class="col-md-2">
                         <label for="Reference">Users Type</label>
-                        <div class="userMultiSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForMaster(), "Value", "Text"), "--Select--", new { @onChange="FillUsers()"})</div>
+                        <div class="userMultiSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForUsers(), "Value", "Text"), "--Select--", new { @onChange="FillUsers()"})</div>
                     </div>
                     <div class="col-md-3">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster(""), "Value", "Text"), new { multiple = "multiple" })</div>
+                        <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
                     <div class="col-md-6">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
                     <div class="col-md-1 d-flex justify-content-between">
-                        @*<div class="topUploadCustom">
-                        <div class="upload-btn-wrapper submitChatBtn">
-                        <button><span class="fa fa-paperclip"></span></button>
-                        <input type="file" id="fileupload" class="fileUploadNormal" multiple>
-                        </div>
-                        </div>*@
-
                         <div class="savenext-btn" style="margin-top:28px;">
                             <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
                         </div>
@@ -394,8 +387,9 @@
     });
 
     function FillUsers(id) {
-        var _drpUserType = $('select#dpUserType').val();
-        $.get("@Url.Action("GetUsersByUserType", "Chat")", { type: _drpUserType }, function (response) {
+        var _drpUserType = $("#dpUserType option:selected").text();
+        var _drpUserTypeId = $("#dpUserType option:selected").val();
+        $.get("@Url.Action("GetUsersByUserType", "Chat")", { type: _drpUserType, id: _drpUserTypeId }, function (response) {
             if (response != null) {
                 $("#dpUser").empty();
                 $.each(response, function (ind, val) {

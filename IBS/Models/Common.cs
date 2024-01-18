@@ -17,6 +17,7 @@ using static IBS.Helper.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
+using DocumentFormat.OpenXml.InkML;
 
 namespace IBS.Models
 {
@@ -4899,31 +4900,151 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SAPType)).ToList();
         }
 
-        public static List<SelectListItem> GetUserMaster(string UsertType)
+        public static List<SelectListItem> GetUserMaster(string UsertType, string UsertTypeID)
         {
+            List<SelectListItem> UM = new List<SelectListItem>();
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
-            List<SelectListItem> UM = (from a in ModelContext.UserMasters
-                                       where a.UserType == UsertType
-                                       orderby a.UserType ascending, a.Name ascending
-                                       select new SelectListItem
-                                       {
-                                           Text = Convert.ToString(a.Name),
-                                           Value = Convert.ToString(a.Id)
-                                       }).ToList();
+            if (UsertType.ToLower() == "inspection engineer (ie)")
+            {
+                UM = (from e in ModelContext.T09Ies
+                     join um in ModelContext.UserMasters on e.IeEmpNo.ToString() equals um.UserId.ToString()
+                     join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
+                     join r in ModelContext.Roles on ur.RoleId equals r.RoleId
+                     where r.RoleId == Convert.ToInt32(UsertTypeID) && e.IeStatus == null
+                     select new SelectListItem
+                     {
+                         Text = Convert.ToString(e.IeName),
+                         Value = Convert.ToString(um.Id)
+
+                         //MOBILE = e.IE_PHONE_NO,
+                         //ID = e.IE_CD,
+                         //USER_NAME = e.IE_NAME,
+                         //USER_ID = e.IE_EMP_NO,
+                         //REGION = e.IE_REGION,
+                         //AUTH_LEVL = (int?)null,
+                         //ROLE_ID = r.ROLE_ID,
+                         //ROLE_NAME = r.ROLENAME,
+                         //ORGN_TYPE = (string)null,
+                         //ORGN_CHASED = (string)null,
+                         //ORGANISATION = (string)null,
+                         //IECD = e.IE_CD,
+                         //COCD = e.IE_CO_CD,
+                         //MASTER_ID = um.ID
+                     }).ToList();
+            }
+            else
+            {
+                UM = (from u in ModelContext.T02Users
+                      join um in ModelContext.UserMasters on u.UserId.ToString() equals um.UserId.ToString()
+                      join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
+                      join r in ModelContext.Roles on ur.RoleId equals r.RoleId
+                      where r.RoleId == Convert.ToInt32(UsertTypeID)
+                      select new SelectListItem
+                      {
+                          Text = Convert.ToString(u.UserName),
+                          Value = Convert.ToString(um.Id)
+
+                          //MOBILE = u.MOBILE,
+                          //ID = u.ID,
+                          //USER_NAME = u.USER_NAME,
+                          //USER_ID = u.USER_ID,
+                          //REGION = u.REGION,
+                          //AUTH_LEVL = u.auth_levl,
+                          //ROLE_ID = r.ROLE_ID,
+                          //ROLE_NAME = r.ROLENAME,
+                          //ORGN_TYPE = (string)null,
+                          //ORGN_CHASED = (string)null,
+                          //ORGANISATION = (string)null,
+                          //IECD = 0,
+                          //COCD = 0,
+                          //MASTER_ID = um.ID
+                      }).ToList();
+            }
+            //UM = (from a in ModelContext.UserMasters
+            //      where a.UserType == UsertType
+            //      orderby a.UserType ascending, a.Name ascending
+            //      select new SelectListItem
+            //      {
+            //          Text = Convert.ToString(a.Name),
+            //          Value = Convert.ToString(a.Id)
+            //      }).ToList();
             return UM;
         }
 
-        public static List<SelectListItem> GetUserTypeForMaster()
+        public static List<SelectListItem> GetUserTypeForUsers()
         {
-            List<SelectListItem> list = new List<SelectListItem>
+            //List<SelectListItem> list = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Users", Value = "USERS" },
+            //    new SelectListItem { Text = "Vendor", Value = "VENDOR" },
+            //    new SelectListItem { Text = "Inspection Engineer (IE)", Value = "IE" },
+            //    new SelectListItem { Text = "Client", Value = "CLIENT_LOGIN" },
+            //    new SelectListItem { Text = "Liaisoning Officer (LO)", Value = "LO_LOGIN" },
+            //};
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<int> roleIdsToFilter = new List<int> { 2, 125, 126, 127, 128, 129 };
+            List<SelectListItem> Role = (from a in ModelContext.Roles
+                                         where roleIdsToFilter.Contains(a.RoleId)
+                                         select new SelectListItem
+                                         {
+                                             Text = Convert.ToString(a.Rolename),
+                                             Value = Convert.ToString(a.RoleId)
+                                         }).ToList();
+            return Role;
+        }
+
+        public static string ConvertAmountToWords(decimal amount)
+        {
+            if (amount == 0)
             {
-                new SelectListItem { Text = "Users", Value = "USERS" },
-                new SelectListItem { Text = "Vendor", Value = "VENDOR" },
-                new SelectListItem { Text = "Inspection Engineer (IE)", Value = "IE" },
-                new SelectListItem { Text = "Client", Value = "CLIENT_LOGIN" },
-                new SelectListItem { Text = "Liaisoning Officer (LO)", Value = "LO_LOGIN" },
-            };
-            return list;
+                return "Zero";
+            }
+
+            string[] units = { "", "Thousand", "Million", "Billion", "Trillion" };
+            int i = 0;
+            string words = "";
+
+            while (amount > 0)
+            {
+                if (amount % 1000 != 0)
+                {
+                    words = $"{ConvertThreeDigitAmountToWords((int)(amount % 1000))} {units[i]} {words}";
+                }
+
+                amount /= 1000;
+                if(amount.ToString().Substring(0, 3) == "0.0")
+                    break;
+                i++;
+            }
+
+            return words.Trim();
+        }
+
+        public static string ConvertThreeDigitAmountToWords(int num)
+        {
+            string[] ones = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+            string[] teens = { "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+            string[] tens = { "", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+
+            string words = "";
+
+            if (num % 100 < 10 || num % 100 >= 20)
+            {
+                words = $"{ones[num % 10]} {words}";
+                num /= 10;
+            }
+            else
+            {
+                words = $"{teens[num % 10 - 1]} {words}";
+                num /= 100;
+            }
+
+            if (num > 0)
+            {
+                words = $"{ones[num % 10]} Hundred {words}";
+            }
+
+            return words.Trim();
         }
     }
 
