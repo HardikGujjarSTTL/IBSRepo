@@ -60,5 +60,7 @@ namespace IBS.Models
 
         public IFormFile ComplaintFile { get; set; }
         public string ComplaintID { get; set; }
+
+        public string COMP_DOC { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace IBS.Controllers.WebsitePages
                 List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(0));
                 FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
                 FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.OnlineComplaints).ToList();
                 FileUploaderUpload_Memo.OthersSection = false;
                 FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
                 FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
@@ -64,7 +64,7 @@ namespace IBS.Controllers.WebsitePages
                 string Compid = _onlineComplaintsRepository.SaveComplaints(onlineComplaints);
                 if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                 {
-                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
+                    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.OnlineComplaints };
                     List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                     DocumentHelper.SaveFiles(Convert.ToString(Compid), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, string.Empty, Compid, DocumentIds);
                 }

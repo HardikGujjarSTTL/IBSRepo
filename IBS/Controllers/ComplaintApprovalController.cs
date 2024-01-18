@@ -32,7 +32,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<OnlineComplaints> dTResult = complaintApprovalRepository.GetRejComplaints(dtParameters);
+            DTResult<OnlineComplaints> dTResult = complaintApprovalRepository.GetRejComplaints(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -47,7 +47,7 @@ namespace IBS.Controllers
                 List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(TEMP_COMPLAINT_ID));
                 FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
                 FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
-                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
+                FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.OnlineComplaints).ToList();
                 FileUploaderUpload_Memo.OthersSection = false;
                 FileUploaderUpload_Memo.MaxUploaderinOthers = 5;
                 FileUploaderUpload_Memo.FilUploadMode = (int)Enums.FilUploadMode.Single;
@@ -65,7 +65,7 @@ namespace IBS.Controllers
         public ActionResult RejectComplaint(OnlineComplaints model)
         {
             model.createdBy = UserId;
-            model.UserId = UserName.Substring(0, 8);
+            model.UserId = UserName.Length >= 8 ? UserName.Substring(0, 8) : UserName;
             string msg = "";
             try
             {
@@ -90,11 +90,11 @@ namespace IBS.Controllers
         public ActionResult AcceptComplaint(OnlineComplaints model, IFormCollection FrmCollection)
         {
             model.createdBy = UserId;
-            model.UserId = UserName.Substring(0, 8);
+            model.UserId = UserName.Length >= 8 ? UserName.Substring(0, 8) : UserName;
             string msg = complaintApprovalRepository.AcceptComplaint(model);
             if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
             {
-                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
+                int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.OnlineComplaints };
                 List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
                 DocumentHelper.SaveFiles(Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
             }
@@ -115,7 +115,7 @@ namespace IBS.Controllers
         {
             model.createdBy = UserId;
             model.UpdatedBy = UserId;
-            model.UserId = UserName.Substring(0, 8);
+            model.UserId = UserName.Length >= 8 ? UserName.Substring(0, 8) : UserName;
             string msg = complaintApprovalRepository.SubmitAcceptRecord(model);
             return Json(new { status = true, responseText = msg, redirectToIndex = true });
         }

@@ -133,11 +133,11 @@
                                                 @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
                                                 {
                                                     <br>
-                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>{{@Model.irn_no}}</p>
+                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>@Model.irn_no</p>
                                                 }
                                                 @if (!string.IsNullOrEmpty(Model.remarks))
                                                 {
-                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>{{@Model.remarks}}</p>
+                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>@Model.remarks</p>
                                                 }
                                             </div>
                                             <div valign="top" width="30%"> <b> Through</b><br>@Model.BPO_NAME<br>@Model.bpo_orgn<br>@Model.bpo_add<br>@Model.bpo_city<br><br>Recipient GSTIN : @Model.recipient_gstin_no<br>State Code : @(string.IsNullOrEmpty(Model.recipient_gstin_no) ? "" : Model.recipient_gstin_no.Substring(0, 2))</div>
@@ -147,7 +147,7 @@
                                             <div valign="top" width="30%">
                                                 <b><span class="hindi"> सेवा में</span> / TO</b><br>
                                                 @*<?php echo Model.bpo_name; ?>*@
-                                                @Model.BPO_NAME DY FA&CAO (W) <br>
+                                                @Model.BPO_NAME<br>
                                                 @Model.bpo_orgn WEST CENTRAL RAILWAY<br>
                                                 @Model.bpo_add <br>
                                                 @Model.bpo_city <br>
@@ -156,9 +156,9 @@
                                                 @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
                                                 {
                                                     <br>
-                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>{{Model.irn_no}}</p>
+                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>@Model.irn_no</p>
                                                     @if (!string.IsNullOrEmpty(Model.remarks)) { }
-                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>{{Model.remarks}}</p>
+                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>@Model.remarks</p>
                                                 }
                                             </div>
                                         }
@@ -178,7 +178,7 @@
                                                         @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
                                                         {
                                                             <br>
-                                                            <p style="padding:0;margin:0;"><strong>ACK No.</strong>{{Model.ack_no}} <strong>ACK Date:</strong>{{Model.ack_dt}}</p>
+                                                            <p style="padding:0;margin:0;"><strong>ACK No.</strong>@Model.ack_no <strong>ACK Date:</strong>@Model.ack_dt</p>
                                                         }
                                                     </td>
                                                 </tr>
@@ -201,12 +201,12 @@
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "O")
                                                 {
                                                     <td style="width: 14%;"><b><span><img style="width:120px" src="img/CreditNote.jpg" alt="" /></span><br>CREDIT NOTE.</b></td>
-                                                    <td style="width: 86%;" valign="middle" align="left">{{@Model.credit_doc_id}}</td>
+                                                    <td style="width: 86%;" valign="middle" align="left">@Model.credit_doc_id</td>
                                                 }
                                                 else
                                                 {
                                                     <td style="width: 14%;"><b><span class="hindi">&#2367;बल सं.</span><br>BILL NO.</b></td>
-                                                    <td style="width: 86%;" valign="middle" align="left">{{@Model.invoice_no}}</td>
+                                                    <td style="width: 86%;" valign="middle" align="left">@Model.invoice_no</td>
                                                 }
                                             </tr>
                                         </table>
@@ -215,7 +215,7 @@
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;" valign="middle" align="right">{{date("d-M-Y",strtotime(@Model.BILL_DT))}}</td>
+                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -233,7 +233,7 @@
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 35%;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
-                                                <td style="width: 65%;" valign="middle" align="left">{{@Model.po_no}}</td>
+                                                <td style="width: 65%;" valign="middle" align="left">@Model.po_no</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -241,7 +241,7 @@
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;" valign="middle" align="right">{{date("d-M-Y",strtotime(@Model.po_dt))}}</td>
+                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -262,11 +262,11 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    {{@Model.VendName}}
+                                                    @Model.VendName
                                                     <br>
-                                                    {{@Model.VendAdd1}}
+                                                    @Model.VendAdd1
                                                     <br>
-                                                    {{@Model.VendorCity}}
+                                                    @Model.VendorCity
                                                 </td>
                                             </tr>
                                         </table>
@@ -278,11 +278,11 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    {{@Model.Consignee}}
+                                                    @Model.Consignee
                                                     <br>
-                                                    {{@Model.ConsigneeAdd1}}
+                                                    @Model.ConsigneeAdd1
                                                     <br>
-                                                    {{@Model.ConsigneeCity}}
+                                                    @Model.ConsigneeCity
                                                 </td>
                                             </tr>
                                         </table>
@@ -304,11 +304,11 @@
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
                                 </tr>
                                 <tr>
-                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding:15px 0;">{{@Model.ICNO}}</td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">{{date("d-m-Y",strtotime(@Model.ICDT))}}</td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">{{@Model.bk_no}}</td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">{{@Model.set_no}}</td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">{{@Model.call_instalment_no}}</td>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding:15px 0;">@Model.IC_NO</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.bk_no</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.set_no</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.call_instalment_no</td>
                                 </tr>
                             </table>
                             <!--================sec6 over==============-->
@@ -404,7 +404,7 @@
                                                     <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
                                                     <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                     <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>{{@Model.material_value}}</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
                                                 </tr>
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "O")
                                                 {
@@ -416,7 +416,7 @@
 
                                                         </td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">{{abs(@Model.insp_fee)}}<br>{{@Model.sgst}}<br>{{@Model.cgst}}<br>{{abs(@Model.igst)}}</td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@(Math.Round(Model.insp_fee))<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@Math.Round(Model.igst)</td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                                         </td>
                                                     </tr>
@@ -437,7 +437,7 @@
                                                             }
                                                         </td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">{{abs(@Model.insp_fee)}}<br>{{@Model.sgst}}<br>{{@Model.cgst}}<br>{{abs(@Model.igst)}}</td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @(Model.insp_fee)<br>@Model.sgst<br>@Model.cgst<br>@*abs*@ @(Model.igst)</td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                                         </td>
                                                     </tr>
@@ -453,8 +453,8 @@
                                                         <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
                                                     }
                                                     <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{abs(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{abs(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                                 </tr>
                                                 <tr>
                                                     <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -465,8 +465,8 @@
                                                 </tr>
                                                 <tr>
                                                     <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{abs(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
+                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst+Model.cgst+Model.igst+Model.insp_fee)</b></td>
                                                 </tr>
                                             </table>
                                             <!--================sec7 over==============-->
@@ -669,7 +669,7 @@
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>{{$data->material_value}}</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
                                         </tr>
                                         <tr style="border-bottom: 0">
                                             <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
@@ -685,7 +685,7 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">{{abs(@Model.insp_fee)}}<br>{{@Model.sgst}}<br>{{@Model.cgst}}<br>{{abs(@Model.igst)}}</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                             </td>
                                         </tr>
@@ -693,8 +693,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -705,8 +705,8 @@
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -904,11 +904,12 @@
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>{{$data->material_value}}</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
                                         </tr>
                                         <tr style="border-bottom: 0">
                                             <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                                CONSIGNEE'S DETAILS
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -920,7 +921,7 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">{{abs(@Model.insp_fee)}}<br>{{@Model.sgst}}<br>{{@Model.cgst}}<br>{{abs(@Model.igst)}}</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>abs@*abs*@ @Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                             </td>
                                         </tr>
@@ -928,8 +929,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -940,8 +941,8 @@
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)}}</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>{{@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee}}</b></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
