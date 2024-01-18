@@ -643,7 +643,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .ui-datepicker.ui-widget-content{background: #f2f4ff;}
 
 .headerTopStrip{ background:#f1f1f1; padding:5px 0;}
-.headerTopStrip select{ padding:0; border:none; width:auto; height:auto;}
+.headerTopStrip select{ padding:0; width:auto; height:auto;}
 .headerTopStrip label{ margin:0; padding:0;}
 .loginBtnHome a.loginDropBtn{ background:#F66A2F; color:#fff; display:inline-block; text-transform:uppercase; font-weight:500; text-decoration:none; padding:10px 15px; border-radius:8px; transition:all 0.5s ease;}
 .loginBtnHome a.loginDropBtn:hover{ background:#118133;}

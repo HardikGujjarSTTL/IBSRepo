@@ -43,8 +43,8 @@
                             <li>
                                 <label><span class="fa fa-language"></span></label>
                                 <select name="Languages" id="languages" title="Select Language" class="">
-                                    <option selected="selected" value="">English</option>
-                                    <option value="">हिन्दी</option>
+                                    <option selected="selected" value="/FHome">English</option>
+                                    <option value="/FHome">हिन्दी</option>
                                 </select>
                             </li>
                         </ul>
@@ -348,6 +348,12 @@
                 }
             });
             }
+            
+            $("#languages").change(function () {
+                var value = $(this).val();
+                location.href = value;
+               alert("Page will be Coming Soon! Have Patience.");
+            });
         
         $(".datepicker").datepicker({
             changeMonth: true,

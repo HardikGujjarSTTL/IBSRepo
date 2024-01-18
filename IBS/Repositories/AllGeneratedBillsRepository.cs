@@ -2,7 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using MessagePack;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 
@@ -96,18 +98,42 @@ namespace IBS.Repositories
 
         public AllGeneratedBills GenerateBill(AllGeneratedBills model)
         {
-            if(model.RailwayChk == "true")
-            {
+            OracleParameter[] par = new OracleParameter[10];
+            par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODT", OracleDbType.Varchar2, model.ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_REGION_CODE", OracleDbType.Varchar2, model.REGION_CODE, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_BPO_TYPE", OracleDbType.Varchar2, model.CLIENT_TYPE, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_LOA", OracleDbType.Varchar2, model.CLIENT_NAME, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RAILWAY_RDO", OracleDbType.Varchar2, model.RailwayChk, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_CLIENT_NAME", OracleDbType.Varchar2, model.CLIENT_NAME, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_CLIENT_TYPE", OracleDbType.Varchar2, model.CLIENT_TYPE, ParameterDirection.Input);
+            par[8] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
+            par[9] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            }
-            else if(model.CLIENT_NAME != null)
+            var ds = DataAccessDB.GetDataSet("SP_GET_PDFBILL_DETAILS", par, 1);
+            List<BillDetailsForPDF> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<BillDetailsForPDF>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
-            else
-            {
 
+            foreach (var item in list) {
+                decimal totalBillAmount = (item.sgst ?? 0) + (item.cgst ?? 0) + (item.igst ?? 0) + (item.insp_fee ?? 0);
+                item.BILL_AMOUNT = totalBillAmount;
+
+                DateTime billDate = Convert.ToDateTime(item.BILL_DT);
+                string formattedDate = billDate.ToString("yyyy-MM-dd");
+
+                var expire = "2020-10-01";
+
+                if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null)) {
+                    continue;
+                }
             }
+            
+            model.lstBillDetailsForPDF = list;
+
             return model;
         }
 
