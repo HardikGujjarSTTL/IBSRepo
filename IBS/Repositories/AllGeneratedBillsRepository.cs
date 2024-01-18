@@ -118,19 +118,19 @@ namespace IBS.Repositories
                 list = JsonConvert.DeserializeObject<List<BillDetailsForPDF>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
-            foreach (var item in list) {
-                decimal totalBillAmount = (item.sgst ?? 0) + (item.cgst ?? 0) + (item.igst ?? 0) + (item.insp_fee ?? 0);
-                item.BILL_AMOUNT = totalBillAmount;
+            //foreach (var item in list) {
+            //    decimal totalBillAmount = (item.sgst ?? 0) + (item.cgst ?? 0) + (item.igst ?? 0) + (item.insp_fee ?? 0);
+            //    item.BILL_AMOUNT = totalBillAmount;
 
-                DateTime billDate = Convert.ToDateTime(item.BILL_DT);
-                string formattedDate = billDate.ToString("yyyy-MM-dd");
+            //    DateTime billDate = Convert.ToDateTime(item.BILL_DT);
+            //    string formattedDate = billDate.ToString("yyyy-MM-dd");
 
-                var expire = "2020-10-01";
+            //    var expire = "2020-10-01";
 
-                if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null)) {
-                    continue;
-                }
-            }
+            //    if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null)) {
+            //        continue;
+            //    }
+            //}
             
             model.lstBillDetailsForPDF = list;
 
