@@ -166,7 +166,6 @@
         }
 
         function BtnCreateBill() {
-
             var fromdata = {
                 FromDate: $("#FromDt").val(),
                 ToDate: $("#ToDt").val(),
@@ -179,15 +178,15 @@
             };
 
             $.ajax({
-                url: "@Url.Action("NorthBill", "AllGeneratedBills")", //CreateBill
+                url: "@Url.Action("NorthBillGeneratePDF", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata), 
                 xhrFields: {
                     responseType: 'blob'
                 },
-                success: function (result) {
-                    window.location.href = "@Url.Action("NorthBill", "AllGeneratedBills")";
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
                 },
                 error: function (error) {
                     console.error(error);
@@ -208,14 +207,15 @@
             };
 
             $.ajax({
-                url: "@Url.Action("ReturnBill", "AllGeneratedBills")",
+                url: "@Url.Action("ReturnBillPDF", "AllGeneratedBills")",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata),
                 xhrFields: {
                     responseType: 'blob'
                 },
-                success: function (result) {
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
                 },
                 error: function (error) {
                     console.error(error);

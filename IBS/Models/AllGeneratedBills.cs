@@ -40,13 +40,14 @@
         public string RailwayChk { get; set; }
         public string invoice_no { get; set; }
         public string material_value { get; set; }
-        public string insp_fee { get; set; }
-        public string sgst { get; set; }
-        public string cgst { get; set; }
-        public string igst { get; set; }
-        public string fee_rate { get; set; }
+        public decimal insp_fee { get; set; }
+        public decimal sgst { get; set; }
+        public decimal cgst { get; set; }
+        public decimal igst { get; set; }
+        public decimal fee_rate { get; set; }
+        public decimal BILL_AMOUNT { get; set; }
         public List<ItemsDetail> items { get; set; } = new List<ItemsDetail>();
-        public List<BillDetailsForPDF> lstBillDetail { get; set; } //lstBillDetailsForPDF
+        public List<AllGeneratedBills> lstBillDetailsForPDF { get; set; } //lstBillDetailsForPDF
     }
 
     public class BillDetailsForPDF
