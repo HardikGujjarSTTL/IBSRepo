@@ -207,7 +207,7 @@
             };
 
             $.ajax({
-                url: "@Url.Action("ReturnBillPDF", "AllGeneratedBills")",
+                url: "@Url.Action("ReturnBill", "AllGeneratedBills")",
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata),
