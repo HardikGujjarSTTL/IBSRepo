@@ -875,7 +875,7 @@ namespace IBS.Repositories
             if (model.CASE_NO.Substring(0, 1) == inspRegionFirstChar)
             {
                 // sender for local mail testing
-                sender = "hardiksilvertouch007@outlook.com";
+                //sender = "hardiksilvertouch007@outlook.com";
                 SendMailModel.CC = cc;
                 SendMailModel.CC = JI_IE;
                 SendMailModel.To = ie_email;
@@ -912,7 +912,7 @@ namespace IBS.Repositories
                 }
 
                 // sender for local mail testing
-                sender = "hardiksilvertouch007@outlook.com";
+                //sender = "hardiksilvertouch007@outlook.com";
                 SendMailModel.CC = ie_email;
                 SendMailModel.CC = co_email;
                 SendMailModel.CC = "nrinspn@gmail.com";

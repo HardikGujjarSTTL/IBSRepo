@@ -152,6 +152,7 @@ namespace IBS.Helper
             Upload_IC_Annexue1 = 35,
             Upload_IC_Annexue2 = 36,
             Cancellation_Document = 37,
+            OnlineComplaints = 61,
         }
 
         public enum DocumentICCancellation : int

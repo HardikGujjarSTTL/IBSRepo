@@ -239,7 +239,7 @@ namespace IBS.Controllers
                         var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref1 };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        if (DocumentsList[0].DocName == "Upload Tech Ref")
+                        if (DocumentsList[3].DocName == "Upload Tech Ref")
                         {
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, FileName, string.Empty, DocumentIds);
                         }
@@ -276,11 +276,11 @@ namespace IBS.Controllers
                         int[] DocumentIds1 = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Case };
                         DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase), env, iDocument, FileName, string.Empty, DocumentIds1);
                     }
-                    if (DocumentsList[1].DocName == "Upload Rejection Memo")
-                    {
-                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
-                        DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), env, iDocument, FileName, string.Empty, DocumentIds);
-                    }
+                    //if (DocumentsList[1].DocName == "Upload Rejection Memo")
+                    //{
+                    //    int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo };
+                    //    DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo), env, iDocument, FileName, string.Empty, DocumentIds);
+                    //}
                     msg = "Upload Successfully.";
                     return Json(new { status = true, responseText = msg, redirectToIndex = true });
                 }

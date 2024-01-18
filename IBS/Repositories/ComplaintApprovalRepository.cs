@@ -38,7 +38,7 @@ namespace IBS.Repositories
             return json;
         }
 
-        public DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters)
+        public DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters, string Region)
         {
 
             DTResult<OnlineComplaints> dTResult = new() { draw = 0 };
@@ -65,7 +65,7 @@ namespace IBS.Repositories
             }
 
             query = from t in context.TempOnlineComplaints
-                    where t.Status == null
+                    where t.Status == null && t.InspRegion == Region
                     orderby t.TempComplaintId, t.TempComplaintId
                     select new OnlineComplaints
                     {
@@ -80,10 +80,11 @@ namespace IBS.Repositories
                         SetNo = t.SetNo,
                         InspRegion = t.InspRegion,
                         RejMemono = t.RejMemoNo,
-                        //RejMemodate = t.RejMemoDt,
+                        RejMemodate = t.RejMemoDt,
                         RejectionValue = t.RejectionValue,
                         RejectionReason = t.RejectionReason,
                         Remarks = t.Remarks,
+                        COMP_DOC = t.TempComplaintId
                         //COMP_DOC = "Online_Complaints/" + t.TEMP_COMPLAINT_ID + ".pdf"
                     };
 
