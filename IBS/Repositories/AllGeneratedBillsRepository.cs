@@ -132,7 +132,7 @@ namespace IBS.Repositories
             //    }
             //}
             
-            //model.lstBillDetailsForPDF = list;
+            model.lstBillDetailsForPDF = list;
 
             return model;
         }

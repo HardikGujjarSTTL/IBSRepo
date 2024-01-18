@@ -66,7 +66,7 @@ namespace IBS.Controllers
             else if (model.REGION_CODE == "Q")
             { regionCode = "Q_Bills"; }
 
-            if (model.items.Count() > 0)
+            if (model.lstBillDetailsForPDF.Count() > 0)
             {
                 foreach (var item in model.items)
                 {
@@ -102,7 +102,6 @@ namespace IBS.Controllers
                     //        // PDF file does not exist
                     //    }
                     //}
-
                 }
             }
 
