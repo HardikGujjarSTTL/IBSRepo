@@ -961,10 +961,6 @@
         }
 
         function abc(xmldata, xmlfilename) {
-            // alert(xmldata);
-            // var xml=encodeURI(xmldata);
-            // alert(xml);
-
             var xml = xmldata;
 
             $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
@@ -973,10 +969,8 @@
                     alert($(exeResponse).find("error").text());
                 }
                 else {
-                    var Url = "@Url.Action("PKIDATA", "IC_RPT_Intermediate")"; // "/RBS/PKIDATA.aspx";
-                    $.post(Url, { "file": exeResponse, "filename": xmlfilename }, function (res) {
-                        window.location.href = "@Url.Action("Index", "IC_RPT_Intermediate")?filename=" + res; //"/RBS/IC_RPT_Intermediate.aspx?filename=" + res;
-                    });
+                    var pdf = $(exeResponse).find("data").text();
+                    downloadPDF(pdf);
                 }
             }).fail(function (xhr, textStatus, errorThrown) {
                 window.location.href = "@Url.Action("Index", "IC_RPT_Intermediate")?filename=" + xmlfilename;
