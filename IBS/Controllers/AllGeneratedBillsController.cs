@@ -55,7 +55,7 @@ namespace IBS.Controllers
             string htmlContent = "";
             try
             {
-                 model = allGeneratedBillsRepository.GenerateBill(fromdata);
+                model = allGeneratedBillsRepository.GenerateBill(fromdata);
 
                 string regionCode = "";
                 if (model.REGION_CODE == "N")
@@ -93,8 +93,8 @@ namespace IBS.Controllers
                         {
                             Directory.CreateDirectory(path);
                         }
-                        
-                        if(Directory.Exists(path))
+
+                        if (Directory.Exists(path))
                         {
                             // check if the PDF file exists
                             string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
@@ -106,15 +106,25 @@ namespace IBS.Controllers
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
 
-                                }else if (model.REGION_CODE == "S"){
+                                }
+                                else if (model.REGION_CODE == "S")
+                                {
 
-                                }else if (model.REGION_CODE == "E"){
+                                }
+                                else if (model.REGION_CODE == "E")
+                                {
 
-                                }else if (model.REGION_CODE == "W"){
+                                }
+                                else if (model.REGION_CODE == "W")
+                                {
 
-                                }else if (model.REGION_CODE == "C"){
+                                }
+                                else if (model.REGION_CODE == "C")
+                                {
 
-                                }else if (model.REGION_CODE == "Q"){
+                                }
+                                else if (model.REGION_CODE == "Q")
+                                {
 
                                 }
 
@@ -147,7 +157,7 @@ namespace IBS.Controllers
                         }
                     }
                 }
-
+                GlobalDeclaration.AllGeneratedBillModel = model;
                 AlertAddSuccess("Bill Generated !!");
             }
             catch (Exception ex)
@@ -157,7 +167,7 @@ namespace IBS.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> ReturnBill([FromBody] AllGeneratedBills fromdata)
         {
@@ -215,19 +225,29 @@ namespace IBS.Controllers
                                 System.IO.File.Delete(pdfFilePath);
                             }
 
-                            if(model.REGION_CODE == "N")
+                            if (model.REGION_CODE == "N")
                             {
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
 
-                            }else if(model.REGION_CODE == "S"){
+                            }
+                            else if (model.REGION_CODE == "S")
+                            {
 
-                            }else if (model.REGION_CODE == "E"){
+                            }
+                            else if (model.REGION_CODE == "E")
+                            {
 
-                            }else if (model.REGION_CODE == "W"){
+                            }
+                            else if (model.REGION_CODE == "W")
+                            {
 
-                            }else if (model.REGION_CODE == "C"){
+                            }
+                            else if (model.REGION_CODE == "C")
+                            {
 
-                            }else if (model.REGION_CODE == "Q"){
+                            }
+                            else if (model.REGION_CODE == "Q")
+                            {
 
                             }
 
@@ -277,11 +297,40 @@ namespace IBS.Controllers
 
         #region GeneratePDF
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(AllGeneratedBills model)
+        public async Task<IActionResult> GeneratePDF(string Bill_NO)
         {
             string htmlContent = string.Empty;
-            //OnlinePaymentGateway model = GlobalDeclaration.OnlinePaymentResponse;
-            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBillGeneratePDF.cshtml", model);
+            AllGeneratedBills model = GlobalDeclaration.AllGeneratedBillModel;
+
+            string BillNo = Bill_NO;
+
+            AllGeneratedBills selectedBill = model.lstBillDetailsForPDF.FirstOrDefault(bill => bill.BILL_NO == BillNo);
+
+            if (model.REGION_CODE == "N")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", model);
+
+            }
+            else if (model.REGION_CODE == "S")
+            {
+
+            }
+            else if (model.REGION_CODE == "E")
+            {
+
+            }
+            else if (model.REGION_CODE == "W")
+            {
+
+            }
+            else if (model.REGION_CODE == "C")
+            {
+
+            }
+            else if (model.REGION_CODE == "Q")
+            {
+
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions

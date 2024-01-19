@@ -289,12 +289,8 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            //var downloadLink = "@Url.Action("DownloadPhotos", "ICPhotoEnclosed")" +
-                            //    "?CaseNo=" + row.CaseNo +
-                            //    "&CallRecvDt=" + row.CallRecvDt +
-                            //    "&CallSno=" + row.CallSno +
-                            //    "&BkNo=" + row.BkNo +
-                            //    "&SetNo=" + row.SetNo;
+
+                            var downloadLink = "@Url.Action("GeneratePDF", "AllGeneratedBills")";
 
                             return '<td width="10%" valign="top" align="center">' +
                                 '<a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
