@@ -88,6 +88,8 @@ namespace IBS.Helper
             VendorCreationBasis = 31,
             [Description("/ReadWriteData/Files/TECH")]
             Tech = 32,
+            [Description("/ReadWriteData/LAB/PReciept")]
+            LabPayment = 33,
         }
 
         public enum DocumentCategory : int
@@ -118,6 +120,8 @@ namespace IBS.Helper
             CancellationDocument = 27,
             PurchaseOrderFormCase = 28,
             VendorPO = 29,
+            UploadLab = 31,
+            UploadLabPayment = 32,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -152,6 +156,7 @@ namespace IBS.Helper
             Upload_IC_Annexue1 = 35,
             Upload_IC_Annexue2 = 36,
             Cancellation_Document = 37,
+            OnlineComplaints = 61,
         }
 
         public enum DocumentICCancellation : int
@@ -186,7 +191,11 @@ namespace IBS.Helper
         {
             MasterItemDoc = 10,
         }
-
+        public enum DocumentCategory_LabUploadDoc : int
+        {
+            Upload_Lab_Report = 59,
+            Upload_Payment_Report = 60
+        }
         public static string GetEnumDescription(object enumValue)
         {
             string defDesc = string.Empty;
