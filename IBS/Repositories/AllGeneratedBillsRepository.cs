@@ -87,7 +87,17 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public AllGeneratedBills GenerateBill(AllGeneratedBills model)
+        public AllGeneratedBills CreateBills(AllGeneratedBills model)
+        {
+            return CreateBillReturnBillDetails(model, "SP_GET_PDFBILL_DETAILS");
+        }
+
+        public AllGeneratedBills ReturnBills(AllGeneratedBills model)
+        {
+            return CreateBillReturnBillDetails(model, "SP_GET_PDFRETURNBILL_DETAILS");
+        }
+
+        private AllGeneratedBills CreateBillReturnBillDetails(AllGeneratedBills model, string procedureName)
         {
             OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
@@ -100,7 +110,7 @@ namespace IBS.Repositories
             par[7] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
             par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("SP_GET_PDFBILL_DETAILS", par, 1);
+            var ds = DataAccessDB.GetDataSet(procedureName, par, 1);
             List<AllGeneratedBills> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -132,47 +142,6 @@ namespace IBS.Repositories
 
             return model;
         }
-
-        public AllGeneratedBills GenerateReturnBill(AllGeneratedBills model)
-        {
-            OracleParameter[] par = new OracleParameter[9];
-            par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODT", OracleDbType.Varchar2, model.ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_REGION_CODE", OracleDbType.Varchar2, model.REGION_CODE, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_LOA", OracleDbType.Varchar2, model.LOA, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RAILWAY_RDO", OracleDbType.Varchar2, model.RailwayChk, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_CLIENT_NAME", OracleDbType.Varchar2, model.CLIENT_NAME, ParameterDirection.Input);
-            par[6] = new OracleParameter("P_CLIENT_TYPE", OracleDbType.Varchar2, model.CLIENT_TYPE, ParameterDirection.Input);
-            par[7] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            var ds = DataAccessDB.GetDataSet("SP_GET_PDFRETURNBILL_DETAILS", par, 1);
-            List<AllGeneratedBills> list = new();
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            }
-
-            model.lstBillDetailsForPDF = list;
-
-            return model;
-        }
-        //public bool Remove(int Id, int UserID)
-        //{
-        //    T94Bank bank = context.T94Banks.Find(Id);
-
-        //    if (bank == null) { return false; }
-
-        //    bank.Isdeleted = 1;
-        //    bank.Updatedby = UserID;
-        //    bank.Updateddate = DateTime.Now;
-
-        //    context.SaveChanges();
-        //    return true;
-        //}
-
     }
-
 }
 
