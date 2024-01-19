@@ -281,23 +281,56 @@ namespace IBS.Repositories
 
             string ss;
             string sqlQuery = "Select to_char(sysdate,'mm/dd/yyyy') from dual";
-
+            string CallDate = Convert.ToDateTime(LabSampleInfoModel.CallRecDt).ToString("MM/dd/yyyy");
+            string UTRDT = Convert.ToDateTime(LabSampleInfoModel.UTRDT).ToString("MM/dd/yyyy");
+           
+            string? caseNo = LabSampleInfoModel.CaseNo;
+            DateTime? callRecDt = Convert.ToDateTime(LabSampleInfoModel.CallRecDt);
+            int? callSNO = Convert.ToInt32(LabSampleInfoModel.CallSNO);
+            var query = (from x in context.T110LabDocs
+                         where x.CaseNo == caseNo && x.CallRecvDt == callRecDt && x.CallSno == callSNO
+                         select new LabSampleInfoModel
+                         {
+                             CaseNo = x.CaseNo,
+                             CallRecDt = Convert.ToString(x.CallRecvDt),
+                             CallSNO = Convert.ToString(x.CallSno)
+                         }).Distinct();
+            var result = query.FirstOrDefault();
             ss = GetDateString(sqlQuery);
             try
             {
+                if (result == null)
+                {
+                    OracleParameter[] par = new OracleParameter[9];
+                    par[0] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, LabSampleInfoModel.CaseNo, ParameterDirection.Input);
+                    par[1] = new OracleParameter("p_CallRecvDT", OracleDbType.Date, CallDate, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_CallSno", OracleDbType.Varchar2, LabSampleInfoModel.CallSNO, ParameterDirection.Input);
+                    par[3] = new OracleParameter("p_TestingCharges", OracleDbType.Varchar2, LabSampleInfoModel.NetTesting, ParameterDirection.Input);
+                    par[4] = new OracleParameter("p_DocInitDateTime", OracleDbType.Date, ss, ParameterDirection.Input);
+                    par[5] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LabSampleInfoModel.TDS, ParameterDirection.Input);
+                    par[6] = new OracleParameter("p_UTRNo", OracleDbType.Varchar2, LabSampleInfoModel.UTRNO, ParameterDirection.Input);
+                    par[7] = new OracleParameter("p_UTRDate", OracleDbType.Date, UTRDT, ParameterDirection.Input);
+                    par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName.Trim(), ParameterDirection.Input);
 
-                OracleParameter[] par = new OracleParameter[9];
-                par[0] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, LabSampleInfoModel.CaseNo, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_CallRecvDT", OracleDbType.Date, LabSampleInfoModel.CallRecDt, ParameterDirection.Input);
-                par[2] = new OracleParameter("p_CallSno", OracleDbType.Varchar2, LabSampleInfoModel.CallSNO, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_TestingCharges", OracleDbType.Varchar2, LabSampleInfoModel.NetTesting, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_DocInitDateTime", OracleDbType.Date, ss, ParameterDirection.Input);
-                par[5] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LabSampleInfoModel.TDS, ParameterDirection.Input);
-                par[6] = new OracleParameter("p_UTRNo", OracleDbType.Varchar2, LabSampleInfoModel.UTRNO, ParameterDirection.Input);
-                par[7] = new OracleParameter("p_UTRDate", OracleDbType.Date, LabSampleInfoModel.UTRDT, ParameterDirection.Input);
-                par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName.Trim(), ParameterDirection.Input);
+                    var ds = DataAccessDB.ExecuteNonQuery("Vendor_InsertLabSampleInfo", par, 1);
+                }
+                else
+                {
+                    OracleParameter[] par = new OracleParameter[9];
+                    par[0] = new OracleParameter("p_TestingCharges", OracleDbType.Varchar2, LabSampleInfoModel.NetTesting, ParameterDirection.Input);
+                    par[1] = new OracleParameter("p_DocInitDateTime", OracleDbType.Date, ss, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_TDS", OracleDbType.Varchar2, LabSampleInfoModel.TDS, ParameterDirection.Input);
+                    par[3] = new OracleParameter("p_UTRNo", OracleDbType.Varchar2, LabSampleInfoModel.UTRNO, ParameterDirection.Input);
+                    par[4] = new OracleParameter("p_UTRDate", OracleDbType.Date, UTRDT, ParameterDirection.Input);
+                    par[5] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, LabSampleInfoModel.CaseNo, ParameterDirection.Input);
+                    par[6] = new OracleParameter("p_CallRecvDT", OracleDbType.Date, CallDate, ParameterDirection.Input);
+                    par[7] = new OracleParameter("p_CallSno", OracleDbType.Varchar2, LabSampleInfoModel.CallSNO, ParameterDirection.Input);
+                    par[8] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, LabSampleInfoModel.UName, ParameterDirection.Input);
 
-                var ds = DataAccessDB.ExecuteNonQuery("Vendor_InsertLabSampleInfo", par, 1);
+
+                    var ds = DataAccessDB.ExecuteNonQuery("Vendor_UPDATE_SAMPLE_INFO", par, 1);
+                }
+                
 
             }
             catch (Exception ex)

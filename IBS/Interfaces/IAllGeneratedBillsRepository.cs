@@ -6,6 +6,8 @@ namespace IBS.Interfaces
     {
         DTResult<AllGeneratedBills> GetBillDetails(DTParameters dtParameters);
 
-        public AllGeneratedBills GenerateBill(AllGeneratedBills model);
+        public AllGeneratedBills CreateBills(AllGeneratedBills model);
+
+        public AllGeneratedBills ReturnBills(AllGeneratedBills model);
     }
 }

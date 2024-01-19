@@ -35,14 +35,14 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Client Type</label>
-                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),"--Select--",new {@id="ClientType"})
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),new {@id="ClientType"})
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">LOA</label>
-                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),"--Select--",new {@id="LOA"})
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),new {@id="LOA"})
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -111,11 +111,12 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-
+        var Region = "@ViewBag.Region";
         $(document).ready(function () {
             $("#ClientName").hide();
             $("#BPOName").hide();
             $('#AllRly').prop('checked', true);
+            $("#InspRegion").val(Region);
         });
 
         $('#AllRly').change(function () {
@@ -173,21 +174,22 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
-                url: "@Url.Action("CreateBill", "AllGeneratedBills")",
+                url: "@Url.Action("CreateBill", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata), 
                 xhrFields: {
                     responseType: 'blob'
                 },
-                success: function (result) {
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.log(error);
                 }
             });
         }
@@ -201,7 +203,7 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk = $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
@@ -212,10 +214,11 @@
                 xhrFields: {
                     responseType: 'blob'
                 },
-                success: function (result) {
+                success: function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.log(error);
                 }
             });
         }
@@ -286,15 +289,11 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            //var downloadLink = "@Url.Action("DownloadPhotos", "ICPhotoEnclosed")" +
-                            //    "?CaseNo=" + row.CaseNo +
-                            //    "&CallRecvDt=" + row.CallRecvDt +
-                            //    "&CallSno=" + row.CallSno +
-                            //    "&BkNo=" + row.BkNo +
-                            //    "&SetNo=" + row.SetNo;
 
+                            var BillNo = data.BILL_NO;
+                            var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
                             return '<td width="10%" valign="top" align="center">' +
-                                '<a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
                                 '</td>';
                         }
                     },

@@ -27,6 +27,7 @@ builder.Services.AddScoped<IInspectionRepository, InspectionRepository>();
 builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
 
 builder.Services.AddScoped<ICRISRepository, CRISRepository>();
+builder.Services.AddScoped<IInvoices_SAPRepository, Invoices_SAPRepository>();
 
 builder.Services.AddSwaggerGen(c =>
 {
