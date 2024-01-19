@@ -178,7 +178,7 @@
             };
 
             $.ajax({
-                url: "@Url.Action("NorthBillGeneratePDF", "AllGeneratedBills")", //CreateBill
+                url: "@Url.Action("CreateBill", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata), 
@@ -290,10 +290,10 @@
                         data: null,
                         render: function (data, type, row) {
 
-                            var downloadLink = "@Url.Action("GeneratePDF", "AllGeneratedBills")";
-
+                            var BillNo = data.BILL_NO;
+                            var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
                             return '<td width="10%" valign="top" align="center">' +
-                                '<a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
                                 '</td>';
                         }
                     },

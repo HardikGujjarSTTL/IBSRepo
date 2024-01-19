@@ -957,6 +957,6 @@ namespace IBS.Helper
 
         public static CallsMarkedToIEModel CallsMarked { get; set; }
 
-        public static AllGeneratedBills AllGeneratedBillModel { get; set; }
+        public static List<AllGeneratedBills> AllGeneratedBillModel { get; set; }
     }
 }

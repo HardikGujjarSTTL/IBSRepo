@@ -45,31 +45,20 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             DTResult<AllGeneratedBills> dTResult = allGeneratedBillsRepository.GetBillDetails(dtParameters);
+            GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
             return Json(dTResult);
         }
 
         [HttpPost]
-        public async Task<IActionResult> NorthBillGeneratePDF([FromBody] AllGeneratedBills fromdata) //CreateBill
+        public async Task<IActionResult> CreateBill([FromBody] AllGeneratedBills fromdata) //CreateBill
         {
             AllGeneratedBills model = new();
             string htmlContent = "";
             try
             {
-                model = allGeneratedBillsRepository.GenerateBill(fromdata);
+                model = allGeneratedBillsRepository.CreateBills(fromdata);
 
-                string regionCode = "";
-                if (model.REGION_CODE == "N")
-                { regionCode = "North_Bills"; }
-                else if (model.REGION_CODE == "S")
-                { regionCode = "South_Bills"; }
-                else if (model.REGION_CODE == "E")
-                { regionCode = "East_Bills"; }
-                else if (model.REGION_CODE == "W")
-                { regionCode = "West_Bills"; }
-                else if (model.REGION_CODE == "C")
-                { regionCode = "Central_Bills"; }
-                else if (model.REGION_CODE == "Q")
-                { regionCode = "Q_Bills"; }
+                string FolderName = GetFolderNameByRegion(model.REGION_CODE);
 
                 if (model.lstBillDetailsForPDF.Count() > 0)
                 {
@@ -88,7 +77,7 @@ namespace IBS.Controllers
                             continue;
                         }
 
-                        var path = env.WebRootPath + "/ReadWriteData/" + regionCode;
+                        var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                         if (!Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
@@ -123,10 +112,6 @@ namespace IBS.Controllers
                                 {
 
                                 }
-                                else if (model.REGION_CODE == "Q")
-                                {
-
-                                }
 
                                 await new BrowserFetcher().DownloadAsync();
                                 await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
@@ -157,7 +142,7 @@ namespace IBS.Controllers
                         }
                     }
                 }
-                GlobalDeclaration.AllGeneratedBillModel = model;
+                
                 AlertAddSuccess("Bill Generated !!");
             }
             catch (Exception ex)
@@ -175,21 +160,9 @@ namespace IBS.Controllers
             string htmlContent = "";
             try
             {
-                model = allGeneratedBillsRepository.GenerateReturnBill(fromdata);
+                model = allGeneratedBillsRepository.ReturnBills(fromdata);
 
-                string regionCode = "";
-                if (model.REGION_CODE == "N")
-                { regionCode = "North_Bills"; }
-                else if (model.REGION_CODE == "S")
-                { regionCode = "South_Bills"; }
-                else if (model.REGION_CODE == "E")
-                { regionCode = "East_Bills"; }
-                else if (model.REGION_CODE == "W")
-                { regionCode = "West_Bills"; }
-                else if (model.REGION_CODE == "C")
-                { regionCode = "Central_Bills"; }
-                else if (model.REGION_CODE == "Q")
-                { regionCode = "Q_Bills"; }
+                string FolderName = GetFolderNameByRegion(model.REGION_CODE);
 
                 if (model.lstBillDetailsForPDF.Count() > 0)
                 {
@@ -208,7 +181,7 @@ namespace IBS.Controllers
                             continue;
                         }
 
-                        var path = env.WebRootPath + "/ReadWriteData/" + regionCode;
+                        var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                         if (!Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
@@ -243,10 +216,6 @@ namespace IBS.Controllers
 
                             }
                             else if (model.REGION_CODE == "C")
-                            {
-
-                            }
-                            else if (model.REGION_CODE == "Q")
                             {
 
                             }
@@ -295,41 +264,53 @@ namespace IBS.Controllers
             return View(model);
         }
 
-        #region GeneratePDF
-        [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string Bill_NO)
+        private string GetFolderNameByRegion(string regionCode)
         {
+            if (regionCode == "N")
+            { regionCode = "North_Bills"; }
+            else if (regionCode == "S")
+            { regionCode = "South_Bills"; }
+            else if (regionCode == "E")
+            { regionCode = "East_Bills"; }
+            else if (regionCode == "W")
+            { regionCode = "West_Bills"; }
+            else if (regionCode == "C")
+            { regionCode = "Central_Bills"; }
+            else if (regionCode == "Q")
+            { regionCode = "Q_Bills"; }
+
+            return regionCode;
+        }
+
+        #region GeneratePDF
+        public async Task<IActionResult> GeneratePDF(string BillNo)
+        {
+            string pdfFileName = "";
             string htmlContent = string.Empty;
-            AllGeneratedBills model = GlobalDeclaration.AllGeneratedBillModel;
+            List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
 
-            string BillNo = Bill_NO;
+            AllGeneratedBills selectedBill = model.FirstOrDefault(bill => bill.BILL_NO == BillNo);
 
-            AllGeneratedBills selectedBill = model.lstBillDetailsForPDF.FirstOrDefault(bill => bill.BILL_NO == BillNo);
-
-            if (model.REGION_CODE == "N")
+            if (selectedBill.REGION_CODE == "North")
             {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", model);
-
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/North_Bill.cshtml", selectedBill);
+                pdfFileName = "NorthBill.pdf";
             }
-            else if (model.REGION_CODE == "S")
+            else if (selectedBill.REGION_CODE == "South")
             {
-
+                pdfFileName = "SouthBill.pdf";
             }
-            else if (model.REGION_CODE == "E")
+            else if (selectedBill.REGION_CODE == "East")
             {
-
+                pdfFileName = "EastBill.pdf";
             }
-            else if (model.REGION_CODE == "W")
+            else if (selectedBill.REGION_CODE == "West")
             {
-
+                pdfFileName = "WestBill.pdf";
             }
-            else if (model.REGION_CODE == "C")
+            else if (selectedBill.REGION_CODE == "Central")
             {
-
-            }
-            else if (model.REGION_CODE == "Q")
-            {
-
+                pdfFileName = "CentralBill.pdf";
             }
 
             await new BrowserFetcher().DownloadAsync();
@@ -355,7 +336,7 @@ namespace IBS.Controllers
 
             await browser.CloseAsync();
 
-            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+            return File(pdfContent, "application/pdf", pdfFileName);
         }
         #endregion
     }
