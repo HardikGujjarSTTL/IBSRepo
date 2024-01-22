@@ -1,0 +1,1035 @@
+﻿@model IBS.Models.AllGeneratedBills
+@{
+    ViewData["Title"] = "EastBill";
+    var billDate = Model.BILL_DT;
+    var expire = "2020-10-01";
+    var billDate_time = Convert.ToDateTime(billDate);
+    var expire_time = Convert.ToDateTime(expire);
+    var size = Model.items.Count();
+    var requireQr = false;
+    var total = 0;
+    var no = 1;
+    var count = 1;
+    var Adh = "@";
+    if (billDate_time >= expire_time)
+    {
+        requireQr = true;
+    }
+    else
+    {
+        requireQr = false;
+    }
+}
+
+<style>
+    .hindi {
+        font-family: 'mangal';
+    }
+
+    table,
+    tr,
+    td,
+    th {
+        border-collapse: collapse;
+    }
+</style>
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>East</h2>
+        </div>
+    </div>
+</div>
+<div>
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%">
+                <!-- table start-->
+                <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" style="border-bottom:1px solid #000;">
+                            <!--================sec1 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td valign="middle" width="40%"><img src="~/images/rites-logo.png" alt="" style="width:600px;display: block;" /></td> @*img/riteslogo1.jpg*@
+                                    @if (Model.BILL_NO == "F") @*.Substring(0, 1)*@
+                                    {
+                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                            <b>
+                                                <br>CREDIT NOTE<br>
+                                                <span class="hindi">मूल </span>ORIGINAL
+                                            </b>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                            <b>
+                                                <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
+                                                <br>INSPECTION FEE BILL<br>
+                                                <span class="hindi">मूल </span>ORIGINAL
+                                            </b>
+                                        </td>
+                                    }
+                                    <td width="45%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; line-height:9px;padding-bottom: 15px;" valign="middle" align="right">
+                                        <b>
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:36px;"><span class="hindi">आयकर सं</span>/Pan No.</td>
+                                                    <td align="center" width="10">:</td>
+                                                    <td style="font-size:36px;">AAACR0830Q</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:36px;"><span class="hindi">माल और सेवा कर सं </span>/GSTIN</td>
+                                                    <td align="center" width="10">:</td>
+                                                    <td style="font-size:36px;">19AAACR0830Q1Z3</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:36px;"><span class="hindi">दूरभाष</span> / Telephone</td>
+                                                    <td align="center" width="10">:</td>
+                                                    <td style="font-size:36px;">033-2234-8665/8730</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:36px;"><span class="hindi">फैक्स</span> / Fax No.</td>
+                                                    <td align="center" width="10">:</td>
+                                                    <td style="font-size:36px;">033-2234-8704</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:36px;"><span class="hindi">ई-मेल</span> / E-mail</td>
+                                                    <td align="center" width="10">:</td>
+                                                    <td style="font-size:36px;padding-bottom: 15px;">erinspn@rites.com</td>
+                                                </tr>
+                                            </table>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--================sec1 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
+                            <!--================sec2 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="vertical-align: top;">
+                                <tr>
+                                    <td style="padding: 7px; padding-top: 150px;font-size: 20px;" width="200">
+                                        @if (!string.IsNullOrEmpty(Model.irfc_bpo_cd) && Model.irfc_funded == "Y")
+                                        {
+                                            <div width="20%">
+                                                <span>
+                                                    <br><b><span class="hindi"> सेवा में</span> / TO</b>
+                                                    @*<?php echo Model.irfc_bpo_name .  Model.irfc_bpo_rly .  Model.irfc_bpo_add . Model.irfc_bpo_city; ?>*@
+                                                </span>
+                                                @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
+                                                {
+                                                    <br>
+                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>@Model.irn_no</p>
+                                                }
+                                                @if (!string.IsNullOrEmpty(Model.remarks))
+                                                {
+                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>@Model.remarks</p>
+                                                }
+                                            </div>
+                                            <div valign="top" width="30%"> <b> Through</b><br>@Model.BPO_NAME<br>@Model.bpo_orgn<br>@Model.bpo_add<br>@Model.bpo_city<br><br>Recipient GSTIN : @Model.recipient_gstin_no<br>State Code : @(string.IsNullOrEmpty(Model.recipient_gstin_no) ? "" : Model.recipient_gstin_no.Substring(0, 2))</div>
+                                        }
+                                        else
+                                        {
+                                            <div valign="top" width="30%">
+                                                <b><span class="hindi"> सेवा में</span> / TO</b><br>
+                                                @*<?php echo Model.bpo_name; ?>*@
+                                                @Model.BPO_NAME<br>
+                                                @Model.bpo_orgn WEST CENTRAL RAILWAY<br>
+                                                @Model.bpo_add <br>
+                                                @Model.bpo_city <br>
+                                                Recipient GSTIN : @Model.recipient_gstin_no<br>State Code : @(string.IsNullOrEmpty(Model.recipient_gstin_no) ? "" : Model.recipient_gstin_no.Substring(0, 2))
+
+                                                @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
+                                                {
+                                                    <br>
+                                                    <p style="padding:0;margin:0;"><strong>IRN No.</strong>@Model.irn_no</p>
+                                                    @if (!string.IsNullOrEmpty(Model.remarks)) { }
+                                                    <p style="padding:0;margin:0;"><strong>Remarks.</strong>@Model.remarks</p>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                    @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
+                                    {
+                                        <td align="center" style="padding: 7px;padding-top: 25px;padding-bottom: 25px;">
+                                            <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(400)->generate(Model.qr_code)) !!}">
+                                        </td>
+                                    }
+                                    <td align="right" style="padding: 7px; padding-top: 150px;font-size: 20px;">
+                                        <b>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <span class="hindi"><img src="img/a1.JPG" alt="" /></span> / NORTHERN REGION <br><span class="hindi">१२वीं मं&#2367;जल, कोर २ </span> / 12th FLOOR CORE-II<br><span class="hindi"><img src="img/a3.JPG" alt="" /></span>/ SCOPE MINAR, LAXMI NAGAR<br><span class="hindi"><img src="img/a4.JPG" alt="" /></span>/ Delhi - 110092<br>CIN NO.L74899DL1974GOI007227
+                                                        @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
+                                                        {
+                                                            <br>
+                                                            <p style="padding:0;margin:0;"><strong>ACK No.</strong>@Model.ack_no <strong>ACK Date:</strong>@Model.ack_dt</p>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--================sec2 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="border-bottom:1px solid #000; padding:15px 0;">
+                            <!--================sec3 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "F")
+                                                {
+                                                    <td style="width: 14%;"><b><span><img style="width:120px" src="img/CreditNote.jpg" alt="" /></span><br>CREDIT NOTE.</b></td>
+                                                    <td style="width: 86%;" valign="middle" align="left">@Model.credit_doc_id</td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="width: 14%;"><b><span class="hindi">&#2367;बल सं.</span><br>BILL NO.</b></td>
+                                                    <td style="width: 86%;" valign="middle" align="left">@Model.invoice_no</td>
+                                                }
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--================sec3 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="border-bottom:1px solid #000; padding:15px 0;">
+                            <!--================sec4 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width: 35%;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
+                                                <td style="width: 65%;" valign="middle" align="left">@Model.po_no</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--================sec4 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="border-bottom:1px solid #000;" valign="top">
+                            <!--================sec5 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td valign="top" width="51%" style="font-size:11px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:15px 0;" height="100">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @Model.VendName
+                                                    <br>
+                                                    @Model.VendAdd1
+                                                    <br>
+                                                    @Model.VendorCity
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td valign="top" width="49%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @Model.Consignee
+                                                    <br>
+                                                    @Model.ConsigneeAdd1
+                                                    <br>
+                                                    @Model.ConsigneeCity
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--================sec5 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                            <!--================sec6 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
+                                </tr>
+                                <tr>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding:15px 0;">@Model.IC_NO</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.bk_no</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.set_no</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.call_instalment_no</td>
+                                </tr>
+                            </table>
+                            <!--================sec6 over==============-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                            <!--================sec7 start==============-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:15px 0" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:15px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                                </tr>
+                                @{
+                                    foreach (var val in Model.items.Skip(0).Take(7))
+                                    {
+                                        <tr>
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.qty} <br>{val.uom_s_desc}")</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.rate}<br>{val.uom_factor}")</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                        </tr>
+                                        <tr>
+                                            if (Convert.ToInt32(val.sales_tax) > 0)
+                                            {
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                            }
+                                        </tr>
+
+                                        string[] typeArr = { "N", "P", "L" };
+                                        var discountHTML = "";
+                                        var discountOtHTML = "";
+                                        var perHtml = "";
+                                        var perOtHtml = "";
+                                        var disStatus = false;
+                                        var otherChStatus = false;
+                                        if (typeArr.Contains(val.discount_type))
+                                        {
+                                            disStatus = true;
+                                            var dSign = val.discount_type == "P" ? "%" : (val.discount_type == "N" ? "Per Num." : "Lumsum");
+                                            discountHTML = $"<span>{val.discount}</span><br>";
+                                            perHtml = $"Discount Value@{val.discount_per} {dSign}<br>";
+                                        }
+                                        if (typeArr.Contains(val.ot_charge_type))
+                                        {
+                                            otherChStatus = true;
+                                            var dSign2 = val.ot_charge_type == "P" ? "%" : (val.ot_charge_type == "N" ? "Per Num." : "Lumsum");
+                                            perOtHtml = $"<span>Other Charges@{val.ot_charge_per} {dSign2}</span><br>";
+                                            discountOtHTML = $"<span>{val.other_charges}</span><br>";
+                                        }
+                                        if (disStatus)
+                                        {
+                                            <tr>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                            </tr>
+                                        }
+                                        if (otherChStatus)
+                                        {
+                                            <tr>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                            </tr>
+                                        }
+                                        no = no + 1;
+                                        total += Convert.ToInt32(val.basic_value) + Convert.ToInt32(val.sales_tax);
+                                    }
+                                }
+                            </table>
+                            @if (size <= 7)
+                            {
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="100%">
+                                            <!-- table start-->
+                                            <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
+                                                </tr>
+                                                @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "F")
+                                                {
+                                                    <tr style="border-bottom: 0">
+                                                        <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                                            Credit Note Amount <br>9% SGST<br>9% CGST<br>18% IGST<br>
+                                                            <br>
+
+                                                        </td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@(Math.Round(Model.insp_fee))<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@Math.Round(Model.igst)</td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr style="border-bottom: 0">
+                                                        <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                                            @foreach (var val in Model.items)
+                                                            {
+                                                                if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
+                                                                {
+                                                                    <span>RITES Inspection Fee</span> @Adh @Model.fee_rate @(val.discount_type == "P" ? "%" : "")
+                                                                    <span><br> 9% SGST <br>9% CGST <br>18% IGST<br><br> </span>
+                                                                }
+                                                                count++;
+                                                            }
+                                                        </td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @(Model.insp_fee)<br>@Model.sgst<br>@Model.cgst<br>@*abs*@ @(Model.igst)</td>
+                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "F")
+                                                    {
+                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Credit Note Value</b></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
+                                                    }
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                </tr>
+                                            </table>
+                                            <!--================sec7 over==============-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="100%" style="font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                                            <!--================sec8 start==============-->
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="padding-top: 25px;font-size: 20px;">1) <span class="hindi">आरटीजीएस / ईएफटी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड, कोलकाता" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए।</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size: 20px;">
+                                                        R.T.G.S./EFT/Crossed Cheque/DD should be drawn in favour of "RITES Ltd., Kolkata."
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size: 20px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size: 20px;">2) Please send all communications to the address given above.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size: 30px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size: 20px;">3) Return one copy of bill with payment for ready reference</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td width="50%" style="font-size: 20px;">EFT details are as under</td>
+                                                                <td style="font-size: 20px;">Account No: 005010200015561</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">NAME OF BANK : / AXIS BANK LTD.</td>
+                                                                <td style="font-size: 20px;">BRANCH CODE: 005</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">NAME OF THE BRANCH : SHAKESPEARE SARANI</td>
+                                                                <td style="font-size: 20px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: UTIB0000005</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="padding-bottom: 15px;font-size: 20px;">TYPE OF ACCOUNT : CURRENT ACCOUNT</td>
+                                                                <td style="font-size: 20px;">CENTER CODE: 700</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="padding-top: 10px;font-size: 20px;">DIGIT CODE NUMBER OF THE BANK BRANCH APPEARING ON THE MICR CHEQUE ISSUED BY THE BANK: 700211002</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!--================sec8 over==============-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="100%" style="padding:5px 10px; border-top:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 20px;" align="center">
+                                            <br>
+                                            <b> <span class="hindi"><img src="img/l8.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/l9.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
+                                            <br>
+                                            <span>
+                                                This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        </td>
+                    </tr>
+                </table>
+                <!-- table over-->
+            </td>
+        </tr>
+    </table>
+    @if (size > 7)
+    {
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="100%" style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; padding: 15px 0; border-bottom: 1px solid #000;" valign="top">
+                    <!-- table start-->
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                        </tr>
+                        @{
+                            foreach (var val in Model.items.Skip(7).Take(15))
+                            {
+                                <tr>
+                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
+                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.qty} <br>{val.uom_s_desc}")</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.rate}<br>{val.uom_factor}")</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                </tr>
+                                <tr>
+                                    if (Convert.ToInt32(val.sales_tax) > 0)
+                                    {
+                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                    }
+                                </tr>
+
+                                string[] typeArr = { "N", "P", "L" };
+                                var discountHTML = "";
+                                var discountOtHTML = "";
+                                var perHtml = "";
+                                var perOtHtml = "";
+                                var disStatus = false;
+                                var otherChStatus = false;
+                                if (typeArr.Contains(val.discount_type))
+                                {
+                                    disStatus = true;
+                                    var dSign = val.discount_type == "P" ? "%" : (val.discount_type == "N" ? "Per Num." : "Lumsum");
+                                    discountHTML = $"<span>{val.discount}</span><br>";
+                                    perHtml = $"Discount Value@{val.discount_per} {dSign}<br>";
+                                }
+                                if (typeArr.Contains(val.ot_charge_type))
+                                {
+                                    otherChStatus = true;
+                                    var dSign2 = val.ot_charge_type == "P" ? "%" : (val.ot_charge_type == "N" ? "Per Num." : "Lumsum");
+                                    perOtHtml = $"<span>Other Charges@{val.ot_charge_per} {dSign2}</span><br>";
+                                    discountOtHTML = $"<span>{val.other_charges}</span><br>";
+                                }
+                                if (disStatus)
+                                {
+                                    <tr>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                    </tr>
+                                }
+                                if (otherChStatus)
+                                {
+                                    <tr>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                    </tr>
+                                }
+                                no = no + 1;
+                                total += Convert.ToInt32(val.basic_value) + Convert.ToInt32(val.sales_tax);
+                            }
+                        }
+                    </table>
+                </td>
+            </tr>
+        </table>
+        @if (size <= 22)
+        {
+            if (size > 14)
+            {
+                <pagebreak></pagebreak>
+            }
+            <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="100%">
+                                    <!--table start-->
+                                    <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
+                                        </tr>
+                                        <tr style="border-bottom: 0">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                                @foreach (var val in Model.items)
+                                                {
+                                                    if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
+                                                    {
+                                                        <span>RITES Inspection Fee</span> @Adh @Model.fee_rate @(
+                                        val.discount_type == "P" ? "%" : ""
+                                        )
+                                                        <span><br> 9% SGST <br>9% CGST <br>18% IGST<br><br> </span>
+                                                    }
+                                                    count++;
+                                                }
+                                            </td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                        </tr>
+                                    </table>
+                                    <!--================sec7 over==============-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" style="font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                                    <!--================sec8 start==============-->
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
+                                            <td style="font-size:12px;border-right:1px solid #000;" align="center" rowspan="2">
+                                                <b>
+                                                    <table cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b><i>Authorised Officer</i></b></td>
+                                                        </tr>
+                                                    </table>
+                                                </b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size:9px; border-right:1px solid #000; padding-left:10px;" valign="top">
+                                                <table width="100%" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td style="padding-top: 25px;font-size: 20px;">1) <span class="hindi">आरटीजीएस / ईएफटी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड, कोलकाता" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए।</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 20px;">
+                                                            R.T.G.S./EFT/Crossed Cheque/DD should be drawn in favour of "RITES Ltd., Kolkata."
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 20px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 20px;">2) Please send all communications to the address given above.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 30px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 20px;">3) Return one copy of bill with payment for ready reference</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                                <tr>
+                                                                    <td width="50%" style="font-size: 20px;">EFT details are as under</td>
+                                                                    <td style="font-size: 20px;">Account No: 005010200015561</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="font-size: 20px;">NAME OF BANK : / AXIS BANK LTD.</td>
+                                                                    <td style="font-size: 20px;">BRANCH CODE: 005</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="font-size: 20px;">NAME OF THE BRANCH : SHAKESPEARE SARANI</td>
+                                                                    <td style="font-size: 20px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: UTIB0000005</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td style="padding-bottom: 15px;font-size: 20px;">TYPE OF ACCOUNT : CURRENT ACCOUNT</td>
+                                                                    <td style="font-size: 20px;">CENTER CODE: 700</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2" style="padding-top: 10px;font-size: 20px;">DIGIT CODE NUMBER OF THE BANK BRANCH APPEARING ON THE MICR CHEQUE ISSUED BY THE BANK: 700211002</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!--================sec8 over==============-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" style="padding:5px 10px; border-top:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 20px;" align="center">
+                                    <br>
+                                    <b> <span class="hindi"><img src="img/l8.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/l9.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
+                                    <br>
+                                    <span>
+                                        This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @if (size > 22)
+            {
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; padding: 15px 0; border-bottom: 1px solid #000;" valign="top">
+                            <!-- table start-->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                                    <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                                    <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                                    <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                                    <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                                </tr>
+                                @{
+                                    foreach (var val in Model.items.Skip(22).Take(37))
+                                    {
+                                        <tr>
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">
+                                                @(
+                                                $"{val.qty} <br>{val.uom_s_desc}"
+                                                    )
+                                            </td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">
+                                                @(
+                                                $"{val.rate}<br>{val.uom_factor}"
+                                                    )
+                                            </td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                        </tr>
+                                        <tr>
+                                            if (Convert.ToInt32(val.sales_tax) > 0)
+                                            {
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                            }
+                                        </tr>
+
+                                        string[] typeArr = { "N", "P", "L" };
+                                        var discountHTML = "";
+                                        var discountOtHTML = "";
+                                        var perHtml = "";
+                                        var perOtHtml = "";
+                                        var disStatus = false;
+                                        var otherChStatus = false;
+                                        if (typeArr.Contains(val.discount_type))
+                                        {
+                                            disStatus = true;
+                                            var dSign = val.discount_type == "P" ? "%" : (val.discount_type == "N" ? "Per Num." : "Lumsum");
+                                            discountHTML = $"<span>{val.discount}</span><br>";
+                                            perHtml = $"Discount Value@{val.discount_per} {dSign}<br>";
+                                        }
+                                        if (typeArr.Contains(val.ot_charge_type))
+                                        {
+                                            otherChStatus = true;
+                                            var dSign2 = val.ot_charge_type == "P" ? "%" : (val.ot_charge_type == "N" ? "Per Num." : "Lumsum");
+                                            perOtHtml = $"<span>Other Charges@{val.ot_charge_per} {dSign2}</span><br>";
+                                            discountOtHTML = $"<span>{val.other_charges}</span><br>";
+                                        }
+                                        if (disStatus)
+                                        {
+                                            <tr>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                            </tr>
+                                        }
+                                        if (otherChStatus)
+                                        {
+                                            <tr>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                            </tr>
+                                        }
+                                        no = no + 1;
+                                        total += Convert.ToInt32(val.basic_value) + Convert.ToInt32(val.sales_tax);
+                                    }
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                @if (size > 22 && size <= 37)
+                {
+                    if (size > 29)
+                    {
+                        <pagebreak></pagebreak>
+                    }
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="100%">
+                                            <!--table start-->
+                                            <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
+                                                </tr>
+                                                <tr style="border-bottom: 0">
+                                                    <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                                        CONSIGNEE'S DETAILS
+                                                        @foreach (var val in Model.items)
+                                                        {
+                                                            if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
+                                                            {
+                                                                <span>RITES Inspection Fee</span> @Adh @Model.fee_rate @(val.discount_type == "P" ? "%" : "")
+                                                                <span><br> 9% SGST <br>9% CGST <br>18% IGST<br><br> </span>
+                                                            }
+                                                            count++;
+                                                        }
+                                                    </td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>abs@*abs*@ @Math.Round(Model.igst)</td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000" align="center"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                </tr>
+                                            </table>
+                                            <!--================sec7 over==============-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="100%" style="font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                                            <!--================sec8 start==============-->
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
+                                                    <td style="font-size:12px;border-right:1px solid #000;" align="center" rowspan="2">
+                                                        <b>
+                                                            <table cellpadding="0" cellspacing="0">
+                                                                <tr>
+                                                                    <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b><i>Authorised Officer</i></b></td>
+                                                                </tr>
+                                                            </table>
+                                                        </b>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:9px; border-right:1px solid #000; padding-left:10px;" valign="top">
+                                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td style="padding-top: 25px;font-size: 20px;">1) <span class="hindi">आरटीजीएस / ईएफटी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड, कोलकाता" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए।</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">
+                                                                    R.T.G.S./EFT/Crossed Cheque/DD should be drawn in favour of "RITES Ltd., Kolkata."
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">2) Please send all communications to the address given above.</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 30px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 20px;">3) Return one copy of bill with payment for ready reference</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td width="50%" style="font-size: 20px;">EFT details are as under</td>
+                                                                            <td style="font-size: 20px;">Account No: 005010200015561</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="font-size: 20px;">NAME OF BANK : / AXIS BANK LTD.</td>
+                                                                            <td style="font-size: 20px;">BRANCH CODE: 005</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="font-size: 20px;">NAME OF THE BRANCH : SHAKESPEARE SARANI</td>
+                                                                            <td style="font-size: 20px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: UTIB0000005</td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td style="padding-bottom: 15px;font-size: 20px;">TYPE OF ACCOUNT : CURRENT ACCOUNT</td>
+                                                                            <td style="font-size: 20px;">CENTER CODE: 700</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="2" style="padding-top: 10px;font-size: 20px;">DIGIT CODE NUMBER OF THE BANK BRANCH APPEARING ON THE MICR CHEQUE ISSUED BY THE BANK: 700211002</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!--================sec8 over==============-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="100%" style="padding:5px 10px; border-top:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 20px;" align="center">
+                                            <br>
+                                            <b> <span class="hindi"><img src="img/l8.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/l9.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
+                                            <br>
+                                            <span>
+                                                This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+        }
+    }
+</div>
