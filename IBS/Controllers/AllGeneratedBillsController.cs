@@ -95,23 +95,22 @@ namespace IBS.Controllers
                                 if (model.REGION_CODE == "N")
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-
                                 }
                                 else if (model.REGION_CODE == "S")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "E")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "W")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "C")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
                                 }
 
                                 await new BrowserFetcher().DownloadAsync();
@@ -202,23 +201,22 @@ namespace IBS.Controllers
                             if (model.REGION_CODE == "N")
                             {
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-
                             }
                             else if (model.REGION_CODE == "S")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "E")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "W")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "C")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
                             }
 
                             await new BrowserFetcher().DownloadAsync();
@@ -311,18 +309,22 @@ namespace IBS.Controllers
             }
             else if (selectedBill.REGION_CODE == "South")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", selectedBill);
                 pdfFileName = "SouthBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "East")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", selectedBill);
                 pdfFileName = "EastBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "West")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", selectedBill);
                 pdfFileName = "WestBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "Central")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", selectedBill);
                 pdfFileName = "CentralBill.pdf";
             }
 
