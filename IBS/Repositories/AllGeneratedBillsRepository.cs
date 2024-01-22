@@ -67,7 +67,7 @@ namespace IBS.Repositories
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
-                
+
                 List<AllGeneratedBills> list = new List<AllGeneratedBills>();
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -120,27 +120,45 @@ namespace IBS.Repositories
 
             model.items = new List<ItemsDetail>();
 
-            foreach (var item in list)
-            {
-                var result = from vbi in context.V23BillItems
-                             where vbi.BillNo == item.BILL_NO
-                             select new ItemsDetail
-                             {
-                                 Item_SrNo = vbi.ItemSrno,
-                                 item_desc = vbi.ItemDesc,
-                                 qty = vbi.Qty,
-                                 rate = vbi.Rate,
-                                 UnitCode = vbi.UomSDesc,
-                                 uom_factor = vbi.UomFactor,
-                                 basic_value = vbi.BasicValue,
-                                 Value = vbi.Value
-                             };
-
-                model.items.AddRange(result);
-            }
+            //foreach (var item in list)
+            //{
+            //    var result = from vbi in context.V23BillItems
+            //                 where vbi.BillNo == item.BILL_NO
+            //                 select new ItemsDetail
+            //                 {
+            //                     Item_SrNo = vbi.ItemSrno,
+            //                     item_desc = vbi.ItemDesc,
+            //                     qty = vbi.Qty,
+            //                     rate = vbi.Rate,
+            //                     UnitCode = vbi.UomSDesc,
+            //                     uom_factor = vbi.UomFactor,
+            //                     basic_value = vbi.BasicValue,
+            //                     Value = vbi.Value
+            //                 };
+            //    model.items.AddRange(result);
+            //}
             model.lstBillDetailsForPDF = list;
 
             return model;
+        }
+
+        public List<ItemsDetail> GetBillItems(string Bill_No)
+        {
+            List<ItemsDetail> list = new List<ItemsDetail>();
+            list = (from vbi in context.V23BillItems
+                    where vbi.BillNo == Bill_No
+                    select new ItemsDetail
+                    {
+                        Item_SrNo = vbi.ItemSrno,
+                        item_desc = vbi.ItemDesc,
+                        qty = vbi.Qty,
+                        rate = vbi.Rate,
+                        uom_s_desc = vbi.UomSDesc,
+                        uom_factor = vbi.UomFactor,
+                        basic_value = vbi.BasicValue,
+                        Value = vbi.Value
+                    }).ToList();
+            return list;
         }
     }
 }

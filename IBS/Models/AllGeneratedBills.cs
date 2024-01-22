@@ -46,6 +46,12 @@
         public decimal igst { get; set; }
         public decimal fee_rate { get; set; }
         public decimal BILL_AMOUNT { get; set; }
+
+        public string irfc_bpo_name { get; set; }
+        public string irfc_bpo_rly { get; set; }
+        public string irfc_bpo_add { get; set; }
+        public string irfc_bpo_city { get; set; }
+        public string total { get; set; }
         public List<ItemsDetail> items { get; set; } = new List<ItemsDetail>();
         public List<AllGeneratedBills> lstBillDetailsForPDF { get; set; } //lstBillDetailsForPDF
     }

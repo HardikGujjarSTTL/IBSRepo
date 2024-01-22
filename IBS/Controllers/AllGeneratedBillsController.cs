@@ -64,6 +64,7 @@ namespace IBS.Controllers
                 {
                     foreach (var item in model.lstBillDetailsForPDF)
                     {
+                        item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
                         decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                         item.BILL_AMOUNT = totalBillAmount;
 
@@ -94,23 +95,26 @@ namespace IBS.Controllers
                                 if (model.REGION_CODE == "N")
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-
                                 }
                                 else if (model.REGION_CODE == "S")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "E")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "W")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
+                                }
+                                else if (model.REGION_CODE == "Q")
+                                {
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
                                 }
                                 else if (model.REGION_CODE == "C")
                                 {
-
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                                 }
 
                                 await new BrowserFetcher().DownloadAsync();
@@ -201,23 +205,26 @@ namespace IBS.Controllers
                             if (model.REGION_CODE == "N")
                             {
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-
                             }
                             else if (model.REGION_CODE == "S")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "E")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "W")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
+                            }
+                            else if (model.REGION_CODE == "Q")
+                            {
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
                             }
                             else if (model.REGION_CODE == "C")
                             {
-
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                             }
 
                             await new BrowserFetcher().DownloadAsync();
@@ -260,6 +267,33 @@ namespace IBS.Controllers
 
         public IActionResult NorthBill(AllGeneratedBills obj)
         {
+            obj.REGION_CODE = "N";
+            obj.CLIENT_TYPE = "R";
+            obj.FromDate = "01/01/2021";
+            obj.ToDate = "31/01/2021";
+            obj.BPO_NAME = null;
+
+            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+            if (model.lstBillDetailsForPDF.Count() > 0)
+            {
+                foreach (var item in model.lstBillDetailsForPDF)
+                {
+                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+                    item.BILL_AMOUNT = totalBillAmount;
+                }
+            }
+            return View(model.lstBillDetailsForPDF[0]);
+        }
+
+        public IActionResult SouthBill(AllGeneratedBills obj)
+        {
+            AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
+            return View(model);
+        }
+
+        public IActionResult COQABill(AllGeneratedBills obj)
+        {
             AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
             return View(model);
         }
@@ -298,19 +332,28 @@ namespace IBS.Controllers
             }
             else if (selectedBill.REGION_CODE == "South")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", selectedBill);
                 pdfFileName = "SouthBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "East")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", selectedBill);
                 pdfFileName = "EastBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "West")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", selectedBill);
                 pdfFileName = "WestBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "Central")
             {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", selectedBill);
                 pdfFileName = "CentralBill.pdf";
+            }
+            else if (selectedBill.REGION_CODE == "Q")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", selectedBill);
+                pdfFileName = "Q.pdf";
             }
 
             await new BrowserFetcher().DownloadAsync();
