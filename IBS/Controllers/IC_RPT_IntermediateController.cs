@@ -438,23 +438,22 @@ namespace IBS.Controllers
                     XmlTextWriter tx = new XmlTextWriter(sw);
                     doc.WriteTo(tx);
 
-                    string aa = sw.ToString();
+                    //string aa = sw.ToString();
                     
-
-                    string fname = CaseNO + "-" + BkNo + "-" + SetNo;
+                    //string fname = CaseNO + "-" + BkNo + "-" + SetNo;
 
                     //fname = env.WebRootPath + "/IC_XML/" + fname + ".xml";
 
-                    string path = env.WebRootPath + "/ReadWriteData/IC_XML";
+                    //string path = env.WebRootPath + "/ReadWriteData/IC_XML";
 
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
+                    //if (!Directory.Exists(path))
+                    //{
+                    //    Directory.CreateDirectory(path);
+                    //}
 
-                    doc.Save(path + "/" + fname + ".xml");
+                    //doc.Save(path + "/" + fname + ".xml");
 
-                    return Json(new { status = 1, responseText = aa });
+                    return Json(new { status = 1, responseText = sw.ToString() });
                 }
                 else
                 {
