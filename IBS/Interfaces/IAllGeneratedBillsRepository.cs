@@ -9,5 +9,6 @@ namespace IBS.Interfaces
         public AllGeneratedBills CreateBills(AllGeneratedBills model);
 
         public AllGeneratedBills ReturnBills(AllGeneratedBills model);
+        List<ItemsDetail> GetBillItems(string Bill_No);
     }
 }

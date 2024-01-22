@@ -64,6 +64,7 @@ namespace IBS.Controllers
                 {
                     foreach (var item in model.lstBillDetailsForPDF)
                     {
+                        item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
                         decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                         item.BILL_AMOUNT = totalBillAmount;
 
@@ -259,6 +260,18 @@ namespace IBS.Controllers
         }
 
         public IActionResult NorthBill(AllGeneratedBills obj)
+        {
+            AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
+            return View(model);
+        }
+
+        public IActionResult SouthBill(AllGeneratedBills obj)
+        {
+            AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
+            return View(model);
+        }
+
+        public IActionResult COQABill(AllGeneratedBills obj)
         {
             AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
             return View(model);
