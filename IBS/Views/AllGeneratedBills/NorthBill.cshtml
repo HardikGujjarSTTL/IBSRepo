@@ -168,9 +168,10 @@
                                     </td>
                                     @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
                                     {
+                                        var QR_Code = "data:image/png;base64," + Model.qr_code;
                                         <td align="center" style="padding: 7px;padding-top: 25px;padding-bottom: 25px;">
                                             @*<img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(400)->generate(Model.qr_code)) !!}">*@
-                                            <img src="data:image/png;base64, @Html.Raw(Model.qr_code)" width="400px" height="400px" />
+                                            <img src="@QR_Code" width="400px" height="400px" />
                                         </td>
                                     }
                                     <td align="right" style="padding: 7px; padding-top: 150px;font-size: 20px;">

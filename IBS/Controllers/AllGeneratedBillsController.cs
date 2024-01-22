@@ -261,8 +261,23 @@ namespace IBS.Controllers
 
         public IActionResult NorthBill(AllGeneratedBills obj)
         {
-            AllGeneratedBills model = new AllGeneratedBills();//allGeneratedBillsRepository.GenerateBill(fromdata);
-            return View(model);
+            obj.REGION_CODE = "N";
+            obj.CLIENT_TYPE = "R";
+            obj.FromDate = "01/01/2021";
+            obj.ToDate = "31/01/2021";
+            obj.BPO_NAME = null;
+
+            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+            if (model.lstBillDetailsForPDF.Count() > 0)
+            {
+                foreach (var item in model.lstBillDetailsForPDF)
+                {
+                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+                    item.BILL_AMOUNT = totalBillAmount;
+                }
+            }
+            return View(model.lstBillDetailsForPDF[0]);
         }
 
         public IActionResult SouthBill(AllGeneratedBills obj)
