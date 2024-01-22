@@ -108,9 +108,13 @@ namespace IBS.Controllers
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
                                 }
-                                else if (model.REGION_CODE == "C")
+                                else if (model.REGION_CODE == "Q")
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
+                                }
+                                else if (model.REGION_CODE == "C")
+                                {
+                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                                 }
 
                                 await new BrowserFetcher().DownloadAsync();
@@ -214,9 +218,13 @@ namespace IBS.Controllers
                             {
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
                             }
-                            else if (model.REGION_CODE == "C")
+                            else if (model.REGION_CODE == "Q")
                             {
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
+                            }
+                            else if (model.REGION_CODE == "C")
+                            {
+                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                             }
 
                             await new BrowserFetcher().DownloadAsync();
@@ -326,6 +334,11 @@ namespace IBS.Controllers
             {
                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", selectedBill);
                 pdfFileName = "CentralBill.pdf";
+            }
+            else if (selectedBill.REGION_CODE == "Q")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", selectedBill);
+                pdfFileName = "Q.pdf";
             }
 
             await new BrowserFetcher().DownloadAsync();
