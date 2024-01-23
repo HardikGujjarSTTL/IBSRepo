@@ -134,9 +134,9 @@ namespace IBS.Controllers
 
                                 var pdfContent = await page.PdfStreamAsync(new PdfOptions
                                 {
-                                    Landscape = true,
-                                    Format = PaperFormat.Letter,
-                                    PrintBackground = true
+                                    Landscape = false,
+                                    Format = PaperFormat.A4,
+                                    PrintBackground = false
                                 });
 
                                 await using (var pdfStream = new MemoryStream())
@@ -244,9 +244,9 @@ namespace IBS.Controllers
 
                             var pdfContent = await page.PdfStreamAsync(new PdfOptions
                             {
-                                Landscape = true,
-                                Format = PaperFormat.Letter,
-                                PrintBackground = true
+                                Landscape = false,
+                                Format = PaperFormat.A4,
+                                PrintBackground = false
                             });
 
                             await using (var pdfStream = new MemoryStream())
@@ -416,9 +416,9 @@ namespace IBS.Controllers
 
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
-                Landscape = true,
-                Format = PaperFormat.Letter,
-                PrintBackground = true
+                Landscape = false,
+                Format = PaperFormat.A4,
+                PrintBackground = false
             });
 
             await browser.CloseAsync();
