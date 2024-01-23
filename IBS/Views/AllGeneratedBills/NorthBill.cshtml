@@ -35,13 +35,6 @@
         padding:3px;
     }
 </style>
-@*<div>
-    <div class="list-inner">
-        <div class="tast-list">
-            <h2>North</h2>
-        </div>
-    </div>
-</div>*@
 <div>
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
@@ -53,7 +46,7 @@
                             <!--================sec1 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td valign="middle" width="40%" style="text-align:center; vertical-align:middle;"><img src="~/images/rites-logo.png" alt="" style="width:200px;" /></td> @*img/riteslogo1.jpg*@
+                                    <td valign="middle" width="40%" style="text-align:center; vertical-align:middle;"><img src="~/images/rites-logo.png" alt="" style="width:200px;" /></td>
                                     @if (@Model.BILL_NO.Substring(0, 1) == "O")
                                     {
                                         <td width="15%" valign="middle" align="center" style="font-size:14px; font-family:Arial, Helvetica, sans-serif; text-align:center;">
@@ -67,7 +60,7 @@
                                     {
                                         <td width="15%" valign="middle" align="center" style="font-size:14px; font-family:Arial, Helvetica, sans-serif; text-align:center; vertical-align:middle;">
                                             <b>
-                                                <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
+                                                <span class="hindi">निरीक्षण शुल्क बिल</span>
                                                 <br>INSPECTION FEE BILL<br>
                                                 <span class="hindi">मूल </span>ORIGINAL
                                             </b>
@@ -130,7 +123,6 @@
                                             <div width="20%">
                                                 <span>
                                                     <br><b><span class="hindi"> सेवा में</span> / TO</b>
-                                                    @*<?php echo Model.irfc_bpo_name .  Model.irfc_bpo_rly .  Model.irfc_bpo_add . Model.irfc_bpo_city; ?>*@
                                                     @Model.irfc_bpo_name  @Model.irfc_bpo_rly @Model.irfc_bpo_add @Model.irfc_bpo_city
                                                 </span>
                                                 @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && @requireQr)
@@ -265,7 +257,7 @@
                                     <td valign="top" width="51%" style="font-size:11px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:3px 0;" height="100">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
+                                                <td><b><span class="hindi">संविदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -281,7 +273,7 @@
                                     <td valign="top" width="49%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:3px 0;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
+                                                <td><b><span class="hindi">प्रेषिती का विवरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -327,7 +319,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
-                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi">मात्रा</span> <br>QUANTITY</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
@@ -489,13 +481,13 @@
                                                         <b>
                                                             <table cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                                    <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
+                                                                    <td><b> <span class="hindi">प्राधिकृत<br><img src="img/l7.JPG" alt="" /></span></b></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b><i>Authorised Officer</i></b></td>
@@ -571,8 +563,7 @@
         </tr>
     </table>
 
-    <!-- table start-->
-    @*<pagebreak>*@
+    <!-- table start-->    
     @if (size > 7)
     {
         <table width="100%" cellpadding="0" cellspacing="0">
@@ -581,11 +572,11 @@
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
                             <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(7).Take(15))
@@ -661,7 +652,7 @@
         {
             if (size > 14)
             {
-                <pagebreak></pagebreak>
+                @*<pagebreak></pagebreak>*@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -692,7 +683,7 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                             </td>
                                         </tr>
@@ -700,8 +691,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -713,7 +704,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -729,7 +720,7 @@
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                            <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
                                                             <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
@@ -816,11 +807,11 @@
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
                             <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(22).Take(37))
@@ -896,7 +887,7 @@
         {
             if (size > 29)
             {
-                <pagebreak></pagebreak>
+                @*<pagebreak></pagebreak>*@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -928,7 +919,7 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>@Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                             </td>
                                         </tr>
@@ -936,8 +927,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -949,7 +940,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -965,7 +956,7 @@
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                            <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
                                                             <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
