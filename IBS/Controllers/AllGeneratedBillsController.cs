@@ -134,7 +134,7 @@ namespace IBS.Controllers
 
                                 var pdfContent = await page.PdfStreamAsync(new PdfOptions
                                 {
-                                    Landscape = false,
+                                    Landscape =false,
                                     Format = PaperFormat.A4,
                                     PrintBackground = false
                                 });
