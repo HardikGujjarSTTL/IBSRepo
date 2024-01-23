@@ -1,6 +1,9 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers
 {
@@ -22,11 +25,72 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        public async Task<IActionResult> LabListView(string FromDate,string ToDate,string Region)
         {
-            DTResult<LabInvoiceReportModel> dTResult = labInvoiceRepository.GetLabInvoice(dtParameters);
+            LabInvoiceReportModel model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
             //GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
-            return Json(dTResult);
+            string FolderName = "Lab_Invoice";
+            string htmlContent = "";
+            if (model.lstlabInvoicelst.Count() > 0)
+            {
+                foreach (var item in model.lstlabInvoicelst)
+                {
+                    var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    if (Directory.Exists(path))
+                    {
+                        // check if the PDF file exists
+                        string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
+                        bool fileExists = System.IO.File.Exists(pdfFilePath);
+
+                        if (!fileExists)
+                        {
+
+                            htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
+
+
+                            await new BrowserFetcher().DownloadAsync();
+                            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                            {
+                                Headless = true,
+                                DefaultViewport = null
+                            });
+                            await using var page = await browser.NewPageAsync();
+                            await page.EmulateMediaTypeAsync(MediaType.Screen);
+                            await page.SetContentAsync(htmlContent);
+
+                            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+                            {
+                                Landscape = true,
+                                Format = PaperFormat.A4,
+                                PrintBackground = true
+                            });
+
+                            await using (var pdfStream = new MemoryStream())
+                            {
+                                await pdfContent.CopyToAsync(pdfStream);
+                                byte[] pdfBytes = pdfStream.ToArray();
+                                string base64String = Convert.ToBase64String(pdfBytes);
+                                await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            return PartialView(model);
         }
+
+        //public async Task<IActionResult> GeneratePDF(DTResult<LabInvoiceReportModel>  dTResult)
+        //{
+        //    string htmlContent = "";
+        //    string FolderName = GetFolderNameByRegion(dTResult.);
+        //}
+
     }
 }

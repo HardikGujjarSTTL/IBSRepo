@@ -1,0 +1,48 @@
+﻿@model LabInvoiceReportModel
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtGB" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Sr.No.</th>
+                        <th>File Name</th>
+                        <th>Action</th>
+                    </tr>
+                    @{
+                        var Srno = 0;
+                        if (Model != null)
+                        {
+                            if (Model.lstlabInvoicelst.Count() > 0)
+                            {
+                                foreach (var item in Model.lstlabInvoicelst.Take(10))
+                                {
+                                    Srno = Srno + 1;
+                                    <tr>
+                                        <td>@Srno</td>
+                                        <td>@item.InvoiceBillNo</td>
+                                        <td><a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No Data Found</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">No Data Found</td>
+                            </tr>
+                        }
+                    }
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

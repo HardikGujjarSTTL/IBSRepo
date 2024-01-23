@@ -20,5 +20,13 @@
         public string IRN_NO { get; set; }
         public string BILL_FINALIZE { get; set; }
         public string BILL_SENT { get; set; }
+        public List<labInvoicelst> lstlabInvoicelst { get; set; }
+    }
+
+    public class labInvoicelst
+    {
+        public string InvoiceBillNo { get; set; }
+        public string InvoiceNo { get; set; }
+        public string BillNO { get; set; }
     }
 }

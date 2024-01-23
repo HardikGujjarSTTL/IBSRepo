@@ -19400,6 +19400,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Datetime)
                 .HasColumnType("DATE")
                 .HasColumnName("DATETIME");
+            entity.Property(e => e.DigBillGenDt)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("DIG_BILL_GEN_DT");
             entity.Property(e => e.IeCd)
                 .HasPrecision(4)
                 .HasColumnName("IE_CD");

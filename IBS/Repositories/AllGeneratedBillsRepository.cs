@@ -171,7 +171,7 @@ namespace IBS.Repositories
 
             foreach (var bill in billsToUpdate)
             {
-                bill.DigBillGenDt = DateTime.Now;
+                bill.DigBillGenDt = DateTime.Now.Date;
             }
             string msg = "Update Successfull !!";
 
