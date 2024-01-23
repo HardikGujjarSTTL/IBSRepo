@@ -136,7 +136,8 @@ namespace IBS.Controllers
                                 {
                                     Landscape =false,
                                     Format = PaperFormat.Letter,
-                                    PrintBackground = false
+                                    PrintBackground = false,
+                                    Width = "1500px"
                                 });
 
                                 await using (var pdfStream = new MemoryStream())
