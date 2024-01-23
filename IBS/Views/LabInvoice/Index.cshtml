@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Generate Invoice</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" id="FromDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" maxlength="100" id="ToDt" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+             <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Region</label>
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--",new {@id="InspRegion"})
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-4 text-center">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="BtnSubmit()">Submit</button>
+                    <button type="button" class="save-btn active" onclick="BtnGetBill()">Sign PDF's</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtGB" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>File Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+        <partial name="_DataTablesScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
+
+        <script type="text/javascript">
+
+                function BtnSubmit() {
+                InitializeDatatable();
+            }
+
+            function InitializeDatatable() {
+
+                var FromDate = $("#FromDt").val();
+                var ToDate = $("#ToDt").val();
+                var Region = $("#InspRegion").val();
+
+                var ajaxUrl = "@Url.Action("LoadTable")";
+
+                $("#dtGB").DataTable({
+                    stateSave: false,
+                    autoWidth: true,
+                    scrollX: true,
+                    scrollCollapse: true,
+                    processing: true,
+                    serverSide: true,
+                    destroy: true,
+                    paging: true,
+                    searching: true,
+                    ajax: {
+                        url: ajaxUrl,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: function (d) {
+                            var AdditionalValues = {
+                                "FromDate": FromDate,
+                                "ToDate": ToDate,
+                                "Region": Region,
+                            };
+                            d.AdditionalValues = AdditionalValues;
+                            return JSON.stringify(d);
+                        },
+                    },
+                    columns: [
+                        {
+                            data: '', orderable: false, width: '5%',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        { data: "BILL_NO" },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+
+                                var BillNo = data.BILL_NO;
+                                var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
+                                return '<td width="10%" valign="top" align="center">' +
+                                    '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                    '</td>';
+                            }
+                        },
+                    ],
+                    "order": [[0, "asc"]]
+                });
+            }
+
+        </script>
+}

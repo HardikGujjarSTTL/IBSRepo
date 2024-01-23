@@ -10,16 +10,16 @@ using System.Data;
 
 namespace IBS.Repositories
 {
-    public class AllGeneratedBillsRepository : IAllGeneratedBillsRepository
+    public class LabInvoiceRepository : ILabInvoiceRepository
     {
         private readonly ModelContext context;
 
-        public AllGeneratedBillsRepository(ModelContext context)
+        public LabInvoiceRepository(ModelContext context)
         {
             this.context = context;
         }
 
-        public DTResult<AllGeneratedBills> GetBillDetails(DTParameters dtParameters)
+        public DTResult<LabInvoiceReportModel> GetLabInvoice(DTParameters dtParameters)
         {
             DTResult<AllGeneratedBills> dTResult = new() { draw = 0 };
             IQueryable<AllGeneratedBills>? query = null;
@@ -85,97 +85,6 @@ namespace IBS.Repositories
             }
 
             return dTResult;
-        }
-
-        public AllGeneratedBills CreateBills(AllGeneratedBills model)
-        {
-            return CreateBillReturnBillDetails(model, "SP_GET_PDFBILL_DETAILS");
-        }
-
-        public AllGeneratedBills ReturnBills(AllGeneratedBills model)
-        {
-            return CreateBillReturnBillDetails(model, "SP_GET_PDFRETURNBILL_DETAILS");
-        }
-
-        private AllGeneratedBills CreateBillReturnBillDetails(AllGeneratedBills model, string procedureName)
-        {
-            OracleParameter[] par = new OracleParameter[9];
-            par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODT", OracleDbType.Varchar2, model.ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_REGION_CODE", OracleDbType.Varchar2, model.REGION_CODE, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_LOA", OracleDbType.Varchar2, model.LOA, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RAILWAY_RDO", OracleDbType.Varchar2, model.RailwayChk, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_CLIENT_NAME", OracleDbType.Varchar2, model.CLIENT_NAME, ParameterDirection.Input);
-            par[6] = new OracleParameter("P_CLIENT_TYPE", OracleDbType.Varchar2, model.CLIENT_TYPE, ParameterDirection.Input);
-            par[7] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            var ds = DataAccessDB.GetDataSet(procedureName, par, 1);
-            List<AllGeneratedBills> list = new();
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            }
-
-            model.lstBillDetailsForPDF = list;
-
-            return model;
-        }
-
-        public List<ItemsDetail> GetBillItems(string Bill_No)
-        {
-            List<ItemsDetail> list = new List<ItemsDetail>();
-            list = (from vbi in context.V23BillItems
-                    where vbi.BillNo == Bill_No
-                    select new ItemsDetail
-                    {
-                        Item_SrNo = vbi.ItemSrno,
-                        item_desc = vbi.ItemDesc,
-                        qty = vbi.Qty,
-                        rate = vbi.Rate,
-                        uom_s_desc = vbi.UomSDesc,
-                        uom_factor = vbi.UomFactor,
-                        basic_value = vbi.BasicValue,
-                        Value = vbi.Value
-                    }).ToList();
-            return list;
-        }
-
-        public List<T22Bill> GetBillByBillNo(string Bill_No)
-        {
-            var Bills = context.T22Bills
-                      .Where(b => b.BillNo == Bill_No)
-                      .ToList();
-
-            return Bills;
-        }
-
-        public string UpdateBillCount(string Bill_No,int count)
-        {
-            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
-
-            foreach (var bill in billsToUpdate)
-            {
-                bill.BillResentStatus = "S";
-                bill.BillResentCount = Convert.ToBoolean(count);
-            }
-            string msg = "Update Successfull !!";
-
-            return msg;
-        }
-
-        public string UpdateGEN_Bill_Date(string Bill_No) 
-        {
-            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
-
-            foreach (var bill in billsToUpdate)
-            {
-                bill.DigBillGenDt = DateTime.Now;
-            }
-            string msg = "Update Successfull !!";
-
-            return msg;
         }
     }
 }
