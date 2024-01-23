@@ -153,18 +153,17 @@ namespace IBS.Repositories
 
             var Holiday_ID = !string.IsNullOrEmpty(dtParameters.AdditionalValues["HOLIDAY_ID"]) ? Convert.ToInt32(dtParameters.AdditionalValues["HOLIDAY_ID"]) : 0;
 
-            query = from a in context.T112HolidayDetails
-                    //join b in context.T111HolidayMasters on a.HolidayId equals b.Id
-                    //where a.HolidayId == Holiday_ID && (a.Isdeleted ?? 0) == 0
-                    select new HolidayDetailModel
-                    {
-                        ID = a.Id,
-                        //FINANCIAL_YEAR = b.FinancialYear,
-                        //HOLIDAY_ID = a.HolidayId,
-                        HOLIDAY_DT = Convert.ToDateTime(a.HolidayDt),
-                        HOLIDAY_DESC = a.HolidayDesc,
-                        USER_NAME = a.UserId
-                    };
+            query = (from t112 in context.T112HolidayDetails
+                     join t111 in context.T111HolidayMasters on t112.HolidayId equals t111.Id
+                     where t112.HolidayId == Holiday_ID
+                     select new HolidayDetailModel
+                     {
+                         ID = t112.Id,
+                         FINANCIAL_YEAR = t111.FinancialYear,
+                         HOLIDAY_DT = t112.HolidayDt,
+                         HOLIDAY_DESC = t112.HolidayDesc,
+                         USER_NAME = t112.UserId
+                     });
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
 
@@ -183,7 +182,7 @@ namespace IBS.Repositories
                      where a.Id == id
                      select new HolidayDetailModel
                      {
-                         //HOLIDAY_ID = a.HolidayId,
+                         HOLIDAY_ID = a.HolidayId,
                          HOLIDAY_DT = a.HolidayDt,
                          HOLIDAY_DESC = a.HolidayDesc
                      }).FirstOrDefault();
