@@ -149,6 +149,7 @@ namespace IBS.Repositories
                     where vbi.BillNo == Bill_No
                     select new ItemsDetail
                     {
+                        BILL_NO = vbi.BillNo,
                         Item_SrNo = vbi.ItemSrno,
                         item_desc = vbi.ItemDesc,
                         qty = vbi.Qty,
@@ -156,7 +157,18 @@ namespace IBS.Repositories
                         uom_s_desc = vbi.UomSDesc,
                         uom_factor = vbi.UomFactor,
                         basic_value = vbi.BasicValue,
-                        Value = vbi.Value
+                        sales_tax_per = vbi.SalesTaxPer,
+                        sales_tax = vbi.SalesTax,
+                        EXCISE_TYPE = vbi.ExciseType,
+                        EXCISE_PER = vbi.ExcisePer,
+                        EXCISE = vbi.Excise,
+                        discount_type = vbi.DiscountType,
+                        discount_per = vbi.DiscountPer,
+                        discount = vbi.Discount,
+                        ot_charge_type = vbi.OtChargeType,
+                        ot_charge_per = vbi.OtChargePer,
+                        other_charges = vbi.OtherCharges,
+                        Value = vbi.Value,
                     }).ToList();
             return list;
         }
