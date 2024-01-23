@@ -92,6 +92,11 @@ namespace IBS.Controllers
 
                             if (!fileExists)
                             {
+                                string imgPath = env.WebRootPath + "/images/";
+                                var imagePath = Path.Combine(imgPath, "rites-logo.png");
+                                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                                item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
                                 if (model.REGION_CODE == "N")
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
@@ -146,7 +151,7 @@ namespace IBS.Controllers
                         }
                     }
                 }
-                
+
                 AlertAddSuccess("Bill Generated !!");
             }
             catch (Exception ex)
@@ -283,6 +288,10 @@ namespace IBS.Controllers
                     item.BILL_AMOUNT = totalBillAmount;
                 }
             }
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -354,6 +363,11 @@ namespace IBS.Controllers
             List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
 
             AllGeneratedBills selectedBill = model.FirstOrDefault(bill => bill.BILL_NO == BillNo);
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            selectedBill.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
             if (selectedBill.REGION_CODE == "North")
             {
