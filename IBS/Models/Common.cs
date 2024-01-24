@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
 using DocumentFormat.OpenXml.InkML;
+using QRCoder;
+using System.Drawing;
 
 namespace IBS.Models
 {
@@ -5007,6 +5009,25 @@ namespace IBS.Models
             }
 
             return words.Trim();
+        }
+
+        public static string QRCodeGenerate(string qr_Code)
+        {
+            string base64String = string.Empty;
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qr_Code, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+
+            Bitmap qrCodeBitmap = qrCode.GetGraphic(60);
+
+            // Display the QR code on an Image control
+            using (MemoryStream ms = new MemoryStream())
+            {
+                qrCodeBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] qrCodeImage = ms.ToArray();
+                base64String = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
+            }
+            return base64String;
         }
     }
 
