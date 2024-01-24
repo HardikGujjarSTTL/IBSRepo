@@ -21,6 +21,20 @@
     }
 }
 
+<style>
+    .hindi {
+        font-family: 'mangal';
+        line-height: 9px;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+        border-color: #fff;
+        padding: 0px;
+        line-height: 9px;
+    }
+</style>
+
 <div>
     <div class="list-inner">
         <div class="tast-list">
@@ -42,7 +56,7 @@
                                     <td valign="middle" width="40%"><img src="img/riteslogo1.jpg" alt="" style="width:600px;display: block;" /></td>
                                     @if (Model.BILL_NO.Substring(0, 1) == "R")
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="15%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <br>CREDIT NOTE<br>
                                                 <span class="hindi">मूल </span>ORIGINAL
@@ -51,7 +65,7 @@
                                     }
                                     else
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="15%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
                                                 <br>INSPECTION FEE BILL<br>
@@ -60,43 +74,43 @@
                                         </td>
                                     }
 
-                                    <td width="45%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; line-height:9px;padding-bottom: 15px;" valign="middle" align="right">
+                                    <td width="45%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; line-height:9px;padding-bottom: 15px; padding-right:10px;" valign="middle" align="right">
                                         <b>
                                             <table>
                                                 <tr>
-                                                    <td><br><span class="hindi"><img src="img/h1.JPG" alt="" /></span>/ Format No.</td>
-                                                    <td align="center" width="10"><br>:</td>
-                                                    <td><br>F-7.5-12/1.Rev Nill</td>
+                                                    <td style="text-align:right; font-size:8px;"><br><span class="hindi"><img src="img/h1.JPG" alt="" /></span>/ Format No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;"><br>:</td>
+                                                    <td style="text-align:right; font-size:8px;"><br>F-7.5-12/1.Rev Nill</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">आयकर सं </span>/ PAN No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>AAACR0830Q</td>
+                                                    <td style="text-align:right; font-size:8px;><span class="hindi">आयकर सं </span>/ PAN No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">AAACR0830Q</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">माल और सेवा कर सं </span>/ GSTIN No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>07AAACR0830Q1Z8</td>
+                                                    <td style="text-align:right; font-size:8px;"><span class="hindi">माल और सेवा कर सं </span>/ GSTIN No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">07AAACR0830Q1Z8</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">दूरभाष </span>/ Telephone</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>011-22029110/22029109</td>
+                                                    <td style="text-align:right; font-size:8px;"><span class="hindi">दूरभाष </span>/ Telephone</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">011-22029110/22029109</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi"><img src="img/h5.JPG" alt="" /></span>/ Fax No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>011-22024665</td>
+                                                    <td style="text-align:right; font-size:8px;"><span class="hindi"><img src="img/h5.JPG" alt="" /></span>/ Fax No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">011-22024665</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">ई-मेल </span>/ E-mail</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>nrinspn@rites.com</td>
+                                                    <td style="text-align:right; font-size:8px;"><span class="hindi">ई-मेल </span>/ E-mail</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">nrinspn@rites.com</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">आई आर ई पी एस</span> / IREPS Code</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>128383 (For Rly)</td>
+                                                    <td style="text-align:right; font-size:8px;"><span class="hindi">आई आर ई पी एस</span> / IREPS Code</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="text-align:right; font-size:8px;">128383 (For Rly)</td>
                                                 </tr>
                                             </table>
                                         </b>
@@ -108,13 +122,13 @@
                     </tr>
                     <!--================sec2 start==============-->
                     <tr>
-                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
+                        <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
                             <table width="100%" cellpadding="0" cellspacing="0" style="vertical-align: top;">
                                 <tr>
-                                    <td style="padding: 7px; padding-top: 150px;font-size: 20px;" width="200">
+                                    <td style="padding: 7px 0; font-size:8px;" width="45%">
                                         @if (!string.IsNullOrEmpty(Model.irfc_bpo_cd) && Model.irfc_funded == "Y")
                                         {
-                                            <div width="20%">
+                                            <div width="30%">
                                                 <span>
                                                     <br><b><span class="hindi"> सेवा में</span> / TO</b>
                                                     @Model.irfc_bpo_name  @Model.irfc_bpo_rly @Model.irfc_bpo_add @Model.irfc_bpo_city
@@ -147,16 +161,16 @@
                                     </td>
                                     @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && requireQr)
                                     {
-                                        <td align="center" style="padding: 7px;padding-top: 25px;padding-bottom: 25px;">
+                                        <td align="center" style="padding: 7px; width:20%;" width="20%">
                                             @*<img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(400)->generate($data->qr_code)) !!}">*@
                                             <img src="data:image/png;base64, @Html.Raw(Model.qr_code)" />
                                         </td>
                                     }
-                                    <td align="right" style="padding: 7px; padding-top: 150px;font-size: 20px;">
+                                    <td align="right" style="padding: 7px;" width="35%">
                                         <b>
                                             <table>
                                                 <tr>
-                                                    <td>
+                                                    <td style="font-size:8px; text-align:right;">
                                                         <span class="hindi"><img src="img/a1.JPG" alt="" /></span> / NORTHERN REGION <br><span class="hindi">१२वीं मं&#2367;जल, कोर २ </span> / 12th FLOOR CORE-II<br><span class="hindi"><img src="img/a3.JPG" alt="" /></span>/ SCOPE MINAR, LAXMI NAGAR<br><span class="hindi"><img src="img/a4.JPG" alt="" /></span>/ Delhi - 110092<br>CIN NO.L74899DL1974GOI007227
                                                         @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && requireQr)
                                                         {
@@ -178,7 +192,7 @@
                             <!--================sec3 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; padding-left:10px;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "R")
@@ -195,7 +209,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
@@ -209,11 +223,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="border-bottom:1px solid #000; padding:15px 0;">
+                        <td width="100%" style="border-bottom:1px solid #000; padding:15px 10px;">
                             <!--================sec4 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 35%;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
@@ -221,7 +235,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
@@ -235,11 +249,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="border-bottom:1px solid #000;" valign="top">
+                        <td width="100%" style="border-bottom:1px solid #000; padding-left:10px;" valign="top">
                             <!--================sec5 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td valign="top" width="51%" style="font-size:11px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:15px 0;" height="100">
+                                    <td valign="top" width="51%" style="font-size:8px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:15px 0;" height="100">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
@@ -255,7 +269,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td valign="top" width="49%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0;">
+                                    <td valign="top" width="49%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 0 10px;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
@@ -277,22 +291,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                        <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
                             <!--================sec6 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
+                                    <td width="30%" valign="top" style="font-size:8px; border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
+                                    <td width="15%" valign="top" style="font-size:8px; border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
+                                    <td width="15%" valign="top" style="font-size:8px; border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
+                                    <td width="15%" valign="top" style="font-size:8px; border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
+                                    <td width="15%" valign="top" style="font-size:8px; border-bottom:1px solid #000;padding:15px 0;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
                                 </tr>
                                 <tr>
-                                    <td width="30%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.IC_NO</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.bk_no</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.set_no</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.call_instalment_no</td>
+                                    <td width="30%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.IC_NO</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.bk_no</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.set_no</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.call_instalment_no</td>
                                 </tr>
                             </table>
                             <!--================sec6 over==============-->
@@ -307,7 +321,7 @@
                         @* ';
                         ?>*@
                         <tr>
-                            <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                            <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
                                 <!--================sec7 start==============-->
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
@@ -325,16 +339,16 @@
                                                 <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.qty<br>@val.uom_s_desc</td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right;" align="right">@val.basic_value</td>
                                             </tr>
                                             <tr>
                                                 @if (Convert.ToInt32(val.sales_tax) > 0)
                                                 {
-                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px; text-align:right;" align="right">GST @Adh @val.sales_tax_per%</td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px; text-align:right;" align="center">@val.sales_tax</td>
                                                 }
                                             </tr>
 
@@ -362,21 +376,21 @@
                                             if (disStatus)
                                             {
                                                 <tr>
-                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perHtml</td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountHTML</td>
                                                 </tr>
                                             }
                                             if (otherChStatus)
                                             {
                                                 <tr>
-                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perOtHtml</td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountOtHTML</td>
                                                 </tr>
                                             }
                                             no = no + 1;
@@ -560,7 +574,7 @@
     {
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
@@ -583,11 +597,11 @@
                                 <tr>
                                     @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -615,21 +629,21 @@
                                 if (disStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountHTML</td>
                                     </tr>
                                 }
                                 if (otherChStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perOtHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountOtHTML</td>
                                     </tr>
                                 }
                                 no = no + 1;
@@ -649,7 +663,7 @@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
 
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
@@ -796,7 +810,7 @@
     {
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
@@ -810,20 +824,20 @@
                             foreach (var val in Model.items.Skip(22).Take(37))
                             {
                                 <tr>
-                                    <td width="5%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;padding-top: 15px;" align="center">@no</td>
-                                    <td width="50%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:10px 25px;font-size: 30px;" align="center">@val.item_desc</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.qty<br>@val.uom_s_desc</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.basic_value</td>
+                                    <td width="5%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;padding-top: 15px;" align="center">@no</td>
+                                    <td width="50%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:10px 25px;font-size:8px;" align="center">@val.item_desc</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.qty<br>@val.uom_s_desc</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.rate<br>@val.uom_factor</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
                                     @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -851,21 +865,21 @@
                                 if (disStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountHTML</td>
                                     </tr>
                                 }
                                 if (otherChStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@perOtHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 15px; font-size:8px;" align="center">@discountOtHTML</td>
                                     </tr>
                                 }
                                 no = no + 1;
@@ -884,7 +898,7 @@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
 
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
