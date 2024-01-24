@@ -58,6 +58,7 @@ namespace IBS.Controllers
         {
             AllGeneratedBills model = new();
             string htmlContent = "";
+            List<DigitalSignModel> lstXmlData = new List<DigitalSignModel>();
             try
             {
                 model = allGeneratedBillsRepository.CreateBills(fromdata);
@@ -82,99 +83,84 @@ namespace IBS.Controllers
                             continue;
                         }
 
-                        var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
-                        if (!Directory.Exists(path))
+                        string imgPath = env.WebRootPath + "/images/";
+                        var imagePath = Path.Combine(imgPath, "rites-logo.png");
+                        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                        item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+                        // Generate Base64String QR Code and Display in PDF.
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+
+                        if (model.REGION_CODE == "N")
                         {
-                            Directory.CreateDirectory(path);
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "S")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "E")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "W")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "Q")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "C")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                         }
 
-                        if (Directory.Exists(path))
+                        await new BrowserFetcher().DownloadAsync();
+                        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
                         {
-                            // check if the PDF file exists
-                            string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
-                            bool fileExists = System.IO.File.Exists(pdfFilePath);
+                            Headless = true,
+                            DefaultViewport = null
+                        });
 
-                            if (!fileExists)
-                            {
-                                string imgPath = env.WebRootPath + "/images/";
-                                var imagePath = Path.Combine(imgPath, "rites-logo.png");
-                                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                                item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                        await using var page = await browser.NewPageAsync();
+                        await page.EmulateMediaTypeAsync(MediaType.Screen);
+                        await page.SetContentAsync(htmlContent);
 
-                                // Generate Base64String QR Code and Display in PDF.
-                                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                        var pdfContent = await page.PdfStreamAsync(new PdfOptions
+                        {
+                            Landscape = false,
+                            Format = PaperFormat.Letter,
+                            PrintBackground = false,
+                        });
 
-                                if (model.REGION_CODE == "N")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-                                }
-                                else if (model.REGION_CODE == "S")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
-                                }
-                                else if (model.REGION_CODE == "E")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
-                                }
-                                else if (model.REGION_CODE == "W")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
-                                }
-                                else if (model.REGION_CODE == "Q")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
-                                }
-                                else if (model.REGION_CODE == "C")
-                                {
-                                    htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
-                                }
+                        await using (var pdfStream = new MemoryStream())
+                        {
+                            await pdfContent.CopyToAsync(pdfStream);
+                            byte[] pdfBytes = pdfStream.ToArray();
+                            string base64String = Convert.ToBase64String(pdfBytes);
 
-                                await new BrowserFetcher().DownloadAsync();
-                                await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                                {
-                                    Headless = true,
-                                    DefaultViewport = null
-                                });
+                            pdfStream.Position = 0;
+                            int pageCount = CountPdfPages(pdfStream);
 
-                                await using var page = await browser.NewPageAsync();
-                                await page.EmulateMediaTypeAsync(MediaType.Screen);
-                                await page.SetContentAsync(htmlContent);
+                            string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
 
-                                var pdfContent = await page.PdfStreamAsync(new PdfOptions
-                                {
-                                    Landscape = false,
-                                    Format = PaperFormat.Letter,
-                                    PrintBackground = false,
-                                });
-
-                                await using (var pdfStream = new MemoryStream())
-                                {
-                                    await pdfContent.CopyToAsync(pdfStream);
-                                    byte[] pdfBytes = pdfStream.ToArray();
-                                    string base64String = Convert.ToBase64String(pdfBytes);
-
-                                    pdfStream.Position = 0;
-                                    int pageCount = CountPdfPages(pdfStream);
-                                    
-                                    string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
-
-                                    return Json(new { status = 1, responseText = xmlData });
-
-                                    //await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
-                                }
-
-                            }
+                            DigitalSignModel obj = new DigitalSignModel();
+                            obj.Bill_No = item.BILL_NO;
+                            obj.Base64String = base64String;
+                            lstXmlData.Add(obj);
                         }
                     }
                 }
                 //AlertAddSuccess("Bill Generated !!");
+                return Json(new { status = 1, list = lstXmlData });
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "NorthBillGeneratePDF", 1, GetIPAddress());
             }
 
-            return Json(new { status = 0, responseText = "" });
+            return Json(new { status = 0, list = lstXmlData });
         }
 
         [HttpPost]
@@ -381,7 +367,7 @@ namespace IBS.Controllers
 
                 int count = isBillResentCountNullOrEmpty ? 1 : (BillData[0].BillResentCount.Value ? 2 : 0);
 
-                string Bill_No = allGeneratedBillsRepository.UpdateBillCount(BillNo,count);
+                string Bill_No = allGeneratedBillsRepository.UpdateBillCount(BillNo, count);
             }
 
             string Bill_Date = allGeneratedBillsRepository.UpdateGEN_Bill_Date(BillNo);
