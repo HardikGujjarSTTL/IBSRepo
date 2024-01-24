@@ -19,7 +19,7 @@
                 <div class="col-md-3">
                     <div class="input-search">
                         <label for="Finance_Year">Financial Year</label>
-                        <input type="text" class="input" asp-for="Finance_Year" />
+                        <input type="text" class="input" asp-for="Finance_Year" placeholder="YYYY-YYYY" maxlength="9" />
                         <span asp-validation-for="Finance_Year" class="text-danger"></span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
     <script type="text/javascript">
 
         $(function () {
-            function SubmitHolidayData() {
+            function SubmitHolidayData() {                
                 if ($("#frmHolidayMaster").valid()) {
                     $("#frmHolidayMaster").submit();
                 }

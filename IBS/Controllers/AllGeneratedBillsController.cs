@@ -99,6 +99,9 @@ namespace IBS.Controllers
                                 byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
                                 item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
+                                // Generate Base64String QR Code and Display in PDF.
+                                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+
                                 if (model.REGION_CODE == "N")
                                 {
                                     htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
@@ -137,8 +140,8 @@ namespace IBS.Controllers
                                 var pdfContent = await page.PdfStreamAsync(new PdfOptions
                                 {
                                     Landscape = false,
-                                    Format = PaperFormat.A4,
-                                    PrintBackground = false
+                                    Format = PaperFormat.Letter,
+                                    PrintBackground = false,
                                 });
 
                                 await using (var pdfStream = new MemoryStream())
@@ -247,8 +250,8 @@ namespace IBS.Controllers
                             var pdfContent = await page.PdfStreamAsync(new PdfOptions
                             {
                                 Landscape = false,
-                                Format = PaperFormat.A4,
-                                PrintBackground = false
+                                Format = PaperFormat.Letter,
+                                PrintBackground = false,
                             });
 
                             await using (var pdfStream = new MemoryStream())
@@ -259,7 +262,6 @@ namespace IBS.Controllers
                                 // Save the new PDF file
                                 await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                             }
-
                         }
                     }
                 }
@@ -270,7 +272,6 @@ namespace IBS.Controllers
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "ReturnBillPDF", 1, GetIPAddress());
             }
-
             return View(model);
         }
 
@@ -434,8 +435,8 @@ namespace IBS.Controllers
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = false,
-                Format = PaperFormat.A4,
-                PrintBackground = false
+                Format = PaperFormat.Letter,
+                PrintBackground = false,
             });
 
             await browser.CloseAsync();
