@@ -1,0 +1,51 @@
+﻿@model labInvoicelst
+
+<style>
+    .dash-table {
+        max-height: 400px; /* Set the maximum height for the scrollable area */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    #dtGB {
+        width: 100%; /* Set the width of the table to 100% */
+    }
+</style>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtGB" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Sr.No.</th>
+                        <th>File Name</th>
+                        <th>Action</th>
+                    </tr>
+                    @{
+                        var Srno = 0;
+                        if (Model.lstlabInvoicelst.Count() > 0)
+                        {
+                            foreach (var item in Model.lstlabInvoicelst)
+                            {
+                                Srno = Srno + 1;
+                                <tr>
+                                    <td>@Srno</td>
+                                    <td>@item.InvoiceBillNo</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">No Data Found</td>
+                            </tr>
+                        }
+                    }
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

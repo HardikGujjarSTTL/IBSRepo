@@ -26,15 +26,15 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoadTable([FromBody] DTParameters dtParameters)
+        public async Task<IActionResult> LabInvoiceList(string FromDate,string ToDate,string Region)
         {
-            DTResult<labInvoicelst> model = labInvoiceRepository.GetLabInvoice(dtParameters);
-            GlobalDeclaration.LabInvoiceReport = model.data.ToList();
-            string FolderName = "Lab_Invoice";
+            labInvoicelst model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
+            GlobalDeclaration.LabInvoiceReport = model;
+            string FolderName = "Lab_Invoice_SIGN";
             string htmlContent = "";
             if (model != null)
             {
-                foreach (var item in model.data.ToList())
+                foreach (var item in model.lstlabInvoicelst)
                 {
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                     if (!Directory.Exists(path))
@@ -65,7 +65,7 @@ namespace IBS.Controllers
                             var pdfContent = await page.PdfStreamAsync(new PdfOptions
                             {
                                 Landscape = true,
-                                Format = PaperFormat.A4,
+                                Format = PaperFormat.Letter,
                                 PrintBackground = true
                             });
 
@@ -82,52 +82,52 @@ namespace IBS.Controllers
                 }
             }
 
-            return Json(model);
+            return PartialView(model);
         }
 
-        #region GeneratePDF
-        public async Task<IActionResult> GeneratePDF(string InvoiceBillNo)
-        {
-            string pdfFileName = "";
-            string htmlContent = string.Empty;
-            List<labInvoicelst> selectedBill = GlobalDeclaration.LabInvoiceReport;
+        //#region GeneratePDF
+        //public async Task<IActionResult> GeneratePDF(string InvoiceBillNo)
+        //{
+        //    string pdfFileName = "";
+        //    string htmlContent = string.Empty;
+        //    List<labInvoicelst> selectedBill = GlobalDeclaration.LabInvoiceReport;
 
-            labInvoicelst model = selectedBill.FirstOrDefault(bill => bill.InvoiceBillNo == InvoiceBillNo);
+        //    labInvoicelst model = selectedBill.FirstOrDefault(bill => bill.InvoiceBillNo == InvoiceBillNo);
 
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //    string path = env.WebRootPath + "/images/";
+        //    var imagePath = Path.Combine(path, "rites-logo.png");
+        //    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //    model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
 
-            htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", selectedBill);
-            pdfFileName = "Lab_Invoice.pdf";
+        //    htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", selectedBill);
+        //    pdfFileName = "Lab_Invoice.pdf";
 
-            await new BrowserFetcher().DownloadAsync();
-            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true,
-                DefaultViewport = null
-            });
-            await using var page = await browser.NewPageAsync();
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-            await page.SetContentAsync(htmlContent);
+        //    await new BrowserFetcher().DownloadAsync();
+        //    await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+        //    {
+        //        Headless = true,
+        //        DefaultViewport = null
+        //    });
+        //    await using var page = await browser.NewPageAsync();
+        //    await page.EmulateMediaTypeAsync(MediaType.Screen);
+        //    await page.SetContentAsync(htmlContent);
 
-            string cssPath = env.WebRootPath + "/css/report.css";
-            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
-            await page.AddStyleTagAsync(bootstrapCSS);
+        //    string cssPath = env.WebRootPath + "/css/report.css";
+        //    AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+        //    await page.AddStyleTagAsync(bootstrapCSS);
 
-            var pdfContent = await page.PdfStreamAsync(new PdfOptions
-            {
-                Landscape = false,
-                Format = PaperFormat.A4,
-                PrintBackground = false
-            });
+        //    var pdfContent = await page.PdfStreamAsync(new PdfOptions
+        //    {
+        //        Landscape = false,
+        //        Format = PaperFormat.A4,
+        //        PrintBackground = false
+        //    });
 
-            await browser.CloseAsync();
+        //    await browser.CloseAsync();
 
-            return File(pdfContent, "application/pdf", pdfFileName);
-        }
-        #endregion
+        //    return File(pdfContent, "application/pdf", pdfFileName);
+        //}
+        //#endregion
     }
 }

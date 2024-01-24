@@ -4,6 +4,6 @@ namespace IBS.Interfaces
 {
     public interface ILabInvoiceRepository
     {
-        DTResult<labInvoicelst> GetLabInvoice(DTParameters dtParameters);
+        public labInvoicelst GetLabInvoice(string FromDate, string ToDate, string Region);
     }
 }
