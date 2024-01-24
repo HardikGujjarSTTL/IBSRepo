@@ -1569,4 +1569,4 @@ margin-right:15px;
 }
 .filterToggle.show .fa-chevron-up:before{ font-family:"FontAwesome"; content:"\f078"}
 .chatTopFilter{ clear:both;}
-.userShowHideChat{ display:none;}
+.userShowHideChat{ display:none; cursor:pointer;}
