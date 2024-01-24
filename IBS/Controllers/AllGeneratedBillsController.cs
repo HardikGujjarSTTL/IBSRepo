@@ -20,6 +20,7 @@ using MessagePack;
 using static IBS.Helper.Enums;
 using IBS.DataAccess;
 using System.Xml;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 
 namespace IBS.Controllers
@@ -139,6 +140,7 @@ namespace IBS.Controllers
                             await pdfContent.CopyToAsync(pdfStream);
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
+                            //base64String = base64String.Replace("\"", "");
 
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
@@ -147,7 +149,7 @@ namespace IBS.Controllers
 
                             DigitalSignModel obj = new DigitalSignModel();
                             obj.Bill_No = item.BILL_NO;
-                            obj.Base64String = base64String;
+                            obj.Base64String = xmlData;
                             lstXmlData.Add(obj);
                         }
                     }
@@ -356,7 +358,6 @@ namespace IBS.Controllers
             return regionCode;
         }
 
-        #region GeneratePDF
         public async Task<IActionResult> GeneratePDF(string BillNo)
         {
             List<T22Bill> BillData = allGeneratedBillsRepository.GetBillByBillNo(BillNo);
@@ -439,7 +440,6 @@ namespace IBS.Controllers
 
             return File(pdfContent, "application/pdf", pdfFileName);
         }
-        #endregion
 
         public string GenerateDigitalSignatureXML(string base64String, int pageNo)
         {
@@ -574,6 +574,22 @@ namespace IBS.Controllers
                 iText.Kernel.Pdf.PdfDocument pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfReader);
                 return pdfDocument.GetNumberOfPages();
             }
+        }
+
+        [HttpPost]
+        public IActionResult UploadSignedPdf(string base64SignedPdf, string Bill_No)
+        {
+            byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
+            string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path = path + Bill_No + ".pdf";
+            System.IO.File.WriteAllBytes(path, pdfBytes);
+            return Json(new { status = 1 });
         }
     }
 }
