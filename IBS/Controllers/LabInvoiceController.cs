@@ -1,6 +1,7 @@
 ﻿using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
@@ -25,15 +26,16 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LabListView(string FromDate,string ToDate,string Region)
+        public async Task<IActionResult> LoadTable([FromBody] DTParameters dtParameters)
         {
-            LabInvoiceReportModel model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
-            //GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
+            //LabInvoiceReportModel model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
+            DTResult<labInvoicelst> model = labInvoiceRepository.GetLabInvoice(dtParameters);
+            GlobalDeclaration.LabInvoiceReport = model.data.ToList();
             string FolderName = "Lab_Invoice";
             string htmlContent = "";
-            if (model.lstlabInvoicelst.Count() > 0)
+            if (model != null)
             {
-                foreach (var item in model.lstlabInvoicelst)
+                foreach (var item in model.data.ToList())
                 {
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                     if (!Directory.Exists(path))
@@ -43,7 +45,7 @@ namespace IBS.Controllers
 
                     if (Directory.Exists(path))
                     {
-                        // check if the PDF file exists
+                        //check if the PDF file exists
                         string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
                         bool fileExists = System.IO.File.Exists(pdfFilePath);
 
@@ -83,14 +85,52 @@ namespace IBS.Controllers
                 }
             }
 
-            return PartialView(model);
+            return Json(model);
         }
 
-        //public async Task<IActionResult> GeneratePDF(DTResult<LabInvoiceReportModel>  dTResult)
-        //{
-        //    string htmlContent = "";
-        //    string FolderName = GetFolderNameByRegion(dTResult.);
-        //}
+        #region GeneratePDF
+        public async Task<IActionResult> GeneratePDF(string InvoiceBillNo)
+        {
+            string pdfFileName = "";
+            string htmlContent = string.Empty;
+            List<labInvoicelst> selectedBill = GlobalDeclaration.LabInvoiceReport;
 
+            labInvoicelst model = selectedBill.FirstOrDefault(bill => bill.InvoiceBillNo == InvoiceBillNo);
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+
+            htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", selectedBill);
+            pdfFileName = "Lab_Invoice.pdf";
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = false,
+                Format = PaperFormat.A4,
+                PrintBackground = false
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", pdfFileName);
+        }
+        #endregion
     }
 }

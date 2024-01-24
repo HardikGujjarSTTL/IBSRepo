@@ -1,4 +1,4 @@
-﻿@model LabInvoiceReportModel
+﻿@model labInvoicelst
 
 @{
     ViewData["Title"] = "Index";
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-   @* <section class="table-section">
+    <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtGB" class="table-responsive">
@@ -53,44 +53,13 @@
                             <th>File Name</th>
                             <th>Action</th>
                         </tr>
-                        @{
-                            var Srno = 0;
-                            if(Model != null)
-                            {
-                                if (Model.lstlabInvoicelst.Count() > 0)
-                                {
-                                    foreach (var item in Model.lstlabInvoicelst.Take(10))
-                                    {
-                                        Srno = Srno + 1;
-                                        <tr>
-                                            <td>@Srno</td>
-                                            <td>@item.InvoiceBillNo</td>
-                                            <td></td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="4">No Data Found</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4">No Data Found</td>
-                                </tr>
-                            }
-                        }
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
             </div>
         </div>
-    </section>*@
-    <div id="dvReportViewer"></div>
+    </section>
 </div>
 
 @section scripts{
@@ -100,81 +69,71 @@
     <script type="text/javascript">
 
         function BtnSubmit() {
-            //InitializeDatatable();
-
-                var FromDate = $("#FromDt").val();
-                var ToDate = $("#ToDt").val();
-                var Region = $("#InspRegion").val();
-            $.ajax({
-                url: '@Url.Action("LabListView", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
-                type: 'POST',
-                cache: false,
-                data: '{}',
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                $("#dvReportViewer").empty();
-                $("#dvReportViewer").html(response);
-            });
-            
+            InitializeDatatable();
         }
 
-        //function InitializeDatatable() {
+        function InitializeDatatable() {
 
-        //    var FromDate = $("#FromDt").val();
-        //    var ToDate = $("#ToDt").val();
-        //    var Region = $("#InspRegion").val();
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
 
-        //    var ajaxUrl = "@Url.Action("LoadTable")";
+            var ajaxUrl = "@Url.Action("LoadTable")";
+            var ajaxUrl1 = "@Url.Action("LoadTable")";
 
-        //    $("#dtGB").DataTable({
-        //        stateSave: false,
-        //        autoWidth: true,
-        //        scrollX: true,
-        //        scrollCollapse: true,
-        //        processing: true,
-        //        serverSide: true,
-        //        destroy: true,
-        //        paging: true,
-        //        searching: true,
-        //        ajax: {
-        //            url: ajaxUrl,
-        //            type: "POST",
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json",
-        //            data: function (d) {
-        //                var AdditionalValues = {
-        //                    "FromDate": FromDate,
-        //                    "ToDate": ToDate,
-        //                    "Region": Region,
-        //                };
-        //                d.AdditionalValues = AdditionalValues;
-        //                return JSON.stringify(d);
-        //            },
-        //        },
-        //        columns: [
-        //            {
-        //                data: '', orderable: false, width: '5%',
-        //                render: function (data, type, row, meta) {
-        //                    return meta.row + meta.settings._iDisplayStart + 1;
-        //                }
-        //            },
-        //            { data: "invoice_no" },
-        //            {
-        //                data: null,
-        //                render: function (data, type, row) {
-
-        //                    var BillNo = data.BILL_NO;
-        //                    var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
-        //                    return '<td width="10%" valign="top" align="center">' +
-        //                        '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
-        //                        '</td>';
-        //                }
-        //            },
-        //        ],
-        //        "order": [[0, "asc"]]
-        //    });
-        //}
+            $("#dtGB").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl1,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "Region": Region,
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: "InvoiceBillNo",
+                        render: function (data, type, row) {
+                            return data + ".pdf";
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            debugger
+                            var InvoiceBill = data.InvoiceBillNo;
+                            var downloadLink = '/LabInvoice/GeneratePDF?InvoiceBillNo=' + InvoiceBill;
+                            return '<td width="10%" valign="top" align="center">' +
+                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '</td>';
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
 
     </script>
 }
