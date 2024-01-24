@@ -181,6 +181,7 @@ builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 builder.Services.AddScoped<IClientRailwayRepository, IBS.Repositories.ClientRailwayRepository>();
 builder.Services.AddScoped<IAllGeneratedBillsRepository, IBS.Repositories.AllGeneratedBillsRepository>();
+builder.Services.AddScoped<ILabInvoiceRepository, IBS.Repositories.LabInvoiceRepository>();
 
 
 

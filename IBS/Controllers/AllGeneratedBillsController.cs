@@ -18,6 +18,7 @@ using IBS.Interfaces;
 using IBS.Filters;
 using MessagePack;
 using static IBS.Helper.Enums;
+using IBS.DataAccess;
 using System.Xml;
 
 
@@ -274,6 +275,8 @@ namespace IBS.Controllers
                         }
                     }
                 }
+
+                AlertAddSuccess("Bill Returned !!");
             }
             catch (Exception ex)
             {
@@ -370,6 +373,19 @@ namespace IBS.Controllers
         #region GeneratePDF
         public async Task<IActionResult> GeneratePDF(string BillNo)
         {
+            List<T22Bill> BillData = allGeneratedBillsRepository.GetBillByBillNo(BillNo);
+
+            if (BillData.Count > 0 && BillData[0].BillResentStatus == "R")
+            {
+                bool isBillResentCountNullOrEmpty = !BillData[0].BillResentCount.HasValue;
+
+                int count = isBillResentCountNullOrEmpty ? 1 : (BillData[0].BillResentCount.Value ? 2 : 0);
+
+                string Bill_No = allGeneratedBillsRepository.UpdateBillCount(BillNo,count);
+            }
+
+            string Bill_Date = allGeneratedBillsRepository.UpdateGEN_Bill_Date(BillNo);
+
             string pdfFileName = "";
             string htmlContent = string.Empty;
             List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
