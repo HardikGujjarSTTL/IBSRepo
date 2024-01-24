@@ -176,27 +176,37 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
                 url: "@Url.Action("CreateBill", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(fromdata), 
+                data: JSON.stringify(fromdata),
                 // xhrFields: {
                 //     responseType: 'blob'
                 // },
                 success: function (response) {
                     //ShowHideMsgNew(response.status, response.responseText);
-                    abc(response.responseText, "test.pdf")
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        if (listXml.length > 0) {
+                            for (var i = 0; i < listXml.length; i++) {
+                                DigitalSign(listXml[i].Base64String)
+                            }
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                    }
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
         }
-     
+
         function BtnReturnBill() {
             var fromdata = {
                 FromDate: $("#FromDt").val(),
@@ -206,7 +216,7 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
@@ -318,7 +328,7 @@
             });
         }
 
-        function abc(xmldata, xmlfilename) {
+        function DigitalSign(xmldata) {
             var xml = xmldata;
 
             $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
@@ -337,7 +347,7 @@
         function downloadPDF(pdf) {
             const linkSource = `data:application/pdf;base64,${pdf}`;
             const downloadLink = document.createElement("a");
-            const fileName = "IC_Report.pdf";
+            const fileName = "Ditital_Sign_Report.pdf";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();

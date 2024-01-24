@@ -82,6 +82,11 @@
         public decimal? other_charges { get; set; }
         public decimal? Value { get; set; }
         public string UnitCode { get; set; }
-        
+    }
+
+    public class DigitalSignModel
+    {
+        public string Bill_No { get; set; }
+        public string Base64String { get; set; }
     }
 }
