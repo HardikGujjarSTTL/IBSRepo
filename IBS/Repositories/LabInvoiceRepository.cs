@@ -74,36 +74,17 @@ namespace IBS.Repositories
                 InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1]
             }).ToList();
 
-            //query = lstLabInvoice.AsQueryable();
-
-            //if (!string.IsNullOrEmpty(searchBy))
-            //    query = query.Where(w => Convert.ToString(w.InvoiceBillNo).ToLower().Contains(searchBy.ToLower())
-            //    );
-
-
-            //dTResult.recordsTotal = query.Count();
-            //dTResult.recordsFiltered = query.Count();
-            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            //dTResult.draw = dtParameters.Draw;
-
-            //return dTResult;
-            dTResult.data = lstLabInvoice;
+            query = lstLabInvoice.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchBy))
-                lstLabInvoice = lstLabInvoice
-                    .Where(w => Convert.ToString(w.InvoiceBillNo).ToLower().Contains(searchBy.ToLower()))
-                    .ToList();
+                query = query.Where(w => Convert.ToString(w.InvoiceBillNo).ToLower().Contains(searchBy.ToLower())
+                );
 
-            dTResult.recordsTotal = lstLabInvoice.Count();
 
-            lstLabInvoice = DbContextHelper.OrderByDynamic(lstLabInvoice.AsQueryable(), orderCriteria, orderAscendingDirection)
-                .Skip(dtParameters.Start)
-                .Take(dtParameters.Length)
-                .ToList();
-
-            dTResult.recordsFiltered = lstLabInvoice.Count();
-
-            dTResult.data = lstLabInvoice;
+            dTResult.recordsTotal = query.Count();
+            dTResult.recordsFiltered = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
