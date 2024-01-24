@@ -118,25 +118,6 @@ namespace IBS.Repositories
                 list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
-            model.items = new List<ItemsDetail>();
-
-            //foreach (var item in list)
-            //{
-            //    var result = from vbi in context.V23BillItems
-            //                 where vbi.BillNo == item.BILL_NO
-            //                 select new ItemsDetail
-            //                 {
-            //                     Item_SrNo = vbi.ItemSrno,
-            //                     item_desc = vbi.ItemDesc,
-            //                     qty = vbi.Qty,
-            //                     rate = vbi.Rate,
-            //                     UnitCode = vbi.UomSDesc,
-            //                     uom_factor = vbi.UomFactor,
-            //                     basic_value = vbi.BasicValue,
-            //                     Value = vbi.Value
-            //                 };
-            //    model.items.AddRange(result);
-            //}
             model.lstBillDetailsForPDF = list;
 
             return model;
@@ -171,6 +152,42 @@ namespace IBS.Repositories
                         Value = vbi.Value,
                     }).ToList();
             return list;
+        }
+
+        public List<T22Bill> GetBillByBillNo(string Bill_No)
+        {
+            var Bills = context.T22Bills
+                      .Where(b => b.BillNo == Bill_No)
+                      .ToList();
+
+            return Bills;
+        }
+
+        public string UpdateBillCount(string Bill_No,int count)
+        {
+            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
+
+            foreach (var bill in billsToUpdate)
+            {
+                bill.BillResentStatus = "S";
+                bill.BillResentCount = Convert.ToBoolean(count);
+            }
+            string msg = "Update Successfull !!";
+
+            return msg;
+        }
+
+        public string UpdateGEN_Bill_Date(string Bill_No) 
+        {
+            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
+
+            foreach (var bill in billsToUpdate)
+            {
+                bill.DigBillGenDt = DateTime.Now.Date;
+            }
+            string msg = "Update Successfull !!";
+
+            return msg;
         }
     }
 }

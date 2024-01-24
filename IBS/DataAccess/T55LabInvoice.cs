@@ -57,5 +57,7 @@ public partial class T55LabInvoice
 
     public string? CreditId { get; set; }
 
+    public DateTimeOffset? DigBillGenDt { get; set; }
+
     public virtual T50LabRegister? SampleRegNoNavigation { get; set; }
 }
