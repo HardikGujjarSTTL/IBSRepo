@@ -28,7 +28,6 @@ namespace IBS.Controllers
         [HttpPost]
         public async Task<IActionResult> LoadTable([FromBody] DTParameters dtParameters)
         {
-            //LabInvoiceReportModel model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
             DTResult<labInvoicelst> model = labInvoiceRepository.GetLabInvoice(dtParameters);
             GlobalDeclaration.LabInvoiceReport = model.data.ToList();
             string FolderName = "Lab_Invoice";
@@ -51,9 +50,7 @@ namespace IBS.Controllers
 
                         if (!fileExists)
                         {
-
                             htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
-
 
                             await new BrowserFetcher().DownloadAsync();
                             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
