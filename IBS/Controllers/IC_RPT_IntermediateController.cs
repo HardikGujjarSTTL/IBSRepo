@@ -287,7 +287,6 @@ namespace IBS.Controllers
                     { "SetNo", SetNo },
                 };
 
-
                 using (var httpClient = new HttpClient())
                 {
                     var encodedFormData = new FormUrlEncodedContent(formData);
