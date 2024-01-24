@@ -119,6 +119,7 @@
 		<PackageReference Include="BarcodeLib" Version="2.4.0" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="3.0.0" />
 		<PackageReference Include="EPPlus" Version="6.2.10" />
+		<PackageReference Include="itext7" Version="8.0.2" />
 		<PackageReference Include="iTextSharp" Version="5.5.13.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.19" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
