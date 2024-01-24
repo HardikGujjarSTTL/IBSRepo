@@ -51,7 +51,7 @@
                         <tr>
                             <th>Sr.No.</th>
                             <th>File Name</th>
-                            <th>Action</th>
+                            <th class="action">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,8 +125,8 @@
                             debugger
                             var InvoiceBill = data.InvoiceBillNo;
                             var downloadLink = '/LabInvoice/GeneratePDF?InvoiceBillNo=' + InvoiceBill;
-                            return '<td width="10%" valign="top" align="center">' +
-                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                            return '<td valign="top" align="center" class="center">' +
+                                '<a href="' + downloadLink + '" class="btn" target="_blank"><span class="fa fa-file-pdf-o"></span></a>' +
                                 '</td>';
                         }
                     },

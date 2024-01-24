@@ -71,7 +71,11 @@ namespace IBS.Repositories
             {
                 InvoiceNo = row.invoice_no,
                 BillNO = row.BillNO,
-                InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1]
+                InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1],
+                //Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
+                //  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
+                //  Region == "E" ? "EASTERN REGION(INSPECTION)" :
+                //  Region == "W" ? "WESTERN REGION(INSPECTION)",
             }).ToList();
 
             query = lstLabInvoice.AsQueryable();

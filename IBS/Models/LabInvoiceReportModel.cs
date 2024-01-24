@@ -24,6 +24,7 @@
 
     public class labInvoicelst
     {
+        public string Region_code { get; set; }
         public string InvoiceBillNo { get; set; }
         public string InvoiceNo { get; set; }
         public string BillNO { get; set; }
