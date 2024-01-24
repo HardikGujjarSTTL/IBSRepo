@@ -111,7 +111,9 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
         var Region = "@ViewBag.Region";
+
         $(document).ready(function () {
             $("#ClientName").hide();
             $("#BPOName").hide();
@@ -182,18 +184,19 @@
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(fromdata), 
-                xhrFields: {
-                    responseType: 'blob'
-                },
+                // xhrFields: {
+                //     responseType: 'blob'
+                // },
                 success: function (response) {
-                    ShowHideMsgNew(response.status, response.responseText);
+                    //ShowHideMsgNew(response.status, response.responseText);
+                    abc(response.responseText, "test.pdf")
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
         }
-
+     
         function BtnReturnBill() {
             var fromdata = {
                 FromDate: $("#FromDt").val(),
@@ -314,6 +317,32 @@
                 "order": [[0, "asc"]]
             });
         }
+
+        function abc(xmldata, xmlfilename) {
+            var xml = xmldata;
+
+            $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
+                var status = $(exeResponse).find("status").text();
+                if (status == "failed") {
+                    alert($(exeResponse).find("error").text());
+                }
+                else {
+                    var pdf = $(exeResponse).find("data").text();
+                    downloadPDF(pdf);
+                }
+            }).fail(function (xhr, textStatus, errorThrown) {
+            });
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "IC_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
+        }
+
 
     </script>
 }
