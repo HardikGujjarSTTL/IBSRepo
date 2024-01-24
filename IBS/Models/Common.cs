@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
 using DocumentFormat.OpenXml.InkML;
+using QRCoder;
+using System.Drawing;
 
 namespace IBS.Models
 {
@@ -4907,30 +4909,15 @@ namespace IBS.Models
             if (UsertType.ToLower() == "inspection engineer (ie)")
             {
                 UM = (from e in ModelContext.T09Ies
-                     join um in ModelContext.UserMasters on e.IeEmpNo.ToString() equals um.UserId.ToString()
-                     join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
-                     join r in ModelContext.Roles on ur.RoleId equals r.RoleId
-                     where r.RoleId == Convert.ToInt32(UsertTypeID) && e.IeStatus == null
-                     select new SelectListItem
-                     {
-                         Text = Convert.ToString(e.IeName),
-                         Value = Convert.ToString(um.Id)
-
-                         //MOBILE = e.IE_PHONE_NO,
-                         //ID = e.IE_CD,
-                         //USER_NAME = e.IE_NAME,
-                         //USER_ID = e.IE_EMP_NO,
-                         //REGION = e.IE_REGION,
-                         //AUTH_LEVL = (int?)null,
-                         //ROLE_ID = r.ROLE_ID,
-                         //ROLE_NAME = r.ROLENAME,
-                         //ORGN_TYPE = (string)null,
-                         //ORGN_CHASED = (string)null,
-                         //ORGANISATION = (string)null,
-                         //IECD = e.IE_CD,
-                         //COCD = e.IE_CO_CD,
-                         //MASTER_ID = um.ID
-                     }).ToList();
+                      join um in ModelContext.UserMasters on e.IeEmpNo.ToString() equals um.UserId.ToString()
+                      join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
+                      join r in ModelContext.Roles on ur.RoleId equals r.RoleId
+                      where r.RoleId == Convert.ToInt32(UsertTypeID) && e.IeStatus == null
+                      select new SelectListItem
+                      {
+                          Text = Convert.ToString(e.IeName),
+                          Value = Convert.ToString(um.Id)
+                      }).ToList();
             }
             else
             {
@@ -4943,32 +4930,9 @@ namespace IBS.Models
                       {
                           Text = Convert.ToString(u.UserName),
                           Value = Convert.ToString(um.Id)
-
-                          //MOBILE = u.MOBILE,
-                          //ID = u.ID,
-                          //USER_NAME = u.USER_NAME,
-                          //USER_ID = u.USER_ID,
-                          //REGION = u.REGION,
-                          //AUTH_LEVL = u.auth_levl,
-                          //ROLE_ID = r.ROLE_ID,
-                          //ROLE_NAME = r.ROLENAME,
-                          //ORGN_TYPE = (string)null,
-                          //ORGN_CHASED = (string)null,
-                          //ORGANISATION = (string)null,
-                          //IECD = 0,
-                          //COCD = 0,
-                          //MASTER_ID = um.ID
                       }).ToList();
             }
-            //UM = (from a in ModelContext.UserMasters
-            //      where a.UserType == UsertType
-            //      orderby a.UserType ascending, a.Name ascending
-            //      select new SelectListItem
-            //      {
-            //          Text = Convert.ToString(a.Name),
-            //          Value = Convert.ToString(a.Id)
-            //      }).ToList();
-            return UM;
+            return UM.OrderBy(x => x.Text).ToList();
         }
 
         public static List<SelectListItem> GetUserTypeForUsers()
@@ -5012,7 +4976,7 @@ namespace IBS.Models
                 }
 
                 amount /= 1000;
-                if(amount.ToString().Substring(0, 3) == "0.0")
+                if (amount.ToString().Substring(0, 3) == "0.0")
                     break;
                 i++;
             }
@@ -5045,6 +5009,25 @@ namespace IBS.Models
             }
 
             return words.Trim();
+        }
+
+        public static string QRCodeGenerate(string qr_Code)
+        {
+            string base64String = string.Empty;
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qr_Code, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+
+            Bitmap qrCodeBitmap = qrCode.GetGraphic(60);
+
+            // Display the QR code on an Image control
+            using (MemoryStream ms = new MemoryStream())
+            {
+                qrCodeBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] qrCodeImage = ms.ToArray();
+                base64String = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
+            }
+            return base64String;
         }
     }
 
