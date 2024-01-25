@@ -566,7 +566,7 @@ namespace IBS.Controllers
 
             if (selectedBill.REGION_CODE == "North")
             {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/North_Bill.cshtml", selectedBill);
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", selectedBill);
                 pdfFileName = "NorthBill.pdf";
             }
             else if (selectedBill.REGION_CODE == "South")

@@ -54,7 +54,7 @@ namespace IBS.Controllers
                     string paths = env.WebRootPath + "/images/";
                     var imagePath = Path.Combine(paths, "rites-logo.png");
                     byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                     var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
