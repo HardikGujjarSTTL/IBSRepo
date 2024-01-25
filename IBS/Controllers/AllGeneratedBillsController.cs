@@ -88,8 +88,11 @@ namespace IBS.Controllers
                         byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
                         item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
-                        // Generate Base64String QR Code and Display in PDF.
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                        if (!string.IsNullOrEmpty(item.qr_code))
+                        {
+                            // Generate Base64String QR Code and Display in PDF.
+                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                        }
 
                         if (model.REGION_CODE == "N")
                         {
@@ -293,6 +296,11 @@ namespace IBS.Controllers
             var imagePath = Path.Combine(path, "rites-logo.png");
             byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
             model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -314,6 +322,16 @@ namespace IBS.Controllers
                     item.BILL_AMOUNT = totalBillAmount;
                 }
             }
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -334,6 +352,16 @@ namespace IBS.Controllers
                     decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                     item.BILL_AMOUNT = totalBillAmount;
                 }
+            }
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
             }
             return View(model.lstBillDetailsForPDF[0]);
         }
