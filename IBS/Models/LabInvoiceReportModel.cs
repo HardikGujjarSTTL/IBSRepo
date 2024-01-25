@@ -25,6 +25,7 @@
     public class labInvoicelst
     {
         public string Region_code { get; set; }
+        public string RegionChar { get; set; }
         public string InvoiceBillNo { get; set; }
         public string InvoiceNo { get; set; }
         public string BillNO { get; set; }
@@ -63,7 +64,6 @@
         public string set_no { get; set; }
         public string call_instalment_no { get; set; }
         public string RailwayChk { get; set; }
-        public string invoice_no { get; set; }
         public string material_value { get; set; }
         public decimal insp_fee { get; set; }
         public decimal sgst { get; set; }
@@ -75,7 +75,20 @@
         public string irfc_bpo_add { get; set; }
         public string irfc_bpo_city { get; set; }
         public string CaseNo { get; set; }
+        public string pdfFolder { get; set; }
+        public DateTime DIG_GEN_BILL_DT { get; set; }
         public DateTime? InvoiceDt { get; set; }
+        public decimal? TotalTESTING_CHARGES { get; set; }
         public List<labInvoicelst> lstlabInvoicelst { get; set; }
+        public List<LabItemsDetail> items { get; set; }
+    }
+
+    public class LabItemsDetail
+    {
+        public string INVOICE_NO { get; set; }
+        public string ITEM_DESC { get; set; }
+        public decimal? QTY { get; set; }
+        public decimal? TESTING_CHARGES { get; set; }
+        public decimal? IGST { get; set; }
     }
 }

@@ -4,6 +4,10 @@ namespace IBS.Interfaces
 {
     public interface ILabInvoiceRepository
     {
-        DTResult<labInvoicelst> GetLabInvoice(DTParameters dtParameters);
+        public labInvoicelst GetLabInvoice(string FromDate, string ToDate, string Region);
+
+        public labInvoicelst UpdatePDFDetails(labInvoicelst model,string PDFNamee, string RelativePath);
+
+        List<LabItemsDetail> GetBillItems(string InvoiceNo);
     }
 }

@@ -19403,6 +19403,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.DigBillGenDt)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("DIG_BILL_GEN_DT");
+            entity.Property(e => e.Fileid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("FILEID");
             entity.Property(e => e.IeCd)
                 .HasPrecision(4)
                 .HasColumnName("IE_CD");
@@ -19436,6 +19440,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Relativepath)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.SampleRegNo)
                 .HasMaxLength(9)
                 .IsUnicode(false)
@@ -24800,6 +24808,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("CUSTOMER_REF_NO");
+            entity.Property(e => e.DigBillGenDt)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("DIG_BILL_GEN_DT");
             entity.Property(e => e.IeCd)
                 .HasPrecision(4)
                 .HasColumnName("IE_CD");

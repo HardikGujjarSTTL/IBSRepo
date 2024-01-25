@@ -43,7 +43,9 @@
             </div>
         </div>
     </div>
-    <section class="table-section">
+    <div id="dvReportViewer"></div>
+
+ @*   <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
                 <table id="dtGB" class="table-responsive">
@@ -59,7 +61,7 @@
                 </table>
             </div>
         </div>
-    </section>
+    </section>*@
 </div>
 
 @section scripts{
@@ -69,71 +71,84 @@
     <script type="text/javascript">
 
         function BtnSubmit() {
-            InitializeDatatable();
-        }
-
-        function InitializeDatatable() {
-
+            //InitializeDatatable();
             var FromDate = $("#FromDt").val();
             var ToDate = $("#ToDt").val();
             var Region = $("#InspRegion").val();
-
-            var ajaxUrl = "@Url.Action("LoadTable")";
-            var ajaxUrl1 = "@Url.Action("LoadTable")";
-
-            $("#dtGB").DataTable({
-                stateSave: false,
-                autoWidth: true,
-                scrollX: true,
-                scrollCollapse: true,
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                paging: true,
-                searching: true,
-                ajax: {
-                    url: ajaxUrl1,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: function (d) {
-                        var AdditionalValues = {
-                            "FromDate": FromDate,
-                            "ToDate": ToDate,
-                            "Region": Region,
-                        };
-                        d.AdditionalValues = AdditionalValues;
-                        return JSON.stringify(d);
-                    },
-                },
-                columns: [
-                    {
-                        data: '', orderable: false, width: '5%',
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: "InvoiceBillNo",
-                        render: function (data, type, row) {
-                            return data + ".pdf";
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            debugger
-                            var InvoiceBill = data.InvoiceBillNo;
-                            var downloadLink = '/LabInvoice/GeneratePDF?InvoiceBillNo=' + InvoiceBill;
-                            return '<td valign="top" align="center" class="text-center">' +
-                                '<a href="' + downloadLink + '" class="btn" target="_blank"><span class="fa fa-file-pdf-o"></span></a>' +
-                                '</td>';
-                        }
-                    },
-                ],
-                "order": [[0, "asc"]]
+            $.ajax({
+                url: '@Url.Action("LabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                $("#dvReportViewer").empty();
+                $("#dvReportViewer").html(response);
             });
         }
+
+                //function InitializeDatatable() {
+
+                //    var FromDate = $("#FromDt").val();
+                //    var ToDate = $("#ToDt").val();
+                //    var Region = $("#InspRegion").val();
+
+                //    var ajaxUrl = "@Url.Action("LoadTable")";
+                //    var ajaxUrl1 = "@Url.Action("LoadTable")";
+
+                //    $("#dtGB").DataTable({
+                //        stateSave: false,
+                //        autoWidth: true,
+                //        scrollX: true,
+                //        scrollCollapse: true,
+                //        processing: true,
+                //        serverSide: true,
+                //        destroy: true,
+                //        paging: true,
+                //        searching: true,
+                //        ajax: {
+                //            url: ajaxUrl1,
+                //            type: "POST",
+                //            contentType: "application/json; charset=utf-8",
+                //            dataType: "json",
+                //            data: function (d) {
+                //                var AdditionalValues = {
+                //                    "FromDate": FromDate,
+                //                    "ToDate": ToDate,
+                //                    "Region": Region,
+                //                };
+                //                d.AdditionalValues = AdditionalValues;
+                //                return JSON.stringify(d);
+                //            },
+                //        },
+                //        columns: [
+                //            {
+                //                data: '', orderable: false, width: '5%',
+                //                render: function (data, type, row, meta) {
+                //                    return meta.row + meta.settings._iDisplayStart + 1;
+                //                }
+                //            },
+                //            {
+                //                data: "InvoiceBillNo",
+                //                render: function (data, type, row) {
+                //                    return data + ".pdf";
+                //                }
+                //            },
+                //            {
+                //                data: null,
+                //                render: function (data, type, row) {
+                //                    debugger
+                //                    var InvoiceBill = data.InvoiceBillNo;
+                //                    var downloadLink = '/LabInvoice/GeneratePDF?InvoiceBillNo=' + InvoiceBill;
+                //                    return '<td width="10%" valign="top" align="center">' +
+                //                        '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                //                        '</td>';
+                //                }
+                //            },
+                //        ],
+                //        "order": [[0, "asc"]]
+                //    });
+                //}
 
     </script>
 }

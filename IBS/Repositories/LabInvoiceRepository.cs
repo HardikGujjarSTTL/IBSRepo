@@ -3,6 +3,7 @@ using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using iText.Commons.Actions.Contexts;
 using MessagePack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -21,31 +22,11 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public DTResult<labInvoicelst> GetLabInvoice(DTParameters dtParameters)
+        public labInvoicelst GetLabInvoice(string FromDate, string ToDate, string Region)
         {
-            DTResult<labInvoicelst> dTResult = new() { draw = 0 };
-            IQueryable<labInvoicelst>? query = null;
-
-            var searchBy = dtParameters.Search?.Value;
-            var orderCriteria = string.Empty;
-            var orderAscendingDirection = false;
-
-            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
-            {
-                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "InvoiceBillNo";
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            else
-            {
-                orderCriteria = "InvoiceBillNo";
-                orderAscendingDirection = true;
-            }
-            string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
-            string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
-            string Region = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]) ? Convert.ToString(dtParameters.AdditionalValues["Region"]) : null;
-
-            query = (from T55 in context.T55LabInvoices
+            labInvoicelst model = new();
+           
+            var query = (from T55 in context.T55LabInvoices
                      join T22 in context.T22Bills on T55.CaseNo equals T22.CaseNo
                      where T55.InvoiceDt >= DateTime.Parse(FromDate) && T55.InvoiceDt <= DateTime.Parse(ToDate)
                            && T55.RegionCode == Region
@@ -65,32 +46,59 @@ namespace IBS.Repositories
                          ack_no = T55.AckNo,
                          ack_dt = T55.AckDt,
                          recipient_gstin_no = T55.RecipientGstinNo,
-                     });
+                     }).Take(5);
 
             List<labInvoicelst> lstLabInvoice = query.AsEnumerable().Select(row => new labInvoicelst
             {
-                InvoiceNo = row.invoice_no,
+                InvoiceNo = row.InvoiceNo,
                 BillNO = row.BillNO,
+                CaseNo = row.CaseNo,
+                irn_no = row.irn_no,
+                ack_no = row.ack_no,
+                ack_dt = row.ack_dt,
+                recipient_gstin_no = row.recipient_gstin_no,
                 InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1],
-                //Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
-                //  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
-                //  Region == "E" ? "EASTERN REGION(INSPECTION)" :
-                //  Region == "W" ? "WESTERN REGION(INSPECTION)",
+                Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
+                  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
+                  Region == "E" ? "EASTERN REGION(INSPECTION)" :
+                  Region == "W" ? "WESTERN REGION(INSPECTION)" : Region
             }).ToList();
 
-            query = lstLabInvoice.AsQueryable();
+            model.lstlabInvoicelst = lstLabInvoice;
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.InvoiceBillNo).ToLower().Contains(searchBy.ToLower())
-                );
+            return model;
+        }
 
+        public labInvoicelst UpdatePDFDetails(labInvoicelst model, string PDFNamee, string RelativePath)
+        {
+            var invoiceToUpdate = context.T55LabInvoices.FirstOrDefault(i => i.InvoiceNo == model.InvoiceNo);
 
-            dTResult.recordsTotal = query.Count();
-            dTResult.recordsFiltered = query.Count();
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-            dTResult.draw = dtParameters.Draw;
+            if (invoiceToUpdate != null)
+            {
+                invoiceToUpdate.DigBillGenDt = DateTime.Now.Date;
+                invoiceToUpdate.Relativepath = RelativePath;
+                invoiceToUpdate.Fileid = PDFNamee;
+                context.SaveChanges(); 
+            }
 
-            return dTResult;
+            return model;
+        }
+
+        public List<LabItemsDetail> GetBillItems(string InvoiceNo)
+        {
+            List<LabItemsDetail> list = new List<LabItemsDetail>();
+            list = (from vbi in context.T86LabInvoiceDetails
+                    where vbi.InvoiceNo == InvoiceNo
+                    select new LabItemsDetail
+                    {
+                        INVOICE_NO = vbi.InvoiceNo,
+                        ITEM_DESC = vbi.ItemDesc,
+                        IGST = vbi.Igst,
+                        QTY = vbi.Qty,
+                        TESTING_CHARGES = vbi.TestingCharges,
+                    }).ToList();
+
+            return list;
         }
     }
 }
