@@ -41,9 +41,9 @@ namespace IBS.Controllers.SignalR
             return PartialView(model);
         }
 
-        public IActionResult ChatMessageHistory(string id, int SenderID)
+        public IActionResult ChatMessageHistory(int SenderID,string ReceiverId)
         {
-            var recv_id = !string.IsNullOrEmpty(id) ? Convert.ToInt32(id) : 0;
+            var recv_id = !string.IsNullOrEmpty(ReceiverId) ? Convert.ToInt32(ReceiverId) : 0;
             ChatMessage model = new ChatMessage();
             model = _chathub.GetMessageList(SenderID, recv_id);
             model.Master_ID = SenderID;
