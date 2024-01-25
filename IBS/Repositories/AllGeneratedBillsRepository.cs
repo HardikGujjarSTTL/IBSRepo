@@ -67,7 +67,7 @@ namespace IBS.Repositories
             if (ds != null && ds.Tables.Count > 0)
             {
                 dt = ds.Tables[0];
-                
+
                 List<AllGeneratedBills> list = new List<AllGeneratedBills>();
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -87,7 +87,17 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public AllGeneratedBills GenerateBill(AllGeneratedBills model)
+        public AllGeneratedBills CreateBills(AllGeneratedBills model)
+        {
+            return CreateBillReturnBillDetails(model, "SP_GET_PDFBILL_DETAILS");
+        }
+
+        public AllGeneratedBills ReturnBills(AllGeneratedBills model)
+        {
+            return CreateBillReturnBillDetails(model, "SP_GET_PDFRETURNBILL_DETAILS");
+        }
+
+        private AllGeneratedBills CreateBillReturnBillDetails(AllGeneratedBills model, string procedureName)
         {
             OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
@@ -100,7 +110,7 @@ namespace IBS.Repositories
             par[7] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
             par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("SP_GET_PDFBILL_DETAILS", par, 1);
+            var ds = DataAccessDB.GetDataSet(procedureName, par, 1);
             List<AllGeneratedBills> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -108,71 +118,99 @@ namespace IBS.Repositories
                 list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
 
-            model.items = new List<ItemsDetail>();
-
-            foreach (var item in list)
-            {
-                var result = from vbi in context.V23BillItems
-                             where vbi.BillNo == item.BILL_NO
-                             select new ItemsDetail
-                             {
-                                 Item_SrNo = vbi.ItemSrno,
-                                 item_desc = vbi.ItemDesc,
-                                 qty = vbi.Qty,
-                                 rate = vbi.Rate,
-                                 UnitCode = vbi.UomSDesc,
-                                 uom_factor = vbi.UomFactor,
-                                 basic_value = vbi.BasicValue,
-                                 Value = vbi.Value
-                             };
-
-                model.items.AddRange(result);
-            }
             model.lstBillDetailsForPDF = list;
 
             return model;
         }
 
-        public AllGeneratedBills GenerateReturnBill(AllGeneratedBills model)
+        public List<ItemsDetail> GetBillItems(string Bill_No)
         {
-            OracleParameter[] par = new OracleParameter[9];
-            par[0] = new OracleParameter("P_FROMDT", OracleDbType.Varchar2, model.FromDate, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_TODT", OracleDbType.Varchar2, model.ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_REGION_CODE", OracleDbType.Varchar2, model.REGION_CODE, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_LOA", OracleDbType.Varchar2, model.LOA, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RAILWAY_RDO", OracleDbType.Varchar2, model.RailwayChk, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_CLIENT_NAME", OracleDbType.Varchar2, model.CLIENT_NAME, ParameterDirection.Input);
-            par[6] = new OracleParameter("P_CLIENT_TYPE", OracleDbType.Varchar2, model.CLIENT_TYPE, ParameterDirection.Input);
-            par[7] = new OracleParameter("P_BPO_NAME", OracleDbType.Varchar2, model.BPO_NAME, ParameterDirection.Input);
-            par[8] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-            var ds = DataAccessDB.GetDataSet("SP_GET_PDFRETURNBILL_DETAILS", par, 1);
-            List<AllGeneratedBills> list = new();
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                list = JsonConvert.DeserializeObject<List<AllGeneratedBills>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            }
-
-            model.lstBillDetailsForPDF = list;
-
-            return model;
+            List<ItemsDetail> list = new List<ItemsDetail>();
+            list = (from vbi in context.V23BillItems
+                    where vbi.BillNo == Bill_No
+                    select new ItemsDetail
+                    {
+                        BILL_NO = vbi.BillNo,
+                        Item_SrNo = vbi.ItemSrno,
+                        item_desc = vbi.ItemDesc,
+                        qty = vbi.Qty,
+                        rate = vbi.Rate,
+                        uom_s_desc = vbi.UomSDesc,
+                        uom_factor = vbi.UomFactor,
+                        basic_value = vbi.BasicValue,
+                        sales_tax_per = vbi.SalesTaxPer,
+                        sales_tax = vbi.SalesTax,
+                        EXCISE_TYPE = vbi.ExciseType,
+                        EXCISE_PER = vbi.ExcisePer,
+                        EXCISE = vbi.Excise,
+                        discount_type = vbi.DiscountType,
+                        discount_per = vbi.DiscountPer,
+                        discount = vbi.Discount,
+                        ot_charge_type = vbi.OtChargeType,
+                        ot_charge_per = vbi.OtChargePer,
+                        other_charges = vbi.OtherCharges,
+                        Value = vbi.Value,
+                    }).ToList();
+            return list;
         }
-        //public bool Remove(int Id, int UserID)
-        //{
-        //    T94Bank bank = context.T94Banks.Find(Id);
 
-        //    if (bank == null) { return false; }
+        public List<T22Bill> GetBillByBillNo(string Bill_No)
+        {
+            var Bills = context.T22Bills
+                      .Where(b => b.BillNo == Bill_No)
+                      .ToList();
 
-        //    bank.Isdeleted = 1;
-        //    bank.Updatedby = UserID;
-        //    bank.Updateddate = DateTime.Now;
+            return Bills;
+        }
 
-        //    context.SaveChanges();
-        //    return true;
-        //}
+        public string UpdateBillCount(string Bill_No, int count)
+        {
+            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
 
+            foreach (var bill in billsToUpdate)
+            {
+                bill.BillResentStatus = "S";
+                bill.BillResentCount = Convert.ToBoolean(count);
+            }
+            string msg = "Update Successfull !!";
+
+            return msg;
+        }
+
+        public string UpdateGEN_Bill_Date(string Bill_No)
+        {
+            var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
+
+            foreach (var bill in billsToUpdate)
+            {
+                bill.DigBillGenDt = DateTime.Now.Date;
+            }
+            string msg = "Update Successfull !!";
+
+            return msg;
+        }
+
+        public int SaveUploadFile(string imagePath, string Bill_No)
+        {
+            var res = 0;
+            var data = (from item in context.T22Bills
+                        where item.BillNo == Bill_No
+                        select item).FirstOrDefault();
+            try
+            {
+                if (data != null)
+                {
+                    data.Relativepath = imagePath;
+                    context.SaveChanges();
+                    res = 1;
+                }
+            }
+            catch (Exception)
+            {
+                res = 0;
+            }
+            return res;
+        }
     }
-
 }
 

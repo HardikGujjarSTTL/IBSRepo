@@ -405,34 +405,63 @@
             //     return;
             // }
 
-            var EmailId = "bikey3383@gmail.com";
+            // var EmailId = "bikey3383@gmail.com";
 
-            $.get('http://localhost:9090/api/Home?EmailId=' + EmailId, function (response) {
-                if (response.Flag == 0) {
-                    ShowHideMsg("error", "Kindly Attached Certificate!!");
-                    return;
-                }
-                else {
-                    $('#BK_NO').prop('disabled', true);
-                    $('#SET_NO').prop('disabled', true);
+            // $.get('http://localhost:9090/api/Home?EmailId=' + EmailId, function (response) {
+            //     if (response.Flag == 0) {
+            //         ShowHideMsg("error", "Kindly Attached Certificate!!");
+            //         return;
+            //     }
+            //     else {
+            //         $('#BK_NO').prop('disabled', true);
+            //         $('#SET_NO').prop('disabled', true);
 
-                    var CaseNO = $("#lblCASE_NO").html();
-                    var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
-                    var CallSNo = $("#lblCall_SNO").html();
-                    var Consignee_CD = $("#CONSIGNEE_CD").val();
-                    var Region = $("#Region").val();
-                    var BkNo = $('#BK_NO').val();
-                    var SetNo = $('#SET_NO').val();
+            //         var CaseNO = $("#lblCASE_NO").html();
+            //         var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+            //         var CallSNo = $("#lblCall_SNO").html();
+            //         var Consignee_CD = $("#CONSIGNEE_CD").val();
+            //         var Region = $("#Region").val();
+            //         var BkNo = $('#BK_NO').val();
+            //         var SetNo = $('#SET_NO').val();
 
-                    $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
-                        if (response.status) {
-                            getDigitalSignedDoc(EmailId, response.responseText);
-                        }
-                        else {
-                            ShowHideMsg("error", response.responseText);
-                        }
-                    });
-                }
+            //         $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
+            //             if (response.status) {
+            //                 getDigitalSignedDoc(EmailId, response.responseText);
+            //             }
+            //             else {
+            //                 ShowHideMsg("error", response.responseText);
+            //             }
+            //         });
+            //     }
+            // });
+
+
+
+            // $.ajax({
+            //     url: "@Url.Action("GetReportData", "IC_RPT_Intermediate")",
+            //     type: 'GET',
+            //     dataType: 'xml', // Specify the expected data type
+            //     success: function (data) {
+            //         console.log(data);
+            //     },
+            //     error: function (error) {
+            //         console.error(error);
+            //     }
+            // });
+
+            $('#BK_NO').prop('disabled', true);
+            $('#SET_NO').prop('disabled', true);
+
+            var CaseNO = $("#lblCASE_NO").html();
+            var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
+            var CallSNo = $("#lblCall_SNO").html();
+            var Consignee_CD = $("#CONSIGNEE_CD").val();
+            var Region = $("#Region").val();
+            var BkNo = $('#BK_NO').val();
+            var SetNo = $('#SET_NO').val();
+
+            $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
+                abc(response.responseText, "test.pdf")
             });
         }
 
@@ -932,23 +961,16 @@
         }
 
         function abc(xmldata, xmlfilename) {
-            //alert(xmldata);
-            //var xml=encodeURI(xmldata);
-            //alert(xml);
-
             var xml = xmldata;
+
             $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
-                //alert("IN function");
                 var status = $(exeResponse).find("status").text();
-
                 if (status == "failed") {
-
+                    alert($(exeResponse).find("error").text());
                 }
                 else {
-                    var Url = "@Url.Action("PKIDATA", "IC_RPT_Intermediate")"; // "/RBS/PKIDATA.aspx";
-                    $.post(Url, { "file": exeResponse, "filename": xmlfilename }, function (res) {
-                        window.location.href = "@Url.Action("Index", "IC_RPT_Intermediate")?filename=" + res; //"/RBS/IC_RPT_Intermediate.aspx?filename=" + res;
-                    });
+                    var pdf = $(exeResponse).find("data").text();
+                    downloadPDF(pdf);
                 }
             }).fail(function (xhr, textStatus, errorThrown) {
                 window.location.href = "@Url.Action("Index", "IC_RPT_Intermediate")?filename=" + xmlfilename;

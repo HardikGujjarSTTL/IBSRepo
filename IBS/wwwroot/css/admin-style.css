@@ -1555,3 +1555,18 @@ select.form-control, select{appearance:auto!important;-webkit-appearance:auto!im
     100% { transform:translateY(0); }
 }
 .fa-comments{animation: 2s bounce ease infinite;}
+
+.userNormalSelect{ background:#fff;}
+
+.filterToggle{ cursor:pointer; background:#f1f1f1; text-align:center; width:auto; padding:5px 10px; -webkit-border-top-left-radius: 8px;
+-webkit-border-top-right-radius: 8px;
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-topright: 8px;
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
+float:right;
+margin-right:15px;
+}
+.filterToggle.show .fa-chevron-up:before{ font-family:"FontAwesome"; content:"\f078"}
+.chatTopFilter{ clear:both;}
+.userShowHideChat{ display:none; cursor:pointer;}

@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Principal;
 using DocumentFormat.OpenXml.InkML;
+using QRCoder;
+using System.Drawing;
 
 namespace IBS.Models
 {
@@ -31,6 +33,8 @@ namespace IBS.Models
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
         public static int RegenerateOtpButtonShowMinute = 10;
+        private static String[] units = { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen","Seventeen", "Eighteen", "Nineteen" };
+        private static String[] tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
 
         public static Dictionary<string, string> ConnectedUsers = new Dictionary<string, string>();
 
@@ -4907,30 +4911,15 @@ namespace IBS.Models
             if (UsertType.ToLower() == "inspection engineer (ie)")
             {
                 UM = (from e in ModelContext.T09Ies
-                     join um in ModelContext.UserMasters on e.IeEmpNo.ToString() equals um.UserId.ToString()
-                     join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
-                     join r in ModelContext.Roles on ur.RoleId equals r.RoleId
-                     where r.RoleId == Convert.ToInt32(UsertTypeID) && e.IeStatus == null
-                     select new SelectListItem
-                     {
-                         Text = Convert.ToString(e.IeName),
-                         Value = Convert.ToString(um.Id)
-
-                         //MOBILE = e.IE_PHONE_NO,
-                         //ID = e.IE_CD,
-                         //USER_NAME = e.IE_NAME,
-                         //USER_ID = e.IE_EMP_NO,
-                         //REGION = e.IE_REGION,
-                         //AUTH_LEVL = (int?)null,
-                         //ROLE_ID = r.ROLE_ID,
-                         //ROLE_NAME = r.ROLENAME,
-                         //ORGN_TYPE = (string)null,
-                         //ORGN_CHASED = (string)null,
-                         //ORGANISATION = (string)null,
-                         //IECD = e.IE_CD,
-                         //COCD = e.IE_CO_CD,
-                         //MASTER_ID = um.ID
-                     }).ToList();
+                      join um in ModelContext.UserMasters on e.IeEmpNo.ToString() equals um.UserId.ToString()
+                      join ur in ModelContext.Userroles on um.Id equals ur.UserMasterId
+                      join r in ModelContext.Roles on ur.RoleId equals r.RoleId
+                      where r.RoleId == Convert.ToInt32(UsertTypeID) && e.IeStatus == null
+                      select new SelectListItem
+                      {
+                          Text = Convert.ToString(e.IeName),
+                          Value = Convert.ToString(um.Id)
+                      }).ToList();
             }
             else
             {
@@ -4943,32 +4932,9 @@ namespace IBS.Models
                       {
                           Text = Convert.ToString(u.UserName),
                           Value = Convert.ToString(um.Id)
-
-                          //MOBILE = u.MOBILE,
-                          //ID = u.ID,
-                          //USER_NAME = u.USER_NAME,
-                          //USER_ID = u.USER_ID,
-                          //REGION = u.REGION,
-                          //AUTH_LEVL = u.auth_levl,
-                          //ROLE_ID = r.ROLE_ID,
-                          //ROLE_NAME = r.ROLENAME,
-                          //ORGN_TYPE = (string)null,
-                          //ORGN_CHASED = (string)null,
-                          //ORGANISATION = (string)null,
-                          //IECD = 0,
-                          //COCD = 0,
-                          //MASTER_ID = um.ID
                       }).ToList();
             }
-            //UM = (from a in ModelContext.UserMasters
-            //      where a.UserType == UsertType
-            //      orderby a.UserType ascending, a.Name ascending
-            //      select new SelectListItem
-            //      {
-            //          Text = Convert.ToString(a.Name),
-            //          Value = Convert.ToString(a.Id)
-            //      }).ToList();
-            return UM;
+            return UM.OrderBy(x => x.Text).ToList();
         }
 
         public static List<SelectListItem> GetUserTypeForUsers()
@@ -4995,31 +4961,54 @@ namespace IBS.Models
 
         public static string ConvertAmountToWords(decimal amount)
         {
-            if (amount == 0)
+            try
             {
-                return "Zero";
-            }
-
-            string[] units = { "", "Thousand", "Million", "Billion", "Trillion" };
-            int i = 0;
-            string words = "";
-
-            while (amount > 0)
-            {
-                if (amount % 1000 != 0)
+                Int64 amount_int = (Int64)amount;
+                Int64 amount_dec = (Int64)Math.Round((amount - (decimal)(amount_int)) * 100);
+                if (amount_dec == 0)
                 {
-                    words = $"{ConvertThreeDigitAmountToWords((int)(amount % 1000))} {units[i]} {words}";
+                    return "Rupees " + ConvertWord(amount_int) + " Only.";
                 }
-
-                amount /= 1000;
-                if(amount.ToString().Substring(0, 3) == "0.0")
-                    break;
-                i++;
+                else
+                {
+                    return "Rupees " + ConvertWord(amount_int) + " Point " + ConvertWord(amount_dec) + " Only.";
+                }
             }
-
-            return words.Trim();
+            catch (Exception e)
+            {
+                // TODO: handle exception  
+            }
+            return "";
         }
 
+        public static String ConvertWord(Int64 i)
+        {
+            if (i < 20)
+            {
+                return units[i];
+            }
+            if (i < 100)
+            {
+                return tens[i / 10] + ((i % 10 > 0) ? " " + ConvertWord(i % 10) : "");
+            }
+            if (i < 1000)
+            {
+                return units[i / 100] + " Hundred" + ((i % 100 > 0) ? " " + ConvertWord(i % 100) : "");
+            }
+            if (i < 100000)
+            {
+                return ConvertWord(i / 1000) + " Thousand " + ((i % 1000 > 0) ? " " + ConvertWord(i % 1000) : "");
+            }
+            if (i < 10000000)
+            {
+                return ConvertWord(i / 100000) + " Lakh " + ((i % 100000 > 0) ? " " + ConvertWord(i % 100000) : "");
+            }
+            if (i < 1000000000)
+            {
+                return ConvertWord(i / 10000000) + " Crore " + ((i % 10000000 > 0) ? " " + ConvertWord(i % 10000000) : "");
+            }
+            return ConvertWord(i / 1000000000) + " Arab " + ((i % 1000000000 > 0) ? " " + ConvertWord(i % 1000000000) : "");
+        }
         public static string ConvertThreeDigitAmountToWords(int num)
         {
             string[] ones = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
@@ -5045,6 +5034,25 @@ namespace IBS.Models
             }
 
             return words.Trim();
+        }
+
+        public static string QRCodeGenerate(string qr_Code)
+        {
+            string base64String = string.Empty;
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qr_Code, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+
+            Bitmap qrCodeBitmap = qrCode.GetGraphic(60);
+
+            // Display the QR code on an Image control
+            using (MemoryStream ms = new MemoryStream())
+            {
+                qrCodeBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] qrCodeImage = ms.ToArray();
+                base64String = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
+            }
+            return base64String;
         }
     }
 

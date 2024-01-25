@@ -956,5 +956,8 @@ namespace IBS.Helper
         public static OtherReportsModel OtherReportsModelList { get; set; }
 
         public static CallsMarkedToIEModel CallsMarked { get; set; }
+
+        public static List<AllGeneratedBills> AllGeneratedBillModel { get; set; }
+        public static labInvoicelst LabInvoiceReport { get; set; }
     }
 }

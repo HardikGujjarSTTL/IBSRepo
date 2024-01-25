@@ -1,7 +1,8 @@
 ﻿@model IBS.Models.ChatMessage
 
 @{
-    ViewData["Title"] = "Index";
+    //Layout = "";
+    ViewData["Title"] = "Mobile Chat";
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
     string SiteUrl = Model.HostUrl;
@@ -10,11 +11,6 @@
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
 <input type="hidden" id="hdnFileSize" value="" />
-<div class="list-inner">
-    <div class="tast-list">
-        <h2>Users Chat</h2>
-    </div>
-</div>
 <div class="task-listinput">
     <form role="form" id="frmChatMessage">
         <div class="accordion-body chatArea">
@@ -96,6 +92,13 @@
 
 
     $(document).ready(function () {
+        
+        $("#header").hide();
+        $("#sidebar").hide();
+        $(".navBtn").hide();
+        $("#footer").hide();
+        $(".contentContainer").css("margin-left", "0");
+
         GetUserReceiverList();
         GetChatMessageList(ReceiverId);
 
@@ -110,9 +113,7 @@
             $(".overlayLoader").hide();
         });
 
-
         // filter show hide
-
         $(".filterToggle").click(function () {
             $(this).toggleClass("show");
             $(".chatTopFilter").slideToggle();
@@ -121,8 +122,7 @@
             $(".chatLeftBoxBody").slideToggle();
         });
 
-
-
+        //setTimeout(function () { $(".loginPageInfo").hide(); }, 500);
     });
 
     $('#fileupload').change(function (e) {
@@ -131,7 +131,7 @@
 
     function GetUserReceiverList() {
         $.ajax({
-            url: '@Url.Action("ChatUserReceiver", "Chat")',
+            url: '@Url.Action("ChatUserReceiver", "MobileChat")?SenderId=' + SenderId,
             type: 'POST',
             cache: false,
             processData: false,
@@ -151,7 +151,7 @@
     function GetChatMessageList(recvid) {
         ReceiverId = recvid;
         $.ajax({
-            url: '@Url.Action("ChatMessageHistory", "Chat")/' + ReceiverId,
+            url: '@Url.Action("ChatMessageHistory", "MobileChat")?SenderId=' + SenderId + '&ReceiverId=' + ReceiverId,
             type: 'POST',
             cache: false,
             processData: false,
@@ -222,7 +222,7 @@
 
     connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
         if (MsgType == 1) {
-            window.location.href = "@Url.Action("Index", "Chat")";
+            window.location.href = "@Url.Action("Index", "MobileChat")";
         }
         else {
             var FilePath = "../ReadWriteData/CHAT_FILES/";
@@ -335,9 +335,6 @@
                     }
                 });
             }
-            //var runscript = document.createElement('script');
-            //runscript.setAttribute('src', '/js/ChatMessageHistory.js');
-            //document.head.appendChild(runscript);
         }
     });
 
@@ -414,7 +411,7 @@
     function FillUsers(id) {
         var _drpUserType = $("#dpUserType option:selected").text();
         var _drpUserTypeId = $("#dpUserType option:selected").val();
-        $.get("@Url.Action("GetUsersByUserType", "Chat")", { type: _drpUserType, id: _drpUserTypeId }, function (response) {
+        $.get("@Url.Action("GetUsersByUserType", "MobileChat")", { type: _drpUserType, id: _drpUserTypeId }, function (response) {
             if (response != null) {
                 $("#dpUser").empty();
                 $.each(response, function (ind, val) {

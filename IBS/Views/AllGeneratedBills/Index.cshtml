@@ -28,21 +28,21 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Choose Region</label>
-                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--",new {@id="InspRegion"})
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Client Type</label>
-                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO() , "Value", "Text"),new {@id="ClientType"})
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO(), "Value", "Text"), new { @id = "ClientType" })
                     <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">LOA</label>
-                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA() , "Value", "Text"),new {@id="LOA"})
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA(), "Value", "Text"), new { @id = "LOA" })
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -64,7 +64,7 @@
             </div>
             <div class="col-md-3" id="ClientName">
                 <label for="Reference">Choose Client</label>
-                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "","Value"), "--Select--", new {@id="RailwayCD"})
+                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "", "Value"), "--Select--", new { @id = "RailwayCD" })
             </div>
             <div class="col-md-3" id="BPOName">
                 <label for="Reference">Enter BPO Name</label>
@@ -106,12 +106,14 @@
     </section>
 </div>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
         var Region = "@ViewBag.Region";
+
         $(document).ready(function () {
             $("#ClientName").hide();
             $("#BPOName").hide();
@@ -174,22 +176,32 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
-                url: "@Url.Action("NorthBillGeneratePDF", "AllGeneratedBills")", //CreateBill
+                url: "@Url.Action("CreateBill", "AllGeneratedBills")", //CreateBill
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(fromdata), 
-                xhrFields: {
-                    responseType: 'blob'
-                },
+                data: JSON.stringify(fromdata),
                 success: function (response) {
-                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        if (listXml.length > 0) {
+                            for (var i = 0; i < listXml.length; i++) {
+                                $(".overlayLoader").show();
+                                DigitalSign(listXml[i].Base64String, listXml[i].Bill_No);
+                                $(".overlayLoader").hide();
+                                ShowHideMsg("success", "Digital signed successfully!!");
+                            }
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                    }
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.log(error);
                 }
             });
         }
@@ -203,7 +215,7 @@
                 CLIENT_NAME: $("#RailwayCD").val(),
                 BPO_NAME: $("#BPO_Name").val(),
                 CLIENT_TYPE: $("#ClientType").val(),
-                RailwayChk : $("#AllRly").is(":checked") == true ? "true" : "false"
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
 
             $.ajax({
@@ -215,10 +227,15 @@
                     responseType: 'blob'
                 },
                 success: function (response) {
-                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.success) {
+                        setTimeout(function () {
+                            var redirecturl = "@Url.Action("Index", "AllGeneratedBills")";
+                            window.location.href = redirecturl;
+                        }, 2000);
+                    }
                 },
-                error: function (error) {
-                    console.error(error);
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown);
                 }
             });
         }
@@ -289,15 +306,11 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            //var downloadLink = "@Url.Action("DownloadPhotos", "ICPhotoEnclosed")" +
-                            //    "?CaseNo=" + row.CaseNo +
-                            //    "&CallRecvDt=" + row.CallRecvDt +
-                            //    "&CallSno=" + row.CallSno +
-                            //    "&BkNo=" + row.BkNo +
-                            //    "&SetNo=" + row.SetNo;
 
+                            var BillNo = data.BILL_NO;
+                            var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
                             return '<td width="10%" valign="top" align="center">' +
-                                '<a href="" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
                                 '</td>';
                         }
                     },
@@ -318,6 +331,36 @@
                 "order": [[0, "asc"]]
             });
         }
+
+        function DigitalSign(xmldata, Bill_No) {
+            
+            var xml = xmldata;
+            $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
+                var status = $(exeResponse).find("status").text();
+                if (status == "ok") {
+                    var pdf = $(exeResponse).find("data").text();
+                    $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) {});
+                }
+                // if (status == "failed") {
+                //     alert($(exeResponse).find("error").text());
+                // }
+                // else {
+                //     var pdf = $(exeResponse).find("data").text();
+                //     downloadPDF(pdf);
+                // }
+            }).fail(function (xhr, textStatus, errorThrown) {
+            });
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "Ditital_Sign_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
+        }
+
 
     </script>
 }
