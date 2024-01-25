@@ -64,4 +64,6 @@ public partial class ViewGetCallStatusDetail
     public decimal? Count { get; set; }
 
     public int ItemSrnoPo { get; set; }
+
+    public string? RlyNonrly { get; set; }
 }
