@@ -79,6 +79,7 @@
         public DateTime DIG_GEN_BILL_DT { get; set; }
         public DateTime? InvoiceDt { get; set; }
         public decimal? TotalTESTING_CHARGES { get; set; }
+        public decimal? GrandTotal { get; set; }
         public List<labInvoicelst> lstlabInvoicelst { get; set; }
         public List<LabItemsDetail> items { get; set; }
     }
