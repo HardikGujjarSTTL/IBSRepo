@@ -305,7 +305,15 @@ namespace IBS.Controllers
                 }
             }
             
+            if(model.lstBillDetailsForPDF.Count > 0)
+            {
+
             return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         public IActionResult SouthBill(AllGeneratedBills obj)
@@ -340,7 +348,15 @@ namespace IBS.Controllers
                 }
             }
 
-            return View(model.lstBillDetailsForPDF[0]);
+            if (model.lstBillDetailsForPDF.Count > 0)
+            {
+
+                return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         public IActionResult CentralBill(AllGeneratedBills obj)
@@ -372,7 +388,15 @@ namespace IBS.Controllers
                 }
             }
 
-            return View(model.lstBillDetailsForPDF[0]);
+            if (model.lstBillDetailsForPDF.Count > 0)
+            {
+
+                return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         public IActionResult EastBill(AllGeneratedBills obj)
@@ -404,7 +428,15 @@ namespace IBS.Controllers
                 }
             }
 
-            return View(model.lstBillDetailsForPDF[0]);
+            if (model.lstBillDetailsForPDF.Count > 0)
+            {
+
+                return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         public IActionResult WestBill(AllGeneratedBills obj)
@@ -436,7 +468,15 @@ namespace IBS.Controllers
                 }
             }
 
-            return View(model.lstBillDetailsForPDF[0]);
+            if (model.lstBillDetailsForPDF.Count > 0)
+            {
+
+                return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         public IActionResult COQABill(AllGeneratedBills obj)
@@ -467,8 +507,16 @@ namespace IBS.Controllers
                     item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
-            
-            return View(model.lstBillDetailsForPDF[0]);
+
+            if (model.lstBillDetailsForPDF.Count > 0)
+            {
+
+                return View(model.lstBillDetailsForPDF[0]);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         private string GetFolderNameByRegion(string regionCode)
