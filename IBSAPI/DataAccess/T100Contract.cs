@@ -46,4 +46,24 @@ public partial class T100Contract
     public int? Isdeleted { get; set; }
 
     public string? Clientcode { get; set; }
+
+    public string? InspectionfeeType { get; set; }
+
+    public int? PerBasisFlatfee { get; set; }
+
+    public int? MandayFlatfee { get; set; }
+
+    public int? LumpsumFlatfee { get; set; }
+
+    public int? PerBasisCancellation { get; set; }
+
+    public int? MandayCancellation { get; set; }
+
+    public int? LumpsumCancellation { get; set; }
+
+    public int? PerBasisRejection { get; set; }
+
+    public int? MandayRejection { get; set; }
+
+    public int? LumpsumRejection { get; set; }
 }

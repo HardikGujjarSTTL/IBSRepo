@@ -36,7 +36,7 @@ namespace IBS.Interfaces.InspectionBilling
 
         string UpdateCallDetails(InspectionCertModel model, int ItemSrnoPo, string CaseNo, DateTime CallRecvDt, int CallSno);
 
-        public ICPopUpModel FindByBillDetails(string BillNo, string Region);
+        public ICPopUpModel FindByBillDetails(string BillNo, string CaseNo, DateTime CallRecvDt, int CallSno, string Region);
 
         public string DocUpdate(string BillNo, string UserId);
 

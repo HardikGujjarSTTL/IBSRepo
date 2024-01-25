@@ -56,4 +56,6 @@ public partial class OnlinePayment
     public string? Description { get; set; }
 
     public string? StatusCd { get; set; }
+
+    public string? TokId { get; set; }
 }

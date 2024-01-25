@@ -12,10 +12,12 @@ namespace IBS.Repositories.InspectionBilling
     public class InspectionCertRepository : IInspectionCertRepository
     {
         private readonly ModelContext context;
+        private readonly IConfiguration config;
 
-        public InspectionCertRepository(ModelContext context)
+        public InspectionCertRepository(ModelContext context, IConfiguration _config)
         {
             this.context = context;
+            this.config = _config;
         }
 
         public DTResult<InspectionCertModel> GetDataList(DTParameters dtParameters, string Region)
@@ -119,6 +121,9 @@ namespace IBS.Repositories.InspectionBilling
             {
                 recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
             }
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.Caseno).ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsTotal = recordsTotal;
             dTResult.recordsFiltered = recordsTotal;
@@ -1813,6 +1818,9 @@ namespace IBS.Repositories.InspectionBilling
         public string BillUpdate(InspectionCertModel model, string Region)
         {
             string str = "";
+
+            InspectionCertSave(model, Region);
+
             if (model.BillNo == null || model.BillNo == "")
             {
                 if (chk_bill_dt(Convert.ToString(model.BillDt), Region) == 1)
@@ -1825,7 +1833,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         gen_bill(model);
                     }
-                    if (model.CanOrRejctionFee == "Y" && model.BillNo == null)
+                    if (model.CanOrRejctionFee == "Y" && model.BillNo != null)
                     {
                         var T13 = context.T13PoMasters.Where(x => x.CaseNo == model.Caseno && (x.PendingCharges == null || x.PendingCharges > 0)).FirstOrDefault();
                         if (T13 != null)
@@ -1833,7 +1841,10 @@ namespace IBS.Repositories.InspectionBilling
                             T13.PendingCharges = Convert.ToByte(Convert.ToInt32(T13.PendingCharges) - 1);
                             context.SaveChanges();
                         }
-                        send_Vend_sms(model.Caseno, Region);
+                        if (Convert.ToString(config.GetSection("MailConfig")["SendSMS"]) == "1")
+                        {
+                            send_Vend_sms(model.Caseno, Region);
+                        }
                     }
                 }
             }
@@ -2302,6 +2313,8 @@ namespace IBS.Repositories.InspectionBilling
                 }
             }
             int MaxFee;
+            int MinFee;
+
             if (model.MaxFee == null || model.MaxFee == 0)
             {
                 MaxFee = -1;
@@ -2310,7 +2323,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 MaxFee = Convert.ToInt32(model.MaxFee);
             }
-            int MinFee;
+
             if (model.MinFee == null || model.MinFee == 0)
             {
                 MinFee = 0;
@@ -2323,7 +2336,7 @@ namespace IBS.Repositories.InspectionBilling
             DataSet ds = new DataSet();
             if (Convert.ToInt32(certdt) >= 20170701)
             {
-                if (model.Callstatus == "C")
+                if (model.Callstatus == "C" || model.Callstatus == "CB")
                 {
                     if (model.CallCancelStatus == "C")
                     {
@@ -2335,7 +2348,7 @@ namespace IBS.Repositories.InspectionBilling
                         parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
                         parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, 10, model.BillNo == null ? "X" : model.BillNo, ParameterDirection.Input);
                         parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, 1, model.BpoFeeType, ParameterDirection.Input);
-                        parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, in_fee, ParameterDirection.Input);
+                        parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, Convert.ToDecimal(model.CallCancelCharges), ParameterDirection.Input);
                         parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, 1, TaxType, ParameterDirection.Input);
                         parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
                         parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
@@ -2556,10 +2569,12 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public ICPopUpModel FindByBillDetails(string BillNo, string Region)
+        public ICPopUpModel FindByBillDetails(string BillNo, string CaseNo, DateTime CallRecvDt, int CallSno, string Region)
         {
             ICPopUpModel model = new();
             T22Bill Bill = context.T22Bills.Where(x => x.BillNo == BillNo).FirstOrDefault();
+
+            T17CallRegister T17 = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
 
             if (Bill == null)
                 throw new Exception("Call Record Not found");
@@ -2570,6 +2585,11 @@ namespace IBS.Repositories.InspectionBilling
                 model.TMValue = Convert.ToDecimal(Bill.MaterialValue);
                 model.TIFee = Bill.InspFee;
                 model.BillDt = Bill.BillDt;
+                model.BillAmount = Bill.BillAmount;
+                if(T17 != null)
+                {
+                    model.Callstatus = T17.CallStatus;
+                }
 
                 return model;
             }
