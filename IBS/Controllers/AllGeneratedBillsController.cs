@@ -20,6 +20,7 @@ using MessagePack;
 using static IBS.Helper.Enums;
 using IBS.DataAccess;
 using System.Xml;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 
 namespace IBS.Controllers
@@ -88,8 +89,11 @@ namespace IBS.Controllers
                         byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
                         item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
 
-                        // Generate Base64String QR Code and Display in PDF.
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                        if (!string.IsNullOrEmpty(item.qr_code))
+                        {
+                            // Generate Base64String QR Code and Display in PDF.
+                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                        }
 
                         if (model.REGION_CODE == "N")
                         {
@@ -139,6 +143,7 @@ namespace IBS.Controllers
                             await pdfContent.CopyToAsync(pdfStream);
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
+                            //base64String = base64String.Replace("\"", "");
 
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
@@ -147,7 +152,7 @@ namespace IBS.Controllers
 
                             DigitalSignModel obj = new DigitalSignModel();
                             obj.Bill_No = item.BILL_NO;
-                            obj.Base64String = base64String;
+                            obj.Base64String = xmlData;
                             lstXmlData.Add(obj);
                         }
                     }
@@ -293,6 +298,11 @@ namespace IBS.Controllers
             var imagePath = Path.Combine(path, "rites-logo.png");
             byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
             model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -313,6 +323,16 @@ namespace IBS.Controllers
                     decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                     item.BILL_AMOUNT = totalBillAmount;
                 }
+            }
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
             }
             return View(model.lstBillDetailsForPDF[0]);
         }
@@ -335,6 +355,16 @@ namespace IBS.Controllers
                     item.BILL_AMOUNT = totalBillAmount;
                 }
             }
+
+            string path = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(path, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -356,7 +386,6 @@ namespace IBS.Controllers
             return regionCode;
         }
 
-        #region GeneratePDF
         public async Task<IActionResult> GeneratePDF(string BillNo)
         {
             List<T22Bill> BillData = allGeneratedBillsRepository.GetBillByBillNo(BillNo);
@@ -439,7 +468,6 @@ namespace IBS.Controllers
 
             return File(pdfContent, "application/pdf", pdfFileName);
         }
-        #endregion
 
         public string GenerateDigitalSignatureXML(string base64String, int pageNo)
         {
@@ -574,6 +602,22 @@ namespace IBS.Controllers
                 iText.Kernel.Pdf.PdfDocument pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfReader);
                 return pdfDocument.GetNumberOfPages();
             }
+        }
+
+        [HttpPost]
+        public IActionResult UploadSignedPdf(string base64SignedPdf, string Bill_No)
+        {
+            byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
+            string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path = path + Bill_No + ".pdf";
+            System.IO.File.WriteAllBytes(path, pdfBytes);
+            return Json(new { status = 1 });
         }
     }
 }

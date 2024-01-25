@@ -20,6 +20,19 @@
         requireQr = false;
     }
 }
+<style>
+    .hindi {
+        font-family: 'mangal';
+        line-height: 9px;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+        border-color: #fff;
+        padding: 0px;
+        line-height: 9px;
+    }
+</style>
 
 <div>
     <div class="list-inner">
@@ -41,7 +54,7 @@
                                     <td valign="middle" width="40%"><img src="img/riteslogo1.jpg" alt="" style="width:600px;display: block;" /></td>
                                     @if (Model.BILL_NO.Substring(0, 1) == "T") @*.Substring(0, 1)*@
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="15%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <br>CREDIT NOTE<br>
                                                 <span class="hindi">मूल </span>ORIGINAL
@@ -50,7 +63,7 @@
                                     }
                                     else
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="15%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
                                                 <br>INSPECTION FEE BILL<br>
@@ -60,33 +73,33 @@
                                     }
 
 
-                                    <td width="45%" style=" font-family:Arial, Helvetica, sans-serif; line-height:9px;" valign="middle" align="right">
+                                    <td width="45%" style=" font-family:Arial, Helvetica, sans-serif; line-height:9px; padding:10px;" valign="middle" align="right">
                                         <b>
                                             <table>
                                                 <tr>
-                                                    <td style="font-size:36px;"><span class="hindi">आयकर सं</span> / Pan No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td style="font-size:36px;">AAACR0830Q</td>
+                                                    <td style="font-size:8px; text-align:right;"><span class="hindi">आयकर सं</span> / Pan No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="font-size:8px; text-align:right;">AAACR0830Q</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:36px;"> <span class="hindi">माल और सेवा कर सं </span>/ GST No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td style="font-size:36px;">33AAACR0830Q1ZD</td>
+                                                    <td style="font-size:8px; text-align:right;"> <span class="hindi">माल और सेवा कर सं </span>/ GST No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="font-size:8px; text-align:right;">33AAACR0830Q1ZD</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:36px;"><span class="hindi">दूरभाष</span> / Telephone</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td style="font-size:36px;">28290355,28290356</td>
+                                                    <td style="font-size:8px; text-align:right;"><span class="hindi">दूरभाष</span> / Telephone</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="font-size:8px; text-align:right;">28290355,28290356</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:36px;"><span class="hindi">फैक्स</span> / Fax No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td style="font-size:36px;">044-28290359 </td>
+                                                    <td style="font-size:8px; text-align:right;"><span class="hindi">फैक्स</span> / Fax No.</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="font-size:8px; text-align:right;">044-28290359 </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:36px;"><span class="hindi">ई-मेल</span> / E-mail</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td style="font-size:36px;padding-bottom: 15px;">srinspn@rites.com</td>
+                                                    <td style="font-size:8px; text-align:right;"><span class="hindi">ई-मेल</span> / E-mail</td>
+                                                    <td align="center" width="10" style="text-align:right; font-size:8px;">:</td>
+                                                    <td style="font-size:8px;padding-bottom: 15px; text-align:right;">srinspn@rites.com</td>
                                                 </tr>
                                             </table>
                                         </b>
@@ -97,15 +110,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
+                        <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
                             <!--================sec2 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0" style="vertical-align: top;">
                                 <tr>
 
-                                    <td style="padding: 7px; padding-top: 100px;">
+                                    <td style="padding: 7px; font-size:8px;" width="45%">
                                         @if (!string.IsNullOrEmpty(Model.irfc_bpo_cd) && Model.irfc_funded == "Y")
                                         {
-                                            <div width="20%">
+                                            <div width="30%">
                                                 <span>
                                                     <b><span class="hindi"> सेवा में</span> / TO</b>
                                                     @Model.irfc_bpo_name   @Model.irfc_bpo_rly   @Model.irfc_bpo_add  @Model.irfc_bpo_city
@@ -145,19 +158,19 @@
                                     </td>
                                     @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && requireQr)
                                     {
-                                        <td align="center" style="padding: 7px;padding-top: 25px;padding-bottom: 25px;">
+                                        <td align="center" style="padding: 7px; width:20%;" width="20%">
                                             @*<img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(400)->generate(@Model.qr_code)) !!}">*@
-                                            <img src="data:image/png;base64, @Html.Raw(Model.qr_code)" />
+                                            <img src="data:image/png;base64, @Html.Raw(Model.qr_code)" width="150" height="150" />
                                         </td>
                                     }
 
 
 
-                                    <td align="right" style="padding: 7px; padding-top: 100px;" width="35%">
+                                    <td align="right" style="padding: 7px;" width="35%">
                                         <b>
                                             <table>
                                                 <tr>
-                                                    <td>
+                                                    <td style="text-align:right;">
                                                         <img src="img/south.JPG" alt="" /> / Southern Region/Q.A.Division<br><span class="hindi">बीएसएनएल कार्यालय, </span> BSNL Office<br><span class="hindi"> सी टी एस &#2367;बल&#2367;्डंग, दूसरी मं&#2367;जल </span> CTS BUILDING, II FLOOR <br> 16, <span class="hindi">ग्रीम रोड, चेन्नई</span> - 600006, 16 Greams Road, Chennai - 600016<br>CIN NO.L74899DL1974GOI007227
                                                         @if (!string.IsNullOrEmpty(Model.irn_no) && !string.IsNullOrEmpty(Model.qr_code) && requireQr)
                                                         {
@@ -178,7 +191,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="border-bottom:1px solid #000; padding-left:10px;padding-top: 25px;padding-bottom: 25px;">
+                        <td width="100%" style="border-bottom:1px solid #000; padding-left:10px;">
                             <!--================sec3 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
@@ -192,8 +205,8 @@
                                                 }
                                                 else
                                                 {
-                                                    <td style="width: 14%;"><b><span class="hindi">&#2367;बल सं.</span><br>BILL NO.</b></td>
-                                                    <td style="width: 86%;" valign="middle" align="left">@Model.invoice_no</td>
+                                                    <td style="width: 14%; font-size:8px;"><b><span class="hindi">&#2367;बल सं.</span><br>BILL NO.</b></td>
+                                                    <td style="width: 86%; font-size:8px;" valign="middle" align="left">@Model.invoice_no</td>
                                                 }
 
                                             </tr>
@@ -202,8 +215,8 @@
                                     <td width="50%" style="font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="width: 80%;font-size:30px;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;font-size:30px;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
+                                                <td style="width: 80%;font-size:8px;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%;font-size:8px;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -220,16 +233,16 @@
                                     <td width="50%" style="font-family:Arial, Helvetica, sans-serif;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="width: 35%;font-size:30px;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
-                                                <td style="width: 65%;font-size:30px;" valign="middle" align="left">@Model.po_no</td>
+                                                <td style="width: 35%;font-size:8px;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
+                                                <td style="width: 65%;font-size:8px;" valign="middle" align="left">@Model.po_no</td>
                                             </tr>
                                         </table>
                                     </td>
                                     <td width="50%" style="font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="width: 80%;font-size:30px;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;font-size:30px;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
+                                                <td style="width: 80%;font-size:8px;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%;font-size:8px;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -246,10 +259,10 @@
                                     <td valign="top" width="51%" style="font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;" height="100">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="font-size: 30px;"><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
+                                                <td style="font-size:8px;"><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
                                             </tr>
                                             <tr>
-                                                <td style="font-size: 30px;">
+                                                <td style="font-size:8px;">
                                                     @Model.Vend_Name
                                                     <br>
                                                     @Model.Vend_Add1
@@ -262,10 +275,10 @@
                                     <td valign="top" width="49%" style="font-family:Arial, Helvetica, sans-serif;padding-left:10px;padding-top: 25px;padding-bottom: 25px;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="font-size: 30px;"><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
+                                                <td style="font-size:8px;"><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
                                             </tr>
                                             <tr>
-                                                <td style="font-size: 30px;">
+                                                <td style="font-size:8px;">
                                                     @Model.Consignee
                                                     <br>
                                                     @Model.Consignee_Add1
@@ -286,18 +299,18 @@
                             <!--================sec6 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;padding-top: 25px;padding-bottom: 25px;font-size:8px;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
                                 </tr>
                                 <tr>
-                                    <td width="30%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.IC_NO</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.bk_no</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.set_no</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size: 30px;">@Model.call_instalment_no</td>
+                                    <td width="30%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.IC_NO</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.bk_no</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.set_no</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.call_instalment_no</td>
                                 </tr>
                             </table>
                             <!--================sec6 over==============-->
@@ -308,11 +321,11 @@
                             <!--================sec7 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size: 30px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                                    <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size:8px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
                                     <br>
 
                                 </tr>
@@ -320,20 +333,20 @@
                                     foreach (var val in Model.items.Skip(0).Take(7))
                                     {
                                         <tr>
-                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
-                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.qty<br>@val.uom_s_desc</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                            <td width="5%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
+                                            <td width="50%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
+                                            <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.qty<br>@val.uom_s_desc</td>
+                                            <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.rate<br>@val.uom_factor</td>
+                                            <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
                                         </tr>
                                         <tr>
                                             @if (Convert.ToInt32(val.sales_tax) > 0)
                                             {
-                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
                                             }
                                         </tr>
 
@@ -361,21 +374,21 @@
                                         if (disStatus)
                                         {
                                             <tr>
-                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountHTML</td>
                                             </tr>
                                         }
                                         if (otherChStatus)
                                         {
                                             <tr>
-                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perOtHtml</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountOtHTML</td>
                                             </tr>
                                         }
                                         no = no + 1;
@@ -391,10 +404,10 @@
                                             <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;">
                                                 <tr>
                                                     <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"><b>Total Material Value Inspected</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"><b>@total</b></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
                                                 </tr>
 
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "T")
@@ -489,11 +502,11 @@
                                             <table width="100%" cellpadding="0" cellspacing="0">
                                                 <tr>
                                                     <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;padding: 15px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/11.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                                    <td style="font-size:12px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                                    <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
                                                         <b>
                                                             <table cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td><b> <span class="hindi"><img src="img/14.JPG" alt="" /><br><img src="img/15.JPG" alt="" /></span></b></td>
+                                                                    <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
@@ -509,45 +522,45 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:9px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                                    <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
                                                         <table width="100%" cellpadding="0" cellspacing="0">
                                                             <tr>
-                                                                <td style="font-size: 18px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
+                                                                <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="font-size: 18px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
+                                                                <td style="font-size:8px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="font-size: 18px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
+                                                                <td style="font-size:8px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td style="padding: 15px 0;font-size: 13px;">
+                                                                <td style="padding: 15px 0;font-size:8px;">
                                                                     <table width="100%" cellpadding="0" cellspacing="0">
                                                                         <tr>
-                                                                            <td width="50%" style="font-size: 18px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
-                                                                            <td style="font-size: 18px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
+                                                                            <td width="50%" style="font-size:8px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
+                                                                            <td style="font-size:8px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td style="font-size: 18px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
+                                                                            <td style="font-size:8px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
                                                                             <td><span class="hindi">शाखा क्र्मांक</span> / BRANCH CODE: 600211002</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td style="font-size: 18px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
-                                                                            <td style="font-size: 18px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
+                                                                            <td style="font-size:8px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
+                                                                            <td style="font-size:8px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
                                                                         </tr>
 
                                                                         <tr>
-                                                                            <td style="font-size: 18px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
-                                                                            <td style="font-size: 18px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
+                                                                            <td style="font-size:8px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
+                                                                            <td style="font-size:8px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td colspan="2" style="font-size: 18px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
+                                                                            <td colspan="2" style="font-size:8px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td style="font-size: 18px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
+                                                                            <td style="font-size:8px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
                                                                         </tr>
                                                                     </table>
                                                                 </td>
@@ -561,7 +574,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size: 18px;" align="center">
+                                        <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size:8px;" align="center">
                                             <br>
                                             <b> <span class="hindi"><img src="img/18.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/19.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
                                             <br><br>
@@ -583,35 +596,35 @@
     {
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="100%" style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; padding: 15px 0; border-bottom: 1px solid #000;" valign="top">
+                <td width="100%" style="font-size: 8px; font-family: Arial, Helvetica, sans-serif; padding: 15px 0; border-bottom: 1px solid #000;" valign="top">
                     <!--================sec7 start==============-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size: 30px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size:8px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
                             <br>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(7).Take(15))
                             {
                                 <tr>
-                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
-                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.qty<br>@val.uom_s_desc</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;font-size:8px;" align="center">@no</td>
+                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;font-size:8px;" align="center">@val.item_desc</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;font-size:8px;" align="center">@val.qty<br>@val.uom_s_desc</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;font-size:8px;" align="center">@val.rate<br>@val.uom_factor</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
                                     @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -639,21 +652,21 @@
                                 if (disStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountHTML</td>
                                     </tr>
                                 }
                                 if (otherChStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perOtHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountOtHTML</td>
                                     </tr>
                                 }
                                 no = no + 1;
@@ -672,7 +685,7 @@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="100%">
@@ -680,10 +693,10 @@
                                     <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@total</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
                                         <tr style="border-bottom: 0">
                                             <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
@@ -732,11 +745,11 @@
                                     <table width="100%" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/11.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:12px;border-right:1px solid #000;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/14.JPG" alt="" /><br><img src="img/15.JPG" alt="" /></span></b></td>
+                                                            <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
                                                             <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
@@ -752,41 +765,41 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:9px; border-right:1px solid #000; padding-left:0px;padding-top: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:0px;padding-top: 15px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
-                                                        <td style="font-size: 18px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
+                                                        <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 18px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
+                                                        <td style="font-size:8px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 18px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
+                                                        <td style="font-size:8px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <table width="100%" cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td width="50%" style="font-size: 18px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
+                                                                    <td width="50%" style="font-size:8px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
+                                                                    <td style="font-size:8px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
                                                                     <td><span class="hindi">शाखा क्र्मांक</span> / BRANCH CODE: 600211002</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" style="font-size: 18px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
+                                                                    <td colspan="2" style="font-size:8px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
+                                                                    <td style="font-size:8px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -799,7 +812,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size: 18px;" align="center">
+                                <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size:8px;" align="center">
                                     <br>
                                     <b> <span class="hindi"><img src="img/18.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/19.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
                                     <br><br>
@@ -822,31 +835,31 @@
                     <!--================sec7 start==============-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size: 30px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size: 30px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;font-size:8px;padding-bottom: 25px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
                             <br>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(22).Take(37))
                             {
                                 <tr>
-                                    <td width="5%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;padding-top: 15px;" align="center">@no</td>
-                                    <td width="50%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:10px 25px;font-size: 30px;" align="center">@val.item_desc</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.qty<br>@val.uom_s_desc</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size: 30px;" align="center">@val.basic_value</td>
+                                    <td width="5%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;padding-top: 15px;" align="center">@no</td>
+                                    <td width="50%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:10px 25px;font-size:8px;" align="center">@val.item_desc</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.qty<br>@val.uom_s_desc</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.rate<br>@val.uom_factor</td>
+                                    <td width="15%" valign="top" style="border-left:1px solid #000000;border-right:1px solid #000000;padding:0 25px;font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
                                     @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -874,21 +887,21 @@
                                 if (disStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountHTML</td>
                                     </tr>
                                 }
                                 if (otherChStatus)
                                 {
                                     <tr>
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perOtHtml</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountOtHTML</td>
                                     </tr>
                                 }
                                 no = no + 1;
@@ -916,14 +929,14 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;">
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size: 30px;" align="center"><b>@total</b></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size: 30px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
@@ -977,11 +990,11 @@
                                     <table width="100%" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;padding: 15px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/11.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:12px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/14.JPG" alt="" /><br><img src="img/15.JPG" alt="" /></span></b></td>
+                                                            <td><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
                                                             <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
@@ -997,45 +1010,45 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:9px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
-                                                        <td style="font-size: 18px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
+                                                        <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td style="font-size: 18px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
+                                                        <td style="font-size:8px;">2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td style="font-size: 18px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
+                                                        <td style="font-size:8px;">3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</td>
                                                     </tr>
 
                                                     <tr>
-                                                        <td style="padding: 15px 0;font-size: 13px;">
+                                                        <td style="padding: 15px 0;font-size:8px;">
                                                             <table width="100%" cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td width="50%" style="font-size: 18px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
+                                                                    <td width="50%" style="font-size:8px;"><span class="hindi">ई एफ टी &#2367;ववरण &#2367;नम्नानुसार हैं</span> / EFT detail are as under </td>
+                                                                    <td style="font-size:8px;"><span class="hindi">खाता संख्या</span> / Account No: 006010200009843</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">बैंक का नाम</span> / NAME OF BANK : / <span class="hindi">ए&#2367;क्सस बैंक &#2367;ल.</span> AXIS BANK LTD.</td>
                                                                     <td><span class="hindi">शाखा क्र्मांक</span> / BRANCH CODE: 600211002</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">शाखा का नाम</span>NAME OF THE BRANCH : 82, <span class="hindi"> डॉ। राधाकृष्णन सलाल, मायलापुर, चेन्नई </span>-4<br> / 82, Dr. Radhakrishnan Salal, Mylapore, Chennai-4</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">आईफससी कोड</span> / IFSC CODE: <span class="hindi">यूटीआईबी0000006</span> / UTIB0000006</td>
                                                                 </tr>
 
                                                                 <tr>
-                                                                    <td style="font-size: 18px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
-                                                                    <td style="font-size: 18px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">खाते का प्रकार</span> / TYPE OF ACCOUNT : <span class="hindi">चालू खाता</span>CURRENT ACCOUNT</td>
+                                                                    <td style="font-size:8px;"><span class="hindi">केंद्र कोड</span> / CENTER CODE: 006</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="2" style="font-size: 18px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
+                                                                    <td colspan="2" style="font-size:8px;"> <span class="hindi"> बैंक शाखा की 9 अंकों की कोड संख्या MICR चेक पर &#2367;दखाई दे रही है। बैंक द्वारा जारी की गई: </span> 600211002</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size: 18px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
+                                                                    <td style="font-size:8px;" colspan="2">9 Digit Code Number of the Bank Branch Appearing on MICR Cheque Issued by the Bank : 600211002</td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -1049,7 +1062,7 @@
                             </tr>
 
                             <tr>
-                                <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size: 18px;" align="center">
+                                <td width="100%" style="padding:20px 10px; border-top:1px solid #000;font-size:8px;" align="center">
                                     <br>
                                     <b> <span class="hindi"><img src="img/18.JPG" alt="" />: १२वीं मं&#2367;जल, कोर १, <img src="img/a3.JPG" alt="" />,<img src="img/a4.JPG" alt="" /></span><br>Registered Office:12th FLOOR, CORE 1, SCOPE MINAR, LAXMI NAGAR, DELHI-110092</b><br><b><span class="hindi"><img src="img/19.JPG" alt="" />: राइट्स भवन, प्लॉट १, सेक्टर २९, गुरुग्राम, ह&#2367;रयाणा -१२२ ००१,</span> <br>Corporate Office: Rites Bhawan, Plot No. 1,Sector-29,Gurgaon,Haryana -122 001.</b>
                                     <br><br>
