@@ -98,13 +98,11 @@
                 <tr>
                     <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; width:33%;">
                         <strong>
-                            M/s BANKE BEHARI CHEMICALS PRIVATE<br>
-                            LIMITED,
+                            M/s @Model.BPO_NAME
                         </strong><br>
                         <br>
-                        SAROJANI NAGAR, D-12, INDUSTRIAL<br>
-                        AREA, KANPUR ROAD,<br>
-                        LUCKNOW<br>
+                        @Model.bpo_add<br>
+                        @Model.bpo_city<br>
                         <br>
                         <strong>Recipient GSTIN No:</strong><br>
                         @Model.recipient_gstin_no
@@ -151,42 +149,7 @@
                     {
                         SrNo = SrNo + 1;
                         <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
-                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
-                        </tr>
-                        <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
-                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
-                        </tr>
-                         <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
-                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
-                        </tr>
-                         <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
-                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
-                        </tr>
-                         <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
-                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
-                        </tr>
-                        <tr>
-                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
+                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
                             <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
                             <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
                             <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>

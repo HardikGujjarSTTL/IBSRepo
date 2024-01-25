@@ -28,6 +28,8 @@ namespace IBS.Repositories
 
             var query = (from T55 in context.T55LabInvoices
                          join T22 in context.T22Bills on T55.CaseNo equals T22.CaseNo
+                         join t12 in context.T12BillPayingOfficers on T55.BpoCd equals t12.BpoCd
+                         join t03 in context.T03Cities on t12.BpoCityCd equals t03.CityCd
                          where T55.InvoiceDt >= DateTime.Parse(FromDate) && T55.InvoiceDt <= DateTime.Parse(ToDate)
                                && T55.RegionCode == Region
                                && T55.QrCode != null
@@ -46,6 +48,9 @@ namespace IBS.Repositories
                              ack_no = T55.AckNo,
                              ack_dt = T55.AckDt,
                              qr_code = T55.QrCode,
+                             BPO_NAME = t12.BpoName,
+                             bpo_add = t12.BpoAdd,
+                             bpo_city = t03.City,
                              recipient_gstin_no = T55.RecipientGstinNo,
                          }).Take(5);
 
@@ -58,6 +63,9 @@ namespace IBS.Repositories
                 ack_no = row.ack_no,
                 ack_dt = row.ack_dt,
                 qr_code = row.qr_code,
+                BPO_NAME = row.BPO_NAME,
+                bpo_add = row.bpo_add,
+                bpo_city=row.bpo_city,
                 recipient_gstin_no = row.recipient_gstin_no,
                 InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1],
                 Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
