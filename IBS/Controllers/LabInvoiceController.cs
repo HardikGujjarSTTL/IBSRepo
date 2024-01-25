@@ -41,7 +41,8 @@ namespace IBS.Controllers
                 foreach (var item in model.lstlabInvoicelst)
                 {
                     item.items = labInvoiceRepository.GetBillItems(item.InvoiceNo);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+                    decimal? totalTestingCharges = item.items.Sum(billItem => billItem.TESTING_CHARGES);
+                    item.TotalTESTING_CHARGES = totalTestingCharges;
 
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                     var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";

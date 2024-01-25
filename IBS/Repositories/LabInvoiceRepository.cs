@@ -97,6 +97,7 @@ namespace IBS.Repositories
                         QTY = vbi.Qty,
                         TESTING_CHARGES = vbi.TestingCharges,
                     }).ToList();
+
             return list;
         }
     }

@@ -1,4 +1,13 @@
 ﻿@model labInvoicelst
+@{
+    var size = Model.items.Count();
+    var requireQr = false;
+    var total = 0;
+    var no = 1;
+    var count = 1;
+    var Adh = "@";
+}
+
 <table width="800" align="center" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #000;">
     <tr>
         <td>
@@ -98,7 +107,7 @@
                         LUCKNOW<br>
                         <br>
                         <strong>Recipient GSTIN No:</strong><br>
-                       @Model.recipient_gstin_no
+                        @Model.recipient_gstin_no
                     </td>
                     <td align="center" valign="top" style="text-align:center; width:33%;"><img src="qr-code.png" width="159" height="156" alt="QR"></td>
                     <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; width:33%;">
@@ -135,42 +144,48 @@
                     <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">Qty.</td>
                     <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">Totat testing Charges (in INR)</td>
                 </tr>
-                <tr>
-                    <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1</td>
-                    <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">BLEACHING POWER</td>
-                    <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
-                    <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1.0</td>
-                    <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">7600</td>
-                </tr>
-                <tr>
-                    <td colspan="5" align="left" valign="top">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td width="16%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">iGST18%</td>
-                                <td width="58%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1368</td>
-                                <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">SUB TOTAL</td>
-                                <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">7600</td>
-                            </tr>
-                            <tr>
-                                <td align="left" valign="top">&nbsp;</td>
-                                <td align="left" valign="top">&nbsp;</td>
-                                <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">Total Tax</td>
-                                <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1368</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td width="74%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">( Rs. Eight Thousand Nine Hundred Sixty-Eight Only /- )</td>
-                                <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">GRAND TOTAL</td>
-                                <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">7600</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+
+                @{
+                    foreach (var val in Model.items.Skip(0).Take(7))
+                    {
+                        <tr>
+                            <td height="180" align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1</td>
+                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
+                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
+                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
+                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="left" valign="top">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="16%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">iGST18%</td>
+                                        <td width="58%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.IGST</td>
+                                        <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">SUB TOTAL</td>
+                                        <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@Model.TotalTESTING_CHARGES</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="top">&nbsp;</td>
+                                        <td align="left" valign="top">&nbsp;</td>
+                                        <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">Total Tax</td>
+                                        <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1368</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="74%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">( Rs. Eight Thousand Nine Hundred Sixty-Eight Only /- )</td>
+                                        <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">GRAND TOTAL</td>
+                                        <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">7600</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                }
             </table>
         </td>
     </tr>
