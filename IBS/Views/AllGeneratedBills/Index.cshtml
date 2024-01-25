@@ -227,15 +227,10 @@
                     responseType: 'blob'
                 },
                 success: function (response) {
-                    if (response.success) {
-                        setTimeout(function () {
-                            var redirecturl = "@Url.Action("Index", "AllGeneratedBills")";
-                            window.location.href = redirecturl;
-                        }, 2000);
-                    }
+                    ShowHideMsgNew(response.status, response.responseText);
                 },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.log('Error:', textStatus, errorThrown);
+                error: function (error) {
+                    console.log(error);
                 }
             });
         }
