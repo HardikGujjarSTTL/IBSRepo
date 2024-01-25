@@ -24,13 +24,14 @@
 <style>
     .hindi {
         font-family: 'mangal';
+        line-height: 9px;
     }
 
-    table,
-    tr,
-    td,
-    th {
+    table, tr, td, th {
         border-collapse: collapse;
+        border-color: #fff;
+        padding: 0px;
+        line-height: 9px;
     }
 </style>
 <div>
@@ -47,16 +48,16 @@
         <tr>
             <td width="100%">
                 <!-- table start-->
-                <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td width="100%" style="border-bottom:1px solid #000;">
                             <!--================sec1 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td valign="middle" width="40%"><img src="~/images/rites-logo.png" alt="" style="width:600px;display: block;" /></td> @*img/riteslogo1.jpg*@
+                                    <td valign="middle" width="40%"><img src="~/images/rites-logo.png" alt="" style="width:150px;height:53px;" /></td> @*img/riteslogo1.jpg*@
                                     @if (Model.BILL_NO == "F") @*.Substring(0, 1)*@
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="20%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <br>CREDIT NOTE<br>
                                                 <span class="hindi">मूल </span>ORIGINAL
@@ -65,7 +66,7 @@
                                     }
                                     else
                                     {
-                                        <td width="15%" valign="middle" align="center" style="font-size:25px; font-family:Arial, Helvetica, sans-serif;">
+                                        <td width="20%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
                                                 <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
                                                 <br>INSPECTION FEE BILL<br>
@@ -73,37 +74,35 @@
                                             </b>
                                         </td>
                                     }
-                                    <td width="45%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; line-height:9px;" valign="middle" align="right">
-                                        <b>
+                                    <td width="40%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; line-height:9px;" valign="middle" align="right">
                                             <table>
                                                 <tr>
-                                                    <td><span class="hindi">आयकर संख्या</span> / Pan No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>AAACR0830Q</td>
+                                                    <td style="text-align:right;"><span class="hindi">आयकर संख्या</span> / Pan No.</td>
+                                                    <td align="center" width="10"  style="text-align:right;">:</td>
+                                                    <td style="text-align:right;">AAACR0830Q</td>
                                                 </tr>
 
                                                 <tr>
-                                                    <td><span class="hindi">माल और सेवा कर सं </span>/ GSTIN No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>27AAACR0830Q1Z6</td>
+                                                    <td style="text-align:right;"><span class="hindi">माल और सेवा कर सं </span>/ GSTIN No.</td>
+                                                    <td align="center" width="10" style="text-align:right;">:</td>
+                                                    <td style="text-align:right;">27AAACR0830Q1Z6</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">दूरभाष</span> / Telephone</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>022-22012523/22015573</td>
+                                                    <td style="text-align:right;"><span class="hindi">दूरभाष</span> / Telephone</td>
+                                                    <td align="center" width="10" style="text-align:right;">:</td>
+                                                    <td style="text-align:right;">022-22012523/22015573</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">फैक्स</span> / Fax No.</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>022-22084155</td>
+                                                    <td style="text-align:right;"><span class="hindi">फैक्स</span> / Fax No.</td>
+                                                    <td align="center" width="10" style="text-align:right;">:</td>
+                                                    <td style="text-align:right;">022-22084155</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><span class="hindi">ई-मेल</span> / E-mail</td>
-                                                    <td align="center" width="10">:</td>
-                                                    <td>wrinspn@rites.com</td>
+                                                    <td style="text-align:right;"><span class="hindi">ई-मेल</span> / E-mail</td>
+                                                    <td align="center" width="10" style="text-align:right;">:</td>
+                                                    <td style="text-align:right;">wrinspn@rites.com</td>
                                                 </tr>
                                             </table>
-                                        </b>
                                     </td>
                                 </tr>
                             </table>
@@ -112,15 +111,15 @@
                     </tr>
                     <!--================sec2 start==============-->
                     <tr>
-                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;padding-left:10px;">
+                        <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; border-bottom:1px solid #000;">
 
                             <table width="100%" cellpadding="0" cellspacing="0" style="vertical-align: top;">
                                 <tr>
 
-                                    <td style="padding:7px;font-size: 20px;padding-top: 30px">
+                                    <td style="font-size:8px;">
                                         @if (!string.IsNullOrEmpty(Model.irfc_bpo_cd) && Model.irfc_funded == "Y")
                                         {
-                                            <div width="20%">
+                                            <div width="30%">
                                                 <span>
                                                     <br><b><span class="hindi"> सेवा में</span> / TO</b>
                                                     @*<?php echo Model.irfc_bpo_name .  Model.irfc_bpo_rly .  Model.irfc_bpo_add . Model.irfc_bpo_city; ?>*@
@@ -161,11 +160,11 @@
 
                                     <!-- <td width="20%">&nbsp;</td>-->
                                     <td align="right">
-                                        <b>
+                                       
                                             <table>
                                                 <tbody>
                                                     <tr>
-                                                        <td style="font-size: 20px;padding-top: 30px;">
+                                                        <td style="font-size:8px; text-align:right;">
                                                             <span class="hindi">पशि्चमी</span> / Western Region<br><span class="hindi">रीजेंट चैंबर, 5 वीं मंजिल</span> / Regent Chamber, 5th floor,<br><span class="hindi">
                                                                 ऊपर स्थिति रेस्तरां
                                                             </span> / Above Status Restaurant, <br>
@@ -183,12 +182,10 @@
                                                             <br>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                    </tr>
+                                                
                                                 </tbody>
                                             </table>
-                                        </b>
+                                       
                                     </td>
                                 </tr>
                             </table>
@@ -200,7 +197,7 @@
                             <!--================sec3 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "F")
@@ -216,11 +213,11 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
+                                                <td style="width: 80%; text-align:right;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%; text-align:right;" valign="middle" align="right">@(Convert.ToDateTime(Model.BILL_DT).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -234,7 +231,7 @@
                             <!--================sec4 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="width: 35%;"><b><span class="hindi">सं&#2367;वदा / एटी / पी.ओ.सं.</span><br>CONTRACT/AT/P.O. NO.</b></td>
@@ -242,11 +239,11 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="50%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;" align="right">
+                                    <td width="50%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;" align="right">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="width: 80%;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
-                                                <td style="width: 20%;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
+                                                <td style="width: 80%; text-align:right;" align="right"><b><span class="hindi">&#2367;दनांक.</span><br>DATE:</b></td>
+                                                <td style="width: 20%; text-align:right;" valign="middle" align="right">@(Convert.ToDateTime(Model.po_dt).ToString("dd-MMM-yyyy"))</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -260,7 +257,7 @@
                             <!--================sec5 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td valign="top" width="51%" style="font-size:11px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:15px 0;" height="100">
+                                    <td valign="top" width="51%" style="font-size:8px;font-family:Arial, Helvetica, sans-serif;border-right:1px solid #000;padding:15px 0;" height="100">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
@@ -276,7 +273,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td valign="top" width="49%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0;">
+                                    <td valign="top" width="49%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
@@ -298,28 +295,28 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
+                        <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:0" valign="top">
                             <!--================sec6 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px; text-align:center;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px; text-align:center;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px; text-align:center;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px; text-align:center;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px; text-align:center;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
                                 </tr>
                                 <tr>
                                     <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:left;padding:15px 0;">@Model.IC_NO</td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.bk_no</td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.set_no</td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding:15px 0;">@Model.call_instalment_no</td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;text-align:center;padding:15px 0;">@Model.call_instalment_no</td>
                                 </tr>
                             </table>
                             <!--================sec6 over==============-->
                         </td>
                     </tr>
-                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
                         <!--================sec7 start==============-->
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
@@ -336,17 +333,17 @@
                                         <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@no</td>
                                         <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
                                         <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.qty} <br>{val.uom_s_desc}")</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@($"{val.rate}<br>{val.uom_factor}")</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right;" align="right">@($"{val.rate}<br>{val.uom_factor}")</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-top: 15px;text-align:right;" align="right">@val.basic_value</td>
                                     </tr>
                                     <tr>
                                         if (Convert.ToInt32(val.sales_tax) > 0)
                                         {
-                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000;  font-size: 8px;text-align:right;" align="right">@val.sales_tax</td>
                                         }
                                     </tr>
 
@@ -374,21 +371,21 @@
                                     if (disStatus)
                                     {
                                         <tr>
-                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perHtml</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountHTML</td>
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center">@perHtml</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size: 8px;text-align:right;" align="right">@discountHTML</td>
                                         </tr>
                                     }
                                     if (otherChStatus)
                                     {
                                         <tr>
-                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@perOtHtml</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 30px;" align="center">@discountOtHTML</td>
+                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center">@perOtHtml</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size: 8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000;  font-size: 8px;text-align:right;" align="right">@discountOtHTML</td>
                                         </tr>
                                     }
                                     no = no + 1;
@@ -404,7 +401,7 @@
                             }
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="100%" style="font-size:11px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;" valign="top">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td width="100%">
@@ -415,7 +412,7 @@
                                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0;" align="center"><b>Total Material Value Inspected</b></td>
                                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@Model.material_value</b></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right"><b>@Model.material_value</b></td>
                                                         </tr>
                                                         <tr style="border-bottom: 0">
                                                             <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
@@ -433,28 +430,28 @@
                                                                 }
                                                             </td>
                                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0; text-align:right;" align="right">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0; text-align:right;" align="right">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
                                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0; text-align:right;" align="right"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0; text-align:right;" align="right"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                             <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
                                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000" align="center"></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000;text-align:right;" align="right"></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right"></td>
                                                         </tr>
                                                         <tr>
                                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
-                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0; text-align:right;" align="right"><b>numtowords(@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee)</b></td>
+                                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0; text-align:right;" align="right"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                                         </tr>
                                                     </table>
                                                     <!--================sec7 over==============-->
@@ -465,24 +462,24 @@
                                                     <!--================sec8 start==============-->
                                                     <table width="100%" cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-top: 15px;padding-left: 15px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
+                                                            <td style="border-right:1px solid #000;padding-top: 15px;padding-left: 15px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
                                                             <td style="font-size:12px;border-right:1px solid #000;padding-left: 15px;" align="center" rowspan="2">
-                                                                <b>
+                                                                
                                                                     <table cellpadding="0" cellspacing="0">
                                                                         <tr>
                                                                             <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td height="100" valign="top"><b>FOR RITES LTD.</b></td>
+                                                                            <td height="100" valign="top" align="center"><b>FOR RITES LTD.</b></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td><b><i>Authorised Officer</i></b></td>
+                                                                            <td align="center"><b><i>Authorised Officer</i></b></td>
                                                                         </tr>
                                                                     </table>
-                                                                </b>
+                                                               
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -495,17 +492,17 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td>
-                                                                            <p>1) <span class="hindi">&#2367;डमांड ड्राफ्ट को "राइट्स &#2367;लमिटेड, मुंबई" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए।</span> / Demand Draft should be drawn in favor of "RITES LTD., Mumbai"</p>
+                                                                            1) <span class="hindi">&#2367;डमांड ड्राफ्ट को "राइट्स &#2367;लमिटेड, मुंबई" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए।</span> / Demand Draft should be drawn in favor of "RITES LTD., Mumbai"
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>
-                                                                            <p>2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.</p>
+                                                                            2) <span class="hindi">कृपया उपरोक्त पते पर सभी व्यवहार करें </span> / Please send all communications to the address given above.
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>
-                                                                            <p>3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference</p>
+                                                                            3) <span class="hindi">कृपया चेक नंबर और चेक की तारीख स&#2367;हत &#2367;व&#2367;धवत क्रम सं संलग्न भुगतान के साथ &#2367;बल की एक प्र&#2367;त लौटाई जाये </span> / Return one copy of bill with payment for ready reference
                                                                         </td>
                                                                     </tr>
 
@@ -527,11 +524,11 @@
                                                                     </td>-->
                                                                     <!--new genrated start-->
                                                                     <tr>
-                                                                        <td style="border-right:1px solid #000;padding-left:10px;">
-                                                                            <p><span>BANK </span>: AXIS BANK LTD. Fort, Mumbai</p>
-                                                                            <p><span>Account No</span> : 004010200023773</p>
-                                                                            <p><span>IFSC CODE</span> : UTIB0000004</p>
-                                                                            <p><span>MICR </span> : 400211002</p>
+                                                                        <td style="border-right:1px solid #000;padding-left:10px; padding-top:10px;">
+                                                                            <span>BANK </span>: AXIS BANK LTD. Fort, Mumbai<br>
+                                                                            <span>Account No</span> : 004010200023773<br>
+                                                                            <span>IFSC CODE</span> : UTIB0000004<br>
+                                                                            <span>MICR </span> : 400211002
                                                                         </td>
 
                                                                     </tr>

@@ -45,7 +45,7 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td width="100%">
-                <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
+                <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td width="100%" style="border-bottom:1px solid #000;">
                             <!--================sec1 start==============-->
@@ -307,7 +307,7 @@
                                     <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@(Convert.ToDateTime(Model.IC_DT).ToString("dd-MM-yyyy"))</td>
                                     <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.bk_no</td>
                                     <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.set_no</td>
-                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;border-right:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.call_instalment_no</td>
+                                    <td width="15%" valign="top" height="50" style="border-bottom:1px solid #000;text-align:center;padding-top: 25px;padding-bottom: 25px;font-size:8px;">@Model.call_instalment_no</td>
                                 </tr>
                             </table>
                             <!--================sec6 over==============-->
@@ -332,7 +332,7 @@
                                             <td width="50%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" align="center">@val.item_desc</td>
                                             <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.qty<br>@val.uom_s_desc</td>
                                             <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.rate<br>@val.uom_factor</td>
-                                            <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px;" align="center">@val.basic_value</td>
+                                            <td width="15%" valign="top" style="font-size:8px; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-top: 15px; text-align:right;" align="right">@val.basic_value</td>
                                         </tr>
                                         <tr>
                                             @if (Convert.ToInt32(val.sales_tax) > 0)
@@ -341,7 +341,7 @@
                                                 <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size:8px;text-align:right;" align="right">@val.sales_tax</td>
                                             }
                                         </tr>
 
@@ -373,7 +373,7 @@
                                                 <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perHtml</td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountHTML</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;text-align:right;" align="right">@discountHTML</td>
                                             </tr>
                                         }
                                         if (otherChStatus)
@@ -383,7 +383,7 @@
                                                 <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@perOtHtml</td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
                                                 <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@discountOtHTML</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;text-align:right;" align="right">@discountOtHTML</td>
                                             </tr>
                                         }
                                         no = no + 1;
@@ -398,11 +398,11 @@
                                         <td width="100%">
                                             <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                                 <tr>
-                                                    <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;text-align:right;" align="right"><b>@total</b></td>
                                                 </tr>
 
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "T")
@@ -418,7 +418,7 @@
                                                         <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">
                                                             @(Math.Round(Model.insp_fee))<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@Math.Round(Model.igst)
                                                         </td>
-                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
+                                                        <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0;text-align:right;" align="right">
                                                         </td>
                                                     </tr>
                                                 }
@@ -438,7 +438,7 @@
                                                             }
                                                         </td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
-                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0;font-size:8px;" align="center">
+                                                        <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0;font-size:8px; text-align:right;" align="right">
                                                             @(Math.Round(Model.insp_fee))<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@Math.Round(Model.igst)
                                                         </td>
                                                         <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
@@ -448,39 +448,39 @@
                                                     <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                     @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "T")
                                                     {
-                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Credit Note Value</b></td>
+                                                        <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Credit Note Value</b></td>
                                                     }
                                                     else
                                                     {
-                                                        <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
+                                                        <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
                                                     }
                                                     <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center">
+                                                    <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right">
                                                         <b>
                                                             @(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)
                                                         </b>
                                                     </td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center">
+                                                    <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right">
                                                         <b>
                                                             @(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)
                                                         </b>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                                    <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center">
+                                                    <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                                    <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center">
                                                         <b>
                                                             @(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))
                                                         </b>
                                                     </td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center">
+                                                    <td width="15%" valign="top" style="border:1px solid #000;text-align:right;" align="right">
                                                         <b>
                                                             @(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)
                                                         </b>
@@ -498,7 +498,7 @@
                                             <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                                 <tr>
                                                     <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                                    <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                                    <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                         <b>
                                                             <table cellpadding="0" cellspacing="0">
                                                                 <tr>
@@ -518,7 +518,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                                    <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                         <table width="100%" cellpadding="0" cellspacing="0">
                                                             <tr>
                                                                 <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -680,7 +680,7 @@
             }
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0 ;border-bottom:1px solid #000;" valign="top">
+                    <td width="100%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; ;border-bottom:1px solid #000;" valign="top">
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="100%">
@@ -688,14 +688,14 @@
                                     <table width="100%" style="border:1px solid #000;" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Material Value Inspected</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000" align="center"><b>@total</b></td>
                                         </tr>
                                         <tr style="border-bottom: 0">
                                             <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0" align="right">
+                                            <td width="50%" valign="top" style="border:1px solid #000;border-bottom: 0" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -707,28 +707,28 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;" align="center">@*abs*@ @Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Math.Round(Model.cgst)<br>@*abs*@ @Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0" align="center">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:15px 0" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="15%" valign="top" style="border:1px solid #000" align="center"></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:15px 0" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@Model.sgst+@Model.cgst+@Model.igst+@Model.insp_fee</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -923,16 +923,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -953,25 +953,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -985,7 +985,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -1005,7 +1005,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -1173,16 +1173,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -1203,25 +1203,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -1235,7 +1235,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -1255,7 +1255,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -1423,16 +1423,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -1453,25 +1453,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -1485,7 +1485,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -1505,7 +1505,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -1673,16 +1673,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -1703,25 +1703,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000; text-align:right;" align="right"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -1735,7 +1735,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -1755,7 +1755,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -1923,16 +1923,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px; text-align:right;border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0px 0;font-size:8px;" align="right"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -1944,7 +1944,7 @@
                                                 }
                                             </td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0;padding:0 15px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;padding:0 15px;font-size:8px;" align="center">@Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>@*abs*@ @Math.Round(Model.igst)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; border-bottom: 0;border-bottom: 0;font-size:8px; text-align:right;" align="right">@Math.Round(Model.insp_fee)<br>@Math.Round(Model.sgst)<br>@Model.cgst<br>@*abs*@ @Math.Round(Model.igst)</td>
                                             <td width="15%" valign="top" style="border:1px solid #000;border-bottom: 0;padding:0 15px;font-size:8px;" align="center">
                                                 <br>
 
@@ -1953,25 +1953,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000; text-align:right;" align="right"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -1985,7 +1985,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -2005,7 +2005,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -2173,16 +2173,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -2203,25 +2203,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -2235,7 +2235,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -2255,7 +2255,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -2423,16 +2423,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -2453,25 +2453,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -2485,7 +2485,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -2505,7 +2505,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -2673,16 +2673,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -2703,25 +2703,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -2735,7 +2735,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -2755,7 +2755,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -2923,16 +2923,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -2953,25 +2953,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -2985,7 +2985,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -3005,7 +3005,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
@@ -3173,16 +3173,16 @@
                                 <td width="100%">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #000;font-size:8px;">
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 25px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 25px;font-size:8px;" align="center"><b>@total</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>Total Material Value Inspected</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;font-size:8px;" align="center"><b>@total</b></td>
                                         </tr>
 
                                         <tr style="border-bottom: 0">
-                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;padding: 25px;font-size:8px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;padding: 15px;font-size:8px;" align="right">
+                                            <td width="5%" valign="top" style="border:1px solid #000;border-bottom: 0;font-size:8px;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;padding:0 10px;border-bottom: 0;font-size:8px;" align="right">
                                                 @foreach (var val in Model.items)
                                                 {
                                                     if (Convert.ToInt32(Model.fee_rate) > 0 && count == 1)
@@ -3203,25 +3203,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>Total Inspection Fee</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="center"><b>Total Inspection Fee</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="50%" valign="top" style="border:1px solid #000;padding: 15px;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="50%" valign="top" style="border:1px solid #000;" align="left">SAC Code 998346 <br> (Technical Testing & Analysis Services)</td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="5%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"></td>
-                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding: 15px;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
+                                            <td colspan="3" width="80%" valign="top" style="border:1px solid #000;" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
 
                                     </table>
@@ -3235,7 +3235,7 @@
                                     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:8px;">
                                         <tr>
                                             <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
-                                            <td style="font-size:8px;border-right:1px solid #000;padding: 15px;" align="center" rowspan="2">
+                                            <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
@@ -3255,7 +3255,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;padding: 15px;" valign="top">
+                                            <td style="font-size:8px; border-right:1px solid #000; padding-left:10px;" valign="top">
                                                 <table width="100%" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td style="font-size:8px;">1) <span class="hindi">ई एफ टी / क्रॉस्ड चेक / डीडी को "राइट्स &#2367;ल&#2367;मटेड" के पक्ष में तैयार &#2367;कया जाना चा&#2367;हए। दक&#2367;्षणी क्षेत्र, चेन्नई</span> / E F T /Crossed cheque/DD should be drawn In favour of "Rites Ltd." Southern Region, Chennai</td>
