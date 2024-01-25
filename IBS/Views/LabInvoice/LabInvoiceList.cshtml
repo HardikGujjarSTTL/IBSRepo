@@ -2,12 +2,12 @@
 
 <style>
     .dash-table {
-        max-height: 400px; /* Set the maximum height for the scrollable area */
-        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: 400px;
+        overflow-y: auto; 
     }
 
     #dtGB {
-        width: 100%; /* Set the width of the table to 100% */
+        width: 100%;
     }
 </style>
 
@@ -19,7 +19,7 @@
                     <tr>
                         <th>Sr.No.</th>
                         <th>File Name</th>
-                        <th>Action</th>
+                        <th class="action">Action</th>
                     </tr>
                     @{
                         var Srno = 0;
@@ -31,7 +31,11 @@
                                 <tr>
                                     <td>@Srno</td>
                                     <td>@item.InvoiceBillNo</td>
-                                    <td></td>
+                                    @if (!string.IsNullOrEmpty(item.InvoiceBillNo))
+                                    {
+                                        var pdfFilePath = Model.pdfFolder + item.InvoiceBillNo + ".pdf";
+                                        <td><a href="@pdfFilePath" class="btn" target="_blank"><span class="fa fa-file-pdf-o"></span></a></td>
+                                    }
                                 </tr>
                             }
                         }

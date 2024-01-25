@@ -3,6 +3,7 @@ using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using iText.Commons.Actions.Contexts;
 using MessagePack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -45,22 +46,58 @@ namespace IBS.Repositories
                          ack_no = T55.AckNo,
                          ack_dt = T55.AckDt,
                          recipient_gstin_no = T55.RecipientGstinNo,
-                     });
+                     }).Take(5);
 
             List<labInvoicelst> lstLabInvoice = query.AsEnumerable().Select(row => new labInvoicelst
             {
-                InvoiceNo = row.invoice_no,
+                InvoiceNo = row.InvoiceNo,
                 BillNO = row.BillNO,
+                CaseNo = row.CaseNo,
+                irn_no = row.irn_no,
+                ack_no = row.ack_no,
+                ack_dt = row.ack_dt,
+                recipient_gstin_no = row.recipient_gstin_no,
                 InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1],
-                //Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
-                //  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
-                //  Region == "E" ? "EASTERN REGION(INSPECTION)" :
-                //  Region == "W" ? "WESTERN REGION(INSPECTION)",
+                Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
+                  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
+                  Region == "E" ? "EASTERN REGION(INSPECTION)" :
+                  Region == "W" ? "WESTERN REGION(INSPECTION)" : Region
             }).ToList();
 
             model.lstlabInvoicelst = lstLabInvoice;
 
             return model;
+        }
+
+        public labInvoicelst UpdatePDFDetails(labInvoicelst model, string PDFNamee, string RelativePath)
+        {
+            var invoiceToUpdate = context.T55LabInvoices.FirstOrDefault(i => i.InvoiceNo == model.InvoiceNo);
+
+            if (invoiceToUpdate != null)
+            {
+                invoiceToUpdate.DigBillGenDt = DateTime.Now.Date;
+                invoiceToUpdate.Relativepath = RelativePath;
+                invoiceToUpdate.Fileid = PDFNamee;
+                context.SaveChanges(); 
+            }
+
+            return model;
+        }
+
+        public List<ItemsDetail> GetBillItems(string InvoiceNo)
+        {
+            List<ItemsDetail> list = new List<ItemsDetail>();
+            list = (from vbi in context.T86LabInvoiceDetails
+                    where vbi.InvoiceNo == InvoiceNo
+                    select new ItemsDetail
+                    {
+                        INVOICE_NO = vbi.InvoiceNo,
+                        Item_SrNo = vbi.ItemSrno,
+                        item_desc = vbi.ItemDesc,
+                        qty = vbi.Qty,
+                        TESTING_CHARGES = vbi.TestingCharges,
+                    }).ToList();
+            return list;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -20,23 +21,31 @@ namespace IBS.Controllers
             this.env = env;
             config = _config;
         }
+
+        [Authorization("LabInvoice", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> LabInvoiceList(string FromDate,string ToDate,string Region)
+        public async Task<IActionResult> LabInvoiceList(string FromDate, string ToDate, string Region)
         {
             labInvoicelst model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
+            model.RegionChar = Region;
             GlobalDeclaration.LabInvoiceReport = model;
             string FolderName = "Lab_Invoice_SIGN";
             string htmlContent = "";
-            if (model != null)
+            if (model.lstlabInvoicelst.Count > 0)
             {
                 foreach (var item in model.lstlabInvoicelst)
                 {
+                    item.items = labInvoiceRepository.GetBillItems(item.InvoiceNo);
+                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                    var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
+                    model.pdfFolder = RelativePath;
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -47,7 +56,7 @@ namespace IBS.Controllers
                         //check if the PDF file exists
                         string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
                         bool fileExists = System.IO.File.Exists(pdfFilePath);
-
+                        var PDFNamee = item.InvoiceBillNo + ".pdf";
                         if (!fileExists)
                         {
                             htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
@@ -76,58 +85,13 @@ namespace IBS.Controllers
                                 string base64String = Convert.ToBase64String(pdfBytes);
                                 await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                             }
-
                         }
+                        model = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
                     }
                 }
             }
 
             return PartialView(model);
         }
-
-        //#region GeneratePDF
-        //public async Task<IActionResult> GeneratePDF(string InvoiceBillNo)
-        //{
-        //    string pdfFileName = "";
-        //    string htmlContent = string.Empty;
-        //    List<labInvoicelst> selectedBill = GlobalDeclaration.LabInvoiceReport;
-
-        //    labInvoicelst model = selectedBill.FirstOrDefault(bill => bill.InvoiceBillNo == InvoiceBillNo);
-
-        //    string path = env.WebRootPath + "/images/";
-        //    var imagePath = Path.Combine(path, "rites-logo.png");
-        //    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-        //    model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-
-        //    htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", selectedBill);
-        //    pdfFileName = "Lab_Invoice.pdf";
-
-        //    await new BrowserFetcher().DownloadAsync();
-        //    await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-        //    {
-        //        Headless = true,
-        //        DefaultViewport = null
-        //    });
-        //    await using var page = await browser.NewPageAsync();
-        //    await page.EmulateMediaTypeAsync(MediaType.Screen);
-        //    await page.SetContentAsync(htmlContent);
-
-        //    string cssPath = env.WebRootPath + "/css/report.css";
-        //    AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
-        //    await page.AddStyleTagAsync(bootstrapCSS);
-
-        //    var pdfContent = await page.PdfStreamAsync(new PdfOptions
-        //    {
-        //        Landscape = false,
-        //        Format = PaperFormat.A4,
-        //        PrintBackground = false
-        //    });
-
-        //    await browser.CloseAsync();
-
-        //    return File(pdfContent, "application/pdf", pdfFileName);
-        //}
-        //#endregion
     }
 }
