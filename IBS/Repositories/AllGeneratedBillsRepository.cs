@@ -163,7 +163,7 @@ namespace IBS.Repositories
             return Bills;
         }
 
-        public string UpdateBillCount(string Bill_No,int count)
+        public string UpdateBillCount(string Bill_No, int count)
         {
             var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
 
@@ -177,7 +177,7 @@ namespace IBS.Repositories
             return msg;
         }
 
-        public string UpdateGEN_Bill_Date(string Bill_No) 
+        public string UpdateGEN_Bill_Date(string Bill_No)
         {
             var billsToUpdate = context.T22Bills.Where(b => b.BillNo == Bill_No).ToList();
 
@@ -188,6 +188,28 @@ namespace IBS.Repositories
             string msg = "Update Successfull !!";
 
             return msg;
+        }
+
+        public int SaveUploadFile(string imagePath, string Bill_No)
+        {
+            var res = 0;
+            var data = (from item in context.T22Bills
+                        where item.BillNo == Bill_No
+                        select item).FirstOrDefault();
+            try
+            {
+                if (data != null)
+                {
+                    data.Relativepath = imagePath;
+                    context.SaveChanges();
+                    res = 1;
+                }
+            }
+            catch (Exception)
+            {
+                res = 0;
+            }
+            return res;
         }
     }
 }

@@ -15615,6 +15615,11 @@ public partial class ModelContext : DbContext
                 .HasPrecision(6)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("REFERENCE_AID");
+            entity.Property(e => e.Relativepath)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasDefaultValueSql("NULL ")
+                .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(300)
                 .IsUnicode(false)
@@ -25890,6 +25895,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false)
                 .HasColumnName("REMARKS");
+            entity.Property(e => e.RlyNonrly)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("RLY_NONRLY");
             entity.Property(e => e.SetNo)
                 .HasMaxLength(3)
                 .IsUnicode(false)

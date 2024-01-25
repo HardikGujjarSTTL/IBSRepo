@@ -18,5 +18,7 @@ namespace IBS.Interfaces
         public string UpdateBillCount(string Bill_No,int count);
 
         public string UpdateGEN_Bill_Date(string Bill_No);
+
+        int SaveUploadFile(string imagePath, string Bill_No);
     }
 }

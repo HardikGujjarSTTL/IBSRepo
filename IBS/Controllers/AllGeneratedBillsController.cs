@@ -768,6 +768,10 @@ namespace IBS.Controllers
 
             path = path + Bill_No + ".pdf";
             System.IO.File.WriteAllBytes(path, pdfBytes);
+
+            var imagePath = "/ReadWriteData/Signed_Invoices/" + Bill_No + ".pdf";
+            var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, Bill_No);
+
             return Json(new { status = 1 });
         }
     }
