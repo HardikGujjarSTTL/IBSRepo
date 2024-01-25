@@ -59,5 +59,9 @@ public partial class T55LabInvoice
 
     public DateTimeOffset? DigBillGenDt { get; set; }
 
+    public string? Relativepath { get; set; }
+
+    public string? Fileid { get; set; }
+
     public virtual T50LabRegister? SampleRegNoNavigation { get; set; }
 }

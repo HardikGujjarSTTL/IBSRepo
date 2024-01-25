@@ -1,0 +1,55 @@
+﻿@model labInvoicelst
+
+<style>
+    .dash-table {
+        max-height: 400px;
+        overflow-y: auto; 
+    }
+
+    #dtGB {
+        width: 100%;
+    }
+</style>
+
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtGB" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>Sr.No.</th>
+                        <th>File Name</th>
+                        <th class="action">Action</th>
+                    </tr>
+                    @{
+                        var Srno = 0;
+                        if (Model.lstlabInvoicelst.Count() > 0)
+                        {
+                            foreach (var item in Model.lstlabInvoicelst)
+                            {
+                                Srno = Srno + 1;
+                                <tr>
+                                    <td>@Srno</td>
+                                    <td>@item.InvoiceBillNo</td>
+                                    @if (!string.IsNullOrEmpty(item.InvoiceBillNo))
+                                    {
+                                        var pdfFilePath = Model.pdfFolder + item.InvoiceBillNo + ".pdf";
+                                        <td><a href="@pdfFilePath" class="btn" target="_blank"><span class="fa fa-file-pdf-o"></span></a></td>
+                                    }
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">No Data Found</td>
+                            </tr>
+                        }
+                    }
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

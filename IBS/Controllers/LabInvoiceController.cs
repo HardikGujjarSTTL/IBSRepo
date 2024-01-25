@@ -1,4 +1,5 @@
-﻿using IBS.Helper;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Repositories;
@@ -20,23 +21,44 @@ namespace IBS.Controllers
             this.env = env;
             config = _config;
         }
+
+        [Authorization("LabInvoice", "Index", "view")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoadTable([FromBody] DTParameters dtParameters)
+        public async Task<IActionResult> LabInvoiceList(string FromDate, string ToDate, string Region)
         {
-            DTResult<labInvoicelst> model = labInvoiceRepository.GetLabInvoice(dtParameters);
-            GlobalDeclaration.LabInvoiceReport = model.data.ToList();
-            string FolderName = "Lab_Invoice";
+            labInvoicelst model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
+            model.RegionChar = Region;
+            GlobalDeclaration.LabInvoiceReport = model;
+            string FolderName = "Lab_Invoice_SIGN";
             string htmlContent = "";
-            if (model != null)
+            if (model.lstlabInvoicelst.Count > 0)
             {
-                foreach (var item in model.data.ToList())
+                foreach (var item in model.lstlabInvoicelst)
                 {
+                    item.items = labInvoiceRepository.GetBillItems(item.InvoiceNo);
+                    decimal? totalTestingCharges = item.items.Sum(billItem => billItem.TESTING_CHARGES);
+                    decimal? SubTotal = item.items.Sum(billItem => billItem.IGST + totalTestingCharges);
+                    item.TotalTESTING_CHARGES = totalTestingCharges;
+                    item.GrandTotal = SubTotal;
+
+                    string imgPath = env.WebRootPath + "/images/";
+                    var imagePath = Path.Combine(imgPath, "rites-logo.png");
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+                    if (!string.IsNullOrEmpty(item.qr_code))
+                    {
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                    }
+
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                    var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
+                    model.pdfFolder = RelativePath;
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -47,7 +69,7 @@ namespace IBS.Controllers
                         //check if the PDF file exists
                         string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
                         bool fileExists = System.IO.File.Exists(pdfFilePath);
-
+                        var PDFNamee = item.InvoiceBillNo + ".pdf";
                         if (!fileExists)
                         {
                             htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
@@ -65,7 +87,7 @@ namespace IBS.Controllers
                             var pdfContent = await page.PdfStreamAsync(new PdfOptions
                             {
                                 Landscape = true,
-                                Format = PaperFormat.A4,
+                                Format = PaperFormat.Letter,
                                 PrintBackground = true
                             });
 
@@ -76,58 +98,13 @@ namespace IBS.Controllers
                                 string base64String = Convert.ToBase64String(pdfBytes);
                                 await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                             }
-
                         }
+                        string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
                     }
                 }
             }
 
-            return Json(model);
+            return PartialView(model);
         }
-
-        #region GeneratePDF
-        public async Task<IActionResult> GeneratePDF(string InvoiceBillNo)
-        {
-            string pdfFileName = "";
-            string htmlContent = string.Empty;
-            List<labInvoicelst> selectedBill = GlobalDeclaration.LabInvoiceReport;
-
-            labInvoicelst model = selectedBill.FirstOrDefault(bill => bill.InvoiceBillNo == InvoiceBillNo);
-
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-
-            htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", selectedBill);
-            pdfFileName = "Lab_Invoice.pdf";
-
-            await new BrowserFetcher().DownloadAsync();
-            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true,
-                DefaultViewport = null
-            });
-            await using var page = await browser.NewPageAsync();
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-            await page.SetContentAsync(htmlContent);
-
-            string cssPath = env.WebRootPath + "/css/report.css";
-            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
-            await page.AddStyleTagAsync(bootstrapCSS);
-
-            var pdfContent = await page.PdfStreamAsync(new PdfOptions
-            {
-                Landscape = false,
-                Format = PaperFormat.A4,
-                PrintBackground = false
-            });
-
-            await browser.CloseAsync();
-
-            return File(pdfContent, "application/pdf", pdfFileName);
-        }
-        #endregion
     }
 }
