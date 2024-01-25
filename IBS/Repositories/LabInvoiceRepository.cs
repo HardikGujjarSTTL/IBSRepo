@@ -25,28 +25,29 @@ namespace IBS.Repositories
         public labInvoicelst GetLabInvoice(string FromDate, string ToDate, string Region)
         {
             labInvoicelst model = new();
-           
+
             var query = (from T55 in context.T55LabInvoices
-                     join T22 in context.T22Bills on T55.CaseNo equals T22.CaseNo
-                     where T55.InvoiceDt >= DateTime.Parse(FromDate) && T55.InvoiceDt <= DateTime.Parse(ToDate)
-                           && T55.RegionCode == Region
-                           && T55.QrCode != null
-                           && T55.IrnNo != null
-                           && T55.AckNo != null
-                           && T55.AckDt != null
-                           && T55.DigBillGenDt == null
-                           && T55.BillFinalised != null
-                     select new labInvoicelst
-                     {
-                         InvoiceNo = T55.InvoiceNo,
-                         BillNO = T22.BillNo,
-                         InvoiceDt = T55.InvoiceDt,
-                         CaseNo = T55.CaseNo,
-                         irn_no = T55.IrnNo,
-                         ack_no = T55.AckNo,
-                         ack_dt = T55.AckDt,
-                         recipient_gstin_no = T55.RecipientGstinNo,
-                     }).Take(5);
+                         join T22 in context.T22Bills on T55.CaseNo equals T22.CaseNo
+                         where T55.InvoiceDt >= DateTime.Parse(FromDate) && T55.InvoiceDt <= DateTime.Parse(ToDate)
+                               && T55.RegionCode == Region
+                               && T55.QrCode != null
+                               && T55.IrnNo != null
+                               && T55.AckNo != null
+                               && T55.AckDt != null
+                               && T55.DigBillGenDt == null
+                               && T55.BillFinalised != null
+                         select new labInvoicelst
+                         {
+                             InvoiceNo = T55.InvoiceNo,
+                             BillNO = T22.BillNo,
+                             InvoiceDt = T55.InvoiceDt,
+                             CaseNo = T55.CaseNo,
+                             irn_no = T55.IrnNo,
+                             ack_no = T55.AckNo,
+                             ack_dt = T55.AckDt,
+                             qr_code = T55.QrCode,
+                             recipient_gstin_no = T55.RecipientGstinNo,
+                         }).Take(5);
 
             List<labInvoicelst> lstLabInvoice = query.AsEnumerable().Select(row => new labInvoicelst
             {
@@ -56,12 +57,14 @@ namespace IBS.Repositories
                 irn_no = row.irn_no,
                 ack_no = row.ack_no,
                 ack_dt = row.ack_dt,
+                qr_code = row.qr_code,
                 recipient_gstin_no = row.recipient_gstin_no,
                 InvoiceBillNo = row.InvoiceNo.Split('/')[0] + row.BillNO.Split('-')[1],
                 Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
                   Region == "S" ? "SOUTERN REGION(INSPECTION)" :
                   Region == "E" ? "EASTERN REGION(INSPECTION)" :
-                  Region == "W" ? "WESTERN REGION(INSPECTION)" : Region
+                  Region == "W" ? "WESTERN REGION(INSPECTION)" : Region,
+                RegionChar = Region
             }).ToList();
 
             model.lstlabInvoicelst = lstLabInvoice;
