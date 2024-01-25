@@ -169,5 +169,5 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .messageBody{ flex-direction:column;}
 .chatLeftBoxBody, .userChatBox{ width:100%;}
 .chatBox{ height:auto;}
-.chatBoxBody, .userChatBox .chatBoxBody{height:auto; max-height:350px; overflow:auto;}
+.chatBoxBody, .userChatBox .chatBoxBody{height:auto; height:350px; overflow:auto;}
 }
