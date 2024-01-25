@@ -69,8 +69,9 @@ namespace IBS.Repositories
             return model;
         }
 
-        public labInvoicelst UpdatePDFDetails(labInvoicelst model, string PDFNamee, string RelativePath)
+        public string UpdatePDFDetails(labInvoicelst model, string PDFNamee, string RelativePath)
         {
+            string msg = "";
             var invoiceToUpdate = context.T55LabInvoices.FirstOrDefault(i => i.InvoiceNo == model.InvoiceNo);
 
             if (invoiceToUpdate != null)
@@ -78,10 +79,11 @@ namespace IBS.Repositories
                 invoiceToUpdate.DigBillGenDt = DateTime.Now.Date;
                 invoiceToUpdate.Relativepath = RelativePath;
                 invoiceToUpdate.Fileid = PDFNamee;
-                context.SaveChanges(); 
+                context.SaveChanges();
+                msg = "Updated !!";
             }
 
-            return model;
+            return msg;
         }
 
         public List<LabItemsDetail> GetBillItems(string InvoiceNo)

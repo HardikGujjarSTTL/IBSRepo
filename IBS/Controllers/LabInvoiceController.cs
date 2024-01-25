@@ -42,7 +42,19 @@ namespace IBS.Controllers
                 {
                     item.items = labInvoiceRepository.GetBillItems(item.InvoiceNo);
                     decimal? totalTestingCharges = item.items.Sum(billItem => billItem.TESTING_CHARGES);
+                    decimal? SubTotal = item.items.Sum(billItem => billItem.IGST + totalTestingCharges);
                     item.TotalTESTING_CHARGES = totalTestingCharges;
+                    item.GrandTotal = SubTotal;
+
+                    string imgPath = env.WebRootPath + "/images/";
+                    var imagePath = Path.Combine(imgPath, "rites-logo.png");
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+                    if (!string.IsNullOrEmpty(item.qr_code))
+                    {
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                    }
 
                     var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                     var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
@@ -87,7 +99,7 @@ namespace IBS.Controllers
                                 await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                             }
                         }
-                        model = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
+                        string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
                     }
                 }
             }
