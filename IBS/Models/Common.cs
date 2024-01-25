@@ -33,6 +33,8 @@ namespace IBS.Models
         public const string RegularExpressionForDT = @"(?:(?:(?:0[1-9]|1\d|2[0-8])\/(?:0[1-9]|1[0-2])|(?:29|30)\/(?:0[13-9]|1[0-2])|31\/(?:0[13578]|1[02]))\/[1-9]\d{3}|29\/02(?:\/[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00))";
         public const string CommonDateTimeFormat = "dd/MM/yyyy-HH:mm:ss";
         public static int RegenerateOtpButtonShowMinute = 10;
+        private static String[] units = { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen","Seventeen", "Eighteen", "Nineteen" };
+        private static String[] tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
 
         public static Dictionary<string, string> ConnectedUsers = new Dictionary<string, string>();
 
@@ -4959,31 +4961,54 @@ namespace IBS.Models
 
         public static string ConvertAmountToWords(decimal amount)
         {
-            if (amount == 0)
+            try
             {
-                return "Zero";
-            }
-
-            string[] units = { "", "Thousand", "Million", "Billion", "Trillion" };
-            int i = 0;
-            string words = "";
-
-            while (amount > 0)
-            {
-                if (amount % 1000 != 0)
+                Int64 amount_int = (Int64)amount;
+                Int64 amount_dec = (Int64)Math.Round((amount - (decimal)(amount_int)) * 100);
+                if (amount_dec == 0)
                 {
-                    words = $"{ConvertThreeDigitAmountToWords((int)(amount % 1000))} {units[i]} {words}";
+                    return "Rupees " + ConvertWord(amount_int) + " Only.";
                 }
-
-                amount /= 1000;
-                if (amount.ToString().Substring(0, 3) == "0.0")
-                    break;
-                i++;
+                else
+                {
+                    return "Rupees " + ConvertWord(amount_int) + " Point " + ConvertWord(amount_dec) + " Only.";
+                }
             }
-
-            return words.Trim();
+            catch (Exception e)
+            {
+                // TODO: handle exception  
+            }
+            return "";
         }
 
+        public static String ConvertWord(Int64 i)
+        {
+            if (i < 20)
+            {
+                return units[i];
+            }
+            if (i < 100)
+            {
+                return tens[i / 10] + ((i % 10 > 0) ? " " + ConvertWord(i % 10) : "");
+            }
+            if (i < 1000)
+            {
+                return units[i / 100] + " Hundred" + ((i % 100 > 0) ? " " + ConvertWord(i % 100) : "");
+            }
+            if (i < 100000)
+            {
+                return ConvertWord(i / 1000) + " Thousand " + ((i % 1000 > 0) ? " " + ConvertWord(i % 1000) : "");
+            }
+            if (i < 10000000)
+            {
+                return ConvertWord(i / 100000) + " Lakh " + ((i % 100000 > 0) ? " " + ConvertWord(i % 100000) : "");
+            }
+            if (i < 1000000000)
+            {
+                return ConvertWord(i / 10000000) + " Crore " + ((i % 10000000 > 0) ? " " + ConvertWord(i % 10000000) : "");
+            }
+            return ConvertWord(i / 1000000000) + " Arab " + ((i % 1000000000 > 0) ? " " + ConvertWord(i % 1000000000) : "");
+        }
         public static string ConvertThreeDigitAmountToWords(int num)
         {
             string[] ones = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };

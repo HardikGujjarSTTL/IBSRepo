@@ -292,26 +292,31 @@ namespace IBS.Controllers
                     item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
                     decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                     item.BILL_AMOUNT = totalBillAmount;
+
+                    if (!string.IsNullOrEmpty(item.qr_code))
+                    {
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                    }
+
+                    string path = env.WebRootPath + "/images/";
+                    var imagePath = Path.Combine(path, "rites-logo.png");
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-            if (!string.IsNullOrEmpty(model.qr_code))
-            {
-                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
-            }
+            
             return View(model.lstBillDetailsForPDF[0]);
         }
 
         public IActionResult SouthBill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "N";
-            obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "S";
+            obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
@@ -322,18 +327,19 @@ namespace IBS.Controllers
                     item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
                     decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                     item.BILL_AMOUNT = totalBillAmount;
+
+                    if (!string.IsNullOrEmpty(item.qr_code))
+                    {
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                    }
+
+                    string path = env.WebRootPath + "/images/";
+                    var imagePath = Path.Combine(path, "rites-logo.png");
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
 
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-            if (!string.IsNullOrEmpty(model.qr_code))
-            {
-                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
-            }
             return View(model.lstBillDetailsForPDF[0]);
         }
 
@@ -432,7 +438,7 @@ namespace IBS.Controllers
 
         public IActionResult COQABill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "N";
+            obj.REGION_CODE = "Q";
             obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
@@ -446,18 +452,19 @@ namespace IBS.Controllers
                     item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
                     decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
                     item.BILL_AMOUNT = totalBillAmount;
+
+                    if (!string.IsNullOrEmpty(item.qr_code))
+                    {
+                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
+                    }
+
+                    string path = env.WebRootPath + "/images/";
+                    var imagePath = Path.Combine(path, "rites-logo.png");
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
-
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            model.lstBillDetailsForPDF[0].base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-            if (!string.IsNullOrEmpty(model.qr_code))
-            {
-                model.lstBillDetailsForPDF[0].qr_code = Common.QRCodeGenerate(model.qr_code);
-            }
+            
             return View(model.lstBillDetailsForPDF[0]);
         }
 
