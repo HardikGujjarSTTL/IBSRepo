@@ -98,13 +98,11 @@
                 <tr>
                     <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; width:33%;">
                         <strong>
-                            M/s BANKE BEHARI CHEMICALS PRIVATE<br>
-                            LIMITED,
+                            M/s @Model.BPO_NAME
                         </strong><br>
                         <br>
-                        SAROJANI NAGAR, D-12, INDUSTRIAL<br>
-                        AREA, KANPUR ROAD,<br>
-                        LUCKNOW<br>
+                        @Model.bpo_add<br>
+                        @Model.bpo_city<br>
                         <br>
                         <strong>Recipient GSTIN No:</strong><br>
                         @Model.recipient_gstin_no
@@ -146,10 +144,12 @@
                 </tr>
 
                 @{
+                    var SrNo = 0;
                     foreach (var val in Model.items.Skip(0).Take(7))
                     {
+                        SrNo = SrNo + 1;
                         <tr>
-                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">1</td>
+                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
                             <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
                             <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
                             <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
@@ -177,8 +177,7 @@
                             <td colspan="5">
                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
-                                        <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(44))</b></td>
-                                        <td width="74%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">( Rs. Eight Thousand Nine Hundred Sixty-Eight Only /- )</td>
+                                        <td colspan="3" width="80%" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;" align="center"><b>@(Common.ConvertAmountToWords(Model.GrandTotal.Value))</b></td>
                                         <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">GRAND TOTAL</td>
                                         <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@Model.GrandTotal</td>
                                     </tr>
