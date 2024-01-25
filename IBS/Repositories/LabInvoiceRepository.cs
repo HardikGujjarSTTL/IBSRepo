@@ -84,17 +84,17 @@ namespace IBS.Repositories
             return model;
         }
 
-        public List<ItemsDetail> GetBillItems(string InvoiceNo)
+        public List<LabItemsDetail> GetBillItems(string InvoiceNo)
         {
-            List<ItemsDetail> list = new List<ItemsDetail>();
+            List<LabItemsDetail> list = new List<LabItemsDetail>();
             list = (from vbi in context.T86LabInvoiceDetails
                     where vbi.InvoiceNo == InvoiceNo
-                    select new ItemsDetail
+                    select new LabItemsDetail
                     {
                         INVOICE_NO = vbi.InvoiceNo,
-                        Item_SrNo = vbi.ItemSrno,
-                        item_desc = vbi.ItemDesc,
-                        qty = vbi.Qty,
+                        ITEM_DESC = vbi.ItemDesc,
+                        IGST = vbi.Igst,
+                        QTY = vbi.Qty,
                         TESTING_CHARGES = vbi.TestingCharges,
                     }).ToList();
             return list;

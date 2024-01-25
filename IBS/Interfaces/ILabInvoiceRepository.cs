@@ -8,6 +8,6 @@ namespace IBS.Interfaces
 
         public labInvoicelst UpdatePDFDetails(labInvoicelst model,string PDFNamee, string RelativePath);
 
-        List<ItemsDetail> GetBillItems(string InvoiceNo);
+        List<LabItemsDetail> GetBillItems(string InvoiceNo);
     }
 }

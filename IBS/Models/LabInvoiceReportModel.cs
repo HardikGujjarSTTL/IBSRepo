@@ -79,15 +79,15 @@
         public DateTime DIG_GEN_BILL_DT { get; set; }
         public DateTime? InvoiceDt { get; set; }
         public List<labInvoicelst> lstlabInvoicelst { get; set; }
-        public List<ItemsDetail> items { get; set; }
+        public List<LabItemsDetail> items { get; set; }
     }
 
-    public class ItemsDetail
+    public class LabItemsDetail
     {
         public string INVOICE_NO { get; set; }
         public string ITEM_DESC { get; set; }
-        public string QTY { get; set; }
+        public decimal? QTY { get; set; }
         public decimal? TESTING_CHARGES { get; set; }
-        public string IGST { get; set; }
+        public decimal? IGST { get; set; }
     }
 }
