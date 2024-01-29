@@ -355,6 +355,12 @@ namespace IBS.Models
     {
         public string Caseno { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? Callrecvdt { get; set; }
+
+        public int? Callsno { get; set; }
+
         public string BillNo { get; set; }
 
         public decimal TMValue { get; set; }
@@ -363,11 +369,15 @@ namespace IBS.Models
 
         public decimal? NetFee { get; set; }
 
+        public decimal? BillAmount { get; set; }
+
         public string InvoiceNo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
+
+        public string? Callstatus { get; set; }
     }
 
     public class InspectionCertItemListModel

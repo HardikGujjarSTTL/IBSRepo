@@ -87,7 +87,7 @@ namespace IBS.Controllers.Vendor
                         string fileName = model.VendCd.ToString();
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Document_Vendor_manufacturer_created };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(formCollection["hdnUploadedDocumentList"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(model.VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorCreationBasis), env, iDocument, "Venor", fileName, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(model.VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorCreationBasis), env, iDocument, "Vendor", fileName, DocumentIds);
                     }
                 }
 

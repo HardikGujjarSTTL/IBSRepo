@@ -145,7 +145,7 @@ namespace IBS.Controllers
 
                         int[] DocumentIds = { (int)Enums.DocumentCategory_LabUploadDoc.Upload_Payment_Report };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(MyFile, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.LabPayment), env, iDocument, "UploadLabPayment", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(MyFile, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.LabPayment), env, iDocument, string.Empty, MyFile, DocumentIds);
 
                     }
                     #endregion

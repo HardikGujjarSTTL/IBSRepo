@@ -51,7 +51,7 @@ public partial class T17CallRegister
 
     public int? CoCd { get; set; }
 
-    public short? CallCancelCharges { get; set; }
+    public int? CallCancelCharges { get; set; }
 
     public string? OnlineCall { get; set; }
 
@@ -114,6 +114,10 @@ public partial class T17CallRegister
     public DateTime? CmApprovalDt { get; set; }
 
     public string? Isfinalizedstatus { get; set; }
+
+    public string? CallCancelChargesStatus { get; set; }
+
+    public decimal? CallCancelAmount { get; set; }
 
     public virtual T09Ie? IeCdNavigation { get; set; }
 

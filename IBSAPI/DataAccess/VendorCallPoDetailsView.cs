@@ -22,4 +22,6 @@ public partial class VendorCallPoDetailsView
     public string? RlyNonrly { get; set; }
 
     public DateTime? RecvDt { get; set; }
+
+    public int? PoiCd { get; set; }
 }

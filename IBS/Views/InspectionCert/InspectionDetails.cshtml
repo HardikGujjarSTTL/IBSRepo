@@ -29,7 +29,7 @@
         <input type="hidden" asp-for="chkABill" />
         <input type="hidden" asp-for="Callstatus" />
         <input type="hidden" asp-for="CallCancelCharges" />
-        
+
 
 
 
@@ -254,13 +254,13 @@
             <div class="row my-0">
                 @if (@Model.Callstatus != "C")
                 {
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-3 CallRejCan">
                         <div class="reference">
                             <label for="Bkno">Book No. <span class="text-danger">*</span></label>
                             <input type="text" class="input" asp-for="Bkno" maxlength="4" style="text-transform: uppercase;">
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-3 CallRejCan">
                         <div class="reference">
                             <label for="Setno">Set No. <span class="text-danger">*</span></label>
                             <input type="text" class="input" asp-for="Setno" maxlength="3" style="text-transform: uppercase;">
@@ -274,21 +274,20 @@
                         <input type="text" class="input" asp-for="CertNo" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
-            </div>
-            <div class="row my-0">
+
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Reference">Cert Date (DD/MM/YYYY)</label>
                         <input type="text" class="datepicker" asp-for="CertDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Install No</label>
                         <input type="text" class="input" asp-for="CallInstallNo" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Install Part</label>
                         @Html.DropDownListFor(model => model.FullPart, new SelectList(IBS.Models.Common.GetFPart(), "Value", "Text"), "--Select--")
@@ -297,13 +296,13 @@
             </div>
 
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">No. of Visits</label>
                         <input type="text" class="input" asp-for="NoOfInsp" maxlength="100" style="text-transform: uppercase;">
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference"><a onclick="lnkbtnMRDT();" title="Click here to refresh Call / Material Rediness Date from [Call Registration] Form">Call/Material Readiness Date</a></label>
                         @if (@Model.ActionType == "A")
@@ -317,7 +316,7 @@
 
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="FirstInspDt">First Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
                         <input type="text" class="datepicker" asp-for="FirstInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
@@ -326,20 +325,20 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="LastInspDt">Last Insp Date(dd/mm/yyyy) <span class="text-danger">*</span></label>
                         <input type="text" class="datepicker" asp-for="LastInspDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
                         @*<span asp-validation-for="LastInspDt" class="text-danger" id="spnLastInspDt"></span>*@
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Other Insp Dates</label>
                         <input type="text" class="input" asp-for="OtherInspDt" maxlength="100">
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">IC Submit Date</label>
                         <input type="text" class="datepicker" asp-for="ICSubmitDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
@@ -347,14 +346,14 @@
                 </div>
             </div>
             <div class="row my-0">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Sealing Pattern</label>
                         @Html.DropDownListFor(model => model.StampPatternCd, new SelectList(IBS.Models.Common.GetSealing(), "Value", "Text"), "--Select--")
                         <textarea class="input" asp-for="StampPattern" style="text-transform: uppercase;display:none;"></textarea>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Photo Attached</label>
                         @Html.DropDownListFor(model => model.Photo, new SelectList(IBS.Models.Common.OnlineCallStatus(), "Value", "Text"), "--Select--")
@@ -375,7 +374,7 @@
             }
 
 
-            <div class="savenext-btn center">
+            <div class="savenext-btn center CallRejCan">
                 @if (@Model.STS != "X")
                 {
                     <button type="button" class="save-btn active" id="btnSave">Save</button>
@@ -437,7 +436,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
-                        <label for="Reference">Cancellation Amount (Material Vlaue) </label>
+                        <label for="Reference">Material Value </label>
                         <input type="text" class="input" asp-for="CallCancelAmount" readonly>
                     </div>
                 </div>
@@ -470,14 +469,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Min Fee Payble (if any) </label>
                         <input type="text" class="input" asp-for="MinFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                         <span id="spnMinFee" style="color:#d52127;"></span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3 CallRejCan">
                     <div class="reference">
                         <label for="Reference">Max Fee Allowed (if any) </label>
                         <input type="text" class="input" asp-for="MaxFee" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
@@ -578,7 +577,7 @@
                         @* <span id="spnRemarks" style="color:#d52127;"></span> *@
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-3 mb-3 CallRejCan">
                     <div class="reference btnAlign">
                         <div class="custom-control custom-checkbox" id="OuterDivOrBody">
                             <label class="custom-checkbox">
@@ -623,7 +622,7 @@
                 </div>
                 <div class="col-lg-6">
 
-                    <div class="row center my-0">
+                    <div class="row center my-0 btnGbill">
                         <div class="col-md-12">
                             <div class="alert alert-warning">
                                 <span style="color:#d52127;">* Enter Fee Details Before Generating Bill !!!</span>
@@ -653,12 +652,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
 
             @if (Model.BillNo != null)
             {
@@ -736,10 +729,10 @@
             ConsigneeGSTChanged();
             $('input[type=radio][name=ConsigneeGST]').change();
 
-
             if ($("#BillDt").val() != "") {
                 $("#btnBillDtUpdate").show();
             }
+
             if ($("#IcTypeId").val() == "9") {
                 $(".divCnoteBill").show();
                 if ($("#CnoteBillNo").val() != null) {
@@ -770,8 +763,18 @@
             if (actiontype == "A") {
                 $("#IcTypeId").val("1");
 
-                $("#btnGBill").hide();
-                $(".UploadDoc").hide();
+                if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
+                    $("#btnGBill").show();
+                    $(".UploadDoc").show();
+                }
+                else if ($("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+                    $("#btnGBill").show();
+                    $(".UploadDoc").show();
+                }
+                else {
+                    $("#btnGBill").hide();
+                    $(".UploadDoc").hide();
+                }
                 $(".lblBillDt").hide();
                 $("#IrfcBpo").hide();
                 $("#lblIrfcBpo").hide();
@@ -787,6 +790,7 @@
             }
             if (actiontype == "M") {
                 $('input[type=radio][name=ConsigneeGST]').change();
+
                 InitializeDatatable();
 
                 if ($("#BillNo").val() == "") {
@@ -806,13 +810,40 @@
             if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
                 $(".dtList").hide();
                 $(".dtListC").show();
+                $(".CallRejCan").hide();
 
                 $("#CallCancelStatus").prop('disabled', true);
                 $("#BpoFee").val($("#CallCancelCharges").val());
+                if($("#Callstatus").val() == "CB")
+                {
+                    $(".btnGbill").hide();
+                }
+
+                $("#IcTypeId").val(6);
+                $("#IcTypeId").prop('disabled', true);
+                $("#CanOrRejctionFee").val("Y");
+                $("#CanOrRejctionFee").prop('disabled', true);
+                $("#BpoFeeType").val("L");
+                $("#BpoFeeType").prop('disabled', true);
+
+            }
+            else if ($("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+
+                $("#IcTypeId").val(2);
+                $("#IcTypeId").prop('disabled', true);
+                $(".CallRejCan").hide();
+                $("#CanOrRejctionFee").val("Y");
+                $("#CanOrRejctionFee").prop('disabled', true);
+                $("#BpoFeeType").val("L");
+                $("#BpoFeeType").prop('disabled', true);
             }
             else {
                 $(".dtList").show();
                 $(".dtListC").hide();
+                $(".CallRejCan").show();
+                $("#CanOrRejctionFee").val("N");
+                $("#CanOrRejctionFee").prop('disabled', false);
+                $("#BpoFeeType").prop('disabled', false);
             }
 
         });
@@ -875,7 +906,6 @@
                 }
             });
         });
-
 
         function StateWiseGST(StateCode) {
             $.ajax({
@@ -1083,6 +1113,7 @@
 
         $("#btnSave").click(function () {
             var ConsigneeGST = $("input[name='ConsigneeGST']:checked").val();
+            $('select').prop('disabled', false);
             $("#SelectRadio").val(ConsigneeGST);
             if ($("#IcTypeId").val() == "9") {
                 if ($("#CnoteBillNo").val() == "") {
@@ -1144,6 +1175,8 @@
                                 }
                             }
                             else {
+                                // var FirstInspDt = $("#FirstInspDt").val();
+                                // alert(FirstInspDt);
                                 var redirectUrl = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + '&CallRecvDt=' + Callrecvdt + '&CallSno=' + Callsno + '&ActionType=M';
                                 setTimeout(function () {
                                     window.location.href = redirectUrl;
@@ -1371,6 +1404,11 @@
             //    $("#chkABill").val('X');
             //}
             // $("#CallCancelStatus").prop('disabled', false);
+
+            var ConsigneeGST = $("input[name='ConsigneeGST']:checked").val();
+            $('select').prop('disabled', false);
+            $("#SelectRadio").val(ConsigneeGST);
+
             $('select').prop('disabled', false);
             var chkABill = $('input[name="chkABill"]:checked').val();
             if (chkABill == "on") {
@@ -1438,6 +1476,9 @@
             //     $("#spnRemarks").html("Please add Remarks.");
             //     return;
             // }
+            var CaseNo = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
 
             event.preventDefault();
             var formData = $("#frmDetails").serialize();
@@ -1445,7 +1486,7 @@
                 if (response.status) {
                     if (response.responseText == "Update Successfully.") {
                         var BillNo = response.Id;
-                        PopUp(BillNo);
+                        PopUp(BillNo, CaseNo, Callrecvdt, Callsno);
                     }
                     else {
                         ShowHideMsgNew(false, response.responseText);
@@ -1457,10 +1498,13 @@
             });
         });
 
-        function PopUp(BillNo) {
-            //var _BillNo = $("#BillNo").val();
+        function PopUp(BillNo, CaseNo, Callrecvdt, Callsno) {
+            let myObject = { BillNo, CaseNo, Callrecvdt, Callsno };
+            // var url = '@Url.Action("BillingClientReport", "BillingReports")?' + $.param(myObject);
+
             $.ajax({
-                url: '@Url.Action("PopUp", "InspectionCert")?BillNo=' + BillNo,
+                // url: '@Url.Action("PopUp", "InspectionCert")?BillNo=' + BillNo,
+                url: '@Url.Action("PopUp", "InspectionCert")?' + $.param(myObject),
                 type: 'GET',
                 cache: false,
                 processData: false,
@@ -1476,7 +1520,18 @@
 
         function PopUpOk() {
             $("#PopUp").modal('hide');
-            location.reload();
+            var CaseNo = $("#Caseno").val();
+            var Callrecvdt = $("#Callrecvdt").val();
+            var Callsno = $("#Callsno").val();
+            debugger
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
+                window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&ActionType=M";
+            }
+            else {
+                location.reload();
+            }
+
+
         }
 
         $("#btnBillDtUpdate").click(function () {

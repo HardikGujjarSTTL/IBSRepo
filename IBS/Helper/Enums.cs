@@ -26,7 +26,7 @@ namespace IBS.Helper
             TempFilePath = 1,
             [Description("/ReadWriteData/Files/UserRegistration")]
             UserRegistration = 2,
-            [Description("/ReadWriteData/Files/AdminUserUploadDoc")]
+            [Description("/ReadWriteData/Files/Documents")]
             AdminUserUploadDoc = 3,
             [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,

@@ -137,36 +137,46 @@ namespace IBS.Controllers.InspectionBilling
                 string i = "";
                 string msg = "Save Successfully.";
 
-                if (Region == "N")
+                if(model.Callstatus == "C" || model.Callstatus == "CB")
                 {
-                    string mess = "";
                     if (model.CallDt == null)
                     {
                         model.CallDt = model.Callrecvdt;
                     }
-                    int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
-                    int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
-                    if (FinspCdtdiff == 1)
-                    {
-                        mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
-                        //AlertDanger(mess);
-                        return Json(new { status = false, responseText = mess, Id = i });
-                    }
-                    if (ICdtLinspdiff == 1)
-                    {
-                        if (mess == "")
-                        {
-                            mess = "IC Date - Last Inspection Date is greater then 3 Days!!!";
-                        }
-                        else
-                        {
-                            mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
-                        }
-                        //AlertDanger(mess);
-                        return Json(new { status = false, responseText = mess, Id = i });
-                    }
-
                 }
+                else
+                {
+                    if (Region == "N")
+                    {
+                        string mess = "";
+                        if (model.CallDt == null)
+                        {
+                            model.CallDt = model.Callrecvdt;
+                        }
+                        int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
+                        int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
+                        if (FinspCdtdiff == 1)
+                        {
+                            mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
+                            //AlertDanger(mess);
+                            return Json(new { status = false, responseText = mess, Id = i });
+                        }
+                        if (ICdtLinspdiff == 1)
+                        {
+                            if (mess == "")
+                            {
+                                mess = "IC Date - Last Inspection Date is greater then 3 Days!!!";
+                            }
+                            else
+                            {
+                                mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
+                            }
+                            //AlertDanger(mess);
+                            return Json(new { status = false, responseText = mess, Id = i });
+                        }
+                    }
+                }
+
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
                     //model.UserId = Convert.ToString(UserId);
@@ -449,14 +459,14 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult PopUp(string BillNo)
+        public IActionResult PopUp(string BillNo, string CaseNo, DateTime CallRecvDt, int CallSno)
         {
             try
             {
                 ICPopUpModel model = new ICPopUpModel();
                 if (BillNo != null)
                 {
-                    model = inpsRepository.FindByBillDetails(BillNo, Region);
+                    model = inpsRepository.FindByBillDetails(BillNo, CaseNo, CallRecvDt, CallSno, Region);
                 }
                 return PartialView("_PopUp", model);
             }
