@@ -168,6 +168,11 @@
         }
 
         function BtnCreateBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+
             var fromdata = {
                 FromDate: $("#FromDt").val(),
                 ToDate: $("#ToDt").val(),
@@ -207,6 +212,10 @@
         }
 
         function BtnReturnBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
             var fromdata = {
                 FromDate: $("#FromDt").val(),
                 ToDate: $("#ToDt").val(),
@@ -241,7 +250,19 @@
         }
 
         function BtnGetBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
             InitializeDatatable();
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#FromDt").val() || $("#ToDt").val()) {
+                type = true;
+            }
+            return type;
         }
 
         function InitializeDatatable() {
@@ -318,15 +339,18 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Id = data.Id;
-                            var RailId = data.RailId;
-                            var editUrl = '@Url.Action("ManageDetails", "CentralItemMaster")/' + Id;
-                            //var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
-                            html += '</div>';
+                            var BILL_NO = data.BILL_NO;
+                            var REGION_CODE = data.REGION_CODE;
+
+                            var html = '<div align="center" class="reportIcon">';
+                            html += '<a onclick="Delete(\'' + BILL_NO + '\', \'' + REGION_CODE + '\'); return false;" href="javascript:void(0);" id="' + BILL_NO + '" class="delete">';
+                            html += '<i class="fa fa-trash Permission_Delete" title="Delete" style="margin:10px;"></i>';
+                            html += '</a></div>';
+
                             return html;
                         }
                     },
+
                 ],
                 "order": [[0, "asc"]]
             });
@@ -361,6 +385,12 @@
             downloadLink.click();
         }
 
+        function Delete(BILL_NO, REGION_CODE) {
+            var url = '@Url.Action("Delete", "AllGeneratedBills")';
+            url = url + "?BILL_NO=" + BILL_NO + "&REGION_CODE=" + REGION_CODE;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
 
     </script>
 }
