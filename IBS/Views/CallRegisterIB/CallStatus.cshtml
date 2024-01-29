@@ -21,6 +21,8 @@
         <input type="hidden" asp-for="CallLetterDt" />
 
         <input type="hidden" asp-for="CallCancelChargesStatus" />
+        
+        
 
         <input type="hidden" asp-for="CallCancelStatus" />
 
@@ -151,13 +153,13 @@
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
-                        <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                        <br>*@
+                            <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
+                         <br>   *@
                             <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
                         </td>
-                    }
-                </tr>
-                <tr>
+                      }
+                     </tr>
+                 <tr>
                     <td>
                         <label for="Reference">Case Status : </label>
                     </td>
@@ -379,6 +381,10 @@
                                 <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                                 <input type="text" asp-for="RejectionCharge" maxlength="100">
                             </div>
+                            <div class="col-md-4 mb-3" id="rejvalue">
+                                <label for="Reference">Material Value : </label>
+                                <input type="text" asp-for="RejectMaterialValue" maxlength="100">
+                            </div>
                             <div class="col-md-5 mb-4" style="margin-top:30px;">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
@@ -417,6 +423,7 @@
                     <input type="hidden" asp-for="ConsigneeFirm" />
                     <input type="hidden" asp-for="ReasonFIFO" />
                     <input type="hidden" asp-for="RejectionCharge" />
+                    <input type="hidden" asp-for="RejectMaterialValue" />
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
                     <input type="hidden" asp-for="CallStatusDt" />
@@ -1058,6 +1065,7 @@
                     success: function (data) {
                         $('#MatValue').val(data.MaterialValue);
                         $('#RejectionCharge').val(data.RejectionCharge);
+                        $('#RejectMaterialValue').val(data.RejectMaterialValue);
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
