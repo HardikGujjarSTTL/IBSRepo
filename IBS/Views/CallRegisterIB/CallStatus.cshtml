@@ -21,8 +21,8 @@
         <input type="hidden" asp-for="CallLetterDt" />
 
         <input type="hidden" asp-for="CallCancelChargesStatus" />
-        
-        
+
+
 
         <input type="hidden" asp-for="CallCancelStatus" />
 
@@ -153,13 +153,13 @@
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
-                            <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                         <br>   *@
+                        <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
+                        <br>   *@
                             <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
                         </td>
-                      }
-                     </tr>
-                 <tr>
+                    }
+                </tr>
+                <tr>
                     <td>
                         <label for="Reference">Case Status : </label>
                     </td>
@@ -244,7 +244,7 @@
                     <input type="hidden" asp-for="CallStatus" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
 
-                    <div class="accordion-body" style="overflow-x: auto;">
+                    <div class="accordion-body CallRejected" style="overflow-x: auto;">
                         <div class="row my-0">
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Consignee : </label>
@@ -263,13 +263,12 @@
 
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0">
                             <div class="col-md-12 mb-3">
                                 <label class="text-danger"><span style="color:red;"><b>Browse the Images to Upload (* Select Atleast 5 Images)</b></span></label>
                             </div>
                         </div>
                         <div class="row my-0">
-
                             <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" id="Img1" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
                             </div>
@@ -339,6 +338,7 @@
                     <input type="hidden" asp-for="ReasonFIFO" />
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
+                    <input type="hidden" asp-for="LocalOutstation" />
                     <input type="hidden" asp-for="CallStatusDt" />
                     <input type="hidden" asp-for="Remarkslbl" id="Remarkslbl" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
@@ -353,12 +353,12 @@
                                 <input asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram">
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0 CallRejected">
                             <div class="col-md-12 mb-3">
                                 <label class="text-danger"><span style="color:red;"><b>Browse the Pdf to Upload</b></span></label>
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0 CallRejected">
                             <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
                             </div>
@@ -367,10 +367,10 @@
                             </div>
                         </div>
                         <div class="row my-0">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 CallRejected">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 CallRejected">
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
                             </div>
                             <div class="col-md-4 mb-3" id="localdrp">
@@ -385,7 +385,7 @@
                                 <label for="Reference">Material Value : </label>
                                 <input type="text" asp-for="RejectMaterialValue" maxlength="100">
                             </div>
-                            <div class="col-md-5 mb-4" style="margin-top:30px;">
+                            <div class="col-md-5 mb-4 CallRejected" style="margin-top:30px;">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
@@ -400,8 +400,8 @@
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
                                     <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
-                                    
-                                    <a asp-controller="CallRegisterIB" asp-action="Index" id="uploadcancel" class="reset-btn">Cancel</a>
+                                    <button type="button" class="save-btn" id="uploadcancel" onclick="btnCancel();">Cancel</button>
+
                                 </div>
                             </div>
                         </div>
@@ -584,6 +584,7 @@
                 var DesireDt = $('#CallRecvDt').val();
 
                 if (selectedValue == "A") {
+                    $(".CallRejected").show();
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -605,6 +606,8 @@
                     $('#consigneeFirmDropdown').trigger('change');
                 }
                 else if (selectedValue == "R") {
+
+                    $(".CallRejected").hide();
                     $('#MatValue').show();
                     $('#accepteddrp').show();
                     $('#localdrp').show();
@@ -625,7 +628,9 @@
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
                     $('#uploadcancel').show();
-                    $('#consigneeFirmDropdown').trigger('change');
+                    // $('#consigneeFirmDropdown').trigger('change');
+                    $('#LocalOutstationdrp').trigger('change');
+
                 }
                 else if (selectedValue == "G") {
                     $('#accepteddrp').show();
@@ -842,6 +847,7 @@
                 }
 
             } else if (CallStatusdrp == "A") {
+                $(".CallRejected").show();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
                 $('#savefiles').addClass('disabled-button');
@@ -868,6 +874,7 @@
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
             } else if (CallStatusdrp == "R") {
+                $(".CallRejected").hide();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
                 $('#AcceptReject').prop('disabled', true);
@@ -889,7 +896,16 @@
                 $('#RefreshAll').show();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
-                $('#consigneeFirmDropdown').trigger('change');
+                $('#CallCancelStatusdrp').hide();
+
+                $('#LocalOutstationdrp').val($('#LocalOutstation').val());
+                $('#LocalOutstationdrp').prop('disabled', true);
+                $('#RejectionCharge').prop('disabled', true);
+                $('#RejectMaterialValue').prop('disabled', true);
+                RejectionMatrialValue();
+
+                // $('#consigneeFirmDropdown').trigger('change');
+
             } else if (CallStatusdrp == "G") {
 
                 $('#CallStatusdrp').prop('disabled', true);
@@ -937,7 +953,7 @@
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
 
-                
+
 
 
             } else if (CallStatusdrp == "S") {
@@ -1073,14 +1089,33 @@
                 });
             });
 
+            function RejectionMatrialValue() {
+                var selectedValue = $('#LocalOutstationdrp').val();
+                var CaseNo = $('#CaseNo').val();
+                var CallSno = $('#CallSno').val();
+                var DesireDt = $('#CallRecvDt').val();
+                $.ajax({
+                    url: '@Url.Action("LocalOutstation", "CallRegisterIB")',
+                    type: 'GET',
+                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                    success: function (data) {
+                        $('#RejectMaterialValue').val(data.RejectMaterialValue);
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving BkNo and SetNo.');
+                    }
+                });
+            }
+
+
+
             $('#CallCancelStatusdrp').change(function () {
                 debugger
                 CallCancelStatus();
                 CallCancellationChanges();
             });
 
-            function CallCancelStatus()
-            {
+            function CallCancelStatus() {
                 debugger
                 $('#MatCanvalue').hide();
                 var selectedValue1 = $('#CallCancelStatusdrp').val();
@@ -1130,10 +1165,9 @@
                 CallCancellationChanges();
             });
 
-            function CallCancellationChanges()
-            {
+            function CallCancellationChanges() {
                 var selectedValue = $('#CallCancelChargesdrp').val();
-                
+
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
@@ -1142,7 +1176,7 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        
+
                         $('#MatValue').val(data.MaterialValue);
                         $('#CanCharges').val(data.CallCancelCharges);
                     },
@@ -1345,43 +1379,43 @@
                 if (uploadedDocumentsArray.length >= 5) {
 
                     //if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
-                        var ajaxData = AjaxModel();
+                    var ajaxData = AjaxModel();
 
-                        if (ajaxData) {
-                            for (var key in ajaxData) {
-                                if (ajaxData.hasOwnProperty(key)) {
-                                    formData.append(key, ajaxData[key]);
-                                }
+                    if (ajaxData) {
+                        for (var key in ajaxData) {
+                            if (ajaxData.hasOwnProperty(key)) {
+                                formData.append(key, ajaxData[key]);
                             }
                         }
-                        var files = $('#hdnUploadedDocumentList_tab-1')[0];
+                    }
+                    var files = $('#hdnUploadedDocumentList_tab-1')[0];
 
 
-                        if (files && files.defaultValue && files.defaultValue != null) {
-                            var files = files.defaultValue;
-                            formData.append("UploadeFile", files);
-                        }
-                        $.ajax({
-                            url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
+                    if (files && files.defaultValue && files.defaultValue != null) {
+                        var files = files.defaultValue;
+                        formData.append("UploadeFile", files);
+                    }
+                    $.ajax({
+                        url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
 
-                                if (response.Id == 1) {
-                                    ShowHideMsgNew(true, response.responseText);
-                                    $('#consigneeFirmDropdown').trigger('change');
-                                }
-                                else {
-                                    ShowHideMsgNew(false, response.responseText);
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                // Handle error
-                                console.error('Error: ' + textStatus, errorThrown);
+                            if (response.Id == 1) {
+                                ShowHideMsgNew(true, response.responseText);
+                                $('#consigneeFirmDropdown').trigger('change');
                             }
-                        });
+                            else {
+                                ShowHideMsgNew(false, response.responseText);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            // Handle error
+                            console.error('Error: ' + textStatus, errorThrown);
+                        }
+                    });
                     // }
                     // else {
                     //     alert('Please select the first five (5) Images!');
@@ -1581,6 +1615,14 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
+        }
+
+        function btnCancel() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+
+            var url = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")?type=' + type;
+            window.location.href = url;
         }
 
     </script>

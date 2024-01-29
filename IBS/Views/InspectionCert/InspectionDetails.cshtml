@@ -449,6 +449,33 @@
             </div>
         </div>
 
+        <div class="alert alert-warning center dtListRej" style="display:none;">
+            REJECTION BILL DETAILS
+        </div>
+
+        <div class="accordion-body dtListRej">
+            <div class="row my-0">
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Local or Outstation</label>
+                        @Html.DropDownListFor(model => model.LocalOutstation, new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"), "--Select--")
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Rejection Charges (Exclusive of Taxes) </label>
+                        <input type="text" class="input" asp-for="RejectionCharge" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="reference">
+                        <label for="Reference">Material Value </label>
+                        <input type="text" class="input" asp-for="RejectMaterialValue" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="alert alert-warning center">
             BILL GENERATION  <span style="color:#d52127;">(Don't use this option for Mulitiple IC - One Bill generation)</span>
         </div>
@@ -768,6 +795,7 @@
                     $(".UploadDoc").show();
                 }
                 else if ($("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+                    $("#LocalOutstation").prop('disabled', true);
                     $("#btnGBill").show();
                     $(".UploadDoc").show();
                 }
@@ -811,6 +839,7 @@
                 $(".dtList").hide();
                 $(".dtListC").show();
                 $(".CallRejCan").hide();
+                $(".dtListRej").hide();
 
                 $("#CallCancelStatus").prop('disabled', true);
                 $("#BpoFee").val($("#CallCancelCharges").val());
@@ -828,25 +857,50 @@
 
             }
             else if ($("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
-
+                RejectionMatrialValue();
                 $("#IcTypeId").val(2);
                 $("#IcTypeId").prop('disabled', true);
+
+                $(".dtList").hide();
+                $(".dtListC").hide();
+                $(".dtListRej").show();
+                
                 $(".CallRejCan").hide();
                 $("#CanOrRejctionFee").val("Y");
                 $("#CanOrRejctionFee").prop('disabled', true);
                 $("#BpoFeeType").val("L");
                 $("#BpoFeeType").prop('disabled', true);
+                if ($("#Callstatus").val() == "RB") {
+                    $(".btnGbill").hide();
+                }
+                $("#BpoFee").val($("#RejectionCharge").val());
             }
             else {
                 $(".dtList").show();
                 $(".dtListC").hide();
                 $(".CallRejCan").show();
+                $(".dtListRej").hide();
                 $("#CanOrRejctionFee").val("N");
                 $("#CanOrRejctionFee").prop('disabled', false);
                 $("#BpoFeeType").prop('disabled', false);
             }
 
         });
+
+        function RejectionMatrialValue() {
+            var selectedValue = $('#LocalOutstation').val();
+            var CaseNo = $("#Caseno").val();
+            var DesireDt = $("#Callrecvdt").val();
+            var CallSno = $("#Callsno").val();
+            $.ajax({
+                url: '@Url.Action("LocalOutstation", "InspectionCert")',
+                type: 'GET',
+                data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                success: function (data) {
+                    $('#RejectMaterialValue').val(data.RejectMaterialValue);
+                },
+            });
+        }
 
         $("#StampPatternCd").change(function () {
             if ($("#StampPatternCd").val() == "O") {

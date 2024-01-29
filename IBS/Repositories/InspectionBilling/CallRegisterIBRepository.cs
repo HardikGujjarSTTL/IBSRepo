@@ -3509,6 +3509,8 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallCancelChargesStatus = Status.CallCancelChargesStatus;
                     model.CallCancelAmount = Status.CallCancelAmount;
                     model.RlyNonrly = Status.RlyNonrly;
+                    model.RejectionCharge = Convert.ToString(Status.RejCharges);
+                    model.LocalOutstation = Convert.ToString(Status.LocalOrOuts);
                 }
 
                 if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
@@ -5303,75 +5305,124 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
                 return model;
             }
-            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == "" && model.RejectionCharge == null)
+            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == "" || model.RejectionCharge == null)
             {
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;
             }
-            else if (model.ConsigneeFirm == "0")
+            if(model.CallStatus != "R")
             {
-                model.AlertMsg = "Select Consignee from the List and then Click on Accepted/Rejected Button";
-                return model;
+                if (model.ConsigneeFirm == "0")
+                {
+                    model.AlertMsg = "Select Consignee from the List and then Click on Accepted Button";
+                    return model;
+                }
+                else if (no_of_photo == 0)
+                {
+                    model.AlertMsg = "Kindly upload the inspections photos and prepare the IC before updating the Call Status to Aceepted!!!";
+                    return model;
+                }
+                else if (no_ic_count > 0)
+                {
+                    model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted!!!";
+                    return model;
+                }
             }
-            else if (no_of_photo == 0)
-            {
-                model.AlertMsg = "Kindly upload the inspections photos and prepare the IC before updating the Call Status to Aceepted/Rejected!!!";
-                return model;
-            }
-            else if (no_ic_count > 0)
-            {
-                model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
-                return model;
-            }
+            
 
             var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
 
-            var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
-
-            if (result.Count > 0)
+            if(model.CallStatus != "R")
             {
-                if (model.CallStatus == "R" && callStatus != "R")
-                {
-                    foreach (var entity in result)
-                    {
-                        int len_item = 0;
-                        if (!string.IsNullOrEmpty(entity.ItemDescPo))
-                        {
-                            if (entity.ItemDescPo.Length > 400)
-                            {
-                                len_item = 390;
-                            }
-                            else
-                            {
-                                len_item = entity.ItemDescPo.Length;
-                            }
+                var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
 
-                            string formatedItem = entity.ItemDescPo.Substring(0, len_item);
-                            var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == entity.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
-                            if (existingEntity != null)
+                if (result.Count > 0)
+                {
+                    if (model.CallStatus == "R" && callStatus != "R")
+                    {
+                        foreach (var entity in result)
+                        {
+                            int len_item = 0;
+                            if (!string.IsNullOrEmpty(entity.ItemDescPo))
                             {
-                                existingEntity.ItemDescPo = formatedItem;
-                                existingEntity.QtyPassed = entity.QtyPassed;
-                                existingEntity.QtyRejected = entity.QtyRejected;
-                                existingEntity.QtyDue = entity.QtyDue;
-                                context.SaveChanges();
+                                if (entity.ItemDescPo.Length > 400)
+                                {
+                                    len_item = 390;
+                                }
+                                else
+                                {
+                                    len_item = entity.ItemDescPo.Length;
+                                }
+
+                                string formatedItem = entity.ItemDescPo.Substring(0, len_item);
+                                var existingEntity = context.T18CallDetails.FirstOrDefault(e => e.ItemSrnoPo == entity.ItemSrnoPo && e.CaseNo == model.CaseNo && e.CallSno == model.CallSno && e.CallRecvDt == model.CallRecvDt);
+                                if (existingEntity != null)
+                                {
+                                    existingEntity.ItemDescPo = formatedItem;
+                                    existingEntity.QtyPassed = entity.QtyPassed;
+                                    existingEntity.QtyRejected = entity.QtyRejected;
+                                    existingEntity.QtyDue = entity.QtyDue;
+                                    context.SaveChanges();
+                                }
                             }
                         }
-                    }
-                }
 
+                        var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
+
+                        existingRecord2.PendingCharges = (byte?)((existingRecord2.PendingCharges ?? 0) + 1);
+                        context.SaveChanges();
+                    }
+
+                    var existingRecord = context.T17CallRegisters.FirstOrDefault(c => c.CaseNo == model.CaseNo && c.CallRecvDt == model.CallRecvDt && c.CallSno == model.CallSno);
+
+                    if (existingRecord != null)
+                    {
+                        existingRecord.CallStatus = model.CallStatus;
+                        existingRecord.CallStatusDt = model.CallStatusDt;
+                        existingRecord.BkNo = model.DocBkNo;
+                        existingRecord.SetNo = model.DocSetNo;
+                        existingRecord.UserId = model.UserName;
+                        existingRecord.Datetime = DateTime.Now;
+                        //existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
+                        existingRecord.FifoVoilateReason = model.ReasonFIFO;
+                        //existingRecord.LocalOrOuts = wRejType;
+
+                        context.SaveChanges();
+                    }
+
+                    var existingRecord1 = context.IcIntermediates.FirstOrDefault(ic => ic.CaseNo == model.CaseNo && ic.BkNo == model.DocBkNo && ic.SetNo == model.DocSetNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno && ic.ConsigneeCd == Convert.ToInt32(model.ConsigneeFirm));
+
+                    if (existingRecord1 != null)
+                    {
+                        existingRecord1.ConsgnCallStatus = model.CallStatus;
+                        context.SaveChanges();
+                    }
+                    //if (model.CallStatus == "R")
+                    //{
+                    //    Vendor_Rej_Email(model);
+                    //}
+                    model.AlertMsg = "Success";
+
+                }
+                else
+                {
+                    model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
+                    return model;
+                }
+            }
+            else
+            {
                 double wRejCharges = 0;
                 string wRejType = "";
-                if (callStatus == "R")
-                {
-                    wRejCharges = Convert.ToDouble(model.RejectionCharge);
-
-                }
-                if (model.LocalOutstation != "" && model.LocalOutstation != null)
+                //if (callStatus == "R")
+                //{
+                //    wRejCharges = Convert.ToDouble(model.RejectionCharge);
+                //}
+                wRejCharges = Convert.ToDouble(model.RejectionCharge);
+                if (model.LocalOutstation != "" || model.LocalOutstation != null)
                 {
                     wRejType = model.LocalOutstation;
                 }
-
                 if (model.CallStatus == "R" && callStatus != "R")
                 {
                     var existingRecord2 = context.T13PoMasters.FirstOrDefault(po => po.CaseNo == model.CaseNo);
@@ -5408,13 +5459,9 @@ namespace IBS.Repositories.InspectionBilling
                     Vendor_Rej_Email(model);
                 }
                 model.AlertMsg = "Success";
+            }
+            
 
-            }
-            else
-            {
-                model.AlertMsg = "Kindly upload the PDF file for all ICs, Before updating the Status to Aceepted/Rejected!!!";
-                return model;
-            }
             return model;
         }
 

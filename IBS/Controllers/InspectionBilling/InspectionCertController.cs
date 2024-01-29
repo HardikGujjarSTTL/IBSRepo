@@ -3,6 +3,7 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
+using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -647,6 +648,12 @@ namespace IBS.Controllers.InspectionBilling
                 return Json(Common.GetTaxType_GST_O());
             }
 
+        }
+
+        public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            InspectionCertModel model = inpsRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
+            return Json(model);
         }
     }
 }
