@@ -325,7 +325,13 @@
                 ShowHideMsgNew(false, "Please select Call S No.");
                 return false;
             }
-            if ($("#Callstatus").val() != "C" && $("#Callstatus").val() != "CB") {
+
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+                if (Caseno != "" && Callrecvdt != null && Callsno != "") {
+                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
+                }
+            }
+            else {
                 if (Bkno == "" || Bkno == null) {
                     ShowHideMsgNew(false, "Please select Book no.");
                     return false;
@@ -336,11 +342,6 @@
                 }
 
                 if (Caseno != "" && Callrecvdt != null && Callsno != "" && Bkno != "" && Setno != "") {
-                    window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
-                }
-            }
-            else {
-                if (Caseno != "" && Callrecvdt != null && Callsno != "") {
                     window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
                 }
             }

@@ -585,7 +585,7 @@ namespace IBS.Repositories.InspectionBilling
             var CallDetails = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
             if (CallDetails != null)
             {
-                if (CallDetails.CallStatus == "C" || CallDetails.CallStatus == "CB")
+                if (CallDetails.CallStatus == "C" || CallDetails.CallStatus == "CB" || CallDetails.CallStatus == "R" || CallDetails.CallStatus == "RB")
                 {
                     var GetDetails = (from C in context.T20Ics
                                       join I in context.T09Ies on C.IeCd equals I.IeCd
@@ -634,6 +634,9 @@ namespace IBS.Repositories.InspectionBilling
                         model.CallCancelStatus = CallDetails.CallCancelStatus;
                         model.CallCancelAmount = CallDetails.CallCancelAmount;
                         model.CallCancelCharges = CallDetails.CallCancelCharges;
+
+                        model.LocalOutstation = CallDetails.LocalOrOuts;
+                        model.RejectionCharge = CallDetails.RejCharges;
 
                         string myYear1 = "", myMonth1 = "", myDay1 = "";
                         if (model.CertDt != null)
@@ -1610,7 +1613,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 bscheck3 = 1;
             }
-            if (model.Callstatus != "C")
+            if (model.Callstatus != "C" || model.Callstatus != "R")
             {
                 if (bscheck == null)
                 {
@@ -2532,7 +2535,7 @@ namespace IBS.Repositories.InspectionBilling
             var CDetails_C = query_c;
             if (CallDetails != null)
             {
-                if (CallDetails.CallStatus != "C")
+                if (CallDetails.CallStatus != "C" || CallDetails.CallStatus != "R")
                 {
                     if (CDetails != null)
                     {
