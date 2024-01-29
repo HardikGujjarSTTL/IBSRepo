@@ -28,7 +28,7 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Choose Region</label>
-                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.FeedBackRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
                     <span class="text-danger"></span>
                 </div>
             </div>
