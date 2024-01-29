@@ -3508,6 +3508,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallLetterDt = Convert.ToDateTime(Status.CallLetterDt);
                     model.CallCancelChargesStatus = Status.CallCancelChargesStatus;
                     model.CallCancelAmount = Status.CallCancelAmount;
+                    model.RlyNonrly = Status.RlyNonrly;
                 }
 
                 if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
@@ -5644,7 +5645,7 @@ namespace IBS.Repositories.InspectionBilling
                               .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
                               .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
                               .FirstOrDefault();
-            model.MaterialValue = Convert.ToString(SumValue.Value);
+            model.RejectMaterialValue = Convert.ToString(SumValue.Value);
             double w_cancharges = 0;
             if (rly_nonrly == "R")
             {

@@ -96,7 +96,7 @@ namespace IBS.Controllers
             {
                 int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.OnlineComplaints };
                 List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                DocumentHelper.SaveFiles(Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, "RejectionMemo", string.Empty, DocumentIds);
+                DocumentHelper.SaveFiles(Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints), env, iDocument, string.Empty, Convert.ToString(model.TEMP_COMPLAINT_ID), DocumentIds);
             }
             if (msg == "Success")
             {

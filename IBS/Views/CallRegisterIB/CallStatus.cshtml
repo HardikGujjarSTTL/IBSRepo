@@ -20,6 +20,8 @@
         <input type="hidden" asp-for="IeCd" />
         <input type="hidden" asp-for="CallLetterDt" />
 
+        <input type="hidden" asp-for="CallCancelChargesStatus" />
+
         <input type="hidden" asp-for="CallCancelStatus" />
 
         <div class="accordion-body" style="overflow-x: auto;">
@@ -1101,6 +1103,8 @@
                                     text: callRlyFirmList[i].Text
                                 }));
                             }
+                            $("#CallCancelChargesdrp").val($("#CallCancelChargesStatus").val());
+                            CallCancellationChanges();
                         },
                         error: function () {
                             alert('Error occurred while retrieving BkNo and SetNo.');

@@ -5870,3 +5870,9 @@ ALTER TABLE T29_JV_DETAILS MODIFY IU_ADV_DT DEFAULT NULL;
 INTER Unit Transfer Report
 =============================
 SP_GET_INTER_UNIT_TRANSFER_REPORT
+
+==============================
+Invoice for SAP
+
+GET_INVOICE_SAP_LIST
+==============================

@@ -653,6 +653,10 @@ namespace IBS.Models
         public string? DocBkNo { get; set; }
         [Required(ErrorMessage = "Please Enter Set No.")]
         public string? DocSetNo { get; set; }
+
+        public string? RlyNonrly { get; set; }
+
+        public string? RejectMaterialValue { get; set; }
     }
 
     public class VendrorCallDetailsModel

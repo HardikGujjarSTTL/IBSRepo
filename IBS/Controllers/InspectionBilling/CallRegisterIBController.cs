@@ -815,22 +815,22 @@ namespace IBS.Controllers.InspectionBilling
                                 if (DocumentsList[0].DocName == "IC PhotoDigital Sign")
                                 {
                                     var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + ".PDF";
-                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, string.Empty, FileName, DocumentIds);
                                 }
                                 if (DocumentsList[1].DocName == "Upload TestPlan")
                                 {
                                     var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + ".PDF";
-                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, DocumentIds);
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, string.Empty, FileName, DocumentIds);
                                 }
                                 if (DocumentsList[2].DocName == "Upload IC Annexue 1")
                                 {
                                     var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + "-A1.PDF";
-                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, string.Empty, FileName, DocumentIds);
                                 }
                                 if (DocumentsList[3].DocName == "Upload IC Annexue 2")
                                 {
                                     var FileName = model.CaseNo + "-" + model.BkNo + "-" + model.SetNo + "-A2.PDF";
-                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, DocumentIds);
+                                    DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, string.Empty, FileName, DocumentIds);
                                 }
                             }
                         }
