@@ -278,11 +278,14 @@ namespace IBS.Controllers
         }
 
         public IActionResult NorthBill(AllGeneratedBills obj)
-        {
-            obj.REGION_CODE = "N";
-            obj.CLIENT_TYPE = "R";
+        {            
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "N";
+            //obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
@@ -362,10 +365,13 @@ namespace IBS.Controllers
 
         public IActionResult CentralBill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "N";
-            obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "N";
+            obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
@@ -402,10 +408,13 @@ namespace IBS.Controllers
 
         public IActionResult EastBill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "N";
-            obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "E";
+            obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
@@ -442,10 +451,13 @@ namespace IBS.Controllers
 
         public IActionResult WestBill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "N";
-            obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "W";
+            obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
