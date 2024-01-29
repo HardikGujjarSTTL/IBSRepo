@@ -25876,6 +25876,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.ItemSrnoPo)
                 .HasPrecision(6)
                 .HasColumnName("ITEM_SRNO_PO");
+            entity.Property(e => e.LocalOrOuts)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("LOCAL_OR_OUTS");
             entity.Property(e => e.MfgPers)
                 .HasMaxLength(25)
                 .IsUnicode(false)
@@ -25891,6 +25896,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(75)
                 .IsUnicode(false)
                 .HasColumnName("PO_NO");
+            entity.Property(e => e.RejCharges)
+                .HasColumnType("NUMBER(9,2)")
+                .HasColumnName("REJ_CHARGES");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(400)
                 .IsUnicode(false)

@@ -66,4 +66,8 @@ public partial class ViewGetCallStatusDetail
     public int ItemSrnoPo { get; set; }
 
     public string? RlyNonrly { get; set; }
+
+    public decimal? RejCharges { get; set; }
+
+    public string? LocalOrOuts { get; set; }
 }
