@@ -481,10 +481,13 @@ namespace IBS.Controllers
 
         public IActionResult COQABill(AllGeneratedBills obj)
         {
-            obj.REGION_CODE = "Q";
-            obj.CLIENT_TYPE = "R";
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
+            obj.REGION_CODE = "Q";
+            obj.LOA = "A";
+            obj.RailwayChk = "true";
+            obj.CLIENT_NAME = null;
+            obj.CLIENT_TYPE = "R";
             obj.BPO_NAME = null;
 
             AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
