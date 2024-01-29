@@ -1,6 +1,6 @@
 ﻿@model IBS.Models.AllGeneratedBills
 @{
-    ViewData["Title"] = "EastBill";
+    ViewData["Title"] = "WestBill";
     var billDate = Model.BILL_DT;
     var expire = "2020-10-01";
     var billDate_time = Convert.ToDateTime(billDate);
@@ -46,7 +46,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td valign="middle" width="40%" style="text-align:left; vertical-align:middle; padding-left:10px;"><img src="@Model.base64Logo" alt="" style="width:150px;height:53px;" /></td>
-                                    @if (Model.BILL_NO == "F") @*.Substring(0, 1)*@
+                                    @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO == "F") @*.Substring(0, 1)*@
                                     {
                                         <td width="20%" valign="middle" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;">
                                             <b>
@@ -769,26 +769,26 @@
                                                     <tr>
                                                         <td>
                                                             <table width="100%" cellpadding="0" cellspacing="0">
-                                                                <tr>
+                                                               @* <tr>
                                                                     <td width="50%" style="font-size: 8px;">EFT details are as under</td>
                                                                     <td style="font-size: 8px;">Account No: 214010200000602</td>
-                                                                </tr>
-                                                                <tr>
+                                                                </tr>*@
+                                                               @* <tr>
                                                                     <td style="font-size: 8px;">NAME OF BANK : / AXIS BANK LTD.</td>
                                                                     <td style="font-size: 8px;">BRANCH CODE: 214</td>
-                                                                </tr>
+                                                                </tr>*@
                                                                 <tr>
                                                                     <td style="font-size: 8px;">NAME OF THE BRANCH : SUPELA, BHILAI</td>
                                                                     <td style="font-size: 8px;"> <span class="hindi">आईफससी कोड </span>/ IFSC CODE: UTIB0000214</td>
                                                                 </tr>
 
                                                                 <tr>
-                                                                    <td style="font-size: 8px;">TYPE OF ACCOUNT : CURRENT ACCOUNT</td>
-                                                                    <td style="font-size: 8px;">CENTER CODE: 490</td>
+                                                                    @*<td style="font-size: 8px;">TYPE OF ACCOUNT : CURRENT ACCOUNT</td>*@
+                                                                    <td style="font-size: 8px;">MICR: 400211002</td>
                                                                 </tr>
-                                                                <tr>
+                                                                @*<tr>
                                                                     <td colspan="2" style="padding-bottom: 25px;font-size: 8px;">DIGIT CODE NUMBER OF THE BANK BRANCH APPEARING ON THE MICR CHEQUE ISSUED BY THE BANK: 490211002</td>
-                                                                </tr>
+                                                                </tr>*@
                                                             </table>
                                                         </td>
                                                     </tr>
