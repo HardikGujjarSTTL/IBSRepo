@@ -59,7 +59,7 @@
                                     {
                                         <td width="15%" valign="top" align="center" style="font-size:8px; font-family:Arial, Helvetica, sans-serif; vertical-align:top; text-align:center;">
                                             <b>
-                                                <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>
+                                                <span class="hindi">निरीक्षण शुल्क बिल</span>
                                                 <br>INSPECTION FEE BILL<br>
                                                 <span class="hindi">मूल </span>ORIGINAL
                                             </b>
@@ -184,7 +184,7 @@
                                             <tr>
                                                 @if (!string.IsNullOrEmpty(Model.BILL_NO) && Model.BILL_NO.Substring(0, 1) == "F")
                                                 {
-                                                    <td style="width: 14%; font-size:8px;"><b><span><img style="width:120px" src="img/CreditNote.jpg" alt="" /></span><br>CREDIT NOTE.</b></td>
+                                                    <td style="width: 15%; text-align:left; font-size:8px;"><b><span>क्रेडिट नोट.</span><br>CREDIT NOTE.</b></td>
                                                     <td style="width: 86%;  font-size:8px;" valign="middle" align="left">@Model.credit_doc_id</td>
                                                 }
                                                 else
@@ -258,7 +258,7 @@
                                     <td valign="top" width="49%" style="font-size:8px; font-family:Arial, Helvetica, sans-serif;padding:15px 0;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td  style=" font-size:8px;"><b><span class="hindi"><img src="img/b1.JPG" alt="" />का &#2367;ववरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
+                                                <td style="font-size:8px;"><b><span class="hindi">प्रेषिती का विवरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
                                             </tr>
                                             <tr>
                                                 <td  style=" font-size:8px;">
@@ -281,11 +281,11 @@
                             <!--================sec6 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center; font-size:8px;" width="275" align="center"><b><span class="hindi"><img src="img/c1.JPG" alt="" /></span> / INSPECTION CERTIFICATE NO.</b></td>
+                                    <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 0; text-align:center; font-size:8px; text-align:center;" width="275" align="center"><b><span class="hindi"> निरीक्षण प्रमाणपत्र सं</span> / INSPECTION CERTIFICATE NO.</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center; font-size:8px;" align="center"><b><span class="hindi">&#2367;दनांक </span>/ DATE</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center; font-size:8px;" align="center"><b><span class="hindi">बुक सं </span>/ BOOK NO.</b></td>
                                     <td width="15%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000;padding:15px 0; text-align:center; font-size:8px;" align="center"><b><span class="hindi">सेट सं </span>/ SET NO.</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; text-align:center; font-size:8px;" align="center"><b><span class="hindi"><img src="img/c2.JPG" alt="" /> </span>/ INSTALMENT NO.</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;  text-align:center; font-size:8px; text-align:center;" align="center"><b><span class="hindi"> किस्त सं </span>/ INSTALMENT NO.</b></td>
                                 </tr>
                                 <tr>
                                     <td width="30%" valign="top" style="border-bottom:1px solid #000;border-right:1px solid #000; text-align:center;padding:15px 0; font-size:8px;">@Model.IC_NO</td>
@@ -303,11 +303,11 @@
                             <!--================sec7 start==============-->
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; font-size:8px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:15px 0; font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                                    <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
+                                    <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">मात्रा</span> <br>QUANTITY</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
+                                    <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
                                 </tr>
                                 @{
                                     foreach (var val in Model.items.Skip(0).Take(7))
@@ -315,12 +315,12 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@no</td>
                                             <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px; font-size:8px;" align="center">@val.item_desc</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@($"{val.qty} <br>{val.uom_s_desc}")</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@($"{val.rate}<br>{val.uom_factor}")</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@($"{val.qty}{val.uom_s_desc}")</td>
+                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@($"{val.rate}{val.uom_factor}")</td>
                                             <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-top: 15px; text-align:right; font-size:8px;" align="right">@val.basic_value</td>
                                         </tr>
                                         <tr>
-                                            if (Convert.ToInt32(val.sales_tax) > 0)
+                                            @if (Convert.ToInt32(val.sales_tax) > 0)
                                             {
                                             <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px; text-align:right;" align="right"></td>
                                             <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
@@ -337,7 +337,7 @@
                                         var perOtHtml = "";
                                         var disStatus = false;
                                         var otherChStatus = false;
-                                        if (typeArr.Contains(val.discount_type))
+                                        @if (typeArr.Contains(val.discount_type))
                                         {
                                             disStatus = true;
                                             var dSign = val.discount_type == "P" ? "%" : (val.discount_type == "N" ? "Per Num." : "Lumsum");
@@ -538,11 +538,11 @@
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">मात्रा</span> <br>QUANTITY</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(7).Take(15))
@@ -550,8 +550,8 @@
                                 <tr>
                                     <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@no</td>
                                     <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px; font-size:8px;" align="center">@val.item_desc</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@($"{val.qty} <br>{val.uom_s_desc}")</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@($"{val.rate}<br>{val.uom_factor}")</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@($"{val.qty} {val.uom_s_desc}")</td>
+                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@($"{val.rate}{val.uom_factor}")</td>
                                     <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
@@ -683,21 +683,21 @@
                                     <!--================sec8 start==============-->
                                     <table width="100%" cellpadding="0" cellspacing="0">
                                         <tr>
-                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px; font-size:8px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
+                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
                                             <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td height="100" valign="top" style=" font-size:8px;"><b>FOR RITES LTD.</b></td>
+                                                            <td height="100" valign="top" style="text-align:center; font-size:8px;"><b>FOR RITES LTD.</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b> <span class="hindi">प्राधिकृत<br>अधिकारी</span></b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td style=" font-size:8px;"><b><i>Authorised Officer</i></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b><i>Authorised Officer</i></b></td>
                                                         </tr>
                                                     </table>
                                                 </b>
@@ -785,11 +785,11 @@
                     <!-- table start-->
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="5%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d1.JPG" alt="" /></span> <br>SL.NO.</b></td>
-                            <td width="50%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d2.JPG" alt="" /></span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d3.JPG" alt="" /></span> <br>QUANTITY</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi">यू&#2367;नट लागत</span> <br>UNIT COST</b></td>
-                            <td width="15%" valign="top" style="border-bottom: 1px solid #000; padding: 15px 0;  font-size:8px;" align="center"><b><span class="hindi"><img src="img/d4.JPG" alt="" /></span> <br>BASIC VALUE</b></td>
+                            <td width="5%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">क्रमां सं.</span> <br>SL.NO.</b></td>
+                            <td width="50%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">सामग्री का वर्णन</span><br>DESCRIPTION OF MATERIAL INSPECTED</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">मात्रा</span> <br>QUANTITY</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">यूनिट लागत</span> <br>UNIT COST</b></td>
+                            <td width="15%" valign="top" style="border-bottom:1px solid #000;padding:3px 0;font-size:8px; text-align:center;" align="center"><b><span class="hindi">आधार मूल्य</span> <br>BASIC VALUE</b></td>
                         </tr>
                         @{
                             foreach (var val in Model.items.Skip(22).Take(37))
@@ -937,21 +937,21 @@
                                     <!--================sec8 start==============-->
                                     <table width="100%" cellpadding="0" cellspacing="0">
                                         <tr>
-                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi"><img src="img/l1.JPG" alt="" /></span> Enclosures : <span class="hindi"><img src="img/nirikshan.JPG" alt="" /></span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
+                                            <td style="border-bottom:1px solid #000;border-right:1px solid #000;padding-left:10px;" width="80%" height="25" valign="middle"><b><span class="hindi">संलग्न</span> Enclosures : <span class="hindi">निरीक्षण शुल्क बिल </span>/ Inspection Certificate <span class="hindi">पी. ओ. कॉपी </span> / P.O. Copy</b></td>
                                             <td style="font-size:8px;border-right:1px solid #000;" align="center" rowspan="2">
                                                 <b>
                                                     <table cellpadding="0" cellspacing="0">
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l4.JPG" alt="" /><br><img src="img/l5.JPG" alt="" /></span></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b> <span class="hindi">कृते राइट्स<br>लिमिटेड</span></b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td height="100" valign="top" style=" font-size:8px;"><b>FOR RITES LTD.</b></td>
+                                                            <td height="100" valign="top" style="text-align:center; font-size:8px;"><b>FOR RITES LTD.</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b> <span class="hindi"><img src="img/l6.JPG" alt="" /><br><img src="img/l7.JPG" alt="" /></span></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b> <span class="hindi">प्राधिकृत<br>अधिकारी</span></b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td style=" font-size:8px;"><b><i>Authorised Officer</i></b></td>
+                                                            <td style="text-align:center; font-size:8px;"><b><i>Authorised Officer</i></b></td>
                                                         </tr>
                                                     </table>
                                                 </b>

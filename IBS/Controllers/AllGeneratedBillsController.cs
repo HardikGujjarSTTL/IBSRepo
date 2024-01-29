@@ -573,6 +573,7 @@ namespace IBS.Controllers
             List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
 
             AllGeneratedBills selectedBill = model.FirstOrDefault(bill => bill.BILL_NO == BillNo);
+            selectedBill.items = allGeneratedBillsRepository.GetBillItems(BillNo);
 
             string path = env.WebRootPath + "/images/";
             var imagePath = Path.Combine(path, "rites-logo.png");
