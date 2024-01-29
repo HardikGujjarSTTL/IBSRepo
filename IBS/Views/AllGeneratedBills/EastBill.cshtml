@@ -245,7 +245,7 @@
                                                 <td style=" font-size:8px;"><b><span class="hindi">सं&#2367;वदाकार का नाम और पता</span> / CONTRACTOR'S NAME AND ADDRESS</b></td>
                                             </tr>
                                             <tr>
-                                                <td  style=" font-size:8px;">
+                                                <td style=" font-size:8px;">
                                                     @Model.Vend_Name
                                                     <br>
                                                     @Model.Vend_Add1
@@ -261,7 +261,7 @@
                                                 <td style="font-size:8px;"><b><span class="hindi">प्रेषिती का विवरण</span> / RECIPIENT / CONSIGNEE'S DETAILS</b></td>
                                             </tr>
                                             <tr>
-                                                <td  style=" font-size:8px;">
+                                                <td style=" font-size:8px;">
                                                     @Model.Consignee
                                                     <br>
                                                     @Model.Consignee_Add1
@@ -322,11 +322,11 @@
                                         <tr>
                                             @if (Convert.ToInt32(val.sales_tax) > 0)
                                             {
-                                            <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px; text-align:right;" align="right"></td>
-                                            <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                            <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size:8px; text-align:right;" align="right">@val.sales_tax</td>
+                                                <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px; text-align:right;" align="right"></td>
+                                                <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                                <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; font-size:8px; text-align:right;" align="right">@val.sales_tax</td>
                                             }
                                         </tr>
 
@@ -513,7 +513,7 @@
                                     <tr>
                                         <td width="100%" style="padding:5px 10px; border-top:1px solid #000;padding-top: 25px;padding-bottom: 25px;font-size:8px; text-align:right;" align="right">
                                             <br>
-                                                 <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
+                                            <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
                                             <br>
                                             <span>
                                                 This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
@@ -555,13 +555,13 @@
                                     <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
-                                    if (Convert.ToInt32(val.sales_tax) > 0)
+                                    @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -810,13 +810,13 @@
                                     <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding-left: 15px; padding-right: 15px; padding-top: 15px; font-size:8px;" align="center">@val.basic_value</td>
                                 </tr>
                                 <tr>
-                                    if (Convert.ToInt32(val.sales_tax) > 0)
+                                    @if (Convert.ToInt32(val.sales_tax) > 0)
                                     {
-                                    <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
-                                    <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
+                                        <td width="5%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="50%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">GST @Adh @val.sales_tax_per%</td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center"></td>
+                                        <td width="15%" valign="top" style="border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0 25px; font-size:8px;" align="center">@val.sales_tax</td>
                                     }
                                 </tr>
 
@@ -1486,7 +1486,7 @@
                             <tr>
                                 <td width="100%" style="padding:5px 10px; border-top:1px solid #000;font-size:8px; text-align:right;" align="right">
                                     <br>
-                                                        <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
+                                    <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
                                     <br><br>
                                     <span>
                                         This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
@@ -2192,7 +2192,7 @@
                             <tr>
                                 <td width="100%" style="padding:5px 10px; border-top:1px solid #000;font-size:8px; text-align:right;" align="right">
                                     <br>
-                                        <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
+                                    <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
                                     <br><br>
                                     <span>
                                         This is an electronically generated bill and does not require signature as per Rule No. 46(q) of GST Rules 2017 notified vide notification No. 74/2018 Dt. 31.12.2018
@@ -2899,7 +2899,7 @@
                             <tr>
                                 <td width="100%" style="padding:5px 10px; border-top:1px solid #000;font-size:8px; text-align:right;" align="right">
                                     <br>
-                                                                                            <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
+                                    <b> <span class="hindi">पूर्वी क्षेत्र/ Eastern Region QA Division</span><br>56, सी। आर। , तीसरी मंिज़ल /56, C R Avenue, 3rd floor</b><br><b><span class="hindi">कोलकाता - 700012 / Kolkata - 700012</span> <br>CIN NO. L74899DL1974GOI007227</b>
 
                                     <br><br>
                                     <span>
