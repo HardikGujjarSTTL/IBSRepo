@@ -447,8 +447,8 @@
                                                         <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0; text-align:center;" align="center"><b>Total Inspection Fee</b></td>
                                                     }
                                                     <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                                 </tr>
                                                 <tr>
                                                     <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -460,7 +460,7 @@
                                                 <tr>
                                                     <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                                     <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                                    <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0;  text-align:right;" align="right"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                                 </tr>
                                             </table>
                                             <!--================sec7 over==============-->
@@ -686,8 +686,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000; text-align:center;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -699,7 +699,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -921,8 +921,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -934,7 +934,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -1156,8 +1156,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -1169,7 +1169,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -1391,8 +1391,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -1404,7 +1404,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -1626,8 +1626,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -1639,7 +1639,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -1861,8 +1861,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -1874,7 +1874,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -2096,8 +2096,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -2109,7 +2109,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -2331,8 +2331,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -2344,7 +2344,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -2566,8 +2566,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -2579,7 +2579,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -2801,8 +2801,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -2814,7 +2814,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
@@ -3036,8 +3036,8 @@
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td width="50%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>Total Inspection Fee</b></td>
                                             <td width="15%" valign="top" style="border:1px solid #000;" align="center"></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
@@ -3049,7 +3049,7 @@
                                         <tr>
                                             <td width="5%" valign="top" style="border:1px solid #000;" align="center"></td>
                                             <td colspan="3" width="80%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Common.ConvertAmountToWords(Model.sgst + Model.cgst + Model.igst + Model.insp_fee))</b></td>
-                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
+                                            <td width="15%" valign="top" style="border:1px solid #000;padding:3px 0" align="center"><b>@Math.Round(Model.sgst + Model.cgst + Model.igst + Model.insp_fee)</b></td>
                                         </tr>
                                     </table>
                                     <!--================sec7 over==============-->
