@@ -279,7 +279,7 @@ namespace IBS.Controllers
             System.IO.File.WriteAllBytes(path, pdfBytes);
 
             var imagePath = "/ReadWriteData/Signed_Invoices/" + InvoiceNo + ".pdf";
-            //var result = labInvoiceRepository.SaveUploadFile(imagePath, InvoiceNo);
+            //string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
 
             return Json(new { status = 1 });
         }
