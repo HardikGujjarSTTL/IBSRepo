@@ -87,6 +87,7 @@
     public class DigitalSignModel
     {
         public string Bill_No { get; set; }
+        public string InvoiceNo { get; set; }
         public string Base64String { get; set; }
     }
 }
