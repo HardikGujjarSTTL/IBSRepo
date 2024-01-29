@@ -23353,6 +23353,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("REGION_CODE");
+            entity.Property(e => e.Relativepath)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("RELATIVEPATH");
             entity.Property(e => e.Remarks)
                 .HasMaxLength(300)
                 .IsUnicode(false)

@@ -55,6 +55,8 @@ public partial class V22Bill
 
     public string? Consignee { get; set; }
 
+    public string? Relativepath { get; set; }
+
     public string? ConsigneeAdd1 { get; set; }
 
     public string? ConsigneeAdd2 { get; set; }
