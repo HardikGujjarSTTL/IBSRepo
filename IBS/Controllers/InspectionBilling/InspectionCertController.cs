@@ -268,7 +268,15 @@ namespace IBS.Controllers.InspectionBilling
                 int idt = dt1.CompareTo(DateTime.Now.Date.ToString("dd/MM/yyyy"));
 
                 model.Regioncode = Region;
-                int fyr = inpsRepository.financial_year_check(model);
+                int fyr = 0;
+                if(model.Callstatus != "R")
+                {
+                    fyr = inpsRepository.financial_year_check(model);
+                }
+                else
+                {
+                    fyr = 0;
+                }
                 if (fyr == 1)
                 {
                     msg = "Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)";

@@ -5310,7 +5310,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;
             }
-            if(model.CallStatus != "R")
+            if (model.CallStatus != "R")
             {
                 if (model.ConsigneeFirm == "0")
                 {
@@ -5328,11 +5328,11 @@ namespace IBS.Repositories.InspectionBilling
                     return model;
                 }
             }
-            
+
 
             var callStatus = context.T17CallRegisters.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Select(t => t.CallStatus).FirstOrDefault();
 
-            if(model.CallStatus != "R")
+            if (model.CallStatus != "R")
             {
                 var result = context.IcIntermediates.Where(ic => ic.CaseNo == model.CaseNo && ic.CallRecvDt == model.CallRecvDt && ic.CallSno == model.CallSno).ToList();
 
@@ -5436,8 +5436,8 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     existingRecord.CallStatus = model.CallStatus;
                     existingRecord.CallStatusDt = model.CallStatusDt;
-                    existingRecord.BkNo = model.DocBkNo;
-                    existingRecord.SetNo = model.DocSetNo;
+                    //existingRecord.BkNo = model.DocBkNo;
+                    //existingRecord.SetNo = model.DocSetNo;
                     existingRecord.UserId = model.UserName;
                     existingRecord.Datetime = DateTime.Now;
                     existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
@@ -5460,7 +5460,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
                 model.AlertMsg = "Success";
             }
-            
+
 
             return model;
         }
@@ -5600,9 +5600,12 @@ namespace IBS.Repositories.InspectionBilling
                         model.CallCancelCharges = Convert.ToString(11000);
                     }
                 }
-
-
             }
+            else
+            {
+                model.CallCancelCharges = Convert.ToString(selectedValue);
+            }
+            model.RlyNonrly = rly_nonrly;
             return model;
         }
 
@@ -5710,7 +5713,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.RejectionCharge = Convert.ToString(SumValue.Value * 1 / 100);
                 w_cancharges = Math.Round(Convert.ToDouble(model.RejectionCharge), 2);
 
-                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno).Count();
+                var no_of_visits = context.T47IeWorkPlans.Where(t => t.CaseNo == CaseNo && t.CallRecvDt == Convert.ToDateTime(DesireDt) && t.CallSno == CallSno).Count();
                 double w_rejcharges = 0;
                 if (selectedValue == "L")
                 {
@@ -5720,7 +5723,7 @@ namespace IBS.Repositories.InspectionBilling
                         model.RejectionCharge = Convert.ToString(w_rejcharges);
                     }
                 }
-                if (selectedValue == "o")
+                if (selectedValue == "O")
                 {
                     w_rejcharges = no_of_visits * 15000;
                     if (w_rejcharges > w_cancharges)
