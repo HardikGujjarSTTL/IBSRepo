@@ -53,6 +53,7 @@
         public string irfc_bpo_add { get; set; }
         public string irfc_bpo_city { get; set; }
         public string total { get; set; }
+        public string RelativePath { get; set; }
 
         public virtual string base64Logo { get; set; }
         public List<ItemsDetail> items { get; set; } = new List<ItemsDetail>();

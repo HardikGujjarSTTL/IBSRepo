@@ -64,19 +64,19 @@ namespace IBS.Controllers
                         var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
                         var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
                         model.pdfFolder = RelativePath;
-                        if (!Directory.Exists(path))
-                        {
-                            Directory.CreateDirectory(path);
-                        }
+                        //if (!Directory.Exists(path))
+                        //{
+                        //    Directory.CreateDirectory(path);
+                        //}
 
-                        if (Directory.Exists(path))
-                        {
+                        //if (Directory.Exists(path))
+                        //{
                             //check if the PDF file exists
                             string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
                             bool fileExists = System.IO.File.Exists(pdfFilePath);
                             var PDFNamee = item.InvoiceBillNo + ".pdf";
-                            if (!fileExists)
-                            {
+                            //if (!fileExists)
+                            //{
                                 htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
 
                                 await new BrowserFetcher().DownloadAsync();
@@ -85,26 +85,24 @@ namespace IBS.Controllers
                                     Headless = true,
                                     DefaultViewport = null
                                 });
+
                                 await using var page = await browser.NewPageAsync();
                                 await page.EmulateMediaTypeAsync(MediaType.Screen);
                                 await page.SetContentAsync(htmlContent);
 
                                 var pdfContent = await page.PdfStreamAsync(new PdfOptions
                                 {
-                                    Landscape = true,
+                                    Landscape = false,
                                     Format = PaperFormat.Letter,
-                                    PrintBackground = true
+                                    PrintBackground = false,
                                 });
 
                                 await using (var pdfStream = new MemoryStream())
                                 {
                                     await pdfContent.CopyToAsync(pdfStream);
                                     byte[] pdfBytes = pdfStream.ToArray();
-                                    //string base64String = Convert.ToBase64String(pdfBytes);
-                                    //await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
                                     string base64String = Convert.ToBase64String(pdfBytes);
                                     //base64String = base64String.Replace("\"", "");
-
                                     pdfStream.Position = 0;
                                     int pageCount = CountPdfPages(pdfStream);
 
@@ -115,9 +113,9 @@ namespace IBS.Controllers
                                     obj.Base64String = xmlData;
                                     lstXmlData.Add(obj);
                                 }
-                            }
+                            //}
                             //string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
-                        }
+                        //}
                     }
                 }
                 return Json(new { status = 1, list = lstXmlData });
@@ -264,24 +262,54 @@ namespace IBS.Controllers
             }
         }
 
+        //[HttpPost]
+        //public IActionResult UploadSignedPdf(string base64SignedPdf, string InvoiceNo)
+        //{
+        //    byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
+        //    string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
+
+        //    if (!Directory.Exists(path))
+        //    {
+        //        Directory.CreateDirectory(path);
+        //    }
+
+        //    path = path + InvoiceNo + ".pdf";
+        //    System.IO.File.WriteAllBytes(path, pdfBytes);
+
+        //    var imagePath = "/ReadWriteData/Signed_Invoices/" + InvoiceNo + ".pdf";
+        //    //string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
+
+        //    return Json(new { status = 1 });
+        //}
         [HttpPost]
-        public IActionResult UploadSignedPdf(string base64SignedPdf, string InvoiceNo)
+        public IActionResult UploadSignedPdf1(IEnumerable<DigitalSignModel> model)
         {
-            byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
-            string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
-
-            if (!Directory.Exists(path))
+            if (model != null)
             {
-                Directory.CreateDirectory(path);
+                foreach (var item in model)
+                {
+                    byte[] pdfBytes = Convert.FromBase64String(item.Base64String);
+                    string path = env.WebRootPath + "/ReadWriteData/Signed_Lab_Invoices/";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    path = path + item.InvoiceNo + ".pdf";
+                    System.IO.File.WriteAllBytes(path, pdfBytes);
+                    string PDFName = item.InvoiceNo + ".pdf";
+                    var imagePath = "/ReadWriteData/Signed_Lab_Invoices/" + item.InvoiceNo + ".pdf";
+                    string msg = labInvoiceRepository.UpdatePDFDetails(item.InvoiceNo, PDFName, path);
+                    //var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, item.Bill_No);
+                }
+
+                return Json(new { status = 1 });
             }
-
-            path = path + InvoiceNo + ".pdf";
-            System.IO.File.WriteAllBytes(path, pdfBytes);
-
-            var imagePath = "/ReadWriteData/Signed_Invoices/" + InvoiceNo + ".pdf";
-            //string msg = labInvoiceRepository.UpdatePDFDetails(item, PDFNamee, RelativePath);
-
-            return Json(new { status = 1 });
+            else
+            {
+                return Json(new { status = 0 });
+            }
         }
     }
 }

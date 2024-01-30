@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public labInvoicelst GetLabInvoice(string FromDate, string ToDate, string Region);
 
-        string UpdatePDFDetails(labInvoicelst model,string PDFNamee, string RelativePath);
+        string UpdatePDFDetails(string InvoiceNo, string PDFNamee, string RelativePath);
 
         List<LabItemsDetail> GetBillItems(string InvoiceNo);
     }
