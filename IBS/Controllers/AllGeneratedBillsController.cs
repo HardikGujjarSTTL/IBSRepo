@@ -50,6 +50,20 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             DTResult<AllGeneratedBills> dTResult = allGeneratedBillsRepository.GetBillDetails(dtParameters);
+
+            foreach (var item in dTResult.data)
+            {
+                string Region = item.REGION_CODE.Substring(0, 1);
+                string FolderName = GetFolderNameByRegion(Region);
+                var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
+                bool fileExists = System.IO.File.Exists(pdfFilePath);
+                if (fileExists)
+                {
+                    long fileSize = (new FileInfo(pdfFilePath)).Length;
+                }
+                item.FileSize = fileSize.ToString();
+            }
             GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
             return Json(dTResult);
         }
@@ -144,7 +158,6 @@ namespace IBS.Controllers
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
                             //base64String = base64String.Replace("\"", "");
-
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
 
@@ -197,6 +210,7 @@ namespace IBS.Controllers
                         }
 
                         var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+
                         if (!Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
