@@ -50,6 +50,24 @@ namespace IBS.Controllers
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             DTResult<AllGeneratedBills> dTResult = allGeneratedBillsRepository.GetBillDetails(dtParameters);
+
+            foreach (var item in dTResult.data)
+            {
+                string Region = item.REGION_CODE.Substring(0, 1);
+                string FolderName = GetFolderNameByRegion(Region);
+                var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
+                bool fileExists = System.IO.File.Exists(pdfFilePath);
+                if (fileExists)
+                {
+                    long fileSize = (new FileInfo(pdfFilePath)).Length;
+                    item.FileSize = fileSize.ToString();
+                }
+                else
+                {
+                    item.FileSize = "0";
+                }
+            }
             GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
             return Json(dTResult);
         }
@@ -144,7 +162,6 @@ namespace IBS.Controllers
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
                             //base64String = base64String.Replace("\"", "");
-
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
 
@@ -173,6 +190,8 @@ namespace IBS.Controllers
         {
             AllGeneratedBills model = new();
             string htmlContent = "";
+            List<DigitalSignModel> lstXmlData = new List<DigitalSignModel>();
+
             try
             {
                 model = allGeneratedBillsRepository.ReturnBills(fromdata);
@@ -197,14 +216,27 @@ namespace IBS.Controllers
                         }
 
                         var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
-                        if (!Directory.Exists(path))
+
+                        //if (!Directory.Exists(path))
+                        //{
+                        //    Directory.CreateDirectory(path);
+                        //}
+                        //if (Directory.Exists(path))
+                        //{
+
+                        string imgPath = env.WebRootPath + "/images/";
+                        var imagePath = Path.Combine(imgPath, "rites-logo.png");
+                        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                        item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+                        if (!string.IsNullOrEmpty(item.qr_code))
                         {
-                            Directory.CreateDirectory(path);
+                            // Generate Base64String QR Code and Display in PDF.
+                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
                         }
-                        if (Directory.Exists(path))
-                        {
-                            // check if the PDF file exists
-                            string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
+
+                        // check if the PDF file exists
+                        string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
                             bool fileExists = System.IO.File.Exists(pdfFilePath);
 
                             if (fileExists)
@@ -238,43 +270,52 @@ namespace IBS.Controllers
                                 htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
                             }
 
-                            await new BrowserFetcher().DownloadAsync();
-                            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                            {
-                                Headless = true,
-                                DefaultViewport = null
-                            });
-                            await using var page = await browser.NewPageAsync();
-                            await page.EmulateMediaTypeAsync(MediaType.Screen);
-                            await page.SetContentAsync(htmlContent);
+                        await new BrowserFetcher().DownloadAsync();
+                        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                        {
+                            Headless = true,
+                            DefaultViewport = null
+                        });
 
-                            var pdfContent = await page.PdfStreamAsync(new PdfOptions
-                            {
-                                Landscape = false,
-                                Format = PaperFormat.Letter,
-                                PrintBackground = false,
-                            });
+                        await using var page = await browser.NewPageAsync();
+                        await page.EmulateMediaTypeAsync(MediaType.Screen);
+                        await page.SetContentAsync(htmlContent);
 
-                            await using (var pdfStream = new MemoryStream())
-                            {
-                                await pdfContent.CopyToAsync(pdfStream);
-                                byte[] pdfBytes = pdfStream.ToArray();
+                        var pdfContent = await page.PdfStreamAsync(new PdfOptions
+                        {
+                            Landscape = false,
+                            Format = PaperFormat.Letter,
+                            PrintBackground = false,
+                        });
 
-                                // Save the new PDF file
-                                await System.IO.File.WriteAllBytesAsync(pdfFilePath, pdfBytes);
-                            }
+                        await using (var pdfStream = new MemoryStream())
+                        {
+                            await pdfContent.CopyToAsync(pdfStream);
+                            byte[] pdfBytes = pdfStream.ToArray();
+                            string base64String = Convert.ToBase64String(pdfBytes);
+                            //base64String = base64String.Replace("\"", "");
+                            pdfStream.Position = 0;
+                            int pageCount = CountPdfPages(pdfStream);
+
+                            string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
+
+                            DigitalSignModel obj = new DigitalSignModel();
+                            obj.Bill_No = item.BILL_NO;
+                            obj.Base64String = xmlData;
+                            lstXmlData.Add(obj);
                         }
+                        //}
                     }
                 }
 
-                AlertAddSuccess("Bill Returned !!");
-                return Json(new { success = true });
+                return Json(new { status = 1, list = lstXmlData });
+
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "ReturnBill", 1, GetIPAddress());
             }
-            return View(model);
+            return Json(new { status = 0, list = lstXmlData });
         }
 
         public IActionResult NorthBill(AllGeneratedBills obj)
