@@ -4,5 +4,6 @@ namespace IBSAPI.Repositories
 {
     public class ChatRepository : IChatRepository
     {
+        //public List<> GetUserType
     }
 }
