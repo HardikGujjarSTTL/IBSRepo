@@ -151,12 +151,12 @@
                 <tr>
                     @{
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
-                        <td class="center" colspan="5">
-                            @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
+                                <td class="center" colspan="5">
+                                    @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
                         <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
                         <br>   *@
-                            <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
-                        </td>
+                                    <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
+                                </td>
                     }
                 </tr>
                 <tr>
@@ -183,10 +183,10 @@
                     </td>
                 </tr>
                 <tr id="MatCanvalue">
-                    <td>
+                    <td class="MatValue">
                         <label for="Reference">Material Value: </label>
                     </td>
-                    <td>
+                    <td class="MatValue">
                         <input type="text" class="input" id="MatValue" asp-for="MaterialValue" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                     <td>
@@ -338,6 +338,8 @@
                     <input type="hidden" asp-for="ReasonFIFO" />
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
+                    <input type="hidden" asp-for="RlyNonrly" />
+                    
                     <input type="hidden" asp-for="LocalOutstation" />
                     <input type="hidden" asp-for="CallStatusDt" />
                     <input type="hidden" asp-for="Remarkslbl" id="Remarkslbl" />
@@ -776,6 +778,13 @@
                     $('#frmcancelled').hide();
                 }
                 else if (selectedValue == "C") {
+                    if ($("#RlyNonrly").val() != "R") {
+                        $(".MatValue").hide();
+                    }
+                    else
+                    {
+                        $(".MatValue").show();
+                    }
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('#rejvalue').hide();
