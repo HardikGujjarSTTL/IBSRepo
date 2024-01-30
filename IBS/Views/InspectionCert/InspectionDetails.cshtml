@@ -1579,7 +1579,7 @@
             var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();
             debugger
-            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
                 window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&ActionType=M";
             }
             else {
