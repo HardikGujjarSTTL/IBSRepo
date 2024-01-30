@@ -65,6 +65,8 @@
 #btnDownload, #ShowModelImg{ background:#017f6a; border-radius:6px; padding:3px 10px; font-size:11px; color:#fff; text-decoration:none;}
 .chatFileSize{ font-size:12px; font-style:italic; padding-right:10px;}
 .fileDownload{ display:flex; justify-content:space-between;}
+.attachChatBtnAlign{ display:flex; justify-content:start; align-items:center;}
+.attachChatBtnAlign .reset-btn, .attachChatBtnAlign .savenext-btn button.active, .attachChatBtnAlign .savenext-btn button{ margin:0;}
 
 
 /* Magnific Popup CSS */
@@ -172,4 +174,5 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .chatBoxBody, .userChatBox .chatBoxBody{height:auto; height:350px; overflow:auto;}
 .chatLeftBoxBody{ display:none;}
 .multiselect-container{ padding:0 10%!important;}
+.chatBox .messageBody, .chatRightBoxBody, .userChatBox{ display:none;}
 }

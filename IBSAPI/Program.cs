@@ -29,6 +29,8 @@ builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
 builder.Services.AddScoped<ICRISRepository, CRISRepository>();
 builder.Services.AddScoped<IInvoices_SAPRepository, Invoices_SAPRepository>();
 
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "IBS2API", Version = "v1" });
