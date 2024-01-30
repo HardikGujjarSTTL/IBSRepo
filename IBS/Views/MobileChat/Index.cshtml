@@ -3,13 +3,15 @@
 @{
     //Layout = "";
     ViewData["Title"] = "Mobile Chat";
-    
+
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
     string SiteUrl = Model.HostUrl;
 }
 <style type="text/css">
-    #header, #sidebar, .navBtn, #footer{ display:none!important;}
+    #header, #sidebar, .navBtn, #footer {
+        display: none !important;
+    }
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
@@ -95,7 +97,7 @@
 
 
     $(document).ready(function () {
-        
+
         $("#header").hide();
         $("#sidebar").hide();
         $(".navBtn").hide();
@@ -127,36 +129,71 @@
         //    $(".userChatBox").slideUp();
         //});
         if ($(window).width() < 767) {
-        $(".chatLeftBoxBody").click(function(){
-              $(".userChatBox, .chatRightBoxBody").slideDown();
-              $(this).slideUp();
-        });
+            $(".chatLeftBoxBody").click(function (e) {
+                e.preventDefault();
+                $(".userChatBox, .chatRightBoxBody").slideDown();
+                $(this).slideUp();
+                $(".chatUserHeader").show();
+            });
 
-            $(".filterToggle").click(function () {
+            $(".filterToggle").click(function (e) {
+
+                debugger
+                e.preventDefault();
                 $(this).toggleClass("show");
                 $(".chatTopFilter").slideToggle();
 
                 $(".chatBox .messageBody").slideToggle();
-                 if ($(".chatRightBoxBody").is(":visible")) {
+                if (!$(".chatLeftBoxBody").is(":visible") && !$(".chatRightBoxBody").is(":visible")){
+                    $(".chatLeftBoxBody").show();
                     $(".chatRightBoxBody").hide();
-                 }else{
-                    $(".chatRightBoxBody").show();
-                 }
-                 return false;
+                    $(".chatUserHeader").hide();
+                }
+                else if ($(".chatRightBoxBody").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                } 
+                else if (!$(".chatLeftBoxBody").is(":visible")){
+                    $(".chatLeftBoxBody").show();
+                    $(".chatUserHeader").hide();
+                }
+                //else {
+                //    $(".chatUserHeader").show();
+                //    $(".chatRightBoxBody").show();
+                //}
             });
 
-            $(".userShowHideChat").click(function () {
-               
+            $(".userShowHideChat").click(function (e) {
+                debugger
+                e.preventDefault();
                 $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
-                //$(".userChatBox").slideUp();
-                //$(".chatTopFilter").slideUp();
                 if ($(".chatTopFilter").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideUp();
-                } else {
+                    $(".chatLeftBoxBody").show();
+                } 
+                else if ($(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideDown();
                 }
-                return false;
-               // $(".userChatBox, .chatRightBoxBody").slideDown();
+                else if ($(".chatLeftBoxBody").is(":visible") && !$(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatTopFilter").slideDown();
+                }
+                else if (!$(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideDown();
+                }
+                //else {
+                //    $(".chatTopFilter").slideDown();
+                //}
+                //$(".chatUserHeader").show();
+                // $(".userChatBox, .chatRightBoxBody").slideDown();
             });
 
         }
