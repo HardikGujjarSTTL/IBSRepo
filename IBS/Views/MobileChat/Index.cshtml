@@ -22,19 +22,19 @@
             </div>
             <div class="chatTopFilter">
                 <div class="row my-0">
-                    <div class="col-md-2">
+                    <div class="col-md-2 mb-2">
                         <label for="Reference">Users Type</label>
                         <div class="userNormalSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForUsers(), "Value", "Text"), "--Select--", new { @onChange="FillUsers()"})</div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-2">
                         <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5 mb-2">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
-                    <div class="col-md-2 d-flex justify-content-between">
+                    <div class="col-md-2 attachChatBtnAlign">
                         <div class="topUploadCustom">
                             <div class="upload-btn-wrapper submitChatBtn">
                                 <button><span class="fa fa-paperclip"></span></button>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="savenext-btn" style="margin-top:28px;">
+                        <div class="savenext-btn" style="margin-top:28px; margin-left:10px;">
                             <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
                         </div>
                     </div>
@@ -118,13 +118,48 @@
         });
 
         // filter show hide
-        $(".filterToggle").click(function () {
-            $(this).toggleClass("show");
-            $(".chatTopFilter").slideToggle();
+        //$(".filterToggle").click(function () {
+        //    $(this).toggleClass("show");
+        //    $(".chatTopFilter").slideToggle();
+        //});
+        //$(".userShowHideChat").click(function () {
+        //    $(".chatLeftBoxBody").slideToggle();
+        //    $(".userChatBox").slideUp();
+        //});
+        if ($(window).width() < 767) {
+        $(".chatLeftBoxBody").click(function(){
+              $(".userChatBox, .chatRightBoxBody").slideDown();
+              $(this).slideUp();
         });
-        $(".userShowHideChat").click(function () {
-            $(".chatLeftBoxBody").slideToggle();
-        });
+
+            $(".filterToggle").click(function () {
+                $(this).toggleClass("show");
+                $(".chatTopFilter").slideToggle();
+
+                $(".chatBox .messageBody").slideToggle();
+                 if ($(".chatRightBoxBody").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                 }else{
+                    $(".chatRightBoxBody").show();
+                 }
+                 return false;
+            });
+
+            $(".userShowHideChat").click(function () {
+               
+                $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                //$(".userChatBox").slideUp();
+                //$(".chatTopFilter").slideUp();
+                if ($(".chatTopFilter").is(":visible")) {
+                    $(".chatTopFilter").slideUp();
+                } else {
+                    $(".chatTopFilter").slideDown();
+                }
+                return false;
+               // $(".userChatBox, .chatRightBoxBody").slideDown();
+            });
+
+        }
 
         //setTimeout(function () { $(".loginPageInfo").hide(); }, 500);
     });
