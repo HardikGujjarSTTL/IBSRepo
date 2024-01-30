@@ -5436,8 +5436,8 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     existingRecord.CallStatus = model.CallStatus;
                     existingRecord.CallStatusDt = model.CallStatusDt;
-                    existingRecord.BkNo = model.DocBkNo;
-                    existingRecord.SetNo = model.DocSetNo;
+                    //existingRecord.BkNo = model.DocBkNo;
+                    //existingRecord.SetNo = model.DocSetNo;
                     existingRecord.UserId = model.UserName;
                     existingRecord.Datetime = DateTime.Now;
                     existingRecord.RejCharges = Convert.ToDecimal(wRejCharges);
