@@ -3,11 +3,14 @@
 @{
     //Layout = "";
     ViewData["Title"] = "Mobile Chat";
+    
     string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
     string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
     string SiteUrl = Model.HostUrl;
 }
-
+<style type="text/css">
+    #header, #sidebar, .navBtn, #footer{ display:none!important;}
+</style>
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
 <input type="hidden" id="hdnFileSize" value="" />
@@ -106,7 +109,8 @@
             includeSelectAllOption: true,
             enableFiltering: true,
             includeFilterClearBtn: true,
-            enableCaseInsensitiveFiltering: true
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 350,
         });
 
         $(document).ajaxSend(function () {

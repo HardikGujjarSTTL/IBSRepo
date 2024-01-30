@@ -46,6 +46,12 @@ namespace IBS.Models
 
         public string CancellationStatus { get; set; }
 
+        public string LocalOutstation { get; set; }
+
+        public decimal? RejectionCharge { get; set; }
+
+        public decimal? RejectMaterialValue { get; set; }
+
         public string Createdby { get; set; }
 
         public DateTime? CreatedDate { get; set; }

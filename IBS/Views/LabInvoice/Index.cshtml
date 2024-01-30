@@ -70,11 +70,16 @@
 
     <script type="text/javascript">
 
+        let arrDigitalSign = [];
+
         function BtnSubmit() {
             //InitializeDatatable();
             var FromDate = $("#FromDt").val();
             var ToDate = $("#ToDt").val();
             var Region = $("#InspRegion").val();
+
+            arrDigitalSign = [];
+
             $.ajax({
                 url: '@Url.Action("LabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
                 type: 'POST',
@@ -86,16 +91,18 @@
                 if (response.status == 1) {
                     var listXml = response.list;
                     if (listXml.length > 0) {
+                        $(".overlayLoader").show();
                         for (var i = 0; i < listXml.length; i++) {
-                            $(".overlayLoader").show();
                             DigitalSign(listXml[i].Base64String, listXml[i].Bill_No);
-                            $(".overlayLoader").hide();
-                            ShowHideMsg("success", "Digital signed successfully!!");
                         }
+                        $(".overlayLoader").hide();
+                        ShowHideMsg("success", "Digital signed successfully!!");
                     }
                 }
                 $("#dvReportViewer").empty();
                 $("#dvReportViewer").html(response);
+            }).done(function (result) {
+                alert(JSON.stringify(arrDigitalSign));
             });
         }
 
@@ -163,24 +170,24 @@
         //}
 
         function DigitalSign(xmldata, Bill_No) {
-
             var xml = xmldata;
-            alert(xml);
-            //$.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
-            //    var status = $(exeResponse).find("status").text();
-            //    if (status == "ok") {
-            //        var pdf = $(exeResponse).find("data").text();
-            //        $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
-            //    }
-            //    // if (status == "failed") {
-            //    //     alert($(exeResponse).find("error").text());
-            //    // }
-            //    // else {
-            //    //     var pdf = $(exeResponse).find("data").text();
-            //    //     downloadPDF(pdf);
-            //    // }
-            //}).fail(function (xhr, textStatus, errorThrown) {
-            //});
+            $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
+                var status = $(exeResponse).find("status").text();
+                alert(status);
+                if (status == "ok") {
+                    var pdf = $(exeResponse).find("data").text();
+                    arrDigitalSign.push({ pdf: pdf }, { Bill_No: Bill_No });
+                    //$.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
+                }
+                // if (status == "failed") {
+                //     alert($(exeResponse).find("error").text());
+                // }
+                // else {
+                //     var pdf = $(exeResponse).find("data").text();
+                //     downloadPDF(pdf);
+                // }
+            }).fail(function (xhr, textStatus, errorThrown) {
+            });
         }
 
         function downloadPDF(pdf) {

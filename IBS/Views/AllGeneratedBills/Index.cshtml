@@ -28,7 +28,7 @@
             <div class="col-md-3 mb-3">
                 <div class="reference">
                     <label for="Reference">Choose Region</label>
-                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.FeedBackRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -215,6 +215,11 @@
         }
 
         function BtnCreateBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+
             var fromdata = {
                 FromDate: $("#FromDt").val(),
                 ToDate: $("#ToDt").val(),
@@ -266,6 +271,10 @@
         }
 
         function BtnReturnBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
             var fromdata = {
                 FromDate: $("#FromDt").val(),
                 ToDate: $("#ToDt").val(),
@@ -300,7 +309,19 @@
         }
 
         function BtnGetBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
             InitializeDatatable();
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#FromDt").val() || $("#ToDt").val()) {
+                type = true;
+            }
+            return type;
         }
 
         function InitializeDatatable() {
@@ -369,7 +390,7 @@
                             var BillNo = data.BILL_NO;
                             var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
                             return '<td width="10%" valign="top" align="center">' +
-                                '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
+                                '<div class="center"><a href="' + downloadLink + '" target="_blank" class="btn"><span class="fa fa-file-pdf-o"></span></a></div>' +
                                 '</td>';
                         }
                     },
@@ -377,15 +398,18 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            var Id = data.Id;
-                            var RailId = data.RailId;
-                            var editUrl = '@Url.Action("ManageDetails", "CentralItemMaster")/' + Id;
-                            //var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
-                            html += '</div>';
+                            var BILL_NO = data.BILL_NO;
+                            var REGION_CODE = data.REGION_CODE;
+
+                            var html = '<div class="center">';
+                            html += '<a onclick="Delete(\'' + BILL_NO + '\', \'' + REGION_CODE + '\'); return false;" href="javascript:void(0);" id="' + BILL_NO + '" class="btn">';
+                            html += '<i class="fa fa-trash Permission_Delete" title="Delete"></i>';
+                            html += '</a></div>';
+
                             return html;
                         }
                     },
+
                 ],
                 "order": [[0, "asc"]]
             });
@@ -473,5 +497,12 @@
         //    downloadLink.download = fileName;
         //    downloadLink.click();
         //}
+        function Delete(BILL_NO, REGION_CODE) {
+            var url = '@Url.Action("Delete", "AllGeneratedBills")';
+            url = url + "?BILL_NO=" + BILL_NO + "&REGION_CODE=" + REGION_CODE;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
     </script>
 }

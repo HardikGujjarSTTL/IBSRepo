@@ -49,5 +49,7 @@ namespace IBS.Interfaces.InspectionBilling
         public InspectionCertModel GetReturned_Bills_ChangesDetails(string CaseNo, string Bkno, string Setno, string ActionType, string Region);
 
         public int SaveReturned_Bills_Changes(InspectionCertModel model);
+
+        public InspectionCertModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
     }
 }

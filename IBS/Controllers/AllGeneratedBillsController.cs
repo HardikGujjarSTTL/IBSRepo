@@ -162,7 +162,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "NorthBillGeneratePDF", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "CreateBill", 1, GetIPAddress());
             }
 
             return Json(new { status = 0, list = lstXmlData });
@@ -272,7 +272,7 @@ namespace IBS.Controllers
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "ReturnBillPDF", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "ReturnBill", 1, GetIPAddress());
             }
             return View(model);
         }
@@ -573,6 +573,7 @@ namespace IBS.Controllers
             List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
 
             AllGeneratedBills selectedBill = model.FirstOrDefault(bill => bill.BILL_NO == BillNo);
+            selectedBill.items = allGeneratedBillsRepository.GetBillItems(BillNo);
 
             string path = env.WebRootPath + "/images/";
             var imagePath = Path.Combine(path, "rites-logo.png");
@@ -819,6 +820,39 @@ namespace IBS.Controllers
             var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, Bill_No);
 
             return Json(new { status = 1 });
+        }
+
+        public IActionResult Delete(string BILL_NO, string REGION_CODE)
+        {
+            try
+            {
+                string Region = REGION_CODE.Substring(0, 1);
+
+                string FolderName = GetFolderNameByRegion(Region);
+
+                var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
+                string pdfFilePath = Path.Combine(path, BILL_NO + ".pdf");
+
+                bool fileExists = System.IO.File.Exists(pdfFilePath);
+
+                if (fileExists)
+                {
+                    // If the file exists, delete it
+                    System.IO.File.Delete(pdfFilePath);
+                    AlertDeletedSuccess();
+                    var result = allGeneratedBillsRepository.SaveUploadFile(null, BILL_NO);
+                }
+                else
+                {
+                    AlertDanger("This Bill NO PDF is not exists !!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "Delete", 1, GetIPAddress());
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

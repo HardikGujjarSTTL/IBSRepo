@@ -6,6 +6,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Drawing;
+using System.Globalization;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -254,6 +255,9 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallCancelChargesStatus = CallData.c.CallCancelChargesStatus;
                     model.CallCancelCharges = CallData.c.CallCancelCharges;
                     model.CallCancelAmount = CallData.c.CallCancelAmount;
+
+                    model.LocalOutstation = CallData.c.LocalOrOuts;
+                    model.RejectionCharge = CallData.c.RejCharges;
                 }
 
                 if (PODetails == null)
@@ -581,7 +585,7 @@ namespace IBS.Repositories.InspectionBilling
             var CallDetails = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno).FirstOrDefault();
             if (CallDetails != null)
             {
-                if (CallDetails.CallStatus == "C" || CallDetails.CallStatus == "CB")
+                if (CallDetails.CallStatus == "C" || CallDetails.CallStatus == "CB" || CallDetails.CallStatus == "R" || CallDetails.CallStatus == "RB")
                 {
                     var GetDetails = (from C in context.T20Ics
                                       join I in context.T09Ies on C.IeCd equals I.IeCd
@@ -630,6 +634,9 @@ namespace IBS.Repositories.InspectionBilling
                         model.CallCancelStatus = CallDetails.CallCancelStatus;
                         model.CallCancelAmount = CallDetails.CallCancelAmount;
                         model.CallCancelCharges = CallDetails.CallCancelCharges;
+
+                        model.LocalOutstation = CallDetails.LocalOrOuts;
+                        model.RejectionCharge = CallDetails.RejCharges;
 
                         string myYear1 = "", myMonth1 = "", myDay1 = "";
                         if (model.CertDt != null)
@@ -1282,7 +1289,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 bscheck3 = 1;
             }
-            if ((bscheck != null || model.Callstatus == "C") && bscheck1 == null && bscheck2 == "" && bscheck3 == 0)
+            if ((bscheck != null || model.Callstatus == "C" || model.Callstatus == "R") && bscheck1 == null && bscheck2 == "" && bscheck3 == 0)
             {
                 string acc_group = "";
                 if (model.SelectRadio == "rdbConsignee")
@@ -1606,7 +1613,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 bscheck3 = 1;
             }
-            if (model.Callstatus != "C")
+            if (model.Callstatus != "C" || model.Callstatus != "R")
             {
                 if (bscheck == null)
                 {
@@ -2362,6 +2369,29 @@ namespace IBS.Repositories.InspectionBilling
                         ds = DataAccessDB.GetDataSet("sp_generate_bill_gst_cancellation", parameter);
                     }
                 }
+                else if (model.Callstatus == "R" || model.Callstatus == "RB")
+                {
+                    OracleParameter[] parameter = new OracleParameter[17];
+                    parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, 1, model.Regioncode, ParameterDirection.Input);
+                    parameter[1] = new OracleParameter("in_case_no", OracleDbType.Varchar2, 10, model.Caseno, ParameterDirection.Input);
+                    parameter[2] = new OracleParameter("in_call_recv_dt", OracleDbType.Date, model.Callrecvdt, ParameterDirection.Input);
+                    parameter[3] = new OracleParameter("in_call_sno", OracleDbType.Int32, model.Callsno, ParameterDirection.Input);
+                    parameter[4] = new OracleParameter("in_consignee_cd", OracleDbType.Int32, model.Consignee, ParameterDirection.Input);
+                    parameter[5] = new OracleParameter("in_bill", OracleDbType.Varchar2, 10, model.BillNo == null ? "X" : model.BillNo, ParameterDirection.Input);
+                    parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, 1, model.BpoFeeType, ParameterDirection.Input);
+                    parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, Convert.ToDecimal(model.RejectionCharge), ParameterDirection.Input);
+                    parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, 1, TaxType, ParameterDirection.Input);
+                    parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
+                    parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
+                    parameter[11] = new OracleParameter("in_max_fee", OracleDbType.Int32, MaxFee, ParameterDirection.Input);
+                    parameter[12] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
+                    parameter[13] = new OracleParameter("in_bill_dt", OracleDbType.Varchar2, Convert.ToDateTime(model.BillDt).ToString("ddMMyyyy"), ParameterDirection.Input);
+                    parameter[14] = new OracleParameter("in_adv_bill", OracleDbType.Varchar2, 1, model.chkABill, ParameterDirection.Input);
+                    parameter[15] = new OracleParameter("in_rejectmaterial", OracleDbType.Int32, Convert.ToInt32(model.RejectMaterialValue), ParameterDirection.Input);
+                    parameter[16] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                    ds = DataAccessDB.GetDataSet("sp_generate_bill_gst_rejection", parameter);
+                }
                 else
                 {
                     OracleParameter[] parameter = new OracleParameter[16];
@@ -2505,7 +2535,7 @@ namespace IBS.Repositories.InspectionBilling
             var CDetails_C = query_c;
             if (CallDetails != null)
             {
-                if (CallDetails.CallStatus != "C")
+                if (CallDetails.CallStatus != "C" || CallDetails.CallStatus != "R")
                 {
                     if (CDetails != null)
                     {
@@ -2586,7 +2616,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.TIFee = Bill.InspFee;
                 model.BillDt = Bill.BillDt;
                 model.BillAmount = Bill.BillAmount;
-                if(T17 != null)
+                if (T17 != null)
                 {
                     model.Callstatus = T17.CallStatus;
                 }
@@ -2914,5 +2944,33 @@ namespace IBS.Repositories.InspectionBilling
             }
         }
 
+        public InspectionCertModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            InspectionCertModel model = new();
+            string formattedCallRecvDt = "";
+            if (DesireDt != null && DesireDt != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(DesireDt.ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                formattedCallRecvDt = parsedFromDate.ToString("dd/MM/yyyy");
+            }
+            var SumValue = (from t18 in context.T18CallDetails
+                            join t15 in context.T15PoDetails on new { t18.CaseNo, t18.ItemSrnoPo } equals new { t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
+                            where t18.CaseNo == CaseNo && t18.CallRecvDt == Convert.ToDateTime(formattedCallRecvDt) && t18.CallSno == CallSno
+                            select new
+                            {
+                                t18.CaseNo,
+                                t18.CallRecvDt,
+                                t18.CallSno,
+                                Value = t15.Value != null && t15.Qty != null && t18.QtyToInsp != null
+                        ? ((decimal)t15.Value / (decimal)t15.Qty) * (decimal)t18.QtyToInsp
+                        : 0
+                            })
+                              .GroupBy(x => new { x.CaseNo, x.CallRecvDt, x.CallSno })
+                              .Select(group => new { Value = Math.Round(group.Sum(x => (decimal)x.Value), 2) })
+                              .FirstOrDefault();
+            model.RejectMaterialValue = Convert.ToDecimal(SumValue.Value);
+            return model;
+        }
     }
 }
