@@ -61,8 +61,12 @@ namespace IBS.Controllers
                 if (fileExists)
                 {
                     long fileSize = (new FileInfo(pdfFilePath)).Length;
+                    item.FileSize = fileSize.ToString();
                 }
-                item.FileSize = fileSize.ToString();
+                else
+                {
+                    item.FileSize = "0";
+                }
             }
             GlobalDeclaration.AllGeneratedBillModel = dTResult.data.ToList();
             return Json(dTResult);
