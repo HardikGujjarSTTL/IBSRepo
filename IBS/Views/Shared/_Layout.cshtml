@@ -100,7 +100,7 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="/Chat" class="">
+                                <a href="@Url.Action("Index","Chat")" class="">
                                     <span class="fa fa-comments"></span>
                                 </a>
                             </li>
@@ -192,7 +192,7 @@
                 <!--leftSidebarNav 1-->
                 <div class="navBtn"><a href="#" id="menu-toggle" class="navbar-toggle"><i class="fa fa-bars"></i></a></div>
                 <aside id="sidebar" class="navbar-default navbar-static-side">
-                    <partial name="Menu"/>
+                    <partial name="Menu" />
                 </aside>
                 <!--leftSidebarNav-->
                 <div class="adminInnerContent">
@@ -256,7 +256,7 @@
                 @:$(".Permission_Delete").css("display", "none");
             }
         }
-                                        }
+                                                        }
 
     </script>
 

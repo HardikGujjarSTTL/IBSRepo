@@ -113,6 +113,9 @@
     <script type="text/javascript">
 
         var Region = "@ViewBag.Region";
+        let arrDigitalSign = [];
+        var cnt = 0;
+        var xmlLength = 0;
 
         $(document).ready(function () {
             $("#ClientName").hide();
@@ -167,11 +170,8 @@
             $("#dvAllRly").show();
         }
 
-        function BtnCreateBill() {
-            if (!Validation()) {
-                ShowHideMsgNew(false, "Please select Date.");
-                return;
-            }
+        function BtnCreateBill1() {
+            arrDigitalSign = [];
 
             var fromdata = {
                 FromDate: $("#FromDt").val(),
@@ -193,12 +193,12 @@
                     if (response.status == 1) {
                         var listXml = response.list;
                         if (listXml.length > 0) {
+                            $(".overlayLoader").show();
                             for (var i = 0; i < listXml.length; i++) {
-                                $(".overlayLoader").show();
                                 DigitalSign(listXml[i].Base64String, listXml[i].Bill_No);
-                                $(".overlayLoader").hide();
-                                ShowHideMsg("success", "Digital signed successfully!!");
                             }
+                            //$(".overlayLoader").hide();
+                            //ShowHideMsg("success", "Digital signed successfully!!");
                         }
                     }
                     else {
@@ -208,6 +208,65 @@
                 error: function (error) {
                     console.log(error);
                 }
+            }).done(function (result) {
+                alert("Done");
+                alert(JSON.stringify(arrDigitalSign));
+            });
+        }
+
+        function BtnCreateBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+
+            var fromdata = {
+                FromDate: $("#FromDt").val(),
+                ToDate: $("#ToDt").val(),
+                REGION_CODE: $("#InspRegion").val(),
+                LOA: $("#LOA").val(),
+                CLIENT_NAME: $("#RailwayCD").val(),
+                BPO_NAME: $("#BPO_Name").val(),
+                CLIENT_TYPE: $("#ClientType").val(),
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
+            };
+
+            arrDigitalSign = [];
+            cnt = 0;
+            $.ajax({
+                url: "@Url.Action("CreateBill", "AllGeneratedBills")", //CreateBill
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(fromdata),
+                success: function (response) {
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        xmlLength = listXml.length;
+                        console.log("XMLLenght = " + xmlLength);
+                        if (listXml.length > 0) {
+                            $(".overlayLoader").show();
+                            for (var i = 0; i < listXml.length; i++) {
+                                //setTimeout(function () {
+                                    DigitalSign(listXml[i].Base64String, listXml[i].Bill_No);
+                                //}, 1000);
+                                //setTimeout(DigitalSign(listXml[i].Base64String, listXml[i].Bill_No), 1000);
+                            }
+                            //$(".overlayLoader").hide();
+                            //ShowHideMsg("success", "Digital signed successfully!!");
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            }).done(function (result) {
+                //setTimeout(function () {
+                //    alert("Done1 = " + JSON.stringify(arrDigitalSign));
+                //    $.post("@Url.Action("UploadSignedPdf1", "AllGeneratedBills")", { "model": arrDigitalSign }, function (exeResponse) { });
+                //}, 5000);
             });
         }
 
@@ -356,35 +415,88 @@
             });
         }
 
-        function DigitalSign(xmldata, Bill_No) {
-            
-            var xml = xmldata;
-            $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
-                var status = $(exeResponse).find("status").text();
-                if (status == "ok") {
+        //function DigitalSign(xmldata, Bill_No) {
+        //    var xml = xmldata;
+        //    $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
+        //        var status = $(exeResponse).find("status").text();
+        //        var pdf = $(exeResponse).find("data").text();
+        //        console.log(status);
+        //        console.log("PDF = " + xmldata);
+        //        console.log(Bill_No);
+        //        console.log("========================");
+        //        if (status == "ok") {
+        //            pdf = $(exeResponse).find("data").text();
+        //            cnt = cnt + 1;
+        //            arrDigitalSign.push({ Base64String: pdf, Bill_No: Bill_No });
+        //            $(".overlayLoader").show();
+        //            if (cnt == xmlLength) {
+        //                $.post("@Url.Action("UploadSignedPdf1", "AllGeneratedBills")", { "model": arrDigitalSign }, function (exeResponse) { });
+        //                $(".overlayLoader").hide();
+        //                ShowHideMsg("success", "Digital signed successfully!!");
+        //            }
+        //            console.log(arrDigitalSign);
+        //            console.log(cnt);
+
+        //            //$.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
+        //        }
+        //        else {
+        //            xmlLength = xmlLength - 1;
+        //        }
+        //        // if (status == "failed") {
+        //        //     alert($(exeResponse).find("error").text());
+        //        // }
+        //        // else {
+        //        //     var pdf = $(exeResponse).find("data").text();
+        //        //     downloadPDF(pdf);
+        //        // }
+        //    }).fail(function (xhr, textStatus, errorThrown) {
+        //    });
+        //}
+
+        async function DigitalSign(xmldata, Bill_No) {
+            $(".overlayLoader").show();
+            const result = await $.ajax({
+                url: "http://127.0.0.1:1620",
+                type: 'POST',
+                data: { response: xmldata },
+                success: function (exeResponse) {
+                    var status = $(exeResponse).find("status").text();
                     var pdf = $(exeResponse).find("data").text();
-                    $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) {});
-                }
-                // if (status == "failed") {
-                //     alert($(exeResponse).find("error").text());
-                // }
-                // else {
-                //     var pdf = $(exeResponse).find("data").text();
-                //     downloadPDF(pdf);
-                // }
-            }).fail(function (xhr, textStatus, errorThrown) {
+                    
+                    if (status == "ok") {
+                        pdf = $(exeResponse).find("data").text();
+                        cnt = cnt + 1;
+                        arrDigitalSign.push({ Base64String: pdf, Bill_No: Bill_No });
+                        if (cnt == xmlLength) {
+                            $.post("@Url.Action("UploadSignedPdf1", "AllGeneratedBills")", { "model": arrDigitalSign }, function (exeResponse) { });
+                            $(".overlayLoader").hide();
+                            ShowHideMsg("success", "Digital signed successfully!!");
+                        }
+                        console.log(arrDigitalSign);
+                        console.log(cnt);
+                        console.log("===========OK=============");
+
+                        //$.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
+                    }
+                    else {
+                        xmlLength = xmlLength - 1;
+                        console.log(status);
+                        console.log("PDF = " + xmldata);
+                        console.log(Bill_No);
+                        console.log("===========FAIL=============");
+                    }
+                },
             });
         }
 
-        function downloadPDF(pdf) {
-            const linkSource = `data:application/pdf;base64,${pdf}`;
-            const downloadLink = document.createElement("a");
-            const fileName = "Ditital_Sign_Report.pdf";
-            downloadLink.href = linkSource;
-            downloadLink.download = fileName;
-            downloadLink.click();
-        }
-
+        //function downloadPDF(pdf) {
+        //    const linkSource = `data:application/pdf;base64,${pdf}`;
+        //    const downloadLink = document.createElement("a");
+        //    const fileName = "Ditital_Sign_Report.pdf";
+        //    downloadLink.href = linkSource;
+        //    downloadLink.download = fileName;
+        //    downloadLink.click();
+        //}
         function Delete(BILL_NO, REGION_CODE) {
             var url = '@Url.Action("Delete", "AllGeneratedBills")';
             url = url + "?BILL_NO=" + BILL_NO + "&REGION_CODE=" + REGION_CODE;

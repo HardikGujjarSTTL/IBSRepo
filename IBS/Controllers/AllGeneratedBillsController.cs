@@ -296,7 +296,7 @@ namespace IBS.Controllers
         }
 
         public IActionResult NorthBill(AllGeneratedBills obj)
-        {            
+        {
             obj.FromDate = "01/01/2021";
             obj.ToDate = "31/01/2021";
             obj.REGION_CODE = "N";
@@ -326,11 +326,11 @@ namespace IBS.Controllers
                     item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
-            
-            if(model.lstBillDetailsForPDF.Count > 0)
+
+            if (model.lstBillDetailsForPDF.Count > 0)
             {
 
-            return View(model.lstBillDetailsForPDF[0]);
+                return View(model.lstBillDetailsForPDF[0]);
             }
             else
             {
@@ -787,6 +787,36 @@ namespace IBS.Controllers
             {
                 iText.Kernel.Pdf.PdfDocument pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfReader);
                 return pdfDocument.GetNumberOfPages();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UploadSignedPdf1(IEnumerable<DigitalSignModel> model)
+        {
+            if (model != null)
+            {
+                foreach (var item in model)
+                {
+                    byte[] pdfBytes = Convert.FromBase64String(item.Base64String);
+                    string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    path = path + item.Bill_No + ".pdf";
+                    System.IO.File.WriteAllBytes(path, pdfBytes);
+
+                    var imagePath = "/ReadWriteData/Signed_Invoices/" + item.Bill_No + ".pdf";
+                    var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, item.Bill_No);
+                }
+
+                return Json(new { status = 1 });
+            }
+            else
+            {
+                return Json(new { status = 0 });
             }
         }
 
