@@ -171,9 +171,12 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .messageBody{ flex-direction:column;}
 .chatLeftBoxBody, .userChatBox{ width:100%;}
 .chatBox{ height:auto;}
-.chatBoxBody, .userChatBox .chatBoxBody{height:auto; height:350px; overflow:auto;}
+.chatBoxBody{height:550px; overflow:auto;}
+.userChatBox .chatBoxBody{height:485px; overflow:auto;}
 .multiselect-container{ padding:0 10%!important;}
 .chatBox .messageBody, .chatRightBoxBody, .userChatBox, .chatLeftBoxBody {
     display: none;
 }
+.topUploadCustom .upload-btn-wrapper{ padding:0 15px;}
+.backToUser{ font-size:18px; color:#999;}
 }

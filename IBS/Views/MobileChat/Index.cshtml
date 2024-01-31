@@ -12,6 +12,8 @@
     #header, #sidebar, .navBtn, #footer {
         display: none !important;
     }
+
+    .chatUserHeader ul li{ justify-content:space-between;}
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
@@ -64,9 +66,14 @@
                         <div class="chatUserHeader">
                             <ul>
                                 <li class="userList">
+                                    <div>
                                     <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
                                     <div class="chatBoxInfo">
                                         <h4 class="clsName"></h4>
+                                    </div>
+                                    </div>
+                                    <div class="backToUser">
+                                    <span class="fa fa-arrow-left"></span> Back
                                     </div>
                                 </li>
                             </ul>
@@ -138,10 +145,19 @@
 
             $(".chatLeftBoxBody").click(function (e) {
                 e.preventDefault();
-                $(".userChatBox, .chatRightBoxBody").slideDown();
-                $(this).slideUp();
+                $(".userChatBox").show();
+                $(".chatRightBoxBody").show();
+                $(this).hide();
                 $(".chatUserHeader").show();
             });
+            
+            $(".backToUser").click(function (e) {
+                $(".chatUserHeader").hide();
+                 $(".userChatBox, .chatRightBoxBody").hide();
+                $(".chatRightBoxBody").hide();
+                 $(".chatLeftBoxBody").show();
+            });
+
 
             $(".userShowHideChat").click(function (e) {
                 e.preventDefault();
