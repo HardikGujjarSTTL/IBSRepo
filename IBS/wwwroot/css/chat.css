@@ -172,7 +172,8 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .chatLeftBoxBody, .userChatBox{ width:100%;}
 .chatBox{ height:auto;}
 .chatBoxBody, .userChatBox .chatBoxBody{height:auto; height:350px; overflow:auto;}
-.chatLeftBoxBody{ display:none;}
 .multiselect-container{ padding:0 10%!important;}
-.chatBox .messageBody, .chatRightBoxBody, .userChatBox{ display:none;}
+.chatBox .messageBody, .chatRightBoxBody, .userChatBox, .chatLeftBoxBody {
+    display: none;
+}
 }
