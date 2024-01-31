@@ -1766,3 +1766,40 @@ ADD RELATIVEPATH VARCHAR2(100);
 
 ALTER TABLE T55_LAB_INVOICE
 ADD FILEID VARCHAR2(50);
+====================================================================================================================
+
+create or replace PROCEDURE SP_GetLabInvoices (
+    p_FromDate IN VARCHAR2,
+    p_ToDate IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT t55.invoice_no InvoiceNO,
+           T22.BILL_NO AS BillNO,
+           t55.invoice_dt InvoiceDt,
+           t55.case_no,
+           t55.irn_no AS irn_no,
+           t55.ack_no AS ack_no,
+           t55.ack_dt AS ack_dt,
+           t55.qr_code AS qr_code,
+           t12.bpo_name AS BPO_NAME,
+           t12.bpo_add AS bpo_add,
+           t03.city AS bpo_city,
+           t55.recipient_gstin_no AS recipient_gstin_no
+    FROM t55_lab_invoice T55
+    JOIN t22_bill T22 ON t55.case_no = t22.case_no
+    JOIN t12_bill_paying_officer t12 ON t55.bpo_cd = t12.bpo_cd
+    JOIN t03_city t03 ON t12.bpo_city_cd = t03.city_cd
+    WHERE t55.invoice_dt BETWEEN TO_DATE(p_FromDate,'DD/MM/YYYY') AND TO_DATE(p_ToDate,'DD/MM/YYYY')
+      AND t55.region_code = p_Region
+      AND t55.qr_code IS NOT NULL
+      AND t55.irn_no IS NOT NULL
+      AND t55.ack_no IS NOT NULL
+      AND t55.ack_dt IS NOT NULL
+      AND t55.dig_bill_gen_dt IS NULL
+      AND t55.bill_finalised IS NOT NULL
+    ORDER BY t55.invoice_dt DESC
+FETCH FIRST 5 ROWS ONLY;
+END SP_GetLabInvoices;

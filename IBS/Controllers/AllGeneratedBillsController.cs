@@ -161,7 +161,6 @@ namespace IBS.Controllers
                             await pdfContent.CopyToAsync(pdfStream);
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
-                            //base64String = base64String.Replace("\"", "");
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
 
@@ -237,38 +236,38 @@ namespace IBS.Controllers
 
                         // check if the PDF file exists
                         string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
-                            bool fileExists = System.IO.File.Exists(pdfFilePath);
+                        bool fileExists = System.IO.File.Exists(pdfFilePath);
 
-                            if (fileExists)
-                            {
-                                // If the file exists, delete it
-                                System.IO.File.Delete(pdfFilePath);
-                            }
+                        if (fileExists)
+                        {
+                            // If the file exists, delete it
+                            System.IO.File.Delete(pdfFilePath);
+                        }
 
-                            if (model.REGION_CODE == "N")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "S")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "E")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "W")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "Q")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "C")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
-                            }
+                        if (model.REGION_CODE == "N")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "S")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "E")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "W")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "Q")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
+                        }
+                        else if (model.REGION_CODE == "C")
+                        {
+                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
+                        }
 
                         await new BrowserFetcher().DownloadAsync();
                         await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
@@ -823,10 +822,7 @@ namespace IBS.Controllers
                     byte[] pdfBytes = Convert.FromBase64String(item.Base64String);
                     string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
 
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
+                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                     path = path + item.Bill_No + ".pdf";
                     System.IO.File.WriteAllBytes(path, pdfBytes);

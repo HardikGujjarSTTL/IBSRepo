@@ -89,6 +89,7 @@
     {
         public string Bill_No { get; set; }
         public string InvoiceNo { get; set; }
+        public string InvoiceBillNo { get; set; }
         public string Base64String { get; set; }
     }
 }
