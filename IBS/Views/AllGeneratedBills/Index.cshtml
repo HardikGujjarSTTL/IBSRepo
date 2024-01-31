@@ -336,7 +336,7 @@
 
         function Validation() {
             var type = false;
-            if ($("#FromDt").val() || $("#ToDt").val()) {
+            if ($("#FromDt").val() && $("#ToDt").val()) {
                 type = true;
             }
             return type;
@@ -405,8 +405,6 @@
                         data: null,
                         render: function (data, type, row) {
 
-                            var BillNo = data.BILL_NO;
-                            //var downloadLink = '/AllGeneratedBills/GeneratePDF?BillNo=' + BillNo;
                             var downloadLink = data.RelativePath;
                             return '<td width="10%" valign="top" align="center">' +
                                 '<div class="center"><a href="' + downloadLink + '" target="_blank" class="btn"><span class="fa fa-file-pdf-o"></span></a></div>' +
