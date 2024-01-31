@@ -98,8 +98,8 @@
 
     $(document).ready(function () {
 
-        $("#header").hide();
         $("#sidebar").hide();
+        $("#header").hide();
         $(".navBtn").hide();
         $("#footer").hide();
         $(".contentContainer").css("margin-left", "0");
@@ -119,46 +119,28 @@
             $(".overlayLoader").hide();
         });
 
-        // filter show hide
-        //$(".filterToggle").click(function () {
-        //    $(this).toggleClass("show");
-        //    $(".chatTopFilter").slideToggle();
-        //});
-        //$(".userShowHideChat").click(function () {
-        //    $(".chatLeftBoxBody").slideToggle();
-        //    $(".userChatBox").slideUp();
-        //});
         if ($(window).width() < 767) {
+
+            $(".filterToggle").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("show");
+                if ($(".chatTopFilter").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideUp();
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                }
+                else {
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideUp();
+                    $(".chatTopFilter").slideDown();
+                }
+            });
+
             $(".chatLeftBoxBody").click(function (e) {
                 e.preventDefault();
                 $(".userChatBox, .chatRightBoxBody").slideDown();
                 $(this).slideUp();
                 $(".chatUserHeader").show();
-            });
-
-            $(".filterToggle").click(function (e) {
-
-                e.preventDefault();
-                $(this).toggleClass("show");
-                $(".chatTopFilter").slideToggle();
-
-                $(".chatBox .messageBody").slideToggle();
-                if (!$(".chatLeftBoxBody").is(":visible") && !$(".chatRightBoxBody").is(":visible")){
-                    $(".chatLeftBoxBody").show();
-                    $(".chatRightBoxBody").hide();
-                    $(".chatUserHeader").hide();
-                }
-                else if ($(".chatRightBoxBody").is(":visible")) {
-                    $(".chatRightBoxBody").hide();
-                } 
-                else if (!$(".chatLeftBoxBody").is(":visible")){
-                    $(".chatLeftBoxBody").show();
-                    $(".chatUserHeader").hide();
-                }
-                //else {
-                //    $(".chatUserHeader").show();
-                //    $(".chatRightBoxBody").show();
-                //}
             });
 
             $(".userShowHideChat").click(function (e) {
@@ -169,7 +151,7 @@
                     $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideUp();
                     $(".chatLeftBoxBody").show();
-                } 
+                }
                 else if ($(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
                     $(".chatLeftBoxBody").hide();
                     $(".chatRightBoxBody").hide();
@@ -186,14 +168,8 @@
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideDown();
-                }
-                //else {
-                //    $(".chatTopFilter").slideDown();
-                //}
-                //$(".chatUserHeader").show();
-                // $(".userChatBox, .chatRightBoxBody").slideDown();
+                }                
             });
-
         }
 
         //setTimeout(function () { $(".loginPageInfo").hide(); }, 500);
