@@ -698,7 +698,7 @@
 <div id="EditCallDetailsModal" class="modal" tabindex="-1" role="dialog">
 </div>
 
-<div id="PopUp" class="modal" tabindex="-1" role="dialog">
+<div id="PopUp" class="modal" tabindex="-1" role="dialog" >
 </div>
 
 
@@ -1572,6 +1572,10 @@
                 }
             });
         }
+
+        $('#PopUp').on('hidden.bs.modal', function () {
+            PopUpOk();
+        })
 
         function PopUpOk() {
             $("#PopUp").modal('hide');

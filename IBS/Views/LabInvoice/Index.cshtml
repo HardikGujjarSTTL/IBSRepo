@@ -79,7 +79,10 @@
             var FromDate = $("#FromDt").val();
             var ToDate = $("#ToDt").val();
             var Region = $("#InspRegion").val();
-
+            if (!Validation()) {
+                ShowHideMsgNew(false, "All fields are mendatory.");
+                return;
+            }
             arrDigitalSign = [];
             cnt = 0;
             $.ajax({
@@ -229,6 +232,14 @@
                     }
                 },
             });
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#FromDt").val() && $("#ToDt").val() && $("#InspRegion").val()) {
+                type = true;
+            }
+            return type;
         }
 
         function downloadPDF(pdf) {

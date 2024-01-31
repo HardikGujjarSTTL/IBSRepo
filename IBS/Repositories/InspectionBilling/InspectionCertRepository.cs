@@ -1523,7 +1523,15 @@ namespace IBS.Repositories.InspectionBilling
                 }
                 else
                 {
-                    model.TaxType = "I";
+                    if(model.Callstatus == "R" || model.Callstatus == "C")
+                    {
+
+                    }
+                    else
+                    {
+                        model.TaxType = "I";
+                    }
+                    
                 }
             }
             return Cstatus;
@@ -2343,7 +2351,7 @@ namespace IBS.Repositories.InspectionBilling
             DataSet ds = new DataSet();
             if (Convert.ToInt32(certdt) >= 20170701)
             {
-                if (model.Callstatus == "C" || model.Callstatus == "CB")
+                if (model.Callstatus == "C")
                 {
                     if (model.CallCancelStatus == "C")
                     {
@@ -2369,7 +2377,7 @@ namespace IBS.Repositories.InspectionBilling
                         ds = DataAccessDB.GetDataSet("sp_generate_bill_gst_cancellation", parameter);
                     }
                 }
-                else if (model.Callstatus == "R" || model.Callstatus == "RB")
+                else if (model.Callstatus == "R")
                 {
                     OracleParameter[] parameter = new OracleParameter[17];
                     parameter[0] = new OracleParameter("in_region_cd", OracleDbType.Varchar2, 1, model.Regioncode, ParameterDirection.Input);
