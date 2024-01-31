@@ -44,24 +44,6 @@
         </div>
     </div>
     <div id="dvReportViewer"></div>
-
-    @*   <section class="table-section">
-    <div class="task-listinput">
-    <div class="dash-table">
-    <table id="dtGB" class="table-responsive">
-    <thead>
-    <tr>
-    <th>Sr.No.</th>
-    <th>File Name</th>
-    <th class="action">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    </table>
-    </div>
-    </div>
-    </section>*@
 </div>
 
 @section scripts{
@@ -75,7 +57,6 @@
         var xmlLength = 0;
 
         function BtnSubmit() {
-            //InitializeDatatable();
             var FromDate = $("#FromDt").val();
             var ToDate = $("#ToDt").val();
             var Region = $("#InspRegion").val();
@@ -92,7 +73,6 @@
                 processData: false,
                 contentType: false
             }).done(function (response) {
-                debugger;
                 if (response.status == 1) {
                     var listXml = response.list;
                     xmlLength = listXml.length;
@@ -110,93 +90,8 @@
                 $("#dvReportViewer").empty();
                 $("#dvReportViewer").html(response);
             }).done(function (result) {
-                //alert(JSON.stringify(arrDigitalSign));
             });
         }
-
-        //function InitializeDatatable() {
-
-        //    var FromDate = $("#FromDt").val();
-        //    var ToDate = $("#ToDt").val();
-        //    var Region = $("#InspRegion").val();
-
-        //    var ajaxUrl = "@Url.Action("LoadTable")";
-        //    var ajaxUrl1 = "@Url.Action("LoadTable")";
-
-        //    $("#dtGB").DataTable({
-        //        stateSave: false,
-        //        autoWidth: true,
-        //        scrollX: true,
-        //        scrollCollapse: true,
-        //        processing: true,
-        //        serverSide: true,
-        //        destroy: true,
-        //        paging: true,
-        //        searching: true,
-        //        ajax: {
-        //            url: ajaxUrl1,
-        //            type: "POST",
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json",
-        //            data: function (d) {
-        //                var AdditionalValues = {
-        //                    "FromDate": FromDate,
-        //                    "ToDate": ToDate,
-        //                    "Region": Region,
-        //                };
-        //                d.AdditionalValues = AdditionalValues;
-        //                return JSON.stringify(d);
-        //            },
-        //        },
-        //        columns: [
-        //            {
-        //                data: '', orderable: false, width: '5%',
-        //                render: function (data, type, row, meta) {
-        //                    return meta.row + meta.settings._iDisplayStart + 1;
-        //                }
-        //            },
-        //            {
-        //                data: "InvoiceBillNo",
-        //                render: function (data, type, row) {
-        //                    return data + ".pdf";
-        //                }
-        //            },
-        //            {
-        //                data: null,
-        //                render: function (data, type, row) {
-        //                    debugger
-        //                    var InvoiceBill = data.InvoiceBillNo;
-        //                    var downloadLink = '/LabInvoice/GeneratePDF?InvoiceBillNo=' + InvoiceBill;
-        //                    return '<td width="10%" valign="top" align="center">' +
-        //                        '<a href="' + downloadLink + '" style="color: blue; text-decoration: underline;" Font-Names="Verdana" Font-Size="8pt" target="_blank">Download</a>' +
-        //                        '</td>';
-        //                }
-        //            },
-        //        ],
-        //        "order": [[0, "asc"]]
-        //    });
-        //}
-
-        //function DigitalSign(xmldata, Bill_No) {
-        //    var xml = xmldata;
-        //    $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
-        //        var status = $(exeResponse).find("status").text();
-        //        alert(status);
-        //        if (status == "ok") {
-        //            var pdf = $(exeResponse).find("data").text();
-        //            arrDigitalSign.push({ pdf: pdf }, { Bill_No: Bill_No });
-        //            //$.post("@Url.Action("UploadSignedPdf", "LabInvoice")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
-        //        }
-        //        // if (status == "failed") {
-        //        //     alert($(exeResponse).find("error").text());
-        //        // }
-        //        // else {
-        //        //     var pdf = $(exeResponse).find("data").text();
-        //        //     downloadPDF(pdf);
-        //        // }
-        //    }).fail(function (xhr, textStatus, errorThrown) {
-        //    });
-        //}
 
         async function DigitalSign(xmldata, InvoiceNo) {
             $(".overlayLoader").show();
@@ -211,7 +106,7 @@
                     if (status == "ok") {
                         pdf = $(exeResponse).find("data").text();
                         cnt = cnt + 1;
-                        arrDigitalSign.push({ Base64String: pdf, InvoiceNo: InvoiceNo });
+                        arrDigitalSign.push({ Base64String: pdf, InvoiceNo: InvoiceNo, InvoiceBillNo: InvoiceBillNo });
                         if (cnt == xmlLength) {
                             $.post("@Url.Action("UploadSignedPdf1", "LabInvoice")", { "model": arrDigitalSign }, function (exeResponse) { });
                             $(".overlayLoader").hide();
@@ -220,8 +115,6 @@
                         console.log(arrDigitalSign);
                         console.log(cnt);
                         console.log("===========OK=============");
-
-                        //$.post("@Url.Action("UploadSignedPdf", "LabInvoice")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) { });
                     }
                     else {
                         xmlLength = xmlLength - 1;
