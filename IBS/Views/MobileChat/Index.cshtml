@@ -162,6 +162,7 @@
             $(".userShowHideChat").click(function (e) {
                 e.preventDefault();
                 $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                $(".filterToggle").toggleClass("show");
                 if ($(".chatTopFilter").is(":visible")) {
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
