@@ -5005,7 +5005,7 @@ namespace IBS.Repositories.InspectionBilling
                         context.T19CallCancels.Add(obj);
                         context.SaveChanges();
 
-                        if (model.CallStatus == "C")
+                        if (model.CallStatus == "C" && model.CallCancelStatus == "C")
                         {
                             var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
 
@@ -5036,7 +5036,7 @@ namespace IBS.Repositories.InspectionBilling
                             }
                         }
 
-                        if (model.CallStatus == "C")
+                        if (model.CallStatus == "C" && model.CallCancelStatus == "C")
                         {
                             var poMaster = context.T13PoMasters.FirstOrDefault(pm => pm.CaseNo == model.CaseNo);
                             poMaster.PendingCharges = (byte?)((poMaster.PendingCharges ?? 0) + 1);
@@ -5190,7 +5190,7 @@ namespace IBS.Repositories.InspectionBilling
 
                             context.SaveChanges();
                         }
-                        if (model.CallStatus == "C")
+                        if (model.CallStatus == "C" && model.CallCancelStatus == "C")
                         {
                             var callRegister = context.T17CallRegisters.FirstOrDefault(cr => cr.CaseNo == model.CaseNo && cr.CallRecvDt == model.CallRecvDt && cr.CallSno == model.CallSno);
 

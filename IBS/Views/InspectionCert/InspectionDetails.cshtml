@@ -843,6 +843,11 @@
 
                 $("#CallCancelStatus").prop('disabled', true);
                 $("#BpoFee").val($("#CallCancelCharges").val());
+                if ($("#CallCancelStatus").val() == "N") {
+                    $("#CallCancelAmount").val("0");
+                    $("#CallCancelCharges").val("0");
+                    $("#BpoFee").val("0");
+                }
                 if($("#Callstatus").val() == "CB")
                 {
                     $(".btnGbill").hide();
@@ -1504,7 +1509,7 @@
                 $("#spnBpoFeeType").html("FEE Type are required.");
                 return;
             }
-            debugger
+
             var CertDt = $("#CertDt").val();
             if (CertDt >= "01/07/2017") {
                 if ($("#TaxType").val() == "") {
@@ -1527,10 +1532,13 @@
                 $("#spnMaxFee").html("Please Maximum 0 fees required.");
                 return;
             }
-            // if ($("#Remarks").val() == "") {
-            //     $("#spnRemarks").html("Please add Remarks.");
-            //     return;
-            // }
+
+            if($("#CallCancelStatus").val() == "N")
+            {
+                ShowHideMsgNew(false, "Call Non-Chargeable bill not generated.");
+                return;
+            }
+            
             var CaseNo = $("#Caseno").val();
             var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();

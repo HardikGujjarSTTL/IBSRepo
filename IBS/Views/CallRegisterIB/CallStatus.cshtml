@@ -155,7 +155,7 @@
                                     @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
                         <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
                         <br>   *@
-                                    <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
+                                    <label class="text-danger">Upload the Photos first in case of Accepted, before changing the Call Status.</label>
                                 </td>
                     }
                 </tr>
@@ -1119,7 +1119,6 @@
 
 
             $('#CallCancelStatusdrp').change(function () {
-                debugger
                 CallCancelStatus();
                 CallCancellationChanges();
             });
