@@ -73,508 +73,306 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBill([FromBody] AllGeneratedBills fromdata) //CreateBill
+        public IActionResult Create_Bill([FromBody] AllGeneratedBills fromdata)
         {
-            AllGeneratedBills model = new();
-            string htmlContent = "";
-            List<DigitalSignModel> lstXmlData = new List<DigitalSignModel>();
+            List<AllGeneratedBills> lstGenBill = new List<AllGeneratedBills>();
             try
             {
+                AllGeneratedBills model = new AllGeneratedBills();
                 model = allGeneratedBillsRepository.CreateBills(fromdata);
-
-                string FolderName = GetFolderNameByRegion(model.REGION_CODE);
-
-                if (model.lstBillDetailsForPDF.Count() > 0)
-                {
-                    foreach (var item in model.lstBillDetailsForPDF)
-                    {
-                        item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                        decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                        item.BILL_AMOUNT = totalBillAmount;
-
-                        DateTime billDate = Convert.ToDateTime(item.BILL_DT);
-                        string formattedDate = billDate.ToString("yyyy-MM-dd");
-
-                        var expire = "2020-10-01";
-
-                        if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null))
-                        {
-                            continue;
-                        }
-
-                        string imgPath = env.WebRootPath + "/images/";
-                        var imagePath = Path.Combine(imgPath, "rites-logo.png");
-                        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                        item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-                        if (!string.IsNullOrEmpty(item.qr_code))
-                        {
-                            // Generate Base64String QR Code and Display in PDF.
-                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                        }
-
-                        if (model.REGION_CODE == "N")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-                        }
-                        else if (model.REGION_CODE == "S")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
-                        }
-                        else if (model.REGION_CODE == "E")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
-                        }
-                        else if (model.REGION_CODE == "W")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
-                        }
-                        else if (model.REGION_CODE == "Q")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
-                        }
-                        else if (model.REGION_CODE == "C")
-                        {
-                            htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
-                        }
-
-                        await new BrowserFetcher().DownloadAsync();
-                        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                        {
-                            Headless = true,
-                            DefaultViewport = null
-                        });
-
-                        await using var page = await browser.NewPageAsync();
-                        await page.EmulateMediaTypeAsync(MediaType.Screen);
-                        await page.SetContentAsync(htmlContent);
-
-                        var pdfContent = await page.PdfStreamAsync(new PdfOptions
-                        {
-                            Landscape = false,
-                            Format = PaperFormat.Letter,
-                            PrintBackground = false,
-                        });
-
-                        await using (var pdfStream = new MemoryStream())
-                        {
-                            await pdfContent.CopyToAsync(pdfStream);
-                            byte[] pdfBytes = pdfStream.ToArray();
-                            string base64String = Convert.ToBase64String(pdfBytes);
-                            //base64String = base64String.Replace("\"", "");
-                            pdfStream.Position = 0;
-                            int pageCount = CountPdfPages(pdfStream);
-
-                            string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
-
-                            DigitalSignModel obj = new DigitalSignModel();
-                            obj.Bill_No = item.BILL_NO;
-                            obj.Base64String = xmlData;
-                            lstXmlData.Add(obj);
-                        }
-                    }
-                }
-                //AlertAddSuccess("Bill Generated !!");
-                return Json(new { status = 1, list = lstXmlData });
+                if (model.lstBillDetailsForPDF.Count > 0)
+                    lstGenBill = model.lstBillDetailsForPDF;
+                else
+                    return Json(new { status = 0, list = lstGenBill });
+                return Json(new { status = 1, list = lstGenBill });
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "CreateBill", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "Create_Bill", 1, GetIPAddress());
+                return Json(new { status = 0, list = lstGenBill });
             }
-
-            return Json(new { status = 0, list = lstXmlData });
         }
 
         [HttpPost]
         public async Task<IActionResult> ReturnBill([FromBody] AllGeneratedBills fromdata)
-        {
-            AllGeneratedBills model = new();
-            string htmlContent = "";
-            List<DigitalSignModel> lstXmlData = new List<DigitalSignModel>();
-
+        {           
+            List<AllGeneratedBills> lstGenBill = new List<AllGeneratedBills>();
             try
             {
+                AllGeneratedBills model = new AllGeneratedBills();
                 model = allGeneratedBillsRepository.ReturnBills(fromdata);
-
-                string FolderName = GetFolderNameByRegion(model.REGION_CODE);
-
-                if (model.lstBillDetailsForPDF.Count() > 0)
-                {
-                    foreach (var item in model.lstBillDetailsForPDF)
-                    {
-                        decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                        item.BILL_AMOUNT = totalBillAmount;
-
-                        DateTime billDate = Convert.ToDateTime(item.BILL_DT);
-                        string formattedDate = billDate.ToString("yyyy-MM-dd");
-
-                        var expire = "2020-10-01";
-
-                        if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (item.qr_code == "" || item.qr_code == null))
-                        {
-                            continue;
-                        }
-
-                        var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
-
-                        //if (!Directory.Exists(path))
-                        //{
-                        //    Directory.CreateDirectory(path);
-                        //}
-                        //if (Directory.Exists(path))
-                        //{
-
-                        string imgPath = env.WebRootPath + "/images/";
-                        var imagePath = Path.Combine(imgPath, "rites-logo.png");
-                        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                        item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-                        if (!string.IsNullOrEmpty(item.qr_code))
-                        {
-                            // Generate Base64String QR Code and Display in PDF.
-                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                        }
-
-                        // check if the PDF file exists
-                        string pdfFilePath = Path.Combine(path, item.BILL_NO + ".pdf");
-                            bool fileExists = System.IO.File.Exists(pdfFilePath);
-
-                            if (fileExists)
-                            {
-                                // If the file exists, delete it
-                                System.IO.File.Delete(pdfFilePath);
-                            }
-
-                            if (model.REGION_CODE == "N")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "S")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "E")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "W")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "Q")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", item);
-                            }
-                            else if (model.REGION_CODE == "C")
-                            {
-                                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", item);
-                            }
-
-                        await new BrowserFetcher().DownloadAsync();
-                        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                        {
-                            Headless = true,
-                            DefaultViewport = null
-                        });
-
-                        await using var page = await browser.NewPageAsync();
-                        await page.EmulateMediaTypeAsync(MediaType.Screen);
-                        await page.SetContentAsync(htmlContent);
-
-                        var pdfContent = await page.PdfStreamAsync(new PdfOptions
-                        {
-                            Landscape = false,
-                            Format = PaperFormat.Letter,
-                            PrintBackground = false,
-                        });
-
-                        await using (var pdfStream = new MemoryStream())
-                        {
-                            await pdfContent.CopyToAsync(pdfStream);
-                            byte[] pdfBytes = pdfStream.ToArray();
-                            string base64String = Convert.ToBase64String(pdfBytes);
-                            //base64String = base64String.Replace("\"", "");
-                            pdfStream.Position = 0;
-                            int pageCount = CountPdfPages(pdfStream);
-
-                            string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
-
-                            DigitalSignModel obj = new DigitalSignModel();
-                            obj.Bill_No = item.BILL_NO;
-                            obj.Base64String = xmlData;
-                            lstXmlData.Add(obj);
-                        }
-                        //}
-                    }
-                }
-
-                return Json(new { status = 1, list = lstXmlData });
-
+                if (model.lstBillDetailsForPDF.Count > 0)
+                    lstGenBill = model.lstBillDetailsForPDF;
+                else
+                    return Json(new { status = 0, list = lstGenBill });
+                return Json(new { status = 1, list = lstGenBill });
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "AllGeneratedBills", "ReturnBill", 1, GetIPAddress());
-            }
-            return Json(new { status = 0, list = lstXmlData });
-        }
-
-        public IActionResult NorthBill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "N";
-            //obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
-
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
-
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
-
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
-
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
-
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
+                return Json(new { status = 0, list = lstGenBill });
             }
         }
 
-        public IActionResult SouthBill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "S";
-            obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
+        #region All Views
+        //public IActionResult NorthBill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "N";
+        //    //obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
 
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
 
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
 
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
 
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
 
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
-            }
-        }
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
 
-        public IActionResult CentralBill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "N";
-            obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
+        //public IActionResult SouthBill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "S";
+        //    obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
 
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
 
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
 
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
 
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
 
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
-            }
-        }
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
 
-        public IActionResult EastBill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "E";
-            obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
+        //public IActionResult CentralBill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "N";
+        //    obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
 
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
 
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
 
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
 
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
 
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
-            }
-        }
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
 
-        public IActionResult WestBill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "W";
-            obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
+        //public IActionResult EastBill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "E";
+        //    obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
 
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
 
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
 
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
 
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
 
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
-            }
-        }
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
 
-        public IActionResult COQABill(AllGeneratedBills obj)
-        {
-            obj.FromDate = "01/01/2021";
-            obj.ToDate = "31/01/2021";
-            obj.REGION_CODE = "Q";
-            obj.LOA = "A";
-            obj.RailwayChk = "true";
-            obj.CLIENT_NAME = null;
-            obj.CLIENT_TYPE = "R";
-            obj.BPO_NAME = null;
+        //public IActionResult WestBill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "W";
+        //    obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
 
-            AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
-            if (model.lstBillDetailsForPDF.Count() > 0)
-            {
-                foreach (var item in model.lstBillDetailsForPDF)
-                {
-                    item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
-                    decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
-                    item.BILL_AMOUNT = totalBillAmount;
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
 
-                    if (!string.IsNullOrEmpty(item.qr_code))
-                    {
-                        item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                    }
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
 
-                    string path = env.WebRootPath + "/images/";
-                    var imagePath = Path.Combine(path, "rites-logo.png");
-                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                    item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
 
-            if (model.lstBillDetailsForPDF.Count > 0)
-            {
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
 
-                return View(model.lstBillDetailsForPDF[0]);
-            }
-            else
-            {
-                return View(model);
-            }
-        }
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
+
+        //public IActionResult COQABill(AllGeneratedBills obj)
+        //{
+        //    obj.FromDate = "01/01/2021";
+        //    obj.ToDate = "31/01/2021";
+        //    obj.REGION_CODE = "Q";
+        //    obj.LOA = "A";
+        //    obj.RailwayChk = "true";
+        //    obj.CLIENT_NAME = null;
+        //    obj.CLIENT_TYPE = "R";
+        //    obj.BPO_NAME = null;
+
+        //    AllGeneratedBills model = allGeneratedBillsRepository.CreateBills(obj);
+        //    if (model.lstBillDetailsForPDF.Count() > 0)
+        //    {
+        //        foreach (var item in model.lstBillDetailsForPDF)
+        //        {
+        //            item.items = allGeneratedBillsRepository.GetBillItems(item.BILL_NO);
+        //            decimal totalBillAmount = (item.sgst) + (item.cgst) + (item.igst) + (item.insp_fee);
+        //            item.BILL_AMOUNT = totalBillAmount;
+
+        //            if (!string.IsNullOrEmpty(item.qr_code))
+        //            {
+        //                item.qr_code = Common.QRCodeGenerate(item.qr_code);
+        //            }
+
+        //            string path = env.WebRootPath + "/images/";
+        //            var imagePath = Path.Combine(path, "rites-logo.png");
+        //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        //            item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+        //        }
+        //    }
+
+        //    if (model.lstBillDetailsForPDF.Count > 0)
+        //    {
+
+        //        return View(model.lstBillDetailsForPDF[0]);
+        //    }
+        //    else
+        //    {
+        //        return View(model);
+        //    }
+        //}
+        #endregion
 
         private string GetFolderNameByRegion(string regionCode)
         {
@@ -593,91 +391,6 @@ namespace IBS.Controllers
 
             return regionCode;
         }
-
-        public async Task<IActionResult> GeneratePDF(string BillNo)
-        {
-            List<T22Bill> BillData = allGeneratedBillsRepository.GetBillByBillNo(BillNo);
-
-            if (BillData.Count > 0 && BillData[0].BillResentStatus == "R")
-            {
-                bool isBillResentCountNullOrEmpty = !BillData[0].BillResentCount.HasValue;
-
-                int count = isBillResentCountNullOrEmpty ? 1 : (BillData[0].BillResentCount.Value ? 2 : 0);
-
-                string Bill_No = allGeneratedBillsRepository.UpdateBillCount(BillNo, count);
-            }
-
-            string Bill_Date = allGeneratedBillsRepository.UpdateGEN_Bill_Date(BillNo);
-
-            string pdfFileName = "";
-            string htmlContent = string.Empty;
-            List<AllGeneratedBills> model = GlobalDeclaration.AllGeneratedBillModel;
-
-            AllGeneratedBills selectedBill = model.FirstOrDefault(bill => bill.BILL_NO == BillNo);
-            selectedBill.items = allGeneratedBillsRepository.GetBillItems(BillNo);
-
-            string path = env.WebRootPath + "/images/";
-            var imagePath = Path.Combine(path, "rites-logo.png");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            selectedBill.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-            if (selectedBill.REGION_CODE == "North")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", selectedBill);
-                pdfFileName = "NorthBill.pdf";
-            }
-            else if (selectedBill.REGION_CODE == "South")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", selectedBill);
-                pdfFileName = "SouthBill.pdf";
-            }
-            else if (selectedBill.REGION_CODE == "East")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", selectedBill);
-                pdfFileName = "EastBill.pdf";
-            }
-            else if (selectedBill.REGION_CODE == "West")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", selectedBill);
-                pdfFileName = "WestBill.pdf";
-            }
-            else if (selectedBill.REGION_CODE == "Central")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", selectedBill);
-                pdfFileName = "CentralBill.pdf";
-            }
-            else if (selectedBill.REGION_CODE == "Q")
-            {
-                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", selectedBill);
-                pdfFileName = "Q.pdf";
-            }
-
-            await new BrowserFetcher().DownloadAsync();
-            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true,
-                DefaultViewport = null
-            });
-            await using var page = await browser.NewPageAsync();
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-            await page.SetContentAsync(htmlContent);
-
-            string cssPath = env.WebRootPath + "/css/report.css";
-            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
-            await page.AddStyleTagAsync(bootstrapCSS);
-
-            var pdfContent = await page.PdfStreamAsync(new PdfOptions
-            {
-                Landscape = false,
-                Format = PaperFormat.Letter,
-                PrintBackground = false,
-            });
-
-            await browser.CloseAsync();
-
-            return File(pdfContent, "application/pdf", pdfFileName);
-        }
-
         public string GenerateDigitalSignatureXML(string base64String, int pageNo)
         {
             XmlDocument doc = new XmlDocument();
@@ -814,36 +527,6 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadSignedPdf1(IEnumerable<DigitalSignModel> model)
-        {
-            if (model != null)
-            {
-                foreach (var item in model)
-                {
-                    byte[] pdfBytes = Convert.FromBase64String(item.Base64String);
-                    string path = env.WebRootPath + "/ReadWriteData/Signed_Invoices/";
-
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                    path = path + item.Bill_No + ".pdf";
-                    System.IO.File.WriteAllBytes(path, pdfBytes);
-
-                    var imagePath = "/ReadWriteData/Signed_Invoices/" + item.Bill_No + ".pdf";
-                    var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, item.Bill_No);
-                }
-
-                return Json(new { status = 1 });
-            }
-            else
-            {
-                return Json(new { status = 0 });
-            }
-        }
-
-        [HttpPost]
         public IActionResult UploadSignedPdf(string base64SignedPdf, string Bill_No)
         {
             byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
@@ -859,6 +542,15 @@ namespace IBS.Controllers
 
             var imagePath = "/ReadWriteData/Signed_Invoices/" + Bill_No + ".pdf";
             var result = allGeneratedBillsRepository.SaveUploadFile(imagePath, Bill_No);
+
+            var BillData = allGeneratedBillsRepository.GetBillByBillNo(Bill_No);
+            if (BillData != null && BillData.BillResentStatus == "R")
+            {
+                bool isBillResentCountNullOrEmpty = !BillData.BillResentCount.HasValue;
+                int count = isBillResentCountNullOrEmpty ? 1 : (BillData.BillResentCount.Value ? 2 : 0);
+                string updBillCount = allGeneratedBillsRepository.UpdateBillCount(Bill_No, count);
+            }
+            string updBillDate = allGeneratedBillsRepository.UpdateGEN_Bill_Date(Bill_No);
 
             return Json(new { status = 1 });
         }
@@ -895,5 +587,99 @@ namespace IBS.Controllers
 
             return RedirectToAction("Index");
         }
+
+        #region Generate PDF with Digital Signature
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(AllGeneratedBills model)
+        {
+            string htmlContent = "";
+            model.items = allGeneratedBillsRepository.GetBillItems(model.BILL_NO);
+            decimal totalBillAmount = (model.sgst) + (model.cgst) + (model.igst) + (model.insp_fee);
+            model.BILL_AMOUNT = totalBillAmount;
+
+            DateTime billDate = Convert.ToDateTime(model.BILL_DT);
+            string formattedDate = billDate.ToString("yyyy-MM-dd");
+
+            var expire = "2020-10-01";
+
+            if (Convert.ToDateTime(formattedDate) >= Convert.ToDateTime(expire) && (model.qr_code == "" || model.qr_code == null))
+            {
+                return Json(new { status = 0, xmlDetail = "", Bill_No = model.BILL_NO });
+            }
+
+            string imgPath = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(imgPath, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                // Generate Base64String QR Code and Display in PDF.
+                model.qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
+
+            if (model.REGION_CODE == "N")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/NorthBill.cshtml", model);
+            }
+            else if (model.REGION_CODE == "S")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/SouthBill.cshtml", model);
+            }
+            else if (model.REGION_CODE == "E")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/EastBill.cshtml", model);
+            }
+            else if (model.REGION_CODE == "W")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/WestBill.cshtml", model);
+            }
+            else if (model.REGION_CODE == "Q")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/COQABill.cshtml", model);
+            }
+            else if (model.REGION_CODE == "C")
+            {
+                htmlContent = await this.RenderViewToStringAsync("/Views/AllGeneratedBills/CentralBill.cshtml", model);
+            }
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = false,
+                Format = PaperFormat.Letter,
+                PrintBackground = false,
+            });
+
+            await using (var pdfStream = new MemoryStream())
+            {
+                await pdfContent.CopyToAsync(pdfStream);
+                byte[] pdfBytes = pdfStream.ToArray();
+                string base64String = Convert.ToBase64String(pdfBytes);
+                //base64String = base64String.Replace("\"", "");
+                pdfStream.Position = 0;
+                int pageCount = CountPdfPages(pdfStream);
+
+                string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
+
+                //DigitalSignModel obj = new DigitalSignModel();
+                //obj.Bill_No = item.BILL_NO;
+                //obj.Base64String = xmlData;
+                //lstXmlData.Add(obj);
+                return Json(new { status = 1, xmlDetail = xmlData, Bill_No = model.BILL_NO });
+            }
+            return Json(new { status = 0, xmlDetail = "", Bill_No = model.BILL_NO });
+        }
+        #endregion
     }
 }

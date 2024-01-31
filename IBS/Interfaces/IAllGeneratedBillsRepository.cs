@@ -13,7 +13,7 @@ namespace IBS.Interfaces
 
         List<ItemsDetail> GetBillItems(string Bill_No);
 
-        List<T22Bill> GetBillByBillNo(string Bill_No);
+        T22Bill GetBillByBillNo(string Bill_No);
 
         public string UpdateBillCount(string Bill_No,int count);
 

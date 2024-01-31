@@ -154,12 +154,11 @@ namespace IBS.Repositories
             return list;
         }
 
-        public List<T22Bill> GetBillByBillNo(string Bill_No)
+        public T22Bill GetBillByBillNo(string Bill_No)
         {
             var Bills = context.T22Bills
                       .Where(b => b.BillNo == Bill_No)
-                      .ToList();
-
+                      .FirstOrDefault();
             return Bills;
         }
 
