@@ -73,7 +73,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBill([FromBody] AllGeneratedBills fromdata) //CreateBill
+        public async Task<IActionResult> CreateBill([FromBody] AllGeneratedBills fromdata)
         {
             AllGeneratedBills model = new();
             string htmlContent = "";
@@ -173,7 +173,6 @@ namespace IBS.Controllers
                         }
                     }
                 }
-                //AlertAddSuccess("Bill Generated !!");
                 return Json(new { status = 1, list = lstXmlData });
             }
             catch (Exception ex)
@@ -216,13 +215,6 @@ namespace IBS.Controllers
 
                         var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
 
-                        //if (!Directory.Exists(path))
-                        //{
-                        //    Directory.CreateDirectory(path);
-                        //}
-                        //if (Directory.Exists(path))
-                        //{
-
                         string imgPath = env.WebRootPath + "/images/";
                         var imagePath = Path.Combine(imgPath, "rites-logo.png");
                         byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
@@ -230,7 +222,6 @@ namespace IBS.Controllers
 
                         if (!string.IsNullOrEmpty(item.qr_code))
                         {
-                            // Generate Base64String QR Code and Display in PDF.
                             item.qr_code = Common.QRCodeGenerate(item.qr_code);
                         }
 
@@ -292,7 +283,6 @@ namespace IBS.Controllers
                             await pdfContent.CopyToAsync(pdfStream);
                             byte[] pdfBytes = pdfStream.ToArray();
                             string base64String = Convert.ToBase64String(pdfBytes);
-                            //base64String = base64String.Replace("\"", "");
                             pdfStream.Position = 0;
                             int pageCount = CountPdfPages(pdfStream);
 
@@ -303,7 +293,6 @@ namespace IBS.Controllers
                             obj.Base64String = xmlData;
                             lstXmlData.Add(obj);
                         }
-                        //}
                     }
                 }
 
