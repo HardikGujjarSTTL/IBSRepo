@@ -194,7 +194,6 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination{ flex-wrap:wrap;}
 .reset-btn{ text-align:center;}
 #sidebar{ height:100%;}
 .logoSection{ justify-content:space-evenly;}
-.userShowHideChat{ display:block;}
 }
 @media only screen and (max-width:400px) {
 .adminForm .sixColFeild li .feildCol { width: 100%; margin-bottom: 10px; }

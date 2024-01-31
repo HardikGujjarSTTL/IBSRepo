@@ -12,6 +12,8 @@
     #header, #sidebar, .navBtn, #footer {
         display: none !important;
     }
+
+    .chatUserHeader ul li{ justify-content:space-between;}
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
@@ -32,7 +34,7 @@
                         <label for="Reference">Users</label>
                         <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>
                     </div>
-                    <div class="col-md-5 mb-2">
+                    <div class="col-md-5">
                         <label for="Reference">Message</label>
                         <input type="text" id="txtMessage" />
                     </div>
@@ -64,9 +66,14 @@
                         <div class="chatUserHeader">
                             <ul>
                                 <li class="userList">
+                                    <div>
                                     <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
                                     <div class="chatBoxInfo">
                                         <h4 class="clsName"></h4>
+                                    </div>
+                                    </div>
+                                    <div class="backToUser">
+                                    <span class="fa fa-arrow-left"></span> Back
                                     </div>
                                 </li>
                             </ul>
@@ -98,8 +105,8 @@
 
     $(document).ready(function () {
 
-        $("#header").hide();
         $("#sidebar").hide();
+        $("#header").hide();
         $(".navBtn").hide();
         $("#footer").hide();
         $(".contentContainer").css("margin-left", "0");
@@ -119,57 +126,49 @@
             $(".overlayLoader").hide();
         });
 
-        // filter show hide
-        //$(".filterToggle").click(function () {
-        //    $(this).toggleClass("show");
-        //    $(".chatTopFilter").slideToggle();
-        //});
-        //$(".userShowHideChat").click(function () {
-        //    $(".chatLeftBoxBody").slideToggle();
-        //    $(".userChatBox").slideUp();
-        //});
         if ($(window).width() < 767) {
-            $(".chatLeftBoxBody").click(function (e) {
-                e.preventDefault();
-                $(".userChatBox, .chatRightBoxBody").slideDown();
-                $(this).slideUp();
-                $(".chatUserHeader").show();
-            });
 
             $(".filterToggle").click(function (e) {
-
                 e.preventDefault();
                 $(this).toggleClass("show");
-                $(".chatTopFilter").slideToggle();
-
-                $(".chatBox .messageBody").slideToggle();
-                if (!$(".chatLeftBoxBody").is(":visible") && !$(".chatRightBoxBody").is(":visible")){
-                    $(".chatLeftBoxBody").show();
+                if ($(".chatTopFilter").is(":visible")) {
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideUp();
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
                 }
-                else if ($(".chatRightBoxBody").is(":visible")) {
-                    $(".chatRightBoxBody").hide();
-                } 
-                else if (!$(".chatLeftBoxBody").is(":visible")){
-                    $(".chatLeftBoxBody").show();
-                    $(".chatUserHeader").hide();
+                else {
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideUp();
+                    $(".chatTopFilter").slideDown();
                 }
-                //else {
-                //    $(".chatUserHeader").show();
-                //    $(".chatRightBoxBody").show();
-                //}
             });
+
+            $(".chatLeftBoxBody").click(function (e) {
+                e.preventDefault();
+                $(".userChatBox").show();
+                $(".chatRightBoxBody").show();
+                $(this).hide();
+                $(".chatUserHeader").show();
+            });
+            
+            $(".backToUser").click(function (e) {
+                $(".chatUserHeader").hide();
+                 $(".userChatBox, .chatRightBoxBody").hide();
+                $(".chatRightBoxBody").hide();
+                 $(".chatLeftBoxBody").show();
+            });
+
 
             $(".userShowHideChat").click(function (e) {
                 e.preventDefault();
                 $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                $(".filterToggle").toggleClass("show");
                 if ($(".chatTopFilter").is(":visible")) {
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideUp();
                     $(".chatLeftBoxBody").show();
-                } 
+                }
                 else if ($(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
                     $(".chatLeftBoxBody").hide();
                     $(".chatRightBoxBody").hide();
@@ -186,14 +185,8 @@
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideDown();
-                }
-                //else {
-                //    $(".chatTopFilter").slideDown();
-                //}
-                //$(".chatUserHeader").show();
-                // $(".userChatBox, .chatRightBoxBody").slideDown();
+                }                
             });
-
         }
 
         //setTimeout(function () { $(".loginPageInfo").hide(); }, 500);
