@@ -392,7 +392,6 @@
                     Cnt = Cnt + 1;
                     if (status == "ok") {
                         pdf = $(exeResponse).find("data").text();
-                        $(".overlayLoader1").show();
                         $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) {
                             if (Cnt == xmlLength) {
                                 $(".overlayLoader1").hide();

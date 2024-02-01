@@ -15,7 +15,7 @@ namespace IBS.Controllers
     public class MultipleFileUploadController : BaseController
     {
         private readonly IMultipleFileUploadRepository multipleFileUploadRepository;
-        
+
 
         public MultipleFileUploadController(IMultipleFileUploadRepository _multipleFileUploadRepository)
         {
@@ -28,37 +28,66 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(MultipleFileUploadModel model)
         {
-            if (model.Files != null && model.Files.Count > 0)
-            {
-                foreach (var file in model.Files)
-                {
-                    if (file.Length > 0)
-                    {
-                        if (Path.GetExtension(file.FileName).ToLower() == ".pdf")
-                        {
-                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ReadWriteData/MultipleFileUpload", file.FileName);
+            var FileName = "";
+            var Bill_NO = "";
 
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-                        }
-                        else
+            try
+            {
+                if (model.Files != null)
+                {
+                    if (model.Files.Count > 0 && model.Files.Count <= 50)
+                    {
+                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ReadWriteData/MultipleFileUpload");
+
+                        if (!Directory.Exists(uploadDirectory))
                         {
-                            AlertDanger("Only PDF files are allowed .");
+                            Directory.CreateDirectory(uploadDirectory);
+                        }
+
+                        foreach (var file in model.Files)
+                        {
+                            if (file.Length > 0)
+                            {
+                                if (Path.GetExtension(file.FileName).ToLower() == ".pdf")
+                                {
+                                    var filePath = Path.Combine(uploadDirectory, file.FileName);
+                                    FileName = "wwwroot/ReadWriteData/MultipleFileUpload/" + file.FileName;
+                                    Bill_NO = file.FileName.Split('.')[0];
+                                    using (var stream = new FileStream(filePath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                    }
+                                }
+                                else
+                                {
+                                    return Json(new { status = false, responseText = "Only PDF files are allowed." });
+                                }
+                            }
+
+                            int CreatedBy = UserId;
+                            int result = multipleFileUploadRepository.InsertPDFDetails(FileName, Bill_NO, CreatedBy);
                         }
                     }
+                    else
+                    {
+                        return Json(new { status = false, responseText = "At a time only 50 pdf are upload." });
+                    }
                 }
+                else
+                {
+                    return Json(new { status = false, responseText = "No files selected for upload." });
+                }
+
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "MultipleFileUpload", "Index", 1, GetIPAddress());
+            }
+
+            return Json(new { status = true, responseText = "File Uploaded !!" });
         }
-
-
     }
-    
-
-
-
 }
