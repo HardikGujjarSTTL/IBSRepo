@@ -113,6 +113,7 @@
     <script type="text/javascript">
 
         var Region = "@ViewBag.Region";
+        var Cnt = 0;
         var xmlLength = 0;
 
         $(document).ready(function () {
@@ -120,6 +121,10 @@
             $("#BPOName").hide();
             $('#AllRly').prop('checked', true);
             $("#InspRegion").val(Region);
+
+            $(document).ajaxSend(function () {
+                $(".overlayLoader").hide();
+            });
         });
 
         $('#AllRly').change(function () {
@@ -209,7 +214,7 @@
                 error: function (error) {
                     console.log(error);
                 }
-            }).done(function (result) {                
+            }).done(function (result) {
             });
         }
 
@@ -317,7 +322,7 @@
                 ],
                 "order": [[0, "asc"]]
             });
-        }        
+        }
 
         function Delete(BILL_NO, REGION_CODE) {
             var url = '@Url.Action("Delete", "AllGeneratedBills")';
@@ -343,7 +348,7 @@
                 CLIENT_TYPE: $("#ClientType").val(),
                 RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
-
+            $(".overlayLoader1").show();
             $.ajax({
                 url: "@Url.Action("Create_Bill", "AllGeneratedBills")",
                 type: "POST",
@@ -352,6 +357,7 @@
                 success: function (response) {
                     if (response.status == 1) {
                         var listXml = response.list;
+                        xmlLength = listXml.length;
                         for (i = 0; i < listXml.length; i++) {
                             var data = listXml[i];
                             $.post("@Url.Action("GeneratePDF", "AllGeneratedBills")", { "model": data }, function (exeResponse) {
@@ -374,7 +380,6 @@
 
         // Add Digital Signature in PDF.
         function DigitalSign(xmldata, Bill_No) {
-            $(".overlayLoader").show();
             $.ajax({
                 url: "http://127.0.0.1:1620",
                 type: 'POST',
@@ -382,18 +387,24 @@
                 success: function (exeResponse) {
                     var status = $(exeResponse).find("status").text();
                     var pdf = $(exeResponse).find("data").text();
-
+                    Cnt = Cnt + 1;
                     if (status == "ok") {
                         pdf = $(exeResponse).find("data").text();
+                        $(".overlayLoader1").show();
                         $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) {
-                            $(".overlayLoader").hide();
-                            ShowHideMsg("success", "Digital signed successfully!!");
+                            if (Cnt == xmlLength) {
+                                $(".overlayLoader1").hide();
+                                ShowHideMsg("success", "Digital signed successfully!!");
+                            }
                         });
-
                         //console.log("Bill_No = " + Bill_No);
                         //console.log("===========OK=============");
                     }
                     else {
+                        if (Cnt == xmlLength){
+                            $(".overlayLoader1").hide();
+                            ShowHideMsg("error", "Digital signed unsuccessfully!!");
+                        }
                         //console.log("PDF = " + pdf);
                         //console.log("Bill_No = " + Bill_No);
                         //console.log("===========FAIL=============");
