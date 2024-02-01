@@ -269,7 +269,7 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadSignedPdf1(string base64SignedPdf, string InvoiceNo,string InvoiceBillNo)
+        public IActionResult UploadSignedPdf1(string base64SignedPdf, string InvoiceNo, string InvoiceBillNo)
         {
             byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
             string path = env.WebRootPath + "/ReadWriteData/Signed_Lab_Invoices/";

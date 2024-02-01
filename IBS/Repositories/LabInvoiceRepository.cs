@@ -51,7 +51,7 @@ namespace IBS.Repositories
                     bpo_add = Convert.ToString(row["bpo_add"]),
                     bpo_city = Convert.ToString(row["bpo_city"]),
                     recipient_gstin_no = Convert.ToString(row["recipient_gstin_no"]),
-                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["BillNO"]).Split('-')[1],
+                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["InvoiceNO"]).Split('/')[1].Split('-')[0],
                     Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
                  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
                  Region == "E" ? "EASTERN REGION(INSPECTION)" :
@@ -93,7 +93,7 @@ namespace IBS.Repositories
                     bpo_add = Convert.ToString(row["bpo_add"]),
                     bpo_city = Convert.ToString(row["bpo_city"]),
                     recipient_gstin_no = Convert.ToString(row["recipient_gstin_no"]),
-                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["BillNO"]).Split('-')[1],
+                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["InvoiceNO"]).Split('/')[1].Split('-')[0],
                     Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
                  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
                  Region == "E" ? "EASTERN REGION(INSPECTION)" :
