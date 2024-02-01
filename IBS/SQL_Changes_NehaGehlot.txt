@@ -1803,3 +1803,14 @@ BEGIN
     ORDER BY t55.invoice_dt DESC
 FETCH FIRST 5 ROWS ONLY;
 END SP_GetLabInvoices;
+========================================================================================================
+
+CREATE TABLE  T114_Multiple_Bill_File_Upload(
+      Role_Id    NUMBER(6,0) NOT NULL,
+      BILL_NO  VARCHAR2(50),
+      FILE_NAME  VARCHAR2(500),
+      CreatedDate  DATE,
+      CreatedBy  Int,
+      UpdatedDate  DATE,
+      UpdatedBy  Int
+  );

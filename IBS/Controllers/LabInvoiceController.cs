@@ -32,84 +32,12 @@ namespace IBS.Controllers
         [HttpPost]
         public async Task<IActionResult> LabInvoiceList(string FromDate, string ToDate, string Region)
         {
-            labInvoicelst model = new();
+            labInvoicelst model = new labInvoicelst();
             try
             {
-                List<DigitalSignModel> lstXmlData = new List<DigitalSignModel>();
                 model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
-                model.RegionChar = Region;
-                GlobalDeclaration.LabInvoiceReport = model;
-                string FolderName = "Lab_Invoice_SIGN";
-                string htmlContent = "";
-                if (model.lstlabInvoicelst.Count > 0)
-                {
-                    foreach (var item in model.lstlabInvoicelst)
-                    {
-                        item.items = labInvoiceRepository.GetBillItems(item.InvoiceNo);
-                        decimal? totalTestingCharges = item.items.Sum(billItem => billItem.TESTING_CHARGES);
-                        decimal? SubTotal = item.items.Sum(billItem => billItem.IGST + totalTestingCharges);
-                        item.TotalTESTING_CHARGES = totalTestingCharges;
-                        item.GrandTotal = SubTotal;
-
-                        if (!string.IsNullOrEmpty(item.qr_code))
-                        {
-                            item.qr_code = Common.QRCodeGenerate(item.qr_code);
-                        }
-
-                        string paths = env.WebRootPath + "/images/";
-                        var imagePath = Path.Combine(paths, "rites-logo.png");
-                        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                        item.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-
-                        var path = env.WebRootPath + "/ReadWriteData/" + FolderName;
-                        var RelativePath = "/ReadWriteData/Lab_Invoice_SIGN/";
-                        model.pdfFolder = RelativePath;
-
-                        //check if the PDF file exists
-                        string pdfFilePath = Path.Combine(path, item.InvoiceBillNo + ".pdf");
-                        bool fileExists = System.IO.File.Exists(pdfFilePath);
-                        var PDFNamee = item.InvoiceBillNo + ".pdf";
-
-                        htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", item);
-
-                        await new BrowserFetcher().DownloadAsync();
-                        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                        {
-                            Headless = true,
-                            DefaultViewport = null
-                        });
-
-                        await using var page = await browser.NewPageAsync();
-                        await page.EmulateMediaTypeAsync(MediaType.Screen);
-                        await page.SetContentAsync(htmlContent);
-
-                        var pdfContent = await page.PdfStreamAsync(new PdfOptions
-                        {
-                            Landscape = false,
-                            Format = PaperFormat.Letter,
-                            PrintBackground = false,
-                        });
-
-                        await using (var pdfStream = new MemoryStream())
-                        {
-                            await pdfContent.CopyToAsync(pdfStream);
-                            byte[] pdfBytes = pdfStream.ToArray();
-                            string base64String = Convert.ToBase64String(pdfBytes);
-                            //base64String = base64String.Replace("\"", "");
-                            pdfStream.Position = 0;
-                            int pageCount = CountPdfPages(pdfStream);
-
-                            string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
-
-                            DigitalSignModel obj = new DigitalSignModel();
-                            obj.InvoiceBillNo = item.InvoiceBillNo;
-                            obj.InvoiceNo = item.InvoiceNo;
-                            obj.Base64String = xmlData;
-                            lstXmlData.Add(obj);
-                        }
-                    }
-                }
-                return Json(new { status = 1, list = lstXmlData });
+                var RelativePath = "/ReadWriteData/Signed_Lab_Invoices/";
+                model.pdfFolder = RelativePath;
             }
             catch (Exception ex)
             {
@@ -117,6 +45,93 @@ namespace IBS.Controllers
             }
             return PartialView(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetLabInvoiceList(string FromDate, string ToDate, string Region)
+        {
+            List<labInvoicelst> lstGenBill = new List<labInvoicelst>();
+            try
+            {
+                labInvoicelst model = new labInvoicelst();
+                model = labInvoiceRepository.GetPDFLabInvoice(FromDate, ToDate, Region);
+                if (model.lstlabInvoicelst.Count > 0)
+                    lstGenBill = model.lstlabInvoicelst;
+                else
+                    return Json(new { status = 0, list = lstGenBill });
+                return Json(new { status = 1, list = lstGenBill });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "LabInvoice", "GetLabInvoiceList", 1, GetIPAddress());
+                return Json(new { status = 0, list = lstGenBill });
+            }
+        }
+
+        #region Generate PDF with Digital Signature
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(labInvoicelst model)
+        {
+            string htmlContent = "";
+            model.items = labInvoiceRepository.GetBillItems(model.InvoiceNo);
+            decimal? totalTestingCharges = model.items.Sum(billItem => billItem.TESTING_CHARGES);
+            decimal? SubTotal = model.items.Sum(billItem => billItem.IGST + totalTestingCharges);
+            model.TotalTESTING_CHARGES = totalTestingCharges;
+            model.GrandTotal = SubTotal;
+
+            if (!string.IsNullOrEmpty(model.qr_code))
+            {
+                model.qr_code = Common.QRCodeGenerate(model.qr_code);
+            }
+
+            string paths = env.WebRootPath + "/images/";
+            var imagePath = Path.Combine(paths, "rites-logo.png");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            model.base64Logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+
+            var path = env.WebRootPath + "/ReadWriteData/" + "Signed_Lab_Invoices";
+            var RelativePath = "/ReadWriteData/Signed_Lab_Invoices/";
+            model.pdfFolder = RelativePath;
+
+            //check if the PDF file exists
+            string pdfFilePath = Path.Combine(path, model.InvoiceBillNo + ".pdf");
+            bool fileExists = System.IO.File.Exists(pdfFilePath);
+            var PDFNamee = model.InvoiceBillNo + ".pdf";
+
+            htmlContent = await this.RenderViewToStringAsync("/Views/LabInvoice/LabInvoicePDF.cshtml", model);
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = false,
+                Format = PaperFormat.Letter,
+                PrintBackground = false,
+            });
+
+            await using (var pdfStream = new MemoryStream())
+            {
+                await pdfContent.CopyToAsync(pdfStream);
+                byte[] pdfBytes = pdfStream.ToArray();
+                string base64String = Convert.ToBase64String(pdfBytes);
+                pdfStream.Position = 0;
+                int pageCount = CountPdfPages(pdfStream);
+
+                string xmlData = GenerateDigitalSignatureXML(base64String, pageCount);
+
+                return Json(new { status = 1, xmlDetail = xmlData, InvoiceNo = model.InvoiceNo, InvoiceBillNo = model.InvoiceBillNo });
+            }
+            return Json(new { status = 0, xmlDetail = "", InvoiceNo = model.InvoiceNo, InvoiceBillNo = model.InvoiceBillNo });
+        }
+        #endregion
 
         public string GenerateDigitalSignatureXML(string base64String, int pageNo)
         {
@@ -254,33 +269,23 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadSignedPdf1(IEnumerable<DigitalSignModel> model)
+        public IActionResult UploadSignedPdf1(string base64SignedPdf, string InvoiceNo,string InvoiceBillNo)
         {
-            if (model != null)
+            byte[] pdfBytes = Convert.FromBase64String(base64SignedPdf);
+            string path = env.WebRootPath + "/ReadWriteData/Signed_Lab_Invoices/";
+
+            if (!Directory.Exists(path))
             {
-                foreach (var item in model)
-                {
-                    byte[] pdfBytes = Convert.FromBase64String(item.Base64String);
-                    string path = env.WebRootPath + "/ReadWriteData/Signed_Lab_Invoices/";
-
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                    path = path + item.InvoiceBillNo + ".pdf";
-                    System.IO.File.WriteAllBytes(path, pdfBytes);
-                    string PDFName = item.InvoiceBillNo + ".pdf";
-                    var imagePath = "/ReadWriteData/Signed_Lab_Invoices/" + item.InvoiceBillNo + ".pdf";
-                    string msg = labInvoiceRepository.UpdatePDFDetails(item.InvoiceNo, PDFName, path);
-                }
-
-                return Json(new { status = 1 });
+                Directory.CreateDirectory(path);
             }
-            else
-            {
-                return Json(new { status = 0 });
-            }
+
+            path = path + InvoiceBillNo + ".pdf";
+            System.IO.File.WriteAllBytes(path, pdfBytes);
+            var PDFName = InvoiceBillNo + ".pdf";
+            var imagePath = "/ReadWriteData/Signed_Lab_Invoices/" + InvoiceBillNo + ".pdf";
+            int result = labInvoiceRepository.UpdatePDFDetails(InvoiceNo, PDFName, imagePath);
+
+            return Json(new { status = 1 });
         }
     }
 }
