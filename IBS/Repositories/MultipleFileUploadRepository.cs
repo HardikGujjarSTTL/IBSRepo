@@ -22,7 +22,7 @@ namespace IBS.Repositories
             {
                 if (data == null)
                 {
-                    int maxID = context.T114MultipleBillFileUploads.Max(x => x.Id) + 1;
+                    int maxID = context.T114MultipleBillFileUploads.Any() ? context.T114MultipleBillFileUploads.Max(x => x.Id) + 1 : 1;
                     T114MultipleBillFileUpload obj = new T114MultipleBillFileUpload();
                     obj.Id = maxID;
                     obj.BillNo = Bill_NO;

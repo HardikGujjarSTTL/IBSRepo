@@ -1,6 +1,6 @@
 ﻿@model IBS.Models.MultipleFileUploadModel
 
-<form method="post" enctype="multipart/form-data" asp-controller="MultipleFileUpload" asp-action="Index" id="frmMultipleFileUpload">
+<form method="post" asp-antiforgery="true" data-ajax="true" enctype="multipart/form-data" asp-controller="MultipleFileUpload" data-ajax-complete="completed" asp-action="Index" id="frmMultipleFileUpload">
     <div class="list-inner">
         <div class="tast-list">
             <h2 style="color:#2b368b">Multiple File Upload</h2>
@@ -28,4 +28,23 @@
         </div>
     </div>
 </form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+            completed = function (response) {
+                var res = response.responseJSON;
+                ShowHideMsgNew(res.status, res.responseText);
+                if (res.status) {
+                    setTimeout(function () {
+                        window.location.href = '@Url.Action("Index", "MultipleFileUpload")';
+                    }, 1000)
+                }
+
+            };
+
+    </script>
+}
 
