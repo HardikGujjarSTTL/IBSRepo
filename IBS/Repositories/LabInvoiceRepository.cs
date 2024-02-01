@@ -41,7 +41,6 @@ namespace IBS.Repositories
                 List<labInvoicelst> lstLabInvoice = dt.AsEnumerable().Select(row => new labInvoicelst
                 {
                     InvoiceNo = Convert.ToString(row["InvoiceNO"]),
-                    BillNO = Convert.ToString(row["BillNO"]),
                     CaseNo = Convert.ToString(row["InvoiceDt"]),
                     irn_no = Convert.ToString(row["irn_no"]),
                     ack_no = Convert.ToString(row["ack_no"]),
@@ -83,7 +82,6 @@ namespace IBS.Repositories
                 List<labInvoicelst> lstLabInvoice = dt.AsEnumerable().Select(row => new labInvoicelst
                 {
                     InvoiceNo = Convert.ToString(row["InvoiceNO"]),
-                    BillNO = Convert.ToString(row["BillNO"]),
                     CaseNo = Convert.ToString(row["InvoiceDt"]),
                     irn_no = Convert.ToString(row["irn_no"]),
                     ack_no = Convert.ToString(row["ack_no"]),
