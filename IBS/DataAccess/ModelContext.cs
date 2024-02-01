@@ -295,6 +295,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T113ChatMaster> T113ChatMasters { get; set; }
 
+    public virtual DbSet<T114MultipleBillFileUpload> T114MultipleBillFileUploads { get; set; }
+
     public virtual DbSet<T11CallCancelCode> T11CallCancelCodes { get; set; }
 
     public virtual DbSet<T12BillPayingOfficer> T12BillPayingOfficers { get; set; }
@@ -12611,6 +12613,40 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.SendMsgDate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("SEND_MSG_DATE");
+        });
+
+        modelBuilder.Entity<T114MultipleBillFileUpload>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T114_MULTIPLE_BILL_FILE_UPLOAD_PK");
+
+            entity.ToTable("T114_MULTIPLE_BILL_FILE_UPLOAD");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.BillNo)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BILL_NO");
+            entity.Property(e => e.Createdby)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.FileName)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("FILE_NAME");
+            entity.Property(e => e.Updatedby)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
         });
 
         modelBuilder.Entity<T11CallCancelCode>(entity =>
