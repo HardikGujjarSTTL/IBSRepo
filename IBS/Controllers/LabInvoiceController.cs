@@ -53,7 +53,7 @@ namespace IBS.Controllers
             try
             {
                 labInvoicelst model = new labInvoicelst();
-                model = labInvoiceRepository.GetLabInvoice(FromDate, ToDate, Region);
+                model = labInvoiceRepository.GetPDFLabInvoice(FromDate, ToDate, Region);
                 if (model.lstlabInvoicelst.Count > 0)
                     lstGenBill = model.lstlabInvoicelst;
                 else
@@ -283,7 +283,7 @@ namespace IBS.Controllers
             System.IO.File.WriteAllBytes(path, pdfBytes);
             var PDFName = InvoiceBillNo + ".pdf";
             var imagePath = "/ReadWriteData/Signed_Lab_Invoices/" + InvoiceBillNo + ".pdf";
-            string msg = labInvoiceRepository.UpdatePDFDetails(InvoiceNo, PDFName, imagePath);
+            int result = labInvoiceRepository.UpdatePDFDetails(InvoiceNo, PDFName, imagePath);
 
             return Json(new { status = 1 });
         }
