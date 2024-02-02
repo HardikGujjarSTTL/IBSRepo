@@ -967,5 +967,10 @@ namespace IBS.Helper
         #region Billing Reports
         public static BillRaisedModel BillRaised { get; set; }
         #endregion
+
+        #region Realisation Payment
+        public static SummaryOnlinePaymentModel SummaryOnlinePayment { get; set; }
+        public static SummaryCrisRlyPaymentModel SummaryCrisRlyPayment { get; set; }
+        #endregion
     }
 }

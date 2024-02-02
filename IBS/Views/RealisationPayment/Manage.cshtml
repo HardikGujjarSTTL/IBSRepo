@@ -90,13 +90,11 @@
     });
 
     function generatePdf(isPrint) {
-        var HTML = $('#dvReportViewer').html();
-
         $.ajax({
             url: "@Url.Action("GeneratePDF", "RealisationPayment")",
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            data: { htmlContent: HTML },
+            data: { ReportType: '@ReportType', IsDetailed: '@Model.IsDetailed' },
             xhrFields: {
                 responseType: 'blob'
             },
