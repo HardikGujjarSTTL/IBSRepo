@@ -6,12 +6,6 @@
 <html>
 <head>
     <title>Railway online bills</title>
-    <style>
-        .borderTable td:nth-child(3) {
-            width:100px;
-            /*line-break: anywhere;*/
-        }
-    </style>
 </head>
 <body>
     <p align="right">
@@ -35,7 +29,7 @@
                 <table class="borderTable" cellpadding="0" cellspacing="0" id="dtList">
                     <tbody>
                         <tr>
-                            <td width='100%' colspan='22'>
+                            <td colspan='22'>
                                 @*<h5 align='center'>@Model.Region</h5>*@
                                 @*<h5 align='center'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</h5>*@
                             </td>
@@ -72,10 +66,10 @@
                             @foreach (var item in Model.lstBillRailway)
                             {
                                 <tr>
-                                    <td width="2%" align="center">@SrNo</td>
-                                    <td width="3%" align="center">@item.BPO_RLY</td>
-                                    <td width="3%" align="left">@item.PO_NO</td>
-                                    <td width="5%" align="right">@item.PO_DT</td>
+                                    <td align="center">@SrNo</td>
+                                    <td align="center">@item.BPO_RLY</td>
+                                    <td align="left">@item.PO_NO</td>
+                                    <td align="right">@item.PO_DT</td>
                                     <td align="right">@item.CASE_NO</td>
                                     <td align="center">@item.PO_OR_LETTER</td>
                                     <td align="center">@item.BPO_NAME</td>

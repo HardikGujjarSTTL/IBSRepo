@@ -33,7 +33,9 @@ h3{ font-size:20px; color:#777;}
         border-right: 1px solid #d1d1d1;
         border-bottom: 1px solid #d1d1d1;
         padding: 2px;
-        font-size:11px!important; box-sizing:border-box;
+        font-size:11px!important;
+        box-sizing:border-box;
+        overflow-wrap:anywhere;
     }
 
     .borderTable th {
