@@ -1,9 +1,8 @@
 ﻿@model IBS.Models.SummaryCrisRlyPaymentModel
 <style>
-    .borderTable td:nth-child(3) {
+    /*.borderTable td:nth-child(3) {
         line-break: anywhere;
-       
-    }
+    }*/
 </style>
 <div>
     <h3 class="center">CRIS PAYMENT DETAILS FOR THE PERIOD : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (Report Sorted on Vendor)</span> <br /> @Model.Region</h3>
@@ -12,27 +11,27 @@
             <tbody>
                 <tr>
                     <th valign="top" align="center"><b>S.No.</b></th>
-                    <th  valign="top" align="center"><b>RLY</b></th>
-                    <th  valign="top" align="center"><b>AU DESC</b></th>
-                    <th  valign="top" align="center"><b>Bill No.</b></th>
-                    <th  valign="top" align="center"><b>Bill Dt.</b></th>
-                    <th  valign="top" align="center"><b>Recv Dt.</b></th>
-                    <th  valign="top" align="center"><b>Invoice No.</b></th>
-                    <th  valign="top" align="center"><b>IC No.</b></th>
-                    <th  valign="top" align="center"><b>IC Date</b></th>
-                    <th  valign="top" align="center"><b>Bill Amount</b></th>
-                    <th  valign="top" align="center"><b>CO6_No.</b></th>
-                    <th  valign="top" align="center"><b>CO6_Date</b></th>
-                    <th  valign="top" align="center"><b>Passed Amt</b></th>
-                    <th  valign="top" align="center"><b>Deducted Amt</b></th>
-                    <th  valign="top" align="center"><b>Net Amount</b></th>
-                    <th  valign="top" align="center"><b>Book Dt</b></th>
-                    <th  valign="top" align="center"><b>Return Dt</b></th>
-                    <th  valign="top" align="center"><b>Return Reason</b></th>
-                    <th  valign="top" align="center"><b>CO7 No.</b></th>
-                    <th  valign="top" align="center"><b>CO7 Dt</b></th>
-                    <th  valign="top" align="center"><b>Payment Dt</b></th>
-                    <th  valign="top" align="center"><b>IBS Cleared Amt</b></th>
+                    <th valign="top" align="center"><b>RLY</b></th>
+                    <th valign="top" align="center"><b>AU DESC</b></th>
+                    <th valign="top" align="center"><b>Bill No.</b></th>
+                    <th valign="top" align="center"><b>Bill Dt.</b></th>
+                    <th valign="top" align="center"><b>Recv Dt.</b></th>
+                    <th valign="top" align="center"><b>Invoice No.</b></th>
+                    <th valign="top" align="center"><b>IC No.</b></th>
+                    <th valign="top" align="center"><b>IC Date</b></th>
+                    <th valign="top" align="center"><b>Bill Amount</b></th>
+                    <th valign="top" align="center"><b>CO6 No.</b></th>
+                    <th valign="top" align="center"><b>CO6 Date</b></th>
+                    <th valign="top" align="center"><b>Passed Amt</b></th>
+                    <th valign="top" align="center"><b>Deducted Amt</b></th>
+                    <th valign="top" align="center"><b>Net Amount</b></th>
+                    <th valign="top" align="center"><b>Book Dt</b></th>
+                    <th valign="top" align="center"><b>Return Dt</b></th>
+                    <th valign="top" align="center"><b>Return Reason</b></th>
+                    <th valign="top" align="center"><b>CO7 No.</b></th>
+                    <th valign="top" align="center"><b>CO7 Dt</b></th>
+                    <th valign="top" align="center"><b>Payment Dt</b></th>
+                    <th valign="top" align="center"><b>IBS Cleared Amt</b></th>
                 </tr>
                 @if (Model != null && Model.lstCrisRlyDetailed != null && Model.lstCrisRlyDetailed.Count > 0)
                 {

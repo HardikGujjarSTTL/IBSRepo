@@ -1,4 +1,5 @@
 ﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -67,26 +68,47 @@ namespace IBS.Controllers.Reports.RealisationPayments
         public IActionResult SummaryOnlinePayment(DateTime FromDate, DateTime ToDate)
         {
             SummaryOnlinePaymentModel model = realisationPaymentRepository.GetSummaryOnlinePayment(FromDate, ToDate, Region);
+            GlobalDeclaration.SummaryOnlinePayment = model;
             return PartialView(model);
         }
 
         public IActionResult SummaryCrisRlyPaymentDetail(DateTime FromDate, DateTime ToDate, string IsRly, string Rly, string IsAU, string AU, string IsAllRegion, string Status)
         {
             SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentDetailed(FromDate, ToDate, IsRly, Rly, IsAU, AU, IsAllRegion, Status, Region);
+            GlobalDeclaration.SummaryCrisRlyPayment = model;
             return PartialView(model);
         }
 
         public IActionResult SummaryCrisRlyPaymentSummary(DateTime FromDate, DateTime ToDate, string IsRlyWise, string Status)
         {
             SummaryCrisRlyPaymentModel model = realisationPaymentRepository.GetSummaryCrisRlyPaymentSummary(FromDate, ToDate, IsRlyWise, Status, Region);
+            GlobalDeclaration.SummaryCrisRlyPayment = model;
             return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeneratePDF(string htmlContent)
+        public async Task<IActionResult> GeneratePDF(string ReportType, string IsDetailed)
         {
-            //PendingICAgainstCallsModel _model = JsonConvert.DeserializeObject<PendingICAgainstCallsModel>(TempData[model.ReportType].ToString());
-            //htmlContent = await this.RenderViewToStringAsync("/Views/ManagementReports/PendingICAgainstCalls.cshtml", _model);
+            string htmlContent = string.Empty;
+
+            if (ReportType == "ONLINENRPAYMENTS")
+            {
+                SummaryOnlinePaymentModel model = GlobalDeclaration.SummaryOnlinePayment;
+                htmlContent = await this.RenderViewToStringAsync("/Views/RealisationPayment/SummaryOnlinePayment.cshtml", model);
+            }
+            else if (ReportType == "CRISRLY")
+            {
+                if (IsDetailed == "true")
+                {
+                    SummaryCrisRlyPaymentModel model = GlobalDeclaration.SummaryCrisRlyPayment;
+                    htmlContent = await this.RenderViewToStringAsync("/Views/RealisationPayment/SummaryCrisRlyPaymentDetail.cshtml", model);
+                }
+                else
+                {
+                    SummaryCrisRlyPaymentModel model = GlobalDeclaration.SummaryCrisRlyPayment;
+                    htmlContent = await this.RenderViewToStringAsync("/Views/RealisationPayment/SummaryCrisRlyPaymentSummary.cshtml", model);
+                }
+            }
 
             await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
@@ -116,3 +138,4 @@ namespace IBS.Controllers.Reports.RealisationPayments
         }
     }
 }
+
