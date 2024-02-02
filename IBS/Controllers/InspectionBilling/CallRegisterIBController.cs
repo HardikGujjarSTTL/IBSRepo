@@ -37,6 +37,10 @@ namespace IBS.Controllers.InspectionBilling
         public IActionResult Index(string CaseNo, DateTime? _CallRecvDt, string CallSno)
         {
             VenderCallRegisterModel model = new();
+
+            //Bhavesh IC updation related test
+            //VenderCallRegisterModel userMaster = callregisterRepository.GetUpdateIC(CaseNo, _CallRecvDt, CallSno);
+
             if (CaseNo != null && _CallRecvDt != null && CallSno != null)
             {
                 model = callregisterRepository.FindByID(CaseNo, _CallRecvDt, CallSno, GetRegionCode);

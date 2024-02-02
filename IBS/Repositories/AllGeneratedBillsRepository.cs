@@ -169,7 +169,7 @@ namespace IBS.Repositories
             foreach (var bill in billsToUpdate)
             {
                 bill.BillResentStatus = "S";
-                bill.BillResentCount = Convert.ToBoolean(count);
+                bill.BillResentCount = Convert.ToByte(count);
             }
             string msg = "Update Successfull !!";
 

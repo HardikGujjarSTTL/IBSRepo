@@ -53,7 +53,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.CallDt = GetDetails.C.CallDt;
                     model.CallInstallNo = Convert.ToInt32(GetDetails.C.CallInstallNo);
                     model.FullPart = GetDetails.C.FullPart;
-                    model.NoOfInsp = Convert.ToInt32(GetDetails.C.NoOfInsp);
+                    model.NoOfInsp = Convert.ToDecimal(GetDetails.C.NoOfInsp);
                     model.FirstInspDt = Convert.ToDateTime(GetDetails.C.FirstInspDt);
                     model.LastInspDt = Convert.ToDateTime(GetDetails.C.LastInspDt);
                     //model.OtherInspDt = Convert.ToDateTime(GetDetails.C.OtherInspDt);
@@ -658,7 +658,7 @@ namespace IBS.Repositories.InspectionBilling
                 {
                     TaxType = model.BpoTaxType;
                 }
-                int NoOfInsp;
+                decimal NoOfInsp;
                 if (model.NoOfInsp == 0)
                 {
                     NoOfInsp = 1;
@@ -760,7 +760,7 @@ namespace IBS.Repositories.InspectionBilling
                 parameter[6] = new OracleParameter("in_fee_type", OracleDbType.Varchar2, 1, model.BpoFeeType, ParameterDirection.Input);
                 parameter[7] = new OracleParameter("in_fee", OracleDbType.Decimal, model.AdjustmentFee, ParameterDirection.Input);
                 parameter[8] = new OracleParameter("in_tax_type", OracleDbType.Varchar2, 1, TaxType, ParameterDirection.Input);
-                parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, NoOfInsp, ParameterDirection.Input);
+                parameter[9] = new OracleParameter("in_no_of_insp", OracleDbType.Int32, Convert.ToInt32(NoOfInsp), ParameterDirection.Input);
                 parameter[10] = new OracleParameter("in_invoice", OracleDbType.Varchar2, InvoiceNo, ParameterDirection.Input);
                 parameter[11] = new OracleParameter("in_max_fee", OracleDbType.Int32, MaxFee, ParameterDirection.Input);
                 parameter[12] = new OracleParameter("in_min_fee", OracleDbType.Int32, MinFee, ParameterDirection.Input);
@@ -1296,7 +1296,7 @@ namespace IBS.Repositories.InspectionBilling
             var T20Details = context.T20Ics.Where(x => x.CaseNo == Caseno && x.CallRecvDt == Convert.ToDateTime(Callrecvdt) && x.CallSno == Callsno).FirstOrDefault();
             if (T20Details != null)
             {
-                model.NoOfInsp = Convert.ToInt32(T20Details.NoOfInsp);
+                model.NoOfInsp = Convert.ToDecimal(T20Details.NoOfInsp);
             }
 
             if (model.BpoFeeType == "D" || model.BpoFeeType == "H")
