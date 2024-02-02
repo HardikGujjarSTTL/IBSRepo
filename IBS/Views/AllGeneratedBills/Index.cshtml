@@ -189,7 +189,7 @@
                 CLIENT_TYPE: $("#ClientType").val(),
                 RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
             };
-
+            $(".overlayLoader1").show();
             $.ajax({
                 url: "@Url.Action("ReturnBill", "AllGeneratedBills")",
                 type: "POST",
@@ -209,6 +209,7 @@
                     }
                     else {
                         ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
                     }
                 },
                 error: function (error) {
@@ -369,6 +370,7 @@
                     }
                     else {
                         ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
                     }
                 },
                 error: function (error) {

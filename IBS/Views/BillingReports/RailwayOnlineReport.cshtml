@@ -14,11 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    @*<div class="savenext-btn">
-    <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
-    <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
-    </div>*@
-    @*<br />*@
+    
     <div id="dvReportViewer">
         @if (Model.BillSummary == "M")
         {
@@ -40,7 +36,7 @@
                 <tr>
                     <th width="2%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
                     <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">RLY</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="2" face="Verdana">PO No.</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">PO No.</font></b></th>
                     <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO Dt</font></b></th>
                     <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Case No.</font></b></th>
                     <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO or Letter</font></b></th>
@@ -68,10 +64,10 @@
                     @foreach (var item in Model.lstBillRailway)
                     {
                         <tr>
-                            <td align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td align="center"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.PO_DT</font></td>
+                            <td width="2%" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="3%" align="center"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td width="3%" align="left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                            <td width="5%" align="right"><font size="1" face="Verdana">@item.PO_DT</font></td>
                             <td align="right"><font size="1" face="Verdana">@item.CASE_NO</font></td>
                             <td align="center"><font size="1" face="Verdana">@item.PO_OR_LETTER</font></td>
                             <td align="center"><font size="1" face="Verdana">@item.BPO_NAME</font></td>
@@ -214,34 +210,43 @@
     });
 
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "BillingReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: 'RailwayOnlineReport' },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     function FileExists(url) {
@@ -261,17 +266,4 @@
 
         return exists;
     }
-
-
-    function ExportExcel(type, fn, dl) {
-        var elt = document.getElementById('dtList');
-        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-        return dl ?
-            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-            XLSX.writeFile(wb, fn || ('SectorBillExcel.' + (type || 'xlsx')));
-    }
-    function ExportPDF(type, fn, dl) {
-
-    }
-
 </script>
