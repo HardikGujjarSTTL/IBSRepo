@@ -142,6 +142,9 @@ h3{ font-size:20px; color:#777;}
     width: 50%;
 }
 
+.gridDataWrap th, .gridDataWrap td{ line-break:anywhere; word-break:break-all; width:1%; font-size:8px;}
+
+
 @keyframes loaderAnimate {
     0% {
         transform: rotate(0deg);
