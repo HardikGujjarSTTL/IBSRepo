@@ -1,5 +1,9 @@
 ﻿@model IBS.Models.Reports.ConsignRejectModel
-
+<style>
+    /*.borderTable td:nth-child(3) {
+            line-break: anywhere;
+        }*/
+</style>
 <div>
     <h3 class="center">(@Model.Region), RITES Ltd.</h3>
     <h3 class="center">Details of Online Consignee Rejections for the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>
@@ -8,56 +12,56 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Temp Rej No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Temp Rej Date</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consiegnee Name</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Desig</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Email</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Consignee Tel</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Memo Dt.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">SET NO</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Item Desc</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Qty Rej</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Value</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Rej Reason</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Complaint ID</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Reason For Rejection</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI Required</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI SNO</font></b></th>
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>Temp Rej No.</b></th>
+                    <th valign="top" align="center"><b>Temp Rej Date</b></th>
+                    <th valign="top" align="center"><b>Consiegnee Name</b></th>
+                    <th valign="top" align="center"><b>Consignee Desig</b></th>
+                    <th valign="top" align="center"><b>Consignee Email</b></th>
+                    <th valign="top" align="center"><b>Consignee Tel</b></th>
+                    <th valign="top" align="center"><b>Rej Memo No.</b></th>
+                    <th valign="top" align="center"><b>Rej Memo Dt.</b></th>
+                    <th valign="top" align="center"><b>Case No.</b></th>
+                    <th valign="top" align="center"><b>BK NO</b></th>
+                    <th valign="top" align="center"><b>SET NO</b></th>
+                    <th valign="top" align="center"><b>Vendor</b></th>
+                    <th valign="top" align="center"><b>Item Desc</b></th>
+                    <th valign="top" align="center"><b>Qty Rej</b></th>
+                    <th valign="top" align="center"><b>Rej Value</b></th>
+                    <th valign="top" align="center"><b>Rej Reason</b></th>
+                    <th valign="top" align="center"><b>Status</b></th>
+                    <th valign="top" align="center"><b>Complaint ID</b></th>
+                    <th valign="top" align="center"><b>Reason For Rejection</b></th>
+                    <th valign="top" align="center"><b>JI Required</b></th>
+                    <th valign="top" align="center"><b>JI SNO</b></th>
                 </tr>
                 @if (Model != null && Model.lstConsignReject != null && Model.lstConsignReject.Count > 0)
                 {
                     @foreach (var item in Model.lstConsignReject)
                     {
                         <tr>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.ID</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.TempComplaintId.</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_TempComplaintDt</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeName</font></td>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeDesig</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeEmail</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ConsigneeMobile</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejMemoNo</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Display_RejMemoDt</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CaseNo</font></td>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BkNo</font></td>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.SetNo</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Vendor</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ItemDesc</font></td>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.QtyRejected</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejectionValue</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.RejectionReason</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.Status</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.ComplaintId</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.TempCompRejReason</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.JiRequired</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.JiSno</font></td>
+                            <td valign="top" align="center">@item.ID</td>
+                            <td valign="top" align="center">@item.TempComplaintId.</td>
+                            <td valign="top" align="center">@item.Display_TempComplaintDt</td>
+                            <td valign="top" align="center">@item.ConsigneeName</td>
+                            <td valign="top" align="center">@item.ConsigneeDesig</td>
+                            <td valign="top" align="center">@item.ConsigneeEmail</td>
+                            <td valign="top" align="center">@item.ConsigneeMobile</td>
+                            <td valign="top" align="center">@item.RejMemoNo</td>
+                            <td valign="top" align="center">@item.Display_RejMemoDt</td>
+                            <td valign="top" align="center">@item.CaseNo</td>
+                            <td valign="top" align="center">@item.BkNo</td>
+                            <td valign="top" align="center">@item.SetNo</td>
+                            <td valign="top" align="center">@item.Vendor</td>
+                            <td valign="top" align="center">@item.ItemDesc</td>
+                            <td valign="top" align="center">@item.QtyRejected</td>
+                            <td valign="top" align="center">@item.RejectionValue</td>
+                            <td valign="top" align="center">@item.RejectionReason</td>
+                            <td valign="top" align="center">@item.Status</td>
+                            <td valign="top" align="center">@item.ComplaintId</td>
+                            <td valign="top" align="center">@item.TempCompRejReason</td>
+                            <td valign="top" align="center">@item.JiRequired</td>
+                            <td valign="top" align="center">@item.JiSno</td>
                         </tr>
                     }
                 }

@@ -41,7 +41,6 @@ namespace IBS.Repositories
                 List<labInvoicelst> lstLabInvoice = dt.AsEnumerable().Select(row => new labInvoicelst
                 {
                     InvoiceNo = Convert.ToString(row["InvoiceNO"]),
-                    BillNO = Convert.ToString(row["BillNO"]),
                     CaseNo = Convert.ToString(row["InvoiceDt"]),
                     irn_no = Convert.ToString(row["irn_no"]),
                     ack_no = Convert.ToString(row["ack_no"]),
@@ -51,7 +50,48 @@ namespace IBS.Repositories
                     bpo_add = Convert.ToString(row["bpo_add"]),
                     bpo_city = Convert.ToString(row["bpo_city"]),
                     recipient_gstin_no = Convert.ToString(row["recipient_gstin_no"]),
-                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["BillNO"]).Split('-')[1],
+                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["InvoiceNO"]).Split('/')[1].Split('-')[0],
+                    Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
+                 Region == "S" ? "SOUTERN REGION(INSPECTION)" :
+                 Region == "E" ? "EASTERN REGION(INSPECTION)" :
+                 Region == "W" ? "WESTERN REGION(INSPECTION)" : Region,
+                    RegionChar = Region
+                }).ToList();
+                model.lstlabInvoicelst = lstLabInvoice;
+            }
+
+            return model;
+        }
+        
+        public labInvoicelst GetPDFLabInvoice(string FromDate, string ToDate, string Region)
+        {
+            labInvoicelst model = new();
+            DataTable dt = new DataTable();
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_FromDate", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_ToDate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("SP_PDFLabInvoices", par);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                List<labInvoicelst> lstLabInvoice = dt.AsEnumerable().Select(row => new labInvoicelst
+                {
+                    InvoiceNo = Convert.ToString(row["InvoiceNO"]),
+                    CaseNo = Convert.ToString(row["InvoiceDt"]),
+                    irn_no = Convert.ToString(row["irn_no"]),
+                    ack_no = Convert.ToString(row["ack_no"]),
+                    ack_dt = Convert.ToDateTime(row["ack_dt"]),
+                    qr_code = Convert.ToString(row["qr_code"]),
+                    BPO_NAME = Convert.ToString(row["BPO_NAME"]),
+                    bpo_add = Convert.ToString(row["bpo_add"]),
+                    bpo_city = Convert.ToString(row["bpo_city"]),
+                    recipient_gstin_no = Convert.ToString(row["recipient_gstin_no"]),
+                    InvoiceBillNo = Convert.ToString(row["InvoiceNO"]).Split('/')[0] + Convert.ToString(row["InvoiceNO"]).Split('/')[1].Split('-')[0],
                     Region_code = Region == "N" ? "NORTHERN REGION(INSPECTION)" :
                  Region == "S" ? "SOUTERN REGION(INSPECTION)" :
                  Region == "E" ? "EASTERN REGION(INSPECTION)" :
@@ -64,21 +104,28 @@ namespace IBS.Repositories
             return model;
         }
 
-        public string UpdatePDFDetails(string InvoiceNo, string PDFNamee, string RelativePath)
+        public int UpdatePDFDetails(string InvoiceNo, string PDFNamee, string RelativePath)
         {
-            string msg = "";
-            var invoiceToUpdate = context.T55LabInvoices.FirstOrDefault(i => i.InvoiceNo == InvoiceNo);
-
-            if (invoiceToUpdate != null)
+            var res = 0;
+            var data = (from item in context.T55LabInvoices
+                        where item.InvoiceNo == InvoiceNo
+                        select item).FirstOrDefault();
+            try
             {
-                invoiceToUpdate.DigBillGenDt = DateTime.Now.Date;
-                invoiceToUpdate.Relativepath = RelativePath;
-                invoiceToUpdate.Fileid = PDFNamee;
-                context.SaveChanges();
-                msg = "Updated !!";
+                if (data != null)
+                {
+                    data.Relativepath = RelativePath;
+                    data.DigBillGenDt = DateTime.Now.Date;
+                    data.Fileid = PDFNamee;
+                    context.SaveChanges();
+                    res = 1;
+                }
             }
-
-            return msg;
+            catch (Exception)
+            {
+                res = 0;
+            }
+            return res;
         }
 
         public List<LabItemsDetail> GetBillItems(string InvoiceNo)

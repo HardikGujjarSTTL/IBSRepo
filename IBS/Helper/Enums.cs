@@ -959,5 +959,18 @@ namespace IBS.Helper
 
         public static List<AllGeneratedBills> AllGeneratedBillModel { get; set; }
         public static labInvoicelst LabInvoiceReport { get; set; }
+
+        #region RemitanceReports 
+        public static RemitanceModel Remitance { get; set; }
+        #endregion
+
+        #region Billing Reports
+        public static BillRaisedModel BillRaised { get; set; }
+        #endregion
+
+        #region Realisation Payment
+        public static SummaryOnlinePaymentModel SummaryOnlinePayment { get; set; }
+        public static SummaryCrisRlyPaymentModel SummaryCrisRlyPayment { get; set; }
+        #endregion
     }
 }

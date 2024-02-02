@@ -38,7 +38,8 @@
         <div class="row my-0">
             <div class="col-md-12 mb-4 text-center">
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn active" onclick="BtnSubmit()">Submit</button>
+                    <button type="button" class="save-btn active" onclick="BtnSubmit()">Generate PDF</button>
+                    <button type="button" class="save-btn active" onclick="BtnList()">Get List</button>
                 </div>
             </div>
         </div>
@@ -52,8 +53,7 @@
 
     <script type="text/javascript">
 
-        let arrDigitalSign = [];
-        var cnt = 0;
+        var Cnt = 0;
         var xmlLength = 0;
 
         function BtnSubmit() {
@@ -64,64 +64,63 @@
                 ShowHideMsgNew(false, "All fields are mendatory.");
                 return;
             }
-            arrDigitalSign = [];
-            cnt = 0;
+            $(".overlayLoader1").show();
             $.ajax({
-                url: '@Url.Action("LabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
-                type: 'POST',
-                cache: false,
-                processData: false,
-                contentType: false
-            }).done(function (response) {
-                if (response.status == 1) {
-                    var listXml = response.list;
-                    xmlLength = listXml.length;
-                    console.log("XMLLenght = " + xmlLength);
-                    if (listXml.length > 0) {
-                        $(".overlayLoader").show();
-                        for (var i = 0; i < listXml.length; i++) {
-                            DigitalSign(listXml[i].Base64String, listXml[i].InvoiceNo);
+                url: '@Url.Action("GetLabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
+                type: "POST",
+                contentType: false,
+                success: function (response) {
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        xmlLength = listXml.length;
+                        for (i = 0; i < listXml.length; i++) {
+                            var data = listXml[i];
+                            $.post("@Url.Action("GeneratePDF", "LabInvoice")", { "model": data }, function (exeResponse) {
+                                if (exeResponse.status = 1) {
+                                    DigitalSign(exeResponse.xmlDetail, exeResponse.InvoiceNo, exeResponse.InvoiceBillNo);
+                                }
+                            });
                         }
                     }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    //console.log(error);
                 }
-                else {
-                    ShowHideMsgNew(false, "No Data Found");
-                }
-                $("#dvReportViewer").empty();
-                $("#dvReportViewer").html(response);
             }).done(function (result) {
             });
         }
 
-        async function DigitalSign(xmldata, InvoiceNo) {
-            $(".overlayLoader").show();
-            const result = await $.ajax({
+        function DigitalSign(xmldata, InvoiceNo, InvoiceBillNo) {
+            $.ajax({
                 url: "http://127.0.0.1:1620",
                 type: 'POST',
                 data: { response: xmldata },
                 success: function (exeResponse) {
                     var status = $(exeResponse).find("status").text();
                     var pdf = $(exeResponse).find("data").text();
-
+                    Cnt = Cnt + 1;
+                    debugger;
                     if (status == "ok") {
                         pdf = $(exeResponse).find("data").text();
-                        cnt = cnt + 1;
-                        arrDigitalSign.push({ Base64String: pdf, InvoiceNo: InvoiceNo, InvoiceBillNo: InvoiceBillNo });
-                        if (cnt == xmlLength) {
-                            $.post("@Url.Action("UploadSignedPdf1", "LabInvoice")", { "model": arrDigitalSign }, function (exeResponse) { });
-                            $(".overlayLoader").hide();
-                            ShowHideMsg("success", "Digital signed successfully!!");
-                        }
-                        console.log(arrDigitalSign);
-                        console.log(cnt);
-                        console.log("===========OK=============");
+                        $.post("@Url.Action("UploadSignedPdf1", "LabInvoice")", { "base64SignedPdf": pdf, "InvoiceNo": InvoiceNo, "InvoiceBillNo": InvoiceBillNo }, function (exeResponse) {
+                            if (Cnt == xmlLength) {
+                                $(".overlayLoader1").hide();
+                                ShowHideMsg("success", "Digital signed successfully!!");
+                            }
+                        });
                     }
                     else {
-                        xmlLength = xmlLength - 1;
-                        console.log(status);
-                        console.log("PDF = " + xmldata);
-                        console.log(InvoiceNo);
-                        console.log("===========FAIL=============");
+                        if (Cnt == xmlLength) {
+                            $(".overlayLoader1").hide();
+                            ShowHideMsg("error", "Digital signed unsuccessfully!!");
+                        }
+                        //console.log("PDF = " + pdf);
+                        //console.log("Bill_No = " + Bill_No);
+                        //console.log("===========FAIL=============");
                     }
                 },
             });
@@ -142,6 +141,30 @@
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();
+        }
+
+        function BtnList(){
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
+            if (!Validation()) {
+                ShowHideMsgNew(false, "All fields are mendatory.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("LabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
+                type: "POST",
+                contentType: false,
+                success: function (response) {
+                    $("#dvReportViewer").empty();
+                    $("#dvReportViewer").html(response);
+                },
+                error: function (error) {
+                    //console.log(error);
+                }
+            }).done(function (result) {
+            });
         }
 
     </script>

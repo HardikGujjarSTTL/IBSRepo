@@ -14,11 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    @*<div class="savenext-btn">
-    <button type="button" class="save-btn active" onclick="ExportExcel('xlsx')">Export table to excel</button>
-    <button type="button" class="save-btn active" onclick="ExportPDF('pdf')">Export table to pdf</button>
-    </div>*@
-    @*<br />*@
+
     <div id="dvReportViewer">
         @if (Model.BillSummary == "M")
         {
@@ -28,137 +24,139 @@
         {
             <h3 class="center">Download documents for rly invoices for the period : <span class="orangeText">@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") - @Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")</span> @Model.Region</h3>
         }
-        <table class="borderTable" cellpadding="0" cellspacing="0" width="100%" id="dtList">
-            <tbody>
-                <tr>
-                    <td width='100%' colspan='22'>
-                        @*<h5 align='center'><font face='Verdana'>@Model.Region</font></h5>*@
-                        @*<h5 align='center'><font face='Verdana'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</font></h5>*@
-                    </td>
-                </tr>
-
-                <tr>
-                    <th width="2%" valign="top" align="center"><b><font size="2" face="Verdana">Sr. No.</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">RLY</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="2" face="Verdana">PO No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO Dt</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Case No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">PO or Letter</font></b></th>
-                    <th width="4%" valign="top" align="center"><b><font size="2" face="Verdana">BPO Name</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Dt.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Invoice No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">AU</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">IC No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">IC Date</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">BK No.</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Set No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Bill Amount</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Outstanding Amt</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Digital Bill Gen Date</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Digital Invoice</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">Digital IC</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="2" face="Verdana">PO</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="2" face="Verdana">Invoice Supp Docs</font></b></th>
-                </tr>
-                @if (Model != null && Model.lstBillRailway.Count > 0)
-                {
-                    int SrNo = 1;
-
-                    @foreach (var item in Model.lstBillRailway)
-                    {
+        <div>
+            <div class="tableOuter">
+                <table class="borderTable" cellpadding="0" cellspacing="0" id="dtList">
+                    <tbody>
                         <tr>
-                            <td align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td align="center"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.PO_DT</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                            <td align="center"><font size="1" face="Verdana">@item.PO_OR_LETTER</font></td>
-                            <td align="center"><font size="1" face="Verdana">@item.BPO_NAME</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.BILL_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.BILL_DT</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.INVOICE_NO</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.AU_DESC</font></td>
-                            <td align="left"><font size="1" face="Verdana">@item.IC_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.IC_DT</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.BK_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.SET_NO</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
-                            <td align="right"><font size="1" face="Verdana">@item.AMOUNT_OUTSTANDING</font></td>
-                            <td align="right"><b><font size="1" face="Verdana">@item.DIG_BILL_GEN_DATE</font></td>
-                            @if (@item.ONLINE_INVOICE != null)
-                            {
-                                <td align="left">
-                                    <font size="1" face="Verdana">
-                                        <a href=@item.ONLINE_INVOICE target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>INVOICE</font></h5></a>
-                                    </font>
-                                </td>
-                            }
-                            else
-                            {
-                                <td align="left"><b><font size="1" face="Verdana"></font></b></td>
-                            }
-                            @if (@item.IC_PHOTO != null)
-                            {
-                                var fpath1 = Model.FilePath3 + "/" + @item.IC_PHOTO + ".pdf";
-                                var Fpath2 = Model.FilePath3 + "/ReadWriteData/BILL_IC/" + @item.IC_PHOTO + ".pdf";
-                                if (System.IO.File.Exists(fpath1) == true)
-                                {
-                                    <td align="left">
-                                        <font size="1" face="Verdana">
-                                            <a href=@Fpath2 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>IC</font></h5></a>
-                                        </font>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td align="left"><font size="1" face="Verdana"></font></td>
-                                }
-                            }
-                            else
-                            {
-                                <td align="left"><font size="1" face="Verdana"></font></td>
-                            }
-
-                            
-                            @if (@item.PO_SOURCE == "C")
-                            {
-                                string po_source = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + @item.PO_YR + "/" + @item.IMMS_RLY_CD + "/" + @item.PO_NO + ".pdf";
-                                <td align="left">
-                                    <font size="1" face="Verdana">
-                                        <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>VIEW PO</font></h5></a>
-                                    </font>
-                                </td>
-                            }
-                            else
-                            {
-                                var fpath_po = Model.FilePath2 + "/" + @item.CASE_NO + ".pdf";
-                                var Fpath = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf";
-                                if (System.IO.File.Exists(fpath_po) == true)
-                                {
-                                    <td align="left">
-                                        <font size="1" face="Verdana">
-                                            <a href=@Fpath target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>VIEW PO</font></h5></a>
-                                        </font>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td align="left">
-                                        <font size="1" face="Verdana">
-                                        </font>
-                                    </td>
-                                }
-
-                            }
-
-                            <td align="left"><font size="1" face="Verdana">@item.INVOICE_SUPP_DOCS</font></td>
+                            <td colspan='22'>
+                                @*<h5 align='center'>@Model.Region</h5>*@
+                                @*<h5 align='center'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</h5>*@
+                            </td>
                         </tr>
-                        SrNo++;
-                    }
-                }
-            </tbody>
-        </table>
+
+                        <tr>
+                            <th valign="top" align="center"><b>Sr. No.</b></th>
+                            <th valign="top" align="center"><b>RLY</b></th>
+                            <th valign="top" align="center"><b>PO No.</b></th>
+                            <th valign="top" align="center"><b>PO Dt</b></th>
+                            <th valign="top" align="center"><b>Case No.</b></th>
+                            <th valign="top" align="center"><b>PO or Letter</b></th>
+                            <th valign="top" align="center"><b>BPO Name</b></th>
+                            <th valign="top" align="center"><b>Bill No.</b></th>
+                            <th valign="top" align="center"><b>Bill Dt.</b></th>
+                            <th valign="top" align="center"><b>Invoice No.</b></th>
+                            <th valign="top" align="center"><b>AU</b></th>
+                            <th valign="top" align="center"><b>IC No.</b></th>
+                            <th valign="top" align="center"><b>IC Date</b></th>
+                            <th valign="top" align="center"><b>BK No.</b></th>
+                            <th valign="top" align="center"><b>Set No.</b></th>
+                            <th valign="top" align="center"><b>Bill Amount</b></th>
+                            <th valign="top" align="center"><b>Outstanding Amt</b></th>
+                            <th valign="top" align="center"><b>Digital Bill Gen Date</b></th>
+                            <th valign="top" align="center"><b>Digital Invoice</b></th>
+                            <th valign="top" align="center"><b>Digital IC</b></th>
+                            <th valign="top" align="center"><b>PO</b></th>
+                            <th valign="top" align="center"><b>Invoice Supp Docs</b></th>
+                        </tr>
+                        @if (Model != null && Model.lstBillRailway.Count > 0)
+                        {
+                            int SrNo = 1;
+
+                            @foreach (var item in Model.lstBillRailway)
+                            {
+                                <tr>
+                                    <td align="center">@SrNo</td>
+                                    <td align="center">@item.BPO_RLY</td>
+                                    <td align="left">@item.PO_NO</td>
+                                    <td align="right">@item.PO_DT</td>
+                                    <td align="right">@item.CASE_NO</td>
+                                    <td align="center">@item.PO_OR_LETTER</td>
+                                    <td align="center">@item.BPO_NAME</td>
+                                    <td align="left">@item.BILL_NO</td>
+                                    <td align="right">@item.BILL_DT</td>
+                                    <td align="left">@item.INVOICE_NO</td>
+                                    <td align="left">@item.AU_DESC</td>
+                                    <td align="left">@item.IC_NO</td>
+                                    <td align="right">@item.IC_DT</td>
+                                    <td align="right">@item.BK_NO</td>
+                                    <td align="right">@item.SET_NO</td>
+                                    <td align="right">@item.BILL_AMOUNT</td>
+                                    <td align="right">@item.AMOUNT_OUTSTANDING</td>
+                                    <td align="right"><b>@item.DIG_BILL_GEN_DATE</td>
+                                    @if (@item.ONLINE_INVOICE != null)
+                                    {
+                                        <td align="left">
+
+                                            <a href=@item.ONLINE_INVOICE target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>INVOICE</h5></a>
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left"><b></b></td>
+                                    }
+                                    @if (@item.IC_PHOTO != null)
+                                    {
+                                        var fpath1 = Model.FilePath3 + "/" + @item.IC_PHOTO + ".pdf";
+                                        var Fpath2 = Model.FilePath3 + "/ReadWriteData/BILL_IC/" + @item.IC_PHOTO + ".pdf";
+                                        if (System.IO.File.Exists(fpath1) == true)
+                                        {
+                                            <td align="left">
+
+                                                <a href=@Fpath2 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>IC</h5></a>
+
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td align="left"></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td align="left"></td>
+                                    }
+
+
+                                    @if (@item.PO_SOURCE == "C")
+                                    {
+                                        string po_source = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + @item.PO_YR + "/" + @item.IMMS_RLY_CD + "/" + @item.PO_NO + ".pdf";
+                                        <td align="left">
+
+                                            <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>VIEW PO</h5></a>
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        var fpath_po = Model.FilePath2 + "/" + @item.CASE_NO + ".pdf";
+                                        var Fpath = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf";
+                                        if (System.IO.File.Exists(fpath_po) == true)
+                                        {
+                                            <td align="left">
+
+                                                <a href=@Fpath target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>VIEW PO</h5></a>
+
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td align="left">
+                                            </td>
+                                        }
+
+                                    }
+
+                                    <td align="left">@item.INVOICE_SUPP_DOCS</td>
+                                </tr>
+                                SrNo++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 </html>
@@ -214,34 +212,43 @@
     });
 
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "BillingReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: 'RailwayOnlineReport' },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     function FileExists(url) {
@@ -261,17 +268,4 @@
 
         return exists;
     }
-
-
-    function ExportExcel(type, fn, dl) {
-        var elt = document.getElementById('dtList');
-        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-        return dl ?
-            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-            XLSX.writeFile(wb, fn || ('SectorBillExcel.' + (type || 'xlsx')));
-    }
-    function ExportPDF(type, fn, dl) {
-
-    }
-
 </script>
