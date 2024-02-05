@@ -1,8 +1,8 @@
 ﻿@model IBS.Models.Reports.ConsigneeCompReports
 <style>
-    .borderTable td:nth-child(18), .borderTable td:nth-child(22), .borderTable td:nth-child(24) {
-        line-break:anywhere;
-        width:80px!important;
+    .borderTable th:nth-child(10), .borderTable th:nth-child(18), .borderTable th:nth-child(19),
+    .borderTable td:nth-child(10), .borderTable td:nth-child(18), .borderTable td:nth-child(19) {
+        width:150px!important;
     }
 </style>
 <div>
@@ -10,8 +10,8 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="100%" valign="top" align="Center" colspan="29">Compliant Recieved During the Period: @Model.FromDate To @Model.ToDate  (@Model.Regions) @Model.jirequired</th>
-                    <th colspan="7" width="15%" valign="top" align="center"><b>Corrective & Preventive Action Identified</b></th>
+                    <th valign="top" align="Center" colspan="29">Compliant Recieved During the Period: @Model.FromDate To @Model.ToDate  (@Model.Regions) @Model.jirequired</th>
+                    <th colspan="7"  valign="top" align="center"><b>Corrective & Preventive Action Identified</b></th>
                 </tr>
                 <tr>
                     <th  valign="top" align="center"><b>S.No.</b></th>
@@ -23,7 +23,7 @@
                     <th  valign="top" align="center"><b>Date</b></th>
                     <th  valign="top" align="center"><b>BK NO & Set NO</b></th>
                     <th  valign="top" align="center"><b>Date of IC</b></th>
-                    <th width="20%" valign="top" align="center"><b>Item</b></th>
+                    <th  valign="top" align="center"><b>Item</b></th>
                     <th  valign="top" align="center"><b>Consignee</b></th>
                     <th  valign="top" align="center"><b>IE</b></th>
                     <th  valign="top" align="center"><b>Qty Offered</b></th>
@@ -67,7 +67,7 @@
                             <td  valign="top" align="Left">@item.PO_DATE</td>
                             <td  valign="top" align="Left">@item.BK_SET</td>
                             <td  valign="top" align="Left">@item.IC_DATE</td>
-                            <td width="20%" valign="top" align="Left">@item.ITEM_DESC</td>
+                            <td  valign="top" align="Left">@item.ITEM_DESC</td>
                             <td  valign="top" align="Left">@item.CONSIGNEE</td>
                             <td  valign="top" align="Left">@item.IE_NAME</td>
                             <td  valign="top" align="Left">@item.QTY_OFF</td>

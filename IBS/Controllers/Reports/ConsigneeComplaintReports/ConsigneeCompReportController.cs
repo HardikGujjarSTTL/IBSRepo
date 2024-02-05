@@ -374,8 +374,8 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
-                PrintBackground = true
+                Format = PaperFormat.A4,
+                //PrintBackground = true
             });
 
             await browser.CloseAsync();

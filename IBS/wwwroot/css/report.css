@@ -33,7 +33,7 @@ h3{ font-size:20px; color:#777;}
         border-right: 1px solid #d1d1d1;
         border-bottom: 1px solid #d1d1d1;
         padding: 2px;
-        font-size:11px!important;
+        font-size:10px!important;
         box-sizing:border-box;
         overflow-wrap:anywhere;
     }
@@ -71,7 +71,7 @@ h3{ font-size:20px; color:#777;}
 .tableOuter {
     width: 100%;
     margin-bottom: 20px;
-    padding: 10px;
+    /*padding: 10px;*/
     -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
