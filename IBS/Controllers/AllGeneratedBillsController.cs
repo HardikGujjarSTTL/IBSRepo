@@ -547,7 +547,7 @@ namespace IBS.Controllers
             if (BillData != null && BillData.BillResentStatus == "R")
             {
                 bool isBillResentCountNullOrEmpty = !BillData.BillResentCount.HasValue;
-                int count = isBillResentCountNullOrEmpty ? 1 : (BillData.BillResentCount.Value ? 2 : 0);
+                int count = isBillResentCountNullOrEmpty ? 1 : (Convert.ToBoolean(BillData.BillResentCount.Value) ? 2 : 0);
                 string updBillCount = allGeneratedBillsRepository.UpdateBillCount(Bill_No, count);
             }
             string updBillDate = allGeneratedBillsRepository.UpdateGEN_Bill_Date(Bill_No);

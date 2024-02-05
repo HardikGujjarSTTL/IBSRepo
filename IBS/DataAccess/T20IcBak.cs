@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace IBS.DataAccess;
 
-public partial class T20Ic
+public partial class T20IcBak
 {
-    public string CaseNo { get; set; } = null!;
+    public string? CaseNo { get; set; }
 
-    public DateTime CallRecvDt { get; set; }
+    public DateTime? CallRecvDt { get; set; }
 
-    public int CallSno { get; set; }
+    public int? CallSno { get; set; }
 
     public int? IcTypeId { get; set; }
 
-    public int ConsigneeCd { get; set; }
+    public int? ConsigneeCd { get; set; }
 
     public string? BpoCd { get; set; }
 
@@ -33,7 +33,7 @@ public partial class T20Ic
 
     public string? FullPart { get; set; }
 
-    public decimal? NoOfInsp { get; set; }
+    public int? NoOfInsp { get; set; }
 
     public DateTime? FirstInspDt { get; set; }
 
@@ -76,14 +76,4 @@ public partial class T20Ic
     public DateTimeOffset? Updateddate { get; set; }
 
     public decimal? Isdeleted { get; set; }
-
-    public virtual T22Bill? BillNoNavigation { get; set; }
-
-    public virtual T12BillPayingOfficer? BpoCdNavigation { get; set; }
-
-    public virtual T17CallRegister Ca { get; set; } = null!;
-
-    public virtual T93IcType? IcType { get; set; }
-
-    public virtual T09Ie? IeCdNavigation { get; set; }
 }

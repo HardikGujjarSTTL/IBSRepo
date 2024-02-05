@@ -95,7 +95,16 @@
                         }
                     },
                     { data: "Client" },
-                    { data: "VisitDt" },
+                    // { data: "VisitDt" },
+                    {
+                        data: "VisitDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     { data: "ClientOfficerName" },
                     { data: "OverallOutcome" },
                     { data: "Highlights" },                                        

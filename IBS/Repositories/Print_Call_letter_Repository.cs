@@ -32,7 +32,7 @@ namespace IBS.Repositories
                          join t15 in context.T15PoDetails on new { CaseNo = t18.CaseNo, ItemSrnoPo = t18.ItemSrnoPo } equals new { CaseNo = t15.CaseNo, ItemSrnoPo = t15.ItemSrno }
                          join t09 in context.T09Ies on t17.IeCd equals t09.IeCd into t09Group
                          from t09 in t09Group.DefaultIfEmpty()
-                         where t17.CaseNo == CASE_NO && t17.CallRecvDt == Convert.ToDateTime(CALL_RECV_DATE) && t17.CallSno == Convert.ToInt32(CALL_SNO)
+                         where t17.CaseNo == CASE_NO && t17.CallRecvDt == Convert.ToDateTime(CALL_RECV_DATE) && t17.CallSno == Convert.ToInt32(CALL_SNO) && cn.Status == null && pu.Status == null && v12.Status == null
                          select new Print_Call_letter_Model
                          {
                              PO_NO = p.PoNo,

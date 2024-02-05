@@ -37,7 +37,7 @@ namespace IBS.Repositories
         {
             var query = context.V06Consignees
                 .Where(consignee =>
-                    consignee.Consignee.Trim().ToUpper().StartsWith(Consignee.ToUpper()))
+                    consignee.Consignee.Trim().ToUpper().StartsWith(Consignee.ToUpper()) && consignee.Status == null)
                 .OrderBy(consignee => consignee.Consignee)
                 .Select(consignee => new Consignee
                 {
