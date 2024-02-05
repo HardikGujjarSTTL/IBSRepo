@@ -103,7 +103,6 @@
                     var status = $(exeResponse).find("status").text();
                     var pdf = $(exeResponse).find("data").text();
                     Cnt = Cnt + 1;
-                    debugger;
                     if (status == "ok") {
                         pdf = $(exeResponse).find("data").text();
                         $.post("@Url.Action("UploadSignedPdf1", "LabInvoice")", { "base64SignedPdf": pdf, "InvoiceNo": InvoiceNo, "InvoiceBillNo": InvoiceBillNo }, function (exeResponse) {

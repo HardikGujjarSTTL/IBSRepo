@@ -369,6 +369,7 @@ namespace IBS.Repositories
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
                 userSessionModel.MasterID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
+                userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAIL"]);
                 userSessionModel.LoginType = model.UserType.Trim();
             }
             else
