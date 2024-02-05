@@ -85,7 +85,7 @@ public partial class T22Bill
 
     public string? BillResentStatus { get; set; }
 
-    public bool? BillResentCount { get; set; }
+    public byte? BillResentCount { get; set; }
 
     public string? IrnNo { get; set; }
 

@@ -164,7 +164,7 @@ namespace IBS.Models
 
         public string FullPart { get; set; }
 
-        public int NoOfInsp { get; set; }
+        public decimal NoOfInsp { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]

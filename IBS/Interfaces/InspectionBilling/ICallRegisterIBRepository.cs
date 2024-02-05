@@ -8,6 +8,8 @@ namespace IBS.Interfaces.InspectionBilling
 
         public VenderCallRegisterModel FindByID(string CaseNo, DateTime? CallRecvDt, string CallSno, string GetRegionCode);
 
+        public VenderCallRegisterModel GetUpdateIC(string CaseNo, DateTime? CallRecvDt, string CallSno);
+
         DTResult<VenderCallRegisterModel> FindByModifyDetail(string CaseNo, string CallRecvDt, int CallSno, string GetRegionCode);
 
         DTResult<VenderCallRegisterModel> FindMatchDetail(string CaseNo, string CallRecvDt, int CallSno, string GetRegionCode);

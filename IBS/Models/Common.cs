@@ -2489,7 +2489,7 @@ namespace IBS.Models
             List<SelectListItem> dropList = new List<SelectListItem>();
             dropList = (from a in ModelContext.V06Consignees
                         where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                        a.ConsigneeCd.ToString() == consignee.ToString()
+                        a.ConsigneeCd.ToString() == consignee.ToString() && a.Status == null
                         orderby a.Consignee
                         select
                    new SelectListItem
@@ -3305,6 +3305,7 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
 
             var obj = (from of in context.V12BillPayingOfficers
+                       where of.Status == null
                            //where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
                        select of).ToList();
             objdata = (from a in obj
@@ -3476,7 +3477,7 @@ namespace IBS.Models
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
                 var obj = (from of in context.V06Consignees
-                           where of.ConsigneeCd == ConsigneeSearch
+                           where of.ConsigneeCd == ConsigneeSearch && of.Status == null
                            select of).ToList();
 
                 objdata = (from a in obj
@@ -3578,6 +3579,7 @@ namespace IBS.Models
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
 
             List<SelectListItem> objdata = (from a in context.V06Consignees
+                                            where a.Status == null
                                             orderby a.Consignee
                                             select
                                        new SelectListItem
