@@ -23926,6 +23926,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("AU");
+            entity.Property(e => e.AuDesc)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("AU_DESC");
             entity.Property(e => e.BillAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("BILL_AMOUNT");
@@ -23979,9 +23983,19 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.ChqAmt)
+                .HasColumnType("NUMBER(12,2)")
+                .HasColumnName("CHQ_AMT");
+            entity.Property(e => e.ChqDt)
+                .HasColumnType("DATE")
+                .HasColumnName("CHQ_DT");
             entity.Property(e => e.CnoteAmount)
                 .HasColumnType("NUMBER")
                 .HasColumnName("CNOTE_AMOUNT");
+            entity.Property(e => e.CnoteBillNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("CNOTE_BILL_NO");
             entity.Property(e => e.Consignee)
                 .HasMaxLength(132)
                 .IsUnicode(false)
@@ -24005,6 +24019,13 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("FIN_YR");
+            entity.Property(e => e.IcDt)
+                .HasColumnType("DATE")
+                .HasColumnName("IC_DT");
+            entity.Property(e => e.IcNo)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IC_NO");
             entity.Property(e => e.IeCd)
                 .HasPrecision(6)
                 .HasColumnName("IE_CD");
@@ -24012,6 +24033,10 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false)
                 .HasColumnName("LO_REMARKS");
+            entity.Property(e => e.Narration)
+                .HasMaxLength(63)
+                .IsUnicode(false)
+                .HasColumnName("NARRATION");
             entity.Property(e => e.PoDt)
                 .HasColumnType("DATE")
                 .HasColumnName("PO_DT");
@@ -24024,6 +24049,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("PO_OR_LETTER");
+            entity.Property(e => e.RecipientGstinNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("RECIPIENT_GSTIN_NO");
             entity.Property(e => e.RegionCode)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -24040,6 +24069,11 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("SET_NO");
+            entity.Property(e => e.StockNonstock)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("STOCK_NONSTOCK");
             entity.Property(e => e.Tds)
                 .HasColumnType("NUMBER")
                 .HasColumnName("TDS");
@@ -26064,6 +26098,10 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.DesireDt)
                 .HasColumnType("DATE")
                 .HasColumnName("DESIRE_DT");
+            entity.Property(e => e.FifoVoilateReason)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("FIFO_VOILATE_REASON");
             entity.Property(e => e.Hologram)
                 .HasMaxLength(250)
                 .IsUnicode(false)

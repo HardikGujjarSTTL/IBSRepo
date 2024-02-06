@@ -85,10 +85,10 @@
 
                             wHistory = Url.Action("CaseHistory", "CallMarkedOnline") + "?CASE_NO=" + @item.CASE_NO + "&ActionType=CHI&type=C";
 
-                            callDocAny = $"../ReadWriteData/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.PDF";
-                            CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.PDF";
+                            callDocAny = $"../ReadWriteData/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.pdf";
+                            CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.pdf";
 
-                            DocU = $"../ReadWriteData/LAB/{item.CASE_NO}_{item.CALL_SNO}_{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}.PDF";
+                            DocU = $"../ReadWriteData/LAB/{item.CASE_NO}_{item.CALL_SNO}_{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}.pdf";
 
                             CallStausF = $"{item.CALL_STATUS_FULL}";
                             D1 = $"{item.CALL_STATUS_FULL}";
@@ -209,7 +209,7 @@
                                 }
                                 @if (item.PO_SOURCE == "C")
                                 {
-                                    <td align="center"><font  face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
+                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc target="_blank">@item.CASE_NO</a></font></td>
                                 }
                                 else
                                 {
@@ -221,7 +221,7 @@
                                     {
                                         <td align="center">
                                             <font  face="Verdana">
-                                                <a href=@Fpath11 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                                <a href=@Fpath11 target="_blank" Font-Names='Verdana'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
                                     }
@@ -229,7 +229,7 @@
                                     {
                                         <td align="center">
                                             <font  face="Verdana">
-                                                <a href=@Fpath22 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                                <a href=@Fpath22 target="_blank" Font-Names='Verdana'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
                                     }

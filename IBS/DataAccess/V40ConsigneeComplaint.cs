@@ -129,6 +129,8 @@ public partial class V40ConsigneeComplaint
 
     public string? NoJiReason { get; set; }
 
+    public string? NoJiOther { get; set; }
+
     public string? RootCauseAnalysis { get; set; }
 
     public string? TechRef { get; set; }
@@ -140,6 +142,4 @@ public partial class V40ConsigneeComplaint
     public string? CapaStatus { get; set; }
 
     public string? DandarStatus { get; set; }
-
-    public string? NoJiOther { get; set; }
 }

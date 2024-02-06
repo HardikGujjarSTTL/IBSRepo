@@ -3539,6 +3539,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.RlyNonrly = Status.RlyNonrly;
                     model.RejectionCharge = Convert.ToString(Status.RejCharges);
                     model.LocalOutstation = Convert.ToString(Status.LocalOrOuts);
+                    model.ReasonFIFO = Convert.ToString(Status.FifoVoilateReason);
                 }
 
                 if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))
@@ -5333,7 +5334,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.AlertMsg = "Your Call Status is Blank, Kindly Goto Mainmenu and select the call again to update!!!";
                 return model;
             }
-            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == "" || model.RejectionCharge == null)
+            else if (model.CallStatus.Trim() == "R" && model.RejectionCharge == null)
             {
                 model.AlertMsg = "Kindly Enter Rejection Charges in Case of Rejection IC!!!";
                 return model;
