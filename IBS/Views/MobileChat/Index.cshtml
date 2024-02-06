@@ -12,10 +12,106 @@
     #header, #sidebar, .navBtn, #footer {
         display: none !important;
     }
-    main.pb-3{padding-bottom:0!important;}
-    .accordion-body{margin-bottom:0!important;}
-    .chatArea{height:calc(100vh - 40px);}
-    .chatUserHeader ul li{ justify-content:space-between;}
+
+    main.pb-3 {
+        padding-bottom: 0 !important;
+    }
+
+    .accordion-body {
+        margin-bottom: 0 !important;
+    }
+
+    .chatArea {
+        height: calc(100vh - 40px);
+    }
+
+    .chatUserHeader ul li {
+        justify-content: space-between;
+    }
+
+    /*Start User DropDown CSS*/
+    .customCheckSelect {
+        max-width: 350px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .checkBoxGroup {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .checkBoxGroup li {
+        margin: 5px 0;
+    }
+
+    .checkBoxGroup li label {
+        margin: 0;
+        padding: 0;
+    }
+
+    .selectAllCheck, .selectAllCheck1 {
+        border: 1px solid #d1d1d1;
+        padding: 8px;
+        border-radius: 5px;
+        width: 100%;
+        height: 42px;
+        position: relative;
+        box-sizing: border-box;
+        background: #fff;
+    }
+
+    .downarrow {
+        border: 6px solid rgba(0, 0, 0, 0);
+        border-top-color: rgba(0, 0, 0, 0);
+        border-top-color: #999;
+        height: 1px;
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translate(-50%, -50%);
+    }
+
+    .check {
+        display: none;
+    }
+
+    .filterCheckbox {
+        display: none;
+        background: #fff;
+        border: 1px solid #d1d1d1;
+        padding: 10px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        max-height: 300px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        position: absolute;
+        max-width: 350px;
+        width: 100%;
+        z-index: 10;
+    }
+
+    #myInput {
+        border: 1px solid #d1d1d1;
+        padding: 5px;
+        border-radius: 5px;
+        height: 30px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .valueCheck {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        white-space: nowrap;
+        display: block;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+    /*End User DropDown CSS*/
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
 <input type="hidden" id="hdnFileName" value="" />
@@ -34,7 +130,19 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <label for="Reference">Users</label>
-                        <div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>
+                        @*<div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>*@
+                        <div class="customCheckSelect">
+                            <div class="selectAllCheck" id="selectAllCheck">
+                                <input type="hidden" id="hdnUser" />
+                                <span class="valueCheck">--Select--</span>
+                                <span class="downarrow"></span>
+                            </div>
+                            <div class="filterCheckbox">
+                                <input id="myInput" type="text" />
+                                <ul class="checkBoxGroup">
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-5">
                         <label for="Reference">Message</label>
@@ -69,13 +177,13 @@
                             <ul>
                                 <li class="userList">
                                     <div>
-                                    <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
-                                    <div class="chatBoxInfo">
-                                        <h4 class="clsName"></h4>
-                                    </div>
+                                        <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
+                                        <div class="chatBoxInfo">
+                                            <h4 class="clsName"></h4>
+                                        </div>
                                     </div>
                                     <div class="backToUser">
-                                    <span class="fa fa-arrow-left"></span> Back
+                                        <span class="fa fa-arrow-left"></span> Back
                                     </div>
                                 </li>
                             </ul>
@@ -103,6 +211,7 @@
     var Cnt = 0;
     var byteArray = [];
     var base64String = "";
+    var arrchkVal = [];
 
 
     $(document).ready(function () {
@@ -116,13 +225,13 @@
         GetUserReceiverList();
         GetChatMessageList(ReceiverId);
 
-        $('#dpUser').multiselect({
-            includeSelectAllOption: true,
-            enableFiltering: true,
-            includeFilterClearBtn: true,
-            enableCaseInsensitiveFiltering: true,
-            maxHeight: 350,
-        });
+        //$('#dpUser').multiselect({
+        //    includeSelectAllOption: true,
+        //    enableFiltering: true,
+        //    includeFilterClearBtn: true,
+        //    enableCaseInsensitiveFiltering: true,
+        //    maxHeight: 350,
+        //});
 
         $(document).ajaxSend(function () {
             $(".overlayLoader").hide();
@@ -152,12 +261,12 @@
                 $(this).hide();
                 $(".chatUserHeader").show();
             });
-            
+
             $(".backToUser").click(function (e) {
                 $(".chatUserHeader").hide();
-                 $(".userChatBox, .chatRightBoxBody").hide();
+                $(".userChatBox, .chatRightBoxBody").hide();
                 $(".chatRightBoxBody").hide();
-                 $(".chatLeftBoxBody").show();
+                $(".chatLeftBoxBody").show();
             });
 
 
@@ -187,11 +296,9 @@
                     $(".chatRightBoxBody").hide();
                     $(".chatUserHeader").hide();
                     $(".chatTopFilter").slideDown();
-                }                
+                }
             });
         }
-
-        //setTimeout(function () { $(".loginPageInfo").hide(); }, 500);
     });
 
     $('#fileupload').change(function (e) {
@@ -244,7 +351,7 @@
         var Message = "";
 
         if (type == 1) {
-            ReceiverId = $("#dpUser").val().join(",");
+            ReceiverId = $("#hdnUser").val();//$("#dpUser").val().join(",");
             Message = $("#txtMessage").val();
 
             // validation
@@ -481,12 +588,92 @@
         var _drpUserType = $("#dpUserType option:selected").text();
         var _drpUserTypeId = $("#dpUserType option:selected").val();
         $.get("@Url.Action("GetUsersByUserType", "MobileChat")", { type: _drpUserType, id: _drpUserTypeId }, function (response) {
+
             if (response != null) {
-                $("#dpUser").empty();
+                var html = "";
+                //$("#dpUser").empty();
+                //$.each(response, function (ind, val) {
+                //    $("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                //});
+                //$("#dpUser").multiselect('rebuild');
+
+                arrchkVal = [];
+                $(".valueCheck").html("--Select--");
+                $("#hdnUser").val("");
+                $(".checkBoxGroup").empty();
+                $(".checkBoxGroup").append("<li><input class='checkAll' name='checkAll' type='checkbox' value='All' /> <label>Select All</label></li>")
                 $.each(response, function (ind, val) {
-                    $("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                    //$("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                    var text = val.Text == null ? "" : val.Text;
+                    html = "<li><input name='chk' type='checkbox' value='" + val.Value + '#' + text + "' text='" + text + "' /> <label>" + text + "</label></li>"
+                    $(".checkBoxGroup").append(html);
                 });
-                $("#dpUser").multiselect('rebuild');
+                LoadUserDropdown();
+            }
+        });
+    }
+
+    function LoadUserDropdown() {
+        $(".selectAllCheck").unbind().click(function (e) {
+            e.preventDefault();
+            if ($('.filterCheckbox').css("display") == "block") {
+                $('.filterCheckbox').slideUp();
+            } else {
+                $('.filterCheckbox').slideDown();
+            }
+        });
+
+        $(document).bind('mousedown touchstart', function (e) {
+            if ($(e.target).closest('.filterCheckbox').length === 0) {
+                $('.filterCheckbox').slideUp();
+            }
+        });
+
+        $("#myInput").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $(".checkBoxGroup li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $('input[name="chk"]').unbind().change(function (e) {
+            if (this.value != "All") {
+                if (this.checked) {
+                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });                    
+                    $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                    $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+                }
+                else {
+                    $('input[class="checkAll"]').prop('checked', false);                    
+                    var index = arrchkVal.map((temp) => temp["id"]).indexOf(this.value.split("#")[0])                    
+                    if (index > -1) { // only splice array when item is found
+                        arrchkVal.splice(index, 1); // 2nd parameter means remove one item only
+                    }
+                    $('input[name="check"]').removeAttr('checked');
+                    $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                    $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+                }
+            }
+        });
+
+        $('input[class="checkAll"]').unbind().change(function (e) {
+            $(this).removeAttr('checked');
+            $("input:checkbox").prop('checked', $(this).prop("checked"));
+            if (this.checked) {
+                arrchkVal = [];
+                $('input[name="chk"]').removeAttr('checked');
+                $('input[name="chk"]').each(function () {
+                    $(this).attr('checked', 'checked');
+                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });
+                });
+                $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+            } else {
+                $('input[name="chk"]').removeAttr('checked');
+                arrchkVal = [];
+                $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                $(".valueCheck").html("--Select--");
+                $("#hdnUser").val("");
             }
         });
     }

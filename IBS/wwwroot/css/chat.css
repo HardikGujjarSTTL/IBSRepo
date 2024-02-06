@@ -183,4 +183,5 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .upload-btn-wrapper{ width:40px; right:54px;}
 .submitChatBtn{ width:40px;}
 .userShowHideChat{ display:block;}
+.customCheckSelect { max-width:inherit;}
 }

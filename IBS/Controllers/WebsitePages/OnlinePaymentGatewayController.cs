@@ -515,5 +515,23 @@ namespace IBS.Controllers.WebsitePages
 
         //    return Json(new { status = false, response = jsonresponse });
         //}
+
+        public async Task<IActionResult> PaymentCallBack()
+        {
+            string encdata = Request.Form["encdata"];
+            
+            string fileName = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".txt";
+
+            string path = Path.Combine(env.WebRootPath, "ReadWriteData", "Payment_Response", fileName);
+
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+
+            await System.IO.File.WriteAllTextAsync(path, encdata);
+
+            return Json(new { status = true });
+        }
     }
 }
