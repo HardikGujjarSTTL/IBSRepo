@@ -253,7 +253,6 @@ namespace IBS.Controllers.WebsitePages
                 PayresponseModel.Parent objectres = new PayresponseModel.Parent();
 
                 objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
-
                 model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
                 model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
                 model.Product = objectres.payInstrument.payDetails.product;
@@ -296,6 +295,7 @@ namespace IBS.Controllers.WebsitePages
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "OnlinePaymentGateway", "BindPaymentList", 1, GetIPAddress());
             }
+
             return View(model);
         }
 
@@ -516,7 +516,7 @@ namespace IBS.Controllers.WebsitePages
         //    return Json(new { status = false, response = jsonresponse });
         //}
 
-        public async Task<IActionResult> PaymentCallBack()
+        public IActionResult PaymentCallBack()
         {
             string encdata = Request.Form["encdata"];
             
@@ -529,7 +529,7 @@ namespace IBS.Controllers.WebsitePages
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
 
-            await System.IO.File.WriteAllTextAsync(path, encdata);
+            System.IO.File.WriteAllTextAsync(path, encdata);
 
             return Json(new { status = true });
         }
