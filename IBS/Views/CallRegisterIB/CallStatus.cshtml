@@ -151,12 +151,12 @@
                 <tr>
                     @{
                         var URLICInter = "/CallRegisterIB/CallStatus?CaseNo=" + Model.CaseNo + "&CallRecvDt=" + Convert.ToDateTime(Model.CallRecvDt).ToString("yyyy-mm-dd") + "&CallSno=" + Model.CallSno + "&IeCd=" + Model.IeCd + "&ActionType=" + Model.ActionType;
-                                <td class="center" colspan="5">
-                                    @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
+                                    <td class="center" colspan="5">
+                                        @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
                         <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
                         <br>   *@
-                                    <label class="text-danger">Upload the Photos first in case of Accepted, before changing the Call Status.</label>
-                                </td>
+                                        <label class="text-danger">Upload the Photos first in case of Accepted, before changing the Call Status.</label>
+                                    </td>
                     }
                 </tr>
                 <tr>
@@ -401,9 +401,9 @@
                             <div class="col-md-12 mb-5" style="align-content:center;">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
-                                    <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
+                                    <button type="button" class="save-btn active" id="RefreshAll" onclick="btnRefreshAll();">Refresh All</button>
                                     <button type="button" class="save-btn" id="uploadcancel" onclick="btnCancel();">Cancel</button>
-
+                                    
                                 </div>
                             </div>
                         </div>
@@ -1252,6 +1252,7 @@
             }
 
         }
+
         function Accepted() {
             var formData = AjaxModel();
 
@@ -1596,9 +1597,8 @@
 
         }
 
-        function RefreshAll() {
+        function btnRefreshAll() {
             var formData = AjaxModel();
-
             $.ajax({
                 url: '@Url.Action("RefreshAllDlt", "CallRegisterIB")',
                 type: 'POST',
