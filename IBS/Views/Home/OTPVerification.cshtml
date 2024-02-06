@@ -90,7 +90,7 @@
                     var decodedData = atob(encodedData);
                     var expiryDateMatch = decodedData.match(/<attribute\s+name="Expiry Date">\s*<!\[CDATA\[(.*?)\]\]>\s*<\/attribute>/);
                     var DSC_Exp_DT = expiryDateMatch ? expiryDateMatch[1] : null;
-                    alert(status);
+
                     $.post("@Url.Action("DigitalSignatureStatus", "Home")", { DSC_Exp_DT: DSC_Exp_DT }, function (response) {
 
                         if (response.status == true) {
