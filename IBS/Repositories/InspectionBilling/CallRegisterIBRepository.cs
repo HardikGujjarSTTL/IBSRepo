@@ -213,16 +213,16 @@ namespace IBS.Repositories.InspectionBilling
                     foreach (var bill in BakDetails)
                     {
                         var T20 = context.T20Ics.Where(x => x.CaseNo == bill.CaseNo && x.CallRecvDt == bill.CallRecvDt && x.CallSno == bill.CallSno).FirstOrDefault();
-                        if(T20 != null)
+                        if (T20 != null)
                         {
                             T20.NoOfInsp = Convert.ToDecimal(bill.NoOfInsp);
                             context.SaveChanges();
                         }
-                        
+
                     }
                 }
-            }    
-            
+            }
+
             return model;
         }
 
@@ -5824,6 +5824,85 @@ namespace IBS.Repositories.InspectionBilling
                 }
             }
             return flag;
+        }
+
+        public VenderCallStatusModel GetValidBkSet(string CaseNo, DateTime? DesireDt, int CallSno, int ConsigneeCd, string DocBkNo, string DocSetNo, int IE_CD)
+        {
+            VenderCallStatusModel model = new();
+
+            IcIntermediate IC = context.IcIntermediates.Where(x => x.ConsigneeCd == ConsigneeCd && x.BkNo == DocBkNo && x.SetNo == DocSetNo).FirstOrDefault();
+
+            if (IC == null)
+            {
+                return model;
+            }
+            else
+            {
+                var ic_book = (from item in context.T10IcBooksets
+                               orderby item.IssueDt descending
+                               where item.IssueToIecd == IE_CD
+                               select item).FirstOrDefault();
+
+                var ICInter = context.IcIntermediates.Where(ic => ic.CaseNo == CaseNo.Trim() && ic.CallRecvDt == Convert.ToDateTime(DesireDt)
+                             && ic.CallSno == CallSno).OrderByDescending(ic => ic.Datetime).ToList();
+
+                if (ICInter.Count > 0)
+                {
+                    foreach (var item in ICInter)
+                    {
+                        if (ConsigneeCd == item.ConsigneeCd)
+                        {
+                            model.DocBkNo = item.BkNo;
+                            model.DocSetNo = item.SetNo;
+                            model.Consignee = Convert.ToString(item.ConsigneeCd);
+                        }
+                    }
+                }
+                else
+                {
+                    if (ic_book != null)
+                    {
+                        var dlt_IC = (from x in context.IcIntermediates
+                                      orderby x.SetNo descending
+                                      where x.BkNo.Trim() == ic_book.BkNo.Trim() && x.IeCd == IE_CD
+                                      select x).FirstOrDefault();
+
+                        if (dlt_IC != null)
+                        {
+                            int setNo = Convert.ToInt32(dlt_IC.SetNo) + 1;
+
+                            string incrementedSetNo = setNo.ToString("D3");
+                            var ic_bookset = (from item in context.T10IcBooksets
+                                              orderby item.IssueDt descending
+                                              where item.BkNo.Trim().ToUpper() == dlt_IC.BkNo &&
+                                                    Convert.ToInt32(incrementedSetNo) >= Convert.ToInt32(item.SetNoFr) && Convert.ToInt32(incrementedSetNo) <= Convert.ToInt32(item.SetNoTo) &&
+                                                    item.IssueToIecd == dlt_IC.IeCd
+                                              select item).FirstOrDefault();
+
+                            if (ic_bookset != null)
+                            {
+                                model.DocBkNo = ic_bookset.BkNo;
+                                model.DocSetNo = Convert.ToString(incrementedSetNo);
+                            }
+                            else
+                            {
+                                model.DocBkNo = "";
+                                model.DocSetNo = "";
+                            }
+                        }
+                        else
+                        {
+                            model.DocBkNo = ic_book.BkNo;
+                            model.DocSetNo = Convert.ToString(ic_book.SetNoFr);
+                        }
+                    }
+                }
+
+                model.AlertMsg = "Book Number or Set Number Already Existing for this Consignee.!!!";
+            }
+            
+
+            return model;
         }
     }
 }
