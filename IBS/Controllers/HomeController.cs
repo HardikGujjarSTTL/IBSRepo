@@ -435,7 +435,7 @@ namespace IBS.Controllers
                 }
                 else
                 {
-                    string DSCUpdate = userRepository.UpdateDSCDate(GetIeCd, Convert.ToDateTime(DSC_Exp_DT));
+                    string DSCUpdate = userRepository.UpdateDSCDate(SessionHelper.UserModelDTO.IeCd, Convert.ToDateTime(DSC_Exp_DT));
                     return Json(new { status = true, responseText = responseText });
                 }
             }

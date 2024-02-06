@@ -26,7 +26,7 @@
         </div>
         <div class="row my-3">
             <div class="col-md-12">
-                <button type="button" id="btnSubmit" class="btn btnGreen" >Submit OTP</button>
+                <button type="button" id="btnSubmit" class="btn btnGreen">Submit OTP</button>
             </div>
         </div>
         <div class="row m-0">
@@ -86,28 +86,32 @@
                 data: { response: xmldata },
                 success: function (exeResponse) {
                     var status = $(exeResponse).find("status").text();
-                    var encodedData = $(exeResponse).find("data").text();
-                    var decodedData = atob(encodedData);
-                    var expiryDateMatch = decodedData.match(/<attribute\s+name="Expiry Date">\s*<!\[CDATA\[(.*?)\]\]>\s*<\/attribute>/);
-                    var DSC_Exp_DT = expiryDateMatch ? expiryDateMatch[1] : null;
 
-                    $.post("@Url.Action("DigitalSignatureStatus", "Home")", { DSC_Exp_DT: DSC_Exp_DT }, function (response) {
+                    if (status == "ok") {
+                        var encodedData = $(exeResponse).find("data").text();
+                        var decodedData = atob(encodedData);
+                        var expiryDateMatch = decodedData.match(/<attribute\s+name="Expiry Date">\s*<!\[CDATA\[(.*?)\]\]>\s*<\/attribute>/);
+                        var DSC_Exp_DT = expiryDateMatch ? expiryDateMatch[1] : null;
 
-                        if (response.status == true) {
-                            if (status == "ok") {
+                        $.post("@Url.Action("DigitalSignatureStatus", "Home")", { DSC_Exp_DT: DSC_Exp_DT }, function (response) {
+                            if (response.status == true) {
                                 oCompleted(response);
                                 $(".overlayLoader1").hide();
-                            }
-                            else {
-                                ShowHideMsgNew(false, "Kindly Attached Certificate!!");
+                            } else {
+                                ShowHideMsgNew(response.status, response.responseText);
                                 $(".overlayLoader1").hide();
                             }
-                        }else{
-                            ShowHideMsgNew(response.status, response.responseText);
-                            $(".overlayLoader1").hide();
-                        }
-                    });
+                        });
+                    }
+                    else {
+                        ShowHideMsgNew(false, "Kindly Attached Certificate!!");
+                        $(".overlayLoader1").hide();
+                    }
                 },
+                error: function (error) {
+                    ShowHideMsgNew(false, "Kindly Attached Certificate or Make sure Digital Signature Server is running!!");
+                    $(".overlayLoader1").hide();
+                }
             });
         }
 
