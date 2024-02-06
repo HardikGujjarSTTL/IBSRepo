@@ -612,7 +612,9 @@
                     $('#ViewPrintIC').show();
                     $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').show();
+                    $('#ReasonFIFOdv').show();
                     $('#consigneeFirmDropdown').trigger('change');
+
                 }
                 else if (selectedValue == "R") {
 
@@ -889,6 +891,7 @@
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
+                $('#ReasonFIFOdv').show();
             } else if (CallStatusdrp == "R") {
                 $(".CallRejected").hide();
                 $('#CallStatusdrp').prop('disabled', true);
@@ -1261,6 +1264,10 @@
         }
 
         function Accepted() {
+            if ($("#ReasonFIFO").val() == "") {
+                $("#spnReasonFIFO").html("Reason For Violating FIFO.");
+                return;
+            }
             var formData = AjaxModel();
 
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
