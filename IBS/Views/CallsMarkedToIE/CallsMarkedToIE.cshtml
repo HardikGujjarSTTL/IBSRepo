@@ -50,29 +50,29 @@
             <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" style="font-size: smaller;">
                 <tbody>
                     <tr>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Approval for CM</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor Name</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">New Vendor</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Purchaser</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Delv Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Insp Desire Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Serial no.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Document(if any).</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No./View PO</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po source</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po No.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person Phone No.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">User(other then ie)</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Last Updation Date</font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font  face="Verdana"></font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font face="Verdana"></font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font face="Verdana"></font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Approval for CM</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Vendor Name</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">New Vendor</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Purchaser</font></b></th>
+                        <th width="150px;" valign="top" align="center"><b><font  face="Verdana">Item</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Delv Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Insp Desire Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Call Date</font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font  face="Verdana">Call Serial no.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Call Document(if any).</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Case No./View PO</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po source</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Status</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Remarks</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po No.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Contact Person</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Contact Person Phone No.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">User(other then ie)</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Last Updation Date</font></b></th>
                     </tr>
                     @if (Model != null && Model.ReportLstNew != null && Model.ReportLstNew.Count > 0)
                     {
@@ -146,66 +146,66 @@
                             <tr>
                                 @if (item.CM_APPROVAL == "A" || item.CALL_STATUS != "M")
                                 {
-                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wSelect>Select</a></font></td>
-                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wPrint>Print</a></font></td>
-                                    <td align="center" colspan="1"><font size="3" face="Verdana"><a href=@wHistory>History</a></font></td>
+                                    <td align="center" colspan="1"><a href=@wSelect>Select</a></td>
+                                    <td align="center" colspan="1"><a href=@wPrint>Print</a></td>
+                                    <td align="center" colspan="1"><a href=@wHistory>History</a></td>
 
-                                    <td align="center"><font size="1" face="Verdana" color='#FF00CC'>Approved by CM</font></td>
+                                    <td align="center"><font  face="Verdana" color='#FF00CC'>Approved by CM</font></td>
                                 }
                                 else
                                 {
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">Select</font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">Print</font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">History</font></td>
+                                    <td align="center" colspan="1">Select</td>
+                                    <td align="center" colspan="1">Print</td>
+                                    <td align="center" colspan="1">History</td>
 
-                                    <td align="center"><font size="1" face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
+                                    <td align="center"><font  face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
                                 }
                                 @if (item.VEND_CD == item.MFG_CD)
                                 {
-                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
+                                    <td align="center"><font  face="Verdana">@item.VENDOR</font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana">@item.VENDOR</font> <font size="1" face="Verdana" color='#FF00CC'> At </font> <font size="1" face="Verdana" font color='#3333FF'>@item.MANUFACTURER</font></td>
+                                    <td align="center"><font  face="Verdana">@item.VENDOR</font> <font  face="Verdana" color='#FF00CC'> At </font> <font  face="Verdana" font color='#3333FF'>@item.MANUFACTURER</font></td>
                                 }
 
                                 @if (item.NEWVENDOR == "Y")
                                 {
-                                    <td align="center"><font size="1" face="Verdana" color=crimson>Yes</font></td>
+                                    <td align="center"><font  face="Verdana" color=crimson>Yes</font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana"></font></td>
+                                    <td align="center"><font  face="Verdana"></font></td>
                                 }
                                 
-                                <td align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
+                                <td align="center"><font  face="Verdana">@item.CONSIGNEE</font></td>
                                 <td align="center">
 
                                     @if (item.COUNT > 1)
                                     {
-                                        <font size="1" face="Verdana">
+                                        <font  face="Verdana">
                                             @item.ITEM_DESC_PO
                                         </font>
-                                        <font size="1" face="Verdana" color='#FF00CC'>and more items as per call</font>
+                                        <font  face="Verdana" color='#FF00CC'>and more items as per call</font>
                                     }
                                     else
                                     {
-                                        <font size="1" face="Verdana">
+                                        <font  face="Verdana">
                                             @item.ITEM_DESC_PO
                                         </font>
                                     }
                                 </td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.EXT_DELV_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.INSP_DESIRE_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CALL_MARK_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.EXT_DELV_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.INSP_DESIRE_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.CALL_MARK_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.CALL_SNO</font></td>
                                 @if (System.IO.File.Exists(@callDocAny))
                                 {
-                                    <td align="center"><font size="2" face="Verdana"><a href=@callDocAny target="_blank">Call Documents</a></font></td>
+                                    <td align="center"><font  face="Verdana"><a href=@callDocAny target="_blank">Call Documents</a></font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="2" face="Verdana"></font></td>
+                                    <td align="center"><font  face="Verdana"></font></td>
                                 }
                                 @if (item.PO_SOURCE == "C")
                                 {
@@ -220,7 +220,7 @@
                                     if (System.IO.File.Exists(fpath1) == true)
                                     {
                                         <td align="center">
-                                            <font size="1" face="Verdana">
+                                            <font  face="Verdana">
                                                 <a href=@Fpath11 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
@@ -228,20 +228,20 @@
                                     else if (System.IO.File.Exists(fpath2) == true)
                                     {
                                         <td align="center">
-                                            <font size="1" face="Verdana">
+                                            <font  face="Verdana">
                                                 <a href=@Fpath22 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
                                     }
                                     else
                                     {
-                                        <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                        <td align="center"><font  face="Verdana">@item.CASE_NO</font></td>
                                     }
 
                                 }
-                                <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
+                                <td align="center"><font  face="Verdana">@item.SOURCE</font></td>
 
-                                @* <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
+                                @* <td align="center"><font  face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
 
                                 @if (item.CALL_STATUS == "U")
                                 {
@@ -249,26 +249,26 @@
                                     var Fpath1 = Model.FilePath1 + "/ReadWriteData/LAB/" + item.CASE_NO + "_" + item.CALL_SNO + "_" + Convert.ToDateTime(item.CALL_RECV_DT).ToString("yyyyddMM") + ".pdf";
                                     if (System.IO.File.Exists(fpath123) == true)
                                     {
-                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit" target="_blank">Lab Report</a><br />@D2</font></td>
+                                        <td align="center"><font  face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit" target="_blank">Lab Report</a><br />@D2</font></td>
                                     }
                                     else
                                     {
-                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
+                                        <td align="center"><font  face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
                                     }
 
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
+                                    <td align="center"><font  face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
                                 }
 
-                                <td align="center"><font size="1" face="Verdana">@item.REMARKS</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MFG_PERS</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MFG_PHONE</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.USER_ID</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DATETIME).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.REMARKS</font></td>
+                                <td align="center"><font  face="Verdana">@item.PO_NO</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.MFG_PERS</font></td>
+                                <td align="center"><font  face="Verdana">@item.MFG_PHONE</font></td>
+                                <td align="center"><font  face="Verdana">@item.USER_ID</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.DATETIME).ToString("dd/MM/yyyy")</font></td>
                             </tr>
                         }
                     }
