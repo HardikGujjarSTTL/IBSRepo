@@ -3539,6 +3539,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.RlyNonrly = Status.RlyNonrly;
                     model.RejectionCharge = Convert.ToString(Status.RejCharges);
                     model.LocalOutstation = Convert.ToString(Status.LocalOrOuts);
+                    model.ReasonFIFO = Convert.ToString(Status.FifoVoilateReason);
                 }
 
                 if (string.IsNullOrEmpty(model.BkNo) && string.IsNullOrEmpty(model.SetNo))

@@ -176,10 +176,12 @@
                 </tr>
                 <tr id="ReasonFIFOdv">
                     <td>
-                        <label for="Reference">Reason For Violating FIFO : </label>
+                        <label for="Reference">Reason For Violating FIFO : <i class="text-danger">*</i></label>
+                        <span style="color:red;">(Max 400 Chars)</span>
                     </td>
                     <td colspan="4">
                         <textarea rows="4" asp-for="ReasonFIFO" style="color:red;text-transform: uppercase;" id="ReasonFIFO"></textarea>
+                        <span id="spnReasonFIFO" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr id="MatCanvalue">
@@ -362,28 +364,32 @@
                         </div>
                         <div class="row my-0 CallRejected">
                             <div class="col-md-6 mb-3">
+                                <span style="color:red;">IC (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
                             </div>
                             <div class="col-md-6 mb-3">
+                                <span style="color:red;">TESTPLAN (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
                             </div>
                         </div>
                         <div class="row my-0">
                             <div class="col-md-6 mb-3 CallRejected">
+                                <span style="color:red;">Annexure-I (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
                             </div>
                             <div class="col-md-6 mb-3 CallRejected">
+                                <span style="color:red;">Annexure-II (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
                             </div>
                             <div class="col-md-4 mb-3" id="localdrp">
                                 <label for="Reference">Local or Outstation : </label>
                                 @Html.DropDownList("LocalOutstationdrp", new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"), new { @id = "LocalOutstationdrp" })
                             </div>
-                            <div class="col-md-4 mb-3" id="rejvalue">
+                            <div class="col-md-4 mb-3 rejvalue" id="rejvalue">
                                 <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                                 <input type="text" asp-for="RejectionCharge" maxlength="100">
                             </div>
-                            <div class="col-md-4 mb-3" id="rejvalue">
+                            <div class="col-md-4 mb-3 rejvalue" id="rejvalue">
                                 <label for="Reference">Material Value : </label>
                                 <input type="text" asp-for="RejectMaterialValue" maxlength="100">
                             </div>
@@ -392,10 +398,7 @@
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
                             </div>
-                            <div id="ForARS">
-                                <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
-                                <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
-                            </div>
+                            
                         </div>
                         <div class="row my-0">
                             <div class="col-md-12 mb-5" style="align-content:center;">
@@ -405,6 +408,10 @@
                                     <button type="button" class="save-btn" id="uploadcancel" onclick="btnCancel();">Cancel</button>
                                     
                                 </div>
+                            </div>
+                            <div id="ForARS">
+                                <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
+                                <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
                             </div>
                         </div>
                     </div>
@@ -540,7 +547,7 @@
             $('#bkset').hide();
             $('#LocalOutstationdrp').hide();
             $('#localdrp').hide();
-            $('#rejvalue').hide();
+            $('.rejvalue').hide();
             $('#Remarksval').hide();
             $('#Holograms').hide();
 
@@ -594,7 +601,7 @@
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#AcceptReject').text('Accepted');
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $("#ForARS").show();
                     $('#Remarksval').hide();
                     $('#AcceptReject').show();
@@ -613,7 +620,7 @@
                     $('#MatValue').show();
                     $('#accepteddrp').show();
                     $('#localdrp').show();
-                    $('#rejvalue').show();
+                    $('.rejvalue').show();
                     $('#savedetails').hide();
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
@@ -643,7 +650,7 @@
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#AcceptReject').show();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
                     $('#frmcancelled').hide();
@@ -660,7 +667,7 @@
                 else if (selectedValue == "T") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').show();
@@ -680,7 +687,7 @@
                 else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $("#ForARS").hide();
@@ -700,7 +707,7 @@
                 else if (selectedValue == "U") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -720,7 +727,7 @@
                 else if (selectedValue == "W") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -740,7 +747,7 @@
                 else if (selectedValue == "M" || selectedValue == "B") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -760,7 +767,7 @@
                 else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -787,7 +794,7 @@
                     }
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -874,7 +881,7 @@
                 $('#localdrp').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#uploadfile').show();
                 $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
@@ -891,7 +898,7 @@
                 $('#MatValue').show();
                 $('#accepteddrp').show();
                 $('#localdrp').show();
-                $('#rejvalue').show();
+                $('.rejvalue').show();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
                 $('#accepteuploadddrp').show();
@@ -934,7 +941,7 @@
                 $('#localdrp').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#uploadfile').show();
                 $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
@@ -946,7 +953,7 @@
             } else if (CallStatusdrp == "T") {
                 $('#accepteuploadddrp').show();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').show();
@@ -968,7 +975,7 @@
             } else if (CallStatusdrp == "S") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -986,7 +993,7 @@
             } else if (CallStatusdrp == "U") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -1004,7 +1011,7 @@
             } else if (CallStatusdrp == "W") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -1022,7 +1029,7 @@
             } else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -1040,7 +1047,7 @@
             } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -1295,6 +1302,11 @@
         }
 
         function Save() {
+            debugger
+            if ($("#ReasonFIFO").val() == "") {
+                $("#spnReasonFIFO").html("Reason For Violating FIFO.");
+                return;
+            }
 
             var formData = new FormData();
             SaveSingleDocuments("tab-2");
@@ -1557,7 +1569,8 @@
                 RejectionCharge: RejectionCharge,
                 IeCd: IeCd,
                 CallCancelCharges: CallCancelCharges,
-                CallLetterDt: CallLetterDt
+                CallLetterDt: CallLetterDt,
+                ReasonFIFO: ReasonFIFO
             };
 
             return formData;
