@@ -71,19 +71,6 @@ namespace IBS.Controllers
             UserSessionModel userMaster = userRepository.LoginByUserPass(loginModel);
             if (userMaster != null)
             {
-                if (loginModel.UserType == "IE")
-                {
-                    //bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
-                    //if (IsDigitalSignatureConfig)
-                    //{
-                    //    string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.UserID);
-                    //    if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
-                    //    {
-                    //        AlertDanger(_DigitalSignatureStatus);
-                    //        return RedirectToAction("Index");
-                    //    }
-                    //}
-                }
                 //// temporary Commited - for local
                 //if (userMaster.MOBILE != null && userMaster.MOBILE != "")
                 if (1 == 1)
@@ -135,7 +122,7 @@ namespace IBS.Controllers
             loginModel.UserName = loginModel.DecryptUserName;
             loginModel.UserType = loginModel.DecryptUserType;
             string xmlData = string.Empty;
-            string responseText =string.Empty;
+            string responseText = string.Empty;
 
             if (userRepository.VerifyOTP(loginModel))
             {
@@ -147,18 +134,14 @@ namespace IBS.Controllers
                         bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
                         if (IsDigitalSignatureConfig)
                         {
-                            string _DigitalSignatureStatus = DigitalSignatureStatus(userMaster.UserID);
-                            if (!string.IsNullOrEmpty(_DigitalSignatureStatus))
+                            if (!string.IsNullOrEmpty(userMaster.Email))
                             {
-                                if (!string.IsNullOrEmpty(userMaster.Email))
-                                {
-                                    xmlData = GenerateDigitalSignatureXML(userMaster.Email);
-                                    responseText = xmlData;
-                                }
-                                else
-                                {
-                                    responseText = "Kindly Attached Valid Certificate!!";
-                                }
+                                xmlData = GenerateDigitalSignatureXML(userMaster.Email);
+                                responseText = xmlData;
+                            }
+                            else
+                            {
+                                responseText = "Kindly Attached Valid Certificate!!";
                             }
                         }
                     }
@@ -437,93 +420,32 @@ namespace IBS.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("Encrypted")]
-        //public ActionResult<string> Encrypted(string Text)
-        //{
-        //    string encryptedPassword = Common.getEncryptedText(Text, "301ae92bb2bc7599");
-        //    return Ok(encryptedPassword);
-        //}
 
-        //[HttpGet("Decrypted")]
-        //public ActionResult<string> Decrypted(string Text)
-        //{
-        //    string DecryptedPassword = Common.getDecryptedText(Text, "301ae92bb2bc7599");
-        //    return Ok(DecryptedPassword);
-        //}
-
-        #region Digital Signature
-        public string DigitalSignatureStatus(int IeCd)
+        [HttpPost]
+        public ActionResult DigitalSignatureStatus(string DSC_Exp_DT)
         {
             string responseText = string.Empty;
 
-            CertificateDetails DSCDT_Email = userRepository.GetDSC_Exp_DT(IeCd);
-
-            //X509Certificate2 Certificate = DigitalSigner.getCertificate("minesh vinodchandra doshi");
-            X509Certificate2 Certificate = DigitalSigner.getCertificate(DSCDT_Email.IE_Email);
-
-            if (Certificate == null)
+            if (!string.IsNullOrEmpty(DSC_Exp_DT))
             {
-                responseText = "Kindly Attached Certificate!!";
-            }
-            else
-            {
-                CertificateDetails CertificateDetailsModel = ExtractCertificateDetails(Certificate.Subject);
-
-                DateTime? DSC_Exp_DT = Certificate.NotAfter;
-
-                if (DSC_Exp_DT.Value.Date < DateTime.Now.Date)
+                if (Convert.ToDateTime(DSC_Exp_DT) < DateTime.Now)
                 {
                     responseText = "DSC Expiry date cannot be earlier then current date!!";
+                    return Json(new { status = false, responseText = responseText });
                 }
                 else
                 {
-                    if (DSCDT_Email.DSC_Exp_DT == null || (DSC_Exp_DT.Value.Date != DSCDT_Email.DSC_Exp_DT.Value.Date))
-                    {
-                        string DSCUpdate = userRepository.UpdateDSCDate(IeCd, DSC_Exp_DT.Value);
-                    }
+                    string DSCUpdate = userRepository.UpdateDSCDate(SessionHelper.UserModelDTO.IeCd, Convert.ToDateTime(DSC_Exp_DT));
+                    return Json(new { status = true, responseText = responseText });
                 }
             }
-
-            return responseText;
-
-        }
-
-        private CertificateDetails ExtractCertificateDetails(string subject)
-        {
-            return new CertificateDetails
+            else
             {
-                CommonName = GetCertificateValue(subject, "CN"),
-                Email = GetCertificateValue(subject, "E"),
-                SerialNumber = GetCertificateValue(subject, "SERIALNUMBER"),
-                Phone = GetCertificateValue(subject, "Phone"),
-                Title = GetCertificateValue(subject, "T"),
-                Street = GetCertificateValue(subject, "STREET"),
-                State = GetCertificateValue(subject, "S"),
-                Locality = GetCertificateValue(subject, "L"),
-                PostalCode = GetCertificateValue(subject, "PostalCode"),
-                OrganizationUnit = GetCertificateValue(subject, "OU"),
-                Organization = GetCertificateValue(subject, "O"),
-                Country = GetCertificateValue(subject, "C")
-            };
-        }
-
-        private string GetCertificateValue(string subject, string field)
-        {
-            string prefix = field + "=";
-            int start = subject.IndexOf(prefix);
-            if (start >= 0)
-            {
-                start += prefix.Length;
-                int end = subject.IndexOf(',', start);
-                if (end < 0)
-                    end = subject.Length;
-
-                return subject.Substring(start, end - start).Trim();
+                return Json(new { status = false, responseText = "Kindly Attached Valid Certificate!!" });
             }
 
-            return null;
+            return Json(new { status = false, responseText = responseText});
         }
-        #endregion
 
         public string GenerateDigitalSignatureXML(string Email)
         {
@@ -535,7 +457,7 @@ namespace IBS.Controllers
             doc.AppendChild(requestNode);
 
             XmlNode commandNode = doc.CreateElement("command");
-            commandNode.AppendChild(doc.CreateTextNode("pkiNetworkCertAuth"));
+            commandNode.AppendChild(doc.CreateTextNode("pkiNetworkCertExt"));
             requestNode.AppendChild(commandNode);
 
             XmlNode tsNode = doc.CreateElement("ts");
@@ -558,24 +480,6 @@ namespace IBS.Controllers
             nameNode1.Attributes.Append(nameNode1Attr);
             certNode.AppendChild(nameNode1);
 
-            XmlNode nameNode2 = doc.CreateElement("attribute");
-            XmlAttribute nameNode2Attr = doc.CreateAttribute("name");
-            nameNode2Attr.Value = "O";
-            nameNode2.Attributes.Append(nameNode2Attr);
-            certNode.AppendChild(nameNode2);
-
-            XmlNode nameNode3 = doc.CreateElement("attribute");
-            XmlAttribute nameNode3Attr = doc.CreateAttribute("name");
-            nameNode3Attr.Value = "OU";
-            nameNode3.Attributes.Append(nameNode3Attr);
-            certNode.AppendChild(nameNode3);
-
-            XmlNode nameNode4 = doc.CreateElement("attribute");
-            XmlAttribute nameNode4Attr = doc.CreateAttribute("name");
-            nameNode4Attr.Value = "T";
-            nameNode4.Attributes.Append(nameNode4Attr);
-            certNode.AppendChild(nameNode4);
-
             XmlNode nameNode5 = doc.CreateElement("attribute");
             XmlAttribute nameNode5Attr = doc.CreateAttribute("name");
             nameNode5Attr.Value = "E";
@@ -588,12 +492,6 @@ namespace IBS.Controllers
             nameNode6Attr.Value = "SN";
             nameNode6.Attributes.Append(nameNode6Attr);
             certNode.AppendChild(nameNode6);
-
-            XmlNode nameNode7 = doc.CreateElement("attribute");
-            XmlAttribute nameNode7Attr = doc.CreateAttribute("name");
-            nameNode7Attr.Value = "CA";
-            nameNode7.Attributes.Append(nameNode7Attr);
-            certNode.AppendChild(nameNode7);
 
             XmlNode nameNode8 = doc.CreateElement("attribute");
             XmlAttribute nameNode8Attr = doc.CreateAttribute("name");
@@ -608,42 +506,6 @@ namespace IBS.Controllers
             nameNode9.Attributes.Append(nameNode9Attr);
             nameNode9.AppendChild(doc.CreateTextNode("1"));
             certNode.AppendChild(nameNode9);
-
-            XmlNode nameNode10 = doc.CreateElement("attribute");
-            XmlAttribute nameNode10Attr = doc.CreateAttribute("name");
-            nameNode10Attr.Value = "VD";
-            nameNode10.Attributes.Append(nameNode10Attr);
-            certNode.AppendChild(nameNode10);
-
-            //XmlNode fileNode = doc.CreateElement("file");
-            //requestNode.AppendChild(fileNode);
-
-            //XmlNode nameNode11 = doc.CreateElement("attribute");
-            //XmlAttribute nameNode11Attr = doc.CreateAttribute("name");
-            //nameNode11Attr.Value = "type";
-            //nameNode11.Attributes.Append(nameNode11Attr);
-            //nameNode11.AppendChild(doc.CreateTextNode("pdf"));
-            //fileNode.AppendChild(nameNode11);
-
-            //XmlNode pdfNode = doc.CreateElement("pdf");
-            //requestNode.AppendChild(pdfNode);
-
-            //XmlNode pageNode = doc.CreateElement("page");
-            //pageNode.AppendChild(doc.CreateTextNode(pageNo.ToString()));
-            //pdfNode.AppendChild(pageNode);
-
-            //XmlNode coodNode = doc.CreateElement("cood");
-            //coodNode.AppendChild(doc.CreateTextNode("400,45"));
-            //pdfNode.AppendChild(coodNode);
-
-            //XmlNode sizeNode = doc.CreateElement("size");
-            //sizeNode.AppendChild(doc.CreateTextNode("165,60"));
-
-            //pdfNode.AppendChild(sizeNode);
-
-            //XmlNode dataNode = doc.CreateElement("data");
-            //dataNode.AppendChild(doc.CreateTextNode(base64String));
-            //requestNode.AppendChild(dataNode);
 
             StringWriter sw = new StringWriter();
             XmlTextWriter tx = new XmlTextWriter(sw);

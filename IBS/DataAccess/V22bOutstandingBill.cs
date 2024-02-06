@@ -45,6 +45,8 @@ public partial class V22bOutstandingBill
 
     public string? PoOrLetter { get; set; }
 
+    public string? StockNonstock { get; set; }
+
     public int? VendCd { get; set; }
 
     public string? VendName { get; set; }
@@ -64,6 +66,22 @@ public partial class V22bOutstandingBill
     public int? IeCd { get; set; }
 
     public decimal? BillAmount { get; set; }
+
+    public string? CnoteBillNo { get; set; }
+
+    public string? IcNo { get; set; }
+
+    public DateTime? IcDt { get; set; }
+
+    public string? RecipientGstinNo { get; set; }
+
+    public DateTime ChqDt { get; set; }
+
+    public string? Narration { get; set; }
+
+    public decimal? ChqAmt { get; set; }
+
+    public string? AuDesc { get; set; }
 
     public decimal? Tds { get; set; }
 

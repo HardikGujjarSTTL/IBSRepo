@@ -70,4 +70,6 @@ public partial class ViewGetCallStatusDetail
     public decimal? RejCharges { get; set; }
 
     public string? LocalOrOuts { get; set; }
+
+    public string? FifoVoilateReason { get; set; }
 }
