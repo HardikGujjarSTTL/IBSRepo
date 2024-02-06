@@ -181,6 +181,12 @@ namespace IBS.Models
 
         public List<CNoteInvoiceModel> lstCNoteInvoice { get; set; }
 
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+
+        public string rdoSummary { get; set; }
+        public string rdoBpo { get; set; }
+
     }
 
     public class BillRaisedListModel

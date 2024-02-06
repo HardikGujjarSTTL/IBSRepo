@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <p align="right">
+    <p align="right" id="secExport" style="display:none;">
         <input type="button" class="commonBtn" value="Back" id="btnBack" style="display:none;" />
         <input type="button" class="commonBtn" value="Print" id="btnPrint" />
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
@@ -162,6 +162,12 @@
             </div>
         </div>
     </div>
+
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
 </body>
 </html>
 <link href="~/css/report.css" rel="stylesheet" />
@@ -216,6 +222,7 @@
     });
 
     function generatePdf(isPrint) {
+        $("#secExport").hide();
         $.ajax({
             url: "@Url.Action("GeneratePDF", "BillingReports")",
             type: "POST",
@@ -248,6 +255,7 @@
                     a.remove();
                     window.URL.revokeObjectURL(url);
                 }
+                $("#secExport").show();
             },
             error: function (error) {
                 console.error(error);

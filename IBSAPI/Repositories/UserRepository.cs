@@ -66,6 +66,7 @@ namespace IBSAPI.Repositories
                 userModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
                 userModel.CO_CD = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
                 userModel.ID = Convert.ToInt32(ds.Tables[0].Rows[0]["ID"]);
+                userModel.Master_ID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
             }
             else
             {
