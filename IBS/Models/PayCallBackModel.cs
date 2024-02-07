@@ -39,7 +39,7 @@
             public PayDetails payDetails { get; set; }
             public ResponseDetails responseDetails { get; set; }
             public PayModeSpecificData payModeSpecificData { get; set; }
-            public ProdDetail prodDetails { get; set; }
+            public List<ProdDetail> prodDetails { get; set; }
             public PayInstrument()
             {
                 //
