@@ -542,7 +542,7 @@ namespace IBS.Controllers.WebsitePages
             objectres = JsonConvert.DeserializeObject<PayCallBackModel.Parent>(Decryptval);
             model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
             model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
-            //model.Product = objectres.payInstrument.prodDetails[0].prodName;
+            model.Product = objectres.payInstrument.payDetails.prodDetails[0].prodName;
             DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
             model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
             model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
