@@ -760,22 +760,22 @@ namespace IBS.Controllers.InspectionBilling
                 int[] Upload_Test_PlanDID = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Test_Plan };
                 int[] Upload_IC_Annexue1DID = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue1 };
                 int[] Upload_IC_Annexue2DID = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_IC_Annexue2 };
-                if (DocumentsList[0].DocName == "IC PhotoDigital Sign")
+                if (DocumentsList[0].DocName == "IC Photo")
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + ".PDF";
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.ICPhotoDigSign).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, ICPhoto_Dig_SignDID);
                 }
-                if (DocumentsList[1].DocName == "Upload TestPlan")
+                if (DocumentsList[1].DocName == "Testplan/Lab Test Reports (If Any)")
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + ".PDF";
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadTestPlan).ToList(), Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, Upload_Test_PlanDID);
                 }
-                if (DocumentsList[2].DocName == "Upload IC Annexue 1")
+                if (DocumentsList[2].DocName == "IC Annexue-I (If Any)")
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "-A1.PDF";
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue1).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, Upload_IC_Annexue1DID);
                 }
-                if (DocumentsList[3].DocName == "Upload IC Annexue 2")
+                if (DocumentsList[3].DocName == "IC Annexue-II (If Any)")
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + "-A2.PDF";
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo), DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue2).ToList(), Enums.GetEnumDescription(Enums.FolderPath.BILLIC), env, iDocument, FileName, string.Empty, Upload_IC_Annexue2DID);
@@ -953,5 +953,13 @@ namespace IBS.Controllers.InspectionBilling
             var res = callregisterRepository.SaveRPTPRMInspectionCertificate(CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD);
             return Json(res);
         }
+
+        public IActionResult GetValidBkSet(string CaseNo, DateTime? DesireDt, int CallSno, int ConsigneeCd, string DocBkNo, string DocSetNo)
+        {
+            int IE_CD = SessionHelper.UserModelDTO.IeCd;
+            VenderCallStatusModel model = callregisterRepository.GetValidBkSet(CaseNo, DesireDt, CallSno, ConsigneeCd, DocBkNo, DocSetNo, IE_CD);
+            return Json(model);
+        }
     }
 }
+    
