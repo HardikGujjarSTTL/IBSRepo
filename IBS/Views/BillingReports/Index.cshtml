@@ -768,9 +768,10 @@
                 }
 
                 if (!IsValid) return;
-
-                let myObject = { FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, rdbPRly, rdbPAU };
-                var url = '@Url.Action("BillsNotCrisReport", "BillingReports")?' + $.param(myObject);
+                var ReportType = "@ReportType";
+                let myObject = { FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, rdbPRly, rdbPAU, ReportType };
+                //var url = '@Url.Action("BillsNotCrisReport", "BillingReports")?' + $.param(myObject);
+                var url = '@Url.Action("Manage", "BillingReports")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
             if (actiontype == "CNoteInvoice") {

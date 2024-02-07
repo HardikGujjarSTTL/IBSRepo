@@ -40,6 +40,10 @@
             loadRailwayOnlineReport();
             fileName = 'RailwayOnlineReport';
         }
+        else if ('@ReportType' == 'RBNRS') {
+            loadBillsNotCrisReport();
+            fileName = "BillsNotCrisReport";
+        }
     });
 
     function loadRailwayOnlineReport() {
@@ -48,6 +52,15 @@
 
 
         $("#dvReportViewer").load("@Url.Action("RailwayOnlineReport_Partial","BillingReports")", myObject, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadBillsNotCrisReport() {
+        let myObject = { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', chkRegion: '@Model.chkRegion', ClientType: '@Model.ClientType', lstAU: '@Model.lstAU', actiontype: '@Model.actiontype', rdbPRly: '@Model.rdbPRly', rdbPAU: '@Model.rdbPAU' };
+
+        $("#dvReportViewer").load("@Url.Action("BillsNotCrisReport_Partial","BillingReports")", myObject, function (response) {
             $("#dvReportViewer").empty();
             $("#dvReportViewer").html(response);
         });

@@ -94,6 +94,10 @@ namespace IBS.Controllers.Reports.Billing
             {
                 model.ReportTitle = "Railway online bills";
             }
+            else if(model.ReportType == "RBNRS")
+            {
+                model.ReportTitle = "Returned Bills yet to be Submitted to CRIS (Under Testing)";
+            }
             return View(model);
         }
         #endregion
@@ -177,12 +181,19 @@ namespace IBS.Controllers.Reports.Billing
         }
         #endregion
 
-        #region Bill Cris Reports
+        #region Bill Not Cris Reports
         public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string rdbPRly, string rdbPAU)
         {
             BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, Region, rdbPRly, rdbPAU);
             GlobalDeclaration.BillRaised = model;
             return View(model);
+        }
+
+        public IActionResult BillsNotCrisReport_Partial(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string rdbPRly, string rdbPAU)
+        {
+            BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, Region, rdbPRly, rdbPAU);
+            GlobalDeclaration.BillRaised = model;
+            return PartialView(model);
         }
         #endregion
 
@@ -210,10 +221,11 @@ namespace IBS.Controllers.Reports.Billing
                 BillRaisedModel model = GlobalDeclaration.BillRaised;
                 htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillingSectorReport.cshtml", model);
             }
-            else if (ReportType == "BillsNotCrisReport")
+            else if (ReportType == "RBNRS")  //(ReportType == "BillsNotCrisReport")
             {
                 BillRaisedModel model = GlobalDeclaration.BillRaised;
-                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillsNotCrisReport.cshtml", model);
+                //htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillsNotCrisReport.cshtml", model);
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillsNotCrisReport_Partial.cshtml", model);
             }
             else if(ReportType == "RlyBills")
             {
