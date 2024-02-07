@@ -41,7 +41,8 @@ namespace IBS.Controllers
                 {
                     model.Createdby = UserId;
                     model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                    unitOfMeasurementsRepository.SaveDetails(model);
+                    var res = unitOfMeasurementsRepository.SaveDetails(model);
+                    if (res < 0) { AlertAlreadyExist("UOM Short Description or UOM Long Description already exists in this division factor !!"); return View(model); }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else

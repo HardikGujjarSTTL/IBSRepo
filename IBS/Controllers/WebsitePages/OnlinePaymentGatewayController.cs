@@ -238,7 +238,6 @@ namespace IBS.Controllers.WebsitePages
         public IActionResult PaymentResponse(string id)
         {
             OnlinePaymentGateway model = new();
-
             try
             {
                 byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
@@ -537,30 +536,30 @@ namespace IBS.Controllers.WebsitePages
             string salt1 = config.GetSection("PaymentConfig")["decrypt"];
             string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
 
-            //PayCallBackModel.Rootobject root = new PayCallBackModel.Rootobject();
-            //PayCallBackModel.Parent objectres = new PayCallBackModel.Parent();
+            PayCallBackModel.Rootobject root = new PayCallBackModel.Rootobject();
+            PayCallBackModel.Parent objectres = new PayCallBackModel.Parent();
 
-            //objectres = JsonConvert.DeserializeObject<PayCallBackModel.Parent>(Decryptval);
-            //model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
-            //model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
-            //model.Product = objectres.payInstrument.prodDetails.prodName;
-            //DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
-            //model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
-            //model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
-            //model.BankName = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankName;
-            //model.PaymentStatus = objectres.payInstrument.responseDetails.message;
-            ////model.Email = objectres.payInstrument.custDetails.custEmail;
-            ////model.Mobile = objectres.payInstrument.custDetails.custMobile;
-            //model.MerID = objectres.payInstrument.merchDetails.merchId;
-            //model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
-            //model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
-            //model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
-            //model.BankID = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankId;
-            //model.SubChannel = objectres.payInstrument.payModeSpecificData.subChannel[0];
-            //model.Description = objectres.payInstrument.responseDetails.description;
-            //model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
+            objectres = JsonConvert.DeserializeObject<PayCallBackModel.Parent>(Decryptval);
+            model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
+            model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
+            //model.Product = objectres.payInstrument.prodDetails[0].prodName;
+            DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
+            model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+            model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+            model.BankName = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+            model.PaymentStatus = objectres.payInstrument.responseDetails.message;
+            //model.Email = objectres.payInstrument.custDetails.custEmail;
+            //model.Mobile = objectres.payInstrument.custDetails.custMobile;
+            model.MerID = objectres.payInstrument.merchDetails.merchId;
+            model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
+            model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
+            model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
+            model.BankID = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankId;
+            model.SubChannel = objectres.payInstrument.payModeSpecificData.subChannel[0];
+            model.Description = objectres.payInstrument.responseDetails.description;
+            model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
 
-            //model = onlinePaymentGatewayRepository.PaymentCallBackUpdate(model);
+            model = onlinePaymentGatewayRepository.PaymentCallBackUpdate(model);
             System.IO.File.WriteAllTextAsync(path, Decryptval);
 
             return Json(new { status = true });

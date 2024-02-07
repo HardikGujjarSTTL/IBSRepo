@@ -94,6 +94,12 @@ namespace IBS.Repositories
         {
             if (model.UomCd == 0)
             {
+                var Cnt = (from a in context.T04Uoms
+                           where (a.UomSDesc == model.UomSDesc && a.UomFactor == model.UomFactor) || (a.UomLDesc == model.UomLDesc && a.UomFactor == model.UomFactor)
+                           select a).Count();
+
+                if (Cnt > 0) { return -1; }
+
                 int UomCd = GetMaxUOM_CD();
                 UomCd += 1;
 
