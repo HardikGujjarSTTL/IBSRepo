@@ -1225,6 +1225,7 @@
                     if (data.AlertMsg != null) {
                         ShowHideMsgNew(false, "Book Number : " + $('#DocBkNo').val() + " or Set Number : " + $('#DocSetNo').val() + " Already Existing for this Consignee.!!!");
                         $('#DocSetNo').val(data.DocSetNo);
+                        $('#DocBkNo').val(data.DocBkNo);
                     }
                 },
                 error: function () {
