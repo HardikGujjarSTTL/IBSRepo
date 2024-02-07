@@ -5884,7 +5884,6 @@ Invoice for SAP
 GET_INVOICE_SAP_LIST
 ==============================
 
-
 QANEA vs QAPROD Difference
 ==========================
 1) ALTER TABLE RITES_BILL_DTLS MODIFY BILL_RESENT_COUNT NUMBER(2,0)
