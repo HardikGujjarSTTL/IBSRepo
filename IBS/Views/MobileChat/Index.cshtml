@@ -22,8 +22,10 @@
     }
 
     .chatArea {
-        height: calc(100vh - 40px);
+        height: calc(100vh - 0px);
     }
+
+    
 
     .chatUserHeader ul li {
         justify-content: space-between;
@@ -111,6 +113,9 @@
         padding-right: 15px;
         box-sizing: border-box;
     }
+    .adminInnerContent{ padding:0!important;}
+
+    .accordion-body.chatArea{ padding:5px!important}
     /*End User DropDown CSS*/
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
@@ -501,7 +506,7 @@
             $(".fileUploadedInfo").hide();
 
             if ($(".deleteSelectTriggerNew").length) {
-                $(".deleteSelectTriggerNew").click(function () {
+                $(".deleteSelectTriggerNew").unbind().click(function () {
                     if ($(".fileUploadDelete").is(":visible")) {
                         $(this).next().slideUp();
 
