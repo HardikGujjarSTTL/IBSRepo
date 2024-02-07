@@ -251,7 +251,6 @@ namespace IBS.Controllers.WebsitePages
                 string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
                 PayresponseModel.Rootobject root = new PayresponseModel.Rootobject();
                 PayresponseModel.Parent objectres = new PayresponseModel.Parent();
-
                 objectres = JsonConvert.DeserializeObject<PayresponseModel.Parent>(Decryptval);
                 model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
                 model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
@@ -459,7 +458,7 @@ namespace IBS.Controllers.WebsitePages
             await page.SetContentAsync(htmlContent);
 
             string cssPath = env.WebRootPath + "/css/report.css";
-
+            
             AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
             await page.AddStyleTagAsync(bootstrapCSS);
 
@@ -518,8 +517,14 @@ namespace IBS.Controllers.WebsitePages
 
         public IActionResult PaymentCallBack()
         {
+            OnlinePaymentGateway model = new();
+
+            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            int iterations = 65536;
+            int keysize = 256;
+
             string encdata = Request.Form["encdata"];
-            
+
             string fileName = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".txt";
 
             string path = Path.Combine(env.WebRootPath, "ReadWriteData", "Payment_Response", fileName);
@@ -528,8 +533,35 @@ namespace IBS.Controllers.WebsitePages
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
+            string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
+            string salt1 = config.GetSection("PaymentConfig")["decrypt"];
+            string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
 
-            System.IO.File.WriteAllTextAsync(path, encdata);
+            //PayCallBackModel.Rootobject root = new PayCallBackModel.Rootobject();
+            //PayCallBackModel.Parent objectres = new PayCallBackModel.Parent();
+
+            //objectres = JsonConvert.DeserializeObject<PayCallBackModel.Parent>(Decryptval);
+            //model.MERTXNID = objectres.payInstrument.merchDetails.merchTxnId;
+            //model.Charges = Convert.ToDecimal(objectres.payInstrument.payDetails.amount);
+            //model.Product = objectres.payInstrument.prodDetails.prodName;
+            //DateTime txnCompleteDate = Convert.ToDateTime(objectres.payInstrument.payDetails.txnCompleteDate);
+            //model.TranDate = txnCompleteDate.ToString("dd/MM/yyyy");
+            //model.BankTXNID = objectres.payInstrument.payModeSpecificData.bankDetails.bankTxnId;
+            //model.BankName = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankName;
+            //model.PaymentStatus = objectres.payInstrument.responseDetails.message;
+            ////model.Email = objectres.payInstrument.custDetails.custEmail;
+            ////model.Mobile = objectres.payInstrument.custDetails.custMobile;
+            //model.MerID = objectres.payInstrument.merchDetails.merchId;
+            //model.merchTxnDate = objectres.payInstrument.merchDetails.merchTxnDate;
+            //model.AtomTXNID = objectres.payInstrument.payDetails.atomTxnId;
+            //model.custAccNo = objectres.payInstrument.payDetails.custAccNo;
+            //model.BankID = objectres.payInstrument.payModeSpecificData.bankDetails.otsBankId;
+            //model.SubChannel = objectres.payInstrument.payModeSpecificData.subChannel[0];
+            //model.Description = objectres.payInstrument.responseDetails.description;
+            //model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
+
+            //model = onlinePaymentGatewayRepository.PaymentCallBackUpdate(model);
+            System.IO.File.WriteAllTextAsync(path, Decryptval);
 
             return Json(new { status = true });
         }

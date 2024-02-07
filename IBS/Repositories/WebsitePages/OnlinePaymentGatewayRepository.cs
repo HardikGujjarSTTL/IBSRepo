@@ -132,6 +132,30 @@ namespace IBS.Repositories.WebsitePages
             return model;
         }
 
+        public OnlinePaymentGateway PaymentCallBackUpdate(OnlinePaymentGateway model)
+        {
+            var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnId == model.MERTXNID);
+
+            if (onlinePayment != null)
+            {
+                onlinePayment.TransactionNo = model.BankTXNID;
+                onlinePayment.RrnNo = null;
+                onlinePayment.Status = model.PaymentStatus;
+                onlinePayment.MerTxnId = model.MERTXNID;
+                onlinePayment.AtomTxnId = model.AtomTXNID;
+                onlinePayment.CustAccNo = model.custAccNo;
+                onlinePayment.TxnCompleteDate = Convert.ToDateTime(model.TranDate);
+                onlinePayment.BankTxnId = model.BankTXNID;
+                onlinePayment.BankName = model.BankName;
+                onlinePayment.SubChannel = model.SubChannel;
+                onlinePayment.Description = model.Description;
+                onlinePayment.StatusCd = model.StatusCode;
+                context.SaveChanges();
+                model.AlertMsg = "Success";
+            }
+            return model;
+        }
+
         public OnlinePaymentGateway PaymentTrackingResponse(OnlinePaymentGateway model)
         {
             var onlinePayment = context.OnlinePayments.FirstOrDefault(p => p.MerTxnRef == model.MER_TXN_REF);
