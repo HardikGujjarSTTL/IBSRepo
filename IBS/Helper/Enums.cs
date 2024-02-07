@@ -972,5 +972,6 @@ namespace IBS.Helper
         public static SummaryOnlinePaymentModel SummaryOnlinePayment { get; set; }
         public static SummaryCrisRlyPaymentModel SummaryCrisRlyPayment { get; set; }
         #endregion
+        public static ConsigneeComplaintsModel ConsigneeComplaints { get; set; }
     }
 }

@@ -108,7 +108,7 @@ namespace IBS.Controllers.Reports
         }
         #endregion
 
-        #region IC 7th Copy Report //IC7thCopyReport        
+        #region IC 7th Copy Report //IC7thCopyReport        IEDairy
         public IActionResult IE7thCopyReport(string Bk_No, string Set_No)
         {
             var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
@@ -235,6 +235,7 @@ namespace IBS.Controllers.Reports
                 row.IsComplainReportTif = System.IO.File.Exists(reporttifpath) == true ? true : false;
                 row.IsComplainReportPdf = System.IO.File.Exists(reportpdfpath) == true ? true : false;
             }
+            GlobalDeclaration.ConsigneeComplaints = model;
             return PartialView(model);
         }
 
@@ -283,6 +284,11 @@ namespace IBS.Controllers.Reports
                 RecieptVoucherModel model = GlobalDeclaration.BankStatement;
                 htmlContent = await this.RenderViewToStringAsync("/Views/Reports/BankStatement.cshtml", model);
             }
+            else if(ReportType == "CCI")
+            {
+                ConsigneeComplaintsModel model = GlobalDeclaration.ConsigneeComplaints;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/ConsigneeComplaints.cshtml", model);
+            }
 
 
             await new BrowserFetcher().DownloadAsync();
@@ -303,8 +309,8 @@ namespace IBS.Controllers.Reports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
-                PrintBackground = true
+                Format = PaperFormat.A3,
+                //PrintBackground = true
             });
 
             await browser.CloseAsync();
