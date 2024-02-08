@@ -198,33 +198,33 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public VenderCallRegisterModel GetUpdateIC(string CaseNo, DateTime? CallRecvDt, string CallSno)
-        {
-            VenderCallRegisterModel model = new();
+        //public VenderCallRegisterModel GetUpdateIC(string CaseNo, DateTime? CallRecvDt, string CallSno)
+        //{
+        //    VenderCallRegisterModel model = new();
 
-            DateTime? _CallRecvDt = DateTime.ParseExact("15-10-2012", "dd-MM-yyyy", null);
+        //    DateTime? _CallRecvDt = DateTime.ParseExact("15-10-2012", "dd-MM-yyyy", null);
 
-            var BakDetails = context.T20IcBaks.ToList();
+        //    var BakDetails = context.T20IcBaks.ToList();
 
-            if (BakDetails != null)
-            {
-                if (BakDetails.Count > 0)
-                {
-                    foreach (var bill in BakDetails)
-                    {
-                        var T20 = context.T20Ics.Where(x => x.CaseNo == bill.CaseNo && x.CallRecvDt == bill.CallRecvDt && x.CallSno == bill.CallSno).FirstOrDefault();
-                        if (T20 != null)
-                        {
-                            T20.NoOfInsp = Convert.ToDecimal(bill.NoOfInsp);
-                            context.SaveChanges();
-                        }
+        //    if (BakDetails != null)
+        //    {
+        //        if (BakDetails.Count > 0)
+        //        {
+        //            foreach (var bill in BakDetails)
+        //            {
+        //                var T20 = context.T20Ics.Where(x => x.CaseNo == bill.CaseNo && x.CallRecvDt == bill.CallRecvDt && x.CallSno == bill.CallSno).FirstOrDefault();
+        //                if (T20 != null)
+        //                {
+        //                    T20.NoOfInsp = Convert.ToDecimal(bill.NoOfInsp);
+        //                    context.SaveChanges();
+        //                }
 
-                    }
-                }
-            }
+        //            }
+        //        }
+        //    }
 
-            return model;
-        }
+        //    return model;
+        //}
 
         public DTResult<VenderCallRegisterModel> FindByModifyDetail(string CaseNo, string CallRecvDt, int CallSNo, string GetRegionCode)
         {

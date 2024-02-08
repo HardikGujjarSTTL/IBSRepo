@@ -163,7 +163,7 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .editDeleteFile a{ text-decoration:none;}
 .editDeleteFile a:hover{ color:#F66A2F;}
 
-.chatUserHeader{ background:#fff; box-shadow:1px 1px 1px 1px #d1d1d1; padding:10px;}
+.chatUserHeader{ background:#fff; box-shadow:1px 1px 1px 1px #d1d1d1; padding:5px;}
 .chatUserHeader ul{ list-style:none; margin:0; padding:0;}
 .chatUserHeader ul li{ display:flex; align-items:center;}
 .chatUserHeader ul li h4{ margin-bottom:0; font-size:16px; font-weight:700;}
@@ -171,17 +171,19 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .messageBody{ flex-direction:column;}
 .chatLeftBoxBody, .userChatBox{ width:100%;}
 .chatBox{ height:auto;}
-.chatBoxBody{height:calc(100vh - 198px); overflow:auto;}
-.userChatBox .chatBoxBody{height:calc(100vh - 263px); overflow:auto;}
+.chatBoxBody{height:calc(100vh - 84px); overflow:auto;}
+.userChatBox .chatBoxBody{height:calc(100vh - 134px); overflow:auto; padding-bottom:63px;}
 .multiselect-container{ padding:0 10%!important; width:100%; box-sizing:border-box; overflow-x:hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch!important;}
 .chatBox .messageBody, .chatRightBoxBody, .userChatBox, .chatLeftBoxBody {
     display: none;
 }
 .topUploadCustom .upload-btn-wrapper{ padding:0 15px;}
 .savenext-btn button, .savenext-btn a{padding:10px 15px;}
-.backToUser{ font-size:16px; color:#999;}
+.backToUser{ font-size:12px; color:#999;}
 .upload-btn-wrapper{ width:40px; right:54px;}
 .submitChatBtn{ width:40px;}
 .userShowHideChat{ display:block;}
 .customCheckSelect { max-width:inherit;}
+.chatBoxInfo h4.clsName { font-size:12px;}
+.userList .headerUserName{ display:flex; align-items:center;}
 }
