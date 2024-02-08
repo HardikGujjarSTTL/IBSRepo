@@ -131,7 +131,7 @@
         public decimal TY_bill_amt { get; set; }
         public decimal TY_EXP_FEE { get; set; }
         public decimal TY_TOA2 { get; set; }
-        public int TY_Days { get; set; }
+        public decimal TY_Days { get; set; }
         public decimal TY_OR_Actual { get; set; }
         public decimal TY_BRO_TARGET { get; set; }
         public decimal LY_turn { get; set; }

@@ -79,7 +79,7 @@ namespace IBS.Controllers.Reports
                 }
                 ViewBag.Title = "Highlights upto the month of : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 COHighlightMainModel model = pCDOReportController.GetCOHighlightData(CumYrMth, wYrMth, byear.ToString(), dmonth, lstdate, CumYrPast, wYrMth_Past);
-                return View();
+                return View(model);
             }
             catch (Exception ex)
             {

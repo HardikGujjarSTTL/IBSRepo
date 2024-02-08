@@ -107,18 +107,18 @@
         <h3 class="heading3">HIGHLIGHTS</h3>
         <table class="borderTable">
             <tr>
-                <td widtd="20%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></td>
-                <td widtd="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></td>
-                <td widtd="15%" valign="top" align="center"><b><font size="1" face="Verdana">Highlights</font></b></td>
+                <td width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></td>
+                <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></td>
+                <td width="80%" valign="top" align="center"><b><font size="1" face="Verdana">Highlights</font></b></td>
             </tr>
             @if (Model != null && Model.cOHighlight1Models.Count > 0)
             {
                 foreach (var item in Model.cOHighlight1Models)
                 {
                     <tr>
-                        <td widtd="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.sn</font></b></td>
-                        <td widtd="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Region_Code</font></b></td>
-                        <td widtd="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Hight_text</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.sn</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.Region_Code</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.Hight_text</font></b></td>
                     </tr>
                 }
             }
