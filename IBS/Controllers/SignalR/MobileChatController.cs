@@ -47,6 +47,7 @@ namespace IBS.Controllers.SignalR
             ChatMessage model = new ChatMessage();
             model = _chathub.GetMessageList(SenderID, recv_id);
             model.Master_ID = SenderID;
+            model.lstMsg.Select(x => x.RelativePath = !string.IsNullOrEmpty(x.RelativePath) ? _configuration.GetSection("AppSettings")["SiteUrl"] + x.RelativePath : x.RelativePath).ToList();
             return PartialView(model);
         }
 

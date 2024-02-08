@@ -48,6 +48,7 @@ namespace IBS.Controllers.SignalR
             ChatMessage model = new ChatMessage();
             model = _chathub.GetMessageList(Master_ID, recv_id);
             model.Master_ID = Master_ID;
+            model.lstMsg.Select(x => x.RelativePath = !string.IsNullOrEmpty(x.RelativePath) ? _configuration.GetSection("AppSettings")["SiteUrl"] + x.RelativePath : x.RelativePath).ToList();
             return PartialView(model);
         }
 
@@ -66,7 +67,7 @@ namespace IBS.Controllers.SignalR
             if (formData.MyFiles != null)
             {
                 Guid newGuid = Guid.NewGuid();
-                model.RelativePath = "../ReadWriteData/CHAT_FILES";
+                model.RelativePath = "/ReadWriteData/CHAT_FILES";
                 model.Field_ID = Path.GetFileNameWithoutExtension(formData.MyFiles.FileName) + "_" + newGuid.ToString() + Path.GetExtension(formData.MyFiles.FileName);
                 model.Extension = Path.GetExtension(formData.MyFiles.FileName);
                 model.FileDisplayName = formData.MyFiles.FileName;
