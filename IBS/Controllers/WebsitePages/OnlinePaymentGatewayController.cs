@@ -64,6 +64,12 @@ namespace IBS.Controllers.WebsitePages
                 string Mer_Ref = onlinePaymentGatewayRepository.GetMerTrnRef(model.CaseNo,model.ChargesType);
 
                 model.MER_TXN_REF = Mer_Ref;
+                string sender = string.Empty;
+                if (model.CaseNo.ToString().Substring(0, 1) == "N") { sender = "North"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "W") { sender = "West"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "E") { sender = "East"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "S") { sender = "South"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "C") { sender = "Central"; }
 
                 md.merchId = config.GetSection("PaymentConfig")["merchId"];
                 md.userId = config.GetSection("PaymentConfig")["merchId"];
@@ -72,7 +78,7 @@ namespace IBS.Controllers.WebsitePages
                 md.merchTxnId = Mer_Ref;
                 model.MerID = md.merchId;
                 pd.amount = Convert.ToString(model.Charges);
-                pd.product = config.GetSection("PaymentConfig")["product"];
+                pd.product = config.GetSection("PaymentConfig")["product"]; 
                 pd.custAccNo = config.GetSection("PaymentConfig")["custAccNo"];
                 pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
 
