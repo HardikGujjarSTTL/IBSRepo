@@ -185,5 +185,5 @@ img.mfp-img { width: auto; max-width: 100%; height: auto; display: block; line-h
 .userShowHideChat{ display:block;}
 .customCheckSelect { max-width:inherit;}
 .chatBoxInfo h4.clsName { font-size:12px;}
-.userList div{ display:flex; align-items:center;}
+.userList .headerUserName{ display:flex; align-items:center;}
 }
