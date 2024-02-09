@@ -5,7 +5,7 @@
         width: 150px;
     }
 </style>
-<div>
+<div style="margin-left:5px;margin-right:5px;">
     <h3 class="center">(@Model.Region), RITES Ltd.</h3>
     <h3 class="center">Details of Online Consignee Rejections for the Period : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate </span></h3>
 
@@ -13,28 +13,28 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th valign="top" align="center"><b>S.No.</b></th>
-                    <th valign="top" align="center"><b>Temp Rej No.</b></th>
-                    <th valign="top" align="center"><b>Temp Rej Date</b></th>
-                    <th valign="top" align="center"><b>Consiegnee Name</b></th>
-                    <th valign="top" align="center"><b>Consignee Desig</b></th>
-                    <th valign="top" align="center"><b>Consignee Email</b></th>
-                    <th valign="top" align="center"><b>Consignee Tel</b></th>
-                    <th valign="top" align="center"><b>Rej Memo No.</b></th>
-                    <th valign="top" align="center"><b>Rej Memo Dt.</b></th>
-                    <th valign="top" align="center"><b>Case No.</b></th>
-                    <th valign="top" align="center"><b>BK NO</b></th>
-                    <th valign="top" align="center"><b>SET NO</b></th>
-                    <th valign="top" align="center"><b>Vendor</b></th>
-                    <th valign="top" align="center"><b>Item Desc</b></th>
-                    <th valign="top" align="center"><b>Qty Rej</b></th>
-                    <th valign="top" align="center"><b>Rej Value</b></th>
-                    <th valign="top" align="center"><b>Rej Reason</b></th>
-                    <th valign="top" align="center"><b>Status</b></th>
-                    <th valign="top" align="center"><b>Complaint ID</b></th>
-                    <th valign="top" align="center"><b>Reason For Rejection</b></th>
-                    <th valign="top" align="center"><b>JI Required</b></th>
-                    <th valign="top" align="center"><b>JI SNO</b></th>
+                    <th width="3%" valign="top" align="center"><b>S.No.</b></th>
+                    <th width="4%" valign="top" align="center"><b>Temp Rej No.</b></th>
+                    <th width="4%" valign="top" align="center"><b>Temp Rej Date</b></th>
+                    <th width="5%" valign="top" align="center"><b>Consiegnee Name</b></th>
+                    <th width="8%" valign="top" align="center"><b>Consignee Desig</b></th>
+                    <th width="5%" valign="top" align="center"><b>Consignee Email</b></th>
+                    <th width="5%" valign="top" align="center"><b>Consignee Tel</b></th>
+                    <th width="3%" valign="top" align="center"><b>Rej Memo No.</b></th>
+                    <th width="4%" valign="top" align="center"><b>Rej Memo Dt.</b></th>
+                    <th width="5%" valign="top" align="center"><b>Case No.</b></th>
+                    <th width="4%" valign="top" align="center"><b>BK NO</b></th>
+                    <th width="4%" valign="top" align="center"><b>SET NO</b></th>
+                    <th width="7%" valign="top" align="center"><b>Vendor</b></th>
+                    <th width="14%" valign="top" align="center"><b>Item Desc</b></th>
+                    <th width="3%" valign="top" align="center"><b>Qty Rej</b></th>
+                    <th width="5%" valign="top" align="center"><b>Rej Value</b></th>
+                    <th width="5%" valign="top" align="center"><b>Rej Reason</b></th>
+                    <th width="4%" valign="top" align="center"><b>Status</b></th>
+                    <th width="4%" valign="top" align="center"><b>Complaint ID</b></th>
+                    <th width="5%" valign="top" align="center"><b>Reason For Rejection</b></th>
+                    <th width="5%" valign="top" align="center"><b>JI Required</b></th>
+                    <th width="4%" valign="top" align="center"><b>JI SNO</b></th>
                 </tr>
                 @if (Model != null && Model.lstConsignReject != null && Model.lstConsignReject.Count > 0)
                 {

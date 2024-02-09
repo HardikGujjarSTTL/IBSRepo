@@ -333,10 +333,8 @@ namespace IBS.Controllers.Reports
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true,
-                DefaultViewport = null,
-                //ExecutablePath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-            }).ConfigureAwait(false);
-
+                DefaultViewport = null
+            });
             await using var page = await browser.NewPageAsync();
             await page.EmulateMediaTypeAsync(MediaType.Screen);
             await page.SetContentAsync(htmlContent);
@@ -349,7 +347,7 @@ namespace IBS.Controllers.Reports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
+                Format = PaperFormat.A3,
                 PrintBackground = true
             });
 
