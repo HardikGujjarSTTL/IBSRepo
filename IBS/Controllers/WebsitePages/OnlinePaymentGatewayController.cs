@@ -79,7 +79,6 @@ namespace IBS.Controllers.WebsitePages
                 md.merchTxnId = Mer_Ref;
                 model.MerID = md.merchId;
                 pd.amount = Convert.ToString(model.Charges);
-                //pd.product = config.GetSection("PaymentConfig")["Product"]; ; 
                 pd.product = Region; 
                 pd.custAccNo = config.GetSection("PaymentConfig")["custAccNo"];
                 pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
@@ -494,15 +493,14 @@ namespace IBS.Controllers.WebsitePages
             pi.payDetails = pd;
             rt.payInstrument = pi;
             var json = JsonConvert.SerializeObject(rt);
-            string passphrase = config.GetSection("paymentconfig")["encrypt"];
-            string salt = config.GetSection("paymentconfig")["encrypt"];
+            string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
+            string salt = config.GetSection("PaymentConfig")["Encrypt"];
             byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             int iterations = 65536;
 
             string encryptval = Encrypt(json, passphrase, salt, iv, iterations);
-            //string encryptval = "https://titanuat.atomtech.in/SettlementReport/generateReport?merchantId=7760&encdat\r\na=F1F7E46B85600F3CBB86E848B8F80149FF27D16E2D3B5B002081007CF73F90D15CEC7C14705\r\n7045DCBCDDCF80A3661AC9460947D5940EB843C1CB31";
 
-            string testurleq = "https://titanuat.atomtech.in/settlementreport/generatereport" + "?merchid=" + config.GetSection("paymentconfig")["merchid"] + "&settlementdate=" + "2024-01-05";
+            string testurleq = "https://titanuat.atomtech.in/SettlementReport/generateReport" + "?merchantId=" + config.GetSection("PaymentConfig")["merchid"] + "&settlementDate=" + "2024-01-05";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
@@ -512,7 +510,7 @@ namespace IBS.Controllers.WebsitePages
             Encoding encoding = new UTF8Encoding();
             byte[] data = encoding.GetBytes(json);
             request.ProtocolVersion = HttpVersion.Version11;
-            request.Method = "post";
+            request.Method = "POST";
             request.ContentType = "application/json";
             request.ContentLength = data.Length;
             Stream stream = request.GetRequestStream();

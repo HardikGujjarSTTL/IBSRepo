@@ -22,11 +22,23 @@
 
     <div class="accordion-body" id="BYIE">
         <div class="row my-0">
-            <div class="col-md-3 mb-3">
-                <label for="PropertyId">IE</label>
-                @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
-                <span id="spnIeCd" class="text-danger"></span>
-            </div>
+            @if (!string.IsNullOrEmpty(Convert.ToString(ViewBag.IeCd)))
+            {
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">IE</label>
+                    @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIENameByIECDAndRegion(ViewBag.Regions, ViewBag.IeCd), "Value", "Text"),new { id = "IENAME" })
+                    <span id="spnIeCd" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">IE</label>
+                    @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEToWhomIssued(ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "IENAME" })
+                    <span id="spnIeCd" class="text-danger"></span>
+                </div>
+            }
+
             <div class="col-md-3 mb-3">
                 <label for="Reference">Date From.</label>
                 <input type="text" class="input datepicker" asp-for="FromDate" id="FromDate" placeholder="DD/MM/YYYY" required>

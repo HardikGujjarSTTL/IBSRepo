@@ -697,5 +697,11 @@
                 }
             });
         }
+
+        $('#PoNo').keyup(function () {
+            var inputValue = $('#PoNo').val();
+            var lastFiveDigits = inputValue.slice(-5);
+            $('#L5noPo').val(lastFiveDigits);
+        });
     </script>
 }

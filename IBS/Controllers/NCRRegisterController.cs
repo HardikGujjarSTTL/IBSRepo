@@ -18,6 +18,8 @@ namespace IBS.Controllers
         public IActionResult Index()
         {
             string Region = SessionHelper.UserModelDTO.Region;
+            int? IE = SessionHelper.UserModelDTO.IeCd == 0 ? (int?)null : SessionHelper.UserModelDTO.IeCd;
+            ViewBag.IeCd = IE;
             ViewBag.Regions = Region;
             return View();
         }

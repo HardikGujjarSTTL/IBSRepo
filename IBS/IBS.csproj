@@ -20,6 +20,7 @@
 	  <None Remove="wwwroot\ReadWriteData\Payment\**" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="Controllers\WebsitePages\2yhvgqzy.jdw~" />
 	  <None Remove="Repositories\AccountCodesDirectoryRepository.cs~RF1034cdb0.TMP" />
 	</ItemGroup>
 	
