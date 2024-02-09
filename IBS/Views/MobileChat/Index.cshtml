@@ -323,11 +323,12 @@
             processData: false,
             contentType: false
         }).done(function (response) {
+            debugger
             if (response != null) {
                 $(".chatLeftBoxBody").html("");
                 $(".chatLeftBoxBody").html(response);
                 $(".userList").removeClass("active");
-                $("#li" + ReceiverId).addClass("active");
+                //$("#li" + ReceiverId).addClass("active");
                 $(".clsShortName").html($(".SN_" + ReceiverId).html());
                 $(".clsName").html($(".N_" + ReceiverId).html());
             }
@@ -335,26 +336,37 @@
     }
 
     function GetChatMessageList(recvid) {
+        debugger
         ReceiverId = recvid;
-        $.ajax({
-            url: '@Url.Action("ChatMessageHistory", "MobileChat")?SenderId=' + SenderId + '&ReceiverId=' + ReceiverId,
-            type: 'POST',
-            cache: false,
-            processData: false,
-            contentType: false
-        }).done(function (response) {
-            if (response != null) {
-                $(".chatRightBoxBody").html("");
-                $(".chatRightBoxBody").html(response);
-                $(".userList").removeClass("active");
-                $("#li" + ReceiverId).addClass("active");
-                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+        if (ReceiverId != "") {
+            var arrRecvID = ReceiverId.split(",");
+            for (var i = 0; i < arrRecvID.length; i++) {
+                $.ajax({
+                    url: '@Url.Action("ChatMessageHistory", "MobileChat")?SenderId=' + SenderId + '&ReceiverId=' + arrRecvID[i],//ReceiverId,
+                    type: 'POST',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response != null) {
+                        $(".chatRightBoxBody").html("");
+                        $(".chatRightBoxBody").html(response);
+                        //$(".userList").removeClass("active");
+                        //$("#li" + ReceiverId).addClass("active");
 
-                Cnt = parseInt($("#hdnCurrDtCount").val());
-                $(".clsShortName").html($(".SN_" + recvid).html());
-                $(".clsName").html($(".N_" + recvid).html());
+                        //if ((arrRecvID.length - 1) == i) {
+                        //    $(".userList").removeClass("active");
+                        //    $("#li" + arrRecvID[i]).addClass("active");
+                        //}
+                        $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+
+                        Cnt = parseInt($("#hdnCurrDtCount").val());
+                        $(".clsShortName").html($(".SN_" + recvid).html());
+                        $(".clsName").html($(".N_" + recvid).html());
+                    }
+                });
             }
-        });
+        }
     }
 
     function SendMessage(type) {
@@ -408,7 +420,10 @@
 
     connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
         if (MsgType == 1) {
-            window.location.href = "@Url.Action("Index", "MobileChat")?SenderID=" + SenderId;
+            //window.location.href = "@Url.Action("Index", "MobileChat")?SenderID=" + SenderId;
+            GetUserReceiverList();
+            GetChatMessageList(ReceiverId);
+            ClearValues();
         }
         else {
             var FilePath = "../ReadWriteData/CHAT_FILES/";
@@ -686,5 +701,13 @@
                 $("#hdnUser").val("");
             }
         });
+    }
+
+    function ClearValues() {
+        $("#dpUserType").val("");
+        $("#hdnUser").val("");
+        $(".valueCheck").html("--Select--");
+        $("#txtMessage").val("");
+        arrchkVal = [];
     }
 </script>
