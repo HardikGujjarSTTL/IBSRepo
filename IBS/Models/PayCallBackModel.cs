@@ -24,6 +24,7 @@
 
         public class PayDetails
         {
+            public List<ProdDetail> prodDetails { get; set; }
             public double amount { get; set; }
             public double surchargeAmount { get; set; }
             public string atomTxnId { get; set; }
@@ -39,7 +40,6 @@
             public PayDetails payDetails { get; set; }
             public ResponseDetails responseDetails { get; set; }
             public PayModeSpecificData payModeSpecificData { get; set; }
-            public List<ProdDetail> prodDetails { get; set; }
             public PayInstrument()
             {
                 //
@@ -65,7 +65,7 @@
         public class ProdDetail
         {
             public string prodName { get; set; }
-            public double prodAmount { get; set; }
+            public decimal prodAmount { get; set; }
         }
 
         public class ResponseDetails
