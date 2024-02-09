@@ -8,22 +8,22 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CALL RECV DT</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CALL SNO.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">SET No.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 1</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 2</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 3</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 4</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 5</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 6</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 7</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 8</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 9</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 10</font></b></th>
+                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">CALL RECV DT</font></b></th>
+                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">CALL SNO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">BK NO.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">SET No.</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 1</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 2</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 3</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 4</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 5</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 6</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 7</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 8</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 9</font></b></th>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Photo 10</font></b></th>
                 </tr>
                 @if (Model != null && Model.lstlistSubmittedPhotobyIE != null && Model.lstlistSubmittedPhotobyIE.Count > 0)
                 {
@@ -32,22 +32,92 @@
                     {
                         SrNo = SrNo + 1;
                         <tr>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CaseNo</font></td>
-                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CallRecDT</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.CallSno</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.BKNO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.SETNO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_1</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_2</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_3</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_4</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_5</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_6</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_7</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_8</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_9</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.FILE_10</font></td>
+                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@item.CaseNo</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.CallRecDT</font></td>
+                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.CallSno</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.BKNO</font></td>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.SETNO</font></td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_1))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_1;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_2))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_2;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_3))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_3;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_4))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_4;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_5))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_5;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_6))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_6;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_7))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_7;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_8))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_8;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_9))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_9;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_10))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_10;
+                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                }
+
+                            </td>
                         </tr>
                     }
                 }

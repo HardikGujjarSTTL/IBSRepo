@@ -64,12 +64,13 @@ namespace IBS.Controllers.WebsitePages
                 string Mer_Ref = onlinePaymentGatewayRepository.GetMerTrnRef(model.CaseNo,model.ChargesType);
 
                 model.MER_TXN_REF = Mer_Ref;
-                string sender = string.Empty;
-                if (model.CaseNo.ToString().Substring(0, 1) == "N") { sender = "North"; }
-                else if (model.CaseNo.ToString().Substring(0, 1) == "W") { sender = "West"; }
-                else if (model.CaseNo.ToString().Substring(0, 1) == "E") { sender = "East"; }
-                else if (model.CaseNo.ToString().Substring(0, 1) == "S") { sender = "South"; }
-                else if (model.CaseNo.ToString().Substring(0, 1) == "C") { sender = "Central"; }
+
+                string Region = string.Empty;
+                if (model.CaseNo.ToString().Substring(0, 1) == "N") { Region = "NORTH"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "W") { Region = "WEST"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "E") { Region = "EAST"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "S") { Region = "SOUTH"; }
+                else if (model.CaseNo.ToString().Substring(0, 1) == "C") { Region = "CENTRE"; }
 
                 md.merchId = config.GetSection("PaymentConfig")["merchId"];
                 md.userId = config.GetSection("PaymentConfig")["merchId"];
@@ -78,7 +79,8 @@ namespace IBS.Controllers.WebsitePages
                 md.merchTxnId = Mer_Ref;
                 model.MerID = md.merchId;
                 pd.amount = Convert.ToString(model.Charges);
-                pd.product = config.GetSection("PaymentConfig")["product"]; 
+                //pd.product = config.GetSection("PaymentConfig")["Product"]; ; 
+                pd.product = Region; 
                 pd.custAccNo = config.GetSection("PaymentConfig")["custAccNo"];
                 pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
 
@@ -479,46 +481,48 @@ namespace IBS.Controllers.WebsitePages
             return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
         #endregion
-        //[HttpPost]
-        //public IActionResult SettlementResponse()
-        //{
-        //    TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
 
-        //    TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
-        //    TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
-        //    TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
-        //    pi.merchDetails = md;
-        //    pi.payDetails = pd;
-        //    rt.payInstrument = pi;
-        //    var json = JsonConvert.SerializeObject(rt);
-        //    string passphrase = config.GetSection("PaymentConfig")["Encrypt"];
-        //    string salt = config.GetSection("PaymentConfig")["Encrypt"];
-        //    byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        //    int iterations = 65536;
+        [HttpPost]
+        public IActionResult settlementresponse()
+        {
+            TransactionTrackingRequestModel.Rootobject rt = new TransactionTrackingRequestModel.Rootobject();
+            TransactionTrackingRequestModel.MerchDetails md = new TransactionTrackingRequestModel.MerchDetails();
+            TransactionTrackingRequestModel.PayDetails pd = new TransactionTrackingRequestModel.PayDetails();
+            TransactionTrackingRequestModel.PayInstrument pi = new TransactionTrackingRequestModel.PayInstrument();
 
-        //    string Encryptval = Encrypt(json, passphrase, salt, iv, iterations);
+            pi.merchDetails = md;
+            pi.payDetails = pd;
+            rt.payInstrument = pi;
+            var json = JsonConvert.SerializeObject(rt);
+            string passphrase = config.GetSection("paymentconfig")["encrypt"];
+            string salt = config.GetSection("paymentconfig")["encrypt"];
+            byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            int iterations = 65536;
 
-        //    string testurleq = "https://titanuat.atomtech.in/SettlementReport/generateReport" + "?merchId=" + config.GetSection("PaymentConfig")["merchId"] + "&settlementDate=" + "2024-01-05";
-        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
-        //    ServicePointManager.Expect100Continue = true;
-        //    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-        //    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            string encryptval = Encrypt(json, passphrase, salt, iv, iterations);
+            //string encryptval = "https://titanuat.atomtech.in/SettlementReport/generateReport?merchantId=7760&encdat\r\na=F1F7E46B85600F3CBB86E848B8F80149FF27D16E2D3B5B002081007CF73F90D15CEC7C14705\r\n7045DCBCDDCF80A3661AC9460947D5940EB843C1CB31";
 
-        //    request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-        //    Encoding encoding = new UTF8Encoding();
-        //    byte[] data = encoding.GetBytes(json);
-        //    request.ProtocolVersion = HttpVersion.Version11;
-        //    request.Method = "POST";
-        //    request.ContentType = "application/json";
-        //    request.ContentLength = data.Length;
-        //    Stream stream = request.GetRequestStream();
-        //    stream.Write(data, 0, data.Length);
-        //    stream.Close();
-        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        //    string jsonresponse = response.ToString();
+            string testurleq = "https://titanuat.atomtech.in/settlementreport/generatereport" + "?merchid=" + config.GetSection("paymentconfig")["merchid"] + "&settlementdate=" + "2024-01-05";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testurleq);
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
-        //    return Json(new { status = false, response = jsonresponse });
-        //}
+            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            Encoding encoding = new UTF8Encoding();
+            byte[] data = encoding.GetBytes(json);
+            request.ProtocolVersion = HttpVersion.Version11;
+            request.Method = "post";
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+            Stream stream = request.GetRequestStream();
+            stream.Write(data, 0, data.Length);
+            stream.Close();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            string jsonresponse = response.ToString();
+
+            return Json(new { status = false, response = jsonresponse });
+        }
 
         public IActionResult PaymentCallBack()
         {
@@ -530,14 +534,6 @@ namespace IBS.Controllers.WebsitePages
 
             string encdata = Request.Form["encdata"];
 
-            string fileName = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".txt";
-
-            string path = Path.Combine(env.WebRootPath, "ReadWriteData", "Payment_Response", fileName);
-
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-            }
             string passphrase1 = config.GetSection("PaymentConfig")["decrypt"];
             string salt1 = config.GetSection("PaymentConfig")["decrypt"];
             string Decryptval = decrypt(encdata, passphrase1, salt1, iv, iterations);
@@ -566,7 +562,6 @@ namespace IBS.Controllers.WebsitePages
             model.StatusCode = objectres.payInstrument.responseDetails.statusCode;
 
             model = onlinePaymentGatewayRepository.PaymentCallBackUpdate(model);
-            System.IO.File.WriteAllTextAsync(path, Decryptval);
 
             return Json(new { status = true });
         }

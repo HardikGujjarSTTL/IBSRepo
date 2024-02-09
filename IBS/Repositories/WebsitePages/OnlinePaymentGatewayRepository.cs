@@ -151,7 +151,6 @@ namespace IBS.Repositories.WebsitePages
                 onlinePayment.Description = model.Description;
                 onlinePayment.StatusCd = model.StatusCode;
                 context.SaveChanges();
-                model.AlertMsg = "Success";
             }
             return model;
         }
