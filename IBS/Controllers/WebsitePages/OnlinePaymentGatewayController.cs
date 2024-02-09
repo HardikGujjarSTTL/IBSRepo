@@ -79,7 +79,6 @@ namespace IBS.Controllers.WebsitePages
                 md.merchTxnId = Mer_Ref;
                 model.MerID = md.merchId;
                 pd.amount = Convert.ToString(model.Charges);
-                //pd.product = config.GetSection("PaymentConfig")["Product"]; ; 
                 pd.product = Region; 
                 pd.custAccNo = config.GetSection("PaymentConfig")["custAccNo"];
                 pd.txnCurrency = config.GetSection("PaymentConfig")["txnCurrency"];
