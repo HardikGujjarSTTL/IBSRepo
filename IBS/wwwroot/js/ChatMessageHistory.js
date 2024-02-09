@@ -37,6 +37,8 @@ function CloseFileUploadPopup() {
     $(".fileUploadFileName").html("");
 }
 
-$("#btnDownload").click(function () {
+$("#btnDownload").click(function (e) {
+    e.preventDefault(); 
+    window.location.href = 'https://14.143.90.241/IBS2/ReadWriteData/CHAT_FILES/9f040b30-011a-4159-ab3c-c9c348e6fbb5.jpg';
     alert("download");
 });
