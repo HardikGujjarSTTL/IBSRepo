@@ -941,7 +941,7 @@ namespace IBS.Repositories.Reports.OtherReports
                     orderAscendingDirection = true;
                 }
 
-                string CaseNo = "", CallRecDT = null, CallSno = null, BKNO = null, SETNO = null;
+                string CaseNo = "", CallRecDT = "", CallSno = null, BKNO = null, SETNO = null;
 
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
                 {
@@ -971,18 +971,18 @@ namespace IBS.Repositories.Reports.OtherReports
 
                 string formattedFromDate = null;
 
-                //if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-                //{
-                //    DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
+                {
+                    DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
-                //    formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-                //}
+                    formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
+                }
                 try
                 {
                     OracleParameter[] par = new OracleParameter[7];
                     par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, CallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
                     par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -1050,18 +1050,18 @@ namespace IBS.Repositories.Reports.OtherReports
             DataSet ds = null;
             DataTable dt = new DataTable();
 
+            string formattedFromDate = "";
+            if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
+            {
+                DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
-            //if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-            //{
-            //    DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-            //    formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-            //}
+                formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
+            }
 
             OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, CallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
             par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
             par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
             par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
