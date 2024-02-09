@@ -4343,6 +4343,18 @@ namespace IBS.Models
             return contacts;
         }
 
+        public static IEnumerable<SelectListItem> GetIENameByIECDAndRegion(string Region, int IeCd)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeRegion == Region.ToString() && c.IeCd == IeCd
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
         public static List<TextValueDropDownDTO> GetIcStatus()
         {
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.IcStatus)).ToList();
