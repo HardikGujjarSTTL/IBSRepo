@@ -36,3 +36,7 @@ function CloseFileUploadPopup() {
     $("#FileSize").html("");
     $(".fileUploadFileName").html("");
 }
+
+$("#btnDownload").click(function () {
+    alert("download");
+});
