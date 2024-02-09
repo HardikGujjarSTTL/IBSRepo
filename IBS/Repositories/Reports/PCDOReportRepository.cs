@@ -36,15 +36,16 @@ namespace IBS.Repositories.Reports
 
         public COHighlightMainModel GetCOHighlightData(string p_CumYrMth, string p_wYrMth, string p_byear, int p_dmonth, string p_lstdate, string p_CumYrPast, string p_wYrMth_Past)
         {
-            OracleParameter[] par = new OracleParameter[7];
+            OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("p_CumYrMth", OracleDbType.Varchar2, p_CumYrMth, ParameterDirection.Input);
             par[1] = new OracleParameter("p_wYrMth", OracleDbType.Varchar2, p_wYrMth, ParameterDirection.Input);
             par[2] = new OracleParameter("p_byear", OracleDbType.Varchar2, p_byear, ParameterDirection.Input);
             par[3] = new OracleParameter("p_dmonth", OracleDbType.Int32, p_dmonth, ParameterDirection.Input);
             par[4] = new OracleParameter("p_lstdate", OracleDbType.Varchar2, p_lstdate, ParameterDirection.Input);
             par[5] = new OracleParameter("p_CumYrPast", OracleDbType.Varchar2, p_CumYrPast, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_wYrMth_Past", OracleDbType.Varchar2, p_wYrMth_Past, ParameterDirection.Input);
-            par[6] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("p_wYrMth_Past", OracleDbType.Varchar2, p_wYrMth_Past, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_Result1", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("sp_PCDOReport_CO_Highlights", par, 2);
             COHighlightMainModel model = new();
             if (ds != null && ds.Tables.Count > 0)
@@ -52,7 +53,7 @@ namespace IBS.Repositories.Reports
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 model.cOHighlightModels = JsonConvert.DeserializeObject<List<COHighlightModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                string serializeddt1 = JsonConvert.SerializeObject(ds.Tables[1], Formatting.Indented);
                 model.cOHighlight1Models = JsonConvert.DeserializeObject<List<COHighlight1Model>>(serializeddt1, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
             return model;

@@ -941,15 +941,15 @@ namespace IBS.Repositories.Reports.OtherReports
                     orderAscendingDirection = true;
                 }
 
-                string CaseNo = "", CallRecDT = "", CallSno = null, BKNO = null, SETNO = null;
-
+                string CaseNo = "", CallSno = null, BKNO = null, SETNO = null;
+                DateTime? CallRecDT = null;
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
                 {
                     CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
                 }
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecDT"]))
                 {
-                    CallRecDT = Convert.ToString(dtParameters.AdditionalValues["CallRecDT"]);
+                    CallRecDT = Convert.ToDateTime(dtParameters.AdditionalValues["CallRecDT"]);
                 }
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]))
                 {
@@ -968,21 +968,13 @@ namespace IBS.Repositories.Reports.OtherReports
                 DataTable dt = new DataTable();
 
                 DataSet ds;
-
-                string formattedFromDate = null;
-
-                if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-                {
-                    DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                    formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-                }
+                
                 try
                 {
                     OracleParameter[] par = new OracleParameter[7];
                     par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, CallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
                     par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -1050,18 +1042,12 @@ namespace IBS.Repositories.Reports.OtherReports
             DataSet ds = null;
             DataTable dt = new DataTable();
 
-            string formattedFromDate = "";
-            if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-            {
-                DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-            }
+            DateTime? Call_Recv_Dt = !string.IsNullOrEmpty(CallRecDT) ? Convert.ToDateTime(CallRecDT) : null;
 
             OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, Call_Recv_Dt, ParameterDirection.Input); // Corrected type to OracleDbType.Date
             par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
             par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
             par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -1107,13 +1093,13 @@ namespace IBS.Repositories.Reports.OtherReports
 
             if (DSC_Monthrdo == "true")
             {
-                 wYrMth_FR = DSCYear + DSCMonth;
-                 wYrMth_To = DSCYear + DSCMonth;
+                wYrMth_FR = DSCYear + DSCMonth;
+                wYrMth_To = DSCYear + DSCMonth;
             }
             else
             {
-                 wYrMth_FR = DSCYear + DSCMonth;
-                 wYrMth_To = DSCToYear + DSCToMonth;
+                wYrMth_FR = DSCYear + DSCMonth;
+                wYrMth_To = DSCToYear + DSCToMonth;
             }
 
             OracleParameter[] par = new OracleParameter[4];

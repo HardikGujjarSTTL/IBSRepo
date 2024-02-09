@@ -426,7 +426,7 @@ namespace IBS.Repositories.Reports.Billing
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 lstCNoteInvoice = JsonConvert.DeserializeObject<List<CNoteInvoiceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                if (ds.Tables.Count > 0)
+                if (ds.Tables[0].Rows.Count > 0)
                 {
                     model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
                     model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);

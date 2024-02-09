@@ -118,7 +118,7 @@ END;
 
 
 ----------------------------------------------------- Start Client Dashboard SP -----------------------------------------------------
-CREATE OR REPLACE PROCEDURE "GET_CLIENT_DASHBOARD" 
+create or replace PROCEDURE GET_CLIENT_DASHBOARD
 (
   P_RLY_CD IN VARCHAR2,
   P_RLY_NONRLY IN VARCHAR2,
@@ -148,22 +148,35 @@ BEGIN
     FROM (
         SELECT  P_RLY_CD RLY_CD,
                 P_RLY_NONRLY RLY_NONRLY,
-                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 AS TOTAL_CALL,
                 SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
                 0 ACCEPTED_CALL,
-                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 CANCELLED_CALL, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION                
+        FROM T17_CALL_REGISTER t17
+        JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+        WHERE t13.RLY_CD = P_RLY_CD 
+        AND t13.RLY_NONRLY = P_RLY_NONRLY
+        GROUP BY t13.RLY_CD, t13.RLY_NONRLY 
+        UNION ALL
+        SELECT  P_RLY_CD RLY_CD,
+                P_RLY_NONRLY RLY_NONRLY,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION                
         FROM T17_CALL_REGISTER t17
         JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
         WHERE t13.RLY_CD = P_RLY_CD 
         AND t13.RLY_NONRLY = P_RLY_NONRLY
         AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
---        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
---        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
         GROUP BY t13.RLY_CD, t13.RLY_NONRLY 
-        UNION
+        UNION ALL
         SELECT  P_RLY_CD RLY_CD,
                 P_RLY_NONRLY RLY_NONRLY,
                 0 TOTAL_CALL,
@@ -180,8 +193,6 @@ BEGIN
         AND t13.RLY_CD = P_RLY_CD 
         AND t13.RLY_NONRLY = P_RLY_NONRLY
         AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
---        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
---        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')        
         GROUP BY t13.RLY_CD, t13.RLY_NONRLY
     ) A
     GROUP BY A.RLY_CD, A.RLY_NONRLY;
@@ -273,7 +284,7 @@ BEGIN
         GROUP BY t05.VEND_NAME
     ) VCM
     ORDER BY VCM.NO_OF_COMPLAINTS DESC;
-END;
+END GET_CLIENT_DASHBOARD;
 /
 
 create or replace PROCEDURE GET_CLIENT_DASHBOARD_RECENT_PO 
@@ -1114,20 +1125,30 @@ BEGIN
             SUM(STAGE_REJECTION) STAGE_REJECTION           
     FROM (
         SELECT  P_VENDCD VEND_CD,
-                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 AS TOTAL_CALL,
                 SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
                 0 ACCEPTED_CALL,
-                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 CANCELLED_CALL, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION                
+        FROM T17_CALL_REGISTER t17
+        WHERE t17.MFG_CD = P_VENDCD --670    
+        GROUP BY T17.MFG_CD
+        UNION ALL
+        SELECT  P_VENDCD VEND_CD,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION                
         FROM T17_CALL_REGISTER t17
         WHERE t17.MFG_CD = P_VENDCD --670    
         AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
---        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
---        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
         GROUP BY T17.MFG_CD
-        UNION
+        UNION ALL
         SELECT  P_VENDCD VEND_CD,
                 0 TOTAL_CALL,
                 0 PENDING_CALL,
@@ -1140,13 +1161,11 @@ BEGIN
         JOIN T17_CALL_REGISTER t17 ON t47.CASE_NO = t17.CASE_NO AND t47.CALL_RECV_DT = t17.CALL_RECV_DT AND t47.CALL_SNO = t17.CALL_SNO
         WHERE TRIM(t17.CALL_STATUS) = 'A'
         AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
---        AND t17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
---        AND t17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY')
         AND t47.MFG_CD = P_VENDCD --670
         GROUP BY t17.MFG_CD                    
     ) A
     GROUP BY A.VEND_CD;
-END;
+END GET_VENDOR_DASHBOARD_COUNT;
 /
 
 create or replace PROCEDURE GET_VENDOR_DASHBOARD_RECENR_CALL_STATUS 
@@ -1216,6 +1235,54 @@ BEGIN
     AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
     ORDER BY t17.CALL_RECV_DT DESC;
 END GET_VENDOR_DASHBOARD_RECENT_PO;
+
+create or replace PROCEDURE GET_VENDOR_DASHBOARD_COUNT_LISTING 
+(
+  P_FROMDATE VARCHAR2,
+  P_TODATE VARCHAR2,
+  P_VENDCD IN NUMBER,
+  P_STATUS IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS    
+BEGIN
+    IF P_STATUS IN ('TC', 'A', 'C', 'T') THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT  T17.CASE_NO,
+                T17.CALL_RECV_DT,
+                T17.CALL_SNO,
+                T09.IE_NAME,
+                NVL((
+                    SELECT RAILWAY Client FROM T91_RAILWAYS WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R' 
+                    UNION
+                    SELECT DISTINCT BPO_ORGN Client FROM T12_BILL_PAYING_OFFICER WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+                ),'Other')  CLIENT_NAME,
+                T13.PO_NO
+        FROM T17_CALL_REGISTER T17
+        LEFT JOIN T13_PO_MASTER T13 ON T17.CASE_NO = T13.CASE_NO
+        LEFT JOIN T09_IE T09 ON T17.IE_CD = T09.IE_CD
+        WHERE (P_STATUS IS NULL OR T17.CALL_STATUS = P_STATUS)
+        AND T17.MFG_CD = P_VENDCD
+        AND T17.CALL_RECV_DT >= TO_DATE(P_FROMDATE, 'DD/MM/YYYY')
+        AND T17.CALL_RECV_DT <= TO_DATE(P_TODATE, 'DD/MM/YYYY');
+    ELSIF P_STATUS IN ('M', 'U', 'S') THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT  T17.CASE_NO,
+                T17.CALL_RECV_DT,
+                T17.CALL_SNO,
+                T09.IE_NAME,
+                NVL((
+                    SELECT RAILWAY Client FROM T91_RAILWAYS WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R' 
+                    UNION
+                    SELECT DISTINCT BPO_ORGN Client FROM T12_BILL_PAYING_OFFICER WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+                ),'Other')  CLIENT_NAME,
+                T13.PO_NO
+        FROM T17_CALL_REGISTER T17
+        LEFT JOIN T13_PO_MASTER T13 ON T17.CASE_NO = T13.CASE_NO
+        LEFT JOIN T09_IE T09 ON T17.IE_CD = T09.IE_CD
+        WHERE (P_STATUS IS NULL OR T17.CALL_STATUS = P_STATUS)
+        AND T17.MFG_CD = P_VENDCD;
+    END IF;
+END GET_VENDOR_DASHBOARD_COUNT_LISTING;
 ----------------------------------------------------- END VENDOR DASHBOARD SP -----------------------------------------------------
 
 ----------------------------------------------------- START IE DASHBOARD SP -----------------------------------------------------
@@ -1246,12 +1313,29 @@ BEGIN
             TO_CHAR(IE.DSC_EXPIRY_DT,'DD/MM/YYYY') DSC_EXPIRY_DT
     FROM (
         SELECT  P_IECD IE_CD,
-                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 AS TOTAL_CALL,
                 SUM (CASE WHEN t17.CALL_STATUS = 'M' THEN 1 else 0 end) PENDING_CALL,
                 0 ACCEPTED_CALL,
-                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 CANCELLED_CALL, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,
+                0 TOTAL_NO_OF_NC_ISSUE,
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 TOTAL_CONSIGNEE_COMPLAINT,
+                t09.DSC_EXPIRY_DT
+        FROM T17_CALL_REGISTER t17
+        LEFT JOIN T09_IE t09 ON t17.IE_CD = t09.IE_CD
+        WHERE t17.IE_CD = P_IECD --670  
+        GROUP BY t17.IE_CD,t09.DSC_EXPIRY_DT
+        UNION ALL
+        SELECT  P_IECD IE_CD,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN t17.CALL_STATUS = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
                 SUM (CASE WHEN t17.CALL_STATUS = 'T' THEN 1 else 0 end) STAGE_REJECTION,
                 0 TOTAL_NO_OF_NC_ISSUE,
                 0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
@@ -1395,6 +1479,131 @@ BEGIN
     WHERE t17.IE_CD = P_IECD
     AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE;
 END GET_IE_DASHBOARD_PENDING_CALL;
+
+
+create or replace PROCEDURE GET_IE_Dashboard_List
+(
+  p_IE_CD IN NUMBER,
+  p_STATUS_TYPE IN NVARCHAR2,
+  p_FROM_DATE IN NVARCHAR2,
+  p_TO_DATE IN NVARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+) AS
+BEGIN
+    IF p_STATUS_TYPE = 'NCI' THEN
+        OPEN P_RESULT_CURSOR FOR
+        SELECT  t41.Case_No,
+                    TO_CHAR(t41.nc_dt,'DD/MM/YYYY') NC_DT,
+                    NVL((
+                        select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                        union
+                        select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+                    ),'Other')  Client_Name,
+                    t05.VEND_NAME Vend_Name,
+                    t05.VEND_CONTACT_PER_1 Contact_Per,
+                    t05.VEND_CONTACT_TEL_1 Contact_No 
+        FROM T41_NC_MASTER t41
+         JOIN T13_PO_MASTER t13 ON t41.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t41.VEND_CD = t05.VEND_CD
+                WHERE t41.IE_CD = p_IE_CD
+                 AND T41.NC_DT BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY');
+    ELSIF p_STATUS_TYPE = 'CC' THEN
+             OPEN P_RESULT_CURSOR FOR
+            SELECT  t40.Case_No,
+                TO_CHAR(t40.complaint_dt,'DD/MM/YYYY') DATES,
+                NVL((
+                    select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                    union
+                    select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+                ),'Other')  Client_Name,
+                t05.VEND_NAME Vend_Name,
+                t05.VEND_CONTACT_PER_1 Contact_Per,
+                t05.VEND_CONTACT_TEL_1 Contact_No 
+                FROM T40_CONSIGNEE_COMPLAINTS t40
+             JOIN T13_PO_MASTER t13 ON t40.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t40.VEND_CD = t05.VEND_CD
+            WHERE t40.IE_CD = p_IE_CD
+            AND t40.complaint_dt BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY');
+     ELSIF  p_STATUS_TYPE IN ('A', 'C', 'T') THEN --('M', 'A', 'C', 'U', 'S', 'T')
+            OPEN P_RESULT_CURSOR FOR
+            SELECT  t17.Case_No,
+            TO_CHAR(t17.Call_Recv_Dt,'DD/MM/YYYY') DATES,
+            t17.Call_Sno,
+            --TO_CHAR(t17.DT_INSP_DESIRE,'DD/MM/YYYY') Insp_Desire_Dt,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No
+            FROM T17_CALL_REGISTER t17
+            JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+            WHERE t17.IE_CD = p_IE_CD
+            AND t17.CALL_RECV_DT BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY')
+            AND (p_STATUS_TYPE IS NULL OR UPPER(t17.CALL_STATUS) = UPPER(p_STATUS_TYPE));
+     ELSIF p_STATUS_TYPE = 'TC' THEN
+             OPEN P_RESULT_CURSOR FOR
+            SELECT  t17.Case_No,
+            TO_CHAR(t17.Call_Recv_Dt,'DD/MM/YYYY') DATES,
+            t17.Call_Sno,
+            --TO_CHAR(t17.DT_INSP_DESIRE,'DD/MM/YYYY') Insp_Desire_Dt,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No
+            FROM T17_CALL_REGISTER t17
+            JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+            WHERE t17.IE_CD = p_IE_CD
+            AND t17.CALL_RECV_DT BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY'); 
+    ELSIF P_STATUS_TYPE = 'ICIE' THEN
+            OPEN P_RESULT_CURSOR FOR
+             SELECT DISTINCT 670 IECD,  t20.Case_No,
+            TO_CHAR(t20.CALL_RECV_DT,'DD/MM/YYYY') DATES,
+            t20.Call_Sno,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No 
+           FROM T20_IC t20
+            JOIN T30_IC_RECEIVED t30 ON t20.BK_NO <> t30.BK_NO AND t20.SET_NO <> t30.SET_NO
+            JOIN T13_PO_MASTER t13 ON t20.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t13.VEND_CD = t05.VEND_CD
+            WHERE t20.IE_CD = p_IE_CD
+           AND t20.CALL_RECV_DT BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY'); 
+    ELSIF  p_STATUS_TYPE IN ('M', 'U', 'S') THEN
+            OPEN P_RESULT_CURSOR FOR
+            SELECT  t17.Case_No,
+            TO_CHAR(t17.Call_Recv_Dt,'DD/MM/YYYY') DATES,
+            t17.Call_Sno,
+            --TO_CHAR(t17.DT_INSP_DESIRE,'DD/MM/YYYY') Insp_Desire_Dt,
+            NVL((
+                select RAILWAY Client from T91_RAILWAYS where RLY_CD = t13.RLY_CD and t13.RLY_NONRLY = 'R' 
+                union
+                select distinct BPO_ORGN Client from T12_BILL_PAYING_OFFICER where BPO_RLY = t13.RLY_CD and t13.RLY_NONRLY <> 'R' and rownum <= 1
+            ),'Other')  Client_Name,
+            t05.VEND_NAME Vend_Name,
+            t05.VEND_CONTACT_PER_1 Contact_Per,
+            t05.VEND_CONTACT_TEL_1 Contact_No
+            FROM T17_CALL_REGISTER t17
+            JOIN T13_PO_MASTER t13 ON t17.CASE_NO = t13.CASE_NO
+            JOIN T05_VENDOR t05 ON t17.MFG_CD = t05.VEND_CD
+            WHERE t17.IE_CD = p_IE_CD
+--            AND t17.CALL_RECV_DT BETWEEN TO_DATE(p_FROM_DATE, 'DD/MM/YYYY') AND TO_DATE(p_TO_DATE, 'DD/MM/YYYY')
+            AND (p_STATUS_TYPE IS NULL OR UPPER(t17.CALL_STATUS) = UPPER(p_STATUS_TYPE));
+    END IF;
+END GET_IE_Dashboard_List;
 ----------------------------------------------------- END IE DASHBOARD SP -----------------------------------------------------
 
 

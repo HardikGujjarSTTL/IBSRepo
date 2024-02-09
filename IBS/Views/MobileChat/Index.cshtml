@@ -25,7 +25,7 @@
         height: calc(100vh - 0px);
     }
 
-    
+
 
     .chatUserHeader ul li {
         justify-content: space-between;
@@ -44,14 +44,14 @@
         padding: 0;
     }
 
-    .checkBoxGroup li {
-        margin: 5px 0;
-    }
+        .checkBoxGroup li {
+            margin: 5px 0;
+        }
 
-    .checkBoxGroup li label {
-        margin: 0;
-        padding: 0;
-    }
+            .checkBoxGroup li label {
+                margin: 0;
+                padding: 0;
+            }
 
     .selectAllCheck, .selectAllCheck1 {
         border: 1px solid #d1d1d1;
@@ -113,9 +113,14 @@
         padding-right: 15px;
         box-sizing: border-box;
     }
-    .adminInnerContent{ padding:0!important;}
 
-    .accordion-body.chatArea{ padding:5px!important}
+    .adminInnerContent {
+        padding: 0 !important;
+    }
+
+    .accordion-body.chatArea {
+        padding: 5px !important
+    }
     /*End User DropDown CSS*/
 </style>
 <input type="hidden" id="hdnBase64String" value="" />
@@ -131,7 +136,7 @@
                 <div class="row my-0">
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Users Type</label>
-                        <div class="userNormalSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForUsers(), "Value", "Text"), "--Select--", new { @onChange="FillUsers()"})</div>
+                        <div class="userNormalSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForUsers(), "Value", "Text"), "--Select--", new { @onChange = "FillUsers()" })</div>
                     </div>
                     <div class="col-md-3 mb-2">
                         <label for="Reference">Users</label>
@@ -181,7 +186,7 @@
                         <div class="chatUserHeader">
                             <ul>
                                 <li class="userList">
-                                    <div>
+                                    <div class="headerUserName">
                                         <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
                                         <div class="chatBoxInfo">
                                             <h4 class="clsName"></h4>
@@ -403,7 +408,7 @@
 
     connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
         if (MsgType == 1) {
-            window.location.href = "@Url.Action("Index", "MobileChat")";
+            window.location.href = "@Url.Action("Index", "MobileChat")?SenderID=" + SenderId;
         }
         else {
             var FilePath = "../ReadWriteData/CHAT_FILES/";
@@ -644,13 +649,13 @@
         $('input[name="chk"]').unbind().change(function (e) {
             if (this.value != "All") {
                 if (this.checked) {
-                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });                    
+                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });
                     $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
                     $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
                 }
                 else {
-                    $('input[class="checkAll"]').prop('checked', false);                    
-                    var index = arrchkVal.map((temp) => temp["id"]).indexOf(this.value.split("#")[0])                    
+                    $('input[class="checkAll"]').prop('checked', false);
+                    var index = arrchkVal.map((temp) => temp["id"]).indexOf(this.value.split("#")[0])
                     if (index > -1) { // only splice array when item is found
                         arrchkVal.splice(index, 1); // 2nd parameter means remove one item only
                     }

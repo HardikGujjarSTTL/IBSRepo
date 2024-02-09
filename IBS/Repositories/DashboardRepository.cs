@@ -1268,7 +1268,7 @@ namespace IBS.Repositories
                             RegionCode = t17.RegionCode,
                         };
             }
-            else if (ActionType == "M" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
+            else if (ActionType == "C" || ActionType == "T")  //(ActionType == "M" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
             {
                 query = from t17 in context.T17CallRegisters
                         join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
@@ -1290,8 +1290,6 @@ namespace IBS.Repositories
                             PoDt = t13.PoDt,
                             RegionCode = t17.RegionCode,
                         };
-
-
             }
             else if (ActionType == "A")
             {
@@ -1304,6 +1302,29 @@ namespace IBS.Repositories
                               t13.RlyNonrly == OrgnType &&
                               t17.CallRecvDt >= Convert.ToDateTime(FromDate) &&
                               t17.CallRecvDt <= Convert.ToDateTime(ToDate)
+                        select new AdminCountListing
+                        {
+                            CaseNo = t17.CaseNo,
+                            CallRecvDt = t17.CallRecvDt,
+                            CallInstallNo = t17.CallInstallNo,
+                            CallSno = Convert.ToInt16(t17.CallSno),
+                            CallStatus = t17.CallStatus,
+                            CallLetterNo = t17.CallLetterNo,
+                            Remarks = t17.Remarks,
+                            PoNo = t13.PoNo,
+                            PoDt = t13.PoDt,
+                            RegionCode = t17.RegionCode,
+                        };
+            }
+            else if (ActionType == "M" || ActionType == "U" || ActionType == "S")
+            {
+                query = from t17 in context.T17CallRegisters
+                        join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                        where t13.RlyCd == Organisation &&
+                              t13.RlyNonrly == OrgnType &&
+                              //t17.CallRecvDt >= Convert.ToDateTime(FromDate) &&
+                              //t17.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                              t17.CallStatus == ActionType
                         select new AdminCountListing
                         {
                             CaseNo = t17.CaseNo,
@@ -1721,7 +1742,7 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_VENDCD", OracleDbType.Varchar2, Vend_Cd.Substring(0, 8), ParameterDirection.Input);
+            par[2] = new OracleParameter("P_VENDCD", OracleDbType.Varchar2, Vend_Cd, ParameterDirection.Input);
             par[3] = new OracleParameter("P_STATUS", OracleDbType.Varchar2, Status, ParameterDirection.Input);
             par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 

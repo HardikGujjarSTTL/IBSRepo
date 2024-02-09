@@ -75,6 +75,8 @@
             }
             else if (type == "M") {
                 $("#spnHeading").text("No. of Pending Calls.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "A") {
                 $("#spnHeading").text("No. of Accepted Calls.");
@@ -84,9 +86,13 @@
             }
             else if (type == "U") {
                 $("#spnHeading").text("No. of Under Lab Testing.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "S") {
                 $("#spnHeading").text("No. of Still Under Inspection.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection.");
