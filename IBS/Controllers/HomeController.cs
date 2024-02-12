@@ -162,6 +162,7 @@ namespace IBS.Controllers
                         new Claim("OrgnType", (userMaster.OrgnType != null && userMaster.OrgnType != "") ? Convert.ToString(userMaster.OrgnType) : ""),
                         new Claim("Organisation", (userMaster.Organisation != null && userMaster.Organisation != "") ? Convert.ToString(userMaster.Organisation) : ""),
                         new Claim("UserMasterID",Convert.ToString(userMaster.MasterID)),
+                        new Claim("AuthType",Convert.ToString(userMaster.LoginType)),
                     };
                     var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
                     var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });

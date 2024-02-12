@@ -150,6 +150,14 @@ namespace IBS.Controllers
             }
         }
 
+        public string AuthType
+        {
+            get
+            {
+                return (GetUserInfo.LoginType);
+            }
+        }
+
         public void AlertAddSuccess(string message = "")
         {
             if (string.IsNullOrEmpty(message))
