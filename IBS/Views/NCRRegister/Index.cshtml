@@ -30,6 +30,14 @@
                     <span id="spnIeCd" class="text-danger"></span>
                 </div>
             }
+            else if (!string.IsNullOrEmpty(Convert.ToString(ViewBag.Co_Cd)))
+            {
+                <div class="col-md-3 mb-3">
+                    <label for="PropertyId">IE</label>
+                    @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEByCo(ViewBag.Regions, ViewBag.Co_Cd), "Value", "Text"),new { id = "IENAME" })
+                    <span id="spnIeCd" class="text-danger"></span>
+                </div>
+            }
             else
             {
                 <div class="col-md-3 mb-3">
@@ -52,12 +60,12 @@
             <div class="col-md-3 mb-3">
                 <label for="Reference">Case No. </label>
                 <input type="text" class="input" ASP-FOR="CaseNo" maxlength="50" />
-                <span class="text-danger field-validation-error" ></span>
+                <span class="text-danger field-validation-error"></span>
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference">Book No. </label>
                 <input type="text" class="input" ASP-FOR="BKNo" maxlength="50" />
-                <span class="text-danger field-validation-error" ></span>
+                <span class="text-danger field-validation-error"></span>
             </div>
             <div class="col-md-3 mb-3">
                 <label for="Reference">Set No. </label>
@@ -67,7 +75,7 @@
             <div class="col-md-3 mb-3">
                 <label for="Reference">NCR No. </label>
                 <input type="text" class="input" ASP-FOR="NCRCode" maxlength="50" />
-                <span class="text-danger field-validation-error" ></span>
+                <span class="text-danger field-validation-error"></span>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="savenext-btn">
@@ -197,7 +205,9 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            debugger
                             var NC_NO = data.NC_NO;
+                            var IECD = data.IeCd;
                             var CaseNo = data.CaseNo;
                             var BKNo = data.BKNo;
                             var SetNo = data.SetNo;
@@ -205,7 +215,7 @@
                             var AddUrl = '@Url.Action("Manage", "NCRRegister")?CaseNo=' + CaseNo + '&BKNo=' + BKNo + '&SetNo=' + SetNo + '&Actions=' + "A";
                             if (NC_NO != null) {
                                 var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_Add\" title="Edit"></i></a>';
-                            } else {
+                            } else if (IECD == null) {
                                 var html = '<a href=\"' + AddUrl + '\" class=\"edit\"><i class=\"fa fa-plus Permission_Add\" title="Add" style="margin:10px;"></i>';
                             }
                             html += '</div>';

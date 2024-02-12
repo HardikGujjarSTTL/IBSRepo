@@ -339,7 +339,7 @@ namespace IBS.Repositories
                     model.NC_NO = NCNO;
 
 
-                    model.IeCd = Convert.ToString(firstRow["IE_CD"]);
+                    model.IeCd = Convert.ToInt32(firstRow["IE_CD"]);
                     model.IE_SNAME = firstRow["IE_NAME"].ToString();
 
                     if (!firstRow.IsNull("IC_DATE"))

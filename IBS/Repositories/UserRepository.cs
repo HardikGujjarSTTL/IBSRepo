@@ -321,6 +321,7 @@ namespace IBS.Repositories
                 userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
                 userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
                 userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAILID"]).Trim();
+                userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["CO_CD"]);
             }
             else
             {
