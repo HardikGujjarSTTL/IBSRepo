@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">Previous Offer Sent</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -24,15 +24,15 @@
         </ul>
         <table class="borderTable">
             <tr>
-                <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Scope of Work</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Offer Date</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Rate of Insp Fee</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Total Expected Fee(Rs. in Lacs)</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Expected OR</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
-                <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
+                <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                <th width="13%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
+                <th width="26%" valign="top" align="center"><b><font size="1" face="Verdana">Scope of Work</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Offer Date</font></b></th>
+                <th width="26%" valign="top" align="center"><b><font size="1" face="Verdana">Rate of Insp Fee</font></b></th>
+                <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Total Expected Fee(Rs. in Lacs)</font></b></th>
+                <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Expected OR</font></b></th>
+                <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
+                <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
             </tr>
             @{
                 int sno = 1;
@@ -42,15 +42,15 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@sno</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CLIENT_NAME</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.SCOPE_OF_WORK</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.OFFER_DATE</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CONT_INSP_FEE</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CONTRACT_FEE_NUM</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.EXP_OR</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.REGION</font></b></td>
-                        <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.CO_NAME</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@sno</font></b></td>
+                        <td valign="top" align="left"><b><font size="1" face="Verdana">@item.CLIENT_NAME</font></b></td>
+                        <td valign="top" align="left"><b><font size="1" face="Verdana">@item.SCOPE_OF_WORK</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.OFFER_DATE</font></b></td>
+                        <td valign="top" align="left"><b><font size="1" face="Verdana">@item.CONT_INSP_FEE</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.CONTRACT_FEE_NUM</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.EXP_OR</font></b></td>
+                        <td valign="top" align="center"><b><font size="1" face="Verdana">@item.REGION</font></b></td>
+                        <td valign="top" align="left"><b><font size="1" face="Verdana">@item.CO_NAME</font></b></td>
                     </tr>
                     sno = sno + 1;
                 }

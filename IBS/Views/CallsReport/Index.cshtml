@@ -213,25 +213,34 @@
             </div>
             <div class="task-inner row report5" style="display: none">
                 <div class="row my-0">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-4">
+                        <div class="row my-0">
+                        <div class="col-md-12">
                             <label for="Reference">View Calls Marked between the period</label>
+                        </div>
+                            <div class="col-md-3 mb-4">
                             <label for="Reference">From</label>
                             <input type="text" class=" datepicker" id="FDate" maxlength="300" />
+                            </div>
+                            <div class="col-md-3 mb-4">
                             <label for="Reference">To</label>
                             <input type="text" class=" datepicker" id="TDate" maxlength="300" />
+                            </div>
                         </div>
                         <div>
                             <label>Report to be Sorted on</label>
-                            <br></br>
+
+                        <ul class="radioListForm">
+                        <li>
                             <label for="option1">
                                 <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
                             </label>
-                            <br>
+                           </li>
+                           <li>
                             <label for="option2">
                                 <input type="radio" id="callDate" name="options" value="option2"> Call Date
                             </label>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active " onclick="CallMarked();">Search</button>

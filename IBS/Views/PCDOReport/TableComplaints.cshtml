@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">Complaints</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -339,7 +339,7 @@
                     </table>
                 }
             </ul>
-           
+
         }
 
         <ul class="reportLabelList center">
@@ -379,11 +379,11 @@
             </ul>
             <table class="borderTable">
                 <tr>
-                    <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
-                    <th width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>Inspection Region</font></b></th>
-                    <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Case No.</font></b></th>
-                    <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Pending Since(date)</font></b></th>
-                    <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Reason for pendency</font></b></th>
+                    <th width='5%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                    <th width='8%' valign='top' align='center'><b><font size='1' face='Verdana'>Inspection Region</font></b></th>
+                    <th width='7%' valign='top' align='center'><b><font size='1' face='Verdana'>Case No.</font></b></th>
+                    <th width='8%' valign='top' align='center'><b><font size='1' face='Verdana'>Pending Since(date)</font></b></th>
+                    <th width='72%' valign='top' align='center'><b><font size='1' face='Verdana'>Reason for pendency</font></b></th>
                 </tr>
 
                 @{
@@ -394,11 +394,11 @@
                     foreach (var item in Model.long_PendingModels.Where(x => x.region_cd == region_cd1))
                     {
                         <tr>
-                            <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
-                            <td width='17%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
-                            <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.ji_sno</font></b></td>
-                            <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.pending_date</font></b></td>
-                            <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.remarks</font></b></td>
+                            <td valign='top' align='center'><b><font size='1' face='Verdana'>@count</font></b></td>
+                            <td valign='top' align='center'><b><font size='1' face='Verdana'>@item.region</font></b></td>
+                            <td valign='top' align='center'><b><font size='1' face='Verdana'>@item.ji_sno</font></b></td>
+                            <td valign='top' align='center'><b><font size='1' face='Verdana'>@item.pending_date</font></b></td>
+                            <td valign='top' align='left'><b><font size='1' face='Verdana'>@item.remarks</font></b></td>
                         </tr>
                         count = count + 1;
                     }
@@ -412,11 +412,11 @@
         </ul>
         <table class="borderTable">
             <tr>
-                <th width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
-                <th width='14%' valign='top' align='center'><b><font size='1' face='Verdana'>Case No.</font></b></th>
-                <th width='18%' valign='top' align='center'><b><font size='1' face='Verdana'>Consignee/Railway</font></b></th>
+                <th width='5%' valign='top' align='center'><b><font size='1' face='Verdana'>S.NO.</font></b></th>
+                <th width='10%' valign='top' align='center'><b><font size='1' face='Verdana'>Case No.</font></b></th>
+                <th width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>Consignee/Railway</font></b></th>
                 <th width='20%' valign='top' align='center'><b><font size='1' face='Verdana'>Description of Complaints</font></b></th>
-                <th width='35%' valign='top' align='center'><b><font size='1' face='Verdana'>Conclusion/Action taken</font></b></th>
+                <th width='50%' valign='top' align='center'><b><font size='1' face='Verdana'>Conclusion/Action taken</font></b></th>
             </tr>
             @{
                 Int32 CountCR = 1;
@@ -426,11 +426,11 @@
                 foreach (var item in Model.cR_REJModels)
                 {
                     <tr>
-                        <td width='3%' valign='top' align='center'><b><font size='1' face='Verdana'>@CountCR</font></b></td>
-                        <td width='14%' valign='top' align='center'><b><font size='1' face='Verdana'>@item.case_No</font></b></td>
-                        <td width='18%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.consignee</font></b></td>
-                        <td width='20%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.des_com</font></b></td>
-                        <td width='35%' valign='top' align='center'><b><font size='1.5' face='Verdana'>@item.conclusion</font></b></td>
+                        <td valign='top' align='center'><b><font size='1' face='Verdana'>@CountCR</font></b></td>
+                        <td valign='top' align='center'><b><font size='1' face='Verdana'>@item.case_No</font></b></td>
+                        <td valign='top' align='left'><b><font size='1' face='Verdana'>@item.consignee</font></b></td>
+                        <td valign='top' align='left'><b><font size='1' face='Verdana'>@item.des_com</font></b></td>
+                        <td valign='top' align='left'><b><font size='1' face='Verdana'>@item.conclusion</font></b></td>
                     </tr>
                     CountCR = CountCR + 1;
                 }

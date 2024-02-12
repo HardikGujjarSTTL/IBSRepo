@@ -301,7 +301,14 @@ namespace IBS.Controllers.InspectionBilling
                                         }
                                         else
                                         {
-                                            return Json(new { status = true, responseText = "", code, dt, w_itemBlocked = "N", Client = Client });
+                                            if(Client == "Y")
+                                            {
+                                                return Json(new { status = true, responseText = "", code, dt, w_itemBlocked = "N", Client = Client });
+                                            }
+                                            else
+                                            {
+                                                return Json(new { status = false, responseText = "Please change Online/Offline Call Status.", code, dt, w_itemBlocked = "N", Client = Client });
+                                            }
                                         }
                                     }
                                     else
