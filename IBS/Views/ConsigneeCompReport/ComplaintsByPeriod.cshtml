@@ -75,6 +75,15 @@
                             <td  valign="top" align="Left">@item.REJECTION_VALUE</td>
                             <td  valign="top" align="Left">@item.DEPT</td>
                             <td  valign="top" align="Left">@item.COMPLAINT_DATE</td>
+                           @* <td width="8%" valign="top" align="Left">
+                                @if (!string.IsNullOrEmpty(item.REJECTIONMEMOPATH) && !string.IsNullOrEmpty(item.REJECTIONMEMOPATH.Split("/")[1]))
+                                {
+                                    var photoUrl = @item.REJECTIONMEMOPATH + ".pdf";
+                                    <span>@item.REJECTIONMEMOPATH.Split("/")[3]</span>
+                                    <a href="@item.REJECTIONMEMOPATH" target="_blank">@item.REJECTIONMEMOPATH</a>
+                                }
+
+                            </td>*@
                             <td  valign="top" align="Left">@item.REJECTIONMEMOPATH</td>
                             <td  valign="top" align="Left">@item.REJECTION_REASON</td>
                             <td  valign="top" align="Left">@item.NO_JI_RES</td>
