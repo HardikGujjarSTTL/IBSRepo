@@ -163,7 +163,7 @@ namespace IBS.Controllers
                         DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm), env, iDocument, "POMaster", string.Empty, DocumentIds);
                         //}
                     }
-                    return Json(new { status = true, responseText = msg });
+                    return Json(new { status = true, responseText = msg, CaseNo = id.TrimEnd() });
                 }
             }
             catch (Exception ex)

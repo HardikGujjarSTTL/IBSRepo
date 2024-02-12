@@ -283,7 +283,7 @@ namespace IBS.Controllers.InspectionBilling
                         DocumentHelper.SaveFiles(Convert.ToString(id.TrimEnd()), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrder), env, iDocument, "AdmPurOr", string.Empty, DocumentIds);
                         //}
                     }
-                    return Json(new { status = true, responseText = msg });
+                    return Json(new { status = true, responseText = msg, CaseNo = id.TrimEnd() });
                 }
             }
             catch (Exception ex)

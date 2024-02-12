@@ -386,7 +386,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.status) {
-                window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+                //window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+                window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?CaseNo=' + res.CaseNo;
             }
 
         };
