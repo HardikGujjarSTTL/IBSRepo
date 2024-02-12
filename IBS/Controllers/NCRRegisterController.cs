@@ -29,7 +29,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters,Region);
+            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters,Region, SessionHelper.UserModelDTO.LoginType);
             foreach (var item in dTResult.data)
             {
                 item.IeCd = SessionHelper.UserModelDTO.IeCd == 0 ? null : SessionHelper.UserModelDTO.IeCd;

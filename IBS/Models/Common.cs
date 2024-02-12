@@ -4460,6 +4460,18 @@ namespace IBS.Models
                     }).OrderBy(c => c.Text).ToList();
         }
 
+        public static IEnumerable<SelectListItem> GetIEByCoAndRegion(string Region, int COCd)
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            return (from c in context.T09Ies
+                    where c.IeRegion == Region && c.IeCoCd == COCd
+                    select new SelectListItem
+                    {
+                        Value = c.IeCd.ToString(),
+                        Text = c.IeName
+                    }).OrderBy(c => c.Text).ToList();
+        }
+
         public static List<SelectListItem> GetRemarkingToIE(string Region)
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());

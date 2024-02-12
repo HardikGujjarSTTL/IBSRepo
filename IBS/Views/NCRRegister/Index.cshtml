@@ -34,7 +34,7 @@
             {
                 <div class="col-md-3 mb-3">
                     <label for="PropertyId">IE</label>
-                    @Html.DropDownList("", new SelectList(IBS.Models.Common.GetIEByCo(ViewBag.Regions, ViewBag.Co_Cd), "Value", "Text"),new { id = "IENAME" })
+                    @Html.DropDownList("IENAME", new SelectList(IBS.Models.Common.GetIEByCoAndRegion(ViewBag.Regions, ViewBag.Co_Cd), "Value", "Text"), new { id = "IENAME" })
                     <span id="spnIeCd" class="text-danger"></span>
                 </div>
             }

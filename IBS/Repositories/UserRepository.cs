@@ -367,8 +367,8 @@ namespace IBS.Repositories
                 userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
                 userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
-                //userSessionModel.CoCd = ds.Tables[0].Rows[0]["COCD"] is DBNull ? (int?)null : Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
-                userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+                userSessionModel.CoCd = ds.Tables[0].Rows[0]["COCD"] is DBNull ? (int)0 : Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
+                //userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
                 userSessionModel.MasterID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
                 userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAIL"]);
                 userSessionModel.LoginType = model.UserType.Trim();
