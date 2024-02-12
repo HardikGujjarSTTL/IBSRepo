@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">HIGHLIGHTS</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -22,9 +22,9 @@
         <table class="borderTable">
             <thead>
                 <tr>
-                    <th>S.No.</th>
-                    <th>Region</th>
-                    <th>Highlights</th>
+                    <th width="5%">S.No.</th>
+                    <th width="5%">Region</th>
+                    <th width="90%">Highlights</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,9 +33,9 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.sn</td>
-                            <td>@item.Region_Code</td>
-                            <td>@item.Hight_text</td>
+                            <td align="center">@item.sn</td>
+                            <td align="center">@item.Region_Code</td>
+                            <td align="left">@item.Hight_text</td>
                         </tr>
                     }
                 }

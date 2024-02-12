@@ -37,7 +37,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="heading3">@ViewBag.Region</h3>
         <ul class="reportLabelList">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -45,15 +45,15 @@
         <table class="borderTable">
             <thead>
                 <tr>
-                    <th width="8.5%">SNO.</th>
-                    <th width="8.5%">CASE NO.</th>
-                    <th width="8.5%">PO NO.</th>
-                    <th width="8.5%">PO Date</th>
-                    <th width="8.5%">Client</th>
-                    <th width="20%">Vendor</th>
-                    <th width="8.5%">Purchaser</th>
-                    <th width="8.5%">Value</th>
-                    <th width="20%">Item Desc</th>
+                    <th width="5%" align="center">SNO.</th>
+                    <th width="6%" align="center">CASE NO.</th>
+                    <th width="6%" align="center">PO NO.</th>
+                    <th width="6%" align="center">PO Date</th>
+                    <th width="6%" align="center">Client</th>
+                    <th width="20%" align="center">Vendor</th>
+                    <th width="11%" align="center">Purchaser</th>
+                    <th width="6%" align="center">Value</th>
+                    <th width="34%" align="center">Item Desc</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,22 +84,26 @@
                         else
                         {
                             <tr>
-                                <td>@i</td>
-                                <td>@item.CASE_NO</td>
-                                <td>@item.PO_NO</td>
-                                <td>@item.PO_DT</td>
-                                <td>@item.CLIENT</td>
-                                <td>@item.VENDOR</td>
-                                <td>@item.CONSIGNEE</td>
-                                <td>@item.PO_VALUE</td>
-                                <td>@item.ITEM_DESC</td>
+                                <td valign="top" align="center">@i</td>
+                                <td valign="top" align="center">@item.CASE_NO</td>
+                                <td valign="top" align="center">@item.PO_NO</td>
+                                <td valign="top" align="center">@item.PO_DT</td>
+                                <td valign="top" align="center">@item.CLIENT</td>
+                                <td valign="top" align="left">@item.VENDOR</td>
+                                <td valign="top" align="left">@item.CONSIGNEE</td>
+                                <td valign="top" align="right">@item.PO_VALUE</td>
+                                <td valign="top" align="left">@item.ITEM_DESC</td>
                             </tr>
                             wPO_NO = item.PO_NO;
                             i = i + 1;
                         }
-                       
-                        
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" align="center">No Data Found</td>
+                    </tr>
                 }
             </tbody>
         </table>

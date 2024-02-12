@@ -13,7 +13,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">Improvement of Quality of Service</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -23,7 +23,7 @@
         </ul>
         <table class="borderTable">
             <tr>
-                <th width="2%" valign="top" align="center"><b><font size='1' face="Verdana">S.No.</font></b></th>
+                <th width="3%" valign="top" align="center"><b><font size='1' face="Verdana">S.No.</font></b></th>
                 <th width="28%" valign="top" align="center"><b><font size='1' face="Verdana">Region</font></b></th>
                 <th width="20%" valign="top" align="center"><b><font size='1' face="Verdana">No.</font></b></th>
             </tr>
@@ -35,7 +35,7 @@
                 foreach (var item in Model.improvementInQualityofServiceModels)
                 {
                     <tr>
-                        <td width="2%" valign="top" align="left"><font size="1" face="Verdana"></font>@Count</td>
+                        <td width="3%" valign="top" align="center"><font size="1" face="Verdana"></font>@Count</td>
                         <td width="28%" valign="top" align="left"><font size="1" face="Verdana">@item.Region</font></td>
                         <td width="20%" valign="top" align="left"><font size="1" face="Verdana">@item.total</font></td>
                     </tr>
@@ -85,15 +85,15 @@
             </ul>
             <table class="borderTable">
                 <tr>
-                    <th width="2%" valign="top" align="left"><b><font size='1' face="Verdana">S.No.</font></b></th>
-                    <th width="12%" valign="top" align="left"><b><font size='1' face="Verdana">Name & Designation of CM</font></b></th>
-                    <th width="10%" valign="top" align="left"><b><font size='1' face="Verdana">Name of Inspecting Engineer</font></b></th>
-                    <th width="8%" valign="top" align="left"><b><font size='1' face="Verdana">Firm</font></b></th>
-                    <th width="8%" valign="top" align="left"><b><font size='1' face="Verdana">Item</font></b></th>
-                    <th width="8%" valign="top" align="left"><b><font size='1' face="Verdana">Previous internal/consignee rejections</font></b></th>
-                    <th width="23%" valign="top" align="left"><b><font size='1' face="Verdana">Discrepancy if any</font></b></th>
-                    <th width="19%" valign="top" align="left"><b><font size='1' face="Verdana">Overall outcome of the visit</font></b></th>
-                    <th width="10%" valign="top" align="left"><b><font size='1' face="Verdana">No. of ICs scrutinized</font></b></th>
+                    <th width="4%" valign="top" align="left"><b><font size='1' face="Verdana">S.No.</font></b></th>
+                    <th width="11%" valign="top" align="left"><b><font size='1' face="Verdana">Name & Designation of CM</font></b></th>
+                    <th width="11%" valign="top" align="left"><b><font size='1' face="Verdana">Name of Inspecting Engineer</font></b></th>
+                    <th width="11%" valign="top" align="left"><b><font size='1' face="Verdana">Firm</font></b></th>
+                    <th width="18%" valign="top" align="left"><b><font size='1' face="Verdana">Item</font></b></th>
+                    <th width="11%" valign="top" align="left"><b><font size='1' face="Verdana">Previous internal/consignee rejections</font></b></th>
+                    <th width="14%" valign="top" align="left"><b><font size='1' face="Verdana">Discrepancy if any</font></b></th>
+                    <th width="12%" valign="top" align="left"><b><font size='1' face="Verdana">Overall outcome of the visit</font></b></th>
+                    <th width="8%" valign="top" align="left"><b><font size='1' face="Verdana">No. of ICs scrutinized</font></b></th>
                 </tr>
                 @{
                     Int64 CodS = 0;
@@ -104,14 +104,14 @@
                     foreach (var item in Model.improvementInQualityofService1Models.Where(x => x.region_cd == region_cd1))
                     {
                         <tr>
-                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@Count1</font></td>
-                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.NameDesig</font></td>
-                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.IEName</font></td>
-                            <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.Firm</font></td>
-                            <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.Item</font></td>
-                            <td width="8%" valign="top" align="left"><font size="1" face="Verdana">@item.PCR</font></td>
-                            <td width="23%" valign="top" align="left"><font size="1" face="Verdana">@item.Disc</font></td>
-                            <td width="19%" valign="top" align="left"><font size="1" face="Verdana">@item.otcome</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@Count1</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.NameDesig</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.IEName</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.Firm</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.Item</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.PCR</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.Disc</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.otcome</font></td>
 
                             @if (CodS != Convert.ToInt64(item.COD))
                             {
@@ -120,18 +120,18 @@
                                     var obj = Model.improvementInQualityofService2Models.Where(x => x.co_cd == @item.COD).FirstOrDefault();
                                     if (obj != null)
                                     {
-                                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@obj.NOIC</font></td>
+                                        <td valign="top" align="left"><font size="1" face="Verdana">@obj.NOIC</font></td>
                                     }
                                     else
                                     {
-                                        <td width="10%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                                        <td valign="top" align="left"><font size="1" face="Verdana"></font></td>
                                     }
                                     CodS = Convert.ToInt64(item.COD);
                                 }
                             }
                             else
                             {
-                                <td width="10%" valign="top" align="left"><font size="1" face="Verdana"></font></td>
+                                <td valign="top" align="left"><font size="1" face="Verdana"></font></td>
                             }
                         </tr>
                         Count1 = Count1 + 1;
