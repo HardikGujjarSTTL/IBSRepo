@@ -247,7 +247,7 @@
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
                 FillEditedData();
             }
-            
+
         });
 
         function FillEditedData() {
@@ -269,7 +269,7 @@
         }
 
         function FillAgencyClient(types) {
-            
+
             var RlyNonrly = $("#RlyNonrly").val();
             $.ajax({
                 url: '@Url.Action("GetAgencyClient", "POMaster")?RlyNonrly=' + RlyNonrly,
@@ -601,7 +601,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.status) {
-                window.location.href = '@Url.Action("Index", "POMaster")';
+                //window.location.href = '@Url.Action("Index", "POMaster")';
+                window.location.href = '@Url.Action("Manage", "POMaster")?CaseNo=' + res.CaseNo;
             }
         };
 

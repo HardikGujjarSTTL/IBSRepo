@@ -39,15 +39,18 @@
                             <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.BKNO</font></td>
                             <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.SETNO</font></td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_1))
+                                @if (!string.IsNullOrEmpty(item.FILE_1.Split("/")[1]) && !string.IsNullOrEmpty(item.FILE_1.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_1;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
                                 }
+                                else{
+                                    @*<a href="@photoUrl" target="_blank"></a>*@
+                                }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_2))
+                                @if (!string.IsNullOrEmpty(item.FILE_2) && !string.IsNullOrEmpty(item.FILE_2.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_2;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -55,7 +58,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_3))
+                                @if (!string.IsNullOrEmpty(item.FILE_3) && !string.IsNullOrEmpty(item.FILE_3.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_3;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -63,7 +66,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_4))
+                                @if (!string.IsNullOrEmpty(item.FILE_4) && !string.IsNullOrEmpty(item.FILE_4.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_4;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -71,7 +74,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_5))
+                                @if (!string.IsNullOrEmpty(item.FILE_5) && !string.IsNullOrEmpty(item.FILE_5.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_5;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -79,7 +82,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_6))
+                                @if (!string.IsNullOrEmpty(item.FILE_6) && !string.IsNullOrEmpty(item.FILE_6.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_6;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -87,7 +90,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_7))
+                                @if (!string.IsNullOrEmpty(item.FILE_7) && !string.IsNullOrEmpty(item.FILE_7.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_7;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -95,7 +98,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_8))
+                                @if (!string.IsNullOrEmpty(item.FILE_8) && !string.IsNullOrEmpty(item.FILE_8.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_8;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -103,7 +106,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_9))
+                                @if (!string.IsNullOrEmpty(item.FILE_9) && !string.IsNullOrEmpty(item.FILE_9.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_9;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
@@ -111,7 +114,7 @@
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_10))
+                                @if (!string.IsNullOrEmpty(item.FILE_10) && !string.IsNullOrEmpty(item.FILE_10.Split("/")[1]))
                                 {
                                     var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_10;
                                     <a href="@photoUrl" target="_blank">@photoUrl</a>
