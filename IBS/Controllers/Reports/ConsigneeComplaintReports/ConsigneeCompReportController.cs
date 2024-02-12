@@ -375,7 +375,7 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
             {
                 Landscape = true,
                 Format = PaperFormat.A3,
-                //PrintBackground = true
+                PrintBackground = true
             });
 
             await browser.CloseAsync();
