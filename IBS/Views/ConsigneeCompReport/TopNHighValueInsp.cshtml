@@ -2,7 +2,26 @@
 
 <div>
     <h3 class="center">@Model.Regions</h3>
+<style>
+   .borderTable th:nth-child(1){ width:3%;}
 
+        .borderTable th:nth-child(2),
+        .borderTable th:nth-child(3),
+        .borderTable th:nth-child(4),
+        .borderTable th:nth-child(5),
+        .borderTable th:nth-child(10),
+        .borderTable th:nth-child(11),
+        .borderTable th:nth-child(12) {
+            width: 6%;
+        }
+
+        .borderTable th:nth-child(6),
+        .borderTable th:nth-child(7),
+        .borderTable th:nth-child(8),
+        .borderTable th:nth-child(9) {
+            width: 12%;
+        }
+</style>
     @if(@Model.formonth == "true")
     {
         <h3 class="heading3">Top @Model.valinsp Inspections For The Month of : @Model.monthChar , @Model.year ( @Model.BillDate @Model.ICDate)</h3>
@@ -13,18 +32,18 @@
             <table class="borderTable" cellpadding="0" cellspacing="0">
                 <tbody>
                     <tr>
-                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">IC DT</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">ENG. NAME</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">VENDOR</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">CONSIGNEE</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">ITEM DESC.</font></b></th>
-                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">PL NO.</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">MATERIAL VALUE</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">INSP. FEE</font></b></th>
+                        <th valign="top" align="center"><b>S.NO.</b></th>
+                        <th valign="top" align="center"><b>BILL NO.</b></th>
+                        <th valign="top" align="center"><b>BILL DT</b></th>
+                        <th valign="top" align="center"><b>IC DT</b></th>
+                        <th valign="top" align="center"><b>CASE NO.</b></th>
+                        <th valign="top" align="center"><b>ENG. NAME</b></th>
+                        <th valign="top" align="center"><b>VENDOR</b></th>
+                        <th valign="top" align="center"><b>CONSIGNEE</b></th>
+                        <th valign="top" align="center"><b>ITEM DESC.</b></th>
+                        <th valign="top" align="center"><b>PL NO.</b></th>
+                        <th valign="top" align="center"><b>MATERIAL VALUE</b></th>
+                        <th valign="top" align="center"><b>INSP. FEE</b></th>
                     </tr>
                     @if (Model != null && Model.lstValueInspList.Count > 0)
                     {
@@ -33,26 +52,26 @@
                         {
                             SrNo = SrNo + 1;
                             <tr>
-                                <td width="5%" valign="top" align="Left"><font size="1" face="Verdana">@SrNo</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.BillNo</font></td>
-                                <td width="7%" valign="top" align="left">
-                                    <font size="1" face="Verdana">
+                                <td valign="top" align="Left">@SrNo</td>
+                                <td valign="top" align="Left">@item.BillNo</td>
+                                <td valign="top" align="left">
+                                    
                                         @((item.BillDate.HasValue) ? item.BillDate.Value.ToString("dd/MM/yyyy") : string.Empty)
-                                    </font>
+                                    
                                 </td>
-                                 <td width="7%" valign="top" align="left">
-                                    <font size="1" face="Verdana">
+                                 <td valign="top" align="left">
+                                    
                                         @((item.ICDate.HasValue) ? item.ICDate.Value.ToString("dd/MM/yyyy") : string.Empty)
-                                    </font>
+                                    
                                 </td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CaseNo</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.EngName</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.VENDOR</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ITEMDESC</font></td>
-                                <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.PLNO</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.MATERIALVALUE</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.INSPFEE</font></td>
+                                <td valign="top" align="Left">@item.CaseNo</td>
+                                <td valign="top" align="Left">@item.EngName</td>
+                                <td valign="top" align="Left">@item.VENDOR</td>
+                                <td valign="top" align="Left">@item.CONSIGNEE</td>
+                                <td valign="top" align="Left">@item.ITEMDESC</td>
+                                <td valign="top" align="Left">@item.PLNO</td>
+                                <td valign="top" align="Left">@item.MATERIALVALUE</td>
+                                <td valign="top" align="Left">@item.INSPFEE</td>
                             </tr>
                         }
                     }
