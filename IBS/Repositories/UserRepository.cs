@@ -321,7 +321,6 @@ namespace IBS.Repositories
                 userSessionModel.Name = Convert.ToString(ds.Tables[0].Rows[0]["USER_NAME"]).Trim();
                 userSessionModel.UserName = Convert.ToString(ds.Tables[0].Rows[0]["USER_ID"]).Trim();
                 userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAILID"]).Trim();
-                userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["CO_CD"]);
             }
             else
             {
@@ -368,6 +367,7 @@ namespace IBS.Repositories
                 userSessionModel.OrgnType = Convert.ToString(ds.Tables[0].Rows[0]["ORGN_TYPE"]).Trim();
                 userSessionModel.Organisation = Convert.ToString(ds.Tables[0].Rows[0]["ORGANISATION"]).Trim();
                 userSessionModel.IeCd = Convert.ToInt32(ds.Tables[0].Rows[0]["IECD"]);
+                //userSessionModel.CoCd = ds.Tables[0].Rows[0]["COCD"] is DBNull ? (int?)null : Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
                 userSessionModel.CoCd = Convert.ToInt32(ds.Tables[0].Rows[0]["COCD"]);
                 userSessionModel.MasterID = Convert.ToInt32(ds.Tables[0].Rows[0]["MASTER_ID"]);
                 userSessionModel.Email = Convert.ToString(ds.Tables[0].Rows[0]["EMAIL"]);
