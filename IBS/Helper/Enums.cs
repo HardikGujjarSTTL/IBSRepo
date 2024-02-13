@@ -106,6 +106,7 @@ namespace IBS.Helper
             //AdministratorPurchaseOrder =13,
             OnlineComplaints = 11,
             ConsigneeComplaints = 12,
+            UploadRejectionMemo = 33,
             IEFullSignature = 14,
             IEInitials = 15,
             ContractEntryDoc = 16,
@@ -122,6 +123,7 @@ namespace IBS.Helper
             VendorPO = 29,
             UploadLab = 31,
             UploadLabPayment = 32,
+            UploadJIReort = 34,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
