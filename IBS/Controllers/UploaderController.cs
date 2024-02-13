@@ -211,8 +211,8 @@ namespace GSDMWeb.Controllers.Master
             d.Add(".jpeg", "FFD8FF");
             d.Add(".jpg", "FFD8FF");
             d.Add(".png", "89504E470D0A1A0A");
-            d.Add(".tif", "492049");
-            d.Add(".tiff", "492049");
+            d.Add(".tif", "49492");
+            d.Add(".tiff", "49492");
             //Documents'
             d.Add(".doc", "D0CF11E0A1B11AE1");
             d.Add(".docx", "504B030414000600");

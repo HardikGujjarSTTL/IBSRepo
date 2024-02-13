@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IBS.Models
 {
     public class AdministratorPurchaseOrderModel
     {
@@ -16,8 +18,12 @@
 
         public string? L5noPo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? PoDt { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? RecvDt { get; set; }
 
         public int? VendCd { get; set; }
@@ -28,6 +34,8 @@
 
         public string? UserId { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? Datetime { get; set; }
 
         public string? Remarks { get; set; }
@@ -40,10 +48,14 @@
 
         public byte? PendingCharges { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? Createddate { get; set; }
 
         public int? Createdby { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? Updateddate { get; set; }
 
         public int? Updatedby { get; set; }
@@ -55,6 +67,8 @@
 
         public string? ContractNo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? ContractDt { get; set; }
 
         public string? ProjectRef { get; set; }
@@ -64,11 +78,17 @@
         public long? MaxFee { get; set; }
 
         public string? WithServTax { get; set; }
+
         public string? MPOI { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
         public DateTime? PoDtNew { get; set; }
 
         public bool Ispricevariation { get; set; }
+
         public bool Isstageinspection { get; set; }
+
         public int? Contractid { get; set; }
 
     }

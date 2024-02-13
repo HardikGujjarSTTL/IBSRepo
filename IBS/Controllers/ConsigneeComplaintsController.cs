@@ -31,7 +31,7 @@ namespace IBS.Controllers
 
             try
             {
-                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(model.ComplaintId));
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
                 FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
                 FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
                 FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
