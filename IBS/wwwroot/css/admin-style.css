@@ -1571,3 +1571,5 @@ margin-right:15px;
 .filterToggle.show .fa-chevron-up:before{ font-family:"FontAwesome"; content:"\f078"}
 .chatTopFilter{ clear:both;}
 .userShowHideChat{ display:none; cursor:pointer;}
+.custom-readio .company-checkbox .remember{ margin-right:20px;}
+.custom-readio .company-checkbox .remember:last-child{ margin-right:0;}

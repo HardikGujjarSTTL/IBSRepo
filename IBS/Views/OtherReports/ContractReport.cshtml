@@ -7,20 +7,20 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Contract Code</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Contract No.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Scope of Work</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Period From</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Period To</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Rate of Insp Fee</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Contract Fee</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">CM Name</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Cont Special Condns</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Contract Penalty</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">File Uploaded(If Any)</font></b></th>
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>Contract Code</b></th>
+                    <th valign="top" align="center"><b>Client</b></th>
+                    <th valign="top" align="center"><b>Contract No.</b></th>
+                    <th valign="top" align="center"><b>Scope of Work</b></th>
+                    <th valign="top" align="center"><b>Period From</b></th>
+                    <th valign="top" align="center"><b>Period To</b></th>
+                    <th valign="top" align="center"><b>Rate of Insp Fee</b></th>
+                    <th valign="top" align="center"><b>Contract Fee</b></th>
+                    <th valign="top" align="center"><b>CM Name</b></th>
+                    <th valign="top" align="center"><b>Region</b></th>
+                    <th valign="top" align="center"><b>Cont Special Condns</b></th>
+                    <th valign="top" align="center"><b>Contract Penalty</b></th>
+                    <th valign="top" align="center"><b>File Uploaded(If Any)</b></th>
                 </tr>
                 @if (Model != null && Model.lstContrcats != null && Model.lstContrcats.Count > 0)
                 {
@@ -29,20 +29,20 @@
                     {
                         SrNo = SrNo + 1;
                         <tr>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="7%" valign="top" align="Left"><font size="1" face="Verdana">@item.CONTRACT_ID</font></td>
-                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.CLIENT_NAME</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.CONTRACT_NO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.SCOPE_OF_WORK</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.PER_FROM</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.PER_TO</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CONT_INSP_FEE</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CONTRACT_FEE_NUM</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.REGION</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CONTRACT_SPECIAL_CONDN</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.CONTRACT_PANALTY</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana"></font></td>
+                            <td valign="top" align="center">@SrNo</td>
+                            <td valign="top" align="Left">@item.CONTRACT_ID</td>
+                            <td valign="top" align="center">@item.CLIENT_NAME</td>
+                            <td valign="top" align="center">@item.CONTRACT_NO</td>
+                            <td valign="top" align="center">@item.SCOPE_OF_WORK</td>
+                            <td valign="top" align="center">@item.PER_FROM</td>
+                            <td valign="top" align="center">@item.PER_TO</td>
+                            <td valign="top" align="center">@item.CONT_INSP_FEE</td>
+                            <td valign="top" align="center">@item.CONTRACT_FEE_NUM</td>
+                            <td valign="top" align="center">@item.CO_NAME</td>
+                            <td valign="top" align="center">@item.REGION</td>
+                            <td valign="top" align="center">@item.CONTRACT_SPECIAL_CONDN</td>
+                            <td valign="top" align="center">@item.CONTRACT_PANALTY</td>
+                            <td valign="top" align="center"></td>
                         </tr>
                     }
                 }
