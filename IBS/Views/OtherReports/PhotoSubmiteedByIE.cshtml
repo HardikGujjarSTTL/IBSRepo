@@ -39,85 +39,81 @@
                             <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.BKNO</font></td>
                             <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.SETNO</font></td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_1.Split("/")[1]) && !string.IsNullOrEmpty(item.FILE_1.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_1))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_1;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_1;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_1</a>
                                 }
-                                else{
-                                    @*<a href="@photoUrl" target="_blank"></a>*@
+                            </td>
+                            <td width="8%" valign="top" align="center">
+                                @if (!string.IsNullOrEmpty(item.FILE_2))
+                                {
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_2;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_2</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_2) && !string.IsNullOrEmpty(item.FILE_2.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_3))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_2;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_3;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_3</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_3) && !string.IsNullOrEmpty(item.FILE_3.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_4))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_3;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_4;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_4</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_4) && !string.IsNullOrEmpty(item.FILE_4.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_5))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_4;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_5;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_5</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_5) && !string.IsNullOrEmpty(item.FILE_5.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_6))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_5;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_6;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_6</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_6) && !string.IsNullOrEmpty(item.FILE_6.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_7))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_6;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_7;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_7</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_7) && !string.IsNullOrEmpty(item.FILE_7.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_8))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_7;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_8;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_8</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_8) && !string.IsNullOrEmpty(item.FILE_8.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_9))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_8;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_9;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_9</a>
                                 }
 
                             </td>
                             <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_9) && !string.IsNullOrEmpty(item.FILE_9.Split("/")[1]))
+                                @if (!string.IsNullOrEmpty(item.FILE_10))
                                 {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_9;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
-                                }
-
-                            </td>
-                            <td width="8%" valign="top" align="center">
-                                @if (!string.IsNullOrEmpty(item.FILE_10) && !string.IsNullOrEmpty(item.FILE_10.Split("/")[1]))
-                                {
-                                    var photoUrl = Url.Content("~/ReadWriteData/") + item.FILE_10;
-                                    <a href="@photoUrl" target="_blank">@photoUrl</a>
+                                    var photoUrl = Url.Content("~/ReadWriteData/IC_PHOTOS/") + item.FILE_10;
+                                    <a href="@photoUrl" target="_blank">@item.FILE_10</a>
                                 }
 
                             </td>

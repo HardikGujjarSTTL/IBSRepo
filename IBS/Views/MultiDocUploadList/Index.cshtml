@@ -11,13 +11,13 @@
 </div>
 <div class="accordion-body">
     <div class="row my-0">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Bill No</label>
                 <input type="text" asp-for="BillNO" maxlength="100" style="text-transform: uppercase;">
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Bill Date</label>
                 <input type="text" asp-for="BillDT" maxlength="100" style="text-transform: uppercase;">
@@ -29,7 +29,19 @@
                 <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">BK NO.</label>
+                <input type="text" class="input" asp-for="BKNO" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Set No.</label>
+                <input type="text" class="input" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">Call Date</label>
                 <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;">
@@ -47,17 +59,35 @@
                 <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">PO Date</label>
                 <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC NO.</label>
+                <input type="text" class="input" asp-for="IC_NO" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC Date From</label>
+                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" id="IC_DT_From" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC Date To</label>
+                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" id="IC_DT_To" maxlength="100" style="text-transform: uppercase;">
             </div>
         </div>
     </div>
     <div class="row my-0">
         <div class="col-md-12 mb-4 text-center">
             <div class="savenext-btn">
-                <button type="button" class="reset-btn" id="btnSearch">Search</button>
+                <button type="button" class="save-btn active" id="btnSearch">Search</button>
             </div>
         </div>
     </div>
@@ -71,11 +101,14 @@
                         <th>#</th>
                         <th>Bill No.</th>
                         <th>Bill Date</th>
-                        <th>Case No.</th>
-                        <th>PO No.</th>
-                        <th>PO Date</th>
                         <th>Call Date</th>
-                        <th>Call SNo.</th>
+                        <th>Case No.</th>
+                        <th>BK No.</th>
+                        <th>Set No.</th>
+                        <th>PO No.</th>
+                        <th>IC No.</th>
+                        <th>IC Date</th>
+                        <th>Created Date</th>
                         <th>Document</th>
                     </tr>
                 </thead>
@@ -104,6 +137,11 @@
             var BillNO = $("#BillNO").val();
             var CallRecvDt = $("#CallRecvDt").val();
             var BillDT = $("#BillDT").val();
+            var IC_NO = $("#IC_NO").val();
+            var BKNO = $("#BKNO").val();
+            var SetNo = $("#SetNo").val();
+            var IC_DT_From = $("#IC_DT_From").val();
+            var IC_DT_To = $("#IC_DT_To").val();
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -128,7 +166,12 @@
                             "CallSno": CallSno,
                             "BillNO": BillNO,
                             "CallRecvDt": CallRecvDt,
-                            "BillDT": BillDT
+                            "BillDT": BillDT,
+                            "IC_NO": IC_NO,
+                            "BKNO": BKNO,
+                            "IC_DT_To": IC_DT_To,
+                            "IC_DT_From": IC_DT_From,
+                            "SetNo": SetNo
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -152,17 +195,6 @@
                             return data;
                         }
                     },
-                    { data: "CaseNo" },
-                    { data: "PoNo" },
-                    {
-                        data: "PoDt",
-                        render: function (data, type, row) {
-                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
-                            }
-                            return data;
-                        }
-                    },
                     {
                         data: "CallRecvDt",
                         render: function (data, type, row) {
@@ -172,7 +204,28 @@
                             return data;
                         }
                     },
-                    { data: "CallSno" },
+                    { data: "CaseNo" },
+                    { data: "BKNO" },
+                    { data: "SetNo" },
+                    { data: "PoNo" },
+                    { data: "IC_NO" },
+                    { data: "IC_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CreatedDate",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
                     {
                         data: "FileName",
                         render: function (data, type, row) {

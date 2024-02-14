@@ -4,6 +4,8 @@ using IBS.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 using IBS.Helper;
 using System.Data;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Security.Cryptography;
 
 namespace IBS.Repositories
 {
@@ -76,38 +78,99 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string CaseNo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]) ? Convert.ToString(dtParameters.AdditionalValues["CaseNo"]) : "";
-            string PoNo = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]) ? Convert.ToString(dtParameters.AdditionalValues["PoNo"]) : "";
-            string PoDt = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]) ? Convert.ToString(dtParameters.AdditionalValues["PoDt"]) : "";
-            string CallSno = !string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]) ? Convert.ToString(dtParameters.AdditionalValues["CallSno"]) : "";
-            string BillNO = !string.IsNullOrEmpty(dtParameters.AdditionalValues["BillNO"]) ? Convert.ToString(dtParameters.AdditionalValues["BillNO"]) : "";
-            string CallRecvDt = !string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]) ? Convert.ToString(dtParameters.AdditionalValues["CallRecvDt"]) : "";
-            string BillDT = !string.IsNullOrEmpty(dtParameters.AdditionalValues["BillDT"]) ? Convert.ToString(dtParameters.AdditionalValues["BillDT"]) : "";
+            string CaseNo = "", PoNo = null, BillNO = null, CallSno = null,SetNo = null,BKNO= null, IC_NO = null, IC_DT_From = null, IC_DT_To = null;
+            DateTime? CallRecvDt = null, BillDT = null, PoDt = null;
 
-            OracleParameter[] par = new OracleParameter[8];
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]))
+            {
+                CallSno = Convert.ToString(dtParameters.AdditionalValues["CallSno"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillNO"]))
+            {
+                BillNO = Convert.ToString(dtParameters.AdditionalValues["BillNO"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecvDt"]))
+            {
+                CallRecvDt = Convert.ToDateTime(dtParameters.AdditionalValues["CallRecvDt"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BillDT"]))
+            {
+                BillDT = Convert.ToDateTime(dtParameters.AdditionalValues["BillDT"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToDateTime(dtParameters.AdditionalValues["PoDt"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IC_DT_From"]))
+            {
+                IC_DT_From = Convert.ToString(dtParameters.AdditionalValues["IC_DT_From"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IC_DT_To"]))
+            {
+                IC_DT_To = Convert.ToString(dtParameters.AdditionalValues["IC_DT_To"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["IC_NO"]))
+            {
+                IC_NO = Convert.ToString(dtParameters.AdditionalValues["IC_NO"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["BKNO"]))
+            {
+                BKNO = Convert.ToString(dtParameters.AdditionalValues["BKNO"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["SetNo"]))
+            {
+                SetNo = Convert.ToString(dtParameters.AdditionalValues["SetNo"]);
+            }
+
+            OracleParameter[] par = new OracleParameter[13];
             par[0] = new OracleParameter("P_bill_no", OracleDbType.Varchar2, BillNO, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_BILL_DT", OracleDbType.Varchar2, BillDT, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_BILL_DT", OracleDbType.Date, BillDT, ParameterDirection.Input);
             par[2] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_call_recv_dt", OracleDbType.Varchar2, CallRecvDt, ParameterDirection.Input);
+            par[3] = new OracleParameter("P_call_recv_dt", OracleDbType.Date, CallRecvDt, ParameterDirection.Input);
             par[4] = new OracleParameter("P_call_sno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
             par[5] = new OracleParameter("P_PO_NO", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
-            par[6] = new OracleParameter("P_PO_DT", OracleDbType.Varchar2, PoDt, ParameterDirection.Input);
-            par[7] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_PO_DT", OracleDbType.Date, PoDt, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_IC_NO", OracleDbType.Varchar2, IC_NO, ParameterDirection.Input);
+            par[8] = new OracleParameter("P_IC_DT_frm", OracleDbType.Varchar2, IC_DT_From, ParameterDirection.Input);
+            par[9] = new OracleParameter("P_IC_DT_to", OracleDbType.Varchar2, IC_DT_To, ParameterDirection.Input);
+            par[10] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
+            par[11] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
+            par[12] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
+            List<MultipleFileUploadModel> list = new();
             var ds = DataAccessDB.GetDataSet("GET_MultiDocList", par, 1);
-            DataTable dt = ds.Tables[0];
 
-            List<MultipleFileUploadModel> list = dt.AsEnumerable().Select(row => new MultipleFileUploadModel
+            if (ds != null && ds.Tables.Count > 0)
             {
-                CaseNo = row["CASE_NO"].ToString(),
-                PoNo = row["PO_NO"].ToString(),
-                PoDt = row["PO_DT"].ToString(),
-                CallRecvDt = Convert.ToDateTime(row["call_recv_dt"]),
-                CallSno = row["call_sno"].ToString(),
-                BillNO = row["BILL_NO"].ToString(),
-                BillDT = Convert.ToDateTime(row["bill_dt"]),
-                FileName = row["file_name"].ToString()
-            }).ToList();
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[0];
+                    list = dt.AsEnumerable().Select(row => new MultipleFileUploadModel
+                    {
+                        CaseNo = row["CASE_NO"].ToString(),
+                        BKNO = row["bk_no"].ToString(),
+                        SetNo = row["set_no"].ToString(),
+                        PoNo = row["PO_NO"].ToString(),
+                        PoDt = row["PO_DT"].ToString(),
+                        CallSno = row["call_sno"].ToString(),
+                        BillNO = row["BILL_NO"].ToString(),
+                        FileName = row["file_name"].ToString(),
+                        IC_NO = row["ic_no"].ToString(),
+                        CallRecvDt = row["call_recv_dt"] != DBNull.Value ? Convert.ToDateTime(row["call_recv_dt"]) : DateTime.MinValue,
+                        BillDT = row["bill_dt"] != DBNull.Value ? Convert.ToDateTime(row["bill_dt"]) : DateTime.MinValue,
+                        IC_DT = row["ic_dt"] != DBNull.Value ? Convert.ToDateTime(row["ic_dt"]) : DateTime.MinValue,
+                        CreatedDate = row["createddate"] != DBNull.Value ? Convert.ToDateTime(row["createddate"]) : DateTime.MinValue
+                    }).ToList();
+                }
+            }
 
             query = list.AsQueryable();
 
