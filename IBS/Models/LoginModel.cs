@@ -48,6 +48,7 @@ namespace IBS.Models
         public int CoCd { get; set; }
         public string FPUserID { get; set; }
         public int MasterID { get; set; }
+        public string AuthType { get; set; }
     }
 
     public class ForgotPasswordModel

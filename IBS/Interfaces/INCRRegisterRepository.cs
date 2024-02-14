@@ -5,7 +5,7 @@ namespace IBS.Interfaces
 {
     public interface INCRRegisterRepository
     {
-        DTResult<NCRRegister> GetDataList(DTParameters dtParameters,string Region);
+        DTResult<NCRRegister> GetDataList(DTParameters dtParameters,string Region,string LoginType);
         DTResult<Remarks> GetRemarks(DTParameters dtParameters);
         public NCRRegister FindByIDActionA(string CASE_NO, string BK_NO, string SET_NO, string NCNO, string Actions);
         string SaveRemarks(string NCNO, string UserID, List<Remarks> model);

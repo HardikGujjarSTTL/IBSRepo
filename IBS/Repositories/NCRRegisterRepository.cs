@@ -25,7 +25,7 @@ namespace IBS.Repositories
             this.pSendMailRepository = pSendMailRepository;
             this.config = _config;
         }
-        public DTResult<NCRRegister> GetDataList(DTParameters dtParameters,string Region)
+        public DTResult<NCRRegister> GetDataList(DTParameters dtParameters,string Region,string LoginType)
         {
             DTResult<NCRRegister> dTResult = new() { draw = 0 };
             IQueryable<NCRRegister>? query = null;
@@ -100,7 +100,7 @@ namespace IBS.Repositories
                     formattedtoDate = parsedDat1e.ToString("dd/mm/yyyy");
                 }
 
-                OracleParameter[] par = new OracleParameter[12];
+                OracleParameter[] par = new OracleParameter[13];
                 par[0] = new OracleParameter("lst_IE", OracleDbType.Varchar2, IENAME, ParameterDirection.Input);
                 par[1] = new OracleParameter("frm_Dt", OracleDbType.Varchar2, formattedDate, ParameterDirection.Input);
                 par[2] = new OracleParameter("to_Dt", OracleDbType.Varchar2, formattedtoDate, ParameterDirection.Input);
@@ -109,10 +109,11 @@ namespace IBS.Repositories
                 par[5] = new OracleParameter("p_SET_NO", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
                 par[6] = new OracleParameter("p_NCR_NO", OracleDbType.Varchar2, NCNO, ParameterDirection.Input);
                 par[7] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-                par[8] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
-                par[9] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
-                par[10] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                par[11] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[8] = new OracleParameter("p_AuthType", OracleDbType.Varchar2, LoginType != "IE" ? DBNull.Value : (object)LoginType, ParameterDirection.Input);
+                par[9] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+                par[10] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+                par[11] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[12] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
                 ds = DataAccessDB.GetDataSet("GetFilterNCR", par, 2);
 
                 if (ds != null && ds.Tables.Count > 0)
@@ -339,7 +340,7 @@ namespace IBS.Repositories
                     model.NC_NO = NCNO;
 
 
-                    model.IeCd = Convert.ToString(firstRow["IE_CD"]);
+                    model.IeCd = Convert.ToInt32(firstRow["IE_CD"]);
                     model.IE_SNAME = firstRow["IE_NAME"].ToString();
 
                     if (!firstRow.IsNull("IC_DATE"))

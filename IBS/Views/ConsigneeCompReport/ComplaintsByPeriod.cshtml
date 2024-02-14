@@ -1,55 +1,63 @@
 ﻿@model IBS.Models.Reports.ConsigneeCompReports
 <style>
-    .borderTable th:nth-child(1){ 
-        width:36px!important;
+    .borderTable th:nth-child(1) {
+        width: 36px !important;
     }
+
     .borderTable th:nth-child(2),
     .borderTable th:nth-child(3),
     .borderTable th:nth-child(4),
     .borderTable th:nth-child(5) {
         width: 80px !important;
     }
+
     .borderTable th:nth-child(6),
     .borderTable th:nth-child(7),
     .borderTable th:nth-child(8),
     .borderTable th:nth-child(9),
-    .borderTable th:nth-child(28)
-     {
+    .borderTable th:nth-child(28) {
         width: 42px !important;
-     }
+    }
+
     .borderTable th:nth-child(11),
     .borderTable th:nth-child(12) {
         width: 47px !important;
     }
+
     .borderTable th:nth-child(13),
-    .borderTable th:nth-child(14){
+    .borderTable th:nth-child(14) {
         width: 47px !important;
     }
+
     .borderTable th:nth-child(15) {
         width: 50px !important;
     }
+
     .borderTable th:nth-child(16),
     .borderTable th:nth-child(17) {
         width: 54px !important;
     }
+
     .borderTable th:nth-child(10),
     .borderTable th:nth-child(18),
     .borderTable th:nth-child(19) {
         width: 80px !important;
     }
+
     .borderTable th:nth-child(20),
     .borderTable th:nth-child(21) {
         width: 54px !important;
     }
-    .borderTable th:nth-child(22), 
+
+    .borderTable th:nth-child(22),
     .borderTable th:nth-child(23),
     .borderTable th:nth-child(24),
     .borderTable th:nth-child(25),
     .borderTable th:nth-child(26),
     .borderTable th:nth-child(27),
-    .borderTable th:nth-child(28), 
-    .borderTable th:nth-child(29), 
-    .borderTable th:nth-child(30), 
+    .borderTable th:nth-child(28),
+    .borderTable th:nth-child(29),
+    .borderTable th:nth-child(30),
     .borderTable th:nth-child(31),
     .borderTable th:nth-child(32),
     .borderTable th:nth-child(33),
@@ -65,45 +73,45 @@
             <tbody>
                 <tr>
                     <th valign="top" align="Center" colspan="29">Compliant Recieved During the Period: @Model.FromDate To @Model.ToDate  (@Model.Regions) @Model.jirequired</th>
-                    <th colspan="7"  valign="top" align="center"><b>Corrective & Preventive Action Identified</b></th>
+                    <th colspan="7" valign="top" align="center"><b>Corrective & Preventive Action Identified</b></th>
                 </tr>
                 <tr>
-                    <th  valign="top" align="center"><b>S.No.</b></th>
-                    <th  valign="top" align="center"><b>Region</b></th>
-                    <th  valign="top" align="center"><b>Complaint ID</b></th>
-                    <th  valign="top" align="center"><b>Unique SNO.</b></th>
-                    <th  valign="top" align="center"><b>Firm</b></th>
-                    <th  valign="top" align="center"><b>PO No.</b></th>
-                    <th  valign="top" align="center"><b>Date</b></th>
-                    <th  valign="top" align="center"><b>BK NO & Set NO</b></th>
-                    <th  valign="top" align="center"><b>Date of IC</b></th>
-                    <th  valign="top" align="center"><b>Item</b></th>
-                    <th  valign="top" align="center"><b>Consignee</b></th>
-                    <th  valign="top" align="center"><b>IE</b></th>
-                    <th  valign="top" align="center"><b>Qty Offered</b></th>
-                    <th  valign="top" align="center"><b>Qty Rejected</b></th>
-                    <th  valign="top" align="center"><b>Value of Rejected Stores</b></th>
-                    <th  valign="top" align="center"><b>Discipline</b></th>
-                    <th  valign="top" align="center"><b>Date of 1st Reference</b></th>
-                    <th  valign="top" align="center"><b>REJ MEMO</b></th>
-                    <th  valign="top" align="center"><b>Reason of Rejection</b></th>
-                    <th  valign="top" align="center"><b>Reason of No JI</b></th>
-                    <th  valign="top" align="center"><b>Date of JI</b></th>
-                    <th  valign="top" align="center"><b>Inspection Document</b></th>
-                    <th  valign="top" align="center"><b>Status (Decision taken by JI Committe)</b></th>
-                    <th  valign="top" align="center"><b>JI REPORT</b></th>
-                    <th  valign="top" align="center"><b>Defect Code</b></th>
-                    <th  valign="top" align="center"><b>Classfication</b></th>
-                    <th  valign="top" align="center"><b>Conclusion Dt</b></th>
-                    <th  valign="top" align="center"><b>CM</b></th>
-                    <th  valign="top" align="center"><b>JI Engineer</b></th>
-                    <th  valign="top" align="center"><b>Root Cause Analysis</b></th>
-                    <th  valign="top" align="center"><b>Checksheet Status</b></th>
-                    <th  valign="top" align="center"><b>Tech Ref</b></th>
-                    <th  valign="top" align="center"><b>D&AR Proposed</b></th>
-                    <th  valign="top" align="center"><b>Any Other</b></th>
-                    <th  valign="top" align="center"><b>Status of CAPA</b></th>
-                    <th  valign="top" align="center"><b>D&AR Status (if Any)</b></th>
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>Region</b></th>
+                    <th valign="top" align="center"><b>Complaint ID</b></th>
+                    <th valign="top" align="center"><b>Unique SNO.</b></th>
+                    <th valign="top" align="center"><b>Firm</b></th>
+                    <th valign="top" align="center"><b>PO No.</b></th>
+                    <th valign="top" align="center"><b>Date</b></th>
+                    <th valign="top" align="center"><b>BK NO & Set NO</b></th>
+                    <th valign="top" align="center"><b>Date of IC</b></th>
+                    <th valign="top" align="center"><b>Item</b></th>
+                    <th valign="top" align="center"><b>Consignee</b></th>
+                    <th valign="top" align="center"><b>IE</b></th>
+                    <th valign="top" align="center"><b>Qty Offered</b></th>
+                    <th valign="top" align="center"><b>Qty Rejected</b></th>
+                    <th valign="top" align="center"><b>Value of Rejected Stores</b></th>
+                    <th valign="top" align="center"><b>Discipline</b></th>
+                    <th valign="top" align="center"><b>Date of 1st Reference</b></th>
+                    <th valign="top" align="center"><b>REJ MEMO</b></th>
+                    <th valign="top" align="center"><b>Reason of Rejection</b></th>
+                    <th valign="top" align="center"><b>Reason of No JI</b></th>
+                    <th valign="top" align="center"><b>Date of JI</b></th>
+                    <th valign="top" align="center"><b>Inspection Document</b></th>
+                    <th valign="top" align="center"><b>Status (Decision taken by JI Committe)</b></th>
+                    <th valign="top" align="center"><b>JI REPORT</b></th>
+                    <th valign="top" align="center"><b>Defect Code</b></th>
+                    <th valign="top" align="center"><b>Classfication</b></th>
+                    <th valign="top" align="center"><b>Conclusion Dt</b></th>
+                    <th valign="top" align="center"><b>CM</b></th>
+                    <th valign="top" align="center"><b>JI Engineer</b></th>
+                    <th valign="top" align="center"><b>Root Cause Analysis</b></th>
+                    <th valign="top" align="center"><b>Checksheet Status</b></th>
+                    <th valign="top" align="center"><b>Tech Ref</b></th>
+                    <th valign="top" align="center"><b>D&AR Proposed</b></th>
+                    <th valign="top" align="center"><b>Any Other</b></th>
+                    <th valign="top" align="center"><b>Status of CAPA</b></th>
+                    <th valign="top" align="center"><b>D&AR Status (if Any)</b></th>
                 </tr>
                 @if (Model != null && Model.lstConsigneeComplaints.Count > 0)
                 {
@@ -112,51 +120,76 @@
                     {
                         SrNo = SrNo + 1;
                         <tr>
-                            <td  valign="top" align="center">@SrNo</td>
-                            <td  valign="top" align="Left">@item.IN_REGION</td>
-                            <td  valign="top" align="Left">@item.COMPLAINT_ID</td>
-                            <td  valign="top" align="Left">@item.JI_SNO</td>
-                            <td  valign="top" align="Left">@item.VENDOR</td>
-                            <td  valign="top" align="Left">@item.PO_NO</td>
-                            <td  valign="top" align="Left">@item.PO_DATE</td>
-                            <td  valign="top" align="Left">@item.BK_SET</td>
-                            <td  valign="top" align="Left">@item.IC_DATE</td>
-                            <td  valign="top" align="Left">@item.ITEM_DESC</td>
-                            <td  valign="top" align="Left">@item.CONSIGNEE</td>
-                            <td  valign="top" align="Left">@item.IE_NAME</td>
-                            <td  valign="top" align="Left">@item.QTY_OFF</td>
-                            <td  valign="top" align="Left">@item.QTY_REJECTED</td>
-                            <td  valign="top" align="Left">@item.REJECTION_VALUE</td>
-                            <td  valign="top" align="Left">@item.DEPT</td>
-                            <td  valign="top" align="Left">@item.COMPLAINT_DATE</td>
-                           @* <td width="8%" valign="top" align="Left">
-                                @if (!string.IsNullOrEmpty(item.REJECTIONMEMOPATH) && !string.IsNullOrEmpty(item.REJECTIONMEMOPATH.Split("/")[1]))
+                            <td valign="top" align="center">@SrNo</td>
+                            <td valign="top" align="Left">@item.IN_REGION</td>
+                            <td valign="top" align="Left">@item.COMPLAINT_ID</td>
+                            <td valign="top" align="Left">@item.JI_SNO</td>
+                            <td valign="top" align="Left">@item.VENDOR</td>
+                            <td valign="top" align="Left">@item.PO_NO</td>
+                            <td valign="top" align="Left">@item.PO_DATE</td>
+                            <td valign="top" align="Left">@item.BK_SET</td>
+                            <td valign="top" align="Left">@item.IC_DATE</td>
+                            <td valign="top" align="Left">@item.ITEM_DESC</td>
+                            <td valign="top" align="Left">@item.CONSIGNEE</td>
+                            <td valign="top" align="Left">@item.IE_NAME</td>
+                            <td valign="top" align="Left">@item.QTY_OFF</td>
+                            <td valign="top" align="Left">@item.QTY_REJECTED</td>
+                            <td valign="top" align="Left">@item.REJECTION_VALUE</td>
+                            <td valign="top" align="Left">@item.DEPT</td>
+                            <td valign="top" align="Left">@item.COMPLAINT_DATE</td>
+                            <td width="8%" valign="top" align="Left">
+                                @if (!string.IsNullOrEmpty(item.REJECTIONMEMOPATH))
                                 {
-                                    var photoUrl = @item.REJECTIONMEMOPATH + ".pdf";
-                                    <span>@item.REJECTIONMEMOPATH.Split("/")[3]</span>
-                                    <a href="@item.REJECTIONMEMOPATH" target="_blank">@item.REJECTIONMEMOPATH</a>
+                                    string[] pathParts = item.REJECTIONMEMOPATH.Split('/', '\\');
+                                    @if (!string.IsNullOrEmpty(pathParts[4]))
+                                    {
+                                        var path = @item.REJECTIONMEMOPATH + ".pdf";
+                                        <a href="@path" target="_blank">@item.REJECTIONMEMOPATH</a>
+                                    }
                                 }
 
-                            </td>*@
-                            <td  valign="top" align="Left">@item.REJECTIONMEMOPATH</td>
-                            <td  valign="top" align="Left">@item.REJECTION_REASON</td>
-                            <td  valign="top" align="Left">@item.NO_JI_RES</td>
-                            <td  valign="top" align="Left">@item.JI_DATE</td>
-                            <td  valign="top" align="Left">@item.COMPLAINTSCASESPATH</td>
-                            <td  valign="top" align="Left">@item.STATUS</td>
-                            <td  valign="top" align="Left">@item.COMPLAINTSREPORTPATH</td>
-                            <td  valign="top" align="Left">@item.DEFECT_DESC</td>
-                            <td  valign="top" align="Left">@item.JI_STATUS_DESC</td>
-                            <td  valign="top" align="Left">@item.CONCLUSION_DATE</td>
-                            <td  valign="top" align="Left">@item.CO_NAME</td>
-                            <td  valign="top" align="Left">@item.JI_IE_NAME</td>
-                            <td  valign="top" align="Left">@item.ROOT_CAUSE_ANALYSIS</td>
-                            <td  valign="top" align="Left">@item.CHK_STATUS</td>
-                            <td  valign="top" align="Left">@item.TECH_REF</td>
-                            <td  valign="top" align="Left">@item.ACTION_PROPOSED</td>
-                            <td  valign="top" align="Left">@item.ANY_OTHER</td>
-                            <td  valign="top" align="Left">@item.CAPA_STATUS</td>
-                            <td  valign="top" align="Left">@item.DANDAR_STATUS</td>
+                            </td>
+                            @*<td  valign="top" align="Left">@item.REJECTIONMEMOPATH</td>*@
+                            <td valign="top" align="Left">@item.REJECTION_REASON</td>
+                            <td valign="top" align="Left">@item.NO_JI_RES</td>
+                            <td valign="top" align="Left">@item.JI_DATE</td>
+                            <td width="8%" valign="top" align="Left">
+                                @if (!string.IsNullOrEmpty(item.COMPLAINTSCASESPATH))
+                                {
+                                    string[] pathParts = item.COMPLAINTSCASESPATH.Split('/', '\\');
+                                    @if (!string.IsNullOrEmpty(pathParts[4]))
+                                    {
+                                        var path = @item.COMPLAINTSCASESPATH + ".pdf";
+                                        <a href="@path" target="_blank">@item.COMPLAINTSCASESPATH</a>
+                                    }
+                                }
+                            </td>
+                            @*<td  valign="top" align="Left">@item.COMPLAINTSCASESPATH</td>*@
+                            <td valign="top" align="Left">@item.STATUS</td>
+                            <td width="8%" valign="top" align="Left">
+                                @if (!string.IsNullOrEmpty(item.COMPLAINTSREPORTPATH))
+                                {
+                                    string[] pathParts = item.COMPLAINTSREPORTPATH.Split('/', '\\');
+                                    @if (!string.IsNullOrEmpty(pathParts[4]))
+                                    {
+                                        var path = @item.COMPLAINTSREPORTPATH + ".pdf";
+                                        <a href="@path" target="_blank">@item.COMPLAINTSREPORTPATH</a>
+                                    }
+                                }
+                            </td>
+                            @*<td valign="top" align="Left">@item.COMPLAINTSREPORTPATH</td>*@
+                            <td valign="top" align="Left">@item.DEFECT_DESC</td>
+                            <td valign="top" align="Left">@item.JI_STATUS_DESC</td>
+                            <td valign="top" align="Left">@item.CONCLUSION_DATE</td>
+                            <td valign="top" align="Left">@item.CO_NAME</td>
+                            <td valign="top" align="Left">@item.JI_IE_NAME</td>
+                            <td valign="top" align="Left">@item.ROOT_CAUSE_ANALYSIS</td>
+                            <td valign="top" align="Left">@item.CHK_STATUS</td>
+                            <td valign="top" align="Left">@item.TECH_REF</td>
+                            <td valign="top" align="Left">@item.ACTION_PROPOSED</td>
+                            <td valign="top" align="Left">@item.ANY_OTHER</td>
+                            <td valign="top" align="Left">@item.CAPA_STATUS</td>
+                            <td valign="top" align="Left">@item.DANDAR_STATUS</td>
                         </tr>
                     }
                 }

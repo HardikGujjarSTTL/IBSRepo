@@ -31,7 +31,7 @@ namespace IBS.Controllers
 
             try
             {
-                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.OnlineComplaints, Convert.ToString(model.ComplaintId));
+                List<IBS_DocumentDTO> lstDocumentUpload_Memo = iDocument.GetRecordsList((int)Enums.DocumentCategory.ConsigneeComplaints, Convert.ToString(model.ComplaintId));
                 FileUploaderDTO FileUploaderUpload_Memo = new FileUploaderDTO();
                 FileUploaderUpload_Memo.Mode = (int)Enums.FileUploaderMode.Add_Edit;
                 FileUploaderUpload_Memo.IBS_DocumentList = lstDocumentUpload_Memo.Where(m => m.ID == (int)Enums.DocumentCategory_CANRegisrtation.Upload_Rejection_Memo).ToList();
@@ -203,7 +203,7 @@ namespace IBS.Controllers
                     {
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_JI_Report };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        if (DocumentsList[2].DocName == "Upload JI Report")
+                        if (DocumentsList[0].DocName == "Upload JI Report")
                         {
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT), env, iDocument, string.Empty, FileName, DocumentIds);
                         }
@@ -239,7 +239,7 @@ namespace IBS.Controllers
                         var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref1 };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        if (DocumentsList[3].DocName == "Upload Tech Ref")
+                        if (DocumentsList[0].DocName == "Upload Tech Ref")
                         {
                             DocumentHelper.SaveFiles(Convert.ToString(model.ComplaintId), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ComplaintTechRef), env, iDocument, string.Empty, FileName, DocumentIds);
                         }

@@ -33,7 +33,7 @@ namespace IBS.Models
         public DateTime? NCRDate { get; set; }
         public DateTime? Date { get; set; }
         [NotMapped]
-        public string? IeCd { get; set; }
+        public int? IeCd { get; set; }
         public byte? Ie_Cd { get; set; }
         public DateTime? CALL_RECV_DT { get; set; }
         public DateTime CALLRECVDT { get; set; }
