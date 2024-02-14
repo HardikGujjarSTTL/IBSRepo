@@ -89,5 +89,12 @@ namespace IBS.Controllers
 
             return Json(new { status = true, responseText = "File Uploaded !!" });
         }
+
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<MultipleFileUploadModel> dTResult = multipleFileUploadRepository.GetDocList(dtParameters);
+            return Json(dTResult);
+        }
     }
 }
