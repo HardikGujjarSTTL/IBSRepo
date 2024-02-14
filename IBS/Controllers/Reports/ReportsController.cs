@@ -310,7 +310,7 @@ namespace IBS.Controllers.Reports
             {
                 Landscape = true,
                 Format = PaperFormat.A3,
-                //PrintBackground = true
+                PrintBackground = true
             });
 
             await browser.CloseAsync();
