@@ -40,7 +40,7 @@ namespace IBS.Controllers
                 {
                     if (model.Files.Count > 0 && model.Files.Count <= 50)
                     {
-                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ReadWriteData/MultipleFileUpload");
+                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "/ReadWriteData/MultipleFileUpload");
 
                         if (!Directory.Exists(uploadDirectory))
                         {
