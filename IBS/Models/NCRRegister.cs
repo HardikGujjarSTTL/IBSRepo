@@ -47,6 +47,7 @@ namespace IBS.Models
         public string? UserID { get; set; }
         public string JsonData { get; set; }
         public string rdononc { get; set; }
+        public string NCRCodeText { get; set; }
         public string msg { get; set; }
 
         public List<Remarks> lstRemark { get; set; }
