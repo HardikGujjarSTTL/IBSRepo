@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using IBS.Filters;
 
 namespace IBS.Controllers
 {
@@ -22,6 +23,7 @@ namespace IBS.Controllers
             multipleFileUploadRepository = _multipleFileUploadRepository;
         }
 
+        [Authorization("MultipleFileUpload", "Index", "view")]
         public IActionResult Index()
         {
             return View();

@@ -1829,3 +1829,82 @@ MODIFY (UpdatedBy VARCHAR2(10));
 create index IBSDEV.IDX$$_05BC0001 on IBSDEV.T114_MULTIPLE_BILL_FILE_UPLOAD("BILL_NO");
 create index IBSDEV.IDX$$_05BC0002 on IBSDEV.T20_IC("BILL_NO");
 create index IBSDEV.IDX$$_05BC0003 on IBSDEV.T17_CALL_REGISTER("CASE_NO");
+
+==============================================================================================
+
+create or replace PROCEDURE GET_MultiDocList (
+    P_bill_no IN VARCHAR2,
+    P_BILL_DT IN DATE,
+    P_CASE_NO IN VARCHAR2,
+    P_call_recv_dt IN DATE,
+    P_call_sno IN VARCHAR2,
+    P_PO_NO IN VARCHAR2,
+    P_PO_DT IN DATE,
+    P_IC_NO IN VARCHAR2,
+    P_IC_DT_frm IN VARCHAR2,
+    P_IC_DT_to IN VARCHAR2,
+    P_BK_NO IN VARCHAR2,
+    P_SET_NO IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) 
+AS
+    total_records NUMBER;
+BEGIN
+
+        SELECT COUNT(*) INTO total_records
+        from t114_multiple_bill_file_upload T114
+            INNER JOIN t22_bill T22 ON T114.BILL_NO = T22.BILL_NO
+            INNER JOIN t20_ic T20 ON t22.bill_no = t20.bill_no
+            INNER JOIN t17_call_register T17 ON t20.case_no = t17.case_no
+            INNER JOIN t13_po_master T13 ON t17.case_no = t13.case_no
+            WHERE (P_bill_no IS NULL OR t114.bill_no = P_bill_no )
+            AND (P_BILL_DT IS NULL OR T22.BILL_DT = P_BILL_DT)
+            AND (P_CASE_NO IS NULL OR T17.CASE_NO = P_CASE_NO)
+            AND (P_call_recv_dt IS NULL OR t17.call_recv_dt = P_call_recv_dt)
+            AND (P_call_sno IS NULL OR t17.call_sno = P_call_sno)
+            AND (P_PO_NO IS NULL OR T13.PO_NO = P_PO_NO)
+            AND (P_BK_NO IS NULL OR t17.bk_no = P_BK_NO)
+            AND (P_SET_NO IS NULL OR t17.set_no = P_SET_NO)
+            AND (P_IC_NO IS NULL OR t20.ic_no = P_IC_NO)
+            AND (
+                (P_IC_DT_frm IS NULL AND P_IC_DT_to IS NULL) -- both dates are null
+                OR
+                (t20.ic_dt >= TO_DATE(NVL(P_IC_DT_frm, 'DD/MM/YYYY'), 'DD/MM/YYYY')
+                 AND t20.ic_dt <= TO_DATE(NVL(P_IC_DT_to, 'DD/MM/YYYY'), 'DD/MM/YYYY'))
+            )
+--            AND t20.ic_dt BETWEEN TO_DATE(P_IC_DT_frm, 'DD/MM/YYYY') AND TO_DATE(P_IC_DT_to, 'DD/MM/YYYY')
+            AND (P_PO_DT IS NULL OR T13.PO_DT = P_PO_DT);
+            
+             OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+            
+          OPEN P_RESULT_CURSOR FOR 
+    SELECT * FROM (SELECT ROWNUM AS rnum, t.* FROM (
+    SELECT T114.BILL_NO,t114.file_name,t114.createddate,t22.bill_dt,t17.bk_no,T17.CASE_NO,T17.SET_NO,t17.call_recv_dt,
+            t17.call_sno,T13.PO_NO,T13.PO_DT ,t20.ic_no,t20.ic_dt
+            from t114_multiple_bill_file_upload T114
+            INNER JOIN t22_bill T22 ON T114.BILL_NO = T22.BILL_NO
+            INNER JOIN t20_ic T20 ON t22.bill_no = t20.bill_no
+            INNER JOIN t17_call_register T17 ON t20.case_no = t17.case_no
+            INNER JOIN t13_po_master T13 ON t17.case_no = t13.case_no
+            WHERE (P_bill_no IS NULL OR t114.bill_no = P_bill_no )
+            AND (P_BILL_DT IS NULL OR T22.BILL_DT = P_BILL_DT)
+            AND (P_CASE_NO IS NULL OR T17.CASE_NO = P_CASE_NO)
+            AND (P_call_recv_dt IS NULL OR t17.call_recv_dt = P_call_recv_dt)
+            AND (P_call_sno IS NULL OR t17.call_sno = P_call_sno)
+            AND (P_PO_NO IS NULL OR T13.PO_NO = P_PO_NO)
+            AND (P_BK_NO IS NULL OR t17.bk_no = P_BK_NO)
+            AND (P_SET_NO IS NULL OR t17.set_no = P_SET_NO)
+            AND (P_IC_NO IS NULL OR t20.ic_no = P_IC_NO)
+            AND (
+                (P_IC_DT_frm IS NULL AND P_IC_DT_to IS NULL) -- both dates are null
+                OR
+                (t20.ic_dt >= TO_DATE(NVL(P_IC_DT_frm, 'DD/MM/YYYY'), 'DD/MM/YYYY')
+                 AND t20.ic_dt <= TO_DATE(NVL(P_IC_DT_to, 'DD/MM/YYYY'), 'DD/MM/YYYY'))
+            )
+--            AND t20.ic_dt BETWEEN TO_DATE(P_IC_DT_frm, 'DD/MM/YYYY') AND TO_DATE(P_IC_DT_to, 'DD/MM/YYYY')
+            AND (P_PO_DT IS NULL OR T13.PO_DT = P_PO_DT)
+            )t where ROWNUM <= p_page_end) WHERE rnum >= p_page_start;
+END;

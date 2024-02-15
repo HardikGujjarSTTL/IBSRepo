@@ -6,7 +6,7 @@
 
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Document List</h2>
+        <h2>Multiple Document List</h2>
     </div>
 </div>
 <div class="accordion-body">
@@ -57,12 +57,6 @@
             <div class="reference">
                 <label for="Reference">PO No.</label>
                 <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
-            </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="reference">
-                <label for="Reference">PO Date</label>
-                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="PoDt" maxlength="100" style="text-transform: uppercase;">
             </div>
         </div>
         <div class="col-md-2 mb-3">
@@ -132,7 +126,6 @@
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val().toUpperCase();
             var PoNo = $("#PoNo").val();
-            var PoDt = $("#PoDt").val();
             var CallSno = $("#CallSno").val();
             var BillNO = $("#BillNO").val();
             var CallRecvDt = $("#CallRecvDt").val();
@@ -162,7 +155,6 @@
                         var AdditionalValues = {
                             "CaseNo": CaseNo,
                             "PoNo": PoNo,
-                            "PoDt": PoDt,
                             "CallSno": CallSno,
                             "BillNO": BillNO,
                             "CallRecvDt": CallRecvDt,
