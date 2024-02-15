@@ -40,6 +40,7 @@ namespace IBS.Controllers
             var Call_SNO = "";
             var CONSIGNEE_CD = "";
             var ACTIONAR = "";
+
             if (Convert.ToString(Request.Query["CASE_NO"]) == null || Convert.ToString(Request.Query["CALL_RECV_DT"]) == null)
             {
                 CASE_NO = "";
@@ -270,7 +271,7 @@ namespace IBS.Controllers
             try
             {
                 string base64String = string.Empty;
-           
+
                 var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
                 webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
 
@@ -296,20 +297,25 @@ namespace IBS.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         var responseContent = await response.Content.ReadAsStringAsync();
-                        
+
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(responseContent);
 
                         base64String = xmlDoc.InnerText.Replace("\"", "");
-
                     }
                 }
 
-                if (!string.IsNullOrEmpty(base64String))
+                bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
+
+                if (IsDigitalSignatureConfig && !string.IsNullOrEmpty(base64String))
                 {
                     string xmlData = GenerateDigitalSignatureXML(base64String);
 
-                    return Json(new { status = 1, responseText = xmlData });
+                    return Json(new { status = 1, responseText = xmlData, IsDigitalSignatureConfig = 1 });
+                }
+                else if (!IsDigitalSignatureConfig && !string.IsNullOrEmpty(base64String))
+                {
+                    return Json(new { status = 1, responseText = base64String, IsDigitalSignatureConfig = 0 });
                 }
                 else
                 {
