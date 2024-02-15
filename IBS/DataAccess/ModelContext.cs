@@ -3753,7 +3753,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("TEXT_03");
             entity.Property(e => e.Wbs)
-                .HasMaxLength(6)
+                .HasMaxLength(11)
                 .IsUnicode(false)
                 .HasColumnName("WBS");
         });
@@ -9637,7 +9637,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
@@ -9806,7 +9806,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
-                .HasMaxLength(8)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
@@ -11815,6 +11815,8 @@ public partial class ModelContext : DbContext
 
             entity.ToTable("T114_MULTIPLE_BILL_FILE_UPLOAD");
 
+            entity.HasIndex(e => e.BillNo, "IDX$$_05BC0001");
+
             entity.Property(e => e.Id)
                 .HasPrecision(6)
                 .ValueGeneratedNever()
@@ -13096,6 +13098,8 @@ public partial class ModelContext : DbContext
 
             entity.ToTable("T17_CALL_REGISTER");
 
+            entity.HasIndex(e => e.CaseNo, "IDX$$_05BC0003");
+
             entity.HasIndex(e => new { e.RegionCode, e.CallRecvDt, e.CallSno, e.CaseNo }, "UK_CALL_REGISTER").IsUnique();
 
             entity.Property(e => e.CaseNo)
@@ -14207,6 +14211,8 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.CaseNo, e.CallRecvDt, e.ConsigneeCd, e.CallSno });
 
             entity.ToTable("T20_IC");
+
+            entity.HasIndex(e => e.BillNo, "IDX$$_05BC0002");
 
             entity.Property(e => e.CaseNo)
                 .HasMaxLength(9)

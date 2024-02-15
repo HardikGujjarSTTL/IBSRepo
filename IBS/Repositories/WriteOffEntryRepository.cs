@@ -170,7 +170,7 @@ namespace IBS.Repositories
                         WriteID = 1;
                     }
                     WriteOffDetail obj = new WriteOffDetail();
-                    obj.Id = WriteID;
+                    obj.Id = Convert.ToInt32(WriteID);
                     obj.WriteOffMasterId = maxID;
                     obj.BillNo = updateData.Bill_No;
                     obj.WriteOffAmount = updateData.Write_Off_Amt;
