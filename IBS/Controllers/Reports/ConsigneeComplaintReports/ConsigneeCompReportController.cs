@@ -185,6 +185,27 @@ namespace IBS.Controllers.Reports.ConsigneeComplaintReports
 
             model.Regions = region;
             model.jirequired = jirequired;
+
+            foreach (var row in model.lstConsigneeComplaints)
+            {
+                var rejecttif = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var rejectpdf = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+
+                var casetifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var casepdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+
+                var reporttifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
+                var reportpdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
+
+                row.IsRejectionMemoTif = System.IO.File.Exists(rejecttif) == true ? true : false;
+                row.IsRejectionMemoPdf = System.IO.File.Exists(rejectpdf) == true ? true : false;
+
+                row.IsComplainCaseTif = System.IO.File.Exists(casetifpath) == true ? true : false;
+                row.IsComplainCasePdf = System.IO.File.Exists(casepdfpath) == true ? true : false;
+
+                row.IsComplainReportTif = System.IO.File.Exists(reporttifpath) == true ? true : false;
+                row.IsComplainReportPdf = System.IO.File.Exists(reportpdfpath) == true ? true : false;
+            }
             GlobalDeclaration.ConsigneeCompPeriod = model;
             return PartialView(model);
         }

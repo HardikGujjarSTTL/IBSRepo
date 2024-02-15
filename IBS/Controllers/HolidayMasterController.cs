@@ -25,7 +25,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<HolidayMasterModel> dTResult = holidayMasterRepository.GetHolidayMasterList(dtParameters);
+            DTResult<HolidayMasterModel> dTResult = holidayMasterRepository.GetHolidayMasterList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -36,6 +36,10 @@ namespace IBS.Controllers
             if (id > 0)
             {
                 model = holidayMasterRepository.FindByID(id);
+            }
+            else
+            {
+                model.Region = Region;
             }
             return View(model);
         }
@@ -106,7 +110,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTableDetail([FromBody] DTParameters dtParameters)
         {
-            DTResult<HolidayDetailModel> dTResult = holidayMasterRepository.GetHolidayDetailList(dtParameters);
+            DTResult<HolidayDetailModel> dTResult = holidayMasterRepository.GetHolidayDetailList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -117,6 +121,11 @@ namespace IBS.Controllers
             if (id > 0)
             {
                 model = holidayMasterRepository.Detail_FindByID(id);
+                model.REGION = Region;
+            }
+            else
+            {
+                model.REGION = Region;
             }
             return View(model);
         }

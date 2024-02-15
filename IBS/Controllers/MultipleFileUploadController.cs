@@ -40,7 +40,7 @@ namespace IBS.Controllers
                 {
                     if (model.Files.Count > 0 && model.Files.Count <= 50)
                     {
-                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ReadWriteData/MultipleFileUpload");
+                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "/ReadWriteData/MultipleFileUpload");
 
                         if (!Directory.Exists(uploadDirectory))
                         {
@@ -54,7 +54,7 @@ namespace IBS.Controllers
                                 if (Path.GetExtension(file.FileName).ToLower() == ".pdf")
                                 {
                                     var filePath = Path.Combine(uploadDirectory, file.FileName);
-                                    FileName = "wwwroot/ReadWriteData/MultipleFileUpload/" + file.FileName;
+                                    FileName = "/ReadWriteData/MultipleFileUpload/" + file.FileName;
                                     Bill_NO = file.FileName.Split('.')[0];
                                     using (var stream = new FileStream(filePath, FileMode.Create))
                                     {
@@ -88,6 +88,13 @@ namespace IBS.Controllers
             }
 
             return Json(new { status = true, responseText = "File Uploaded !!" });
+        }
+
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<MultipleFileUploadModel> dTResult = multipleFileUploadRepository.GetDocList(dtParameters);
+            return Json(dTResult);
         }
     }
 }

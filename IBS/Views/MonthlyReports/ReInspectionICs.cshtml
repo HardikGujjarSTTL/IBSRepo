@@ -5,21 +5,21 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Book No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Set No.</font></b></th>
-                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
-                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">IC No.</font></b></th>
-                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">IC Date</font></b></th>
-                    <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
-                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
-                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
-                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">BPO</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Bill No.</font></b></th>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Date</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Insp Fee</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Tax</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Amount</font></b></th>
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>Book No.</b></th>
+                    <th valign="top" align="center"><b>Set No.</b></th>
+                    <th valign="top" align="center"><b>Case No.</b></th>
+                    <th valign="top" align="center"><b>IC No.</b></th>
+                    <th valign="top" align="center"><b>IC Date</b></th>
+                    <th valign="top" align="center"><b>IE</b></th>
+                    <th valign="top" align="center"><b>Vendor</b></th>
+                    <th valign="top" align="center"><b>Client</b></th>
+                    <th valign="top" align="center"><b>BPO</b></th>
+                    <th valign="top" align="center"><b>Bill No.</b></th>
+                    <th valign="top" align="center"><b>Bill Date</b></th>
+                    <th valign="top" align="center"><b>Insp Fee</b></th>
+                    <th valign="top" align="center"><b>Tax</b></th>
+                    <th valign="top" align="center"><b>Bill Amount</b></th>
                 </tr>
                 @if (Model != null && Model.lstReInspectionIC != null && Model.lstReInspectionIC.Count > 0)
                 {
@@ -36,30 +36,30 @@
                         wSubSERV_TAX = wSubSERV_TAX + Convert.ToInt32(item.TAX);
                         wSubBILL_AMT = wSubBILL_AMT + Convert.ToInt32(item.BILL_AMOUNT);
                         <tr>
-                            <td width="2%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.BK_NO</font></td>
-                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@item.SET_NO</font></td>
-                            <td width="5%" valign="top" align="left"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.IC_NO</font></td>
-                            <td width="2%" valign="top" align="Left"><font size="1" face="Verdana">@item.IC_DT</font></td>
-                            <td width="4%" valign="top" align="left"><font size="1" face="Verdana">@item.IE_SNAME</font></td>
-                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.Vendor</font></td>
-                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.RLY_CD</font></td>
-                            <td width="12%" valign="top" align="left"><font size="1" face="Verdana">@item.BPO</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
-                            <td width="3%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_DT</font></td>
-                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.INSP_FEE</font></td>
-                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.SERVICE_TAX</font></td>
-                            <td width="1%" valign="top" align="right"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                            <td valign="top" align="center">@SrNo</td>
+                            <td valign="top" align="center">@item.BK_NO</td>
+                            <td valign="top" align="center">@item.SET_NO</td>
+                            <td valign="top" align="left">@item.CASE_NO</td>
+                            <td valign="top" align="left">@item.IC_NO</td>
+                            <td valign="top" align="Left">@item.IC_DT</td>
+                            <td valign="top" align="left">@item.IE_SNAME</td>
+                            <td valign="top" align="left">@item.Vendor</td>
+                            <td valign="top" align="left">@item.RLY_CD</td>
+                            <td valign="top" align="left">@item.BPO</td>
+                            <td valign="top" align="center">@item.BILL_NO</td>
+                            <td valign="top" align="center">@item.BILL_DT</td>
+                            <td valign="top" align="right">@item.INSP_FEE</td>
+                            <td valign="top" align="right">@item.SERVICE_TAX</td>
+                            <td valign="top" align="right">@item.BILL_AMOUNT</td>
                         </tr>
 
                         if (i <= Model.lstReInspectionIC.Count() - 2 && Convert.ToInt32(wBPO_CD) != Convert.ToInt32(Model.lstReInspectionIC[i + 1].BPO_CD))
                         {
                             <tr>
-                                <td width='10%' valign='top' align='center' colspan=12><B> <font size='1' face='Verdana'> Total of: @item.BPO </font></B></td>
-                                <td width='7%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wSubINSP_FEE </font></B></td>
-                                <td width='7%' valign='top' align='right'><B> <font size='1' face='Verdana'> @wSubSERV_TAX </font></B></td>
-                                <td width='15%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wSubBILL_AMT </font></B></td>
+                                <td valign='top' align='center' colspan=12><B>  Total of: @item.BPO </B></td>
+                                <td valign='top' align='right'> <B> @wSubINSP_FEE </B></td>
+                                <td valign='top' align='right'><B>  @wSubSERV_TAX </B></td>
+                                <td valign='top' align='right'> <B> @wSubBILL_AMT </B></td>
                             </tr>
                             wTINSP_FEE = wTINSP_FEE + wSubINSP_FEE;
                             wTSERV_TAX = wTSERV_TAX + wSubSERV_TAX;
@@ -70,10 +70,10 @@
                         else if (i == Model.lstReInspectionIC.Count() - 1)
                         {
                             <tr>
-                                <td width='10%' valign='top' align='center' colspan=12><B> <font size='1' face='Verdana'> Total of: @item.BPO </font></B></td>
-                                <td width='7%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wSubINSP_FEE </font></B></td>
-                                <td width='7%' valign='top' align='right'><B> <font size='1' face='Verdana'> @wSubSERV_TAX </font></B></td>
-                                <td width='15%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wSubBILL_AMT </font></B></td>
+                                <td valign='top' align='center' colspan=12><B>  Total of: @item.BPO </B></td>
+                                <td valign='top' align='right'> <B> @wSubINSP_FEE </B></td>
+                                <td valign='top' align='right'><B>  @wSubSERV_TAX </B></td>
+                                <td valign='top' align='right'> <B> @wSubBILL_AMT </B></td>
                             </tr>
                             wTINSP_FEE = wTINSP_FEE + wSubINSP_FEE;
                             wTSERV_TAX = wTSERV_TAX + wSubSERV_TAX;
@@ -84,16 +84,16 @@
                         i = i + 1;
                     }
                     <tr>
-                        <td width='10%' valign='top' align='center' colspan=12><B> <font size='1' face='Verdana'> Grand Total </font></B></td>
-                        <td width='7%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wTINSP_FEE </font></B></td>
-                        <td width='7%' valign='top' align='right'><B> <font size='1' face='Verdana'> @wTSERV_TAX </font></B></td>
-                        <td width='15%' valign='top' align='right'> <B><font size='1' face='Verdana'> @wTBILL_AMT </font></B></td>
+                        <td valign='top' align='center' colspan=12><B>  Grand Total </B></td>
+                        <td valign='top' align='right'> <B> @wTINSP_FEE </B></td>
+                        <td valign='top' align='right'><B>  @wTSERV_TAX </B></td>
+                        <td valign='top' align='right'> <B> @wTBILL_AMT </B></td>
                     </tr>
                 }
                 else
                 {
                     <tr>
-                        <td colspan="4" class="noRecordGrid">No records found</td>
+                        <td colspan="15" class="noRecordGrid center">No records found</td>
                     </tr>
                 }
             </tbody>

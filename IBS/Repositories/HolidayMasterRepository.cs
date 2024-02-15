@@ -13,7 +13,7 @@ namespace IBS.Repositories
         }
 
         #region Holiday Master
-        public DTResult<HolidayMasterModel> GetHolidayMasterList(DTParameters dtParameters)
+        public DTResult<HolidayMasterModel> GetHolidayMasterList(DTParameters dtParameters, string Region)
         {
             DTResult<HolidayMasterModel> dTResult = new() { draw = 0 };
             IQueryable<HolidayMasterModel>? query = null;
@@ -35,13 +35,16 @@ namespace IBS.Repositories
             }
 
             query = from a in context.T111HolidayMasters
-                    where (a.Isdeleted ?? 0) == 0
+                    join b in context.T01Regions on a.Region equals b.RegionCode into regionJoin
+                    from b in regionJoin.DefaultIfEmpty()
+                    where (a.Isdeleted ?? 0) == 0 && a.Region == Region
                     select new HolidayMasterModel
                     {
                         ID = a.Id,
                         Finance_Year = a.FinancialYear,
                         FY_FR_DT = Convert.ToDateTime(a.FyFromDt),
-                        FY_TO_DT = Convert.ToDateTime(a.FyToDt)
+                        FY_TO_DT = Convert.ToDateTime(a.FyToDt),
+                        Region = a.Region != null ? b.Region : null
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -67,7 +70,8 @@ namespace IBS.Repositories
                          ID = a.Id,
                          Finance_Year = a.FinancialYear,
                          FY_FR_DT = Convert.ToDateTime(a.FyFromDt),
-                         FY_TO_DT = Convert.ToDateTime(a.FyToDt)
+                         FY_TO_DT = Convert.ToDateTime(a.FyToDt),
+                         Region = a.Region
                      }).FirstOrDefault();
             return model;
         }
@@ -82,6 +86,7 @@ namespace IBS.Repositories
                     FyFromDt = model.FY_FR_DT,
                     FyToDt = model.FY_TO_DT,
                     UserId = model.User_Name,
+                    Region = model.Region,
                     Createdby = model.CreatedBy,
                     Createddate = DateTime.Now
                 };
@@ -98,6 +103,7 @@ namespace IBS.Repositories
                     holiday.FyFromDt = model.FY_FR_DT;
                     holiday.FyToDt = model.FY_TO_DT;
                     holiday.UserId = model.User_Name;
+                    holiday.Region= model.Region;
                     holiday.Updatedby = model.UpdatedBy;
                     holiday.Updateddate = DateTime.Now;
 
@@ -130,7 +136,7 @@ namespace IBS.Repositories
         #endregion
 
         #region Holiday Detail
-        public DTResult<HolidayDetailModel> GetHolidayDetailList(DTParameters dtParameters)
+        public DTResult<HolidayDetailModel> GetHolidayDetailList(DTParameters dtParameters, string Region)
         {
             DTResult<HolidayDetailModel> dTResult = new() { draw = 0 };
             IQueryable<HolidayDetailModel>? query = null;
@@ -155,14 +161,17 @@ namespace IBS.Repositories
 
             query = (from t112 in context.T112HolidayDetails
                      join t111 in context.T111HolidayMasters on t112.HolidayId equals t111.Id
-                     where t112.HolidayId == Holiday_ID
+                     join t01 in context.T01Regions on t111.Region equals t01.RegionCode into regionJoin
+                     from t01 in regionJoin.DefaultIfEmpty()
+                     where t112.HolidayId == Holiday_ID && t111.Region == Region
                      select new HolidayDetailModel
                      {
                          ID = t112.Id,
                          FINANCIAL_YEAR = t111.FinancialYear,
                          HOLIDAY_DT = t112.HolidayDt,
                          HOLIDAY_DESC = t112.HolidayDesc,
-                         USER_NAME = t112.UserId
+                         USER_NAME = t112.UserId,
+                         REGION = t01.Region,
                      });
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();

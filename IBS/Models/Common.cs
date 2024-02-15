@@ -4913,11 +4913,12 @@ namespace IBS.Models
             return dropList.OrderBy(x => x.Text).ToList();
         }
 
-        public static List<SelectListItem> GetHolidayMaster()
+        public static List<SelectListItem> GetHolidayMaster(string Region)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> IE = (from a in ModelContext.T111HolidayMasters
                                        orderby a.Id
+                                       where a.Region == Region
                                        select new SelectListItem
                                        {
                                            Text = Convert.ToString(a.FinancialYear),
