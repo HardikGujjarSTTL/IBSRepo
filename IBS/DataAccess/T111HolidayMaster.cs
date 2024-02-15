@@ -24,4 +24,6 @@ public partial class T111HolidayMaster
     public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? Region { get; set; }
 }

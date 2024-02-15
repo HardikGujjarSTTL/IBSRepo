@@ -102,7 +102,7 @@ namespace IBS.Repositories
                 #region Client save
                 if (Client == null)
                 {
-                    int maxID = context.T32ClientLogins.Max(x => x.Id) + 1;
+                    int maxID = context.T32ClientLogins.Max(x => Convert.ToInt32(x.Id)) + 1;
                     T32ClientLogin obj = new T32ClientLogin();
                     obj.Id = maxID;
                     obj.UserName = model.ClientName;
