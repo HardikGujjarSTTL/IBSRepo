@@ -130,7 +130,7 @@ namespace IBS.Repositories
                 SetNo = Convert.ToString(dtParameters.AdditionalValues["SetNo"]);
             }
 
-            OracleParameter[] par = new OracleParameter[13];
+            OracleParameter[] par = new OracleParameter[16];
             par[0] = new OracleParameter("P_bill_no", OracleDbType.Varchar2, BillNO, ParameterDirection.Input);
             par[1] = new OracleParameter("P_BILL_DT", OracleDbType.Date, BillDT, ParameterDirection.Input);
             par[2] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
@@ -143,10 +143,13 @@ namespace IBS.Repositories
             par[9] = new OracleParameter("P_IC_DT_to", OracleDbType.Varchar2, IC_DT_To, ParameterDirection.Input);
             par[10] = new OracleParameter("P_BK_NO", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
             par[11] = new OracleParameter("P_SET_NO", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
-            par[12] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[12] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[13] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[14] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[15] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
             List<MultipleFileUploadModel> list = new();
-            var ds = DataAccessDB.GetDataSet("GET_MultiDocList", par, 1);
+            var ds = DataAccessDB.GetDataSet("GET_MultiDocList", par, 2);
 
             if (ds != null && ds.Tables.Count > 0)
             {
