@@ -37,10 +37,17 @@
                         <span asp-validation-for="FY_TO_DT" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    <div class="input-search">
+                        <label for="Region">Region</label>
+                        @Html.DropDownListFor(model => model.Region, new SelectList(IBS.Models.Common.GetRegionType().Where(x=>x.Value == Model.Region), "Value", "Text"))
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                    </div>
+                </div>
                 <div class="col-md-3">
                     <div class="savenext-btn btnAlign">
                         <button type="submit" class="save-btn active" onclick="SubmitHolidayData();" id="btnSave">Save</button>
-                        <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                        <button type="button" class="reset-btn" onclick="ClearContrls();">Clear</button>
                     </div>
                 </div>
             </div>
@@ -55,16 +62,20 @@
     <script type="text/javascript">
 
         $(function () {
-            function SubmitHolidayData() {                
+            function SubmitHolidayData() {
                 if ($("#frmHolidayMaster").valid()) {
                     $("#frmHolidayMaster").submit();
                 }
             }
 
-            function CLearControls() {
-                $("#frmHolidayMaster").clear();
+            function ClearContrls() {
+                //$("#frmHolidayMaster").clear();
+                $("#Finance_Year").val("");
+                $("#FY_FR_DT").val("");
+                $("#FY_TO_DT").val("");
             }
         });
+
     </script>
 }
 
