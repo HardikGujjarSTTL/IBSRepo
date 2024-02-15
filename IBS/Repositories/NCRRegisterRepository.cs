@@ -570,7 +570,7 @@ namespace IBS.Repositories
             obj1.NcNo = model.NC_NO;
             obj1.NcCd = model.NcCdSno;
             obj1.NcCdSno = nextNcCdSno;
-            obj1.NcDescOthers = extractedText;
+            obj1.NcDescOthers = model.NCRCodeText;
             obj1.UserId = model.UserID;
             obj1.Datetime = DateTime.Now;
             context.T42NcDetails.Add(obj1);
