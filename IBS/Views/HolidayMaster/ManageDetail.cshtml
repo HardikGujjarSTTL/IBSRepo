@@ -19,7 +19,7 @@
                 <div class="col-md-2">
                     <div class="input-search">
                         <label for="HOLIDAY_ID">Financial Year</label>
-                        @Html.DropDownListFor(Model => Model.HOLIDAY_ID, new SelectList(IBS.Models.Common.GetHolidayMaster(), "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(Model => Model.HOLIDAY_ID, new SelectList(IBS.Models.Common.GetHolidayMaster(Model.REGION), "Value", "Text"),"--Select--")
                         <span asp-validation-for="HOLIDAY_ID" class="text-danger"></span>
                     </div>
                 </div>

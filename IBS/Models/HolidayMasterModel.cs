@@ -18,6 +18,7 @@ namespace IBS.Models
         public DateTime CreatedDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public string Region { get; set; }
     }
 
     public class HolidayDetailModel
@@ -37,6 +38,7 @@ namespace IBS.Models
         //public int? ISDELETED { get; set; }
 
         public string? FINANCIAL_YEAR { get; set; }
+        public string REGION { get; set; }
 
     }
 }
