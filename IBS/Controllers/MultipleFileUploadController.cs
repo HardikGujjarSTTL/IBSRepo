@@ -16,11 +16,12 @@ namespace IBS.Controllers
     public class MultipleFileUploadController : BaseController
     {
         private readonly IMultipleFileUploadRepository multipleFileUploadRepository;
+        private readonly IWebHostEnvironment env;
 
-
-        public MultipleFileUploadController(IMultipleFileUploadRepository _multipleFileUploadRepository)
+        public MultipleFileUploadController(IMultipleFileUploadRepository _multipleFileUploadRepository, IWebHostEnvironment env)
         {
             multipleFileUploadRepository = _multipleFileUploadRepository;
+            this.env = env;
         }
 
         [Authorization("MultipleFileUpload", "Index", "view")]
@@ -42,11 +43,11 @@ namespace IBS.Controllers
                 {
                     if (model.Files.Count > 0 && model.Files.Count <= 50)
                     {
-                        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "/ReadWriteData/MultipleFileUpload");
+                        string path = env.WebRootPath + "/ReadWriteData/MultipleFileUpload/";
 
-                        if (!Directory.Exists(uploadDirectory))
+                        if (!Directory.Exists(path))
                         {
-                            Directory.CreateDirectory(uploadDirectory);
+                            Directory.CreateDirectory(path);
                         }
 
                         foreach (var file in model.Files)
@@ -55,7 +56,7 @@ namespace IBS.Controllers
                             {
                                 if (Path.GetExtension(file.FileName).ToLower() == ".pdf")
                                 {
-                                    var filePath = Path.Combine(uploadDirectory, file.FileName);
+                                    var filePath = Path.Combine(path, file.FileName);
                                     FileName = "/ReadWriteData/MultipleFileUpload/" + file.FileName;
                                     Bill_NO = file.FileName.Split('.')[0];
                                     using (var stream = new FileStream(filePath, FileMode.Create))
