@@ -307,7 +307,7 @@
                     <div class="col-md-2 mb-2" id="dtpenalty">
                         <label for="Reference">Date of Imposing Penalty</label>
                         <input type="text" class="input datepicker" ASP-FOR="PenaltyDate" maxlength="300" required />
-                        <span class="text-danger field-validation-error" id="spnPenaltyDate"></span>
+                        @*<span class="text-danger field-validation-error" id="spnPenaltyDate"></span>*@
                     </div>
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Final Remarks/Action</label>
@@ -647,10 +647,10 @@
                 $("#spnPenaltytype").html("Select Penalty Type");
                 IsValid = false;
             }
-            if ($("#PenaltyDate").val() == "") {
-                $("#spnPenaltyDate").html("Select Penalty Date");
-                IsValid = false;
-            }
+            //if ($("#PenaltyDate").val() == "") {
+            //    $("#spnPenaltyDate").html("Select Penalty Date");
+            //    IsValid = false;
+            //}
 
             if (!IsValid) return;
             var IsValid = true;

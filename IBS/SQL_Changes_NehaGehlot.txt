@@ -1823,3 +1823,9 @@ MODIFY (CreatedBy VARCHAR2(10));
 
 ALTER TABLE T114_Multiple_Bill_File_Upload
 MODIFY (UpdatedBy VARCHAR2(10));
+
+=================================================================================
+//Indexs
+create index IBSDEV.IDX$$_05BC0001 on IBSDEV.T114_MULTIPLE_BILL_FILE_UPLOAD("BILL_NO");
+create index IBSDEV.IDX$$_05BC0002 on IBSDEV.T20_IC("BILL_NO");
+create index IBSDEV.IDX$$_05BC0003 on IBSDEV.T17_CALL_REGISTER("CASE_NO");

@@ -1,4 +1,5 @@
-﻿@model IBS.Models.Reports.ConsigneeCompReports
+﻿@using IBS.Helper;
+@model IBS.Models.Reports.ConsigneeCompReports
 <style>
     .borderTable th:nth-child(1) {
         width: 36px !important;
@@ -119,6 +120,12 @@
                     @foreach (var item in Model.lstConsigneeComplaints)
                     {
                         SrNo = SrNo + 1;
+                        var pdfRejectPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var tifRejectPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                        var pdfCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var tifCasePath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.ComplaintCase) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
+                        var pdfReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".PDF";
+                        var tifReportPath = @IBS.Helper.Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + item.CASE_NO + "-" + item.BK_NO + "-" + item.SET_NO + ".TIF";
                         <tr>
                             <td valign="top" align="center">@SrNo</td>
                             <td valign="top" align="Left">@item.IN_REGION</td>
@@ -137,7 +144,7 @@
                             <td valign="top" align="Left">@item.REJECTION_VALUE</td>
                             <td valign="top" align="Left">@item.DEPT</td>
                             <td valign="top" align="Left">@item.COMPLAINT_DATE</td>
-                            <td width="8%" valign="top" align="Left">
+                           @* <td width="8%" valign="top" align="Left">
                                 @if (!string.IsNullOrEmpty(item.REJECTIONMEMOPATH))
                                 {
                                     string[] pathParts = item.REJECTIONMEMOPATH.Split('/', '\\');
@@ -148,12 +155,31 @@
                                     }
                                 }
 
+                            </td>*@
+                            <td valign="top" align="Left">
+                                <font size="1" face="Verdana">
+                                    @if (item.IsRejectionMemoTif == false && item.IsRejectionMemoPdf == false)
+                                    {
+                                        <div valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                    }
+                                    else if (item.IsRejectionMemoTif == false && item.IsRejectionMemoPdf == true)
+                                    {
+
+                                        <div valign='top' align='center'><a href='@pdfRejectPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW REJ MEMO</font></a></div>
+                                    }
+                                    else
+                                    {
+
+                                        <div valign='top' align='center'><a href='@tifRejectPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW REJ MEMO</font></a></div>
+
+                                    }
+                                </font>
                             </td>
                             @*<td  valign="top" align="Left">@item.REJECTIONMEMOPATH</td>*@
                             <td valign="top" align="Left">@item.REJECTION_REASON</td>
                             <td valign="top" align="Left">@item.NO_JI_RES</td>
                             <td valign="top" align="Left">@item.JI_DATE</td>
-                            <td width="8%" valign="top" align="Left">
+                           @* <td width="8%" valign="top" align="Left">
                                 @if (!string.IsNullOrEmpty(item.COMPLAINTSCASESPATH))
                                 {
                                     string[] pathParts = item.COMPLAINTSCASESPATH.Split('/', '\\');
@@ -163,10 +189,29 @@
                                         <a href="@path" target="_blank">@item.COMPLAINTSCASESPATH</a>
                                     }
                                 }
+                            </td>*@
+                            <td valign="top" align="Left">
+                                <font size="1" face="Verdana">
+                                    @if (item.IsComplainCaseTif == false && item.IsComplainCasePdf == false)
+                                    {
+                                        <div valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                    }
+                                    else if (item.IsComplainCaseTif == false && item.IsComplainCasePdf == true)
+                                    {
+
+                                        <div valign='top' align='center'><a href='@pdfCasePath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+                                    }
+                                    else
+                                    {
+
+                                        <div valign='top' align='center'><a href='@tifCasePath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI CASE</font></a></div>
+
+                                    }
+                                </font>
                             </td>
                             @*<td  valign="top" align="Left">@item.COMPLAINTSCASESPATH</td>*@
                             <td valign="top" align="Left">@item.STATUS</td>
-                            <td width="8%" valign="top" align="Left">
+                            @*<td width="8%" valign="top" align="Left">
                                 @if (!string.IsNullOrEmpty(item.COMPLAINTSREPORTPATH))
                                 {
                                     string[] pathParts = item.COMPLAINTSREPORTPATH.Split('/', '\\');
@@ -176,6 +221,25 @@
                                         <a href="@path" target="_blank">@item.COMPLAINTSREPORTPATH</a>
                                     }
                                 }
+                            </td>*@
+                            <td width="1%" valign="top" align="Left">
+                                <font size="1" face="Verdana">
+                                    @if (item.IsComplainReportTif == false && item.IsComplainReportPdf == false)
+                                    {
+                                        <div valign='top' align='center'><font size='1' face='Verdana' color="red">No Document</font></div>
+                                    }
+                                    else if (item.IsComplainReportTif == false && item.IsComplainReportPdf == true)
+                                    {
+
+                                        <div valign='top' align='center'><a href='@pdfReportPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>
+                                    }
+                                    else
+                                    {
+
+                                        <div valign='top' align='center'><a href='@tifReportPath' Font-Names='Verdana' Font-Size='8pt' target="_blank"><font size='1' face='Verdana' target='_blank'>VIEW JI REPORT</font></a></div>
+
+                                    }
+                                </font>
                             </td>
                             @*<td valign="top" align="Left">@item.COMPLAINTSREPORTPATH</td>*@
                             <td valign="top" align="Left">@item.DEFECT_DESC</td>
