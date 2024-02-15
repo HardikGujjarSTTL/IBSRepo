@@ -11,7 +11,7 @@ namespace IBS.Models
 
         public string CaseNo { get; set; }
 
-        public DateTime CallRecvDt { get; set; }
+        public DateTime? CallRecvDt { get; set; }
 
         public string CallSno { get; set; }
 
@@ -25,11 +25,11 @@ namespace IBS.Models
 
         public string IC_NO { get; set; }
 
-        public DateTime BillDT { get; set; }
+        public DateTime? BillDT { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public DateTime IC_DT { get; set; }
+        public DateTime? IC_DT { get; set; }
 
         public string BKNO { get; set; }
 

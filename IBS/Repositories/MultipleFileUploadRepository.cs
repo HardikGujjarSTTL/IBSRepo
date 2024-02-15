@@ -78,7 +78,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string CaseNo = "", PoNo = null, BillNO = null, CallSno = null,SetNo = null,BKNO= null, IC_NO = null, IC_DT_From = null, IC_DT_To = null;
+            string CaseNo = null, PoNo = null, BillNO = null, CallSno = null,SetNo = null,BKNO= null, IC_NO = null, IC_DT_From = null, IC_DT_To = null;
             DateTime? CallRecvDt = null, BillDT = null, PoDt = null;
 
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
@@ -167,29 +167,23 @@ namespace IBS.Repositories
                         BillNO = row["BILL_NO"].ToString(),
                         FileName = row["file_name"].ToString(),
                         IC_NO = row["ic_no"].ToString(),
-                        CallRecvDt = row["call_recv_dt"] != DBNull.Value ? Convert.ToDateTime(row["call_recv_dt"]) : DateTime.MinValue,
-                        BillDT = row["bill_dt"] != DBNull.Value ? Convert.ToDateTime(row["bill_dt"]) : DateTime.MinValue,
-                        IC_DT = row["ic_dt"] != DBNull.Value ? Convert.ToDateTime(row["ic_dt"]) : DateTime.MinValue,
-                        CreatedDate = row["createddate"] != DBNull.Value ? Convert.ToDateTime(row["createddate"]) : DateTime.MinValue
+                        CallRecvDt = row["call_recv_dt"] != DBNull.Value ? Convert.ToDateTime(row["call_recv_dt"]) : null,
+                        BillDT = row["bill_dt"] != DBNull.Value ? Convert.ToDateTime(row["bill_dt"]) : null,
+                        IC_DT = row["ic_dt"] != DBNull.Value ? Convert.ToDateTime(row["ic_dt"]) : null,
+                        CreatedDate = row["createddate"] != DBNull.Value ? Convert.ToDateTime(row["createddate"]) : null
                     }).ToList();
                 }
             }
 
             query = list.AsQueryable();
-
-            dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.BillNO).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = ds.Tables[0].Rows.Count;
-
-            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
