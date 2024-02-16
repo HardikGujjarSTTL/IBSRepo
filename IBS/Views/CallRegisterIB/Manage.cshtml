@@ -98,7 +98,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked <i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode,Model.CallRecvDt) , "Value", "Text"),"--Select--")
                         <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
                 </div>
@@ -419,7 +419,7 @@
             }
 
         });
-        
+
         function FillVendor() {
             var MfgCd = $('#MfgCd').val();
             var hdnMfgCd = $("#MfgCd1").val();
@@ -567,12 +567,12 @@
                 var formData = $("#frmDetails").serialize();
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
-                    
+
                     if (response.status) {
                         $("#btnRegiserCallSave").hide();
                         $("#btnDelete").hide();
                         $("#btnCDetails").show();
-                        
+
                     }
                     //var UpdateAllowed = $("#UpdateAllowed").val();
                     //    if (UpdateAllowed == "N") {
@@ -583,7 +583,7 @@
                     //        $("#btnRegiserCallSave").show();
                     //    }
                 });
-                
+
             }
             return false;
         });
@@ -642,5 +642,14 @@
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
+
+        function Select_IE() {
+            var IE = $("#ClusterCode").val();
+            $.get("@Url.Action("UploadDoc", "CallRegisterIB")", formData, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                }
+            });
+        }
     </script>
 }

@@ -86,7 +86,7 @@ namespace IBS.Repositories
         {
             if (model.ID == 0)
             {
-                return context.T90RlyDesignations.Any(x => x.RlyDesigCd == model.RlyDesigCd);
+                return context.T90RlyDesignations.Any(x => x.RlyDesigCd.ToLower() == model.RlyDesigCd.ToLower());
             }
             else
             {
@@ -98,6 +98,7 @@ namespace IBS.Repositories
         {
             if (model.ID == 0)
             {
+
                 T90RlyDesignation railwayDesignation = new()
                 {
                     RlyDesigCd = model.RlyDesigCd,

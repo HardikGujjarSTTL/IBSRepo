@@ -43,7 +43,12 @@ namespace IBS.Controllers
                     {
                         model.Createdby = UserId;
                         model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                        railwaysDirectoryRepository.SaveDetails(model);
+                        var res = railwaysDirectoryRepository.SaveDetails(model);
+                        if(res < 0)
+                        {
+                            AlertAlreadyExist("Railway Code already exists !!");
+                            return View(model);
+                        }
                         AlertAddSuccess("Record Added Successfully.");
                     }
                     else

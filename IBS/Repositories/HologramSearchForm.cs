@@ -143,6 +143,12 @@ namespace IBS.Repositories
             // if (SOF == null || SOF.HgNoFr == 0)
             if (model.lblHgNoFr == null && model.lblHgNoTo == null)
             {
+                var Cnt = context.T31HologramIssueds.Where(x => x.HgNoFr.ToLower() == model.HgNoFr.ToLower() && x.HgNoTo.ToLower() == model.HgNoTo.ToLower() && x.HgIecd == model.HgIecd).Count();
+                if (Cnt > 0)
+                {
+                    return -1;
+                }
+
                 T31HologramIssued obj = new T31HologramIssued();
                 obj.HgRegion = model.HgRegion;
                 obj.HgNoFr = model.HgNoFr;

@@ -106,6 +106,12 @@ namespace IBS.Repositories
         {
             if (model.IsNew)
             {
+                var Cnt = context.T99ClusterMasters.Where(x => x.ClusterName.ToLower() == model.ClusterName.ToLower() && x.DepartmentName == model.DepartmentName && x.RegionCode == model.RegionCode).Count();
+                if(Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int ClusterCd = GetMaxClusterCd();
                 ClusterCd += 1;
 

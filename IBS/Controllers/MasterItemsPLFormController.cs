@@ -60,7 +60,7 @@ namespace IBS.Controllers
                     return RedirectToAction("Index");
                 }
                 else
-                    AlertAlreadyExist();
+                    AlertAlreadyExist("PL No already exists !!");
             }
             catch (Exception ex)
             {

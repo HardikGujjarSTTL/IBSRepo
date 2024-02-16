@@ -131,7 +131,7 @@ namespace IBS.Repositories
         {
             if (model.IsNew)
             {
-                return context.T62MasterItemPlnos.Any(x => x.PlNo == model.PlNo);
+                return context.T62MasterItemPlnos.Any(x => x.PlNo.ToLower() == model.PlNo.ToLower());
             }
             else
             {

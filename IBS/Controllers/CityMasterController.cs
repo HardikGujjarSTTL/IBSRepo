@@ -48,7 +48,12 @@ namespace IBS.Controllers
                 {
                     model.Createdby = UserId;
                     model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                    cityRepository.SaveDetails(model);
+                    var res = cityRepository.SaveDetails(model);
+                    if(res < 0)
+                    {
+                        AlertAlreadyExist("Record already exists !!");    
+                        return View(model);
+                    }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else

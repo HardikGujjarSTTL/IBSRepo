@@ -48,7 +48,12 @@ namespace IBS.Controllers
                 {
                     model.Createdby = UserId;
                     model.CoRegion = Region;
-                    iE_CO_FormRepository.SaveDetails(model);
+                    var res = iE_CO_FormRepository.SaveDetails(model);
+                    if(res < 0)
+                    {
+                        AlertAlreadyExist("Record already exists !!");
+                        return View(model);
+                    }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else

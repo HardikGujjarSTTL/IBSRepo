@@ -85,6 +85,12 @@ namespace IBS.Repositories
         {
             if (model.RDesigCd == 0)
             {
+                var Cnt = context.T07RitesDesigs.Where(x => x.RDesignation.ToLower().Contains(model.RDesignation.ToLower())).Count();
+                if (Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int Design_Cd = GetMaxDesign_Cd();
                 Design_Cd += 1;
 

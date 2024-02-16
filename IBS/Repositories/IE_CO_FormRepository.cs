@@ -110,6 +110,12 @@ namespace IBS.Repositories
         {
             if (model.CoCd == 0)
             {
+                var Cnt = context.T08IeControllOfficers.Where(x => x.CoName.ToLower() == model.CoName.ToLower() && x.CoDesig == model.CoDesig).Count();
+                if (Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int CoCd = GetMaxCoCd();
                 CoCd += 1;
 

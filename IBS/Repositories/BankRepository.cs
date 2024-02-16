@@ -87,6 +87,12 @@ namespace IBS.Repositories
         {
             if (model.BankCd == 0)
             {
+                var Cnt = context.T94Banks.Where(x => x.BankName.ToLower() == model.BankName.ToLower() && x.FmisBankCd == model.FmisBankCd).Count();
+                if(Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int BankCd = GetMaxBankCd();
                 BankCd += 1;
 
