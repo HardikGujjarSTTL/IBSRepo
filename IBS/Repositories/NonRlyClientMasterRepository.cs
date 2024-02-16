@@ -164,7 +164,8 @@ namespace IBS.Repositories
         public Clientmaster FindNonClientByID(int ID)
         {
             Clientmaster model = new();
-            NonRlyClient client = context.NonRlyClients.Find(ID);
+            //NonRlyClient client = context.NonRlyClients.Find(ID);
+            NonRlyClient client = context.NonRlyClients.Where(x => x.Id == ID).FirstOrDefault();
 
             if (client == null)
                 throw new Exception("Client Not found");
