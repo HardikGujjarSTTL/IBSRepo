@@ -29,7 +29,7 @@ namespace IBS.Repositories
                 {
                     if (context.NonRlyClients.Any())
                     {
-                        maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                        maxID = context.NonRlyClients.Max(x => Convert.ToInt32(x.Id)) + 1;
                     }
                     else
                     {

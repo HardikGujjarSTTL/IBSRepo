@@ -338,12 +338,15 @@
     }
 
     $('#btnSaveMoreNC').on('click', function () {
+        debugger;
         var url = '@Url.Action("SaveMoreNC", "NCRRegister")';
         var selectedText = $("#NcCdSno").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");
         var NCText = selectedText.substr(indexOfHyphen + 1).trim();
         var NcCd = $("#NcCdSno").val();
+        var NCRCodeText = $("#nccodeother").val();
         var formData = new FormData($("#frmNCRDetails")[0]);
+        formData.append("NCRCodeText", NCRCodeText);
 
         $.ajax({
             url: url,

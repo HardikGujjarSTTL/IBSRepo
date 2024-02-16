@@ -78,6 +78,8 @@ namespace IBS.Controllers
         public IActionResult CallRemarkingListForApproval([FromBody] DTParameters dtParameters)
         {
             dtParameters.AdditionalValues.Add("UserId", Convert.ToString(UserId));
+            //dtParameters.AdditionalValues.Add("UserId", Convert.ToString(USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID));
+            
             dtParameters.AdditionalValues.Add("Region", Region);
             DTResult<PendingCallsListModel> dTResult = callRemarkingRepository.GetCallRemarkingListForApproval(dtParameters);
             return Json(dTResult);
