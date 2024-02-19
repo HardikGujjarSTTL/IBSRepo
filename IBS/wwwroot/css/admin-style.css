@@ -1573,3 +1573,4 @@ margin-right:15px;
 .userShowHideChat{ display:none; cursor:pointer;}
 .custom-readio .company-checkbox .remember{ margin-right:20px;}
 .custom-readio .company-checkbox .remember:last-child{ margin-right:0;}
+.loginForm .fa.fa-long-arrow-left{ vertical-align:middle; color:#F66A2F;}
