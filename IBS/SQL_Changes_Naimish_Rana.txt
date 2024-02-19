@@ -115,6 +115,324 @@ END;
 /
 ----------------------------------------------------- End ALL Dashboard COMPLAINTS STATUS SP -----------------------------------------------------
 
+----------------------------------------------------- Start Admin Dashboard SP -----------------------------------------------------
+create or replace PROCEDURE GET_ADMIN_DASHBOARD_COUNT 
+(  
+  P_REGION IN VARCHAR2,
+  P_RESULT_CURSOR OUT SYS_REFCURSOR
+  ,P_RESUT_HIGH_PAYMENT OUT SYS_REFCURSOR
+  ,P_RESUT_HIGH_OUTSTANDING OUT SYS_REFCURSOR
+  ,P_RESULT_PENDING_CASES OUT SYS_REFCURSOR
+  ,P_RESULT_JI_CASES OUT SYS_REFCURSOR
+  ,P_RESULT_REGION_CONSINEE_COMPLAINTS OUT SYS_REFCURSOR
+) AS 
+    P_FROMDATE DATE;
+    P_TODATE DATE;
+BEGIN
+    P_FROMDATE := GET_FINANCIAL_YEAR_START_DATE();
+    P_TODATE := GET_FINANCIAL_YEAR_END_DATE();
+    
+    DBMS_OUTPUT.put_line(P_FROMDATE);
+    DBMS_OUTPUT.put_line(P_TODATE);
+    
+    OPEN P_RESULT_CURSOR FOR
+    SELECT  REGION,
+            SUM(TOTAL_CALL) TOTAL_CALL,
+            SUM(PENDING_CALL) PENDING_CALL,
+            SUM(ACCEPTED_CALL) ACCEPTED_CALL,
+            SUM(CANCELLED_CALL) CANCELLED_CALL, 
+            SUM(UNDER_LAB_TESTING) UNDER_LAB_TESTING, 
+            SUM(STILL_UNDER_INSPECTION) STILL_UNDER_INSPECTION, 
+            SUM(STAGE_REJECTION) STAGE_REJECTION,               
+            SUM(IC_ISSUE_BUT_NOT_RECEIVE_OFFICE) IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+            SUM(NO_OF_BILL) NO_OF_BILL,
+            SUM(IC_ISSUE_RECEIVE_OFFICE_NOT_BILL) IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+            SUM(NO_OF_IE_PER_CM) NO_OF_IE_PER_CM
+    FROM (
+        SELECT  P_REGION REGION,
+                0 AS TOTAL_CALL,
+                SUM (CASE WHEN TRIM(t17.CALL_STATUS) = 'M' THEN 1 else 0 end) PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                SUM (CASE WHEN TRIM(t17.CALL_STATUS) = 'U' THEN 1 else 0 end) UNDER_LAB_TESTING, 
+                SUM (CASE WHEN TRIM(t17.CALL_STATUS) = 'S' THEN 1 else 0 end) STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+        FROM T17_CALL_REGISTER t17
+        WHERE SUBSTR(t17.CASE_NO,1,1) = P_REGION
+        UNION ALL
+        SELECT  P_REGION REGION,
+                COUNT(t17.CASE_NO) AS TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                SUM (CASE WHEN TRIM(t17.CALL_STATUS) = 'C' THEN 1 else 0 end) CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                SUM (CASE WHEN TRIM(t17.CALL_STATUS) = 'T' THEN 1 else 0 end) STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+        FROM T17_CALL_REGISTER t17
+        WHERE SUBSTR(t17.CASE_NO,1,1) = P_REGION
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        UNION ALL
+        SELECT  P_REGION REGION,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                COUNT(t17.CASE_NO) ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+--        FROM T47_IE_WORK_PLAN t47
+        FROM T17_CALL_REGISTER t17 --ON t47.CASE_NO = t17.CASE_NO AND t47.CALL_RECV_DT = t17.CALL_RECV_DT AND t47.CALL_SNO = t17.CALL_SNO
+        WHERE TRIM(t17.CALL_STATUS) = 'A'
+        AND t17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND SUBSTR(t17.CASE_NO,1,1) = P_REGION
+        UNION ALL
+        SELECT  IC.P_REGION REGION,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                COUNT(*) IC_ISSUE_BUT_NOT_RECEIVE_OFFICE,
+                0 NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+        FROM (
+            SELECT DISTINCT P_REGION, t20.* --T20.CASE_NO,T20.CALL_RECV_DT,T20.CALL_SNO,T20.IC_NO,T20.IC_DT, T20.BK_NO,T20.SET_NO
+            FROM T20_IC t20
+            WHERE SUBSTR(t20.CASE_NO,1,1) = P_REGION
+--            AND t20.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+            AND NOT EXISTS (SELECT * FROM T30_IC_RECEIVED T30 WHERE T30.BK_NO = t20.BK_NO AND T30.SET_NO = t20.SET_NO)
+        ) IC
+        GROUP BY IC.P_REGION
+        UNION ALL
+        SELECT  P_REGION REGION,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE, 
+                COUNT(T22.BILL_NO) NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+        FROM T22_BILL T22
+        WHERE SUBSTR(T22.CASE_NO,1,1) = P_REGION 
+        AND T22.BILL_DT BETWEEN P_FROMDATE AND P_TODATE
+        UNION ALL
+        SELECT  P_REGION REGION,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE, 
+                0 NO_OF_BILL,
+                COUNT(*) IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                0 NO_OF_IE_PER_CM
+        FROM (
+            SELECT  T20.*        
+            FROM T20_IC T20
+            JOIN T30_IC_RECEIVED T30 ON T20.BK_NO = T30.BK_NO AND T20.SET_NO = T30.SET_NO
+--            JOIN T22_BILL T22 ON T20.CASE_NO <> T22.CASE_NO
+            WHERE T30.REGION = P_REGION   
+            AND NOT EXISTS (SELECT * FROM T22_BILL T22 WHERE T22.CASE_NO = T20.CASE_NO)
+--            AND T20.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+        ) NOT_BILL
+        UNION ALL
+        SELECT  P_REGION REGION,
+                0 TOTAL_CALL,
+                0 PENDING_CALL,
+                0 ACCEPTED_CALL,
+                0 CANCELLED_CALL, 
+                0 UNDER_LAB_TESTING, 
+                0 STILL_UNDER_INSPECTION, 
+                0 STAGE_REJECTION,                
+                0 IC_ISSUE_BUT_NOT_RECEIVE_OFFICE, 
+                0 NO_OF_BILL,
+                0 IC_ISSUE_RECEIVE_OFFICE_NOT_BILL,
+                ROUND((SUM(NO_OF_IE) / SUM(NO_OF_CM)),0) NO_OF_IE_PER_CM
+        FROM (
+            SELECT  COUNT(*) NO_OF_IE,
+                    0 NO_OF_CM
+            FROM T09_IE T09
+            WHERE T09.IE_STATUS IS NULL AND IE_REGION = P_REGION
+            UNION ALL
+            SELECT  0 NO_OF_IE,
+                    COUNT(*) NO_OF_CM 
+            FROM T08_IE_CONTROLL_OFFICER T08
+            WHERE T08.CO_STATUS IS NULL AND CO_REGION = P_REGION
+        ) NO_IE_PER_CM
+    ) A
+    GROUP BY A.REGION;
+    
+    -- GET Top Five Clients with Highest Payments
+    OPEN P_RESUT_HIGH_PAYMENT FOR
+    SELECT  CLIENT_NAME,
+            COUNT(BILL_NO) NO_OF_BILL,        
+            SUM(BILL_AMOUNT) AMOUNT
+    FROM (
+        SELECT  T22.BILL_NO,
+                T13.RLY_NONRLY,
+                T13.RLY_CD,
+                NVL((
+                        SELECT RAILWAY Client FROM T91_RAILWAYS WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R' 
+                        UNION
+                        SELECT DISTINCT BPO_ORGN Client FROM T12_BILL_PAYING_OFFICER WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+                ),'Other')  CLIENT_NAME,
+                T22.BILL_AMOUNT
+        FROM T22_BILL T22
+        JOIN T13_PO_MASTER T13 ON T22.CASE_NO = T13.CASE_NO
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND SUBSTR(T22.CASE_NO,1,1) = P_REGION
+    ) CLIENT_PAY
+    GROUP BY CLIENT_NAME
+    ORDER BY AMOUNT DESC;
+--    FETCH FIRST 5 ROWS ONLY;
+
+    -- GET Top Five Clients with highest outstanding
+    OPEN P_RESUT_HIGH_OUTSTANDING FOR
+    SELECT  CLIENT_NAME,
+            COUNT(bill_no) NO_OF_BILL,        
+            SUM((bill_amount - ( tds + tds_sgst + tds_cgst + tds_igst + retention_money + write_off_amt + amount_posted + cnote_amount ))) AMOUNT -- outstanding_amount
+    FROM(
+        SELECT  t22.bill_no bill_no,
+                nvl(t22.bill_amount, 0) bill_amount,
+                t25.narration || '/' || t25.chq_no AS narration,
+                nvl(t22.tds, 0) tds,
+                nvl(t22.tds_sgst, 0) tds_sgst,
+                nvl(t22.tds_cgst, 0) tds_cgst,
+                nvl(t22.tds_igst, 0) tds_igst,
+                nvl(t22.retention_money, 0) retention_money,
+                nvl(t22.cnote_amount, 0) cnote_amount,
+                nvl(t22.write_off_amt, 0) write_off_amt,
+                SUM(nvl(t26.amount_cleared, 0)) amount_posted,
+                t13.RLY_NONRLY,
+                t13.RLY_CD,
+                NVL((
+                    SELECT RAILWAY Client FROM T91_RAILWAYS WHERE RLY_CD = t13.RLY_CD AND t13.RLY_NONRLY = 'R' 
+                    UNION
+                    SELECT DISTINCT BPO_ORGN Client FROM T12_BILL_PAYING_OFFICER WHERE BPO_RLY = t13.RLY_CD AND t13.RLY_NONRLY <> 'R' AND ROWNUM <= 1
+                ),'Other')  CLIENT_NAME
+        FROM    t22_bill t22, t20_ic t20, t12_bill_paying_officer t12, t03_city t031, t13_po_master t13, t03_city t032,
+                t03_city t033, t05_vendor t05, t06_consignee t06, t26_cheque_posting t26, t25_rv_details t25, au_cris au
+        WHERE   t22.bill_no = t20.bill_no
+                AND t20.bpo_cd = t12.bpo_cd
+                AND t22.case_no = t25.case_no
+                AND t12.au = au.au
+                AND t12.bpo_city_cd = t031.city_cd (+)
+                AND t22.case_no = t13.case_no
+                AND t13.vend_cd = t05.vend_cd
+                AND t05.vend_city_cd = t032.city_cd (+)
+                AND t20.consignee_cd = t06.consignee_cd
+                AND t06.consignee_city = t033.city_cd (+)
+                AND t22.bill_no = t26.bill_no (+)
+                AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
+                AND substr(t22.bill_no, 1, 1) NOT IN ( 'O', 'T', 'X', 'F', 'D','R' )
+                AND t22.bill_dt BETWEEN P_FROMDATE AND P_TODATE
+                AND SUBSTR(t22.CASE_NO,1,1) = P_REGION
+        GROUP BY t22.bill_no,
+                nvl(t22.bill_amount, 0),
+                t25.narration || '/' || t25.chq_no,
+                nvl(t22.tds, 0),
+                nvl(t22.tds_sgst, 0),
+                nvl(t22.tds_cgst, 0),
+                nvl(t22.tds_igst, 0),
+                nvl(t22.retention_money, 0),
+                nvl(t22.cnote_amount, 0),
+                nvl(t22.write_off_amt, 0),
+                t13.RLY_NONRLY,
+                t13.RLY_CD
+    ) OUTSTANDING
+    GROUP BY CLIENT_NAME
+    ORDER BY AMOUNT DESC;
+
+    -- Get Five oldest pending cases.
+    OPEN P_RESULT_PENDING_CASES FOR
+    SELECT  T17.CASE_NO,
+            T17.CALL_RECV_DT CALL_DATE,
+            T17.CALL_SNO,
+            T13.PO_NO
+    FROM T17_CALL_REGISTER T17
+    JOIN T13_PO_MASTER T13 ON T17.CASE_NO = T13.CASE_NO
+    WHERE T17.CALL_STATUS = 'M'
+    AND SUBSTR(T17.CASE_NO,1,1) = P_REGION
+    AND T17.CALL_RECV_DT BETWEEN P_FROMDATE AND P_TODATE
+    ORDER BY T17.CALL_RECV_DT;
+--    FETCH FIRST 5 ROWS ONLY;
+    
+    -- Get Five Oldest JI cases
+    OPEN P_RESULT_JI_CASES FOR
+    SELECT  T40.CASE_NO,
+            T40.COMPLAINT_DT CALL_DATE,
+            T13.PO_NO
+    FROM T40_CONSIGNEE_COMPLAINTS T40
+    JOIN T13_PO_MASTER T13 ON T40.CASE_NO = T13.CASE_NO
+    WHERE T40.JI_SNO IS NOT NULL
+    AND T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+    AND T40.JI_REGION = P_REGION
+    ORDER BY COMPLAINT_DT;
+    
+    -- Get Region Wise Consignee Complaints 
+    OPEN P_RESULT_REGION_CONSINEE_COMPLAINTS FOR
+    SELECT  ROWNO,
+            REGION,
+            NO_OF_CONSINEE_COMPLAINTS
+    FROM (
+        SELECT  1 ROWNO,
+                'NR' REGION,
+                COUNT(T40.COMPLAINT_ID) NO_OF_CONSINEE_COMPLAINTS
+        FROM T40_CONSIGNEE_COMPLAINTS T40
+        WHERE T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND T40.JI_REGION = 'N'
+        UNION
+        SELECT  2 ROWNO,
+                'WR' REGION,
+                COUNT(T40.COMPLAINT_ID) NO_OF_CONSINEE_COMPLAINTS
+        FROM T40_CONSIGNEE_COMPLAINTS T40
+        WHERE T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND T40.JI_REGION = 'W'
+        UNION
+        SELECT  3 ROWNO,
+                'SR' REGION,
+                COUNT(T40.COMPLAINT_ID) NO_OF_CONSINEE_COMPLAINTS
+        FROM T40_CONSIGNEE_COMPLAINTS T40
+        WHERE T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND T40.JI_REGION = 'S'
+        UNION
+        SELECT  4 ROWNO,
+                'ER' REGION,
+                COUNT(T40.COMPLAINT_ID) NO_OF_CONSINEE_COMPLAINTS
+        FROM T40_CONSIGNEE_COMPLAINTS T40
+        WHERE T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND T40.JI_REGION = 'E'
+        UNION
+        SELECT  5 ROWNO,
+                'CR' REGION,
+                COUNT(T40.COMPLAINT_ID) NO_OF_CONSINEE_COMPLAINTS
+        FROM T40_CONSIGNEE_COMPLAINTS T40
+        WHERE T40.COMPLAINT_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND T40.JI_REGION = 'C'
+    ) REGION_CONSINEE;
+END GET_ADMIN_DASHBOARD_COUNT;
+----------------------------------------------------- End Admin Dashboard SP -----------------------------------------------------
 
 
 ----------------------------------------------------- Start Client Dashboard SP -----------------------------------------------------
