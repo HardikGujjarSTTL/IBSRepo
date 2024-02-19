@@ -131,7 +131,9 @@
                         @if (!string.IsNullOrEmpty(Model.TEMP_COMPLAINT_ID)){
                             var FileName = Model.TEMP_COMPLAINT_ID + ".pdf";
                             <label>Rejection Memo Document : </label>
-                            <a target='_blank' style="color:blue;" href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints))/@FileName'>Download</a>
+                            <div>
+                            <a target='_blank' class="btn" href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints))/@FileName'><span class="fa fa-download"></span></a>
+                            </div>
                         }
                     </div>
                 </div>
