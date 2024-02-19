@@ -214,7 +214,6 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
     $(document).ready(function () {
-        debugger;
         $("#nccodeother").hide();
         $("#ncrcodes").hide();
         $("#ncrclass").hide();
@@ -338,7 +337,6 @@
     }
 
     $('#btnSaveMoreNC').on('click', function () {
-        debugger;
         var url = '@Url.Action("SaveMoreNC", "NCRRegister")';
         var selectedText = $("#NcCdSno").find("option:selected").text();
         var indexOfHyphen = selectedText.indexOf("-");

@@ -19,11 +19,10 @@
 </div>
 
 <section class="@clsView">
-    <div class="task-listinput" id="tab-1">
+    <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ComplaintApproval" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
                 <div class="row my-0">
-                    <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo"  hidden>
                     <input type="text" asp-for="UomCd" hidden>
                     <input type="text" asp-for="Rate"  hidden>
@@ -257,7 +256,6 @@
         function Accept(){
             var urlpath = "@Url.Action("AcceptComplaint", "ComplaintApproval")";
             var formData = $("#frmComplaints").serialize();
-            SaveSingleDocuments("tab-1");
             $.ajax({
                 url: urlpath,
                 type: 'POST',
