@@ -10,7 +10,7 @@
     <div class="accordion-body">
         <div class="row my-0">
             <div class="col-md-12">
-                <ul class="radioListForm">
+                <ul class="radioListForm mb-0">
                     <li>
                         <label for="rb1"><input type="radio" name="radioGroup" id="rb1" /> For Particular BPO</label>
                         <span class="text-danger"></span>
@@ -21,7 +21,7 @@
                         <span class="text-danger"></span>
                     </li>
                     <li>
-                        <label for="rb3"><input type="radio" name="radioGroup" id="rb3" /> For Partcular Client.</label>
+                        <label for="rb3"><input type="radio" name="radioGroup" id="rb3" /> For Particular Client.</label>
 
                         <span class="text-danger"></span>
                     </li>
@@ -29,27 +29,35 @@
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-8 mb-3" style="display:none" id="hdnPDropdown">
-                <input type="text" class="input" id="txtbpo" style="width: 46%;">
-                <button type="button" class="save-btn active" onclick="Search();">Select BPO</button>
+            <div class="col-md-12 mb-3" style="display:none" id="hdnPDropdown">
+                <div class="row">
+                    <div class="col-md-4">
+                <input type="text" class="input" id="txtbpo">
+                    </div>
+                    <div class="col-md-2">
+                <button type="button" class="formBtn save-btn active" onclick="Search();">Select BPO</button>
+                </div>
+                </div>
             </div>
         </div>
         <div class="row my-0">
-            <div class="col-md-12 mb-3" style="display:none" id="hdnbpo">
+            <div class="col-md-4 mb-3" style="display:none" id="hdnbpo">
                 <label for="Reference"></label>
                 <select id="bpoid"></select>
             </div>
         </div>
-        <div class="col-md-3" style="display:none" id="hdnclient">
+        <div class="row my-0">
+        <div class="col-md-4 mb-3" style="display:none" id="hdnclient">
 
             @Html.DropDownList("AccCD", Common.ClientWiseBPO(), new { @id="ddlclientbpo"})
             <span class="text-danger"></span>
         </div>
-        <div class="col-md-5" style="display:none" id="hdnbpocode">
+        <div class="col-md-4" style="display:none" id="hdnbpocode">
             <select id="bpo"></select>
             <span class="text-danger"></span>
         </div>
-        <div class="row align-items-center">
+        </div>
+        <div class="row my-0 align-items-center">
             <div class="col-md-4">
                 <ul class="radioListForm my-0">
                     <li>
