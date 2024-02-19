@@ -266,6 +266,7 @@ namespace IBS.Controllers
                 DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
             }
             var FileName = model.CASE_NO + "-" + model.BK_NO + "-" + model.SET_NO;
+
             msg = "Select file to upload.";
             if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
             {

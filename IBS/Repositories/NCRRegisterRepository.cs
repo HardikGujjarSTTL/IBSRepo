@@ -129,8 +129,8 @@ namespace IBS.Repositories
                         CALL_SNO = row.Field<int>("CALL_SNO"),
                         IE_SNAME = row.Field<string>("ie_name"),
                         CALL_RECV_DT = DateTime.TryParseExact(row.Field<string>("CALL_RECV_DATE"), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime callRecvDate)
-                ? callRecvDate
-                : null,
+                                       ? callRecvDate
+                                       : null,
                         CONSIGNEE = row.Field<string>("CONSIGNEE"),
                     }).ToList();
 
@@ -147,26 +147,11 @@ namespace IBS.Repositories
                     dTResult.recordsFiltered = recordsTotal;
                     dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
                     dTResult.draw = dtParameters.Draw;
-
-                    //dTResult.recordsTotal = query.Count();
-
-                    //if (!string.IsNullOrEmpty(searchBy))
-                    //    query = query.Where(w => Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                    //    || Convert.ToString(w.NC_NO).ToLower().Contains(searchBy.ToLower())
-                    //    );
-
-                    //dTResult.recordsFiltered = query.Count();
-
-                    //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
-                    //dTResult.draw = dtParameters.Draw;
-
                 }
                 else
                 {
                     return dTResult;
                 }
-
             }
             catch (Exception ex)
             {
@@ -216,7 +201,6 @@ namespace IBS.Repositories
                     };
             dTResult.recordsTotal = query.Count();
 
-
             dTResult.recordsFiltered = query.Count();
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
@@ -252,10 +236,8 @@ namespace IBS.Repositories
                 dt = ds.Tables[0];
             }
 
-
             if (dt != null)
             {
-
                 if (dt.Rows.Count > 0)
                 {
                     DataRow firstRow = dt.Rows[0];
@@ -274,21 +256,23 @@ namespace IBS.Repositories
                     if (NCNO != "" && NCNO != null)
                     {
                         model.QtyPassed = firstRow.Table.Columns.Contains("QTY_PASSED") && firstRow["QTY_PASSED"] != DBNull.Value
-                                ? Convert.ToInt32(firstRow["QTY_PASSED"])
-                                : 0;
+                                          ? Convert.ToInt32(firstRow["QTY_PASSED"])
+                                          : 0;
 
                         model.Item = firstRow.Table.Columns.Contains("ITEM_DESC_PO") && firstRow["ITEM_DESC_PO"] != DBNull.Value
-    ? Convert.ToString(firstRow["ITEM_DESC_PO"])
-    : string.Empty;
+                                     ? Convert.ToString(firstRow["ITEM_DESC_PO"])
+                                     : string.Empty;
 
-                        if (firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value)
-                        {
-                            model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
-                        }
-                        else
-                        {
-                            model.NCRDate = DateTime.MinValue;
-                        }
+                        model.NCRDate = firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value ? Convert.ToDateTime(firstRow["NC_DATE"]) : DateTime.MinValue;
+
+                        //if (firstRow.Table.Columns.Contains("NC_DATE") && firstRow["NC_DATE"] != DBNull.Value)
+                        //{
+                        //    model.NCRDate = Convert.ToDateTime(firstRow["NC_DATE"]);
+                        //}
+                        //else
+                        //{
+                        //    model.NCRDate = DateTime.MinValue;
+                        //}
 
                     }
                     if (CASE_NO != "" && CASE_NO != null)
@@ -339,7 +323,6 @@ namespace IBS.Repositories
                     model.CALL_SNO = Convert.ToInt32(firstRow["CALL_SNO"]);
                     model.NC_NO = NCNO;
 
-
                     model.IeCd = Convert.ToInt32(firstRow["IE_CD"]);
                     model.IE_SNAME = firstRow["IE_NAME"].ToString();
 
@@ -353,9 +336,6 @@ namespace IBS.Repositories
                     {
                         model.PO_DT = Convert.ToDateTime(firstRow["PO_DT"]);
                     }
-                }
-                else
-                {
                 }
             }
 
@@ -480,10 +460,7 @@ namespace IBS.Repositories
 
             var NCRMaster = context.T41NcMasters.FirstOrDefault(r => r.CaseNo == model.CaseNo && r.BkNo == model.BKNo && r.SetNo == model.SetNo);
 
-            if (ErrCD == "-1")
-            {
-            }
-            else
+            if (ErrCD != "-1")
             {
                 if (NCRMaster == null)
                 {
@@ -649,15 +626,6 @@ namespace IBS.Repositories
             }
 
             MailMessage mail1 = new MailMessage();
-
-            //if (j == 1 && nCRRegister.SetRegionCode == "N")
-            //{
-            //    mail1.CC.Add("sbu.ninsp@rites.com");
-            //}
-
-            //mail1.From = new MailAddress("nrinspn@gmail.com");
-            //mail1.Subject = "Non Conformities Register";
-            //mail1.Body = NC_REASONS + "\n" + wRegion;
             rsender = "hardiksilvertouch007@outlook.com";
             bool isSend = false;
             if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
@@ -723,7 +691,6 @@ namespace IBS.Repositories
 
                 return count;
             }
-
             return 0;
         }
 
