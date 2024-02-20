@@ -1,6 +1,13 @@
 ﻿@model DashboardModel
 @{
-    ViewData["Title"] = "Dashboard_Vendor_ViewAll_List";
+    @if (Model.ActionType == "RCS")
+    {
+        ViewData["Title"] = "Recent_Calls_Status ";
+    }
+    else if (Model.ActionType == "RPO")
+    {
+        ViewData["Title"] = "Recent_Purchase_Order ";
+    }
 }
 
 <div class="list-inner">

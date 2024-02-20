@@ -183,6 +183,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PasswordReset> PasswordResets { get; set; }
 
+    public virtual DbSet<ProjectDetail> ProjectDetails { get; set; }
+
+    public virtual DbSet<ProjectMaster> ProjectMasters { get; set; }
+
     public virtual DbSet<R25R26> R25R26s { get; set; }
 
     public virtual DbSet<R29> R29s { get; set; }
@@ -6709,6 +6713,71 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(191)
                 .IsUnicode(false)
                 .HasColumnName("TOKEN");
+        });
+
+        modelBuilder.Entity<ProjectDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0012735");
+
+            entity.ToTable("PROJECT_DETAILS");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Department)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("DEPARTMENT");
+            entity.Property(e => e.Nos)
+                .HasColumnType("NUMBER")
+                .HasColumnName("NOS");
+            entity.Property(e => e.ProdId)
+                .HasPrecision(6)
+                .HasColumnName("PROD_ID");
+            entity.Property(e => e.Sanctionedstrength)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("SANCTIONEDSTRENGTH");
+        });
+
+        modelBuilder.Entity<ProjectMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0012732");
+
+            entity.ToTable("PROJECT_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Completiondate)
+                .HasColumnType("DATE")
+                .HasColumnName("COMPLETIONDATE");
+            entity.Property(e => e.Createdby)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Projectname)
+                .HasMaxLength(50)
+                .HasColumnName("PROJECTNAME");
+            entity.Property(e => e.SanctionedFile)
+                .HasMaxLength(50)
+                .HasColumnName("SANCTIONED_FILE");
+            entity.Property(e => e.Startdate)
+                .HasColumnType("DATE")
+                .HasColumnName("STARTDATE");
+            entity.Property(e => e.Updatedby)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
+                .HasColumnName("UPDATEDDATE");
         });
 
         modelBuilder.Entity<R25R26>(entity =>

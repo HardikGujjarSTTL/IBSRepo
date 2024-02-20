@@ -93,6 +93,26 @@ namespace IBS.Helper
             }
         }
 
+        public List<ProjectDetails> lstProjectDetails
+        {
+            get
+            {
+                string ProjectDetails = httpContextAccessor.HttpContext.Session.GetString("sessionProductDetailsModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(ProjectDetails))
+                {
+                    List<ProjectDetails> ProjectDetailsModels = JsonSerializer.Deserialize<List<ProjectDetails>>(ProjectDetails);
+
+                    if (ProjectDetailsModels != null)
+                        return ProjectDetailsModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionProductDetailsModel", JsonSerializer.Serialize(value));
+            }
+        }
+
         public List<ContractEntryList> lstContractEntryList
         {
             get
