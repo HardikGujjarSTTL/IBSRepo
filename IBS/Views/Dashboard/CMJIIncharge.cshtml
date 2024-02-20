@@ -5,6 +5,9 @@
 
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">CM/JI Incharge Dashboard</h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class="formBtn viewall-btn" ,@onChange = "OnChangeRegion();"})
+    </div>
 </div>
 <section class="table-section">
     <div class="table-title">
@@ -600,5 +603,12 @@
                 data: @Html.Raw(Model.DefectCodeJISummary),
             }],
         });
+
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMJIIncharge", "Dashboard")?Region=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
     </script>
 }

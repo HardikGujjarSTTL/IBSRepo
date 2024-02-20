@@ -8,7 +8,7 @@ namespace IBS.Interfaces
         public DashboardModel GetIEDDashBoardCount(int IeCd, string RegionCode, string RoleName);
         public DashboardModel GetDashBoardLabCount(int userid, string Regin);
 
-        public DashboardModel GetCMDashBoardCount(int CoCd);
+        public DashboardModel GetCMDashBoardCount(int CoCd, string Region);
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd, string RegionCode, string RoleName);
         public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation, string RegionCode, string RoleName);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
@@ -41,9 +41,9 @@ namespace IBS.Interfaces
         DTResult<CMDARListing> CMDARListing(DTParameters dtParameters);
 
         #region CM JI Dashboard
-        DashboardModel GetCMJIDDashBoard(int CO_CD);
-        DashboardModel GetCMGeneralDashBoard(int CO_CD);
-        DashboardModel GetCMDARDashBoard(int CO_CD);
+        DashboardModel GetCMJIDDashBoard(int CO_CD, string Region);
+        DashboardModel GetCMGeneralDashBoard(int CO_CD, string Region);
+        DashboardModel GetCMDARDashBoard(int CO_CD, string Region);
         DTResult<CM_JI_ViewAll_Model> Dashboard_CM_JI_ViewAll_List(DTParameters dtParameters, int CO_CD);
         #endregion
         #region CM DFO Dashboard

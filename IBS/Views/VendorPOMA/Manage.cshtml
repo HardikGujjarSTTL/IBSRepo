@@ -329,9 +329,9 @@
             var MaNo = $("#MA_NO").val();
             //var MaDt = moment($("#MA_DT").val()).format("DD-MM-YYYY");
             var MaDt = $("#MA_DT").val();
-            debugger
+            
             var formData = new FormData($("#frmDetails")[0]);
-            debugger
+            
             $.ajax({
                 url: '@Url.Action("DetailsSave", "VendorPOMA")',
                 type: "POST",
@@ -366,7 +366,7 @@
             var MaSNo = urlParams.get('MaSNo');
 
             var formData = new FormData($("#frmDetails")[0]);
-            debugger
+            
             $.ajax({
                 url: '@Url.Action("DetailsUpdate", "VendorPOMA")',
                 type: "POST",

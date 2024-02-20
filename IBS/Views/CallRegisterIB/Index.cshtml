@@ -311,7 +311,7 @@
         });
 
         $("#btnNewCall").click(function () {
-            debugger
+            
             var CaseNo = $("#CaseNo").val().toUpperCase();
             var CallRecvDt = $("#CallRecvDt").val();
             var CallSno = $("#CallSno").val();
@@ -322,7 +322,7 @@
             }
             if (CaseNo != null) {
                 $.get("@Url.Action("GetAddDetails", "CallRegisterIB")", { "CaseNo": CaseNo, "CallRecvDt": CallRecvDt, "CallSno": CallSno }, function (response) {
-                    debugger
+                    
                     if (response.status) {
                         if (response.Client == "Y") {
                             if (response.w_itemBlocked == "Y") {
@@ -423,7 +423,7 @@
                 ShowHideMsgNew(false, "Please select Case No.");
                 return;
             }
-            debugger
+            
             if (CallRecvDt == null || CallRecvDt == "") {
                 ShowHideMsgNew(false, "Please select Call Date");
                 return;

@@ -436,7 +436,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMDashBoardCount(int CoCd)
+        public DashboardModel GetCMDashBoardCount(int CoCd, string Region)
         {
             DashboardModel model = new();
 
@@ -460,10 +460,11 @@ namespace IBS.Repositories
                 }
             }
 
-            OracleParameter[] par2 = new OracleParameter[2];
+            OracleParameter[] par2 = new OracleParameter[3];
 
             par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CoCd, ParameterDirection.Input);
-            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par2[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
             List<DashboardModel> listVend = new();
@@ -2409,13 +2410,14 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DashboardModel GetCMGeneralDashBoard(int CO_CD)
+        public DashboardModel GetCMGeneralDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new DashboardModel();
-            OracleParameter[] par = new OracleParameter[2];
+            OracleParameter[] par = new OracleParameter[3];
 
             par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
             List<DashboardModel> lstIEPer = new();
@@ -2442,13 +2444,14 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMJIDDashBoard(int CO_CD)
+        public DashboardModel GetCMJIDDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new DashboardModel();
-            OracleParameter[] par = new OracleParameter[2];
+            OracleParameter[] par = new OracleParameter[3];
 
             par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
             List<DashboardModel> lstIEPer = new();
@@ -2621,7 +2624,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMDARDashBoard(int CO_CD)
+        public DashboardModel GetCMDARDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new();
 
@@ -2638,10 +2641,11 @@ namespace IBS.Repositories
                 }
             }
 
-            OracleParameter[] par2 = new OracleParameter[2];
+            OracleParameter[] par2 = new OracleParameter[3];
 
             par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par2[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
             List<DashboardModel> listVend = new();
