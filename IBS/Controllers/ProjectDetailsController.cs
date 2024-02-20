@@ -30,7 +30,7 @@ namespace IBS.Controllers
                 {
                     lstProjectDetails = objSessionHelper.lstProjectDetails;
                 }
-                model = projectDetailsRepository.SaveProductDetailsList(model);
+                //model = projectDetailsRepository.SaveProductDetailsList(model);
                 return Json(new { status = true, responseText = "Product Details Added Successfully." });
             }
             catch (Exception ex)
